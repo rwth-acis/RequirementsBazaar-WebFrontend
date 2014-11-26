@@ -1,23 +1,63 @@
-<div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
-</div>
+<core-drawer-panel id="drawerPanel" drawerWidth="200px" forceNarrow >
 
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-  </p>
+  <!--The side bar of the application / component selection-->
+  <core-header-panel drawer>
+    <core-toolbar id="navheader'">
+      <span>Choose Component</span>
+    </core-toolbar>
+    <core-menu id="componentSelection">
+      <paper-item ng-repeat="component in activeProjectComponents" ng-click="selectComponent(component.name, component.description)">{{component.name}}</paper-item>
+    </core-menu>
+  </core-header-panel>
 
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
+  <!--The main panel of the application-->
+  <core-header-panel main>
 
-  <h4>Karma</h4>
-  <p>Spectacular Test Runner for JavaScript.</p>
-</div>
+    <!--The top navigation bar-->
+    <core-toolbar id="mainheader">
+      <paper-icon-button id="navicon" icon="menu" onclick="drawerPanel.togglePanel();"></paper-icon-button>
+      <paper-dropdown-menu label="{{activeProject.name}}" id="projectSelection">
+        <paper-dropdown class="dropdown">
+          <core-selector>
+            <paper-item ng-repeat="project in projects" value="{{project.name}}" ng-click="selectProject(project.name, project.description)">{{project.name}}</paper-item>
+          </core-selector>
+        </paper-dropdown>
+      </paper-dropdown-menu>
+
+      <span flex>{{activeProject.description}}</span>
+      <core-item label="Log Out">
+      </core-item>
+      <core-item label="PP">
+      </core-item>
+    </core-toolbar>
+
+
+    <!--Place Requirements Here-->
+    <div class="content">
+      <div id="currentComponent">
+        <h3 ng-bind="activeComponent.name"></h3>
+        <p ng-bind="activeComponent.description"></p>
+      </div>
+
+      <core-list ng-model="activeComponentRequirements" height="400px">
+        <template>
+          <div>{{name}}</div>
+        </template>
+      </core-list>
+
+      <!--<div style="background: white;padding: 5px;margin-top: 50px" ng-repeat="requirement in activeComponentRequirements" >-->
+
+        <!--<div class="heading">{{requirement.name}}</div>-->
+        <!--<!--<core-collapse class="collapse" class="core-collapse-closed" style="overflow: hidden; height: 0px;">-->
+          <!--<!--<div class="component_content">-->
+            <!--<!--<div>-->
+              <!--<!--{{requirement.description}}-->
+            <!--<!--</div>-->
+          <!--<!--</div>-->
+        <!--<!--</core-collapse>-->
+    <!---->
+      <!--</div>-->
+
+    </div>
+  </core-header-panel>
+</core-drawer-panel>

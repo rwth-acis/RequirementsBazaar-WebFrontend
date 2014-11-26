@@ -1,8 +1,4 @@
-/* Space out content a bit */
-body {
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
+
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
@@ -76,4 +72,72 @@ body {
   .jumbotron {
     border-bottom: 0;
   }
+}
+
+
+
+body {
+  font-family: sans-serif;
+}
+core-header-panel {
+  background-color: #ececec;
+}
+
+core-toolbar {
+  background-color: #03A9F4;
+}
+#componentSelection {
+  background-color: #fff;
+  position: absolute;
+  min-height: 100%;
+  min-width: 100%;
+  margin: 0px;
+}
+
+#componentSelection > core-item{
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.core-selected {
+  background-color: #ececec;
+}
+
+#componentSelection core-item:hover{
+  background-color: #ececec;
+}
+
+#projectSelection{
+  border-bottom: none;
+}
+
+#projectSelection core-item{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#mainContainer {
+  background: #FFF;
+}
+
+#navheader {
+  background-color: #56BA89;
+}
+.content {
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  height: 2000px;
+}
+
+#currentComponent {
+  height: 100px;
+  background: white;
+  margin-bottom: 12px;
+  padding: 12px;
+}
+
+.component_content {
+  padding: 10px;
 }
