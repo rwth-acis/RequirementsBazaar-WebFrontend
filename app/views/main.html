@@ -6,7 +6,7 @@
       <span>Choose Component</span>
     </core-toolbar>
     <core-menu id="componentSelection">
-      <paper-item ng-repeat="component in components" ng-click="selectComponent(component.name, component.description)">{{component.name}}</paper-item>
+      <paper-item ng-repeat="component in components" ng-click="selectComponent(component)">{{component.name}}</paper-item>
     </core-menu>
   </core-header-panel>
 
@@ -16,10 +16,10 @@
     <!--The top navigation bar-->
     <core-toolbar id="mainheader">
       <paper-icon-button id="navicon" icon="menu" onclick="drawerPanel.togglePanel();"></paper-icon-button>
-      <paper-dropdown-menu label="{{activeProject.name}}" id="projectSelection">
+      <paper-dropdown-menu label="{{activeProject.name}}" id="projectSelection" style="color:#000000;">
         <paper-dropdown class="dropdown">
           <core-selector>
-            <paper-item ng-repeat="project in projects" value="{{project.name}}" ng-click="selectProject(project.name, project.description)">{{project.name}}</paper-item>
+            <paper-item ng-repeat="project in projects" value="{{project.name}}" ng-click="selectProject(project)">{{project.name}}</paper-item>
           </core-selector>
         </paper-dropdown>
       </paper-dropdown-menu>
