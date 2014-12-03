@@ -14,8 +14,9 @@ Install bower and grunt
 ```
 npm install --global bower grunt-cli
 ```
-Navigate to project folder and install bower components with
+Navigate to project folder and install dependencies and bower components with
 ```
+npm install
 bower install
 ```
 
