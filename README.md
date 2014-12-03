@@ -1,17 +1,29 @@
 RequirementsBazaar-WebFrontend
 ==============================
 
-How to run
-
-Install
-1. Make sure node.js and git are installed
-2. npm install --global bower grunt-cli
-3. bower install
-
-To start in browser
-4. grunt serve
-
 A Web frontend for the Requirements Bazaar.
+
+
+How to run
+----------
+Make sure node.js and git are installed
+```
+node --version && npm --version && git --version
+```
+Install bower and grunt
+```
+npm install --global bower grunt-cli
+```
+Navigate to project folder and install bower components with
+```
+bower install
+```
+
+Start in browser
+```
+grunt serve
+```
+
 
 License
 -------
