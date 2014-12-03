@@ -1,6 +1,16 @@
 RequirementsBazaar-WebFrontend
 ==============================
 
+How to run
+
+Install
+1. Make sure node.js and git are installed
+2. npm install --global bower grunt-cli
+3. bower install
+
+To start in browser
+4. grunt serve
+
 A Web frontend for the Requirements Bazaar.
 
 License

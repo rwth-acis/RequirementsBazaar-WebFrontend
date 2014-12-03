@@ -55,28 +55,35 @@
         <p ng-bind="activeComponent.description"></p>
       </div>
 
-      <div ng-repeat=" req in activeComponentRequirements">
-        <paper-item style="background: white" ng-click="toggle($event)">{{req.description}}</paper-item>
+      <div ng-repeat=" req in requirements">
+        <paper-item style="background: white" ng-click="toggle($event)">{{req.name}}</paper-item>
         <core-collapse>
-          <div class="collapse-content">
-            <p>Description : {{req.text}}</p>
-            <p>Followers : ...</p>
-            <!--Is developers the same as contributors-->
-            <p>Developers : ...</p>
-            <p>Votes : maybe also a colorful bar</p>
-            <div>
-              <paper-button>Become Lead</paper-button>
-              <paper-button>Edit</paper-button>
-              <paper-button>Delete</paper-button>
+          <div class="collapse-content" style="display: -webkit-box;">
+            <div style="width: 100%">
+              <p>Description : {{req.description}}</p>
+              <p ng-repeat="user in users | filter : {id : req.leaderId}">Leader : {{user.firstname}} {{user.lastname}}</p>
+              <!--Is developers the same as contributors-->
+              <p><span> Followers : ... Developers : ...</span></p>
+              <p>Votes : maybe also a colorful bar</p>
+              <paper-item style="background: white" ng-click="toggle($event)">Attachments</paper-item>
+              <core-collapse>
+                Here be attachments
+              </core-collapse>
+              <paper-item style="background: white" ng-click="toggle($event)">Comments</paper-item>
+              <core-collapse>
+                Here be comments
+              </core-collapse>
             </div>
-            <paper-item style="background: white" ng-click="toggle($event)">Attachments</paper-item>
-            <core-collapse>
-              Here be attachments
-            </core-collapse>
-            <paper-item style="background: white" ng-click="toggle($event)">Comments</paper-item>
-            <core-collapse>
-              Here be comments
-            </core-collapse>
+
+            <div style="width: 50px">
+              <paper-icon-button icon="icons:more-vert" ng-click="" ></paper-icon-button>
+              <div>
+                <paper-button>Become Lead</paper-button>
+                <paper-button>Edit</paper-button>
+                <paper-button>Delete</paper-button>
+              </div>
+            </div>
+
           </div>
         </core-collapse>
       </div>

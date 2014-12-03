@@ -25,7 +25,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       {id : '2',name : 'Project 2', description : 'This is a cool project 2', visibility : '+', leader : '2'}
     ];
 
-    //activeComponent holds the component that is currently selected and components everythings else from the active project
+    //activeComponent holds the component that is currently selected and components everything else from the active project
     $scope.activeComponent = {id : '1', name : 'Component 1', description : 'This is a cool component 1', projectId : '1', leaderId : '1'};
     $scope.components = [
       {id : '1', name : 'Component 1', description : 'This is a cool component 1', projectId : '1', leaderId : '1'},
@@ -33,7 +33,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     ];
 
 
-    $scope.activeComponentRequirements = [
+    $scope.requirements = [
       {id : '1', name : 'Requirement 1', description : 'Please update the ui 1', projectId : '1', leaderId : '1'},
       {id : '2', name : 'Requirement 2', description : 'Please update the ui 2', projectId : '1', leaderId : '1'},
       {id : '3', name : 'Requirement 3', description : 'Please update the ui 3', projectId : '1', leaderId : '1'}
@@ -77,19 +77,19 @@ angular.module('requirementsBazaarWebFrontendApp')
       //TODO query the requirements for the component
       //Demo Data
       if($scope.activeComponent.id === '1'){
-        $scope.activeComponentRequirements = [
+        $scope.requirements = [
           {id : '1', name : 'Requirement 1', description : 'Please update the ui 1', projectId : '1', leaderId : '1'},
           {id : '2', name : 'Requirement 2', description : 'Please update the ui 2', projectId : '1', leaderId : '1'},
           {id : '3', name : 'Requirement 3', description : 'Please update the ui 3', projectId : '1', leaderId : '1'}
         ];
       }else if($scope.activeComponent.id === '2'){
-        $scope.activeComponentRequirements = [
+        $scope.requirements = [
           {id : '1', name : 'Requirement 1', description : 'Please update the ui 1', projectId : '1', leaderId : '1'},
-          {id : '4', name : 'Requirement 4', description : 'Please update the ui 4', projectId : '1', leaderId : '1'},
+          {id : '4', name : 'Requirement 4', description : 'Please update the ui 4', projectId : '1', leaderId : '1'}
         ];
       }else{
         //Component 3 belong to project 2
-        $scope.activeComponentRequirements = [
+        $scope.requirements = [
           {id : '5', name : 'Requirement 5', description : 'Please update the ui 5', projectId : '2', leaderId : '1'},
           {id : '6', name : 'Requirement 6', description : 'Please update the ui 6', projectId : '2', leaderId : '1'}
         ];
