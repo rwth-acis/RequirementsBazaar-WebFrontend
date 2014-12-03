@@ -14,8 +14,6 @@
     <!-- 1. Load webcomponents.js for polyfill support. -->
     <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
 
-    <!--<script src="bower_components/platform/platform.js"></script>-->
-
     <!-- 2. Use an HTML Import to bring in the element. -->
     <link rel="import" href="bower_components/paper-button/paper-button.html">
     <link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
@@ -27,6 +25,7 @@
     <link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
     <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
     <link rel="import" href="bower_components/core-icons/core-icons.html">
+    <link rel="import" href="bower_components/core-icons/social-icons.html">
     <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
 
     <link href="bower_components/core-collapse/core-collapse.html" rel="import">
@@ -39,6 +38,7 @@
     <link href="bower_components/paper-dropdown/paper-dropdown.html" rel="import">
     <link href="bower_components/core-selector/core-selector.html" rel="import">
     <link href="bower_components/paper-item/paper-item.html" rel="import">
+    <link href="bower_components/paper-shadow/paper-shadow.html" rel="import">
 
     <link href="bower_components/paper-item/paper-item.html" rel="import">
     <link href="bower_components/core-image/core-image.html" rel="import">
@@ -47,6 +47,41 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+
+
+    <style>
+      .collapse-content {
+        padding: 15px;
+        border: 1px solid #dedede;
+      }
+
+      paper-icon-button /deep/ core-icon[role=img] {
+        height: 35px;
+        width: 35px;
+      }
+
+      #profileDiv, #NotificationDiv{
+        background: #fff;
+        color:black;
+        border: 1px solid #ccc;
+        border-color: rgba(0,0,0,.2);
+        box-shadow: 0 2px 10px rgba(0,0,0,.2);
+        position: absolute;
+        right: 20px;
+        top: 68px;
+        width: 300px;
+        z-index:100;
+      }
+      #profileDivFooter{
+        background: #f5f5f5;
+        border-top: 1px solid #ccc;
+        border-color: rgba(0,0,0,.2);
+        padding: 10px 0;
+        width: 100%;
+        display: table;
+        /*bottom: 0px; position: absolute; height: 80px;*/
+      }
+    </style>
 
   </head>
   <body fullbleed layout vertical unresolved>
@@ -58,15 +93,15 @@
     <div class="container" ng-view=""></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+     <!--<script>-->
+       <!--(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){-->
+       <!--(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),-->
+       <!--m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)-->
+       <!--})(window,document,'script','//www.google-analytics.com/analytics.js','ga');-->
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
+       <!--ga('create', 'UA-XXXXX-X');-->
+       <!--ga('send', 'pageview');-->
+    <!--</script>-->
 
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>

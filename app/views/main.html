@@ -6,7 +6,7 @@
       <span>Choose Component</span>
     </core-toolbar>
     <core-menu id="componentSelection">
-      <paper-item ng-repeat="component in activeProjectComponents" ng-click="selectComponent(component.name, component.description)">{{component.name}}</paper-item>
+      <paper-item ng-repeat="component in components" ng-click="selectComponent(component.name, component.description)">{{component.name}}</paper-item>
     </core-menu>
   </core-header-panel>
 
@@ -24,11 +24,27 @@
         </paper-dropdown>
       </paper-dropdown-menu>
 
+
       <span flex>{{activeProject.description}}</span>
-      <core-item label="Log Out">
-      </core-item>
-      <core-item label="PP">
-      </core-item>
+
+      <!--Open Notifications button and div-->
+      <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" ></paper-icon-button>
+      <div id="NotificationDiv" ng-show="isNotificationsOpen">
+        <p>Here will be notifications</p>
+      </div>
+
+      <!--Open Profile button and div-->
+      <paper-icon-button src="https://dl.dropboxusercontent.com/u/42434834/FakeProfilePic.jpg" ng-click="isProfileOpen = !isProfileOpen"></paper-icon-button>
+      <div id="profileDiv" ng-show="isProfileOpen">
+        <div id="profileDivContent" style="margin: 12px">
+          <p>{{activeUser.firstname}} {{activeUser.lastname}}</p>
+          <p style="color: #808080; font-size: small">{{activeUser.email}}</p>
+          <p style="color: #808080; font-size: small">Is admin : {{activeUser.admin}}</p>
+        </div>
+        <div id="profileDivFooter">
+          <paper-button ng-click="signOut()" style="background-color: #4285f4;">Sign Out</paper-button>
+        </div>
+      </div>
     </core-toolbar>
 
 
@@ -39,24 +55,31 @@
         <p ng-bind="activeComponent.description"></p>
       </div>
 
-      <core-list ng-model="activeComponentRequirements" height="400px">
-        <template>
-          <div>{{name}}</div>
-        </template>
-      </core-list>
-
-      <!--<div style="background: white;padding: 5px;margin-top: 50px" ng-repeat="requirement in activeComponentRequirements" >-->
-
-        <!--<div class="heading">{{requirement.name}}</div>-->
-        <!--<!--<core-collapse class="collapse" class="core-collapse-closed" style="overflow: hidden; height: 0px;">-->
-          <!--<!--<div class="component_content">-->
-            <!--<!--<div>-->
-              <!--<!--{{requirement.description}}-->
-            <!--<!--</div>-->
-          <!--<!--</div>-->
-        <!--<!--</core-collapse>-->
-    <!---->
-      <!--</div>-->
+      <div ng-repeat=" req in activeComponentRequirements">
+        <paper-item style="background: white" ng-click="toggle($event)">{{req.description}}</paper-item>
+        <core-collapse>
+          <div class="collapse-content">
+            <p>Description : {{req.text}}</p>
+            <p>Followers : ...</p>
+            <!--Is developers the same as contributors-->
+            <p>Developers : ...</p>
+            <p>Votes : maybe also a colorful bar</p>
+            <div>
+              <paper-button>Become Lead</paper-button>
+              <paper-button>Edit</paper-button>
+              <paper-button>Delete</paper-button>
+            </div>
+            <paper-item style="background: white" ng-click="toggle($event)">Attachments</paper-item>
+            <core-collapse>
+              Here be attachments
+            </core-collapse>
+            <paper-item style="background: white" ng-click="toggle($event)">Comments</paper-item>
+            <core-collapse>
+              Here be comments
+            </core-collapse>
+          </div>
+        </core-collapse>
+      </div>
 
     </div>
   </core-header-panel>
