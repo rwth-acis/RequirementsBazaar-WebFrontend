@@ -42,6 +42,7 @@
           <p style="color: #808080; font-size: small">Is admin : {{activeUser.admin}}</p>
         </div>
         <div id="profileDivFooter">
+          <paper-button ng-click="editProfile()" style="background-color: #4285f4;">Edit</paper-button>
           <paper-button ng-click="signOut()" style="background-color: #4285f4;">Sign Out</paper-button>
         </div>
       </div>
@@ -52,7 +53,8 @@
     <div class="content">
       <div id="currentComponent">
         <h3 ng-bind="activeComponent.name"></h3>
-        <p ng-bind="activeComponent.description"></p>
+        <p ng-repeat="user in users | filter : {id : activeComponent.leaderId}">Leader : {{user.firstname}} {{user.lastname}}</p>
+        <p>{{activeComponent.description}}</p>
       </div>
 
       <div ng-repeat=" req in requirements">
@@ -61,7 +63,7 @@
           <div class="collapse-content" style="display: -webkit-box;">
             <div style="width: 100%">
               <p>Description : {{req.description}}</p>
-              <p ng-repeat="user in users | filter : {id : req.leaderId}">Leader : {{user.firstname}} {{user.lastname}}</p>
+              <p ng-repeat="user in users | filter : {id : req.creatorId}">Leader : {{user.firstname}} {{user.lastname}}</p>
               <!--Is developers the same as contributors-->
               <p><span> Followers : ... Developers : ...</span></p>
               <p>Votes : maybe also a colorful bar</p>

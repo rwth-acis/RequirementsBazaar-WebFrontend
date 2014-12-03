@@ -32,11 +32,10 @@ angular.module('requirementsBazaarWebFrontendApp')
       {id : '2', name : 'Component 2', description : 'This is a cool component 2', projectId : '1', leaderId : '2'}
     ];
 
-
     $scope.requirements = [
-      {id : '1', name : 'Requirement 1', description : 'Please update the ui 1', projectId : '1', leaderId : '1'},
-      {id : '2', name : 'Requirement 2', description : 'Please update the ui 2', projectId : '1', leaderId : '1'},
-      {id : '3', name : 'Requirement 3', description : 'Please update the ui 3', projectId : '1', leaderId : '1'}
+      {id : '1', name : 'Requirement 1', description : 'Please update the ui 1', projectId : '1', creatorId : '1'},
+      {id : '2', name : 'Requirement 2', description : 'Please update the ui 2', projectId : '1', creatorId : '2'},
+      {id : '3', name : 'Requirement 3', description : 'Please update the ui 3', projectId : '1', creatorId : '3'}
     ];
 
     $scope.selectProject = function(project){
@@ -78,20 +77,20 @@ angular.module('requirementsBazaarWebFrontendApp')
       //Demo Data
       if($scope.activeComponent.id === '1'){
         $scope.requirements = [
-          {id : '1', name : 'Requirement 1', description : 'Please update the ui 1', projectId : '1', leaderId : '1'},
-          {id : '2', name : 'Requirement 2', description : 'Please update the ui 2', projectId : '1', leaderId : '1'},
-          {id : '3', name : 'Requirement 3', description : 'Please update the ui 3', projectId : '1', leaderId : '1'}
+          {id : '1', name : 'Requirement 1', description : 'Please update the ui 1', projectId : '1', creatorId : '1'},
+          {id : '2', name : 'Requirement 2', description : 'Please update the ui 2', projectId : '1', creatorId : '2'},
+          {id : '3', name : 'Requirement 3', description : 'Please update the ui 3', projectId : '1', creatorId : '3'}
         ];
       }else if($scope.activeComponent.id === '2'){
         $scope.requirements = [
-          {id : '1', name : 'Requirement 1', description : 'Please update the ui 1', projectId : '1', leaderId : '1'},
-          {id : '4', name : 'Requirement 4', description : 'Please update the ui 4', projectId : '1', leaderId : '1'}
+          {id : '1', name : 'Requirement 1', description : 'Please update the ui 1', projectId : '1', creatorId : '1'},
+          {id : '4', name : 'Requirement 4', description : 'Please update the ui 4', projectId : '1', creatorId : '1'}
         ];
       }else{
         //Component 3 belong to project 2
         $scope.requirements = [
-          {id : '5', name : 'Requirement 5', description : 'Please update the ui 5', projectId : '2', leaderId : '1'},
-          {id : '6', name : 'Requirement 6', description : 'Please update the ui 6', projectId : '2', leaderId : '1'}
+          {id : '5', name : 'Requirement 5', description : 'Please update the ui 5', projectId : '2', creatorId : '3'},
+          {id : '6', name : 'Requirement 6', description : 'Please update the ui 6', projectId : '2', creatorId : '3'}
         ];
       }
     };
@@ -103,6 +102,11 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.signOut = function(){
       window.alert('TODO sign out');
     };
+
+    $scope.editProfile = function(){
+      window.alert('TODO');
+    };
+
 
   });
 
