@@ -27,12 +27,6 @@
   border-top: 1px solid #e5e5e5;
 }
 
-/* Customize container */
-@media (min-width: 768px) {
-  .container {
-    max-width: 730px;
-  }
-}
 .container-narrow > hr {
   margin: 30px 0;
 }
@@ -78,15 +72,16 @@
 
 body {
   font-family: sans-serif;
+  margin: 0px;
 }
 core-header-panel {
-  background-color: #ececec;
+  height: 100%;
 }
 
 core-toolbar {
-  background-color: #4285f4;
-  color: white;
-}
+   background-color: #4285f4;
+   color: white;
+ }
 
 #componentSelection {
   background-color: #fff;
@@ -118,10 +113,6 @@ core-toolbar {
   padding-right: 10px;
 }
 
-#mainContainer {
-  background: #FFF;
-}
-
 #navheader {
   background-color: #56BA89;
 }
@@ -133,7 +124,6 @@ core-toolbar {
 }
 
 #currentComponent {
-  height: 100px;
   background: white;
   margin-bottom: 12px;
   padding: 12px;
@@ -141,4 +131,15 @@ core-toolbar {
 
 .component_content {
   padding: 10px;
+}
+
+
+.core-header{
+  height: 60px;
+  line-height: 60px;
+  font-size: 18px;
+  padding: 0 10px;
+  background-color: #4F7DC9;
+  color: #FFF;
+  transition: height 0.2s;
 }

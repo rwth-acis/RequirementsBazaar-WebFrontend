@@ -28,7 +28,10 @@
     "core-selector": "Polymer/core-selector#~0.5.1",
     "paper-item": "Polymer/paper-item#~0.5.1",
     "paper-shadow": "Polymer/paper-shadow#~0.5.1",
-    "core-image": "Polymer/core-image#~0.5.1"
+    "core-image": "Polymer/core-image#~0.5.1",
+    "core-list": "Polymer/core-list#~0.5.1",
+    "paper-input": "Polymer/paper-input#~0.5.1",
+    "paper-toast": "Polymer/paper-toast#~0.5.2"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",

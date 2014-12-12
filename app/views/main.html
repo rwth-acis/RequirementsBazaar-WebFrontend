@@ -1,95 +1,139 @@
-<core-drawer-panel id="drawerPanel" drawerWidth="200px" forceNarrow >
+<!--The main panel of the application-->
+<core-header-panel flex>
 
-  <!--The side bar of the application / component selection-->
-  <core-header-panel drawer>
-    <core-toolbar id="navheader'">
-      <span>Choose Component</span>
-    </core-toolbar>
-    <core-menu id="componentSelection">
-      <paper-item ng-repeat="component in components" ng-click="selectComponent(component)">{{component.name}}</paper-item>
-    </core-menu>
-  </core-header-panel>
+  <!--The top navigation bar-->
+  <core-toolbar id="mainheader">
+    <paper-icon-button id="navicon" icon="menu" ng-click="showSidebar = !showSidebar"></paper-icon-button>
+    <paper-dropdown-menu label="{{activeProject.name}}" id="projectSelection" style="color:#000000;">
+      <paper-dropdown class="dropdown">
+        <core-selector>
+          <paper-item ng-repeat="project in projects" value="{{project.name}}" ng-click="selectProj(project)">{{project.name}}</paper-item>
+        </core-selector>
+      </paper-dropdown>
+    </paper-dropdown-menu>
 
-  <!--The main panel of the application-->
-  <core-header-panel main>
+    <span flex>{{activeProject.description}}</span>
 
-    <!--The top navigation bar-->
-    <core-toolbar id="mainheader">
-      <paper-icon-button id="navicon" icon="menu" onclick="drawerPanel.togglePanel();"></paper-icon-button>
-      <paper-dropdown-menu label="{{activeProject.name}}" id="projectSelection" style="color:#000000;">
-        <paper-dropdown class="dropdown">
-          <core-selector>
-            <paper-item ng-repeat="project in projects" value="{{project.name}}" ng-click="selectProject(project)">{{project.name}}</paper-item>
-          </core-selector>
-        </paper-dropdown>
-      </paper-dropdown-menu>
+    <!--Open Notifications button and div-->
+    <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen"></paper-icon-button>
+    <div id="NotificationDiv" ng-show="isNotificationsOpen">
+      <p>Here will be notifications</p>
+    </div>
 
-
-      <span flex>{{activeProject.description}}</span>
-
-      <!--Open Notifications button and div-->
-      <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" ></paper-icon-button>
-      <div id="NotificationDiv" ng-show="isNotificationsOpen">
-        <p>Here will be notifications</p>
+    <!--Open Profile button and div-->
+    <paper-icon-button src="https://dl.dropboxusercontent.com/u/42434834/FakeProfilePic.jpg" ng-click="isProfileOpen = !isProfileOpen"></paper-icon-button>
+    <div id="profileDiv" ng-show="isProfileOpen">
+      <div id="profileDivContent" style="margin: 12px">
+        <p>{{activeUser.firstname}} {{activeUser.lastname}}</p>
+        <p style="color: #808080; font-size: small">{{activeUser.email}}</p>
+        <p style="color: #808080; font-size: small">Is admin : {{activeUser.admin}}</p>
       </div>
-
-      <!--Open Profile button and div-->
-      <paper-icon-button src="https://dl.dropboxusercontent.com/u/42434834/FakeProfilePic.jpg" ng-click="isProfileOpen = !isProfileOpen"></paper-icon-button>
-      <div id="profileDiv" ng-show="isProfileOpen">
-        <div id="profileDivContent" style="margin: 12px">
-          <p>{{activeUser.firstname}} {{activeUser.lastname}}</p>
-          <p style="color: #808080; font-size: small">{{activeUser.email}}</p>
-          <p style="color: #808080; font-size: small">Is admin : {{activeUser.admin}}</p>
-        </div>
-        <div id="profileDivFooter">
-          <paper-button ng-click="editProfile()" style="background-color: #4285f4;">Edit</paper-button>
-          <paper-button ng-click="signOut()" style="background-color: #4285f4;">Sign Out</paper-button>
-        </div>
+      <div id="profileDivFooter">
+        <paper-button ng-click="editProfile()" style="background-color: #4285f4;">Edit</paper-button>
+        <paper-button ng-click="signOut()" style="background-color: #4285f4;">Sign Out</paper-button>
       </div>
-    </core-toolbar>
+    </div>
+  </core-toolbar>
+
+  <div id="containerMain">
+    <!--The side bar of the application / component selection-->
+    <div id="sidebar" ng-show="!showSidebar" style="position: absolute;width: 195px;background-color: white;z-index: 100">
+      <!--Create a new component-->
+      <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block;margin: 0px">New Component</paper-button>
+      <div ng-hide="!showCreateCompDiv" style="background-color: white;margin-bottom: 20px">
+        <paper-input-decorator label="Name">
+          <paper-autogrow-textarea>
+            <textarea ng-model="newCompName"></textarea>
+          </paper-autogrow-textarea>
+        </paper-input-decorator>
+        <paper-input-decorator label="Description">
+          <paper-autogrow-textarea>
+            <textarea ng-model="newCompDesc"></textarea>
+          </paper-autogrow-textarea>
+        </paper-input-decorator>
+        <paper-icon-button ng-click="submitNewComponent()" icon="icons:check"></paper-icon-button>
+        <paper-icon-button ng-click="clearComponentSubmit()" icon="icons:clear"></paper-icon-button>
+      </div>
+      <!--Show component list-->
+      <core-menu id="componentSelection" style="box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);">
+        <paper-item ng-repeat="component in components" ng-click="selectComp(component)">{{component.name}}</paper-item>
+      </core-menu>
+    </div>
 
 
-    <!--Place Requirements Here-->
+    <!--The main content panel-->
     <div class="content">
-      <div id="currentComponent">
-        <h3 ng-bind="activeComponent.name"></h3>
-        <p ng-repeat="user in users | filter : {id : activeComponent.leaderId}">Leader : {{user.firstname}} {{user.lastname}}</p>
-        <p>{{activeComponent.description}}</p>
+      <!--Currently selected component-->
+      <div id="currentComponent" style="display: -webkit-box;">
+        <div style="width: 80%">
+          <h2 ng-bind="activeComponent.name"></h2>
+          <p ng-bind="activeComponent.description"></p>
+        </div>
+        <div style="width: 20%">
+          <p style="font-size: small">Component lead:</p>
+          <p>
+            <span ng-bind="componentLeader.firstName"></span>
+            <span ng-bind="componentLeader.lastName"></span>
+          </p>
+          <paper-icon-button icon="icons:add-circle" ng-click="showCreateReqDiv=!showCreateReqDiv"></paper-icon-button>
+          <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
+          <paper-icon-button icon="icons:delete"></paper-icon-button>
+        </div>
+      </div>
+      <div ng-hide="!showCreateReqDiv" style="background-color: white;margin-bottom: 20px">
+        <p>Add requirement</p>
+        <paper-input-decorator label="Name">
+          <paper-autogrow-textarea>
+            <textarea ng-model="newReqName"></textarea>
+          </paper-autogrow-textarea>
+        </paper-input-decorator>
+        <paper-input-decorator label="Description">
+          <paper-autogrow-textarea>
+            <textarea ng-model="newReqDesc"></textarea>
+          </paper-autogrow-textarea>
+        </paper-input-decorator>
+        <paper-icon-button ng-click="submitNewReq()" icon="icons:check"></paper-icon-button>
+        <paper-icon-button ng-click="clearReqSubmit()" icon="icons:clear"></paper-icon-button>
       </div>
 
+      <!--List representing the requirements-->
       <div ng-repeat=" req in requirements">
-        <paper-item style="background: white" ng-click="toggle($event)">{{req.name}}</paper-item>
-        <core-collapse>
-          <div class="collapse-content" style="display: -webkit-box;">
-            <div style="width: 100%">
-              <p>Description : {{req.description}}</p>
-              <p ng-repeat="user in users | filter : {id : req.creatorId}">Leader : {{user.firstname}} {{user.lastname}}</p>
-              <!--Is developers the same as contributors-->
+        <paper-item style="background: white; font-size: large" ng-click="toggle($event)">{{req.title}}</paper-item>
+        <core-collapse data-visible = 'false'>
+          <div class="collapse-content" style="display: -webkit-box; background-color: white">
+            <div style="width: 80%">
+              <p>{{req.description}}</p>
+              <p>Leader : </p>
+              Is developers the same as contributors
               <p><span> Followers : ... Developers : ...</span></p>
               <p>Votes : maybe also a colorful bar</p>
-              <paper-item style="background: white" ng-click="toggle($event)">Attachments</paper-item>
+              <paper-button style="background-color: #4285f4;" ng-click="toggle($event)">Attachments</paper-button>
               <core-collapse>
                 Here be attachments
               </core-collapse>
-              <paper-item style="background: white" ng-click="toggle($event)">Comments</paper-item>
+              </br>
+              <paper-button style="background-color: #4285f4;" ng-click="toggle($event)">Comments</paper-button>
               <core-collapse>
                 Here be comments
               </core-collapse>
             </div>
 
-            <div style="width: 50px">
-              <paper-icon-button icon="icons:more-vert" ng-click="" ></paper-icon-button>
-              <div>
-                <paper-button>Become Lead</paper-button>
-                <paper-button>Edit</paper-button>
-                <paper-button>Delete</paper-button>
+            <div style="width: 20%">
+              <paper-icon-button icon="icons:more-vert" ng-click="show=!show" style="float: right;"></paper-icon-button>
+              <div ng-hide="!show">
+                <paper-button style="width: 100%">Become Lead</paper-button>
+                <paper-icon-button icon="icons:favorite"></paper-icon-button>
+                <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
+                <paper-icon-button icon="icons:thumb-up"></paper-icon-button>
+                <paper-icon-button icon="icons:thumb-down"></paper-icon-button>
+                <paper-icon-button icon="icons:delete"></paper-icon-button>
               </div>
             </div>
-
           </div>
         </core-collapse>
+        </br>
       </div>
 
     </div>
-  </core-header-panel>
-</core-drawer-panel>
+  </div>
+</core-header-panel>
