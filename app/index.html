@@ -20,9 +20,9 @@
     <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
     <link rel="import" href="bower_components/core-menu/core-menu.html">
     <link rel="import" href="bower_components/core-item/core-item.html">
-    <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
     <link rel="import" href="bower_components/core-icons/core-icons.html">
     <link rel="import" href="bower_components/core-icons/social-icons.html">
+    <link rel="import" href="/bower_components/core-icons/editor-icons.html">
     <link rel="import" href="bower_components/core-collapse/core-collapse.html">
     <link rel="import" href="bower_components/core-dropdown/core-dropdown.html">
     <link rel="import" href="bower_components/core-menu-button/core-menu-button.html">
@@ -36,6 +36,12 @@
     <link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
     <link rel="import" href="bower_components/paper-dropdown/paper-dropdown.html">
     <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="bower_components/paper-input/paper-input.html">
+
+
+    <!--Might be missing from bower-->
+    <link rel="import" href="bower_components/paper-input/paper-input-decorator.html">
+    <link rel="import" href="bower_components/paper-input/paper-autogrow-textarea.html">
 
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
@@ -74,16 +80,28 @@
         display: table;
         /*bottom: 0px; position: absolute; height: 80px;*/
       }
+
+      paper-toast {
+        bottom: 40px;
+        left: 10px;
+      }
+
     </style>
 
+    <script>
+      function discardDraft(el) {
+        el.show();
+      }
+    </script>
+
   </head>
-  <body fullbleed layout vertical unresolved>
+  <body unresolved>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <div class="container" ng-view="" style="height: 1000px;background-color: #ececec;"></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <!--<script>-->
