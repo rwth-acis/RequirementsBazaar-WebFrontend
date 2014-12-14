@@ -1,121 +1,19 @@
 
-
-/* Everything but the jumbotron gets side spacing for mobile first views */
-.header,
-.marketing,
-.footer {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-/* Custom page header */
-.header {
-  border-bottom: 1px solid #e5e5e5;
-}
-/* Make the masthead heading the same height as the navigation */
-.header h3 {
-  margin-top: 0;
-  margin-bottom: 0;
-  line-height: 40px;
-  padding-bottom: 19px;
-}
-
-/* Custom page footer */
-.footer {
-  padding-top: 19px;
-  color: #777;
-  border-top: 1px solid #e5e5e5;
-}
-
-.container-narrow > hr {
-  margin: 30px 0;
-}
-
-/* Main marketing message and sign up button */
-.jumbotron {
-  text-align: center;
-  border-bottom: 1px solid #e5e5e5;
-}
-.jumbotron .btn {
-  font-size: 21px;
-  padding: 14px 24px;
-}
-
-/* Supporting marketing content */
-.marketing {
-  margin: 40px 0;
-}
-.marketing p + h4 {
-  margin-top: 28px;
-}
-
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-  /* Remove the padding we set earlier */
-  .header,
-  .marketing,
-  .footer {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  /* Space out the masthead */
-  .header {
-    margin-bottom: 30px;
-  }
-  /* Remove the bottom border on the jumbotron for visual effect */
-  .jumbotron {
-    border-bottom: 0;
-  }
-}
-
-
-
 body {
   font-family: sans-serif;
-  margin: 0px;
+  background-color: #ececec;
 }
-core-header-panel {
-  height: 100%;
-}
-
-core-toolbar {
-   background-color: #4285f4;
-   color: white;
- }
 
 #componentSelection {
   background-color: #fff;
-  position: absolute;
-  min-height: 100%;
-  min-width: 100%;
-  margin: 0px;
+  margin: 0;
+  box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
 }
 
-#componentSelection > core-item{
-  padding-left: 12px;
-  padding-right: 12px;
-}
-
-.core-selected {
+#componentSelection paper-item:hover{
   background-color: #ececec;
 }
 
-#componentSelection core-item:hover{
-  background-color: #ececec;
-}
-
-#projectSelection{
-  border-bottom: none;
-}
-
-#projectSelection core-item{
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-#navheader {
-  background-color: #56BA89;
-}
 .content {
   max-width: 1040px;
   margin-left: auto;
@@ -129,17 +27,63 @@ core-toolbar {
   padding: 12px;
 }
 
-.component_content {
-  padding: 10px;
+.collapse-content {
+  padding: 15px;
+  border: 1px solid #dedede;
 }
 
+#profileDiv, #NotificationDiv{
+  background: #fff;
+  color:black;
+  border: 1px solid #ccc;
+  border-color: rgba(0,0,0,.2);
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+  position: absolute;
+  right: 20px;
+  top: 68px;
+  width: 300px;
+  z-index:100;
+}
+#profileDivFooter{
+  background: #f5f5f5;
+  border-top: 1px solid #ccc;
+  border-color: rgba(0,0,0,.2);
+  padding: 10px 0;
+  width: 100%;
+  display: table;
+}
 
-.core-header{
-  height: 60px;
-  line-height: 60px;
-  font-size: 18px;
-  padding: 0 10px;
-  background-color: #4F7DC9;
-  color: #FFF;
-  transition: height 0.2s;
+/*
+
+CSS rules that apply to all core-elements
+
+*/
+
+core-header-panel {
+  position: inherit;
+}
+
+core-toolbar {
+  background-color: #4285f4;
+  color: white;
+}
+
+/*
+
+CSS rules that apply to all paper elements
+
+*/
+
+paper-dropdown-menu{
+  border-bottom: none;
+  color:#000000;
+}
+
+paper-dropdown-menu paper-item:hover{
+  background-color: #ececec;
+}
+
+paper-icon-button /deep/ core-icon[role=img] {
+  height: 35px;
+  width: 35px;
 }

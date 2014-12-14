@@ -88,7 +88,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     getProjects();
 
     $scope.toggle = function(clickEvent) {
-      var collapse = clickEvent.toElement.nextElementSibling;
+      var collapse = clickEvent.target.nextElementSibling;
 
       if(collapse.getAttribute('data-visible') === 'false'){
         console.log('opened requirement');
