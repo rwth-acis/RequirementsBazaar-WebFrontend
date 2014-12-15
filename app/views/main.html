@@ -11,8 +11,7 @@
         </core-selector>
       </paper-dropdown>
     </paper-dropdown-menu>
-
-    <span flex>{{activeProject.description}}</span>
+    <span flex></span>
 
     <!--Open Notifications button and div-->
     <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen"></paper-icon-button>
@@ -29,8 +28,8 @@
         <p style="color: #808080; font-size: small">Is admin : {{activeUser.admin}}</p>
       </div>
       <div id="profileDivFooter">
-        <paper-button ng-click="editProfile()" style="background-color: #4285f4;">Edit</paper-button>
-        <paper-button ng-click="signOut()" style="background-color: #4285f4;">Sign Out</paper-button>
+        <paper-button ng-click="editProfile()">Edit</paper-button>
+        <paper-button ng-click="signOut()">Sign Out</paper-button>
       </div>
     </div>
   </core-toolbar>
@@ -39,7 +38,10 @@
     <!--The side bar of the application / component selection-->
     <div id="sidebar" ng-show="!showSidebar" style="position: absolute;width: 195px;background-color: white;z-index: 10">
       <!--Create a new component-->
-      <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block;margin: 0px">New Component</paper-button>
+      <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block;">
+        <core-icon icon="icons:add-circle" style="padding-right: 5px"></core-icon>
+        Component
+      </paper-button>
       <div ng-hide="!showCreateCompDiv" style="background-color: white;margin-bottom: 20px">
         <paper-input-decorator label="Name">
           <paper-autogrow-textarea>
@@ -78,7 +80,7 @@
           </p>
           <paper-icon-button icon="icons:add-circle" ng-click="showCreateReqDiv=!showCreateReqDiv"></paper-icon-button>
           <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
-          <paper-icon-button icon="icons:delete"></paper-icon-button>
+          <paper-icon-button icon="icons:delete" ng-click="initDeleteComponent()"></paper-icon-button>
         </div>
       </div>
       <div ng-hide="!showCreateReqDiv" style="background-color: white;margin-bottom: 20px">
@@ -98,22 +100,21 @@
       </div>
 
       <!--List representing the requirements-->
-      <div ng-repeat=" req in requirements">
-        <paper-item style="background: white; font-size: large" ng-click="toggle($event)">{{req.title}}</paper-item>
+      <div ng-repeat="req in requirements" ng-init="leader = 'loading';followers = 'loading';developers = 'loading'">
+        <paper-item style="background: white; font-size: large" ng-click="toggle($event,$index)">{{req.title}}</paper-item>
         <core-collapse data-visible = 'false'>
           <div class="collapse-content" style="display: -webkit-box; background-color: white">
             <div style="width: 80%">
               <p>{{req.description}}</p>
-              <p>Leader : </p>
-              Is developers the same as contributors
-              <p><span> Followers : ... Developers : ...</span></p>
-              <p>Votes : maybe also a colorful bar</p>
-              <paper-button style="background-color: #4285f4;" ng-click="toggle($event)">Attachments</paper-button>
+              <p>Leader : {{leader}}</p>
+              <p> Followers : {{followers}}</p>
+              <p> Developers : {{developers}}</span></p>
+              <paper-button style="background-color: #4285f4;" ng-click="toggleAttachments($event)">Attachments</paper-button>
               <core-collapse>
                 Here be attachments
               </core-collapse>
               </br>
-              <paper-button style="background-color: #4285f4;" ng-click="toggle($event)">Comments</paper-button>
+              <paper-button style="background-color: #4285f4;" ng-click="toggleComments($event)">Comments</paper-button>
               <core-collapse>
                 Here be comments
               </core-collapse>
@@ -137,4 +138,16 @@
 
     </div>
   </div>
+
+
+
+  <!--Pop-up elements-->
+  <paper-action-dialog id="deleteSomething" heading="Dialog Title" transition="core-transition-center" ng-show="warningVisible">
+    <paper-shadow z="1">
+      <p>{{warningText}}</p>
+      <paper-button affirmative ng-click="cancelDeleteComponent()">Decline</paper-button>
+      <paper-button affirmative ng-click="deleteComponent()">Accept</paper-button>
+    </paper-shadow>
+  </paper-action-dialog>
+
 </core-header-panel>

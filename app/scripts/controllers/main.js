@@ -21,6 +21,9 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.activeProject = null;
     $scope.activeComponent = null;
 
+    $scope.warningText = 'Confirm deletion !';
+    $scope.warningVisible = false;
+
     //init functions that need to be run when the user enters the page
     function getProjects(){
       reqBazService.getProjects()
@@ -39,7 +42,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.selectProj = function (project) {
       $scope.activeProject = project;
 
-      reqBazService.getComponents($scope.activeProject.id)
+      reqBazService.getComponents($scope.activeProject.id,'0','30')
         .success(function (comps) {
           $scope.components = comps;
           $scope.activeComponent = $scope.components[0];
@@ -55,8 +58,8 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.selectComp = function (component) {
       $scope.activeComponent = component;
       getUser($scope.activeComponent.leaderId,'component');
-
-      reqBazService.getRequirementsByComponent($scope.activeComponent.id,$scope.activeComponent.id)
+      console.log('get requirements for projectID: '+$scope.activeProject.id+' and componentID: '+$scope.activeComponent.id);
+      reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (reqs) {
           $scope.requirements = reqs;
           console.log($scope.requirements);
@@ -87,7 +90,8 @@ angular.module('requirementsBazaarWebFrontendApp')
     //Call the init functions
     getProjects();
 
-    $scope.toggle = function(clickEvent) {
+    $scope.toggle = function(clickEvent,index) {
+      console.log(index);
       var collapse = clickEvent.target.nextElementSibling;
 
       if(collapse.getAttribute('data-visible') === 'false'){
@@ -104,9 +108,15 @@ angular.module('requirementsBazaarWebFrontendApp')
       collapse.toggle();
     };
 
+    $scope.toggleAttachments = function(clickEvent) {
+      console.log('toggle attachments');
+    };
+    $scope.toggleComments = function(clickEvent) {
+      console.log('toggle comments');
+    };
 
 
-    //Creating a component
+    //Creates a new component
     $scope.showCreateCompDiv = false;
     $scope.newCompName = '';
     $scope.newCompDesc = '';
@@ -115,15 +125,15 @@ angular.module('requirementsBazaarWebFrontendApp')
         console.log('submit new component');
         //TODO leaderId is not used, as there is no user management yet
         var component = {description: $scope.newCompDesc, name: $scope.newCompName, leaderId: 1, projectId: $scope.activeProject.id};
-        console.log(component);
-        //TODO ask adam why the component is not created
         reqBazService.createComponent($scope.activeProject.id,component)
           .success(function (message) {
-            //console.log('success');
             console.log(message);
+            //TODO add the new component to the $scope.component and then set everything to default
+            $scope.clearComponentSubmit();
           })
           .error(function (error) {
             console.log(error.message);
+            alert('Something went wrong, please try again');
           });
       }else{
         console.log('Input field empty');
@@ -135,7 +145,36 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.newCompDesc = '';
       $scope.showCreateCompDiv = false;
     };
-
+    $scope.initDeleteComponent = function () {
+      $scope.warningText = 'Confirm deleting the component !';
+      $scope.warningVisible = true;
+    };
+    $scope.cancelDeleteComponent = function(){
+      $scope.warningText = 'Confirm deletion !';
+      $scope.warningVisible = false;
+    };
+    $scope.deleteComponent = function(){
+      $scope.warningText = 'Confirm deletion !';
+      $scope.warningVisible = false;
+      reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
+        .success(function (message) {
+          console.log(message);
+          for(var i = 0; i<$scope.components.length;i++){
+            if($scope.components[i].id === $scope.activeComponent.id){
+              $scope.components.splice(i, 1);
+              break;
+            }
+          }
+          $scope.activeComponent = null;
+          if($scope.components !== null){
+            $scope.activeComponent = $scope.components[0];
+          }
+        })
+        .error(function (error) {
+          console.log(error.message);
+          alert('Could not delete, please try again');
+        });
+    };
 
     //Creating a requirement
     $scope.showCreateReqDiv = false;
@@ -144,14 +183,18 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.submitNewReq = function(){
       if($scope.newReqName !== '' && $scope.newReqDesc !== ''){
         console.log('submit requirement');
-        //var requirement = {};
-        //reqBazService.createRequirement($scope.activeProject.id,$scope.activeComponent.id,{})
-        //  .success(function () {
-        //    console.log('success');
-        //  })
-        //  .error(function (error) {
-        //    console.log(error.message);
-        //  });
+        var requirement = {title: $scope.newReqName, description: $scope.newReqDesc, projectId: $scope.activeProject.id, leadDeveloperId : 1, creatorId : 1};
+
+        console.log($scope.activeProject.id);
+        console.log($scope.activeComponent.id);
+        console.log(requirement);
+        reqBazService.createRequirement($scope.activeProject.id,$scope.activeComponent.id,requirement)
+          .success(function (message) {
+            console.log(message);
+          })
+          .error(function (error) {
+            console.log(error.message);
+          });
 
         $scope.showCreateReqDiv = false;
         //this.createRequirement = function(projectId, componentId, requirement){
