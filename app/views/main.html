@@ -100,31 +100,45 @@
       </div>
 
       <!--List representing the requirements-->
-      <div ng-repeat="req in requirements" ng-init="leader = 'loading';followers = 'loading';developers = 'loading'">
-        <paper-item style="background: white; font-size: large" ng-click="toggle($event,$index)">{{req.title}}</paper-item>
+      <div ng-repeat="req in requirements">
+        <paper-item style="background: white; font-size: large" ng-click="toggleComponent($event,req)">{{req.title}}</paper-item>
         <core-collapse data-visible = 'false'>
           <div class="collapse-content" style="display: -webkit-box; background-color: white">
             <div style="width: 80%">
               <p>{{req.description}}</p>
-              <p>Leader : {{leader}}</p>
-              <p> Followers : {{followers}}</p>
-              <p> Developers : {{developers}}</span></p>
-              <paper-button style="background-color: #4285f4;" ng-click="toggleAttachments($event)">Attachments</paper-button>
+              <p>Leader : {{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}</p>
+              <div style="background-color: #00b3ee">
+                <p>People who follow the project are</p>
+                <p ng-repeat="follower in req.followers">
+                  {{follower.firstName}}
+                </p>
+              </div>
+              <div style="background-color: #0f9d58">
+                <p>Developers for the project</p>
+                <p ng-repeat="dev in req.developers">
+                  {{dev.firstName}}
+                </p>
+              </div>
+              <p>Created by : {{req.creator.firstName}} {{req.creator.lastName}}</p>
+              <paper-button ng-click="toggleAttachments($event)">Attachments</paper-button>
               <core-collapse>
                 Here be attachments
+                {{req.attachments}}
               </core-collapse>
               </br>
-              <paper-button style="background-color: #4285f4;" ng-click="toggleComments($event)">Comments</paper-button>
+              <paper-button ng-click="toggleComments($event)">Comments</paper-button>
               <core-collapse>
                 Here be comments
+                {{req.comments}}
               </core-collapse>
             </div>
 
+            <!--Sidebar for the individal requirements-->
             <div style="width: 20%">
               <paper-icon-button icon="icons:more-vert" ng-click="show=!show" style="float: right;"></paper-icon-button>
               <div ng-hide="!show">
                 <paper-button style="width: 100%">Become Lead</paper-button>
-                <paper-icon-button icon="icons:favorite"></paper-icon-button>
+                <paper-icon-button icon="icons:favorite" ng-click="followRequirement($event,req)"></paper-icon-button>
                 <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
                 <paper-icon-button icon="icons:thumb-up"></paper-icon-button>
                 <paper-icon-button icon="icons:thumb-down"></paper-icon-button>
@@ -145,7 +159,7 @@
   <paper-action-dialog id="deleteSomething" heading="Dialog Title" transition="core-transition-center" ng-show="warningVisible">
     <paper-shadow z="1">
       <p>{{warningText}}</p>
-      <paper-button affirmative ng-click="cancelDeleteComponent()">Decline</paper-button>
+      <paper-button affirmative ng-click="resetDeleteComponent()">Decline</paper-button>
       <paper-button affirmative ng-click="deleteComponent()">Accept</paper-button>
     </paper-shadow>
   </paper-action-dialog>

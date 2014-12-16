@@ -1,13 +1,4 @@
 
-/*html /deep/ paper-dialog {*/
-  /*color: green;*/
-/*}*/
-
-/*html /deep/ paper-dialog::shadow #scroller {*/
-  /*height: 300px;*/
-  /*width: 300px;*/
-/*}*/
-
 #deleteSomething{
   position: fixed;
   z-index: 12;
@@ -73,7 +64,7 @@ body {
 }
 
 #profileDivFooter paper-button{
-  background-color: #669900;
+  /*background-color: #669900;*/
   color: white;
 }
 
@@ -119,4 +110,5 @@ paper-dropdown-menu::shadow #label, paper-dropdown-menu::shadow #arrow{
 
 paper-button {
   margin: 10px;
+  background-color: #669900;;
 }

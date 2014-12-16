@@ -13,7 +13,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.projects = null;
     $scope.components = null;
     $scope.requirements = null;
-    $scope.activeUser = {id : '1', firstname : 'Kristjan', lastname : 'Liiva', email : 'liiva@web.com', admin : 'true', Las2PeerId :'000', username : 'KristjanLiiva'};
+    $scope.activeUser = {id : '2', firstname : 'Max2', lastname : 'Mustermann2', email : 'Max@Mustermann2.de', admin : 'true', Las2PeerId :'2'};
 
     $scope.projectLeader = null;
     $scope.componentLeader = null;
@@ -62,6 +62,17 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (reqs) {
           $scope.requirements = reqs;
+          for(var i = 0; i<$scope.requirements.length;i++){
+            //TODO see if I can come up with something better
+            $scope.requirements[i].creator = {firstName : 'loading'};
+            $scope.requirements[i].leadDeveloper = {firstName : 'loading'};
+            $scope.requirements[i].followers = [];
+            $scope.requirements[i].developers = [];
+            $scope.requirements[i].contributors = [];
+            $scope.requirements[i].attachments = [];
+            $scope.requirements[i].comments = [];
+            $scope.requirements[i].components = [];
+          }
           console.log($scope.requirements);
         })
         .error(function (error) {
@@ -90,16 +101,28 @@ angular.module('requirementsBazaarWebFrontendApp')
     //Call the init functions
     getProjects();
 
-    $scope.toggle = function(clickEvent,index) {
-      console.log(index);
+    $scope.toggleComponent = function(clickEvent,req) {
+      //console.log(req);
       var collapse = clickEvent.target.nextElementSibling;
-
       if(collapse.getAttribute('data-visible') === 'false'){
         console.log('opened requirement');
         collapse.setAttribute('data-visible', 'true');
-
         //Get all the missing pieces of information, like leader, follower, votes
-
+        //Get leader
+        reqBazService.getRequirement(req.id)
+          .success(function (requirement) {
+            req.creator = requirement.creator;
+            req.attachments = requirement.attachments;
+            req.components = requirement.components;
+            req.leadDeveloper = requirement.leadDeveloper;
+            req.followers = requirement.followers;
+            req.developers = requirement.developers;
+            req.contributors = requirement.contributors;
+          })
+          .error(function (error) {
+            console.log(error.message);
+            alert('Something went wrong, please try again');
+          });
       }else{
         collapse.setAttribute('data-visible', 'false');
       }
@@ -114,6 +137,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.toggleComments = function(clickEvent) {
       console.log('toggle comments');
     };
+
 
 
     //Creates a new component
@@ -149,14 +173,13 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.warningText = 'Confirm deleting the component !';
       $scope.warningVisible = true;
     };
-    $scope.cancelDeleteComponent = function(){
+    $scope.resetDeleteComponent = function(){
       $scope.warningText = 'Confirm deletion !';
       $scope.warningVisible = false;
     };
     $scope.deleteComponent = function(){
-      $scope.warningText = 'Confirm deletion !';
-      $scope.warningVisible = false;
-      reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
+      $scope.resetDeleteComponent();
+      reqBazService.deleteComponent($scope.activeComponent.id)
         .success(function (message) {
           console.log(message);
           for(var i = 0; i<$scope.components.length;i++){
@@ -184,12 +207,9 @@ angular.module('requirementsBazaarWebFrontendApp')
       if($scope.newReqName !== '' && $scope.newReqDesc !== ''){
         console.log('submit requirement');
         var requirement = {title: $scope.newReqName, description: $scope.newReqDesc, projectId: $scope.activeProject.id, leadDeveloperId : 1, creatorId : 1};
-
-        console.log($scope.activeProject.id);
-        console.log($scope.activeComponent.id);
-        console.log(requirement);
         reqBazService.createRequirement($scope.activeProject.id,$scope.activeComponent.id,requirement)
           .success(function (message) {
+            //TODO add the requirement to the list
             console.log(message);
           })
           .error(function (error) {
@@ -197,11 +217,6 @@ angular.module('requirementsBazaarWebFrontendApp')
           });
 
         $scope.showCreateReqDiv = false;
-        //this.createRequirement = function(projectId, componentId, requirement){
-        //  var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements';
-        //  return $http.post(reqUrl, requirement);
-        //};
-
       }else{
         console.log('Input field empty');
         //TODO Show toast
@@ -214,6 +229,26 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
+    /**
+     *
+     * Function calls that currently don't do anything or don't work
+     *
+     */
+
+
+
+    //Become a follower of a requirement
+    $scope.followRequirement = function(clickEvent,req){
+      console.log('become follower');
+      reqBazService.addUserToFollowers(req.id)
+        .success(function (message) {
+          console.log(message);
+        })
+        .error(function (error) {
+          console.log(error.message);
+          alert('Something went wrong, please try again');
+        });
+    };
 
 
     $scope.signOut = function(){
@@ -223,8 +258,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.editProfile = function(){
       window.alert('TODO');
     };
-
-
   });
 
 

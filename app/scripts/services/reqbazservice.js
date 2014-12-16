@@ -52,17 +52,18 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $http.get(componentUrl + '/' + componentId);
     };
 
-    this.deleteComponent = function(projectId,componentId){
-      var componentUrl = url + 'projects/' + projectId + '/components';
+    this.deleteComponent = function(componentId){
+      var componentUrl = url + 'projects/' + 0 + '/components';
       return $http.delete(componentUrl + '/' + componentId);
     };
 
     ///REQUIREMENTS
 
-    this.getRequirementsByProject = function(projectId, page, per_page){
-      var reqUrl = url + 'projects/' + projectId + '/components/' + 0 + '/requirements';
-      return $http.get(paginate(reqUrl,page,per_page));
-    };
+    //Currently not used
+    //this.getRequirementsByProject = function(projectId, page, per_page){
+    //  var reqUrl = url + 'projects/' + projectId + '/components/' + 0 + '/requirements';
+    //  return $http.get(paginate(reqUrl,page,per_page));
+    //};
 
     this.getRequirementsByComponent = function(projectId,componentId,page,per_page){
       var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements';
@@ -76,41 +77,42 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     this.getRequirement = function(requirementId){
       var reqUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements';
-      return $http.get(componentUrl + '/' + requirementId);
+      return $http.get(reqUrl + '/' + requirementId);
     };
 
     this.deleteRequirement = function(requirementId) {
       var reqUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements';
-      return $http.delete(componentUrl + '/' + requirementId);
+      return $http.delete(reqUrl + '/' + requirementId);
     };
 
     //DEV LIST
 
     this.addUserToDevelopers = function(requirementId){
       var devUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/developers';
-      return $http.post(reqUrl);
+      return $http.post(devUrl);
     };
 
     this.removeUserFromDevelopers = function(requirementId){
-      var devUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/developers';
-      return $http.delete(reqUrl);
+      var devUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/developers';
+      return $http.delete(devUrl);
     };
 
     ///FOLLOWER LIST
 
-    this.addUserToDevelopers = function(requirementId){
-      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/followers';
-      return $http.post(reqUrl);
+    //
+    this.addUserToFollowers = function(requirementId){
+      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/followers';
+      return $http.post(followUrl);
     };
 
-    this.removeUserFromDevelopers = function(requirementId){
-      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/followers';
-      return $http.delete(reqUrl);
+    this.removeUserFromFollowers = function(requirementId){
+      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/followers';
+      return $http.delete(followUrl);
     };
 
     ///VOTE
     this.addVote = function(requirementId, isDownvote){
-      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/vote';
+      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/vote';
       if (isDownvote){
         followUrl += '?direction=down';
       } else {
@@ -120,32 +122,34 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $http.post(reqUrl);
     };
 
-    this.removeUserFromDevelopers = function(requirementId){
-      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/vote';
-      return $http.delete(reqUrl);
-    };
+
+    //TODO naming is wrong
+    //this.removeUserFromDevelopers = function(requirementId){
+    //  var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/vote';
+    //  return $http.delete(reqUrl);
+    //};
 
     /// COMMENTS
 
     this.getComments = function(requirementId, page, per_page){
-      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/comments';
+      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/comments';
       return $http.get(paginate(commentUrl,page,per_page));
     };
 
     this.createComment = function(requirementId,comment){
-      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/comments';
+      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/comments';
       return $http.post(commentUrl, comment);
     };
 
     this.deleteComment = function(commentId){
-      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + 0 + '/comments';
+      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/comments';
       return $http.delete(commentUrl + '/' + commentId);
     };
 
     ///ATTACHMENTS
     //TODO Attachment Type? I think it is not implemented on backend
     this.createAttachment = function(attachmentType, attachment){
-      var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + 0 + '/attachments';
+      var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/attachments';
 
       attachmentUrl+= '?attachmentType' + attachmentType;
 
@@ -153,7 +157,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     this.deleteComment = function(attachmentId){
-      var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + 0 + '/attachments';
+      var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/attachments';
       return $http.delete(attachmentUrl + '/' + attachmentId);
     };
 
