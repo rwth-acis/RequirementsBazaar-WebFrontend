@@ -46,7 +46,6 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (comps) {
           $scope.components = comps;
           $scope.activeComponent = $scope.components[0];
-          console.log($scope.activeComponent);
           $scope.selectComp($scope.activeComponent);
         })
         .error(function (error) {
@@ -58,7 +57,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.selectComp = function (component) {
       $scope.activeComponent = component;
       getUser($scope.activeComponent.leaderId,'component');
-      console.log('get requirements for projectID: '+$scope.activeProject.id+' and componentID: '+$scope.activeComponent.id);
       reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (reqs) {
           $scope.requirements = reqs;
@@ -101,16 +99,15 @@ angular.module('requirementsBazaarWebFrontendApp')
     //Call the init functions
     getProjects();
 
-    $scope.toggleComponent = function(clickEvent,req) {
-      //console.log(req);
-      var collapse = clickEvent.target.nextElementSibling;
+    $scope.toggleRequirement = function(clickEvent,req) {
+      var collapse = clickEvent.target.parentNode.nextElementSibling;
       if(collapse.getAttribute('data-visible') === 'false'){
         console.log('opened requirement');
         collapse.setAttribute('data-visible', 'true');
         //Get all the missing pieces of information, like leader, follower, votes
-        //Get leader
         reqBazService.getRequirement(req.id)
           .success(function (requirement) {
+            console.log(requirement);
             req.creator = requirement.creator;
             req.attachments = requirement.attachments;
             req.components = requirement.components;
@@ -153,6 +150,9 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             //TODO add the new component to the $scope.component and then set everything to default
+            component.id = message.id;
+            $scope.activeComponent = component;
+            $scope.components.push($scope.activeComponent);
             $scope.clearComponentSubmit();
           })
           .error(function (error) {
@@ -229,14 +229,14 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
+
+
+
     /**
      *
      * Function calls that currently don't do anything or don't work
      *
      */
-
-
-
     //Become a follower of a requirement
     $scope.followRequirement = function(clickEvent,req){
       console.log('become follower');

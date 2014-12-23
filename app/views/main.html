@@ -101,49 +101,44 @@
 
       <!--List representing the requirements-->
       <div ng-repeat="req in requirements">
-        <paper-item style="background: white; font-size: large" ng-click="toggleComponent($event,req)">{{req.title}}</paper-item>
+        <div style="justify-content: space-between; display: flex; background-color: white">
+          <paper-item style="background: white; font-size: large;width: 60%" ng-click="toggleRequirement($event,req)">{{req.title}}</paper-item>
+          <div style="display: -webkit-box">
+            <div ng-hide="!showMore">
+              <!--<paper-button style="margin: 0px;">Become Lead</paper-button>-->
+              <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)"></paper-icon-button>
+              <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
+              <paper-icon-button icon="icons:thumb-up"></paper-icon-button>
+              <paper-icon-button icon="icons:thumb-down"></paper-icon-button>
+              <paper-icon-button icon="icons:delete"></paper-icon-button>
+            </div>
+            <paper-icon-button icon="icons:more-vert" ng-click="showMore=!showMore"></paper-icon-button>
+          </div>
+        </div>
         <core-collapse data-visible = 'false'>
           <div class="collapse-content" style="display: -webkit-box; background-color: white">
             <div style="width: 80%">
               <p>{{req.description}}</p>
-              <p>Leader : {{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}</p>
-              <div style="background-color: #00b3ee">
-                <p>People who follow the project are</p>
-                <p ng-repeat="follower in req.followers">
-                  {{follower.firstName}}
-                </p>
-              </div>
-              <div style="background-color: #0f9d58">
-                <p>Developers for the project</p>
-                <p ng-repeat="dev in req.developers">
-                  {{dev.firstName}}
-                </p>
-              </div>
-              <p>Created by : {{req.creator.firstName}} {{req.creator.lastName}}</p>
-              <paper-button ng-click="toggleAttachments($event)">Attachments</paper-button>
-              <core-collapse>
-                Here be attachments
-                {{req.attachments}}
-              </core-collapse>
-              </br>
-              <paper-button ng-click="toggleComments($event)">Comments</paper-button>
-              <core-collapse>
-                Here be comments
-                {{req.comments}}
-              </core-collapse>
             </div>
 
             <!--Sidebar for the individal requirements-->
             <div style="width: 20%">
-              <paper-icon-button icon="icons:more-vert" ng-click="show=!show" style="float: right;"></paper-icon-button>
-              <div ng-hide="!show">
-                <paper-button style="width: 100%">Become Lead</paper-button>
-                <paper-icon-button icon="icons:favorite" ng-click="followRequirement($event,req)"></paper-icon-button>
-                <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
-                <paper-icon-button icon="icons:thumb-up"></paper-icon-button>
-                <paper-icon-button icon="icons:thumb-down"></paper-icon-button>
-                <paper-icon-button icon="icons:delete"></paper-icon-button>
+              <p style="font-weight: bold">Leader</p>
+              <p style="padding-left: 8px">{{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}</p>
+              <div>
+                <p style="font-weight: bold">Followers</p>
+                <p ng-repeat="follower in req.followers" style="padding-left: 8px">
+                  {{follower.firstName}}
+                </p>
               </div>
+              <div>
+                <p style="font-weight: bold">Developers </p>
+                <p ng-repeat="dev in req.developers" style="padding-left: 8px">
+                  {{dev.firstName}}
+                </p>
+              </div>
+              <p style="font-weight: bold">Created by</p>
+              <p style="padding-left: 8px">{{req.creator.firstName}} {{req.creator.lastName}}</p>
             </div>
           </div>
         </core-collapse>
@@ -152,8 +147,6 @@
 
     </div>
   </div>
-
-
 
   <!--Pop-up elements-->
   <paper-action-dialog id="deleteSomething" heading="Dialog Title" transition="core-transition-center" ng-show="warningVisible">

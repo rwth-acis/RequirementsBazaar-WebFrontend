@@ -58,12 +58,10 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     ///REQUIREMENTS
-
-    //Currently not used
-    //this.getRequirementsByProject = function(projectId, page, per_page){
-    //  var reqUrl = url + 'projects/' + projectId + '/components/' + 0 + '/requirements';
-    //  return $http.get(paginate(reqUrl,page,per_page));
-    //};
+    this.getRequirementsByProject = function(projectId, page, per_page){
+      var reqUrl = url + 'projects/' + projectId + '/requirements';
+      return $http.get(paginate(reqUrl,page,per_page));
+    };
 
     this.getRequirementsByComponent = function(projectId,componentId,page,per_page){
       var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements';
