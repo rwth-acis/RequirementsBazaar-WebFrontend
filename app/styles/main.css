@@ -69,6 +69,30 @@ body {
   color: white;
 }
 
+#addRequirementFab{
+  color: white;
+  cursor: pointer;
+  z-index: 1;
+  position: fixed;
+  right: 40px;
+  bottom: 30px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #db4437;
+}
+#addRequirementDiv{
+  width: 400px;
+  right: 130px;
+  position: fixed;
+  background-color: white;
+  z-index: 2;
+  bottom: 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-color: rgba(0,0,0,.2);
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
 
 /*
 

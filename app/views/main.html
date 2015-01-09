@@ -77,25 +77,9 @@
             <span ng-bind="componentLeader.firstName"></span>
             <span ng-bind="componentLeader.lastName"></span>
           </p>
-          <paper-icon-button icon="icons:add-circle" ng-click="showCreateReqDiv=!showCreateReqDiv"></paper-icon-button>
           <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
           <paper-icon-button icon="icons:delete" ng-click="initDeleteComponent()"></paper-icon-button>
         </div>
-      </div>
-      <div ng-hide="!showCreateReqDiv" style="background-color: white;margin-bottom: 20px">
-        <p>Add requirement</p>
-        <paper-input-decorator label="Name">
-          <paper-autogrow-textarea>
-            <textarea ng-model="newReqName"></textarea>
-          </paper-autogrow-textarea>
-        </paper-input-decorator>
-        <paper-input-decorator label="Description">
-          <paper-autogrow-textarea>
-            <textarea ng-model="newReqDesc"></textarea>
-          </paper-autogrow-textarea>
-        </paper-input-decorator>
-        <paper-icon-button ng-click="submitNewReq()" icon="icons:check"></paper-icon-button>
-        <paper-icon-button ng-click="clearReqSubmit()" icon="icons:clear"></paper-icon-button>
       </div>
 
       <!--List representing the requirements-->
@@ -156,5 +140,23 @@
       <paper-button affirmative ng-click="deleteComponent()">Accept</paper-button>
     </paper-shadow>
   </paper-action-dialog>
+
+  <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showAddReqDiv = !showAddReqDiv"></paper-fab>
+  <div id="addRequirementDiv" ng-hide="!showAddReqDiv">
+    <p>Add requirement</p>
+    <paper-input-decorator label="Name">
+      <paper-autogrow-textarea>
+        <textarea ng-model="newReqName"></textarea>
+      </paper-autogrow-textarea>
+    </paper-input-decorator>
+    <paper-input-decorator label="Description">
+      <paper-autogrow-textarea>
+        <textarea ng-model="newReqDesc"></textarea>
+      </paper-autogrow-textarea>
+    </paper-input-decorator>
+    <paper-icon-button ng-click="submitNewReq()" icon="icons:check"></paper-icon-button>
+    <paper-icon-button ng-click="clearReqSubmit()" icon="icons:clear"></paper-icon-button>
+  </div>
+
 
 </core-header-panel>
