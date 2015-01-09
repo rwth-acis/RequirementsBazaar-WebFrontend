@@ -66,13 +66,12 @@
     <!--The main content panel-->
     <div class="content">
       <!--Currently selected component-->
-      <!--For some reason I cannot more the style attr to main.css-->
-      <div id="currentComponent" style="display: -webkit-box;display: -moz-box;width: -moz-available;">
-        <div style="width: 80%">
+      <div id="currentComponent" class="section group">
+        <div class="col span_6_of_8">
           <h2 ng-bind="activeComponent.name"></h2>
           <p ng-bind="activeComponent.description"></p>
         </div>
-        <div style="width: 20%">
+        <div class="col span_2_of_8">
           <p style="font-size: small">Component lead:</p>
           <p>
             <span ng-bind="componentLeader.firstName"></span>
@@ -101,28 +100,29 @@
 
       <!--List representing the requirements-->
       <div ng-repeat="req in requirements">
-        <div style="justify-content: space-between; display: flex; background-color: white">
-          <paper-item style="background: white; font-size: large;width: 60%" ng-click="toggleRequirement($event,req)">{{req.title}}</paper-item>
-          <div style="display: -webkit-box">
-            <div ng-hide="!showMore">
-              <!--<paper-button style="margin: 0px;">Become Lead</paper-button>-->
+        <div style="background-color: white" class="section group">
+          <paper-item ng-class="{ 'span_4_of_8': $index == selectedIndex, 'col':true, 'span_7_of_8': $index !== selectedIndex}" style="background: white; font-size: large;padding: 0px" ng-click="toggleRequirement($event,req)">{{req.title}}</paper-item>
+          <div ng-class="{ 'span_4_of_8': $index == selectedIndex, 'col':true, 'span_1_of_8': $index !== selectedIndex}" style="display: flex;flex-direction: row-reverse;">
+            <paper-icon-button icon="icons:more-vert" ng-click="showMoreClicked($index)"></paper-icon-button>
+            <div ng-hide="!($index == selectedIndex)" style="display: flex;flex-wrap: wrap;">
+              <paper-button style="margin: 6px;">Become Lead</paper-button>
               <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)"></paper-icon-button>
               <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
               <paper-icon-button icon="icons:thumb-up"></paper-icon-button>
               <paper-icon-button icon="icons:thumb-down"></paper-icon-button>
               <paper-icon-button icon="icons:delete"></paper-icon-button>
             </div>
-            <paper-icon-button icon="icons:more-vert" ng-click="showMore=!showMore"></paper-icon-button>
           </div>
         </div>
         <core-collapse data-visible = 'false'>
-          <div class="collapse-content" style="display: -webkit-box; background-color: white">
-            <div style="width: 80%">
+          <!--Space for description, comments and attachments-->
+          <div class="collapse-content section group">
+            <div class="col span_6_of_8">
               <p>{{req.description}}</p>
             </div>
 
             <!--Sidebar for the individal requirements-->
-            <div style="width: 20%">
+            <div class="col span_2_of_8">
               <p style="font-weight: bold">Leader</p>
               <p style="padding-left: 8px">{{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}</p>
               <div>

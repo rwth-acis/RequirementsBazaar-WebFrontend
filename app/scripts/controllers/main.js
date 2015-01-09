@@ -10,6 +10,9 @@
 angular.module('requirementsBazaarWebFrontendApp')
     .controller('MainCtrl', function ($scope, reqBazService) {
 
+    //Index which requirement in the list is selected
+    $scope.selectedIndex = -1;
+
     $scope.projects = null;
     $scope.components = null;
     $scope.requirements = null;
@@ -230,6 +233,13 @@ angular.module('requirementsBazaarWebFrontendApp')
 
 
 
+    $scope.showMoreClicked = function ($index) {
+      if($scope.selectedIndex == $index){
+        $scope.selectedIndex = -1;
+      }else{
+        $scope.selectedIndex = $index;
+      }
+    };
 
 
     /**
