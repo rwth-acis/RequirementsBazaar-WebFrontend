@@ -32,6 +32,18 @@
         <paper-button ng-click="signOut()">Sign Out</paper-button>
       </div>
     </div>
+
+    <paper-button>
+      <oauth
+        site="https://api.learning-layers.eu/o/oauth2"
+        client-id="f4635a5a-8455-4cf4-9834-6f6f16bf9aec"
+        data-scope="openid email profile"
+        redirect-uri="http://localhost:9000/"
+        profile-uri="https://api.learning-layers.eu/o/oauth2/userinfo"
+        scope="public">
+      </oauth>
+    </paper-button>
+
   </core-toolbar>
 
   <div id="containerMain">

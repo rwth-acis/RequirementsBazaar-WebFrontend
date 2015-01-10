@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ng-polymer-elements'
+    'ng-polymer-elements',
+    'oauth'
   ])
   .config(function ($routeProvider) {
     $routeProvider

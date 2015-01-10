@@ -33,7 +33,8 @@
     "paper-input": "Polymer/paper-input#~0.5.1",
     "paper-toast": "Polymer/paper-toast#~0.5.2",
     "paper-dialog": "Polymer/paper-dialog#~0.5.2",
-    "paper-fab": "Polymer/paper-fab#~0.5.2"
+    "paper-fab": "Polymer/paper-fab#~0.5.2",
+    "oauth-ng": "~0.3.6"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",
