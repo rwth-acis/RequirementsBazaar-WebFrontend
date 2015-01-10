@@ -20,7 +20,7 @@
     </div>
 
     <!--Open Profile button and div-->
-    <paper-icon-button src="https://dl.dropboxusercontent.com/u/42434834/FakeProfilePic.jpg" ng-click="isProfileOpen = !isProfileOpen"></paper-icon-button>
+    <paper-icon-button icon="social:person" ng-click="isProfileOpen = !isProfileOpen"></paper-icon-button>
     <div id="profileDiv" ng-show="isProfileOpen">
       <div id="profileDivContent" style="margin: 12px">
         <p>{{activeUser.firstname}} {{activeUser.lastname}}</p>

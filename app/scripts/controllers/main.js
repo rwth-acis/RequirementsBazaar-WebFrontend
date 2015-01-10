@@ -99,9 +99,6 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     }
 
-    //Call the init functions
-    getProjects();
-
     $scope.toggleRequirement = function(clickEvent,req) {
       var collapse = clickEvent.target.parentNode.nextElementSibling;
       if(collapse.getAttribute('data-visible') === 'false'){
@@ -268,6 +265,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.editProfile = function(){
       window.alert('TODO');
     };
+
+
+
+
+    //Call the init functions
+    getProjects();
+
   });
 
 
