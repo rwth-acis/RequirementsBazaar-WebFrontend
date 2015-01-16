@@ -136,6 +136,10 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
+    /*
+    * Everything related to creating or deleting a new component
+    *
+    * */
 
     //Creates a new component
     $scope.showCreateCompDiv = false;
@@ -149,10 +153,10 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createComponent($scope.activeProject.id,component)
           .success(function (message) {
             console.log(message);
-            //TODO add the new component to the $scope.component and then set everything to default
+            //The component is added to be the first element
             component.id = message.id;
             $scope.activeComponent = component;
-            $scope.components.push($scope.activeComponent);
+            $scope.components.splice(0, 0, $scope.activeComponent);
             $scope.clearComponentSubmit();
           })
           .error(function (error) {
@@ -179,7 +183,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
     $scope.deleteComponent = function(){
       $scope.resetDeleteComponent();
-      reqBazService.deleteComponent($scope.activeComponent.id)
+      reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (message) {
           console.log(message);
           for(var i = 0; i<$scope.components.length;i++){
@@ -199,6 +203,12 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
+
+    /*
+     * Everything related to creating or deleting a new requirement
+     *
+     * */
+
     //Creating a requirement
     $scope.showCreateReqDiv = false;
     $scope.newReqName = '';
@@ -209,8 +219,20 @@ angular.module('requirementsBazaarWebFrontendApp')
         var requirement = {title: $scope.newReqName, description: $scope.newReqDesc, projectId: $scope.activeProject.id, leadDeveloperId : 1, creatorId : 1};
         reqBazService.createRequirement($scope.activeProject.id,$scope.activeComponent.id,requirement)
           .success(function (message) {
-            //TODO add the requirement to the list
-            console.log(message);
+            //Add missing values to the newly created requirement
+            requirement.id = message.id;
+            requirement.creator = {firstName : 'loading'};
+            requirement.leadDeveloper = {firstName : 'loading'};
+            requirement.followers = [];
+            requirement.developers = [];
+            requirement.contributors = [];
+            requirement.attachments = [];
+            requirement.comments = [];
+            requirement.components = [];
+
+            //Add the requirement to the first position
+            $scope.requirements.splice(0, 0, requirement);
+            $scope.clearReqSubmit();
           })
           .error(function (error) {
             console.log(error.message);

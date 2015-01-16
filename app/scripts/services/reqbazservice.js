@@ -52,8 +52,8 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $http.get(componentUrl + '/' + componentId);
     };
 
-    this.deleteComponent = function(componentId){
-      var componentUrl = url + 'projects/' + 0 + '/components';
+    this.deleteComponent = function(projectId,componentId){
+      var componentUrl = url + 'projects/' + projectId + '/components';
       return $http.delete(componentUrl + '/' + componentId);
     };
 
