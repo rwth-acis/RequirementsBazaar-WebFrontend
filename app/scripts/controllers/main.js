@@ -186,15 +186,19 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (message) {
           console.log(message);
-          for(var i = 0; i<$scope.components.length;i++){
-            if($scope.components[i].id === $scope.activeComponent.id){
-              $scope.components.splice(i, 1);
-              break;
+          if(message.success !== "true"){
+            alert('Could not delete, please try again');
+          }else {
+            for (var i = 0; i < $scope.components.length; i++) {
+              if ($scope.components[i].id === $scope.activeComponent.id) {
+                $scope.components.splice(i, 1);
+                break;
+              }
             }
-          }
-          $scope.activeComponent = null;
-          if($scope.components !== null){
-            $scope.activeComponent = $scope.components[0];
+            $scope.activeComponent = null;
+            if ($scope.components !== null) {
+              $scope.activeComponent = $scope.components[0];
+            }
           }
         })
         .error(function (error) {
@@ -249,6 +253,29 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.newReqDesc = '';
       $scope.showCreateReqDiv = false;
     };
+    $scope.deleteRequirement = function(req){
+      console.log('delete requirement');
+      reqBazService.deleteRequirement(req.id)
+        .success(function (message) {
+          if(message.success !== "true"){
+            alert('Could not delete, please try again');
+          }else{
+            // Delete the removed requirement from the list
+            for(var i = 0; i<$scope.requirements.length;i++){
+              if($scope.requirements[i].id === req.id){
+                $scope.requirements.splice(i, 1);
+                break;
+              }
+            }
+          }
+        })
+        // The error function is not used
+        .error(function (error) {
+          console.log(error.message);
+          alert('Could not delete, please try again');
+        });
+    };
+
 
 
 

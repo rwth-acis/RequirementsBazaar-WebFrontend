@@ -121,7 +121,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
-    //TODO naming is wrong
+    //naming is wrong
     //this.removeUserFromDevelopers = function(requirementId){
     //  var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/vote';
     //  return $http.delete(reqUrl);
