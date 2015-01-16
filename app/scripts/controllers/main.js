@@ -27,6 +27,8 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.warningText = 'Confirm deletion !';
     $scope.warningVisible = false;
 
+    $scope.toastText = '';
+
     //init functions that need to be run when the user enters the page
     function getProjects(){
       reqBazService.getProjects()
@@ -34,7 +36,6 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.projects = projs;
           $scope.activeProject = $scope.projects[0];
           $scope.selectProj($scope.activeProject);
-
         })
         .error(function (error) {
           $scope.status = 'Unable to load customer data: ' + error.message;
@@ -64,7 +65,8 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (reqs) {
           $scope.requirements = reqs;
           for(var i = 0; i<$scope.requirements.length;i++){
-            //TODO see if I can come up with something better
+
+            //This adds the missing attributes to the requirements
             $scope.requirements[i].creator = {firstName : 'loading'};
             $scope.requirements[i].leadDeveloper = {firstName : 'loading'};
             $scope.requirements[i].followers = [];
@@ -128,12 +130,6 @@ angular.module('requirementsBazaarWebFrontendApp')
       collapse.toggle();
     };
 
-    $scope.toggleAttachments = function(clickEvent) {
-      console.log('toggle attachments');
-    };
-    $scope.toggleComments = function(clickEvent) {
-      console.log('toggle comments');
-    };
 
 
     /*
@@ -153,19 +149,28 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createComponent($scope.activeProject.id,component)
           .success(function (message) {
             console.log(message);
-            //The component is added to be the first element
-            component.id = message.id;
-            $scope.activeComponent = component;
-            $scope.components.splice(0, 0, $scope.activeComponent);
-            $scope.clearComponentSubmit();
+            if(message.id === 'undefined'){
+              $scope.toastText = 'Warning: Component was not created !';
+              document.getElementById("feedbackToast").show();
+            }else {
+              $scope.toastText = 'Component was created';
+              document.getElementById("feedbackToast").show();
+
+              //The component is added to be the first element
+              component.id = message.id;
+              $scope.activeComponent = component;
+              $scope.components.splice(0, 0, $scope.activeComponent);
+              $scope.clearComponentSubmit();
+            }
           })
           .error(function (error) {
             console.log(error.message);
-            alert('Something went wrong, please try again');
+            $scope.toastText = 'Warning: Component was not created !';
+            document.getElementById("feedbackToast").show();
           });
       }else{
-        console.log('Input field empty');
-        //TODO Show toast
+        $scope.toastText = 'Provide a name & description for the component';
+        document.getElementById("feedbackToast").show();
       }
     };
     $scope.clearComponentSubmit = function(){
@@ -187,7 +192,8 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           console.log(message);
           if(message.success !== "true"){
-            alert('Could not delete, please try again');
+            $scope.toastText = 'Warning: Component was not deleted !';
+            document.getElementById("feedbackToast").show();
           }else {
             for (var i = 0; i < $scope.components.length; i++) {
               if ($scope.components[i].id === $scope.activeComponent.id) {
@@ -199,11 +205,14 @@ angular.module('requirementsBazaarWebFrontendApp')
             if ($scope.components !== null) {
               $scope.activeComponent = $scope.components[0];
             }
+            $scope.toastText = 'Component deleted';
+            document.getElementById("feedbackToast").show();
           }
         })
         .error(function (error) {
           console.log(error.message);
-          alert('Could not delete, please try again');
+          $scope.toastText = 'Warning: Component was not deleted !';
+          document.getElementById("feedbackToast").show();
         });
     };
 
@@ -223,29 +232,41 @@ angular.module('requirementsBazaarWebFrontendApp')
         var requirement = {title: $scope.newReqName, description: $scope.newReqDesc, projectId: $scope.activeProject.id, leadDeveloperId : 1, creatorId : 1};
         reqBazService.createRequirement($scope.activeProject.id,$scope.activeComponent.id,requirement)
           .success(function (message) {
-            //Add missing values to the newly created requirement
-            requirement.id = message.id;
-            requirement.creator = {firstName : 'loading'};
-            requirement.leadDeveloper = {firstName : 'loading'};
-            requirement.followers = [];
-            requirement.developers = [];
-            requirement.contributors = [];
-            requirement.attachments = [];
-            requirement.comments = [];
-            requirement.components = [];
+            console.log(message);
+            if(message.id === 'undefined'){
+              $scope.toastText = 'Warning: Requirement was not created !';
+              document.getElementById("feedbackToast").show();
+            }else{
+              $scope.toastText = 'Requirement was created';
+              document.getElementById("feedbackToast").show();
 
-            //Add the requirement to the first position
-            $scope.requirements.splice(0, 0, requirement);
-            $scope.clearReqSubmit();
+              //Add missing values to the newly created requirement
+              requirement.id = message.id;
+              requirement.creator = {firstName : 'loading'};
+              requirement.leadDeveloper = {firstName : 'loading'};
+              requirement.followers = [];
+              requirement.developers = [];
+              requirement.contributors = [];
+              requirement.attachments = [];
+              requirement.comments = [];
+              requirement.components = [];
+
+              //Add the requirement to the first position
+              $scope.requirements.splice(0, 0, requirement);
+              $scope.clearReqSubmit();
+            }
           })
           .error(function (error) {
+            //This method only catches network errors
             console.log(error.message);
+            $scope.toastText = 'Warning: Requirement was not created !';
+            document.getElementById("feedbackToast").show();
           });
 
         $scope.showCreateReqDiv = false;
       }else{
-        console.log('Input field empty');
-        //TODO Show toast
+        $scope.toastText = 'Provide a name & description for the requirement';
+        document.getElementById("feedbackToast").show();
       }
     };
     $scope.clearReqSubmit = function(){
@@ -258,7 +279,8 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteRequirement(req.id)
         .success(function (message) {
           if(message.success !== "true"){
-            alert('Could not delete, please try again');
+            $scope.toastText = 'Warning: Requirement was not deleted';
+            document.getElementById("feedbackToast").show();
           }else{
             // Delete the removed requirement from the list
             for(var i = 0; i<$scope.requirements.length;i++){
@@ -267,12 +289,15 @@ angular.module('requirementsBazaarWebFrontendApp')
                 break;
               }
             }
+            $scope.toastText = 'Requirement deleted';
+            document.getElementById("feedbackToast").show();
           }
         })
-        // The error function is not used
         .error(function (error) {
+          //This error only catches network errors
           console.log(error.message);
-          alert('Could not delete, please try again');
+          $scope.toastText = 'Warning: Requirement was not deleted';
+          document.getElementById("feedbackToast").show();
         });
     };
 
@@ -314,9 +339,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.editProfile = function(){
       window.alert('TODO');
     };
-
-
-
 
     //Call the init functions
     getProjects();
