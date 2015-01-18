@@ -27,10 +27,6 @@
         <p style="color: #808080; font-size: small">{{activeUser.email}}</p>
         <p style="color: #808080; font-size: small">Is admin : {{activeUser.admin}}</p>
       </div>
-      <div id="profileDivFooter">
-        <paper-button ng-click="editProfile()">Edit</paper-button>
-        <paper-button ng-click="signOut()">Sign Out</paper-button>
-      </div>
     </div>
 
     <paper-button>
@@ -72,6 +68,9 @@
       <core-menu id="componentSelection">
         <paper-item ng-repeat="component in components" ng-click="selectComp(component)">{{component.name}}</paper-item>
       </core-menu>
+
+      <paper-button id="loadComponents" ng-show="reloadComponents" ng-click="selectProj(activeProject)">Reload</paper-button>
+
     </div>
 
 
@@ -93,6 +92,8 @@
           <paper-icon-button icon="icons:delete" ng-click="initDeleteComponent()"></paper-icon-button>
         </div>
       </div>
+
+      <paper-button id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)">Reload</paper-button>
 
       <!--List representing the requirements-->
       <div ng-repeat="req in requirements">
