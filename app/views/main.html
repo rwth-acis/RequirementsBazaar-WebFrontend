@@ -11,7 +11,9 @@
         </core-selector>
       </paper-dropdown>
     </paper-dropdown-menu>
+
     <span flex></span>
+    <paper-button id="createProjectButton" ng-click="showCreateProjectDiv = !showCreateProjectDiv">New project</paper-button>
 
     <!--Open Notifications button and div-->
     <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen"></paper-icon-button>
@@ -155,22 +157,39 @@
   </paper-action-dialog>
 
   <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showCreateReqDiv = !showCreateReqDiv"></paper-fab>
-  <div id="addRequirementDiv" ng-hide="!showCreateReqDiv">
-    <p>Add requirement</p>
-    <paper-input-decorator label="Name">
-      <paper-autogrow-textarea>
-        <textarea ng-model="newReqName"></textarea>
-      </paper-autogrow-textarea>
-    </paper-input-decorator>
-    <paper-input-decorator label="Description">
-      <paper-autogrow-textarea>
-        <textarea ng-model="newReqDesc"></textarea>
-      </paper-autogrow-textarea>
-    </paper-input-decorator>
-    <paper-icon-button ng-click="submitNewReq()" icon="icons:check"></paper-icon-button>
-    <paper-icon-button ng-click="clearReqSubmit()" icon="icons:clear"></paper-icon-button>
-  </div>
+  <div id="createContainer">
+    <div class="addItemDiv" ng-hide="!showCreateReqDiv">
+      <p>Add requirement</p>
+      <paper-input-decorator label="Name">
+        <paper-autogrow-textarea>
+          <textarea ng-model="newReqName"></textarea>
+        </paper-autogrow-textarea>
+      </paper-input-decorator>
+      <paper-input-decorator label="Description">
+        <paper-autogrow-textarea>
+          <textarea ng-model="newReqDesc"></textarea>
+        </paper-autogrow-textarea>
+      </paper-input-decorator>
+      <paper-icon-button ng-click="submitReq()" icon="icons:check"></paper-icon-button>
+      <paper-icon-button ng-click="clearReqSubmit()" icon="icons:clear"></paper-icon-button>
+    </div>
 
+    <div class="addItemDiv" ng-show="showCreateProjectDiv">
+      <p>Create Project</p>
+      <paper-input-decorator label="Name">
+        <paper-autogrow-textarea>
+          <textarea ng-model="newProjectName"></textarea>
+        </paper-autogrow-textarea>
+      </paper-input-decorator>
+      <paper-input-decorator label="Description">
+        <paper-autogrow-textarea>
+          <textarea ng-model="newProjectDesc"></textarea>
+        </paper-autogrow-textarea>
+      </paper-input-decorator>
+      <paper-icon-button ng-click="submitProject()" icon="icons:check"></paper-icon-button>
+      <paper-icon-button ng-click="clearProjectSubmit()" icon="icons:clear"></paper-icon-button>
+  </div>
+  </div>
   <paper-toast id="feedbackToast" text={{toastText}}></paper-toast>
 
 </core-header-panel>

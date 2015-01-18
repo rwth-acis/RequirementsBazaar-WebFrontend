@@ -54,8 +54,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           }
         })
         .error(function () {
-          $scope.toastText = 'Could not load projects, please reload !';
-          document.getElementById('feedbackToast').show();
+          $scope.showFeedback('Could not load projects, please reload !');
         });
     })();
 
@@ -78,8 +77,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.activeComponent = null;
           $scope.requirements = null;
           $scope.selectedIndex = -1;
-          $scope.toastText = 'Could not load components';
-          document.getElementById('feedbackToast').show();
+          $scope.showFeedback('Could not load components');
 
           //Show the reload requirements button
           $scope.reloadComponents = true;
@@ -100,9 +98,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (reqs) {
           $scope.requirements = reqs;
             if($scope.requirements.length === 0){
-              //Since there are none, offer user to create new one
-              $scope.toastText = 'This component has no requirements, feel free to create';
-              document.getElementById('feedbackToast').show();
+              $scope.showFeedback( 'This component has no requirements, feel free to create');
             }else{
               //Show the requirements
               for(var i = 0; i<$scope.requirements.length;i++){
@@ -122,8 +118,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           //Null the list, otherwise user will see wrong requirements
           $scope.requirements = null;
           $scope.selectedIndex = -1;
-          $scope.toastText = 'Could not load requirements';
-          document.getElementById('feedbackToast').show();
+          $scope.showFeedback('Could not load requirements');
 
           //Show the reload requirements button
           $scope.reloadRequirements = true;
@@ -151,8 +146,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           if(purpose === 'project'){
             $scope.projectLeader = null;
           }
-          $scope.toastText = 'Could not load user for: '+purpose;
-          document.getElementById('feedbackToast').show();
+          $scope.showFeedback('Could not load user for: '+purpose);
         });
     }
 
@@ -178,8 +172,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             req.contributors = requirement.contributors;
           })
           .error(function () {
-            $scope.toastText = 'Warning: the requirement was not loaded !';
-            document.getElementById('feedbackToast').show();
+            $scope.showFeedback('Warning: the requirement was not loaded !');
           });
       }else{
         collapse.setAttribute('data-visible', 'false');
@@ -189,6 +182,48 @@ angular.module('requirementsBazaarWebFrontendApp')
       collapse.toggle();
     };
 
+
+    /*
+     * Everything related to creating or deleting a project
+     *
+     * */
+
+    $scope.showCreateProjectDiv = false;
+    $scope.newProjectName = '';
+    $scope.newProjectDesc = '';
+    $scope.submitProject = function(){
+      if($scope.newProjectName !== '' && $scope.newProjectDesc !== ''){
+        console.log('submit new project');
+        var project = {description: $scope.newProjectDesc, name: $scope.newProjectName, visibility: 'PUBLIC', leaderId: 1};
+        reqBazService.createProject(project)
+          .success(function (message) {
+            console.log(message);
+            if(message.id === 'undefined'){
+              $scope.showFeedback('Warning: Project was not created !');
+            }else {
+              $scope.showFeedback('Project was created');
+
+              //The project is added to be the first element and will be active
+              project.id = message.id;
+              $scope.activeProject = project;
+              $scope.projects.splice(0, 0, $scope.activeProject);
+              $scope.selectProj($scope.activeComponent);
+              $scope.clearProjectSubmit();
+            }
+          })
+          .error(function (error) {
+            console.log(error.message);
+            $scope.showFeedback('Warning: Project was not created !');
+          });
+      }else{
+        $scope.showFeedback('Provide a name & description for the Project');
+      }
+    };
+    $scope.clearProjectSubmit = function(){
+      $scope.newProjectName = '';
+      $scope.newProjectDesc = '';
+      $scope.showCreateProjectDiv = false;
+    };
 
 
     /*
@@ -209,11 +244,9 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             if(message.id === 'undefined'){
-              $scope.toastText = 'Warning: Component was not created !';
-              document.getElementById('feedbackToast').show();
+              $scope.showFeedback('Warning: Component was not created !');
             }else {
-              $scope.toastText = 'Component was created';
-              document.getElementById('feedbackToast').show();
+              $scope.showFeedback('Component was created');
 
               //The component is added to be the first element and will be active
               component.id = message.id;
@@ -225,12 +258,10 @@ angular.module('requirementsBazaarWebFrontendApp')
           })
           .error(function (error) {
             console.log(error.message);
-            $scope.toastText = 'Warning: Component was not created !';
-            document.getElementById('feedbackToast').show();
+            $scope.showFeedback('Warning: Component was not created !');
           });
       }else{
-        $scope.toastText = 'Provide a name & description for the component';
-        document.getElementById('feedbackToast').show();
+        $scope.showFeedback('Provide a name & description for the component');
       }
     };
     $scope.clearComponentSubmit = function(){
@@ -252,8 +283,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           console.log(message);
           if(message.success !== 'true'){
-            $scope.toastText = 'Warning: Component was not deleted !';
-            document.getElementById('feedbackToast').show();
+            $scope.showFeedback('Warning: Component was not deleted !');
           }else {
             for (var i = 0; i < $scope.components.length; i++) {
               if ($scope.components[i].id === $scope.activeComponent.id) {
@@ -265,14 +295,12 @@ angular.module('requirementsBazaarWebFrontendApp')
             if ($scope.components !== null) {
               $scope.activeComponent = $scope.components[0];
             }
-            $scope.toastText = 'Component deleted';
-            document.getElementById('feedbackToast').show();
+            $scope.showFeedback('Component deleted');
           }
         })
         .error(function (error) {
           console.log(error.message);
-          $scope.toastText = 'Warning: Component was not deleted !';
-          document.getElementById('feedbackToast').show();
+          $scope.showFeedback('Warning: Component was not deleted !');
         });
     };
 
@@ -286,7 +314,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.showCreateReqDiv = false;
     $scope.newReqName = '';
     $scope.newReqDesc = '';
-    $scope.submitNewReq = function(){
+    $scope.submitReq = function(){
       if($scope.newReqName !== '' && $scope.newReqDesc !== ''){
         console.log('submit requirement');
         var requirement = {title: $scope.newReqName, description: $scope.newReqDesc, projectId: $scope.activeProject.id, leadDeveloperId : 1, creatorId : 1};
@@ -294,11 +322,9 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             if(message.id === 'undefined'){
-              $scope.toastText = 'Warning: Requirement was not created !';
-              document.getElementById('feedbackToast').show();
+              $scope.showFeedback('Warning: Requirement was not created !');
             }else{
-              $scope.toastText = 'Requirement was created';
-              document.getElementById('feedbackToast').show();
+              $scope.showFeedback('Requirement was created');
 
               //Add missing values to the newly created requirement
               requirement.id = message.id;
@@ -317,16 +343,14 @@ angular.module('requirementsBazaarWebFrontendApp')
             }
           })
           .error(function (error) {
-            //This method only catches network errors
+            //This error only catches unknown server errors, usual errorCodes are sent with success message
             console.log(error.message);
-            $scope.toastText = 'Warning: Requirement was not created !';
-            document.getElementById('feedbackToast').show();
+            $scope.showFeedback('Warning: Requirement was not created !');
           });
 
         $scope.showCreateReqDiv = false;
       }else{
-        $scope.toastText = 'Provide a name & description for the requirement';
-        document.getElementById('feedbackToast').show();
+        $scope.showFeedback('Provide a name & description for the requirement');
       }
     };
     $scope.clearReqSubmit = function(){
@@ -339,8 +363,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteRequirement(req.id)
         .success(function (message) {
           if(message.success !== 'true'){
-            $scope.toastText = 'Warning: Requirement was not deleted';
-            document.getElementById('feedbackToast').show();
+            $scope.showFeedback('Warning: Requirement was not deleted');
           }else{
             // Delete the removed requirement from the list
             for(var i = 0; i<$scope.requirements.length;i++){
@@ -349,15 +372,13 @@ angular.module('requirementsBazaarWebFrontendApp')
                 break;
               }
             }
-            $scope.toastText = 'Requirement deleted';
-            document.getElementById('feedbackToast').show();
+            $scope.showFeedback('Requirement deleted');
           }
         })
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
-          console.log(error.message);
-          $scope.toastText = 'Warning: Requirement was not deleted';
-          document.getElementById('feedbackToast').show();
+          console.log(error);
+          $scope.showFeedback('Warning: Requirement was not deleted');
         });
     };
 
@@ -375,6 +396,15 @@ angular.module('requirementsBazaarWebFrontendApp')
       }
     };
 
+
+    /*
+    * Shows feedback to the user
+    * Called: automatic
+    * */
+    $scope.showFeedback = function(text){
+      $scope.toastText = text;
+      document.getElementById('feedbackToast').show();
+    };
 
     /**
      *
