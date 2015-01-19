@@ -11,6 +11,7 @@
         </core-selector>
       </paper-dropdown>
     </paper-dropdown-menu>
+    <paper-icon-button icon="icons:delete" ng-click="initDeleteProject()"></paper-icon-button>
 
     <span flex></span>
     <paper-button id="createProjectButton" ng-click="showCreateProjectDiv = !showCreateProjectDiv">New project</paper-button>
@@ -148,12 +149,10 @@
   </div>
 
   <!--Pop-up elements-->
-  <paper-action-dialog id="deleteSomething" heading="Dialog Title" transition="core-transition-center" ng-show="warningVisible">
-    <paper-shadow z="1">
-      <p>{{warningText}}</p>
-      <paper-button affirmative ng-click="resetDeleteComponent()">Decline</paper-button>
-      <paper-button affirmative ng-click="deleteComponent()">Accept</paper-button>
-    </paper-shadow>
+  <paper-action-dialog id="confirmationDialog" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading="Confirm Deletion">
+    <p>{{confirmationDesc}}</p>
+    <paper-button affirmative >Decline</paper-button>
+    <paper-button affirmative ng-click="confirmDelete()">Accept</paper-button>
   </paper-action-dialog>
 
   <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showCreateReqDiv = !showCreateReqDiv"></paper-fab>

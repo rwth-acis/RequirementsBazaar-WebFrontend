@@ -1,14 +1,4 @@
 
-#deleteSomething{
-  position: fixed;
-  z-index: 12;
-  top: 0;
-  left: 8px;
-  right: 8px;
-  margin:32px;
-  background: white;
-}
-
 body {
   font-family: sans-serif;
   background-color: #ececec;

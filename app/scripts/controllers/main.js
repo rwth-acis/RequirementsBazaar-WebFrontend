@@ -25,18 +25,17 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.activeComponent = null;
 
     //Variables for confirming deleting a object
-    $scope.warningText = 'Confirm deletion !';
-    $scope.warningVisible = false;
+    $scope.confirmationDesc = 'The action cannot be undone !';
 
     //In case loading requirements/components fails, show a reload button
     $scope.reloadRequirements = false;
     $scope.reloadComponents = false;
 
-
     //Only one toast is used for feedback, toastText holds the description
     $scope.toastText = '';
 
-
+    //Is used to identify what needs to be deleted after used confirmed it. project, component etc
+    var confirmDeletionObject = '';
 
     /*
     * Loads projects and then components ...
@@ -224,6 +223,28 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.newProjectDesc = '';
       $scope.showCreateProjectDiv = false;
     };
+    $scope.initDeleteProject = function(){
+      $scope.confirmationDesc = 'The action cannot be undone. Deleting a project also removes all components and requirements !';
+      confirmDeletionObject = 'project';
+      document.getElementById('confirmationDialog').toggle();
+    };
+    $scope.deleteProject = function(){
+      console.log('delete project confirmed');
+      //TODO delete the project
+    };
+
+    //TODO move this and write doc
+    $scope.confirmDelete = function(){
+      if(confirmDeletionObject === 'project'){
+        confirmDeletionObject = '';
+        $scope.deleteProject();
+      }
+      if(confirmDeletionObject === 'component'){
+        confirmDeletionObject = '';
+        $scope.deleteComponent();
+      }
+    };
+
 
 
     /*
@@ -270,15 +291,11 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.showCreateCompDiv = false;
     };
     $scope.initDeleteComponent = function () {
-      $scope.warningText = 'Confirm deleting the component !';
-      $scope.warningVisible = true;
-    };
-    $scope.resetDeleteComponent = function(){
-      $scope.warningText = 'Confirm deletion !';
-      $scope.warningVisible = false;
+      $scope.confirmationDesc = 'The action cannot be undone. The requirements will be accessible under the default component.';
+      confirmDeletionObject = 'component';
+      document.getElementById('confirmationDialog').toggle();
     };
     $scope.deleteComponent = function(){
-      $scope.resetDeleteComponent();
       reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (message) {
           console.log(message);
