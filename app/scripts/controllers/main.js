@@ -206,7 +206,7 @@ angular.module('requirementsBazaarWebFrontendApp')
               project.id = message.id;
               $scope.activeProject = project;
               $scope.projects.splice(0, 0, $scope.activeProject);
-              $scope.selectProj($scope.activeComponent);
+              $scope.selectProj($scope.activeProject);
               $scope.clearProjectSubmit();
             }
           })
@@ -231,20 +231,8 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.deleteProject = function(){
       console.log('delete project confirmed');
       //TODO delete the project
+      $scope.showFeedback('This feature is currently under discussion');
     };
-
-    //TODO move this and write doc
-    $scope.confirmDelete = function(){
-      if(confirmDeletionObject === 'project'){
-        confirmDeletionObject = '';
-        $scope.deleteProject();
-      }
-      if(confirmDeletionObject === 'component'){
-        confirmDeletionObject = '';
-        $scope.deleteComponent();
-      }
-    };
-
 
 
     /*
@@ -259,7 +247,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.submitNewComponent = function(){
       if($scope.newCompName !== ''){
         console.log('submit new component');
-        //TODO leaderId is not used, as there is no user management yet
         var component = {description: $scope.newCompDesc, name: $scope.newCompName, leaderId: 1, projectId: $scope.activeProject.id};
         reqBazService.createComponent($scope.activeProject.id,component)
           .success(function (message) {
@@ -400,6 +387,21 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
+
+    /*
+    * Confirmation dialog switch. Only one is used so a variable manages what is currently being deleted
+    * Called: When the user confirms to delete an element
+    * */
+    $scope.confirmDelete = function(){
+      if(confirmDeletionObject === 'project'){
+        confirmDeletionObject = '';
+        $scope.deleteProject();
+      }
+      if(confirmDeletionObject === 'component'){
+        confirmDeletionObject = '';
+        $scope.deleteComponent();
+      }
+    };
 
     /*
     * Shows or hides additional requirement functions
