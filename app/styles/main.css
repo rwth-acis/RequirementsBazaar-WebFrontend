@@ -1,14 +1,4 @@
 
-#deleteSomething{
-  position: fixed;
-  z-index: 12;
-  top: 0;
-  left: 8px;
-  right: 8px;
-  margin:32px;
-  background: white;
-}
-
 body {
   font-family: sans-serif;
   background-color: #ececec;
@@ -81,17 +71,23 @@ body {
   border-radius: 50%;
   background: #db4437;
 }
-#addRequirementDiv{
-  width: 400px;
-  right: 130px;
-  position: fixed;
+.addItemDiv{
   background-color: white;
-  z-index: 2;
-  bottom: 0;
+  width: 400px;
   padding: 10px;
+  margin-left: 5px;
   border: 1px solid #ccc;
   border-color: rgba(0,0,0,.2);
   box-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
+#createContainer{
+  z-index: 2;
+  width: 900px;
+  right: 130px;
+  bottom: 0;
+  position: fixed;
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 #loadRequirements{
@@ -104,6 +100,7 @@ body {
 #loadComponents{
   display: block;
 }
+
 
 
 /*
