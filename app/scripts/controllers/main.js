@@ -211,7 +211,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             }
           })
           .error(function (error) {
-            console.log(error.message);
+            console.log(error);
             $scope.showFeedback('Warning: Project was not created !');
           });
       }else{
@@ -265,7 +265,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             }
           })
           .error(function (error) {
-            console.log(error.message);
+            console.log(error);
             $scope.showFeedback('Warning: Component was not created !');
           });
       }else{
@@ -303,7 +303,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           }
         })
         .error(function (error) {
-          console.log(error.message);
+          console.log(error);
           $scope.showFeedback('Warning: Component was not deleted !');
         });
     };
@@ -348,7 +348,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           })
           .error(function (error) {
             //This error only catches unknown server errors, usual errorCodes are sent with success message
-            console.log(error.message);
+            console.log(error);
             $scope.showFeedback('Warning: Requirement was not created !');
           });
 
@@ -438,7 +438,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           console.log(message);
         })
         .error(function (error) {
-          console.log(error.message);
+          console.log(error);
           $scope.toastText = 'Warning: could not register as a follower';
           document.getElementById('feedbackToast').show();
         });
