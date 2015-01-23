@@ -141,10 +141,6 @@ paper-icon-button /deep/ core-icon[role=img] {
   width: 30px;
 }
 
-paper-icon-button {
-  padding: 0 1px 1px 1px;
-  margin: 1px;
-}
 
 paper-dropdown-menu::shadow #label, paper-dropdown-menu::shadow #arrow{
   color: white;

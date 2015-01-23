@@ -122,13 +122,12 @@
                 <p>{{req.description}}</p>
                 <h2>Comments</h2>
                 <!--here be comments-->
-                <div ng-repeat="comment in req.comments">
+                <div ng-repeat="comment in req.comments" style="border: 1px solid #dedede;margin: 8px;padding: 2px">
                   <p>{{comment.message}}</p>
                   <div style="display: flex">
-                    <p style="font-size: smaller;width: 80%;">by {{comment.creatorId}} on {{comment.creation_time}}</p>
+                    <p style="font-size: smaller;width: 100%;">by {{comment.creatorId}} on {{comment.creation_time}}</p>
                     <paper-icon-button ng-click="deleteComment(comment.Id,req)" icon="icons:delete"></paper-icon-button>
                   </div>
-                  <hr/>
                 </div>
                 <!--Submit comment form-->
                 <h2>Leave a comment</h2>
