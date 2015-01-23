@@ -108,8 +108,9 @@ angular.module('requirementsBazaarWebFrontendApp')
                 $scope.requirements[i].developers = [];
                 $scope.requirements[i].contributors = [];
                 $scope.requirements[i].attachments = [];
-                $scope.requirements[i].comments = [];
                 $scope.requirements[i].components = [];
+
+                $scope.requirements[i].comments = [];
               }
             }
         })
@@ -169,6 +170,9 @@ angular.module('requirementsBazaarWebFrontendApp')
             req.followers = requirement.followers;
             req.developers = requirement.developers;
             req.contributors = requirement.contributors;
+
+            //Load comments
+            $scope.getComments(req);
           })
           .error(function () {
             $scope.showFeedback('Warning: the requirement was not loaded !');
@@ -197,7 +201,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createProject(project)
           .success(function (message) {
             console.log(message);
-            if(message.id === 'undefined'){
+            if(message.hasOwnProperty('errorCode')){
               $scope.showFeedback('Warning: Project was not created !');
             }else {
               $scope.showFeedback('Project was created');
@@ -251,7 +255,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createComponent($scope.activeProject.id,component)
           .success(function (message) {
             console.log(message);
-            if(message.id === 'undefined'){
+            if(message.hasOwnProperty('errorCode')){
               $scope.showFeedback('Warning: Component was not created !');
             }else {
               $scope.showFeedback('Component was created');
@@ -325,7 +329,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createRequirement($scope.activeProject.id,$scope.activeComponent.id,requirement)
           .success(function (message) {
             console.log(message);
-            if(message.id === 'undefined'){
+            if(message.hasOwnProperty('errorCode')){
               $scope.showFeedback('Warning: Requirement was not created !');
             }else{
               $scope.showFeedback('Requirement was created');
@@ -338,7 +342,6 @@ angular.module('requirementsBazaarWebFrontendApp')
               requirement.developers = [];
               requirement.contributors = [];
               requirement.attachments = [];
-              requirement.comments = [];
               requirement.components = [];
 
               //Add the requirement to the first position
@@ -376,6 +379,8 @@ angular.module('requirementsBazaarWebFrontendApp')
                 break;
               }
             }
+            //No requirement selected
+            $scope.selectedIndex = -1;
             $scope.showFeedback('Requirement deleted');
           }
         })
@@ -387,11 +392,109 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
+    /*
+    * Everything related to comments
+    *
+    * */
 
     /*
-    * Confirmation dialog switch. Only one is used so a variable manages what is currently being deleted
-    * Called: When the user confirms to delete an element
+    * Makes an extra call to retrieve the comments and saves them under the requirement
+    * Called: When the requirement is opened
     * */
+    $scope.getComments = function(req){
+      reqBazService.getComments(req.id,0,30)
+        .success(function (comments) {
+          req.comments = comments;
+          console.log(comments[0]);
+        })
+        .error(function (error) {
+          //This error only catches unknown server errors, usual errorCodes are sent with success message
+          console.log(error);
+          $scope.showFeedback('Warning: Could not get comments');
+        });
+    };
+
+    /*
+    * Submits a comment, time of the post is initially approximate
+    * Called: by the user
+    * */
+    $scope.submitComment = function(text,req){
+      console.log('post comment: '+text);
+      if(text === undefined){
+        $scope.showFeedback('Comment cannot be empty');
+      }else{
+        // user 1 is the current anon user
+        var comment = {requirementId: req.id, message: text, creatorId: 1};
+        reqBazService.createComment(req.id,comment)
+          .success(function (message) {
+            console.log(message);
+            if(message.hasOwnProperty('errorCode')){
+              $scope.showFeedback('Warning: Comment was not posted !');
+            }else{
+              comment.Id = message.id;
+              //Instead of making a new server call, just approximate
+              comment.creation_time = Date();
+              req.comments.splice(0, 0, comment);
+            }
+          })
+          .error(function (error) {
+            //This error only catches unknown server errors, usual errorCodes are sent with success message
+            console.log(error);
+            $scope.showFeedback('Warning: Comment was not posted');
+          });
+      }
+    };
+
+    /*
+    * Comment is deleted without further confirmation
+    * Called: by the user
+    * */
+    $scope.deleteComment = function(id,req){
+      reqBazService.deleteComment(id)
+        .success(function (message) {
+          console.log(message);
+          if(message.success !== 'true'){
+            $scope.showFeedback('Warning: Comment was not deleted !');
+          }else{
+            // Delete the removed requirement from the list
+            console.log(req);
+            for(var i = 0; i<req.comments.length;i++){
+              if(req.comments[i].Id === id){
+                req.comments.splice(i, 1);
+                break;
+              }
+            }
+          }
+        })
+        .error(function (error) {
+          //This error only catches unknown server errors, usual errorCodes are sent with success message
+          console.log(error);
+          $scope.showFeedback('Warning: Comment was not deleted');
+        });
+    };
+
+
+    /*
+    * Utility functions used by other calls
+    *
+    * */
+
+    /*
+     * Shows or hides additional requirement functions
+     * Called: User clicks more-vert on requirement
+     * */
+    $scope.showMoreClicked = function ($index) {
+      if($scope.selectedIndex === $index){
+        $scope.selectedIndex = -1;
+      }else{
+        $scope.selectedIndex = $index;
+      }
+    };
+
+    /*
+     * Confirmation dialog switch. Only one is used so a variable manages what is currently being deleted
+     * Called: When the user confirms to delete an element
+     * */
     $scope.confirmDelete = function(){
       if(confirmDeletionObject === 'project'){
         confirmDeletionObject = '';
@@ -402,19 +505,6 @@ angular.module('requirementsBazaarWebFrontendApp')
         $scope.deleteComponent();
       }
     };
-
-    /*
-    * Shows or hides additional requirement functions
-    * Called: User clicks more-vert on requirement
-    * */
-    $scope.showMoreClicked = function ($index) {
-      if($scope.selectedIndex === $index){
-        $scope.selectedIndex = -1;
-      }else{
-        $scope.selectedIndex = $index;
-      }
-    };
-
 
     /*
     * Shows feedback to the user

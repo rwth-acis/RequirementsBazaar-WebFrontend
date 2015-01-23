@@ -47,7 +47,7 @@
 
   <div id="containerMain">
     <!--The side bar of the application / component selection-->
-    <div id="sidebar" ng-show="!showSidebar" style="position: absolute;width: 195px;background-color: white;z-index: 10">
+    <div id="sidebar" ng-show="!showSidebar" style="position: fixed;width: 195px;background-color: white;z-index: 10">
       <!--Create a new component-->
       <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block;">
         <core-icon icon="icons:add-circle" style="padding-right: 5px"></core-icon>
@@ -118,27 +118,48 @@
           <!--Space for description, comments and attachments-->
           <div class="collapse-content section group">
             <div class="col span_6_of_8">
-              <p>{{req.description}}</p>
+              <div style="padding: 10px">
+                <p>{{req.description}}</p>
+                <h2>Comments</h2>
+                <!--here be comments-->
+                <div ng-repeat="comment in req.comments" style="border: 1px solid #dedede;margin: 8px;padding: 2px">
+                  <p>{{comment.message}}</p>
+                  <div style="display: flex">
+                    <p style="font-size: smaller;width: 100%;">by {{comment.creatorId}} on {{comment.creation_time}}</p>
+                    <paper-icon-button ng-click="deleteComment(comment.Id,req)" icon="icons:delete"></paper-icon-button>
+                  </div>
+                </div>
+                <!--Submit comment form-->
+                <h2>Leave a comment</h2>
+                <paper-input-decorator label="Comment - Anonymous, if not logged in">
+                  <paper-autogrow-textarea>
+                    <textarea ng-model="newComment" required></textarea>
+                  </paper-autogrow-textarea>
+                </paper-input-decorator>
+                <paper-button ng-click="submitComment(newComment,req);newComment='';">Submit</paper-button>
+              </div>
             </div>
 
             <!--Sidebar for the individal requirements-->
             <div class="col span_2_of_8">
-              <p style="font-weight: bold">Leader</p>
-              <p style="padding-left: 8px">{{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}</p>
-              <div>
-                <p style="font-weight: bold">Followers</p>
-                <p ng-repeat="follower in req.followers" style="padding-left: 8px">
-                  {{follower.firstName}}
-                </p>
+              <div style="padding: 10px">
+                <p style="font-weight: bold">Leader</p>
+                <p style="padding-left: 8px">{{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}</p>
+                <div>
+                  <p style="font-weight: bold">Followers</p>
+                  <p ng-repeat="follower in req.followers" style="padding-left: 8px">
+                    {{follower.firstName}}
+                  </p>
+                </div>
+                <div>
+                  <p style="font-weight: bold">Developers </p>
+                  <p ng-repeat="dev in req.developers" style="padding-left: 8px">
+                    {{dev.firstName}}
+                  </p>
+                </div>
+                <p style="font-weight: bold">Created by</p>
+                <p style="padding-left: 8px">{{req.creator.firstName}} {{req.creator.lastName}}</p>
               </div>
-              <div>
-                <p style="font-weight: bold">Developers </p>
-                <p ng-repeat="dev in req.developers" style="padding-left: 8px">
-                  {{dev.firstName}}
-                </p>
-              </div>
-              <p style="font-weight: bold">Created by</p>
-              <p style="padding-left: 8px">{{req.creator.firstName}} {{req.creator.lastName}}</p>
             </div>
           </div>
         </core-collapse>

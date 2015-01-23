@@ -117,6 +117,10 @@ core-toolbar {
   color: white;
 }
 
+
+
+
+
 /*
 
 CSS rules that apply to all paper elements
@@ -133,9 +137,10 @@ paper-dropdown-menu paper-item:hover{
 }
 
 paper-icon-button /deep/ core-icon[role=img] {
-  height: 35px;
-  width: 35px;
+  height: 30px;
+  width: 30px;
 }
+
 
 paper-dropdown-menu::shadow #label, paper-dropdown-menu::shadow #arrow{
   color: white;
