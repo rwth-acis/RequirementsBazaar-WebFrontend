@@ -17,7 +17,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.components = null;
     $scope.requirements = null;
     $scope.activeUser = {id : '2', firstname : 'Max2', lastname : 'Mustermann2', email : 'Max@Mustermann2.de', admin : 'true', Las2PeerId :'2'};
-    $scope.myComments = [];
 
     $scope.projectLeader = null;
     $scope.componentLeader = null;
@@ -380,6 +379,8 @@ angular.module('requirementsBazaarWebFrontendApp')
                 break;
               }
             }
+            //No requirement selected
+            $scope.selectedIndex = -1;
             $scope.showFeedback('Requirement deleted');
           }
         })
@@ -391,39 +392,14 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
-
-    /*
-    * Confirmation dialog switch. Only one is used so a variable manages what is currently being deleted
-    * Called: When the user confirms to delete an element
-    * */
-    $scope.confirmDelete = function(){
-      if(confirmDeletionObject === 'project'){
-        confirmDeletionObject = '';
-        $scope.deleteProject();
-      }
-      if(confirmDeletionObject === 'component'){
-        confirmDeletionObject = '';
-        $scope.deleteComponent();
-      }
-    };
-
-    /*
-    * Shows or hides additional requirement functions
-    * Called: User clicks more-vert on requirement
-    * */
-    $scope.showMoreClicked = function ($index) {
-      if($scope.selectedIndex === $index){
-        $scope.selectedIndex = -1;
-      }else{
-        $scope.selectedIndex = $index;
-      }
-    };
-
-
-
     /*
     * Everything related to comments
     *
+    * */
+
+    /*
+    * Makes an extra call to retrieve the comments and saves them under the requirement
+    * Called: When the requirement is opened
     * */
     $scope.getComments = function(req){
       reqBazService.getComments(req.id,0,30)
@@ -437,6 +413,11 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.showFeedback('Warning: Could not get comments');
         });
     };
+
+    /*
+    * Submits a comment, time of the post is initially approximate
+    * Called: by the user
+    * */
     $scope.submitComment = function(text,req){
       console.log('post comment: '+text);
       if(text === undefined){
@@ -463,6 +444,11 @@ angular.module('requirementsBazaarWebFrontendApp')
           });
       }
     };
+
+    /*
+    * Comment is deleted without further confirmation
+    * Called: by the user
+    * */
     $scope.deleteComment = function(id,req){
       reqBazService.deleteComment(id)
         .success(function (message) {
@@ -487,6 +473,38 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
+
+    /*
+    * Utility functions used by other calls
+    *
+    * */
+
+    /*
+     * Shows or hides additional requirement functions
+     * Called: User clicks more-vert on requirement
+     * */
+    $scope.showMoreClicked = function ($index) {
+      if($scope.selectedIndex === $index){
+        $scope.selectedIndex = -1;
+      }else{
+        $scope.selectedIndex = $index;
+      }
+    };
+
+    /*
+     * Confirmation dialog switch. Only one is used so a variable manages what is currently being deleted
+     * Called: When the user confirms to delete an element
+     * */
+    $scope.confirmDelete = function(){
+      if(confirmDeletionObject === 'project'){
+        confirmDeletionObject = '';
+        $scope.deleteProject();
+      }
+      if(confirmDeletionObject === 'component'){
+        confirmDeletionObject = '';
+        $scope.deleteComponent();
+      }
+    };
 
     /*
     * Shows feedback to the user
