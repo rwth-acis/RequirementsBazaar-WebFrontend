@@ -122,9 +122,12 @@
                 <p>{{req.description}}</p>
                 <h2>Comments</h2>
                 <!--here be comments-->
-                <div ng-repeat="comment in myComments">
+                <div ng-repeat="comment in req.comments">
                   <p>{{comment.message}}</p>
-                  <p style="font-size: smaller">by {{comment.creatorId}} on {{comment.creation_time}}</p>
+                  <div style="display: flex">
+                    <p style="font-size: smaller;width: 80%;">by {{comment.creatorId}} on {{comment.creation_time}}</p>
+                    <paper-icon-button ng-click="deleteComment(comment.Id,req)" icon="icons:delete"></paper-icon-button>
+                  </div>
                   <hr/>
                 </div>
                 <!--Submit comment form-->
@@ -134,7 +137,7 @@
                     <textarea ng-model="newComment" required></textarea>
                   </paper-autogrow-textarea>
                 </paper-input-decorator>
-                <paper-button ng-click="submitComment(newComment,req.id);newComment='';">Submit</paper-button>
+                <paper-button ng-click="submitComment(newComment,req);newComment='';">Submit</paper-button>
               </div>
             </div>
 

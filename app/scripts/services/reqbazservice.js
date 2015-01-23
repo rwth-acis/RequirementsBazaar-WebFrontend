@@ -154,7 +154,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $http.post(attachmentUrl, attachment);
     };
 
-    this.deleteComment = function(attachmentId){
+    this.deleteAttachment = function(attachmentId){
       var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/attachments';
       return $http.delete(attachmentUrl + '/' + attachmentId);
     };

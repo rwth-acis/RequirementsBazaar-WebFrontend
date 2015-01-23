@@ -110,6 +110,8 @@ angular.module('requirementsBazaarWebFrontendApp')
                 $scope.requirements[i].contributors = [];
                 $scope.requirements[i].attachments = [];
                 $scope.requirements[i].components = [];
+
+                $scope.requirements[i].comments = [];
               }
             }
         })
@@ -171,7 +173,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             req.contributors = requirement.contributors;
 
             //Load comments
-            $scope.getComments(req.id);
+            $scope.getComments(req);
           })
           .error(function () {
             $scope.showFeedback('Warning: the requirement was not loaded !');
@@ -423,10 +425,11 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Everything related to comments
     *
     * */
-    $scope.getComments = function(id){
-      reqBazService.getComments(id,0,30)
+    $scope.getComments = function(req){
+      reqBazService.getComments(req.id,0,30)
         .success(function (comments) {
-          $scope.myComments = comments;
+          req.comments = comments;
+          console.log(comments[0]);
         })
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
@@ -434,23 +437,23 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.showFeedback('Warning: Could not get comments');
         });
     };
-    $scope.submitComment = function(text,id){
+    $scope.submitComment = function(text,req){
       console.log('post comment: '+text);
       if(text === undefined){
         $scope.showFeedback('Comment cannot be empty');
       }else{
         // user 1 is the current anon user
-        var comment = {requirementId: id, message: text, creatorId: 1};
-        reqBazService.createComment(id,comment)
+        var comment = {requirementId: req.id, message: text, creatorId: 1};
+        reqBazService.createComment(req.id,comment)
           .success(function (message) {
             console.log(message);
             if(message.hasOwnProperty('errorCode')){
               $scope.showFeedback('Warning: Comment was not posted !');
             }else{
-              comment.id = message.id;
-              //Instead of making a new server, I just approximate
+              comment.Id = message.id;
+              //Instead of making a new server call, just approximate
               comment.creation_time = Date();
-              $scope.myComments.splice(0, 0, comment);
+              req.comments.splice(0, 0, comment);
             }
           })
           .error(function (error) {
@@ -459,6 +462,29 @@ angular.module('requirementsBazaarWebFrontendApp')
             $scope.showFeedback('Warning: Comment was not posted');
           });
       }
+    };
+    $scope.deleteComment = function(id,req){
+      reqBazService.deleteComment(id)
+        .success(function (message) {
+          console.log(message);
+          if(message.success !== 'true'){
+            $scope.showFeedback('Warning: Comment was not deleted !');
+          }else{
+            // Delete the removed requirement from the list
+            console.log(req);
+            for(var i = 0; i<req.comments.length;i++){
+              if(req.comments[i].Id === id){
+                req.comments.splice(i, 1);
+                break;
+              }
+            }
+          }
+        })
+        .error(function (error) {
+          //This error only catches unknown server errors, usual errorCodes are sent with success message
+          console.log(error);
+          $scope.showFeedback('Warning: Comment was not deleted');
+        });
     };
 
 
