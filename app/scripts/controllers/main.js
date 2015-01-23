@@ -17,6 +17,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.components = null;
     $scope.requirements = null;
     $scope.activeUser = {id : '2', firstname : 'Max2', lastname : 'Mustermann2', email : 'Max@Mustermann2.de', admin : 'true', Las2PeerId :'2'};
+    $scope.myComments = [];
 
     $scope.projectLeader = null;
     $scope.componentLeader = null;
@@ -108,7 +109,6 @@ angular.module('requirementsBazaarWebFrontendApp')
                 $scope.requirements[i].developers = [];
                 $scope.requirements[i].contributors = [];
                 $scope.requirements[i].attachments = [];
-                $scope.requirements[i].comments = [];
                 $scope.requirements[i].components = [];
               }
             }
@@ -169,6 +169,9 @@ angular.module('requirementsBazaarWebFrontendApp')
             req.followers = requirement.followers;
             req.developers = requirement.developers;
             req.contributors = requirement.contributors;
+
+            //Load comments
+            $scope.getComments(req.id);
           })
           .error(function () {
             $scope.showFeedback('Warning: the requirement was not loaded !');
@@ -197,7 +200,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createProject(project)
           .success(function (message) {
             console.log(message);
-            if(message.id === 'undefined'){
+            if(message.hasOwnProperty('errorCode')){
               $scope.showFeedback('Warning: Project was not created !');
             }else {
               $scope.showFeedback('Project was created');
@@ -251,7 +254,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createComponent($scope.activeProject.id,component)
           .success(function (message) {
             console.log(message);
-            if(message.id === 'undefined'){
+            if(message.hasOwnProperty('errorCode')){
               $scope.showFeedback('Warning: Component was not created !');
             }else {
               $scope.showFeedback('Component was created');
@@ -325,7 +328,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createRequirement($scope.activeProject.id,$scope.activeComponent.id,requirement)
           .success(function (message) {
             console.log(message);
-            if(message.id === 'undefined'){
+            if(message.hasOwnProperty('errorCode')){
               $scope.showFeedback('Warning: Requirement was not created !');
             }else{
               $scope.showFeedback('Requirement was created');
@@ -338,7 +341,6 @@ angular.module('requirementsBazaarWebFrontendApp')
               requirement.developers = [];
               requirement.contributors = [];
               requirement.attachments = [];
-              requirement.comments = [];
               requirement.components = [];
 
               //Add the requirement to the first position
@@ -412,6 +414,50 @@ angular.module('requirementsBazaarWebFrontendApp')
         $scope.selectedIndex = -1;
       }else{
         $scope.selectedIndex = $index;
+      }
+    };
+
+
+
+    /*
+    * Everything related to comments
+    *
+    * */
+    $scope.getComments = function(id){
+      reqBazService.getComments(id,0,30)
+        .success(function (comments) {
+          $scope.myComments = comments;
+        })
+        .error(function (error) {
+          //This error only catches unknown server errors, usual errorCodes are sent with success message
+          console.log(error);
+          $scope.showFeedback('Warning: Could not get comments');
+        });
+    };
+    $scope.submitComment = function(text,id){
+      console.log('post comment: '+text);
+      if(text === undefined){
+        $scope.showFeedback('Comment cannot be empty');
+      }else{
+        // user 1 is the current anon user
+        var comment = {requirementId: id, message: text, creatorId: 1};
+        reqBazService.createComment(id,comment)
+          .success(function (message) {
+            console.log(message);
+            if(message.hasOwnProperty('errorCode')){
+              $scope.showFeedback('Warning: Comment was not posted !');
+            }else{
+              comment.id = message.id;
+              //Instead of making a new server, I just approximate
+              comment.creation_time = Date();
+              $scope.myComments.splice(0, 0, comment);
+            }
+          })
+          .error(function (error) {
+            //This error only catches unknown server errors, usual errorCodes are sent with success message
+            console.log(error);
+            $scope.showFeedback('Warning: Comment was not posted');
+          });
       }
     };
 
