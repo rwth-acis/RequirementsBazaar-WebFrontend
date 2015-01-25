@@ -11,6 +11,12 @@ angular.module('requirementsBazaarWebFrontendApp')
   .service('reqBazService', function reqBazService($http) {
     var url = 'http://localhost:8080/bazaar/';
 
+    //Access token
+    var access_token = '';
+    this.setAccessToken = function(token){
+      access_token=token;
+    };
+
     var paginate = function (url,page,per_page){
       if((typeof page !== "undefined") && (typeof per_page !== "undefined"))
       {
@@ -136,6 +142,8 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     this.createComment = function(requirementId,comment){
       var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/comments';
+      if(access_token !== '')
+        commentUrl = commentUrl+'/?access_token='+access_token;
       return $http.post(commentUrl, comment);
     };
 
@@ -163,6 +171,5 @@ angular.module('requirementsBazaarWebFrontendApp')
     this.getUser = function(userId) {
       var userUrl = url + 'users';
       return $http.get(userUrl + '/' + userId);
-    }
-
+    };
   });

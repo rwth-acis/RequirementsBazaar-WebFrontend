@@ -515,6 +515,18 @@ angular.module('requirementsBazaarWebFrontendApp')
       document.getElementById('feedbackToast').show();
     };
 
+
+    /*
+     * Register a listener for the oauth login and if an existing token is still valid
+     * */
+    $scope.$on('oauth:login', function(event, token) {
+      reqBazService.setAccessToken(token.access_token);
+    });
+    $scope.$on('oauth:authorized', function(event, token) {
+      reqBazService.setAccessToken(token.access_token);
+    });
+
+
     /**
      *
      * Function calls that currently don't do anything or don't work
