@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService) {
+    .controller('MainCtrl', function ($scope, reqBazService, CommentService, ComponentService, $rootScope) {
 
     //Index which requirement in the list is selected
     $scope.selectedIndex = -1;
@@ -172,7 +172,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             req.contributors = requirement.contributors;
 
             //Load comments
-            $scope.getComments(req);
+            CommentService.getComments(req);
           })
           .error(function () {
             $scope.showFeedback('Warning: the requirement was not loaded !');
@@ -249,31 +249,18 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.newCompName = '';
     $scope.newCompDesc = '';
     $scope.submitNewComponent = function(){
-      if($scope.newCompName !== ''){
+      if(!isEmpty($scope.newCompName,'Provide a name & description for the component')) {
         console.log('submit new component');
-        var component = {description: $scope.newCompDesc, name: $scope.newCompName, leaderId: 1, projectId: $scope.activeProject.id};
-        reqBazService.createComponent($scope.activeProject.id,component)
-          .success(function (message) {
-            console.log(message);
-            if(message.hasOwnProperty('errorCode')){
-              $scope.showFeedback('Warning: Component was not created !');
-            }else {
-              $scope.showFeedback('Component was created');
-
-              //The component is added to be the first element and will be active
-              component.id = message.id;
-              $scope.activeComponent = component;
-              $scope.components.splice(0, 0, $scope.activeComponent);
-              $scope.selectComp($scope.activeComponent);
-              $scope.clearComponentSubmit();
-            }
-          })
-          .error(function (error) {
-            console.log(error);
-            $scope.showFeedback('Warning: Component was not created !');
+        ComponentService.createComponent($scope.newCompDesc, $scope.newCompName, $scope.activeProject.id).then(
+          function (component) {
+            //The component is added to be the first element and will be active
+            $scope.activeComponent = component;
+            $scope.components.splice(0, 0, $scope.activeComponent);
+            $scope.selectComp($scope.activeComponent);
+            $scope.clearComponentSubmit();
+          }, function (error) {
+            //do nothing
           });
-      }else{
-        $scope.showFeedback('Provide a name & description for the component');
       }
     };
     $scope.clearComponentSubmit = function(){
@@ -287,28 +274,15 @@ angular.module('requirementsBazaarWebFrontendApp')
       document.getElementById('confirmationDialog').toggle();
     };
     $scope.deleteComponent = function(){
-      reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
-        .success(function (message) {
-          console.log(message);
-          if(message.success !== 'true'){
-            $scope.showFeedback('Warning: Component was not deleted !');
-          }else {
-            for (var i = 0; i < $scope.components.length; i++) {
-              if ($scope.components[i].id === $scope.activeComponent.id) {
-                $scope.components.splice(i, 1);
-                break;
-              }
-            }
-            $scope.activeComponent = null;
-            if ($scope.components !== null) {
-              $scope.activeComponent = $scope.components[0];
-            }
-            $scope.showFeedback('Component deleted');
+      ComponentService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id,$scope.components).then(
+        function (components) {
+          //set a new active component
+          $scope.activeComponent = null;
+          if (components !== null) {
+            $scope.activeComponent = components[0];
           }
-        })
-        .error(function (error) {
-          console.log(error);
-          $scope.showFeedback('Warning: Component was not deleted !');
+        }, function (error) {
+          //do nothing
         });
     };
 
@@ -323,21 +297,21 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.newReqName = '';
     $scope.newReqDesc = '';
     $scope.submitReq = function(){
-      if($scope.newReqName !== '' && $scope.newReqDesc !== ''){
+      if(!isEmpty($scope.newReqName,'Provide a name & description for the requirement') && !isEmpty($scope.newReqDesc,'Provide a name & description for the requirement')) {
         console.log('submit requirement');
-        var requirement = {title: $scope.newReqName, description: $scope.newReqDesc, projectId: $scope.activeProject.id, leadDeveloperId : 1, creatorId : 1};
-        reqBazService.createRequirement($scope.activeProject.id,$scope.activeComponent.id,requirement)
+        var requirement = {title: $scope.newReqName, description: $scope.newReqDesc, projectId: $scope.activeProject.id, leadDeveloperId: 1, creatorId: 1};
+        reqBazService.createRequirement($scope.activeProject.id, $scope.activeComponent.id, requirement)
           .success(function (message) {
             console.log(message);
-            if(message.hasOwnProperty('errorCode')){
+            if (message.hasOwnProperty('errorCode')) {
               $scope.showFeedback('Warning: Requirement was not created !');
-            }else{
+            } else {
               $scope.showFeedback('Requirement was created');
 
               //Add missing values to the newly created requirement
               requirement.id = message.id;
-              requirement.creator = {firstName : 'loading'};
-              requirement.leadDeveloper = {firstName : 'loading'};
+              requirement.creator = {firstName: 'loading'};
+              requirement.leadDeveloper = {firstName: 'loading'};
               requirement.followers = [];
               requirement.developers = [];
               requirement.contributors = [];
@@ -356,8 +330,6 @@ angular.module('requirementsBazaarWebFrontendApp')
           });
 
         $scope.showCreateReqDiv = false;
-      }else{
-        $scope.showFeedback('Provide a name & description for the requirement');
       }
     };
     $scope.clearReqSubmit = function(){
@@ -393,55 +365,12 @@ angular.module('requirementsBazaarWebFrontendApp')
 
 
     /*
-    * Everything related to comments
-    *
-    * */
-
-    /*
-    * Makes an extra call to retrieve the comments and saves them under the requirement
-    * Called: When the requirement is opened
-    * */
-    $scope.getComments = function(req){
-      reqBazService.getComments(req.id,0,30)
-        .success(function (comments) {
-          req.comments = comments;
-          console.log(comments[0]);
-        })
-        .error(function (error) {
-          //This error only catches unknown server errors, usual errorCodes are sent with success message
-          console.log(error);
-          $scope.showFeedback('Warning: Could not get comments');
-        });
-    };
-
-    /*
     * Submits a comment, time of the post is initially approximate
     * Called: by the user
     * */
     $scope.submitComment = function(text,req){
-      console.log('post comment: '+text);
-      if(text === undefined){
-        $scope.showFeedback('Comment cannot be empty');
-      }else{
-        // user 1 is the current anon user
-        var comment = {requirementId: req.id, message: text, creatorId: 1};
-        reqBazService.createComment(req.id,comment)
-          .success(function (message) {
-            console.log(message);
-            if(message.hasOwnProperty('errorCode')){
-              $scope.showFeedback('Warning: Comment was not posted !');
-            }else{
-              comment.Id = message.id;
-              //Instead of making a new server call, just approximate
-              comment.creation_time = Date();
-              req.comments.splice(0, 0, comment);
-            }
-          })
-          .error(function (error) {
-            //This error only catches unknown server errors, usual errorCodes are sent with success message
-            console.log(error);
-            $scope.showFeedback('Warning: Comment was not posted');
-          });
+      if(!isEmpty(text,'Comment cannot be empty')){
+        CommentService.submitComment(text,req);
       }
     };
 
@@ -450,27 +379,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Called: by the user
     * */
     $scope.deleteComment = function(id,req){
-      reqBazService.deleteComment(id)
-        .success(function (message) {
-          console.log(message);
-          if(message.success !== 'true'){
-            $scope.showFeedback('Warning: Comment was not deleted !');
-          }else{
-            // Delete the removed requirement from the list
-            console.log(req);
-            for(var i = 0; i<req.comments.length;i++){
-              if(req.comments[i].Id === id){
-                req.comments.splice(i, 1);
-                break;
-              }
-            }
-          }
-        })
-        .error(function (error) {
-          //This error only catches unknown server errors, usual errorCodes are sent with success message
-          console.log(error);
-          $scope.showFeedback('Warning: Comment was not deleted');
-        });
+      CommentService.deleteComponent(id,req);
     };
 
 
@@ -510,10 +419,24 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Shows feedback to the user
     * Called: automatic
     * */
-    $scope.showFeedback = function(text){
+    $rootScope.showFeedback = function(text){
       $scope.toastText = text;
       document.getElementById('feedbackToast').show();
     };
+
+    var isEmpty = function(elem, text){
+      if(elem === ''){
+        $scope.showFeedback(text);
+        return true;
+      }else if(elem === undefined){
+        $scope.showFeedback(text);
+        return true;
+      }
+      else{
+        return false;
+      }
+    };
+
 
     /**
      *
