@@ -25,6 +25,14 @@ Start in browser
 grunt serve
 ```
 
+How to build using Docker
+-------------------------
+Docker is providing the simplest way to run the Requirement Bazaar Web-Frontend. Just follow the following steps if Docker is already installed on your system:
+
+ 1. `git clone this repo` 
+ 2. `docker build -t rwthacis/reqbaz-webfrontend .` 
+ 3. ``docker run -i -t --rm -v `pwd`:/build rwthacis/reqbaz-webfrontend``
+
 
 License
 -------
