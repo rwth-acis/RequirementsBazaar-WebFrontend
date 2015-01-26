@@ -17,15 +17,18 @@ RUN apt-get install -y \
 
 RUN ln -s /usr/bin/nodejs /usr/local/bin/node
 
+# install build environment dependencies
+RUN npm install -g npm \
+                   grunt-cli \
+                   bower
+
 # create mount point
 RUN mkdir /build
 WORKDIR /build
 VOLUME ["/build"]
 
-# Clone and build code on run
-CMD npm install -g npm \
-                   grunt-cli \
-                   bower && \
+# build code on run
+CMD npm cache clean && \
     npm install && \
     bower install --allow-root --config.analytics=false && \
-	grunt build
+    grunt build
