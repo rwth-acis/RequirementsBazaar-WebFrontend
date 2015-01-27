@@ -8,7 +8,64 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, CommentService, ComponentService, $rootScope) {
+    .controller('MainCtrl', function ($scope, reqBazService, CommentService, ComponentService, $rootScope, $upload) {
+
+    var attachment = null;
+    $scope.attachmentURL = null;
+    $scope.fileSelected = function (files) {
+      console.log(files);
+      if(files[0].type.indexOf('image/') > -1){
+        $scope.attachmentURL = URL.createObjectURL(files[0]);
+        attachment = files[0];
+      }
+      if(files[0].type.indexOf('application/pdf') > -1){
+        console.log('is pdf');
+      }
+
+
+    };
+
+      //$scope.upload = $upload.upload({
+      //  url: 'server/upload/url',
+      //  data: {myObj: $scope.myModelObj},
+      //  file: $scope.files
+      //}).progress(function(evt) {
+      //  console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ evt.config.file.name);
+      //}).success(function(data, status, headers, config) {
+      //  console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
+      //});
+
+
+    $scope.addAttachment = function(event,files){
+
+      //Sample how to upload the file
+      var fd = new FormData();
+      //Take the first selected file
+      fd.append("file", files[0]);
+      //$http.post(uploadUrl, fd, {
+      //  withCredentials: true,
+      //  headers: {'Content-Type': undefined },
+      //  transformRequest: angular.identity
+      //})
+
+
+    };
+    $scope.submitAttachment = function(req){
+      console.log('save changes');
+      console.log('text : '+req.description);
+      if(attachment !== null)
+        console.log('and an attachment');
+
+      //reqBazService.createAttachment()
+      //  .success(function(){
+      //
+      //  })
+      //  .error(function(){
+      //    console.log('error')
+      //  });
+    };
+
+
 
     //Index which requirement in the list is selected
     $scope.selectedIndex = -1;

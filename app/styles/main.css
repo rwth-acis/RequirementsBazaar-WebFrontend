@@ -110,6 +110,11 @@ body {
   margin-top: 5px;
 }
 
+.descriptionDiv{
+  border: 1px solid #ccc;
+  border-color: rgba(0,0,0,.2);
+}
+
 /*
 
 CSS rules that apply to all core-elements
@@ -152,7 +157,7 @@ paper-icon-button /deep/ core-icon[role=img] {
   width: 30px;
 }
 
-paper-dropdown-menu /deep/ #label, paper-dropdown-menu /deep/ #arrow{
+paper-dropdown-menu /deep/ #label, paper-dropdown-menu /deep/ #arrow, paper-dropdown-menu /deep/ #label:not(.selectedItem){
   color: white;
 }
 

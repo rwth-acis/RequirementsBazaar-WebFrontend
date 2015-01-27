@@ -121,7 +121,18 @@
           <div class="collapse-content section group">
             <div class="col span_6_of_8">
               <div style="padding: 10px">
-                <p>{{req.description}}</p>
+                <div contenteditable="true" class="descriptionDiv" ng-file-drop ng-file-change="fileSelected($files, $event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf">
+                  {{req.description}}
+                </div>
+                <div ng-no-file-drop class="descriptionDiv" contenteditable="true">
+                  {{req.description}}
+                </div>
+                <pre ng-bind="req.description"></pre>
+                <img ng-show="attachmentURL != null" ng-src="{{attachmentURL}}" style="width: 100%"/>
+                <paper-button ng-click="submitAttachment(req)">Save changes</paper-button>
+                <paper-icon-button ng-file-select ng-file-change="fileSelected($files, $event)" icon="icons:attachment" style="padding: 8px"></paper-icon-button>
+
+
                 <h2>Comments</h2>
                 <!--here be comments-->
                 <div ng-repeat="comment in req.comments" style="border: 1px solid #dedede;margin: 8px;padding: 2px">
