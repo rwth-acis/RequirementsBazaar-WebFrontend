@@ -53,7 +53,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           }
         })
         .error(function () {
-          $scope.showFeedback('Could not load projects, please reload !');
+          $rootScope.showFeedback('Could not load projects, please reload !');
         });
     })();
 
@@ -76,7 +76,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.activeComponent = null;
           $scope.requirements = null;
           $scope.selectedIndex = -1;
-          $scope.showFeedback('Could not load components');
+          $rootScope.showFeedback('Could not load components');
 
           //Show the reload requirements button
           $scope.reloadComponents = true;
@@ -97,7 +97,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (reqs) {
           $scope.requirements = reqs;
             if($scope.requirements.length === 0){
-              $scope.showFeedback( 'This component has no requirements, feel free to create');
+              $rootScope.showFeedback( 'This component has no requirements, feel free to create');
             }else{
               //Show the requirements
               for(var i = 0; i<$scope.requirements.length;i++){
@@ -118,7 +118,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           //Null the list, otherwise user will see wrong requirements
           $scope.requirements = null;
           $scope.selectedIndex = -1;
-          $scope.showFeedback('Could not load requirements');
+          $rootScope.showFeedback('Could not load requirements');
 
           //Show the reload requirements button
           $scope.reloadRequirements = true;
@@ -146,7 +146,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           if(purpose === 'project'){
             $scope.projectLeader = null;
           }
-          $scope.showFeedback('Could not load user for: '+purpose);
+          $rootScope.showFeedback('Could not load user for: '+purpose);
         });
     }
 
@@ -175,7 +175,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             CommentService.getComments(req);
           })
           .error(function () {
-            $scope.showFeedback('Warning: the requirement was not loaded !');
+            $rootScope.showFeedback('Warning: the requirement was not loaded !');
           });
       }else{
         collapse.setAttribute('data-visible', 'false');
@@ -202,9 +202,9 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             if(message.hasOwnProperty('errorCode')){
-              $scope.showFeedback('Warning: Project was not created !');
+              $rootScope.showFeedback('Warning: Project was not created !');
             }else {
-              $scope.showFeedback('Project was created');
+              $rootScope.showFeedback('Project was created');
 
               //The project is added to be the first element and will be active
               project.id = message.id;
@@ -216,10 +216,10 @@ angular.module('requirementsBazaarWebFrontendApp')
           })
           .error(function (error) {
             console.log(error);
-            $scope.showFeedback('Warning: Project was not created !');
+            $rootScope.showFeedback('Warning: Project was not created !');
           });
       }else{
-        $scope.showFeedback('Provide a name & description for the Project');
+        $rootScope.showFeedback('Provide a name & description for the Project');
       }
     };
     $scope.clearProjectSubmit = function(){
@@ -235,7 +235,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.deleteProject = function(){
       console.log('delete project confirmed');
       //TODO delete the project
-      $scope.showFeedback('This feature is currently under discussion');
+      $rootScope.showFeedback('This feature is currently under discussion');
     };
 
 
@@ -304,9 +304,9 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             if (message.hasOwnProperty('errorCode')) {
-              $scope.showFeedback('Warning: Requirement was not created !');
+              $rootScope.showFeedback('Warning: Requirement was not created !');
             } else {
-              $scope.showFeedback('Requirement was created');
+              $rootScope.showFeedback('Requirement was created');
 
               //Add missing values to the newly created requirement
               requirement.id = message.id;
@@ -326,7 +326,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           .error(function (error) {
             //This error only catches unknown server errors, usual errorCodes are sent with success message
             console.log(error);
-            $scope.showFeedback('Warning: Requirement was not created !');
+            $rootScope.showFeedback('Warning: Requirement was not created !');
           });
 
         $scope.showCreateReqDiv = false;
@@ -342,7 +342,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteRequirement(req.id)
         .success(function (message) {
           if(message.success !== 'true'){
-            $scope.showFeedback('Warning: Requirement was not deleted');
+            $rootScope.showFeedback('Warning: Requirement was not deleted');
           }else{
             // Delete the removed requirement from the list
             for(var i = 0; i<$scope.requirements.length;i++){
@@ -353,13 +353,13 @@ angular.module('requirementsBazaarWebFrontendApp')
             }
             //No requirement selected
             $scope.selectedIndex = -1;
-            $scope.showFeedback('Requirement deleted');
+            $rootScope.showFeedback('Requirement deleted');
           }
         })
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
-          $scope.showFeedback('Warning: Requirement was not deleted');
+          $rootScope.showFeedback('Warning: Requirement was not deleted');
         });
     };
 

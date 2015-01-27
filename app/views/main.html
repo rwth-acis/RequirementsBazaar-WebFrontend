@@ -17,13 +17,13 @@
     <paper-button id="createProjectButton" ng-click="showCreateProjectDiv = !showCreateProjectDiv">New project</paper-button>
 
     <!--Open Notifications button and div-->
-    <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen"></paper-icon-button>
+    <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled></paper-icon-button>
     <div id="NotificationDiv" ng-show="isNotificationsOpen">
       <p>Here will be notifications</p>
     </div>
 
     <!--Open Profile button and div-->
-    <paper-icon-button icon="social:person" ng-click="isProfileOpen = !isProfileOpen"></paper-icon-button>
+    <paper-icon-button icon="social:person" ng-click="isProfileOpen = !isProfileOpen" disabled></paper-icon-button>
     <div id="profileDiv" ng-show="isProfileOpen">
       <div id="profileDivContent" style="margin: 12px">
         <p>{{activeUser.firstname}} {{activeUser.lastname}}</p>
@@ -47,13 +47,14 @@
 
   <div id="containerMain">
     <!--The side bar of the application / component selection-->
-    <div id="sidebar" ng-show="!showSidebar" style="position: fixed;width: 195px;background-color: white;z-index: 10">
+    <div id="sidebar" ng-show="!showSidebar">
+
       <!--Create a new component-->
-      <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block;">
-        <core-icon icon="icons:add-circle" style="padding-right: 5px"></core-icon>
+      <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block;color:white">
+        <core-icon icon="icons:add-circle" ></core-icon>
         Component
       </paper-button>
-      <div ng-hide="!showCreateCompDiv" style="background-color: white;margin-bottom: 20px">
+      <div ng-hide="!showCreateCompDiv" style="margin-bottom: 20px">
         <paper-input-decorator label="Name">
           <paper-autogrow-textarea>
             <textarea ng-model="newCompName"></textarea>
@@ -67,13 +68,14 @@
         <paper-icon-button ng-click="submitNewComponent()" icon="icons:check"></paper-icon-button>
         <paper-icon-button ng-click="clearComponentSubmit()" icon="icons:clear"></paper-icon-button>
       </div>
+
       <!--Show component list-->
       <core-menu id="componentSelection">
         <paper-item ng-repeat="component in components" ng-click="selectComp(component)">{{component.name}}</paper-item>
       </core-menu>
 
+      <!--Reload button shown in case there was a problem retrieving the components-->
       <paper-button id="loadComponents" ng-show="reloadComponents" ng-click="selectProj(activeProject)">Reload</paper-button>
-
     </div>
 
 
@@ -91,7 +93,7 @@
             <span ng-bind="componentLeader.firstName"></span>
             <span ng-bind="componentLeader.lastName"></span>
           </p>
-          <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
+          <paper-icon-button icon="editor:mode-edit" disabled></paper-icon-button>
           <paper-icon-button icon="icons:delete" ng-click="initDeleteComponent()"></paper-icon-button>
         </div>
       </div>
@@ -99,17 +101,17 @@
       <paper-button id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)">Reload</paper-button>
 
       <!--List representing the requirements-->
-      <div ng-repeat="req in requirements">
-        <div style="background-color: white" class="section group">
+      <div ng-repeat="req in requirements" class="requirementsElement">
+        <div style="background-color: white;" class="section group">
           <paper-item ng-class="{ 'span_4_of_8': $index == selectedIndex, 'col':true, 'span_7_of_8': $index !== selectedIndex}" style="background: white; font-size: large;padding: 0px" ng-click="toggleRequirement($event,req)">{{req.title}}</paper-item>
           <div ng-class="{ 'span_4_of_8': $index == selectedIndex, 'col':true, 'span_1_of_8': $index !== selectedIndex}" style="display: flex;flex-direction: row-reverse;">
             <paper-icon-button icon="icons:more-vert" ng-click="showMoreClicked($index)"></paper-icon-button>
             <div ng-hide="!($index == selectedIndex)" style="display: flex;flex-wrap: wrap;">
-              <paper-button style="margin: 6px;">Become Lead</paper-button>
-              <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)"></paper-icon-button>
-              <paper-icon-button icon="editor:mode-edit"></paper-icon-button>
-              <paper-icon-button icon="icons:thumb-up"></paper-icon-button>
-              <paper-icon-button icon="icons:thumb-down"></paper-icon-button>
+              <paper-button style="margin: 6px;" disabled>Become Lead</paper-button>
+              <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)" disabled></paper-icon-button>
+              <paper-icon-button icon="editor:mode-edit" disabled></paper-icon-button>
+              <paper-icon-button icon="icons:thumb-up" disabled></paper-icon-button>
+              <paper-icon-button icon="icons:thumb-down" disabled></paper-icon-button>
               <paper-icon-button icon="icons:delete" ng-click="deleteRequirement(req)"></paper-icon-button>
             </div>
           </div>

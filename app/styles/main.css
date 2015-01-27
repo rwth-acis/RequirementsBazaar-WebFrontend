@@ -4,10 +4,16 @@ body {
   background-color: #ececec;
 }
 
-#componentSelection {
-  background-color: #fff;
-  margin: 0;
+#sidebar {
   box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
+  background-color: white;
+  width: 195px;
+  z-index: 10;
+  position: fixed;
+}
+
+#componentSelection {
+  margin: 2px;
 }
 
 #componentSelection paper-item:hover{
@@ -100,7 +106,9 @@ body {
   display: block;
 }
 
-
+.requirementsElement {
+  margin-top: 5px;
+}
 
 /*
 
@@ -117,6 +125,9 @@ core-toolbar {
   color: white;
 }
 
+core-icon {
+  margin-right: 5px;
+}
 
 
 
@@ -141,8 +152,7 @@ paper-icon-button /deep/ core-icon[role=img] {
   width: 30px;
 }
 
-
-paper-dropdown-menu::shadow #label, paper-dropdown-menu::shadow #arrow{
+paper-dropdown-menu /deep/ #label, paper-dropdown-menu /deep/ #arrow{
   color: white;
 }
 
