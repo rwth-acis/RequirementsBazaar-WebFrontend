@@ -10,52 +10,46 @@
 angular.module('requirementsBazaarWebFrontendApp')
     .controller('MainCtrl', function ($scope, reqBazService, CommentService, ComponentService, $rootScope, $upload) {
 
-    var attachment = null;
-    $scope.attachmentURL = null;
+    /*
+    * Currently only images, videos and pdfs are accepted as attachments
+    * Called: when the user has selected a file
+    * */
+    $scope.attachments = [];
     $scope.fileSelected = function (files) {
-      console.log(files);
       if(files[0].type.indexOf('image/') > -1){
-        $scope.attachmentURL = URL.createObjectURL(files[0]);
-        attachment = files[0];
+        $scope.attachments.push({'file':files[0],'URL':URL.createObjectURL(files[0])});
       }
-      if(files[0].type.indexOf('application/pdf') > -1){
-        console.log('is pdf');
+      if(files[0].type.indexOf('application/pdf') > -1 || files[0].type.indexOf('video/') > -1){
+        console.log('is pdf or video');
+        $scope.attachments.push({'file':files[0],'URL':null});
       }
-
-
+      console.log($scope.attachments);
     };
 
-      //$scope.upload = $upload.upload({
-      //  url: 'server/upload/url',
-      //  data: {myObj: $scope.myModelObj},
-      //  file: $scope.files
-      //}).progress(function(evt) {
-      //  console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ evt.config.file.name);
-      //}).success(function(data, status, headers, config) {
-      //  console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
-      //});
 
+    //$scope.upload = $upload.upload({
+    //  url: 'server/upload/url',
+    //  data: {myObj: $scope.myModelObj},
+    //  file: $scope.files
+    //}).progress(function(evt) {
+    //  console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ evt.config.file.name);
+    //}).success(function(data, status, headers, config) {
+    //  console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
+    //});
 
-    $scope.addAttachment = function(event,files){
-
-      //Sample how to upload the file
-      var fd = new FormData();
-      //Take the first selected file
-      fd.append("file", files[0]);
-      //$http.post(uploadUrl, fd, {
-      //  withCredentials: true,
-      //  headers: {'Content-Type': undefined },
-      //  transformRequest: angular.identity
-      //})
-
-
-    };
+    /*
+    * After the user has finished editing
+    * Called: by the user, by clicking on submit requirement
+    * */
     $scope.submitAttachment = function(req){
       console.log('save changes');
       console.log('text : '+req.description);
-      if(attachment !== null)
-        console.log('and an attachment');
-
+      if($scope.attachments !== null){
+        console.log('with attachments:');
+        console.log($scope.attachments);
+      }
+      //TODO update req text
+      //TODO save all the attachments
       //reqBazService.createAttachment()
       //  .success(function(){
       //
@@ -444,18 +438,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Utility functions used by other calls
     *
     * */
-
-    /*
-     * Shows or hides additional requirement functions
-     * Called: User clicks more-vert on requirement
-     * */
-    $scope.showMoreClicked = function ($index) {
-      if($scope.selectedIndex === $index){
-        $scope.selectedIndex = -1;
-      }else{
-        $scope.selectedIndex = $index;
-      }
-    };
 
     /*
      * Confirmation dialog switch. Only one is used so a variable manages what is currently being deleted

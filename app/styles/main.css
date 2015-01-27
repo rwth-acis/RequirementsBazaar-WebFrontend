@@ -28,40 +28,20 @@ body {
 }
 
 #currentComponent {
-  background: white;
+  background-color: white;
   margin-bottom: 12px;
   padding: 12px;
-}
-
-.collapse-content {
-  padding: 15px;
-  border: 1px solid #dedede;
-  background-color: white;
 }
 
 #profileDiv, #NotificationDiv{
   background: #fff;
   color:black;
-  border: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
   box-shadow: 0 2px 10px rgba(0,0,0,.2);
   position: absolute;
   right: 20px;
   top: 68px;
   width: 300px;
   z-index:100;
-}
-#profileDivFooter{
-  background: #f5f5f5;
-  border-top: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
-  padding: 10px 0;
-  width: 100%;
-  display: table;
-}
-
-#profileDivFooter paper-button{
-  color: white;
 }
 
 #addRequirementFab{
@@ -81,8 +61,6 @@ body {
   width: 400px;
   padding: 10px;
   margin-left: 5px;
-  border: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
   box-shadow: 0 2px 10px rgba(0,0,0,.2);
 }
 #createContainer{
@@ -107,13 +85,15 @@ body {
 }
 
 .requirementsElement {
-  margin-top: 5px;
+  margin-top: 10px;
+  background-color: white;
 }
 
-.descriptionDiv{
+.add-border{
   border: 1px solid #ccc;
   border-color: rgba(0,0,0,.2);
 }
+
 
 /*
 
@@ -157,13 +137,19 @@ paper-icon-button /deep/ core-icon[role=img] {
   width: 30px;
 }
 
+/*For Chrome*/
 paper-dropdown-menu /deep/ #label, paper-dropdown-menu /deep/ #arrow, paper-dropdown-menu /deep/ #label:not(.selectedItem){
-  color: white;
+    color: white;
+  }
+/*For Firefox and Internet Explorer*/
+#label, #arrow{
+  color: white !important;
 }
 
 paper-button {
   margin: 10px;
   background-color: #669900;
+  color: white;
 }
 
 

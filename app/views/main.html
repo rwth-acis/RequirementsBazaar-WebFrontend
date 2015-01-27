@@ -18,13 +18,13 @@
 
     <!--Open Notifications button and div-->
     <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled></paper-icon-button>
-    <div id="NotificationDiv" ng-show="isNotificationsOpen">
+    <div id="NotificationDiv" class="add-border" ng-show="isNotificationsOpen">
       <p>Here will be notifications</p>
     </div>
 
     <!--Open Profile button and div-->
     <paper-icon-button icon="social:person" ng-click="isProfileOpen = !isProfileOpen" disabled></paper-icon-button>
-    <div id="profileDiv" ng-show="isProfileOpen">
+    <div id="profileDiv" class="add-border" ng-show="isProfileOpen">
       <div id="profileDivContent" style="margin: 12px">
         <p>{{activeUser.firstname}} {{activeUser.lastname}}</p>
         <p style="color: #808080; font-size: small">{{activeUser.email}}</p>
@@ -50,7 +50,7 @@
     <div id="sidebar" ng-show="!showSidebar">
 
       <!--Create a new component-->
-      <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block;color:white">
+      <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block">
         <core-icon icon="icons:add-circle" ></core-icon>
         Component
       </paper-button>
@@ -102,12 +102,12 @@
 
       <!--List representing the requirements-->
       <div ng-repeat="req in requirements" class="requirementsElement">
-        <div style="background-color: white;" class="section group">
-          <paper-item ng-class="{ 'span_4_of_8': $index == selectedIndex, 'col':true, 'span_7_of_8': $index !== selectedIndex}" style="background: white; font-size: large;padding: 0px" ng-click="toggleRequirement($event,req)">{{req.title}}</paper-item>
-          <div ng-class="{ 'span_4_of_8': $index == selectedIndex, 'col':true, 'span_1_of_8': $index !== selectedIndex}" style="display: flex;flex-direction: row-reverse;">
-            <paper-icon-button icon="icons:more-vert" ng-click="showMoreClicked($index)"></paper-icon-button>
-            <div ng-hide="!($index == selectedIndex)" style="display: flex;flex-wrap: wrap;">
-              <paper-button style="margin: 6px;" disabled>Become Lead</paper-button>
+        <div style="border-bottom: 1px solid #ccc;width: 100%; display: flex" class="section group">
+          <paper-item style="background: white; font-size: large;padding: 0px; width: 100%" ng-click="toggleRequirement($event,req)">{{req.title}}</paper-item>
+          <div style="display: flex;flex-direction: row-reverse;">
+            <paper-icon-button icon="icons:more-vert" ng-click="show = !show"></paper-icon-button>
+            <div ng-show="show" style="display:flex;">
+              <paper-button style="margin: 6px;" disabled>Lead</paper-button>
               <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)" disabled></paper-icon-button>
               <paper-icon-button icon="editor:mode-edit" disabled></paper-icon-button>
               <paper-icon-button icon="icons:thumb-up" disabled></paper-icon-button>
@@ -118,20 +118,27 @@
         </div>
         <core-collapse data-visible = 'false'>
           <!--Space for description, comments and attachments-->
-          <div class="collapse-content section group">
+          <div class="section group">
             <div class="col span_6_of_8">
               <div style="padding: 10px">
-                <div contenteditable="true" class="descriptionDiv" ng-file-drop ng-file-change="fileSelected($files, $event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf">
+                <div contenteditable="true" class="add-border" ng-file-drop ng-file-change="fileSelected($files, $event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*">
                   {{req.description}}
                 </div>
                 <div ng-no-file-drop class="descriptionDiv" contenteditable="true">
                   {{req.description}}
                 </div>
                 <pre ng-bind="req.description"></pre>
-                <img ng-show="attachmentURL != null" ng-src="{{attachmentURL}}" style="width: 100%"/>
-                <paper-button ng-click="submitAttachment(req)">Save changes</paper-button>
-                <paper-icon-button ng-file-select ng-file-change="fileSelected($files, $event)" icon="icons:attachment" style="padding: 8px"></paper-icon-button>
 
+                <!--Show attachments-->
+                <img ng-repeat="img in attachments | filter: attachments.URL : !null"  ng-src="{{img.URL}}" style="width: 100%"/>
+                <div ng-repeat="attachment in attachments" class="add-border" style="display:flex">
+                  <p style="width: 100%;" ng-bind="attachment.file.name"></p>
+                  <paper-icon-button ng-click="attachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
+                </div>
+                <div style="display:flex;">
+                  <paper-button ng-click="submitAttachment(req)">Save changes</paper-button>
+                  <paper-icon-button ng-file-select ng-file-change="fileSelected($files, $event)" icon="icons:attachment"></paper-icon-button>
+                </div>
 
                 <h2>Comments</h2>
                 <!--here be comments-->
@@ -176,7 +183,6 @@
             </div>
           </div>
         </core-collapse>
-        </br>
       </div>
 
     </div>
@@ -191,7 +197,7 @@
 
   <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showCreateReqDiv = !showCreateReqDiv"></paper-fab>
   <div id="createContainer">
-    <div class="addItemDiv" ng-hide="!showCreateReqDiv">
+    <div class="addItemDiv add-border" ng-hide="!showCreateReqDiv">
       <p>Add requirement</p>
       <paper-input-decorator label="Name">
         <paper-autogrow-textarea>
