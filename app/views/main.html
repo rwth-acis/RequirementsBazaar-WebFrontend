@@ -101,7 +101,7 @@
       <paper-button id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)">Reload</paper-button>
 
       <!--List representing the requirements-->
-      <div ng-repeat="req in requirements" class="requirementsElement">
+      <div ng-repeat="req in requirements" class="requirementsElement" ng-controller="RequirementCtrl">
         <div style="border-bottom: 1px solid #ccc;width: 100%; display: flex" class="section group">
           <paper-item style="background: white; font-size: large;padding: 0px; width: 100%" ng-click="toggleRequirement($event,req)">{{req.title}}</paper-item>
           <div style="display: flex;flex-direction: row-reverse;">
@@ -135,7 +135,7 @@
                   <paper-icon-button ng-click="attachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
                 </div>
                 <div style="display:flex;">
-                  <paper-button ng-click="submitAttachment(req)">Save changes</paper-button>
+                  <paper-button ng-click="updateRequirement(req)">Save changes</paper-button>
                   <paper-icon-button ng-file-select ng-file-change="fileSelected($files, $event)" icon="icons:attachment"></paper-icon-button>
                 </div>
 

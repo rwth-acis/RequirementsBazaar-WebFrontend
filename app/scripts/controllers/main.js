@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, CommentService, ComponentService, $rootScope, $upload) {
+    .controller('MainCtrl', function ($scope, reqBazService, CommentService, UtilityService, ComponentService, $rootScope, $upload) {
 
     //Index which requirement in the list is selected
     $scope.selectedIndex = -1;
@@ -53,7 +53,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           }
         })
         .error(function () {
-          $rootScope.showFeedback('Could not load projects, please reload !');
+          UtilityService.showFeedback('Could not load projects, please reload !');
         });
     })();
 
@@ -76,7 +76,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.activeComponent = null;
           $scope.requirements = null;
           $scope.selectedIndex = -1;
-          $rootScope.showFeedback('Could not load components');
+          UtilityService.showFeedback('Could not load components');
 
           //Show the reload requirements button
           $scope.reloadComponents = true;
@@ -97,7 +97,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (reqs) {
           $scope.requirements = reqs;
             if($scope.requirements.length === 0){
-              $rootScope.showFeedback( 'This component has no requirements, feel free to create');
+              UtilityService.showFeedback( 'This component has no requirements, feel free to create');
             }else{
               //Show the requirements
               for(var i = 0; i<$scope.requirements.length;i++){
@@ -118,7 +118,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           //Null the list, otherwise user will see wrong requirements
           $scope.requirements = null;
           $scope.selectedIndex = -1;
-          $rootScope.showFeedback('Could not load requirements');
+          UtilityService.showFeedback('Could not load requirements');
 
           //Show the reload requirements button
           $scope.reloadRequirements = true;
@@ -146,7 +146,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           if(purpose === 'project'){
             $scope.projectLeader = null;
           }
-          $rootScope.showFeedback('Could not load user for: '+purpose);
+          UtilityService.showFeedback('Could not load user for: '+purpose);
         });
     }
 
@@ -175,7 +175,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             CommentService.getComments(req);
           })
           .error(function () {
-            $rootScope.showFeedback('Warning: the requirement was not loaded !');
+            UtilityService.showFeedback('Warning: the requirement was not loaded !');
           });
       }else{
         collapse.setAttribute('data-visible', 'false');
@@ -202,9 +202,9 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             if(message.hasOwnProperty('errorCode')){
-              $rootScope.showFeedback('Warning: Project was not created !');
+              UtilityService.showFeedback('Warning: Project was not created !');
             }else {
-              $rootScope.showFeedback('Project was created');
+              UtilityService.showFeedback('Project was created');
 
               //The project is added to be the first element and will be active
               project.id = message.id;
@@ -216,10 +216,10 @@ angular.module('requirementsBazaarWebFrontendApp')
           })
           .error(function (error) {
             console.log(error);
-            $rootScope.showFeedback('Warning: Project was not created !');
+            UtilityService.showFeedback('Warning: Project was not created !');
           });
       }else{
-        $rootScope.showFeedback('Provide a name & description for the Project');
+        UtilityService.showFeedback('Provide a name & description for the Project');
       }
     };
     $scope.clearProjectSubmit = function(){
@@ -235,7 +235,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.deleteProject = function(){
       console.log('delete project confirmed');
       //TODO delete the project
-      $rootScope.showFeedback('This feature is currently under discussion');
+      UtilityService.showFeedback('This feature is currently under discussion');
     };
 
 
@@ -249,7 +249,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.newCompName = '';
     $scope.newCompDesc = '';
     $scope.submitNewComponent = function(){
-      if(!isEmpty($scope.newCompName,'Provide a name & description for the component')) {
+      if(!UtilityService.isEmpty($scope.newCompName,'Provide a name & description for the component')) {
         console.log('submit new component');
         ComponentService.createComponent($scope.newCompDesc, $scope.newCompName, $scope.activeProject.id).then(
           function (component) {
@@ -297,16 +297,16 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.newReqName = '';
     $scope.newReqDesc = '';
     $scope.submitReq = function(){
-      if(!isEmpty($scope.newReqName,'Provide a name & description for the requirement') && !isEmpty($scope.newReqDesc,'Provide a name & description for the requirement')) {
+      if(!UtilityService.isEmpty($scope.newReqName,'Provide a name & description for the requirement') && !UtilityService.isEmpty($scope.newReqDesc,'Provide a name & description for the requirement')) {
         console.log('submit requirement');
         var requirement = {title: $scope.newReqName, description: $scope.newReqDesc, projectId: $scope.activeProject.id, leadDeveloperId: 1, creatorId: 1};
         reqBazService.createRequirement($scope.activeProject.id, $scope.activeComponent.id, requirement)
           .success(function (message) {
             console.log(message);
             if (message.hasOwnProperty('errorCode')) {
-              $rootScope.showFeedback('Warning: Requirement was not created !');
+              UtilityService.showFeedback('Warning: Requirement was not created !');
             } else {
-              $rootScope.showFeedback('Requirement was created');
+              UtilityService.showFeedback('Requirement was created');
 
               //Add missing values to the newly created requirement
               requirement.id = message.id;
@@ -326,7 +326,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           .error(function (error) {
             //This error only catches unknown server errors, usual errorCodes are sent with success message
             console.log(error);
-            $rootScope.showFeedback('Warning: Requirement was not created !');
+            UtilityService.showFeedback('Warning: Requirement was not created !');
           });
 
         $scope.showCreateReqDiv = false;
@@ -342,7 +342,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteRequirement(req.id)
         .success(function (message) {
           if(message.success !== 'true'){
-            $rootScope.showFeedback('Warning: Requirement was not deleted');
+            UtilityService.showFeedback('Warning: Requirement was not deleted');
           }else{
             // Delete the removed requirement from the list
             for(var i = 0; i<$scope.requirements.length;i++){
@@ -353,117 +353,15 @@ angular.module('requirementsBazaarWebFrontendApp')
             }
             //No requirement selected
             $scope.selectedIndex = -1;
-            $rootScope.showFeedback('Requirement deleted');
+            UtilityService.showFeedback('Requirement deleted');
           }
         })
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
-          $rootScope.showFeedback('Warning: Requirement was not deleted');
+          UtilityService.showFeedback('Warning: Requirement was not deleted');
         });
     };
-
-
-    /*
-    * Submits a comment, time of the post is initially approximate
-    * Called: by the user
-    * */
-    $scope.submitComment = function(text,req){
-      if(!isEmpty(text,'Comment cannot be empty')){
-        CommentService.submitComment(text,req);
-      }
-    };
-
-    /*
-    * Comment is deleted without further confirmation
-    * Called: by the user
-    * */
-    $scope.deleteComment = function(id,req){
-      CommentService.deleteComponent(id,req);
-    };
-
-
-    /*
-    * Everything related to attachments
-    *
-    * */
-
-
-    /*
-     * Currently only images, videos and pdfs are accepted as attachments
-     * Called: when the user has selected a file
-     * */
-    $scope.attachments = [];
-    $scope.fileSelected = function (files) {
-      if(files[0].type.indexOf('image/') > -1){
-        $scope.attachments.push({'file':files[0],'URL':URL.createObjectURL(files[0])});
-      }
-      if(files[0].type.indexOf('application/pdf') > -1 || files[0].type.indexOf('video/') > -1){
-        console.log('is pdf or video');
-        $scope.attachments.push({'file':files[0],'URL':null});
-      }
-      console.log($scope.attachments);
-    };
-
-
-    //$scope.upload = $upload.upload({
-    //  url: 'server/upload/url',
-    //  data: {myObj: $scope.myModelObj},
-    //  file: $scope.files
-    //}).progress(function(evt) {
-    //  console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ evt.config.file.name);
-    //}).success(function(data, status, headers, config) {
-    //  console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
-    //});
-
-    /*
-     * After the user has finished editing
-     * Called: by the user, by clicking on submit requirement
-     * */
-    $scope.submitAttachment = function(req){
-      console.log('save changes');
-      console.log('text : '+req.description);
-      if($scope.attachments !== null){
-        console.log('with attachments:');
-      }
-
-      console.log($scope.attachments);
-      $rootScope.showFeedback('Warning: Not implemented');
-
-      //TODO update req text
-      //TODO save all the attachments
-
-      //var url = 'http://localhost:8080/bazaar/';
-      //var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/attachments';
-      //attachmentUrl+= '?attachmentType=F';
-      //
-      //$scope.upload = $upload.upload({
-      //  url: attachmentUrl,
-      //  data: {myObj: $scope.myModelObj},
-      //  file: $scope.files
-      //}).progress(function(evt) {
-      //  console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ evt.config.file.name);
-      //}).success(function(data, status, headers, config) {
-      //  console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
-      //});
-
-
-      //this.createAttachment = function(attachmentType, attachment){
-      //  var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/attachments';
-      //
-      //  attachmentUrl+= '?attachmentType' + attachmentType;
-      //
-      //  return $http.post(attachmentUrl, attachment);
-      //};
-
-    };
-
-
-
-    /*
-    * Utility functions used by other calls
-    *
-    * */
 
     /*
      * Confirmation dialog switch. Only one is used so a variable manages what is currently being deleted
@@ -480,27 +378,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       }
     };
 
-    /*
-    * Shows feedback to the user
-    * Called: automatic
-    * */
-    $rootScope.showFeedback = function(text){
-      $scope.toastText = text;
-      document.getElementById('feedbackToast').show();
-    };
 
-    var isEmpty = function(elem, text){
-      if(elem === ''){
-        $scope.showFeedback(text);
-        return true;
-      }else if(elem === undefined){
-        $scope.showFeedback(text);
-        return true;
-      }
-      else{
-        return false;
-      }
-    };
 
 
     /**

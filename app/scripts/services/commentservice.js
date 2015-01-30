@@ -18,7 +18,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
-          $rootScope.showFeedback('Warning: Could not get comments');
+          UtilityService.showFeedback('Warning: Could not get comments');
         });
     };
 
@@ -28,7 +28,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           console.log(message);
           if(message.success !== 'true'){
-            $rootScope.showFeedback('Warning: Comment was not deleted !');
+            UtilityService.showFeedback('Warning: Comment was not deleted !');
           }else{
             // Delete the removed requirement from the list
             for(var i = 0; i<req.comments.length;i++){
@@ -42,7 +42,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
-          $rootScope.showFeedback('Warning: Comment was not deleted !');
+          UtilityService.showFeedback('Warning: Comment was not deleted !');
         });
     };
 
@@ -56,7 +56,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           console.log(message);
           if(message.hasOwnProperty('errorCode')){
-            $rootScope.showFeedback('Warning: Comment was not submitted !');
+            UtilityService.showFeedback('Warning: Comment was not submitted !');
           }else{
             comment.Id = message.id;
             //Instead of making a new server call, just approximate
@@ -67,7 +67,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
-          $rootScope.showFeedback('Warning: Comment was not submitted !');
+          UtilityService.showFeedback('Warning: Comment was not submitted !');
         });
     };
 

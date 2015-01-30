@@ -18,17 +18,17 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           console.log(message);
           if(message.hasOwnProperty('errorCode')){
-            $rootScope.showFeedback('Warning: Component was not created !');
+            UtilityService.showFeedback('Warning: Component was not created !');
             deferred.reject();
           }else {
-            $rootScope.showFeedback('Component was created');
+            UtilityService.showFeedback('Component was created');
             component.id = message.id;
             deferred.resolve(component);
           }
         })
         .error(function (error) {
           console.log(error);
-          $rootScope.showFeedback('Warning: Component was not created !');
+          UtilityService.showFeedback('Warning: Component was not created !');
           deferred.reject();
         });
 
@@ -43,7 +43,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           console.log(message);
           if(message.success !== 'true'){
-            $rootScope.showFeedback('Warning: Component was not deleted !');
+            UtilityService.showFeedback('Warning: Component was not deleted !');
             deferred.reject();
           }else {
             for (var i = 0; i < components.length; i++) {
@@ -53,13 +53,13 @@ angular.module('requirementsBazaarWebFrontendApp')
               }
             }
 
-            $rootScope.showFeedback('Component deleted');
+            UtilityService.showFeedback('Component deleted');
             deferred.resolve(components);
           }
         })
         .error(function (error) {
           console.log(error);
-          $rootScope.showFeedback('Warning: Component was not deleted !');
+          UtilityService.showFeedback('Warning: Component was not deleted !');
           deferred.reject();
         });
 
