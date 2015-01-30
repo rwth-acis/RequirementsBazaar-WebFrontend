@@ -132,11 +132,6 @@ paper-dropdown-menu paper-item:hover{
   background-color: #ececec;
 }
 
-paper-icon-button /deep/ core-icon[role=img] {
-  height: 30px;
-  width: 30px;
-}
-
 /*For Chrome*/
 paper-dropdown-menu /deep/ #label, paper-dropdown-menu /deep/ #arrow, paper-dropdown-menu /deep/ #label:not(.selectedItem){
     color: white;
