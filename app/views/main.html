@@ -12,9 +12,7 @@
       </paper-dropdown>
     </paper-dropdown-menu>
     <paper-icon-button icon="icons:delete" ng-click="initDeleteProject()"></paper-icon-button>
-
     <span flex></span>
-    <paper-button id="createProjectButton" ng-click="showCreateProjectDiv = !showCreateProjectDiv">New project</paper-button>
 
     <!--Open Notifications button and div-->
     <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled></paper-icon-button>
@@ -50,23 +48,25 @@
     <div id="sidebar" ng-show="!showSidebar">
 
       <!--Create a new component-->
-      <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block">
-        <core-icon icon="icons:add-circle" ></core-icon>
-        Component
-      </paper-button>
-      <div ng-hide="!showCreateCompDiv" style="margin-bottom: 20px">
-        <paper-input-decorator label="Name">
-          <paper-autogrow-textarea>
-            <textarea ng-model="newCompName"></textarea>
-          </paper-autogrow-textarea>
-        </paper-input-decorator>
-        <paper-input-decorator label="Description">
-          <paper-autogrow-textarea>
-            <textarea ng-model="newCompDesc"></textarea>
-          </paper-autogrow-textarea>
-        </paper-input-decorator>
-        <paper-icon-button ng-click="submitNewComponent()" icon="icons:check"></paper-icon-button>
-        <paper-icon-button ng-click="clearComponentSubmit()" icon="icons:clear"></paper-icon-button>
+      <div ng-controller="CreateComponentCtrl">
+        <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block">
+          <core-icon icon="icons:add-circle" ></core-icon>
+          Component
+        </paper-button>
+        <div ng-hide="!showCreateCompDiv" style="margin-bottom: 20px">
+          <paper-input-decorator label="Name">
+            <paper-autogrow-textarea>
+              <textarea ng-model="newCompName"></textarea>
+            </paper-autogrow-textarea>
+          </paper-input-decorator>
+          <paper-input-decorator label="Description">
+            <paper-autogrow-textarea>
+              <textarea ng-model="newCompDesc"></textarea>
+            </paper-autogrow-textarea>
+          </paper-input-decorator>
+          <paper-icon-button ng-click="submitNewComponent()" icon="icons:check"></paper-icon-button>
+          <paper-icon-button ng-click="clearComponentSubmit()" icon="icons:clear"></paper-icon-button>
+        </div>
       </div>
 
       <!--Show component list-->
@@ -188,46 +188,48 @@
   </div>
 
   <!--Pop-up elements-->
-  <paper-action-dialog id="confirmationDialog" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading="Confirm Deletion">
-    <p>{{confirmationDesc}}</p>
+  <paper-action-dialog id="confirmDeleteProject" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading="Confirm Deletion">
+    <p>The action cannot be undone. Deleting a project also removes all components and requirements !</p>
     <paper-button affirmative >Decline</paper-button>
-    <paper-button affirmative ng-click="confirmDelete()">Accept</paper-button>
+    <paper-button affirmative ng-click="deleteProject()">Accept</paper-button>
   </paper-action-dialog>
 
-  <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showCreateReqDiv = !showCreateReqDiv"></paper-fab>
-  <div id="createContainer">
-    <div class="addItemDiv add-border" ng-hide="!showCreateReqDiv">
-      <p>Add requirement</p>
-      <paper-input-decorator label="Name">
-        <paper-autogrow-textarea>
-          <textarea ng-model="newReqName"></textarea>
-        </paper-autogrow-textarea>
-      </paper-input-decorator>
-      <paper-input-decorator label="Description">
-        <paper-autogrow-textarea>
-          <textarea ng-model="newReqDesc"></textarea>
-        </paper-autogrow-textarea>
-      </paper-input-decorator>
-      <paper-icon-button ng-click="submitReq()" icon="icons:check"></paper-icon-button>
-      <paper-icon-button ng-click="clearReqSubmit()" icon="icons:clear"></paper-icon-button>
-    </div>
+  <paper-action-dialog id="confirmDeleteComponent" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading="Confirm Deletion">
+    <p>The action cannot be undone. The requirements will be accessible under the default component.</p>
+    <paper-button affirmative >Decline</paper-button>
+    <paper-button affirmative ng-click="deleteComponent()">Accept</paper-button>
+  </paper-action-dialog>
 
-    <div class="addItemDiv" ng-show="showCreateProjectDiv">
-      <p>Create Project</p>
+  <!--Create a new Requirement or Project-->
+  <div id="createContainer" ng-controller="CreateCtrl">
+    <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showCreateDiv = !showCreateDiv"></paper-fab>
+    <div class="addItemDiv add-border" ng-hide="!showCreateDiv">
+
+      <!--Choose either Project or Requirement-->
+      <paper-dropdown-menu label="Requirement">
+        <paper-dropdown class="dropdown">
+          <core-menu class="menu" selected="requirement" valueattr="value" ng-model="selected" ng-init="selected='requirement'">
+            <paper-item value="requirement">Requirement</paper-item>
+            <paper-item value="project">Project</paper-item>
+          </core-menu>
+        </paper-dropdown>
+      </paper-dropdown-menu>
+
       <paper-input-decorator label="Name">
         <paper-autogrow-textarea>
-          <textarea ng-model="newProjectName"></textarea>
+          <textarea ng-model="newName"></textarea>
         </paper-autogrow-textarea>
       </paper-input-decorator>
       <paper-input-decorator label="Description">
         <paper-autogrow-textarea>
-          <textarea ng-model="newProjectDesc"></textarea>
+          <textarea ng-model="newDesc"></textarea>
         </paper-autogrow-textarea>
       </paper-input-decorator>
-      <paper-icon-button ng-click="submitProject()" icon="icons:check"></paper-icon-button>
-      <paper-icon-button ng-click="clearProjectSubmit()" icon="icons:clear"></paper-icon-button>
+      <paper-icon-button ng-click="selected == 'requirement' ? submitReq() : submitProject()" icon="icons:check"></paper-icon-button>
+      <paper-icon-button ng-click="clearSubmit()" icon="icons:clear"></paper-icon-button>
+    </div>
   </div>
-  </div>
+
   <paper-toast id="feedbackToast" text={{toastText}}></paper-toast>
 
 </core-header-panel>

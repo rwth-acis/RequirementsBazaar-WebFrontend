@@ -14,9 +14,10 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Shows feedback to the user
      * Called: automatic
      * */
-    this.showFeedback = function(viewText, text){
-      viewText = text;
-      document.getElementById('feedbackToast').show();
+    this.showFeedback = function(text){
+      var toast = document.getElementById('feedbackToast');
+      toast.text = text;
+      toast.show();
     };
 
     this.isEmpty = function(elem, text){
