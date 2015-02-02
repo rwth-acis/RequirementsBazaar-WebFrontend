@@ -25,9 +25,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.reloadRequirements = false;
     $scope.reloadComponents = false;
 
-    //Is used to identify what needs to be deleted after used confirmed it. project, component etc
-    var confirmDeletionObject = '';
-
     /*
     * Loads projects and then components ...
     * Called: only when the page loads

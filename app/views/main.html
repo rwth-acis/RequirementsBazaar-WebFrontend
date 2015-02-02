@@ -120,13 +120,8 @@
           <div class="section group">
             <div class="col span_6_of_8">
               <div style="padding: 10px">
-                <div contenteditable="true" class="add-border" ng-file-drop ng-file-change="fileSelected($files,$event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*">
-                  {{req.description}}
-                </div>
-                <div ng-no-file-drop class="descriptionDiv" contenteditable="true">
-                  {{req.description}}
-                </div>
-                <pre ng-bind="req.description"></pre>
+                <div contenteditable class="add-border" ng-file-drop ng-file-change="fileSelected($files,$event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="req.description"></div>
+                <div ng-no-file-drop class="descriptionDiv" contenteditable ng-model="req.description"></div>
 
                 <!--Show attachments-->
                 <img ng-repeat="img in attachments | filter: attachments.URL : !null"  ng-src="{{img.URL}}" style="width: 100%"/>
@@ -136,7 +131,7 @@
                 </div>
                 <div style="display:flex;">
                   <paper-button ng-click="updateRequirement(req)">Save changes</paper-button>
-                  <paper-icon-button ng-file-select ng-file-change="fileSelected($files, $event)" icon="icons:attachment"></paper-icon-button>
+                  <paper-icon-button ng-file-select ng-file-change="fileSelected($files)" icon="icons:attachment"></paper-icon-button>
                 </div>
 
                 <h2>Comments</h2>
@@ -187,7 +182,13 @@
     </div>
   </div>
 
-  <!--Pop-up elements-->
+
+
+  <!--
+
+      Confirmation Dialogs for Projects and Components
+
+  -->
   <paper-action-dialog id="confirmDeleteProject" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading="Confirm Deletion">
     <p>The action cannot be undone. Deleting a project also removes all components and requirements !</p>
     <paper-button affirmative >Decline</paper-button>
@@ -200,7 +201,13 @@
     <paper-button affirmative ng-click="deleteComponent()">Accept</paper-button>
   </paper-action-dialog>
 
-  <!--Create a new Requirement or Project-->
+
+  <!--
+
+      Create a new Requirement or Project
+
+  -->
+
   <div id="createContainer" ng-controller="CreateCtrl">
     <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showCreateDiv = !showCreateDiv"></paper-fab>
     <div class="addItemDiv add-border" ng-hide="!showCreateDiv">
@@ -215,6 +222,7 @@
         </paper-dropdown>
       </paper-dropdown-menu>
 
+      <!--Input fields-->
       <paper-input-decorator label="Name">
         <paper-autogrow-textarea>
           <textarea ng-model="newName"></textarea>
@@ -225,8 +233,21 @@
           <textarea ng-model="newDesc"></textarea>
         </paper-autogrow-textarea>
       </paper-input-decorator>
-      <paper-icon-button ng-click="selected == 'requirement' ? submitReq() : submitProject()" icon="icons:check"></paper-icon-button>
-      <paper-icon-button ng-click="clearSubmit()" icon="icons:clear"></paper-icon-button>
+
+      <!--Show the list of added attachments-->
+      <div ng-repeat="attachment in createAttachments" class="add-border" style="display:flex;margin:1px">
+        <p style="width: 100%; margin-bottom: auto;margin-top: auto" ng-bind="attachment.file.name"></p>
+        <paper-icon-button ng-click="createAttachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
+      </div>
+
+      <!--Confirm or add attachments-->
+      <div style="display: flex;margin-top: 10px;">
+        <div style="width: 100%; display: flex;">
+          <paper-button ng-click="selected == 'requirement' ? submitReq() : submitProject()" style="margin: 0;">create</paper-button>
+          <paper-icon-button ng-file-select ng-file-change="newAttachments($files)" icon="icons:attachment"></paper-icon-button>
+        </div>
+        <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
+      </div>
     </div>
   </div>
 

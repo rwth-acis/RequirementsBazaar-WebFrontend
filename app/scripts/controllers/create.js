@@ -14,9 +14,16 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.newName = '';
     $scope.newDesc = '';
 
+    $scope.createAttachments = [];
+
     //Creating a requirement
     $scope.submitReq = function(){
       if(!UtilityService.isEmpty($scope.newName,'Choose requirement name') && !UtilityService.isEmpty($scope.newDesc,'Choose requirement description')) {
+        if($scope.createAttachments.length !== 0){
+          //TODO save the attachments
+          $scope.createAttachments = [];
+          UtilityService.showFeedback('Warning: Attachments were not included !');
+        }
         console.log('submit requirement');
         var requirement = {title: $scope.newName, description: $scope.newDesc, projectId: $scope.activeProject.id, leadDeveloperId: 1, creatorId: 1};
         reqBazService.createRequirement($scope.activeProject.id, $scope.activeComponent.id, requirement)
@@ -25,8 +32,6 @@ angular.module('requirementsBazaarWebFrontendApp')
             if (message.hasOwnProperty('errorCode')) {
               UtilityService.showFeedback('Warning: Requirement was not created !');
             } else {
-              UtilityService.showFeedback('Requirement was created');
-
               //Add missing values to the newly created requirement
               requirement.id = message.id;
               requirement.creator = {firstName: 'loading'};
@@ -84,5 +89,14 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.showCreateDiv = false;
     };
 
-
+    $scope.newAttachments = function(files){
+      if(files[0].type.indexOf('image/') > -1){
+        $scope.createAttachments.push({'file':files[0],'URL':URL.createObjectURL(files[0])});
+      }
+      if(files[0].type.indexOf('application/pdf') > -1 || files[0].type.indexOf('video/') > -1){
+        console.log('is pdf or video');
+        $scope.createAttachments.push({'file':files[0],'URL':null});
+      }
+      console.log($scope.createAttachments);
+    };
   });
