@@ -58,14 +58,14 @@ body {
 }
 .addItemDiv{
   background-color: white;
-  width: 400px;
+  width: 100%;
   padding: 10px;
   margin-left: 5px;
   box-shadow: 0 2px 10px rgba(0,0,0,.2);
 }
 #createContainer{
   z-index: 2;
-  width: 900px;
+  width: 450px;
   right: 130px;
   bottom: 0;
   position: fixed;
@@ -94,6 +94,15 @@ body {
   border-color: rgba(0,0,0,.2);
 }
 
+/*For Chrome*/
+#projectSelection /deep/ #label, #projectSelection /deep/ #arrow, #projectSelection /deep/ #label:not(.selectedItem){
+  color: white;
+}
+
+/*For Firefox and Internet Explorer*/
+#projectSelection #label, #projectSelection #arrow{
+  color: white !important;
+}
 
 /*
 
@@ -132,23 +141,11 @@ paper-dropdown-menu paper-item:hover{
   background-color: #ececec;
 }
 
-/*For Chrome*/
-paper-dropdown-menu /deep/ #label, paper-dropdown-menu /deep/ #arrow, paper-dropdown-menu /deep/ #label:not(.selectedItem){
-    color: white;
-  }
-/*For Firefox and Internet Explorer*/
-#label, #arrow{
-  color: white !important;
-}
-
 paper-button {
   margin: 10px;
   background-color: #669900;
   color: white;
 }
-
-
-
 
 
 
