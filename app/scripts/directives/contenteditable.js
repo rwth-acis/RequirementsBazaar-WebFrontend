@@ -8,7 +8,7 @@
  * directive of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .directive("contenteditable",function(){
+  .directive('contenteditable',function(){
     return {
       restrict: 'A',
       require: 'ngModel',
@@ -26,6 +26,6 @@ angular.module('requirementsBazaarWebFrontendApp')
           scope.$apply(read);
         });
       }
-    }
+    };
 
 });

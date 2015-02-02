@@ -151,7 +151,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             }else{
               comment.Id = message.id;
               //Instead of making a new server call, just approximate
-              comment.creation_time = Date();
+              comment.creationTime = Date();
               req.comments.splice(0, 0, comment);
             }
           })

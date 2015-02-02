@@ -129,8 +129,8 @@
                   <p style="width: 100%;" ng-bind="attachment.file.name"></p>
                   <paper-icon-button ng-click="attachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
                 </div>
-                <div style="display:flex;">
-                  <paper-button ng-click="updateRequirement(req)">Save changes</paper-button>
+                <div style="display:flex;margin-top: 10px">
+                  <paper-button ng-click="updateRequirement(req)" style="margin: 0">Save changes</paper-button>
                   <paper-icon-button ng-file-select ng-file-change="fileSelected($files)" icon="icons:attachment"></paper-icon-button>
                 </div>
 
@@ -139,7 +139,7 @@
                 <div ng-repeat="comment in req.comments" style="border: 1px solid #dedede;margin: 8px;padding: 2px">
                   <p>{{comment.message}}</p>
                   <div style="display: flex">
-                    <p style="font-size: smaller;width: 100%;">by {{comment.creatorId}} on {{comment.creation_time}}</p>
+                    <p style="font-size: smaller;width: 100%;">by {{comment.creatorId}} on {{comment.creationTime}}</p>
                     <paper-icon-button ng-click="deleteComment(comment.Id,req)" icon="icons:delete"></paper-icon-button>
                   </div>
                 </div>
