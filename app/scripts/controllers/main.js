@@ -8,12 +8,12 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload) {
 
     $scope.projects = null;
     $scope.components = null;
     $scope.requirements = null;
-    $scope.activeUser = {id : '1', firstname : 'Kristjan', lastname : 'Liiva', email : 'liiva@web.com', admin : 'true', Las2PeerId :'000', username : 'KristjanLiiva'};
+    $scope.activeUser = {id : '2', firstname : 'Max2', lastname : 'Mustermann2', email : 'Max@Mustermann2.de', admin : 'true', Las2PeerId :'2'};
 
     $scope.projectLeader = null;
     $scope.componentLeader = null;
@@ -21,207 +21,172 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.activeProject = null;
     $scope.activeComponent = null;
 
-    $scope.warningText = 'Confirm deletion !';
-    $scope.warningVisible = false;
+    //In case loading requirements/components fails, show a reload button
+    $scope.reloadRequirements = false;
+    $scope.reloadComponents = false;
 
-    //init functions that need to be run when the user enters the page
-    function getProjects(){
+    /*
+    * Loads projects and then components ...
+    * Called: only when the page loads
+    * */
+    (function(){
       reqBazService.getProjects()
         .success(function (projs) {
           $scope.projects = projs;
-          $scope.activeProject = $scope.projects[0];
-          $scope.selectProj($scope.activeProject);
-
+          if($scope.projects.length !== 0){
+            $scope.activeProject = $scope.projects[0];
+            $scope.selectProj($scope.activeProject);
+          }else{
+            //TODO somehow gracefully handle the fact that there are no projects
+          }
         })
-        .error(function (error) {
-          $scope.status = 'Unable to load customer data: ' + error.message;
+        .error(function () {
+          UtilityService.showFeedback('Could not load projects, please reload !');
         });
-    }
+    })();
 
-    //Is called when the user selects a new project
+    /*
+    * Switches the active project and loads components belonging to it
+    * Called: User selects a new project or reloads components
+    * */
     $scope.selectProj = function (project) {
+      $scope.reloadComponents = false;
       $scope.activeProject = project;
-
       reqBazService.getComponents($scope.activeProject.id,'0','30')
         .success(function (comps) {
           $scope.components = comps;
           $scope.activeComponent = $scope.components[0];
-          console.log($scope.activeComponent);
           $scope.selectComp($scope.activeComponent);
         })
-        .error(function (error) {
-          $scope.status = 'ERROR: ' + error.message;
+        .error(function () {
+          //Null the lists, otherwise user will see wrong components/requirements
+          $scope.components = null;
+          $scope.activeComponent = null;
+          $scope.requirements = null;
+          UtilityService.showFeedback('Could not load components');
+
+          //Show the reload requirements button
+          $scope.reloadComponents = true;
         });
     };
 
-    //Is called when the user has selected a different component
+    /*
+    * Switches the active component and loads requirements belonging to it
+    * Called: User selects a new component/project or reloads requirements
+    * */
     $scope.selectComp = function (component) {
+      $scope.reloadRequirements = false;
       $scope.activeComponent = component;
       getUser($scope.activeComponent.leaderId,'component');
-      console.log('get requirements for projectID: '+$scope.activeProject.id+' and componentID: '+$scope.activeComponent.id);
+
+      //Load the requirements
       reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (reqs) {
           $scope.requirements = reqs;
-          console.log($scope.requirements);
+            if($scope.requirements.length === 0){
+              UtilityService.showFeedback( 'This component has no requirements, feel free to create');
+            }else{
+              //Show the requirements
+              for(var i = 0; i<$scope.requirements.length;i++){
+                //This adds the missing attributes to the requirements
+                $scope.requirements[i].creator = {firstName : 'loading'};
+                $scope.requirements[i].leadDeveloper = {firstName : 'loading'};
+                $scope.requirements[i].followers = [];
+                $scope.requirements[i].developers = [];
+                $scope.requirements[i].contributors = [];
+                $scope.requirements[i].attachments = [];
+                $scope.requirements[i].components = [];
+
+                $scope.requirements[i].comments = [];
+              }
+            }
         })
-        .error(function (error) {
-          $scope.status = 'ERROR: ' + error.message;
+        .error(function () {
+          //Null the list, otherwise user will see wrong requirements
+          $scope.requirements = null;
+          UtilityService.showFeedback('Could not load requirements');
+
+          //Show the reload requirements button
+          $scope.reloadRequirements = true;
         });
     };
 
-    //Queries for users
+    /*
+    * Loads user information
+    * Called: automatically, when a component/requirement etc is shown
+    * */
     function getUser(id,purpose){
       reqBazService.getUser(id)
         .success(function (user) {
           if(purpose === 'component'){
             $scope.componentLeader = user;
-          }else if(purpose === 'project'){
+          }
+          if(purpose === 'project'){
             $scope.projectLeader = user;
-          }else{
-
           }
         })
-        .error(function (error) {
-          console.log(error.message);
-          $scope.status = 'ERROR: ' + error.message;
+        .error(function () {
+          if(purpose === 'component'){
+            $scope.componentLeader = null;
+          }
+          if(purpose === 'project'){
+            $scope.projectLeader = null;
+          }
+          UtilityService.showFeedback('Could not load user for: '+purpose);
         });
     }
 
-    //Call the init functions
-    getProjects();
 
-    $scope.toggle = function(clickEvent,index) {
-      console.log(index);
-      var collapse = clickEvent.target.nextElementSibling;
 
-      if(collapse.getAttribute('data-visible') === 'false'){
-        console.log('opened requirement');
-        collapse.setAttribute('data-visible', 'true');
+    /*
+     * Everything related to creating or deleting a project
+     *
+     * */
 
-        //Get all the missing pieces of information, like leader, follower, votes
-
-      }else{
-        collapse.setAttribute('data-visible', 'false');
-      }
-
-      //toggle visibility of the requirement
-      collapse.toggle();
+    $scope.initDeleteProject = function(){
+      document.getElementById('confirmDeleteProject').toggle();
     };
-
-    $scope.toggleAttachments = function(clickEvent) {
-      console.log('toggle attachments');
-    };
-    $scope.toggleComments = function(clickEvent) {
-      console.log('toggle comments');
+    $scope.deleteProject = function(){
+      console.log('delete project confirmed');
+      //TODO delete the project
+      UtilityService.showFeedback('This feature is currently under discussion');
     };
 
 
-    //Creates a new component
-    $scope.showCreateCompDiv = false;
-    $scope.newCompName = '';
-    $scope.newCompDesc = '';
-    $scope.submitNewComponent = function(){
-      if($scope.newCompName !== ''){
-        console.log('submit new component');
-        //TODO leaderId is not used, as there is no user management yet
-        var component = {description: $scope.newCompDesc, name: $scope.newCompName, leaderId: 1, projectId: $scope.activeProject.id};
-        reqBazService.createComponent($scope.activeProject.id,component)
-          .success(function (message) {
-            console.log(message);
-            //TODO add the new component to the $scope.component and then set everything to default
-            $scope.clearComponentSubmit();
-          })
-          .error(function (error) {
-            console.log(error.message);
-            alert('Something went wrong, please try again');
-          });
-      }else{
-        console.log('Input field empty');
-        //TODO Show toast
-      }
-    };
-    $scope.clearComponentSubmit = function(){
-      $scope.newCompName = '';
-      $scope.newCompDesc = '';
-      $scope.showCreateCompDiv = false;
-    };
+    /*
+    * Everything related to creating or deleting a new component
+    *
+    * */
     $scope.initDeleteComponent = function () {
-      $scope.warningText = 'Confirm deleting the component !';
-      $scope.warningVisible = true;
-    };
-    $scope.cancelDeleteComponent = function(){
-      $scope.warningText = 'Confirm deletion !';
-      $scope.warningVisible = false;
+      document.getElementById('confirmDeleteComponent').toggle();
     };
     $scope.deleteComponent = function(){
-      $scope.warningText = 'Confirm deletion !';
-      $scope.warningVisible = false;
       reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (message) {
           console.log(message);
-          for(var i = 0; i<$scope.components.length;i++){
-            if($scope.components[i].id === $scope.activeComponent.id){
-              $scope.components.splice(i, 1);
-              break;
+          if(message.success !== 'true'){
+            UtilityService.showFeedback('Warning: Component was not deleted !');
+          }else {
+            for (var i = 0; i < $scope.components.length; i++) {
+              if ($scope.components[i].id === $scope.activeComponent.id) {
+                $scope.components.splice(i, 1);
+                break;
+              }
             }
-          }
-          $scope.activeComponent = null;
-          if($scope.components !== null){
-            $scope.activeComponent = $scope.components[0];
+
+            //set a new active component
+            $scope.activeComponent = null;
+            if ($scope.components !== null) {
+              $scope.activeComponent = $scope.components[0];
+            }
+
+            UtilityService.showFeedback('Component deleted');
           }
         })
         .error(function (error) {
-          console.log(error.message);
-          alert('Could not delete, please try again');
+          console.log(error);
+          UtilityService.showFeedback('Warning: Component was not deleted !');
         });
-    };
-
-    //Creating a requirement
-    $scope.showCreateReqDiv = false;
-    $scope.newReqName = '';
-    $scope.newReqDesc = '';
-    $scope.submitNewReq = function(){
-      if($scope.newReqName !== '' && $scope.newReqDesc !== ''){
-        console.log('submit requirement');
-        var requirement = {title: $scope.newReqName, description: $scope.newReqDesc, projectId: $scope.activeProject.id, leadDeveloperId : 1, creatorId : 1};
-
-        console.log($scope.activeProject.id);
-        console.log($scope.activeComponent.id);
-        console.log(requirement);
-        reqBazService.createRequirement($scope.activeProject.id,$scope.activeComponent.id,requirement)
-          .success(function (message) {
-            console.log(message);
-          })
-          .error(function (error) {
-            console.log(error.message);
-          });
-
-        $scope.showCreateReqDiv = false;
-        //this.createRequirement = function(projectId, componentId, requirement){
-        //  var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements';
-        //  return $http.post(reqUrl, requirement);
-        //};
-
-      }else{
-        console.log('Input field empty');
-        //TODO Show toast
-      }
-    };
-    $scope.clearReqSubmit = function(){
-      $scope.newReqName = '';
-      $scope.newReqDesc = '';
-      $scope.showCreateReqDiv = false;
-    };
-
-
-
-
-    $scope.signOut = function(){
-      window.alert('TODO sign out');
-    };
-
-    $scope.editProfile = function(){
-      window.alert('TODO');
     };
 
 

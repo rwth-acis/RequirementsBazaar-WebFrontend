@@ -11,6 +11,8 @@
     <!-- endbower -->
     <!-- endbuild -->
 
+    <base href="/">
+
     <!-- 1. Load webcomponents.js for polyfill support. -->
     <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
 
@@ -38,7 +40,9 @@
     <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
     <link rel="import" href="bower_components/paper-input/paper-input.html">
     <link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
+    <link rel="import" href="bower_components/paper-dialog/paper-action-dialog.html">
     <link rel="import" href="bower_components/paper-toast/paper-toast.html">
+    <link rel="import" href="bower_components/paper-fab/paper-fab.html">
 
 
     <!--Might be missing from bower-->
@@ -48,6 +52,9 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+
+    <!--Not added automatically-->
+    <link rel="import" href="styles/mdi.html">
 
   </head>
   <body unresolved>
@@ -86,14 +93,22 @@
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/ng-polymer-elements/ng-polymer-elements.js"></script>
+    <script src="bower_components/ngstorage/ngStorage.js"></script>
+    <script src="bower_components/oauth-ng/dist/oauth-ng.js"></script>
+    <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/requirement.js"></script>
+        <script src="scripts/controllers/create.js"></script>
+        <script src="scripts/controllers/createComponent.js"></script>
         <script src="scripts/controllers/about.js"></script>
         <script src="scripts/services/reqbazservice.js"></script>
+        <script src="scripts/services/utilityservice.js"></script>
+        <script src="scripts/directives/contenteditable.js"></script>
         <!-- endbuild -->
 
 </body>
