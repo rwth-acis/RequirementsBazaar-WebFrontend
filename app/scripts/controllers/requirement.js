@@ -191,29 +191,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
-
-
-
-    /**
-     *
-     * Function calls that currently don't do anything or don't work
-     *
-     */
-      //Become a follower of a requirement
-    $scope.followRequirement = function(clickEvent,req){
-      console.log('become follower');
-      reqBazService.addUserToFollowers(req.id)
-        .success(function (message) {
-          console.log(message);
-        })
-        .error(function (error) {
-          console.log(error);
-          $scope.toastText = 'Warning: could not register as a follower';
-          document.getElementById('feedbackToast').show();
-        });
-    };
-
-
     $scope.deleteRequirement = function(req){
       console.log('delete requirement');
       reqBazService.deleteRequirement(req.id)
@@ -240,5 +217,24 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
+
+
+    /**
+     *
+     * Function calls that currently don't do anything or don't work
+     *
+     */
+      //Become a follower of a requirement
+    $scope.followRequirement = function(clickEvent,req){
+      console.log('become follower');
+      reqBazService.addUserToFollowers(req.id)
+        .success(function (message) {
+          console.log(message);
+        })
+        .error(function (error) {
+          console.log(error);
+          UtilityService.showFeedback('Warning: could not register as a follower');
+        });
+    };
 
   });

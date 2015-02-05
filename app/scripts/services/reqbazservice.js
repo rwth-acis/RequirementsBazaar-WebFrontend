@@ -110,16 +110,14 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     ///VOTE
     this.addVote = function(requirementId, isDownvote){
-      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/vote';
+      var voteUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/vote';
       if (isDownvote){
-        followUrl += '?direction=down';
+        voteUrl += '?direction=down';
       } else {
-        followUrl += '?direction=up';
+        voteUrl += '?direction=up';
       }
-
-      return $http.post(reqUrl);
+      return $http.post(voteUrl);
     };
-
 
     //naming is wrong
     //this.removeUserFromDevelopers = function(requirementId){

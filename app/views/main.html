@@ -108,9 +108,11 @@
             <paper-icon-button icon="icons:more-vert" ng-click="show = !show"></paper-icon-button>
             <div ng-show="show" style="display:flex;width:400px">
               <paper-button style="margin: 6px;flex-grow: 1" disabled>Lead</paper-button>
-              <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)" disabled></paper-icon-button>
-              <paper-icon-button icon="icons:thumb-up" disabled></paper-icon-button>
-              <paper-icon-button icon="icons:thumb-down" disabled></paper-icon-button>
+              <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)"></paper-icon-button>
+              <div ng-controller="VoteCtrl">
+                <paper-icon-button icon="icons:thumb-up" ng-click="voteUp(req)"></paper-icon-button>
+                <paper-icon-button icon="icons:thumb-down" ng-click="voteDown(req)"></paper-icon-button>
+              </div>
               <paper-icon-button icon="icons:delete" ng-click="deleteRequirement(req)"></paper-icon-button>
             </div>
           </div>
