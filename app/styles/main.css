@@ -7,9 +7,10 @@ body {
 #sidebar {
   box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
   background-color: white;
-  width: 195px;
-  z-index: 10;
+  width: 200px;
+  z-index: 2;
   position: fixed;
+  height: calc(100vh - 64px);
 }
 
 #componentSelection {
@@ -21,7 +22,7 @@ body {
 }
 
 .content {
-  max-width: 1040px;
+  max-width: 1020px;
   margin-left: auto;
   margin-right: auto;
   padding: 10px;
@@ -94,15 +95,15 @@ body {
   border-color: rgba(0,0,0,.2);
 }
 
-/*For Chrome*/
-#projectSelection /deep/ #label, #projectSelection /deep/ #arrow, #projectSelection /deep/ #label:not(.selectedItem){
-  color: white;
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-/*For Firefox and Internet Explorer*/
-#projectSelection #label, #projectSelection #arrow{
-  color: white !important;
-}
 
 /*
 
@@ -122,8 +123,6 @@ core-toolbar {
 core-icon {
   margin-right: 5px;
 }
-
-
 
 
 /*

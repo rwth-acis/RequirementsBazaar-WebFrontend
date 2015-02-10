@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CreateComponentCtrl', function ($scope, reqBazService, UtilityService, $upload) {
+  .controller('CreateComponentCtrl', function ($scope, reqBazService, UtilityService) {
 
     //Creates a new component
     $scope.showCreateCompDiv = false;

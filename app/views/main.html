@@ -2,16 +2,9 @@
 <core-header-panel flex>
 
   <!--The top navigation bar-->
-  <core-toolbar id="mainheader">
+  <core-toolbar id="mainheader" style="z-index: 3;box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);">
     <paper-icon-button id="navicon" icon="menu" ng-click="showSidebar = !showSidebar"></paper-icon-button>
-    <paper-dropdown-menu label="{{activeProject.name}}" id="projectSelection">
-      <paper-dropdown class="dropdown">
-        <core-selector>
-          <paper-item ng-repeat="project in projects" value="{{project.name}}" ng-click="selectProj(project)">{{project.name}}</paper-item>
-        </core-selector>
-      </paper-dropdown>
-    </paper-dropdown-menu>
-    <paper-icon-button icon="icons:delete" ng-click="initDeleteProject()"></paper-icon-button>
+    <p>{{activeProject.name}}</p>
     <span flex></span>
 
     <!--Open Notifications button and div-->
@@ -46,36 +39,76 @@
   <div id="containerMain">
     <!--The side bar of the application / component selection-->
     <div id="sidebar" ng-show="!showSidebar">
+      <div style="height: 50%;overflow: auto">
+        <p style="font-size: smaller;color: #808080;">Choose Component</p>
 
-      <!--Create a new component-->
-      <div ng-controller="CreateComponentCtrl">
-        <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block">
-          <core-icon icon="icons:add-circle" ></core-icon>
-          Component
-        </paper-button>
-        <div ng-hide="!showCreateCompDiv" style="margin-bottom: 20px">
-          <paper-input-decorator label="Name">
-            <paper-autogrow-textarea>
-              <textarea ng-model="newCompName"></textarea>
-            </paper-autogrow-textarea>
-          </paper-input-decorator>
-          <paper-input-decorator label="Description">
-            <paper-autogrow-textarea>
-              <textarea ng-model="newCompDesc"></textarea>
-            </paper-autogrow-textarea>
-          </paper-input-decorator>
-          <paper-icon-button ng-click="submitNewComponent()" icon="icons:check"></paper-icon-button>
-          <paper-icon-button ng-click="clearComponentSubmit()" icon="icons:clear"></paper-icon-button>
+        <!--Show component list-->
+        <core-menu id="componentSelection">
+          <paper-item ng-repeat="component in components" ng-click="selectComp(component)">{{component.name}}</paper-item>
+        </core-menu>
+
+        <!--Reload button shown in case there was a problem retrieving the components-->
+        <paper-button id="loadComponents" ng-show="reloadComponents" ng-click="selectProj(activeProject)">Reload</paper-button>
+
+        <!--Create a new component-->
+        <div ng-controller="CreateComponentCtrl">
+          <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block">
+            <core-icon icon="icons:add-circle" ></core-icon>
+            Component
+          </paper-button>
+          <div ng-hide="!showCreateCompDiv" style="margin-bottom: 20px">
+            <paper-input-decorator label="Name">
+              <paper-autogrow-textarea>
+                <textarea ng-model="newCompName"></textarea>
+              </paper-autogrow-textarea>
+            </paper-input-decorator>
+            <paper-input-decorator label="Description">
+              <paper-autogrow-textarea>
+                <textarea ng-model="newCompDesc"></textarea>
+              </paper-autogrow-textarea>
+            </paper-input-decorator>
+            <paper-icon-button ng-click="submitNewComponent()" icon="icons:check"></paper-icon-button>
+            <paper-icon-button ng-click="clearComponentSubmit()" icon="icons:clear"></paper-icon-button>
+          </div>
         </div>
       </div>
 
-      <!--Show component list-->
-      <core-menu id="componentSelection">
-        <paper-item ng-repeat="component in components" ng-click="selectComp(component)">{{component.name}}</paper-item>
-      </core-menu>
+      <div style="height: 50%;overflow: auto">
+        <hr>
+        <p style="font-size: smaller;color: #808080;padding-left: 16px">Choose Project</p>
 
-      <!--Reload button shown in case there was a problem retrieving the components-->
-      <paper-button id="loadComponents" ng-show="reloadComponents" ng-click="selectProj(activeProject)">Reload</paper-button>
+        <!--Switch project-->
+        <paper-dropdown-menu label="{{activeProject.name}}" style="padding-left:16px">
+          <paper-dropdown class="dropdown">
+            <core-selector>
+              <paper-item ng-repeat="project in projects" value="{{project.name}}" ng-click="selectProj(project)">{{project.name}}</paper-item>
+            </core-selector>
+          </paper-dropdown>
+        </paper-dropdown-menu>
+
+        <!--Create a new project-->
+        <div ng-controller="CreateProjectCtrl">
+          <paper-button ng-click="showCreateDiv=!showCreateDiv" style="display: block">
+            <core-icon icon="icons:add-circle" ></core-icon>
+            project
+          </paper-button>
+          <div ng-hide="!showCreateDiv" style="margin-bottom: 20px">
+            <paper-input-decorator label="Name">
+              <paper-autogrow-textarea>
+                <textarea ng-model="newName"></textarea>
+              </paper-autogrow-textarea>
+            </paper-input-decorator>
+            <paper-input-decorator label="Description">
+              <paper-autogrow-textarea>
+                <textarea ng-model="newDesc"></textarea>
+              </paper-autogrow-textarea>
+            </paper-input-decorator>
+            <paper-icon-button ng-click="submitProject()" icon="icons:check"></paper-icon-button>
+            <paper-icon-button ng-click="clearSubmit()" icon="icons:clear"></paper-icon-button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
 
@@ -103,19 +136,22 @@
       <!--List representing the requirements-->
       <div ng-repeat="req in requirements" class="requirementsElement" ng-controller="RequirementCtrl">
         <div style="border-bottom: 1px solid #ccc;width: 100%; display: flex" class="section group">
-          <paper-item style="background: white; font-size: large;padding: 0px; width: 100%" ng-click="toggleRequirement($event,req)">{{req.title}}</paper-item>
+          <paper-item style="background: white; font-size: large;padding: 0px; width: 100%" ng-click="toggleRequirement(req)">
+            <span style="margin-right: 16px;min-width: 200px;" class="ellipsis" >{{req.title}}</span>
+            <span style="font-size: smaller;color: grey" class="ellipsis" ng-show="!showRequirement">{{req.description}}</span>
+          </paper-item>
+          <paper-icon-button icon="icons:thumb-up" disabled></paper-icon-button>
+          <paper-icon-button icon="icons:thumb-down" disabled></paper-icon-button>
           <div style="display: flex;flex-direction: row-reverse;">
             <paper-icon-button icon="icons:more-vert" ng-click="show = !show"></paper-icon-button>
             <div ng-show="show" style="display:flex;width:400px">
               <paper-button style="margin: 6px;flex-grow: 1" disabled>Lead</paper-button>
               <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)" disabled></paper-icon-button>
-              <paper-icon-button icon="icons:thumb-up" disabled></paper-icon-button>
-              <paper-icon-button icon="icons:thumb-down" disabled></paper-icon-button>
               <paper-icon-button icon="icons:delete" ng-click="deleteRequirement(req)"></paper-icon-button>
             </div>
           </div>
         </div>
-        <core-collapse data-visible = 'false'>
+        <core-collapse opened={{showRequirement}}>
           <!--Space for description, comments and attachments-->
           <div class="section group">
             <div class="col span_6_of_8">
@@ -129,7 +165,8 @@
                   <p style="width: 100%;" ng-bind="attachment.file.name"></p>
                   <paper-icon-button ng-click="attachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
                 </div>
-                <div style="display:flex;margin-top: 10px">
+                <paper-icon-button icon="editor:mode-edit" ng-click="editRequirement = !editRequirement" ng-show="!editRequirement"></paper-icon-button>
+                <div style="display:flex;margin-top: 10px" ng-show="editRequirement">
                   <paper-button ng-click="updateRequirement(req)" style="margin: 0">Save changes</paper-button>
                   <paper-icon-button ng-file-select ng-file-change="fileSelected($files)" icon="icons:attachment"></paper-icon-button>
                 </div>
@@ -211,17 +248,7 @@
   <div id="createContainer" ng-controller="CreateCtrl">
     <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showCreateDiv = !showCreateDiv"></paper-fab>
     <div class="addItemDiv add-border" ng-hide="!showCreateDiv">
-
-      <!--Choose either Project or Requirement-->
-      <paper-dropdown-menu label="Requirement">
-        <paper-dropdown class="dropdown">
-          <core-menu class="menu" selected="requirement" valueattr="value" ng-model="selected" ng-init="selected='requirement'">
-            <paper-item value="requirement">Requirement</paper-item>
-            <paper-item value="project">Project</paper-item>
-          </core-menu>
-        </paper-dropdown>
-      </paper-dropdown-menu>
-
+      <p>Create a requirement</p>
       <!--Input fields-->
       <paper-input-decorator label="Name">
         <paper-autogrow-textarea>
@@ -243,7 +270,7 @@
       <!--Confirm or add attachments-->
       <div style="display: flex;margin-top: 10px;">
         <div style="width: 100%; display: flex;">
-          <paper-button ng-click="selected == 'requirement' ? submitReq() : submitProject()" style="margin: 0;">create</paper-button>
+          <paper-button ng-click="submitReq()" style="margin: 0;">create</paper-button>
           <paper-icon-button ng-file-select ng-file-change="newAttachments($files)" icon="icons:attachment"></paper-icon-button>
         </div>
         <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>

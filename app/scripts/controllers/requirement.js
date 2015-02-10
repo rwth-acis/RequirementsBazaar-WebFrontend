@@ -11,6 +11,8 @@ angular.module('requirementsBazaarWebFrontendApp')
   .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, $upload) {
 
     $scope.attachments = [];
+    $scope.showRequirement = false;
+    $scope.editRequirement = false;
 
     /*
      * Currently only images, videos and pdfs are accepted as attachments
@@ -54,6 +56,9 @@ angular.module('requirementsBazaarWebFrontendApp')
       console.log($scope.attachments);
       UtilityService.showFeedback('Warning: Not implemented');
 
+
+      $scope.editRequirement = false;
+
       //TODO update req text
       //TODO save all the attachments that did not exist before?
 
@@ -83,17 +88,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
-
     /*
      * Toggles the visibility of a requirements
      * Called: user clicks on the requirement
      * */
-    $scope.toggleRequirement = function(clickEvent,req) {
-      var collapse = clickEvent.target.parentNode.nextElementSibling;
-      if(collapse.getAttribute('data-visible') === 'false'){
-        console.log('opened requirement');
-        collapse.setAttribute('data-visible', 'true');
-        //Get all the missing pieces of information, like leader, follower, votes
+    $scope.toggleRequirement = function(req) {
+
+      if($scope.showRequirement === false){
         reqBazService.getRequirement(req.id)
           .success(function (requirement) {
             console.log(requirement);
@@ -111,12 +112,8 @@ angular.module('requirementsBazaarWebFrontendApp')
           .error(function () {
             UtilityService.showFeedback('Warning: the requirement was not loaded !');
           });
-      }else{
-        collapse.setAttribute('data-visible', 'false');
       }
-
-      //toggle visibility of the requirement
-      collapse.toggle();
+      $scope.showRequirement = !$scope.showRequirement;
     };
 
 
