@@ -11,7 +11,6 @@ angular.module('requirementsBazaarWebFrontendApp')
   .controller('CreateComponentCtrl', function ($scope, reqBazService, UtilityService) {
 
     //Creates a new component
-    $scope.showCreateCompDiv = false;
     $scope.newCompName = '';
     $scope.newCompDesc = '';
     $scope.submitNewComponent = function(){
@@ -44,6 +43,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.clearComponentSubmit = function(){
       $scope.newCompName = '';
       $scope.newCompDesc = '';
-      $scope.showCreateCompDiv = false;
+      $scope.$parent.showCreateCompDiv = false;
     };
   });

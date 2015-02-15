@@ -4,7 +4,7 @@
   <!--The top navigation bar-->
   <core-toolbar id="mainheader" style="z-index: 3;box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);">
     <paper-icon-button id="navicon" icon="menu" ng-click="showSidebar = !showSidebar"></paper-icon-button>
-    <p>{{activeProject.name}}</p>
+    <p>Requirement Bazaar</p>
     <span flex></span>
 
     <!--Open Notifications button and div-->
@@ -39,8 +39,14 @@
   <div id="containerMain">
     <!--The side bar of the application / component selection-->
     <div id="sidebar" ng-show="!showSidebar">
-      <div style="height: 50%;overflow: auto">
-        <p style="font-size: smaller;color: #808080;">Choose Component</p>
+      <div style="height: 55%;overflow: auto">
+        <div style="display: flex;justify-content: space-around;">
+          <p style="font-size: smaller;color: #808080;">Choose Component</p>
+          <!--<paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block">-->
+            <!--<core-icon icon="icons:add-circle" ></core-icon>-->
+          <!--</paper-button>-->
+          <paper-icon-button icon="icons:add-circle" ng-click="showCreateCompDiv=!showCreateCompDiv"></paper-icon-button>
+        </div>
 
         <!--Show component list-->
         <core-menu id="componentSelection">
@@ -49,31 +55,9 @@
 
         <!--Reload button shown in case there was a problem retrieving the components-->
         <paper-button id="loadComponents" ng-show="reloadComponents" ng-click="selectProj(activeProject)">Reload</paper-button>
-
-        <!--Create a new component-->
-        <div ng-controller="CreateComponentCtrl">
-          <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block">
-            <core-icon icon="icons:add-circle" ></core-icon>
-            Component
-          </paper-button>
-          <div ng-hide="!showCreateCompDiv" style="margin-bottom: 20px">
-            <paper-input-decorator label="Name">
-              <paper-autogrow-textarea>
-                <textarea ng-model="newCompName"></textarea>
-              </paper-autogrow-textarea>
-            </paper-input-decorator>
-            <paper-input-decorator label="Description">
-              <paper-autogrow-textarea>
-                <textarea ng-model="newCompDesc"></textarea>
-              </paper-autogrow-textarea>
-            </paper-input-decorator>
-            <paper-icon-button ng-click="submitNewComponent()" icon="icons:check"></paper-icon-button>
-            <paper-icon-button ng-click="clearComponentSubmit()" icon="icons:clear"></paper-icon-button>
-          </div>
-        </div>
       </div>
 
-      <div style="height: 50%;overflow: auto">
+      <div style="height: 45%;overflow: auto">
         <hr>
         <p style="font-size: smaller;color: #808080;padding-left: 16px">Choose Project</p>
 
@@ -244,36 +228,62 @@
       Create a new Requirement or Project
 
   -->
+  <div class="createContainer">
+    <div id="createContainer" ng-controller="CreateCtrl" class="createDiv">
+      <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showCreateDiv = !showCreateDiv"></paper-fab>
+      <div class="addItemDiv add-border" ng-hide="!showCreateDiv">
+        <p>Create a requirement</p>
+        <!--Input fields-->
+        <paper-input-decorator label="Name">
+          <paper-autogrow-textarea>
+            <textarea ng-model="newName"></textarea>
+          </paper-autogrow-textarea>
+        </paper-input-decorator>
+        <paper-input-decorator label="Description">
+          <paper-autogrow-textarea>
+            <textarea ng-model="newDesc"></textarea>
+          </paper-autogrow-textarea>
+        </paper-input-decorator>
 
-  <div id="createContainer" ng-controller="CreateCtrl">
-    <paper-fab id="addRequirementFab" icon="icons:add" ng-click="showCreateDiv = !showCreateDiv"></paper-fab>
-    <div class="addItemDiv add-border" ng-hide="!showCreateDiv">
-      <p>Create a requirement</p>
-      <!--Input fields-->
-      <paper-input-decorator label="Name">
-        <paper-autogrow-textarea>
-          <textarea ng-model="newName"></textarea>
-        </paper-autogrow-textarea>
-      </paper-input-decorator>
-      <paper-input-decorator label="Description">
-        <paper-autogrow-textarea>
-          <textarea ng-model="newDesc"></textarea>
-        </paper-autogrow-textarea>
-      </paper-input-decorator>
-
-      <!--Show the list of added attachments-->
-      <div ng-repeat="attachment in createAttachments" class="add-border" style="display:flex;margin:1px">
-        <p style="width: 100%; margin-bottom: auto;margin-top: auto" ng-bind="attachment.file.name"></p>
-        <paper-icon-button ng-click="createAttachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
-      </div>
-
-      <!--Confirm or add attachments-->
-      <div style="display: flex;margin-top: 10px;">
-        <div style="width: 100%; display: flex;">
-          <paper-button ng-click="submitReq()" style="margin: 0;">create</paper-button>
-          <paper-icon-button ng-file-select ng-file-change="newAttachments($files)" icon="icons:attachment"></paper-icon-button>
+        <!--Show the list of added attachments-->
+        <div ng-repeat="attachment in createAttachments" class="add-border" style="display:flex;margin:1px">
+          <p style="width: 100%; margin-bottom: auto;margin-top: auto" ng-bind="attachment.file.name"></p>
+          <paper-icon-button ng-click="createAttachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
         </div>
-        <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
+
+        <!--Confirm or add attachments-->
+        <div style="display: flex;margin-top: 10px;">
+          <div style="width: 100%; display: flex;">
+            <paper-button ng-click="submitReq()" style="margin: 0;">create</paper-button>
+            <paper-icon-button ng-file-select ng-file-change="newAttachments($files)" icon="icons:attachment"></paper-icon-button>
+          </div>
+          <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
+        </div>
+      </div>
+    </div>
+
+    <div id="createComponent" ng-hide="!showCreateCompDiv" class="createDiv">
+      <div class="addItemDiv add-border" ng-controller="CreateComponentCtrl">
+        <p>Create a component</p>
+        <!--Input fields-->
+        <paper-input-decorator label="Name">
+          <paper-autogrow-textarea>
+            <textarea ng-model="newCompName"></textarea>
+          </paper-autogrow-textarea>
+        </paper-input-decorator>
+        <paper-input-decorator label="Description">
+          <paper-autogrow-textarea>
+            <textarea ng-model="newCompDesc"></textarea>
+          </paper-autogrow-textarea>
+        </paper-input-decorator>
+
+        <!--Confirm or add attachments-->
+        <div style="display: flex;margin-top: 10px;">
+          <div style="width: 100%; display: flex;">
+            <paper-button ng-click="submitNewComponent()" style="margin: 0;">create</paper-button>
+          </div>
+          <paper-icon-button ng-click="clearComponentSubmit()" icon="icons:delete"></paper-icon-button>
+        </div>
       </div>
     </div>
   </div>
