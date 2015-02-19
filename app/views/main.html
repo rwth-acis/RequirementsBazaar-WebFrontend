@@ -108,68 +108,73 @@
         </div>
         <core-collapse opened={{showRequirement}}>
           <!--Space for description, comments and attachments-->
-          <div class="section group">
-            <div class="col span_6_of_8">
-              <div style="padding: 10px">
+          <div>
+            <div style="padding: 10px">
 
-                <!--Show requirement text-->
-                <p ng-show="!editRequirement">{{req.description}}</p>
-                <div ng-show="editRequirement">
-                  <div contenteditable class="add-border" ng-file-drop ng-file-change="fileSelected($files,$event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="req.description"></div>
-                  <div ng-no-file-drop class="descriptionDiv" contenteditable ng-model="req.description"></div>
-                </div>
+              <!--Show requirement text-->
+              <p ng-show="!editRequirement">{{req.description}}</p>
+              <div ng-show="editRequirement">
+                <div contenteditable class="add-border" ng-file-drop ng-file-change="fileSelected($files,$event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="req.description"></div>
+                <div ng-no-file-drop class="descriptionDiv" contenteditable ng-model="req.description"></div>
+              </div>
 
-                <!--Show attachments-->
-                <img ng-repeat="img in attachments | filter: attachments.URL : !null"  ng-src="{{img.URL}}" style="width: 100%"/>
-                <div ng-repeat="attachment in attachments" class="add-border" style="display:flex">
-                  <p style="width: 100%;" ng-bind="attachment.file.name"></p>
-                  <paper-icon-button ng-click="attachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
-                </div>
-                <div style="display:flex;margin-top: 10px" ng-show="editRequirement">
-                  <paper-button ng-click="updateRequirement(req)" style="margin: 0">Save changes</paper-button>
-                  <paper-icon-button ng-file-select ng-file-change="fileSelected($files)" icon="icons:attachment"></paper-icon-button>
-                </div>
+              <!--Show attachments-->
+              <img ng-repeat="img in attachments | filter: attachments.URL : !null"  ng-src="{{img.URL}}" style="width: 100%"/>
+              <div ng-repeat="attachment in attachments" class="add-border" style="display:flex">
+                <p style="width: 100%;" ng-bind="attachment.file.name"></p>
+                <paper-icon-button ng-click="attachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
+              </div>
+              <div style="display:flex;margin-top: 10px" ng-show="editRequirement">
+                <paper-button ng-click="updateRequirement(req)" style="margin: 0">Save changes</paper-button>
+                <paper-icon-button ng-file-select ng-file-change="fileSelected($files)" icon="icons:attachment"></paper-icon-button>
+              </div>
 
-                <h2>Comments</h2>
-                <!--here be comments-->
-                <div ng-repeat="comment in req.comments" style="border: 1px solid #dedede;margin: 8px;padding: 2px">
-                  <p>{{comment.message}}</p>
+              <paper-button ng-click="showContributors = !showContributors">Show Contributors</paper-button>
+              <core-collapse opened={{showContributors}}>
+                <div class="section group contributors">
+                  <div class="col span_2_of_8">
+                    <p style="font-weight: bold">Followers</p>
+                    <p style="font-weight: 100" ng-repeat="follower in req.followers"> {{follower.firstName}} {{follower.lastName}}</p>
+                  </div>
+                  <div class="col span_2_of_8">
+                    <p style="font-weight: bold">Developers</p>
+                    <p  style="font-weight: 100" ng-repeat="dev in req.developers">{{dev.firstName}} {{dev.lastName}}</p>
+                  </div>
+                  <div class="col span_2_of_8">
+                    <p style="font-weight: bold">Created by</p>
+                    <p style="font-weight: 100">{{req.creator.firstName}} {{req.creator.lastName}}</p>
+                  </div>
+                  <div class="col span_2_of_8">
+                    <p style="font-weight: bold">Leader</p>
+                    <p style="font-weight: 100">{{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}</p>
+                  </div>
+                </div>
+              </core-collapse>
+
+
+              <h2>Comments</h2>
+              <!--here be comments-->
+              <div ng-repeat="comment in req.comments" style="border-bottom: 1px solid #dedede;margin: 8px;padding: 2px;display: flex" ng-controller="CommentCtrl">
+                <div style="width: 50px">
+                  <img src="https://api.learning-layers.eu/profile.png" width="100%" style="border-radius: 50%;">
+                </div>
+                <div style="width: 100%">
+                  <pre>{{comment.message}}</pre>
                   <div style="display: flex">
                     <p style="font-size: smaller;width: 100%;">by {{comment.creatorId}} on {{comment.creationTime}}</p>
                     <paper-icon-button ng-click="deleteComment(comment.Id,req)" icon="icons:delete"></paper-icon-button>
                   </div>
                 </div>
-                <!--Submit comment form-->
-                <h2>Leave a comment</h2>
-                <paper-input-decorator label="Comment - Anonymous, if not logged in">
-                  <paper-autogrow-textarea>
-                    <textarea ng-model="newComment" required></textarea>
-                  </paper-autogrow-textarea>
-                </paper-input-decorator>
-                <paper-button ng-click="submitComment(newComment,req);newComment='';">Submit</paper-button>
               </div>
-            </div>
 
-            <!--Sidebar for the individal requirements-->
-            <div class="col span_2_of_8">
-              <div style="padding: 10px">
-                <p style="font-weight: bold">Leader</p>
-                <p style="padding-left: 8px">{{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}</p>
-                <div>
-                  <p style="font-weight: bold">Followers</p>
-                  <p ng-repeat="follower in req.followers" style="padding-left: 8px">
-                    {{follower.firstName}}
-                  </p>
-                </div>
-                <div>
-                  <p style="font-weight: bold">Developers </p>
-                  <p ng-repeat="dev in req.developers" style="padding-left: 8px">
-                    {{dev.firstName}}
-                  </p>
-                </div>
-                <p style="font-weight: bold">Created by</p>
-                <p style="padding-left: 8px">{{req.creator.firstName}} {{req.creator.lastName}}</p>
-              </div>
+              <!--Submit comment form-->
+              <h2>Leave a comment</h2>
+              <paper-input-decorator label="Comment - Anonymous, if not logged in">
+                <paper-autogrow-textarea>
+                  <textarea ng-model="newComment" required></textarea>
+                </paper-autogrow-textarea>
+              </paper-input-decorator>
+              <paper-button ng-click="submitComment(newComment,req);newComment='';">Submit</paper-button>
             </div>
           </div>
         </core-collapse>

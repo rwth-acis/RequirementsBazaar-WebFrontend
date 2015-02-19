@@ -104,7 +104,7 @@ body {
 
 #main-toolbar paper-icon-button {
   height: 100%;
-  top: 13px;
+  top: 6px;
 }
 
 #main-toolbar paper-button {
@@ -117,6 +117,9 @@ body {
   display: flex;
 }
 
+.contributors div {
+  min-width: 200px;
+}
 
 /*
 
@@ -170,6 +173,9 @@ paper-button {
   color: white;
 }
 
+paper-icon-button /deep/ core-icon {
+  top: 7px;
+}
 
 
 

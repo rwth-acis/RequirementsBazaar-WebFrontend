@@ -14,6 +14,9 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.showRequirement = false;
     $scope.editRequirement = false;
 
+
+    $scope.showContributors = false;
+
     /*
      * Currently only images, videos and pdfs are accepted as attachments
      * Called: when the user has selected a file
@@ -138,7 +141,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(!UtilityService.isEmpty(text,'Comment cannot be empty')){
         console.log('post comment: '+text);
         // user 1 is the current anon user
-        var comment = {requirementId: req.id, message: text, creatorId: 1};
+        var comment = {requirementId: req.id, message: text};
 
         reqBazService.createComment(req.id,comment)
           .success(function (message) {
@@ -146,6 +149,8 @@ angular.module('requirementsBazaarWebFrontendApp')
             if(message.hasOwnProperty('errorCode')){
               UtilityService.showFeedback('Warning: Comment was not submitted !');
             }else{
+              //TODO get current user name
+              comment.creatorId = 'anon';
               comment.Id = message.id;
               //Instead of making a new server call, just approximate
               comment.creationTime = Date();
@@ -159,34 +164,6 @@ angular.module('requirementsBazaarWebFrontendApp')
           });
       }
     };
-
-    /*
-     * Comment is deleted without further confirmation
-     * Called: by the user
-     * */
-    $scope.deleteComment = function(id,req){
-      reqBazService.deleteComment(id)
-        .success(function (message) {
-          console.log(message);
-          if(message.success !== 'true'){
-            UtilityService.showFeedback('Warning: Comment was not deleted !');
-          }else{
-            // Delete the removed requirement from the list
-            for(var i = 0; i<req.comments.length;i++){
-              if(req.comments[i].Id === id){
-                req.comments.splice(i, 1);
-                break;
-              }
-            }
-          }
-        })
-        .error(function (error) {
-          //This error only catches unknown server errors, usual errorCodes are sent with success message
-          console.log(error);
-          UtilityService.showFeedback('Warning: Comment was not deleted !');
-        });
-    };
-
 
 
 
@@ -236,6 +213,5 @@ angular.module('requirementsBazaarWebFrontendApp')
           UtilityService.showFeedback('Warning: Requirement was not deleted');
         });
     };
-
 
   });
