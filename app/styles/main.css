@@ -4,15 +4,6 @@ body {
   background-color: #ececec;
 }
 
-#sidebar {
-  box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
-  background-color: white;
-  width: 200px;
-  z-index: 2;
-  position: fixed;
-  height: calc(100vh - 64px);
-}
-
 #componentSelection {
   margin: 2px;
 }
@@ -111,6 +102,21 @@ body {
   overflow: hidden;
 }
 
+#main-toolbar paper-icon-button {
+  height: 100%;
+  top: 13px;
+}
+
+#main-toolbar paper-button {
+  height: 100%;
+}
+
+#main-toolbar{
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+}
+
 
 /*
 
@@ -118,8 +124,10 @@ CSS rules that apply to all core-elements
 
 */
 
-core-header-panel {
-  position: inherit;
+
+core-scaffold::shadow core-toolbar {
+  background-color: #669900;
+  color: white;
 }
 
 core-toolbar {
@@ -130,6 +138,7 @@ core-toolbar {
 core-icon {
   margin-right: 5px;
 }
+
 
 
 /*
@@ -147,8 +156,16 @@ paper-dropdown-menu paper-item:hover{
   background-color: #ececec;
 }
 
+/*For Chrome*/
+paper-dropdown-menu /deep/ #label, paper-dropdown-menu /deep/ #arrow, paper-dropdown-menu /deep/ #label:not(.selectedItem){
+    color: white;
+  }
+/*For Firefox and Internet Explorer*/
+#label, #arrow{
+  color: white !important;
+}
+
 paper-button {
-  margin: 10px;
   background-color: #669900;
   color: white;
 }
