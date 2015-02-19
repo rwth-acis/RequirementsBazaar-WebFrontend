@@ -25,6 +25,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.reloadRequirements = false;
     $scope.reloadComponents = false;
 
+    $scope.showProjectSelection = false;
 
     /*
     * Loads projects and then components ...
@@ -51,6 +52,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Called: User selects a new project or reloads components
     * */
     $scope.selectProj = function (project) {
+      $scope.showProjectSelection = false;
       $scope.reloadComponents = false;
       $scope.activeProject = project;
       reqBazService.getComponents($scope.activeProject.id,'0','30')

@@ -5,19 +5,28 @@
 
     <!--The top navigation bar-->
     <core-toolbar>
-      <!--Switch project-->
-      <paper-dropdown-menu label="{{activeProject.name}}" style="padding-left:16px">
-        <paper-dropdown class="dropdown">
-          <core-selector>
-            <paper-item ng-repeat="project in projects" value="{{project.name}}" ng-click="selectProj(project)">{{project.name}}</paper-item>
-          </core-selector>
-        </paper-dropdown>
-      </paper-dropdown-menu>
+      <paper-item ng-click="showProjectSelection = !showProjectSelection">
+        <core-icon icon="icons:arrow-back" ng-show="showProjectSelection"></core-icon>
+        {{activeProject.name}}
+      </paper-item>
     </core-toolbar>
 
+    <!--Show project list-->
+    <core-menu class="sidebarMenu" ng-show="showProjectSelection">
+      <p style="font-size: smaller; color: #808080">Choose project</p>
+      <paper-item ng-repeat="project in projects" ng-click="selectProj(project)">{{project.name}}</paper-item>
+      <hr>
+      <!--Create a new project-->
+      <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="color: black;">
+        <core-icon icon="icons:add-circle" style="padding-right: 5px"></core-icon>
+        Project
+      </paper-button>
+    </core-menu>
+
     <!--Show component list-->
-    <core-menu id="componentSelection">
-      <paper-item ng-repeat="component in components" ng-click="selectComp(component)">{{component.name}}</paper-item>
+    <core-menu class="sidebarMenu" ng-show="!showProjectSelection">
+      <paper-input label="search components" ng-model="filterComp.name" style="padding-left: 16px"></paper-input>
+      <paper-item ng-repeat="component in components | filter:filterComp:strict" ng-click="selectComp(component)">{{component.name}}</paper-item>
       <hr>
       <!--Create a new component-->
       <paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="color: black;">
@@ -87,8 +96,13 @@
 
       <paper-button id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)">Reload</paper-button>
 
+      <!--Search bar-->
+      <div style="background: white;padding: 0px; width: 100%;display: flex">
+        <paper-input label="search requirements" ng-model="filterReq.$" style="padding-left: 16px"></paper-input>
+      </div>
+
       <!--List representing the requirements-->
-      <div ng-repeat="req in requirements" class="requirementsElement" ng-controller="RequirementCtrl">
+      <div ng-repeat="req in requirements | filter:filterReq:strict" class="requirementsElement" ng-controller="RequirementCtrl">
         <div style="border-bottom: 1px solid #ccc;width: 100%; display: flex" class="section group">
           <paper-item style="background: white; font-size: large;padding: 0px; width: 100%" ng-click="toggleRequirement(req)">
             <span style="margin-right: 16px;min-width: 200px;" class="ellipsis" >{{req.title}}</span>
@@ -134,19 +148,31 @@
                 <div class="section group contributors">
                   <div class="col span_2_of_8">
                     <p style="font-weight: bold">Followers</p>
-                    <p style="font-weight: 100" ng-repeat="follower in req.followers"> {{follower.firstName}} {{follower.lastName}}</p>
+                    <p style="font-weight: 100" ng-repeat="follower in req.followers">
+                      <img src="https://api.learning-layers.eu/profile.png" width="20px" style="border-radius: 50%;">
+                      {{follower.firstName}} {{follower.lastName}}
+                    </p>
                   </div>
                   <div class="col span_2_of_8">
                     <p style="font-weight: bold">Developers</p>
-                    <p  style="font-weight: 100" ng-repeat="dev in req.developers">{{dev.firstName}} {{dev.lastName}}</p>
+                    <p  style="font-weight: 100" ng-repeat="dev in req.developers">
+                      <img src="https://api.learning-layers.eu/profile.png" width="20px" style="border-radius: 50%;">
+                      {{dev.firstName}} {{dev.lastName}}
+                    </p>
                   </div>
                   <div class="col span_2_of_8">
                     <p style="font-weight: bold">Created by</p>
-                    <p style="font-weight: 100">{{req.creator.firstName}} {{req.creator.lastName}}</p>
+                    <p style="font-weight: 100">
+                      <img src="https://api.learning-layers.eu/profile.png" width="20px" style="border-radius: 50%;">
+                      {{req.creator.firstName}} {{req.creator.lastName}}
+                    </p>
                   </div>
                   <div class="col span_2_of_8">
                     <p style="font-weight: bold">Leader</p>
-                    <p style="font-weight: 100">{{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}</p>
+                    <p style="font-weight: 100">
+                      <img src="https://api.learning-layers.eu/profile.png" width="20px" style="border-radius: 50%;">
+                      {{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}
+                    </p>
                   </div>
                 </div>
               </core-collapse>

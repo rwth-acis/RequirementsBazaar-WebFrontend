@@ -4,11 +4,11 @@ body {
   background-color: #ececec;
 }
 
-#componentSelection {
+#sidebarMenu {
   margin: 2px;
 }
 
-#componentSelection paper-item:hover{
+#sidebarMenu paper-item:hover{
   background-color: #ececec;
 }
 
