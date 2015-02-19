@@ -5,9 +5,7 @@ body {
 }
 
 #componentSelection {
-  background-color: #fff;
-  margin: 0;
-  box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
+  margin: 2px;
 }
 
 #componentSelection paper-item:hover{
@@ -15,47 +13,27 @@ body {
 }
 
 .content {
-  max-width: 1040px;
+  max-width: 1020px;
   margin-left: auto;
   margin-right: auto;
   padding: 10px;
 }
 
 #currentComponent {
-  background: white;
+  background-color: white;
   margin-bottom: 12px;
   padding: 12px;
-}
-
-.collapse-content {
-  padding: 15px;
-  border: 1px solid #dedede;
-  background-color: white;
 }
 
 #profileDiv, #NotificationDiv{
   background: #fff;
   color:black;
-  border: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
   box-shadow: 0 2px 10px rgba(0,0,0,.2);
   position: absolute;
   right: 20px;
   top: 68px;
   width: 300px;
   z-index:100;
-}
-#profileDivFooter{
-  background: #f5f5f5;
-  border-top: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
-  padding: 10px 0;
-  width: 100%;
-  display: table;
-}
-
-#profileDivFooter paper-button{
-  color: white;
 }
 
 #addRequirementFab{
@@ -72,21 +50,26 @@ body {
 }
 .addItemDiv{
   background-color: white;
-  width: 400px;
+  width: 100%;
   padding: 10px;
   margin-left: 5px;
-  border: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
   box-shadow: 0 2px 10px rgba(0,0,0,.2);
 }
-#createContainer{
+
+.createContainer{
   z-index: 2;
-  width: 900px;
+  width: 800px;
   right: 130px;
   bottom: 0;
   position: fixed;
   display: flex;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.createDiv{
+  width: 300px;
+  margin-left: 16px;
+  margin-right: 16px;
 }
 
 #loadRequirements{
@@ -100,6 +83,39 @@ body {
   display: block;
 }
 
+.requirementsElement {
+  margin-top: 10px;
+  background-color: white;
+}
+
+.add-border{
+  border: 1px solid #ccc;
+  border-color: rgba(0,0,0,.2);
+}
+
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#main-toolbar paper-icon-button {
+  height: 100%;
+  top: 13px;
+}
+
+#main-toolbar paper-button {
+  height: 100%;
+}
+
+#main-toolbar{
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+}
 
 
 /*
@@ -108,8 +124,10 @@ CSS rules that apply to all core-elements
 
 */
 
-core-header-panel {
-  position: inherit;
+
+core-scaffold::shadow core-toolbar {
+  background-color: #669900;
+  color: white;
 }
 
 core-toolbar {
@@ -117,7 +135,9 @@ core-toolbar {
   color: white;
 }
 
-
+core-icon {
+  margin-right: 5px;
+}
 
 
 
@@ -136,23 +156,19 @@ paper-dropdown-menu paper-item:hover{
   background-color: #ececec;
 }
 
-paper-icon-button /deep/ core-icon[role=img] {
-  height: 30px;
-  width: 30px;
-}
-
-
-paper-dropdown-menu::shadow #label, paper-dropdown-menu::shadow #arrow{
-  color: white;
+/*For Chrome*/
+paper-dropdown-menu /deep/ #label, paper-dropdown-menu /deep/ #arrow, paper-dropdown-menu /deep/ #label:not(.selectedItem){
+    color: white;
+  }
+/*For Firefox and Internet Explorer*/
+#label, #arrow{
+  color: white !important;
 }
 
 paper-button {
-  margin: 10px;
   background-color: #669900;
+  color: white;
 }
-
-
-
 
 
 

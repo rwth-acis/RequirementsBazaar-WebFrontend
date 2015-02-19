@@ -17,7 +17,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'ng-polymer-elements',
-    'oauth'
+    'oauth',
+    'angularFileUpload'
   ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider
