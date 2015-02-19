@@ -8,12 +8,12 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile) {
 
     $scope.projects = null;
     $scope.components = null;
     $scope.requirements = null;
-    $scope.activeUser = {id : '2', firstname : 'Max2', lastname : 'Mustermann2', email : 'Max@Mustermann2.de', admin : 'true', Las2PeerId :'2'};
+    $scope.activeUser = {};
 
     $scope.projectLeader = null;
     $scope.componentLeader = null;
@@ -190,6 +190,21 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
+
+    /*
+     * Register a listener for the oauth login and if an existing token is still valid
+     * */
+    $scope.$on('oauth:login', function(event, token) {
+      reqBazService.setAccessToken(token.access_token);
+    });
+    $scope.$on('oauth:authorized', function(event, token) {
+      reqBazService.setAccessToken(token.access_token);
+    });
+
+    $scope.$on('oauth:profile', function(profile) {
+      $scope.activeUser = Profile.get();
+      console.log($scope.activeUser);
+    });
 
   });
 

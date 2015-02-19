@@ -138,7 +138,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(!UtilityService.isEmpty(text,'Comment cannot be empty')){
         console.log('post comment: '+text);
         // user 1 is the current anon user
-        var comment = {requirementId: req.id, message: text, creatorId: 1};
+        var comment = {requirementId: req.id, message: text};
 
         reqBazService.createComment(req.id,comment)
           .success(function (message) {
@@ -146,6 +146,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             if(message.hasOwnProperty('errorCode')){
               UtilityService.showFeedback('Warning: Comment was not submitted !');
             }else{
+              comment.creatorId = $scope.activeUser.preferred_username;
               comment.Id = message.id;
               //Instead of making a new server call, just approximate
               comment.creationTime = Date();
