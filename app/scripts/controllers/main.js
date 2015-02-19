@@ -25,7 +25,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.reloadRequirements = false;
     $scope.reloadComponents = false;
 
-    //$scope.showCreateCompDiv = false;
 
     /*
     * Loads projects and then components ...

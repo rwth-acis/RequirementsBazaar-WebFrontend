@@ -42,9 +42,6 @@
       <div style="height: 55%;overflow: auto">
         <div style="display: flex;justify-content: space-around;">
           <p style="font-size: smaller;color: #808080;">Choose Component</p>
-          <!--<paper-button ng-click="showCreateCompDiv=!showCreateCompDiv" style="display: block">-->
-            <!--<core-icon icon="icons:add-circle" ></core-icon>-->
-          <!--</paper-button>-->
           <paper-icon-button icon="icons:add-circle" ng-click="showCreateCompDiv=!showCreateCompDiv"></paper-icon-button>
         </div>
 
@@ -131,6 +128,7 @@
             <div ng-show="show" style="display:flex;width:400px">
               <paper-button style="margin: 6px;flex-grow: 1" disabled>Lead</paper-button>
               <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)" disabled></paper-icon-button>
+              <paper-icon-button icon="editor:mode-edit" ng-click="editRequirement = !editRequirement" ng-show="!editRequirement"></paper-icon-button>
               <paper-icon-button icon="icons:delete" ng-click="deleteRequirement(req)"></paper-icon-button>
             </div>
           </div>
@@ -140,8 +138,13 @@
           <div class="section group">
             <div class="col span_6_of_8">
               <div style="padding: 10px">
-                <div contenteditable class="add-border" ng-file-drop ng-file-change="fileSelected($files,$event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="req.description"></div>
-                <div ng-no-file-drop class="descriptionDiv" contenteditable ng-model="req.description"></div>
+
+                <!--Show requirement text-->
+                <p ng-show="!editRequirement">{{req.description}}</p>
+                <div ng-show="editRequirement">
+                  <div contenteditable class="add-border" ng-file-drop ng-file-change="fileSelected($files,$event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="req.description"></div>
+                  <div ng-no-file-drop class="descriptionDiv" contenteditable ng-model="req.description"></div>
+                </div>
 
                 <!--Show attachments-->
                 <img ng-repeat="img in attachments | filter: attachments.URL : !null"  ng-src="{{img.URL}}" style="width: 100%"/>
@@ -149,7 +152,6 @@
                   <p style="width: 100%;" ng-bind="attachment.file.name"></p>
                   <paper-icon-button ng-click="attachments.splice($index, 1)" icon="icons:delete" style="padding: 8px"></paper-icon-button>
                 </div>
-                <paper-icon-button icon="editor:mode-edit" ng-click="editRequirement = !editRequirement" ng-show="!editRequirement"></paper-icon-button>
                 <div style="display:flex;margin-top: 10px" ng-show="editRequirement">
                   <paper-button ng-click="updateRequirement(req)" style="margin: 0">Save changes</paper-button>
                   <paper-icon-button ng-file-select ng-file-change="fileSelected($files)" icon="icons:attachment"></paper-icon-button>
