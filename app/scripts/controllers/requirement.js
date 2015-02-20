@@ -149,8 +149,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             if(message.hasOwnProperty('errorCode')){
               UtilityService.showFeedback('Warning: Comment was not submitted !');
             }else{
-              //TODO get current user name
-              comment.creatorId = 'anon';
+              comment.creatorId = $scope.activeUser.preferred_username;
               comment.Id = message.id;
               //Instead of making a new server call, just approximate
               comment.creationTime = Date();
