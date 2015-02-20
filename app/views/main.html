@@ -5,8 +5,9 @@
 
     <!--The top navigation bar-->
     <core-toolbar>
-      <paper-item ng-click="showProjectSelection = !showProjectSelection">
-        <core-icon icon="icons:arrow-back" ng-show="showProjectSelection"></core-icon>
+      <paper-item ng-click="showProjectSelection = !showProjectSelection" style="font-size: large">
+        <core-icon icon="icons:arrow-back" ng-show="!showProjectSelection"></core-icon>
+        <core-icon icon="icons:arrow-forward" ng-show="showProjectSelection"></core-icon>
         {{activeProject.name}}
       </paper-item>
     </core-toolbar>
@@ -41,7 +42,7 @@
   <div tool id="main-toolbar">
     <div>
       <!--<paper-icon-button id="navicon" icon="menu" ng-click="showSidebar = !showSidebar"></paper-icon-button>-->
-      <p>Requirement Bazaar</p>
+      <p>Requirements Bazaar</p>
     </div>
 
     <div style="display: -webkit-box; white-space: nowrap;">
@@ -91,15 +92,11 @@
           </p>
           <paper-icon-button icon="editor:mode-edit" disabled></paper-icon-button>
           <paper-icon-button icon="icons:delete" ng-click="initDeleteComponent()"></paper-icon-button>
+          <paper-input label="search requirements" ng-model="filterReq.$"></paper-input>
         </div>
       </div>
 
       <paper-button id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)">Reload</paper-button>
-
-      <!--Search bar-->
-      <div style="background: white;padding: 0px; width: 100%;display: flex">
-        <paper-input label="search requirements" ng-model="filterReq.$" style="padding-left: 16px"></paper-input>
-      </div>
 
       <!--List representing the requirements-->
       <div ng-repeat="req in requirements | filter:filterReq:strict" class="requirementsElement" ng-controller="RequirementCtrl">
@@ -108,17 +105,21 @@
             <span style="margin-right: 16px;min-width: 200px;" class="ellipsis" >{{req.title}}</span>
             <span style="font-size: smaller;color: grey" class="ellipsis" ng-show="!showRequirement">{{req.description}}</span>
           </paper-item>
-          <paper-icon-button icon="icons:thumb-up" disabled></paper-icon-button>
-          <paper-icon-button icon="icons:thumb-down" disabled></paper-icon-button>
-          <div style="display: flex;flex-direction: row-reverse;">
-            <paper-icon-button icon="icons:more-vert" ng-click="show = !show"></paper-icon-button>
-            <div ng-show="show" style="display:flex;width:400px">
-              <paper-button style="margin: 6px;flex-grow: 1" disabled>Lead</paper-button>
-              <paper-icon-button icon="mdi:eye" ng-click="followRequirement($event,req)" disabled></paper-icon-button>
-              <paper-icon-button icon="editor:mode-edit" ng-click="editRequirement = !editRequirement" ng-show="!editRequirement"></paper-icon-button>
-              <paper-icon-button icon="icons:delete" ng-click="deleteRequirement(req)"></paper-icon-button>
-            </div>
-          </div>
+          <p style="font-size: smaller;color: #808080">0</p>
+          <paper-icon-button icon="icons:thumb-up"></paper-icon-button>
+          <p style="font-size: smaller;color: #808080">0</p>
+          <paper-icon-button icon="icons:thumb-down"></paper-icon-button>
+
+          <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert" style="width: 36px">
+            <paper-dropdown class="dropdown" >
+              <core-menu class="menu">
+                <paper-item>Become a lead developer</paper-item>
+                <paper-item ng-click="editRequirement = true">Edit requirement</paper-item>
+                <paper-item ng-click="followRequirement($event,req)">Follow requirement</paper-item>
+                <paper-item ng-click="deleteRequirement(req)">Delete requirement</paper-item>
+              </core-menu>
+            </paper-dropdown>
+          </paper-dropdown-menu-ex>
         </div>
         <core-collapse opened={{showRequirement}}>
           <!--Space for description, comments and attachments-->

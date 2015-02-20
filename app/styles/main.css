@@ -150,24 +150,6 @@ CSS rules that apply to all paper elements
 
 */
 
-paper-dropdown-menu{
-  border-bottom: none;
-  color:#000000;
-}
-
-paper-dropdown-menu paper-item:hover{
-  background-color: #ececec;
-}
-
-/*For Chrome*/
-paper-dropdown-menu /deep/ #label, paper-dropdown-menu /deep/ #arrow, paper-dropdown-menu /deep/ #label:not(.selectedItem){
-    color: white;
-  }
-/*For Firefox and Internet Explorer*/
-#label, #arrow{
-  color: white !important;
-}
-
 paper-button {
   background-color: #669900;
   color: white;
@@ -178,7 +160,31 @@ paper-icon-button /deep/ core-icon {
 }
 
 
+/*
 
+  Rules that apply to custom / extended elements
+
+*/
+
+html /deep/ paper-dropdown-menu-ex paper-dropdown {
+  position: absolute;
+  overflow: visible;
+  min-height: 40px;
+  left: -210px;
+}
+
+paper-dropdown-menu-ex paper-item:hover{
+  background-color: #ececec;
+}
+
+/*For Chrome*/
+paper-dropdown-menu-ex /deep/ #arrow, paper-dropdown-menu-ex /deep/ #label:not(.selectedItem){
+  color: black;
+}
+/*For Firefox and Internet Explorer*/
+#arrow{
+  color: black !important;
+}
 
 /*
 
