@@ -105,7 +105,7 @@
             <span style="margin-right: 16px;min-width: 200px;" class="ellipsis" >{{req.title}}</span>
             <span style="font-size: smaller;color: grey" class="ellipsis" ng-show="!showRequirement">{{req.description}}</span>
           </paper-item>
-          <div ng-controller="VoteCtrl">
+          <div ng-controller="VoteCtrl" style="display: flex">
             <p style="font-size: smaller;color: #808080">0</p>
             <paper-icon-button icon="icons:thumb-up" ng-click="voteUp(req)"></paper-icon-button>
             <p style="font-size: smaller;color: #808080">0</p>

@@ -130,7 +130,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       } else {
         voteUrl += '?direction=up';
       }
-      return $http.post(voteUrl+accessTokenURL);
+      return $http.post(voteUrl+accessTokenURL2);
     };
 
     //naming is wrong
