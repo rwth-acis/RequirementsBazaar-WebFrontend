@@ -105,11 +105,12 @@
             <span style="margin-right: 16px;min-width: 200px;" class="ellipsis" >{{req.title}}</span>
             <span style="font-size: smaller;color: grey" class="ellipsis" ng-show="!showRequirement">{{req.description}}</span>
           </paper-item>
-          <p style="font-size: smaller;color: #808080">0</p>
-          <paper-icon-button icon="icons:thumb-up"></paper-icon-button>
-          <p style="font-size: smaller;color: #808080">0</p>
-          <paper-icon-button icon="icons:thumb-down"></paper-icon-button>
-
+          <div ng-controller="VoteCtrl">
+            <p style="font-size: smaller;color: #808080">0</p>
+            <paper-icon-button icon="icons:thumb-up" ng-click="voteUp(req)"></paper-icon-button>
+            <p style="font-size: smaller;color: #808080">0</p>
+            <paper-icon-button icon="icons:thumb-down" ng-click="voteDown(req)"></paper-icon-button>
+          </div>
           <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert" style="width: 36px">
             <paper-dropdown class="dropdown" >
               <core-menu class="menu">

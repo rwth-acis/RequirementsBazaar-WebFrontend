@@ -167,6 +167,8 @@ angular.module('requirementsBazaarWebFrontendApp')
 
 
 
+
+
     /**
      *
      * Function calls that currently don't do anything or don't work
@@ -210,6 +212,26 @@ angular.module('requirementsBazaarWebFrontendApp')
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
           UtilityService.showFeedback('Warning: Requirement was not deleted');
+        });
+    };
+
+
+
+    /**
+     *
+     * Function calls that currently don't do anything or don't work
+     *
+     */
+      //Become a follower of a requirement
+    $scope.followRequirement = function(clickEvent,req){
+      console.log('become follower');
+      reqBazService.addUserToFollowers(req.id)
+        .success(function (message) {
+          console.log(message);
+        })
+        .error(function (error) {
+          console.log(error);
+          UtilityService.showFeedback('Warning: could not register as a follower');
         });
     };
 
