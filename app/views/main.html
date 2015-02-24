@@ -86,10 +86,7 @@
         </div>
         <div class="col span_2_of_8">
           <p style="font-size: small">Component lead:</p>
-          <p>
-            <span ng-bind="componentLeader.firstName"></span>
-            <span ng-bind="componentLeader.lastName"></span>
-          </p>
+          <my-user src={{trustSrc(componentLeader.profileImage)}} width="30px" name={{componentLeader.firstName}} email={{componentLeader.eMail}}></my-user>
           <paper-icon-button icon="editor:mode-edit" disabled></paper-icon-button>
           <paper-icon-button icon="icons:delete" ng-click="initDeleteComponent()"></paper-icon-button>
           <paper-input label="search requirements" ng-model="filterReq.$"></paper-input>
@@ -100,8 +97,8 @@
 
       <!--List representing the requirements-->
       <div ng-repeat="req in requirements | filter:filterReq:strict" class="requirementsElement" ng-controller="RequirementCtrl">
-        <div style="border-bottom: 1px solid #ccc;width: 100%; display: flex" class="section group">
-          <paper-item style="background: white; font-size: large;padding: 0px; width: 100%" ng-click="toggleRequirement(req)">
+        <div style="border-bottom: 1px solid #ccc;width: 100%; display: flex;">
+          <paper-item style="background: white; font-size: large;padding: 0px; width: 100%;" ng-click="toggleRequirement(req)">
             <span style="margin-right: 16px;min-width: 200px;" class="ellipsis" >{{req.title}}</span>
             <span style="font-size: smaller;color: grey" class="ellipsis" ng-show="!showRequirement">{{req.description}}</span>
           </paper-item>
@@ -150,35 +147,22 @@
                 <div class="section group contributors">
                   <div class="col span_2_of_8">
                     <p style="font-weight: bold">Followers</p>
-                    <p style="font-weight: 100" ng-repeat="follower in req.followers">
-                      <img src="https://api.learning-layers.eu/profile.png" width="20px" style="border-radius: 50%;">
-                      {{follower.firstName}} {{follower.lastName}}
-                    </p>
+                    <my-user ng-repeat="follower in req.followers" src="https://api.learning-layers.eu/profile.png" width="30px" name={{follower.userName}} email={{follower.eMail}}></my-user>
                   </div>
                   <div class="col span_2_of_8">
                     <p style="font-weight: bold">Developers</p>
-                    <p  style="font-weight: 100" ng-repeat="dev in req.developers">
-                      <img src="https://api.learning-layers.eu/profile.png" width="20px" style="border-radius: 50%;">
-                      {{dev.firstName}} {{dev.lastName}}
-                    </p>
+                    <my-user ng-repeat="dev in req.developers" src="https://api.learning-layers.eu/profile.png" width="30px" name={{dev.userName}} email={{dev.eMail}}></my-user>
                   </div>
                   <div class="col span_2_of_8">
                     <p style="font-weight: bold">Created by</p>
-                    <p style="font-weight: 100">
-                      <img src="https://api.learning-layers.eu/profile.png" width="20px" style="border-radius: 50%;">
-                      {{req.creator.firstName}} {{req.creator.lastName}}
-                    </p>
+                    <my-user src="https://api.learning-layers.eu/profile.png" width="30px" name={{req.creator.userName}} email={{req.creator.eMail}}></my-user>
                   </div>
                   <div class="col span_2_of_8">
                     <p style="font-weight: bold">Leader</p>
-                    <p style="font-weight: 100">
-                      <img src="https://api.learning-layers.eu/profile.png" width="20px" style="border-radius: 50%;">
-                      {{req.leadDeveloper.firstName}} {{req.leadDeveloper.lastName}}
-                    </p>
+                    <my-user src="https://api.learning-layers.eu/profile.png" width="30px" name={{req.leadDeveloper.userName}} email={{req.leadDeveloper.eMail}}></my-user>
                   </div>
                 </div>
               </core-collapse>
-
 
               <h2>Comments</h2>
               <!--here be comments-->

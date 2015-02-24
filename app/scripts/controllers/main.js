@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce) {
 
     $scope.projects = null;
     $scope.components = null;
@@ -207,6 +207,14 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.activeUser = Profile.get();
       console.log($scope.activeUser);
     });
+
+
+    /*
+    * Making sure that the URL passing works on custom elements
+    * */
+    $scope.trustSrc = function(src) {
+      return $sce.trustAsResourceUrl(src);
+    };
 
   });
 

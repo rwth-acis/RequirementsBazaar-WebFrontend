@@ -10,11 +10,14 @@
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CommentCtrl', function ($scope, reqBazService, UtilityService) {
 
-    $scope.commentCreatorName = 'anon';
+    $scope.creatorName = 'anon';
+    $scope.creatorProfileImage = '';
+
 
     $scope.getUserName = function(id){
       reqBazService.getUser(id).success(function (user) {
-        $scope.commentCreatorName = user.firstName;
+        console.log(user);
+        $scope.creatorName = user.firstName;
         return user;
       })
         .error(function () {
