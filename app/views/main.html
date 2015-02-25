@@ -51,9 +51,7 @@
     <div>
       <!--Notifications-->
       <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled></paper-icon-button>
-
       <!--OAuth log in-->
-      <paper-button>
         <oauth
           site="https://api.learning-layers.eu/o/oauth2"
           client-id="f4635a5a-8455-4cf4-9834-6f6f16bf9aec"
@@ -61,9 +59,8 @@
           redirect-uri="http://localhost:9000/"
           profile-uri="https://api.learning-layers.eu/o/oauth2/userinfo"
           scope="public"
-          text="Log In">
+          template="../styles/sign-in-button.html">
         </oauth>
-      </paper-button>
     </div>
   </div>
   <!--
@@ -159,7 +156,6 @@
             </div>
           </div>
         </core-collapse>
-
 
         <!--Comments container-->
         <div ng-controller="CommentCtrl">

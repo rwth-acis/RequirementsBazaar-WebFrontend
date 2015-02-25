@@ -1,0 +1,20 @@
+<span class="oauth">
+  <!--Sign in style-->
+  <core-tooltip large>
+    <paper-icon-button icon="mdi:login" class="logged-out" ng-show="show=='logged-out'" ng-click="login()"></paper-icon-button>
+    <div tip>
+      <span>Login in</span>
+    </div>
+  </core-tooltip>
+
+  <!--Sign out style-->
+  <core-tooltip large>
+    <paper-icon-button icon="mdi:logout" class="logged-in"  ng-show="show=='logged-in'"  ng-click="logout()"></paper-icon-button>
+    <div tip>
+      <p>{{profile.name}}</p>
+      <p>{{profile.email}}</p>
+    </div>
+  </core-tooltip>
+
+  <a href="#" class="denied" ng-show="show=='denied'" ng-click="login()">Access denied.</a>
+</span>
