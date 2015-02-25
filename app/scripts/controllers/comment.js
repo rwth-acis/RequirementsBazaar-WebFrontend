@@ -10,11 +10,44 @@
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CommentCtrl', function ($scope, reqBazService, UtilityService) {
 
-    $scope.commentCreatorName = 'anon';
+    $scope.creatorName = 'anon';
+    $scope.creatorProfileImage = '';
+
+    /*
+     * Submits a comment, time of the post is initially approximate
+     * Called: by the user
+     * */
+    $scope.submitComment = function(text,req){
+      if(!UtilityService.isEmpty(text,'Comment cannot be empty')){
+        console.log('post comment: '+text);
+        // user 1 is the current anon user
+        var comment = {requirementId: req.id, message: text};
+
+        reqBazService.createComment(req.id,comment)
+          .success(function (message) {
+            console.log(message);
+            if(message.hasOwnProperty('errorCode')){
+              UtilityService.showFeedback('Warning: Comment was not submitted !');
+            }else{
+              comment.creatorId = $scope.activeUser.preferred_username;
+              comment.Id = message.id;
+              //Instead of making a new server call, just approximate
+              comment.creationTime = Date();
+              req.comments.splice(0, 0, comment);
+            }
+          })
+          .error(function (error) {
+            //This error only catches unknown server errors, usual errorCodes are sent with success message
+            console.log(error);
+            UtilityService.showFeedback('Warning: Comment was not submitted !');
+          });
+      }
+    };
 
     $scope.getUserName = function(id){
       reqBazService.getUser(id).success(function (user) {
-        $scope.commentCreatorName = user.firstName;
+        console.log(user);
+        $scope.creatorName = user.firstName;
         return user;
       })
         .error(function () {

@@ -1,41 +1,164 @@
-
+/*
+  Page wide utility rules
+*/
 body {
   font-family: sans-serif;
+}
+.small-grey-text {
+  font-size: smaller;
+  color: #808080;
+}
+.large-text {
+  font-size: large;
+}
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+.add-border {
+  border: 1px solid #ccc;
+  border-color: rgba(0,0,0,.2);
+}
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+.width-max {
+  width: 100%;
+}
+
+
+/*
+  Main header
+*/
+#main-toolbar paper-icon-button {
+  height: 100%;
+  top: 6px;
+}
+
+#main-toolbar {
+  white-space: nowrap;
+}
+
+
+/*
+  Sidebar
+*/
+.sidebarMenu paper-item:hover {
   background-color: #ececec;
 }
 
-#sidebarMenu {
-  margin: 2px;
-}
 
-#sidebarMenu paper-item:hover{
-  background-color: #ececec;
+/*
+  Main content
+*/
+#currentComponent {
+  background-color: white;
+  margin-bottom: 12px;
+  padding: 10px;
 }
-
+#loadRequirements {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
 .content {
   max-width: 1020px;
   margin-left: auto;
   margin-right: auto;
   padding: 10px;
 }
-
-#currentComponent {
+.requirement-container {
+  margin-top: 10px;
   background-color: white;
-  margin-bottom: 12px;
+}
+.requirement-header {
+  border-bottom: 1px solid #ccc;
+  display: flex;
+}
+.contributors div {
+  min-width: 200px;
+}
+.requirement-header-title {
+  font-size: large;
+}
+.req-title {
+  margin-right: 12px;
+  min-width: 100px;
+}
+.vote-button-container {
+  display: flex;
+}
+.req-collapse {
   padding: 12px;
 }
-
-#profileDiv, #NotificationDiv{
-  background: #fff;
-  color:black;
-  box-shadow: 0 2px 10px rgba(0,0,0,.2);
-  position: absolute;
-  right: 20px;
-  top: 68px;
-  width: 300px;
-  z-index:100;
+.attachment-image {
+  width: 100px;
+}
+.attachment-container {
+  display:flex;
+}
+.save-req-container {
+  margin-bottom: 10px;
+}
+.save-req-container paper-icon-button{
+  top: 8px;
+}
+.contributors p {
+  font-weight: bold;
+}
+.comment-container {
+  border-bottom: 1px solid #dedede;
+  margin: 8px;
+  padding: 2px;
+  display: flex;
+}
+.comment-container img {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}
+.comment-meta-container {
+  display: flex;
+}
+.confirm-submit paper-icon-button {
+  padding: 0;
+}
+.show-attachments {
+  margin: 1px;
 }
 
+
+
+/*
+  pop up panels
+*/
+/*See if this can be improved*/
+.create-container{
+  z-index: 2;
+  width: 800px;
+  right: 130px;
+  bottom: 0;
+  position: fixed;
+  display: flex;
+  justify-content: flex-end;
+}
+.create-div{
+  width: 300px;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.add-item-div{
+  background-color: white;
+  width: 100%;
+  padding: 10px;
+  margin-left: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
 #addRequirementFab{
   color: white;
   cursor: pointer;
@@ -47,78 +170,6 @@ body {
   height: 56px;
   border-radius: 50%;
   background: #db4437;
-}
-.addItemDiv{
-  background-color: white;
-  width: 100%;
-  padding: 10px;
-  margin-left: 5px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.2);
-}
-
-.createContainer{
-  z-index: 2;
-  width: 800px;
-  right: 130px;
-  bottom: 0;
-  position: fixed;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.createDiv{
-  width: 300px;
-  margin-left: 16px;
-  margin-right: 16px;
-}
-
-#loadRequirements{
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 40%;
-}
-
-#loadComponents{
-  display: block;
-}
-
-.requirementsElement {
-  margin-top: 10px;
-  background-color: white;
-}
-
-.add-border{
-  border: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
-}
-
-
-.ellipsis {
-  text-overflow: ellipsis;
-
-  /* Required for text-overflow to do anything */
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-#main-toolbar paper-icon-button {
-  height: 100%;
-  top: 6px;
-}
-
-#main-toolbar paper-button {
-  height: 100%;
-}
-
-#main-toolbar{
-  width: 100%;
-  justify-content: space-between;
-  display: flex;
-}
-
-.contributors div {
-  min-width: 200px;
 }
 
 /*
@@ -139,10 +190,8 @@ core-toolbar {
 }
 
 core-icon {
-  margin-right: 5px;
+  padding-right: 5px;
 }
-
-
 
 /*
 
@@ -165,6 +214,10 @@ paper-icon-button /deep/ core-icon {
   Rules that apply to custom / extended elements
 
 */
+
+paper-dropdown-menu-ex {
+  width: 36px;
+}
 
 html /deep/ paper-dropdown-menu-ex paper-dropdown {
   position: absolute;
