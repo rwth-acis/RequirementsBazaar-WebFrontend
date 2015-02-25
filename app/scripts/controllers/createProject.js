@@ -10,15 +10,17 @@
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CreateProjectCtrl', function ($scope, reqBazService, UtilityService) {
 
-    //Creates a new component
-    $scope.showCreateDiv = false;
-    $scope.newName = '';
-    $scope.newDesc = '';
+    $scope.name = '';
+    $scope.desc = '';
+
+    /*
+    * Submit a new project
+    * */
     $scope.submitProject = function(){
-      if(!UtilityService.isEmpty($scope.newName,'Choose project name') && !UtilityService.isEmpty($scope.newDesc, 'Choose project description')){
+      if(!UtilityService.isEmpty($scope.name,'Choose project name') && !UtilityService.isEmpty($scope.desc, 'Choose project description')){
         console.log('submit new project');
-        var project = {description: $scope.newDesc, name: $scope.newName, visibility: 'PUBLIC', leaderId: 1};
-        reqBazService.createProject(project)
+        var proj = {description: $scope.desc, name: $scope.name, visibility: 'PUBLIC', leaderId: 1};
+        reqBazService.createProject(proj)
           .success(function (message) {
             console.log(message);
             if(message.hasOwnProperty('errorCode')){
@@ -27,8 +29,8 @@ angular.module('requirementsBazaarWebFrontendApp')
               UtilityService.showFeedback('Project was created');
 
               //The project is added to be the first element and will be active
-              project.id = message.id;
-              $scope.activeProject = project;
+              proj.id = message.id;
+              $scope.activeProject = proj;
               $scope.projects.splice(0, 0, $scope.activeProject);
               $scope.selectProj($scope.activeProject);
               $scope.clearSubmit();
@@ -41,9 +43,12 @@ angular.module('requirementsBazaarWebFrontendApp')
       }
     };
 
+    /*
+     * Clear the input fields
+     * */
     $scope.clearSubmit = function(){
-      $scope.newName = '';
-      $scope.newDesc = '';
-      $scope.showCreateDiv = false;
+      $scope.name = '';
+      $scope.desc = '';
+      $scope.$parent.showCreateProjDiv = false;
     };
   });

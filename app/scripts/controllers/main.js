@@ -145,10 +145,6 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Everything related to creating or deleting a project
      *
      * */
-
-    $scope.initDeleteProject = function(){
-      document.getElementById('confirmDeleteProject').toggle();
-    };
     $scope.deleteProject = function(){
       console.log('delete project confirmed');
       //TODO delete the project
@@ -160,9 +156,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Everything related to creating or deleting a new component
     *
     * */
-    $scope.initDeleteComponent = function () {
-      document.getElementById('confirmDeleteComponent').toggle();
-    };
     $scope.deleteComponent = function(){
       reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (message) {
@@ -190,6 +183,52 @@ angular.module('requirementsBazaarWebFrontendApp')
           console.log(error);
           UtilityService.showFeedback('Warning: Component was not deleted !');
         });
+    };
+
+    $scope.deleteRequirement = function(){
+      var req = $scope.deleteObject;
+      console.log('delete requirement');
+      reqBazService.deleteRequirement(req.id)
+        .success(function (message) {
+          if(message.success !== 'true'){
+            UtilityService.showFeedback('Warning: Requirement was not deleted');
+          }else{
+            // Delete the removed requirement from the list
+            for(var i = 0; i<$scope.requirements.length;i++){
+              if($scope.requirements[i].id === req.id){
+                $scope.requirements.splice(i, 1);
+                break;
+              }
+            }
+            //No requirement selected
+            $scope.selectedIndex = -1;
+            UtilityService.showFeedback('Requirement deleted');
+          }
+        })
+        .error(function (error) {
+          //This error only catches unknown server errors, usual errorCodes are sent with success message
+          console.log(error);
+          UtilityService.showFeedback('Warning: Requirement was not deleted');
+        });
+    };
+
+
+    $scope.confirmDelete = function(item, object){
+      $scope.deleteElem = item;
+      $scope.deleteObject = object;
+      if(item === 'req'){
+        $scope.deleteDesc = "The action cannot be undone. All comments and attachments will be deleted!";
+      }
+      else if(item === 'comp'){
+        $scope.deleteDesc = "The action cannot be undone. The requirements will be accessible under the default component.";
+      }
+      else if(item === 'proj'){
+        $scope.deleteDesc = "The action cannot be undone. Deleting a project also removes all components and requirements!";
+      }
+      else{
+        return;
+      }
+      document.getElementById('confirmDelete').toggle();
     };
 
 

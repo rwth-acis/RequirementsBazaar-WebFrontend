@@ -10,24 +10,27 @@
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CreateComponentCtrl', function ($scope, reqBazService, UtilityService) {
 
-    //Creates a new component
-    $scope.newCompName = '';
-    $scope.newCompDesc = '';
-    $scope.submitNewComponent = function(){
-      if(!UtilityService.isEmpty($scope.newCompName,'Provide a name for the component')) {
+    $scope.name = '';
+    $scope.desc = '';
+
+    /*
+     * Submit a new component
+     * */
+    $scope.submitComponent = function(){
+      if(!UtilityService.isEmpty($scope.name,'Provide a name for the component')) {
         console.log('submit new component');
-        var component = {description: $scope.newCompDesc, name: $scope.newCompName, leaderId: 1, projectId: $scope.activeProject.id};
-        reqBazService.createComponent($scope.activeProject.id,component)
+        var comp = {description: $scope.desc, name: $scope.name, leaderId: 1, projectId: $scope.activeProject.id};
+        reqBazService.createComponent($scope.activeProject.id,comp)
           .success(function (message) {
             console.log(message);
             if(message.hasOwnProperty('errorCode')){
               UtilityService.showFeedback('Warning: Component was not created !');
             }else {
               UtilityService.showFeedback('Component was created');
-              component.id = message.id;
+              comp.id = message.id;
 
               //The component is added to be the first element and will be active
-              $scope.activeComponent = component;
+              $scope.activeComponent = comp;
               $scope.components.splice(0, 0, $scope.activeComponent);
               $scope.selectComp($scope.activeComponent);
               $scope.clearComponentSubmit();
@@ -40,9 +43,12 @@ angular.module('requirementsBazaarWebFrontendApp')
       }
     };
 
-    $scope.clearComponentSubmit = function(){
-      $scope.newCompName = '';
-      $scope.newCompDesc = '';
+    /*
+     * Clear the input fields
+     * */
+    $scope.clearSubmit = function(){
+      $scope.name = '';
+      $scope.desc = '';
       $scope.$parent.showCreateCompDiv = false;
     };
   });
