@@ -80,7 +80,7 @@
       </div>
       <div class="col span_2_of_8">
         <p class="small-grey-text">Component lead:</p>
-        <my-user src={{trustSrc(componentLeader.profileImage)}} width="30px" name={{componentLeader.firstName}} email={{componentLeader.eMail}}></my-user>
+        <my-user src={{trustSrc(componentLeader.profileImage)}} width="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}}></my-user>
         <paper-icon-button icon="editor:mode-edit" disabled></paper-icon-button>
         <paper-icon-button icon="icons:delete" ng-click="confirmDelete('comp')"></paper-icon-button>
         <paper-input label="search requirements" ng-model="filterReq.$"></paper-input>
@@ -143,19 +143,19 @@
           <div class="section group contributors">
             <div class="col span_2_of_8">
               <p>Followers</p>
-              <my-user ng-repeat="follower in req.followers" src="https://api.learning-layers.eu/profile.png" width="30px" name={{follower.userName}} email={{follower.eMail}}></my-user>
+              <my-user ng-repeat="follower in req.followers" src={{trustSrc(follower.profileImage)}} width="30px" name={{follower.userName}} email={{follower.eMail}}></my-user>
             </div>
             <div class="col span_2_of_8">
               <p>Developers</p>
-              <my-user ng-repeat="dev in req.developers" src="https://api.learning-layers.eu/profile.png" width="30px" name={{dev.userName}} email={{dev.eMail}}></my-user>
+              <my-user ng-repeat="dev in req.developers" src={{trustSrc(dev.profileImage)}} width="30px" name={{dev.userName}} email={{dev.eMail}}></my-user>
             </div>
             <div class="col span_2_of_8">
               <p>Created by</p>
-              <my-user src="https://api.learning-layers.eu/profile.png" width="30px" name={{req.creator.userName}} email={{req.creator.eMail}}></my-user>
+              <my-user src={{trustSrc(req.creator.profileImage)}} width="30px" name={{req.creator.userName}} email={{req.creator.eMail}}></my-user>
             </div>
             <div class="col span_2_of_8">
               <p>Leader</p>
-              <my-user src="https://api.learning-layers.eu/profile.png" width="30px" name={{req.leadDeveloper.userName}} email={{req.leadDeveloper.eMail}}></my-user>
+              <my-user src={{trustSrc(req.leadDeveloper.profileImage)}} width="30px" name={{req.leadDeveloper.userName}} email={{req.leadDeveloper.eMail}}></my-user>
             </div>
           </div>
         </core-collapse>
