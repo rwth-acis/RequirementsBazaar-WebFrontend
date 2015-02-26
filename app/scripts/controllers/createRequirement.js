@@ -27,7 +27,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           UtilityService.showFeedback('Warning: Attachments were not included !');
         }
         console.log('submit requirement');
-        var req = {title: $scope.newName, description: $scope.newDesc, projectId: $scope.activeProject.id, leadDeveloperId: 1, creatorId: 1};
+        var req = {title: $scope.newName, description: $scope.newDesc, projectId: $scope.activeProject.id, leadDeveloperId: 1};
         reqBazService.createRequirement($scope.activeProject.id, $scope.activeComponent.id, req)
           .success(function (message) {
             console.log(message);

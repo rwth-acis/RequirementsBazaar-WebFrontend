@@ -241,6 +241,10 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.$on('oauth:authorized', function(event, token) {
       reqBazService.setAccessToken(token.access_token);
     });
+    $scope.$on('oauth:logout', function(event) {
+      UtilityService.showFeedback('You are logged out')
+    });
+
 
     $scope.$on('oauth:profile', function(profile) {
       $scope.activeUser = Profile.get();
