@@ -12,6 +12,7 @@
         <core-icon icon="icons:arrow-back" ng-show="!showProjectSelection"></core-icon>
         <core-icon icon="icons:arrow-forward" ng-show="showProjectSelection"></core-icon>
         <span ng-bind="activeProject.name"></span>
+        <core-icon icon="editor:mode-edit" ng-click="go('/project-management/'+activeProject.id)"></core-icon>
       </paper-item>
     </core-toolbar>
 
@@ -193,7 +194,6 @@
     <p>{{deleteDesc}}</p>
     <paper-button dismissive >Decline</paper-button>
     <paper-button affirmative ng-click="deleteComponent()" ng-show="deleteElem === 'comp'">Accept</paper-button>
-    <paper-button affirmative ng-click="deleteProject()" ng-show="deleteElem === 'proj'">Accept</paper-button>
     <paper-button affirmative ng-click="deleteRequirement()" ng-show="deleteElem === 'req'">Accept</paper-button>
   </paper-action-dialog>
   <!--

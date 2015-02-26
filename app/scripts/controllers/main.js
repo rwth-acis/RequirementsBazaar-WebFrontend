@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce, $location) {
 
     $scope.projects = null;
     $scope.components = null;
@@ -140,18 +140,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     }
 
 
-
-    /*
-     * Everything related to creating or deleting a project
-     *
-     * */
-    $scope.deleteProject = function(){
-      console.log('delete project confirmed');
-      //TODO delete the project
-      UtilityService.showFeedback('This feature is currently under discussion');
-    };
-
-
     /*
     * Everything related to creating or deleting a new component
     *
@@ -222,9 +210,6 @@ angular.module('requirementsBazaarWebFrontendApp')
       else if(item === 'comp'){
         $scope.deleteDesc = "The action cannot be undone. The requirements will be accessible under the default component.";
       }
-      else if(item === 'proj'){
-        $scope.deleteDesc = "The action cannot be undone. Deleting a project also removes all components and requirements!";
-      }
       else{
         return;
       }
@@ -259,6 +244,10 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $sce.trustAsResourceUrl(src);
     };
 
+
+    $scope.go = function ( path ) {
+      $location.path( path );
+    };
   });
 
 
