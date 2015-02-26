@@ -11,30 +11,32 @@ angular.module('requirementsBazaarWebFrontendApp')
   .controller('VoteCtrl', function ($scope, reqBazService, UtilityService) {
 
     $scope.voteUp = function(req){
-      console.log('vote up');
       reqBazService.addVote(req.id,false)
         .success(function(message){
-          console.log('vote up successful');
-          console.log(message);
-          //TODO catch if the user has already voted
-          UtilityService.showFeedback('Thank You');
+          if (message.hasOwnProperty('errorCode')) {
+            UtilityService.showFeedback('Warning: Vote not counted !');
+          } else {
+            req.upVotes += 1;
+            UtilityService.showFeedback('Thank You');
+          }
         })
         .error(function(){
-          console.log('vote up unsuccessful');
           UtilityService.showFeedback('Warning: Vote was not counted');
         });
     };
 
     $scope.voteDown = function(req){
-      console.log('vote down');
       reqBazService.addVote(req.id,true)
         .success(function(message){
-          console.log('vote up successful');
-          console.log(message);
-          UtilityService.showFeedback('Thank You');
+          if (message.hasOwnProperty('errorCode')) {
+            UtilityService.showFeedback('Warning: Vote not counted !');
+          } else {
+            req.downVotes += 1;
+            UtilityService.showFeedback('Thank You');
+          }
         })
         .error(function(){
-          console.log('vote up unsuccessful');
+          UtilityService.showFeedback('Warning: Vote was not counted');
         });
     };
   });

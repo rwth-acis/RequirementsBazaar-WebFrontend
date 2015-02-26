@@ -99,9 +99,9 @@
           <span class="ellipsis small-grey-text" ng-show="!showRequirement" ng-bind="req.description"></span>
         </paper-item>
         <div ng-controller="VoteCtrl" class="vote-button-container">
-          <p class="small-grey-text">0</p>
+          <p class="small-grey-text" ng-bind="req.upVotes"></p>
           <paper-icon-button icon="icons:thumb-up" ng-click="voteUp(req)"></paper-icon-button>
-          <p class="small-grey-text">0</p>
+          <p class="small-grey-text" ng-bind="req.downVotes"></p>
           <paper-icon-button icon="icons:thumb-down" ng-click="voteDown(req)"></paper-icon-button>
         </div>
         <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert">
