@@ -12,8 +12,8 @@
         <core-icon icon="icons:arrow-back" ng-show="!showProjectSelection"></core-icon>
         <core-icon icon="icons:arrow-forward" ng-show="showProjectSelection"></core-icon>
         <span ng-bind="activeProject.name"></span>
-        <core-icon icon="editor:mode-edit" ng-click="go('/project-management/'+activeProject.id)"></core-icon>
       </paper-item>
+      <paper-icon-button icon="editor:mode-edit" ng-click="go('/project-management/'+activeProject.id)" class="edit-project"></paper-icon-button>
     </core-toolbar>
 
     <!--List of projects-->

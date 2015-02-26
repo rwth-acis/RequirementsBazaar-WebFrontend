@@ -47,13 +47,8 @@ angular
         redirectTo: '/'
       });
   }])
-  .run(function($rootScope, validateCookie) {
+  .run(function($rootScope, $location) {
     $rootScope.$on('$routeChangeSuccess', function () {
-      validateCookie();
-    })
-  })
-  .factory('validateCookie', function($location){
-    return function(){
       if(sessionStorage.getItem('ngStorage-token') == null){
         if($location.path().indexOf('/access_token') > -1){
           //User is currently logging in
@@ -62,5 +57,5 @@ angular
           $location.replace();
         }
       }
-    }
+    })
   });
