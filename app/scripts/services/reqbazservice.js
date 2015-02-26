@@ -12,13 +12,11 @@ angular.module('requirementsBazaarWebFrontendApp')
     var url = 'http://localhost:8080/bazaar/';
 
     //Access token
-    var access_token = '';
     var accessTokenURL = '';
     var accessTokenURL2 = '';
     this.setAccessToken = function(token){
-      access_token=token;
-      accessTokenURL = '/?access_token='+access_token;
-      accessTokenURL2 = '&access_token='+access_token;
+      accessTokenURL = '/?access_token='+token;
+      accessTokenURL2 = '&access_token='+token;
     };
 
 
