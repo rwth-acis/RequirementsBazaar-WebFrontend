@@ -69,16 +69,24 @@
   -->
   <div class="content">
     <!--Currently selected component-->
-    <div id="currentComponent" class="section group">
+    <div id="currentComponent" class="section group" ng-controller="ActiveCompCtrl">
       <div class="col span_6_of_8">
-        <h2 ng-bind="activeComponent.name"></h2>
-        <p ng-bind="activeComponent.description"></p>
+        <div ng-show="!isDirty">
+          <h2 ng-bind="activeComponent.name"></h2>
+          <p ng-bind="activeComponent.description"></p>
+        </div>
+        <div ng-show="isDirty">
+          <h2 contenteditable ng-model="dirtyComp.name" class="add-border"></h2>
+          <p contenteditable ng-model="dirtyComp.description" class="add-border"></p>
+          <paper-button ng-click="saveChanges()">save</paper-button>
+          <paper-button ng-click="cancelChanges()">cancel</paper-button>
+        </div>
       </div>
       <div class="col span_2_of_8">
         <p class="small-grey-text">Component lead:</p>
         <my-user src={{trustSrc(componentLeader.profileImage)}} width="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}}></my-user>
-        <paper-icon-button icon="editor:mode-edit" disabled></paper-icon-button>
-        <paper-icon-button icon="icons:delete" ng-click="confirmDelete('comp')"></paper-icon-button>
+        <paper-icon-button icon="editor:mode-edit" ng-click="initEdit()"></paper-icon-button>
+        <paper-icon-button icon="icons:delete" ng-click="confirmDelete()"></paper-icon-button>
         <paper-input label="search requirements" ng-model="filterReq.$"></paper-input>
       </div>
     </div>
@@ -89,7 +97,7 @@
     <!--List of requirements-->
     <div ng-repeat="req in requirements | filter:filterReq:strict" class="requirement-container" ng-controller="RequirementCtrl">
       <!--Requirement header-->
-      <div class="requirement-header ">
+      <div class="requirement-header">
         <paper-item ng-click="toggleRequirement(req)" class="requirement-header-title width-max">
           <span class="ellipsis req-title" ng-bind="req.title"></span>
           <span class="ellipsis small-grey-text" ng-show="!showRequirement" ng-bind="req.description"></span>
@@ -106,7 +114,7 @@
               <paper-item>Become a lead developer</paper-item>
               <paper-item ng-click="editRequirement = true">Edit requirement</paper-item>
               <paper-item ng-click="followRequirement($event,req)">Follow requirement</paper-item>
-              <paper-item ng-click="confirmDelete('req',req)">Delete requirement</paper-item>
+              <paper-item ng-click="confirmDelete(req)">Delete requirement</paper-item>
             </core-menu>
           </paper-dropdown>
         </paper-dropdown-menu-ex>

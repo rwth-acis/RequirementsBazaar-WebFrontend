@@ -34,6 +34,9 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.oauthProfileURI = oauthConfig.PROFILE_URI;
     $scope.oauthScope = oauthConfig.SCOPE;
 
+    //Used to filter requirements
+    $scope.filterReq = {};
+
     /*
     * Loads projects and then components ...
     * Called: only when the page loads
@@ -220,21 +223,10 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
-    $scope.confirmDelete = function(item, object){
-      $scope.deleteElem = item;
+    $scope.confirmDelete = function(object){
+      $scope.deleteElem = 'req';
       $scope.deleteObject = object;
-      if(item === 'req'){
-        $scope.deleteDesc = "The action cannot be undone. All comments and attachments will be deleted!";
-      }
-      else if(item === 'comp'){
-        $scope.deleteDesc = "The action cannot be undone. The requirements will be accessible under the default component.";
-      }
-      else if(item === 'proj'){
-        $scope.deleteDesc = "The action cannot be undone. Deleting a project also removes all components and requirements!";
-      }
-      else{
-        return;
-      }
+      $scope.deleteDesc = 'The action cannot be undone. All comments and attachments will be deleted!';
       document.getElementById('confirmDelete').toggle();
     };
 
@@ -244,16 +236,18 @@ angular.module('requirementsBazaarWebFrontendApp')
      * */
     $scope.$on('oauth:login', function(event, token) {
       reqBazService.setAccessToken(token.access_token);
+      UtilityService.showFeedback('Welcome back');
     });
     $scope.$on('oauth:authorized', function(event, token) {
       reqBazService.setAccessToken(token.access_token);
+      UtilityService.showFeedback('Welcome back');
     });
-    $scope.$on('oauth:logout', function(event) {
-      UtilityService.showFeedback('You are logged out')
+    $scope.$on('oauth:logout', function() {
+      UtilityService.showFeedback('You are logged out');
     });
 
 
-    $scope.$on('oauth:profile', function(profile) {
+    $scope.$on('oauth:profile', function() {
       $scope.activeUser = Profile.get();
       console.log($scope.activeUser);
     });
