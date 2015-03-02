@@ -52,7 +52,9 @@ body {
 #main-toolbar {
   white-space: nowrap;
 }
-
+.edit-project /deep/ core-icon {
+  top: 0;
+}
 
 /*
   Sidebar

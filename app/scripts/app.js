@@ -22,6 +22,15 @@ angular
   ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider
+      .when('/access_token=:accessToken', {
+        template: '',
+        controller: function ($location, AccessToken) {
+          var hash = $location.path().substr(1);
+          AccessToken.setTokenFromString(hash);
+          $location.path('/');
+          $location.replace();
+        }
+      })
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
@@ -30,9 +39,23 @@ angular
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
+      .when('/project-management/:projectId', {
+        templateUrl: 'views/project-management.html',
+        controller: 'ProjectManagementCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
-
-    $locationProvider.html5Mode(true).hashPrefix('!');
-  }]);
+  }])
+  .run(function($rootScope, $location) {
+    $rootScope.$on('$routeChangeSuccess', function () {
+      if(sessionStorage.getItem('ngStorage-token') == null){
+        if($location.path().indexOf('/access_token') > -1){
+          //User is currently logging in
+        }else{
+          $location.path('/');
+          $location.replace();
+        }
+      }
+    })
+  });

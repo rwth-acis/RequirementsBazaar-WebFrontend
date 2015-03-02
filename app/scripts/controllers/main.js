@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce, oauthConfig) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce, oauthConfig, $location) {
 
     $scope.projects = null;
     $scope.components = null;
@@ -150,18 +150,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     }
 
 
-
-    /*
-     * Everything related to creating or deleting a project
-     *
-     * */
-    $scope.deleteProject = function(){
-      console.log('delete project confirmed');
-      //TODO delete the project
-      UtilityService.showFeedback('This feature is currently under discussion');
-    };
-
-
     /*
     * Everything related to creating or deleting a new component
     *
@@ -260,6 +248,10 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $sce.trustAsResourceUrl(src);
     };
 
+
+    $scope.go = function ( path ) {
+      $location.path( path );
+    };
   });
 
 
