@@ -140,7 +140,6 @@ body {
 /*See if this can be improved*/
 .create-container{
   z-index: 2;
-  width: 800px;
   right: 130px;
   bottom: 0;
   position: fixed;

@@ -46,9 +46,8 @@
     <link rel="import" href="bower_components/paper-toast/paper-toast.html">
     <link rel="import" href="bower_components/paper-fab/paper-fab.html">
 
-    <link rel="import" href="scripts/myComponents/paper-dropdown-menu-ex.html">
-    <link rel="import" href="scripts/myComponents/my-user.html">
-
+    <link rel="import" href="my-components/paper-dropdown-menu-ex.html">
+    <link rel="import" href="my-components/my-user.html">
 
     <!--Might be missing from bower-->
     <link rel="import" href="bower_components/paper-input/paper-input-decorator.html">
@@ -59,8 +58,8 @@
     <!-- endbuild -->
 
     <!--Not added automatically-->
-    <link rel="import" href="styles/mdi.html">
-    <link rel="import" href="styles/sign-in-button.html">
+    <link rel="import" href="my-components/mdi.html">
+    <link rel="import" href="my-components/sign-in-button.html">
 
   </head>
   <body unresolved>
@@ -107,6 +106,7 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/config/oauthConfig.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/requirement.js"></script>
         <script src="scripts/controllers/vote.js"></script>

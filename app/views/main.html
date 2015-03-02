@@ -52,13 +52,13 @@
       <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled></paper-icon-button>
       <!--OAuth log in-->
       <oauth
-        site="https://api.learning-layers.eu/o/oauth2"
-        client-id="f4635a5a-8455-4cf4-9834-6f6f16bf9aec"
-        data-scope="openid email profile"
-        redirect-uri="http://localhost:9000/"
-        profile-uri="https://api.learning-layers.eu/o/oauth2/userinfo"
-        scope="public"
-        template="../styles/sign-in-button.html">
+        site={{oauthSite}}
+        client-id={{oauthClientId}}
+        data-scope={{oauthDataScope}}
+        redirect-uri={{oauthRedirectURI}}
+        profile-uri={{oauthProfileURI}}
+        scope={{oauthScope}}
+        template="../my-components/sign-in-button.html">
       </oauth>
     </div>
   </div>

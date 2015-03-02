@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce, oauthConfig) {
 
     $scope.projects = null;
     $scope.components = null;
@@ -26,6 +26,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.reloadComponents = false;
 
     $scope.showProjectSelection = false;
+
+    $scope.oauthSite = oauthConfig.SITE;
+    $scope.oauthClientId = oauthConfig.CLIENT_ID;
+    $scope.oauthDataScope = oauthConfig.DATA_SCOPE;
+    $scope.oauthRedirectURI = oauthConfig.REDIRECT_URI;
+    $scope.oauthProfileURI = oauthConfig.PROFILE_URI;
+    $scope.oauthScope = oauthConfig.SCOPE;
 
     /*
     * Loads projects and then components ...
