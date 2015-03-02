@@ -15,10 +15,11 @@ angular.module('requirementsBazaarWebFrontendApp')
     var accessTokenURL = '';
     var accessTokenURL2 = '';
     this.setAccessToken = function(token){
-      accessTokenURL = '/?access_token='+token;
-      accessTokenURL2 = '&access_token='+token;
+      if(token !== undefined){
+        accessTokenURL = '/?access_token='+token;
+        accessTokenURL2 = '&access_token='+token;
+      }
     };
-
 
     var paginate = function (url,page,per_page){
       if((typeof page !== 'undefined') && (typeof per_page !== 'undefined'))

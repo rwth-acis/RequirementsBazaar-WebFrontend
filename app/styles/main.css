@@ -34,9 +34,9 @@ body {
 /*
   Main header
 */
-#main-toolbar paper-icon-button {
-  height: 100%;
-  top: 6px;
+#toolbar-log-in {
+  top: 12px;
+  position: relative;
 }
 
 #main-toolbar {
@@ -177,11 +177,17 @@ CSS rules that apply to all core-elements
 
 */
 
-
-core-scaffold::shadow core-toolbar {
+/*For Chrome*/
+core-scaffold /deep/ core-toolbar {
   background-color: #669900;
   color: white;
 }
+/*For Firefox and Internet Explorer*/
+core-scaffold core-toolbar {
+  background-color: #669900 !important;
+  color: white !important;
+}
+
 
 core-toolbar {
   background-color: #669900;
@@ -203,11 +209,6 @@ paper-button {
   color: white;
 }
 
-paper-icon-button /deep/ core-icon {
-  top: 7px;
-}
-
-
 /*
 
   Rules that apply to custom / extended elements
@@ -218,12 +219,29 @@ paper-dropdown-menu-ex {
   width: 36px;
 }
 
+/*For Chrome*/
+paper-dropdown-menu-ex /deep/ core-icon{
+  top: -2px;
+}
+/*For Firefox and Internet Explorer*/
+paper-dropdown-menu-ex core-icon{
+  top: -2px !important;
+}
+
+
 html /deep/ paper-dropdown-menu-ex paper-dropdown {
   position: absolute;
   overflow: visible;
   min-height: 40px;
   left: -210px;
 }
+paper-dropdown-menu-ex paper-dropdown {
+  position: absolute !important;
+  overflow: visible !important;
+  min-height: 40px !important;
+  left: -210px !important;
+}
+
 
 paper-dropdown-menu-ex paper-item:hover{
   background-color: #ececec;

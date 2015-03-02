@@ -47,17 +47,18 @@
   -->
   <div tool id="main-toolbar" class="flex-space-between width-max">
     <p class="ellipsis">Requirements Bazaar</p>
-    <div>
+    <div id="toolbar-log-in">
       <!--Notifications-->
       <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled></paper-icon-button>
       <!--OAuth log in-->
+      <!--If scope is specified then the log in fails on firefox/IE-->
+      <!--scope={{oauthScope}}-->
       <oauth
         site={{oauthSite}}
         client-id={{oauthClientId}}
         data-scope={{oauthDataScope}}
         redirect-uri={{oauthRedirectURI}}
         profile-uri={{oauthProfileURI}}
-        scope={{oauthScope}}
         template="../my-components/sign-in-button.html">
       </oauth>
     </div>
@@ -102,11 +103,11 @@
           <span class="ellipsis req-title" ng-bind="req.title"></span>
           <span class="ellipsis small-grey-text" ng-show="!showRequirement" ng-bind="req.description"></span>
         </paper-item>
-        <div ng-controller="VoteCtrl" class="vote-button-container">
+        <div ng-controller="VoteCtrl" class="vote-button-container flex-space-between">
           <p class="small-grey-text" ng-bind="req.upVotes"></p>
-          <paper-icon-button icon="icons:thumb-up" ng-click="voteUp(req)"></paper-icon-button>
+          <paper-icon-button icon="icons:thumb-up" ng-click="voteUp(req)" style="padding: 14px;"></paper-icon-button>
           <p class="small-grey-text" ng-bind="req.downVotes"></p>
-          <paper-icon-button icon="icons:thumb-down" ng-click="voteDown(req)"></paper-icon-button>
+          <paper-icon-button icon="icons:thumb-down" ng-click="voteDown(req)" style="padding: 14px;"></paper-icon-button>
         </div>
         <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert">
           <paper-dropdown class="dropdown">
@@ -234,7 +235,7 @@
 
         <!--Confirm or add attachments-->
         <div class="flex-space-between">
-          <div>
+          <div class="flex-space-between">
             <paper-button ng-click="submitReq()">create</paper-button>
             <paper-icon-button ng-file-select ng-file-change="newAttachments($files)" icon="icons:attachment"></paper-icon-button>
           </div>
