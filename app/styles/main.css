@@ -48,12 +48,8 @@ body {
   top: 12px;
   position: relative;
 }
-
 #main-toolbar {
   white-space: nowrap;
-}
-.edit-project /deep/ core-icon {
-  top: 0;
 }
 
 /*

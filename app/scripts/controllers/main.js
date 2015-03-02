@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce, oauthConfig, $location) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce, oauthConfig, $location, AccessToken) {
 
     $scope.projects = null;
     $scope.components = null;
@@ -149,6 +149,18 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     }
 
+    /*
+    * Reroutes user to the project management page, but only if logged in
+    *
+    * */
+    $scope.editProject = function(){
+      //Check if user is logged in
+      if(AccessToken.get() !== null){
+        $scope.go('/project-management/'+$scope.activeProject.id)
+      }else{
+        UtilityService.showFeedback('You must be logged in to edit projects')
+      }
+    };
 
     /*
     * Everything related to creating or deleting a new component
