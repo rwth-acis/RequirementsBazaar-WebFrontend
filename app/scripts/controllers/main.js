@@ -65,7 +65,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.showProjectSelection = false;
       $scope.reloadComponents = false;
       $scope.activeProject = project;
-      reqBazService.getComponents($scope.activeProject.id,'0','30')
+      reqBazService.getComponents($scope.activeProject.id,'0','100')
         .success(function (comps) {
           $scope.components = comps;
           $scope.activeComponent = $scope.components[0];
@@ -93,7 +93,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       getUser($scope.activeComponent.leaderId,'component');
 
       //Load the requirements
-      reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id)
+      reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','100')
         .success(function (reqs) {
           $scope.requirements = reqs;
             if($scope.requirements.length === 0){

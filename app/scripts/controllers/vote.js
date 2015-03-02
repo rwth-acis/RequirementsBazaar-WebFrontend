@@ -14,8 +14,22 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.addVote(req.id,false)
         .success(function(message){
           if (message.hasOwnProperty('errorCode')) {
-            UtilityService.showFeedback('Warning: Vote not counted !');
-          } else {
+            if(message.errorCode === 'AUTHORIZATION'){
+              UtilityService.showFeedback('You are not allowed to vote !');
+            }else{
+              UtilityService.showFeedback('Warning: Vote not counted !');
+            }
+          }
+          else if (message.status === 'UNCHANGED'){
+            UtilityService.showFeedback('You have already voted');
+          }
+          else if (message.status === 'CHANGED'){
+            req.userVoted = 'UP_VOTE';
+            req.upVotes += 1;
+            req.downVotes -= 1;
+          }
+          else if(message.status === 'CREATED'){
+            req.userVoted = 'UP_VOTE';
             req.upVotes += 1;
             UtilityService.showFeedback('Thank You');
           }
@@ -29,8 +43,22 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.addVote(req.id,true)
         .success(function(message){
           if (message.hasOwnProperty('errorCode')) {
-            UtilityService.showFeedback('Warning: Vote not counted !');
-          } else {
+            if(message.errorCode === 'AUTHORIZATION'){
+              UtilityService.showFeedback('You are not allowed to vote !');
+            }else{
+              UtilityService.showFeedback('Warning: Vote not counted !');
+            }
+          }
+          else if (message.status === 'UNCHANGED'){
+            UtilityService.showFeedback('You have already voted');
+          }
+          else if (message.status === 'CHANGED'){
+            req.userVoted = 'DOWN_VOTE';
+            req.upVotes -= 1;
+            req.downVotes += 1;
+          }
+          else if(message.status === 'CREATED'){
+            req.userVoted = 'DOWN_VOTE';
             req.downVotes += 1;
             UtilityService.showFeedback('Thank You');
           }

@@ -101,13 +101,14 @@
       <div class="requirement-header">
         <paper-item ng-click="toggleRequirement(req)" class="requirement-header-title width-max">
           <span class="ellipsis req-title" ng-bind="req.title"></span>
-          <span class="ellipsis small-grey-text" ng-show="!showRequirement" ng-bind="req.description"></span>
         </paper-item>
         <div ng-controller="VoteCtrl" class="vote-button-container flex-space-between">
-          <p class="small-grey-text" ng-bind="req.upVotes"></p>
-          <paper-icon-button icon="icons:thumb-up" ng-click="voteUp(req)" style="padding: 14px;"></paper-icon-button>
-          <p class="small-grey-text" ng-bind="req.downVotes"></p>
-          <paper-icon-button icon="icons:thumb-down" ng-click="voteDown(req)" style="padding: 14px;"></paper-icon-button>
+          <p ng-bind="req.upVotes" class="small-grey-text"></p>
+          <paper-icon-button ng-show="req.userVoted === 'UP_VOTE'" disabled icon="icons:thumb-up" ng-click="voteUp(req)" style="padding: 14px;"></paper-icon-button>
+          <paper-icon-button ng-show="req.userVoted !== 'UP_VOTE'" icon="icons:thumb-up" ng-click="voteUp(req)" style="padding: 14px;"></paper-icon-button>
+          <p ng-bind="req.downVotes" class="small-grey-text"></p>
+          <paper-icon-button disabled ng-show="req.userVoted === 'DOWN_VOTE'" icon="icons:thumb-down" ng-click="voteDown(req)" style="padding: 14px;"></paper-icon-button>
+          <paper-icon-button ng-show="req.userVoted !== 'DOWN_VOTE'" icon="icons:thumb-down" ng-click="voteDown(req)" style="padding: 14px;"></paper-icon-button>
         </div>
         <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert">
           <paper-dropdown class="dropdown">
@@ -120,6 +121,9 @@
           </paper-dropdown>
         </paper-dropdown-menu-ex>
       </div>
+      <paper-item ng-show="!showRequirement" ng-click="toggleRequirement(req)">
+        <p class="multiline-ellipsis" style="color: #808080" ng-bind="req.description"></p>
+      </paper-item>
 
       <!--Requirement content-->
       <core-collapse opened={{showRequirement}} class="req-collapse">
