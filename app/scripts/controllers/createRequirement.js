@@ -32,7 +32,11 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             if (message.hasOwnProperty('errorCode')) {
-              UtilityService.showFeedback('Warning: Requirement was not created !');
+              if(message.errorCode === 'AUTHORIZATION'){
+                UtilityService.showFeedback('You are not allowed to create new requirements!');
+              } else {
+                  UtilityService.showFeedback('Warning: Requirement was not created !');
+              }
             } else {
               //Add missing values to the newly created requirement
               req.id = message.id;

@@ -24,10 +24,13 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             if(message.hasOwnProperty('errorCode')){
-              UtilityService.showFeedback('Warning: Project was not created !');
+              if(message.errorCode === 'AUTHORIZATION'){
+                UtilityService.showFeedback('You are not allowed to create new projects!');
+              } else {
+                UtilityService.showFeedback('Warning: Project was not created !');
+              }
             }else {
               UtilityService.showFeedback('Project was created');
-
               //The project is added to be the first element and will be active
               proj.id = message.id;
               $scope.activeProject = proj;

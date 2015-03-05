@@ -24,7 +24,11 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             if(message.hasOwnProperty('errorCode')){
-              UtilityService.showFeedback('Warning: Component was not created !');
+              if(message.errorCode === 'AUTHORIZATION'){
+                UtilityService.showFeedback('You are not allowed to create new components!');
+              } else {
+                UtilityService.showFeedback('Warning: Component was not created !');
+              }
             }else {
               UtilityService.showFeedback('Component was created');
               comp.id = message.id;
