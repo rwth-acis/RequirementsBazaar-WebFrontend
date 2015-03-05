@@ -146,4 +146,17 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
+    //Become a follower of a requirement
+    $scope.developRequirement = function(clickEvent,req){
+      console.log('become developer');
+      reqBazService.addUserToDevelopers(req.id)
+        .success(function (message) {
+          console.log(message);
+        })
+        .error(function (error) {
+          console.log(error);
+          UtilityService.showFeedback('Warning: could not register as a developer');
+        });
+    };
+
   });
