@@ -30,7 +30,7 @@
 
     <!--List of components-->
     <core-menu class="sidebarMenu" ng-show="!showProjectSelection">
-      <paper-input label="search components" ng-model="filterComp.name"></paper-input>
+      <paper-input label="filter components" ng-model="filterComp.name"></paper-input>
       <paper-item ng-repeat="component in components | filter:filterComp:strict" ng-click="selectComp(component)" ng-bind="component.name"></paper-item>
       <hr>
       <!--Create a new component-->
