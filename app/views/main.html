@@ -13,7 +13,7 @@
         <core-icon icon="icons:arrow-forward" ng-show="showProjectSelection"></core-icon>
         <span ng-bind="activeProject.name"></span>
       </paper-item>
-      <paper-icon-button icon="editor:mode-edit" ng-click="editProject()" class="edit-project"></paper-icon-button>
+      <paper-icon-button icon="editor:mode-edit" hidden ng-click="editProject()" class="edit-project"></paper-icon-button>
     </core-toolbar>
 
     <!--List of projects-->
@@ -87,7 +87,7 @@
       <div class="col span_2_of_8">
         <p class="small-grey-text">Component lead:</p>
         <my-user src={{trustSrc(componentLeader.profileImage)}} width="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}}></my-user>
-        <paper-icon-button icon="editor:mode-edit" ng-click="initEdit()"></paper-icon-button>
+        <paper-icon-button icon="editor:mode-edit" disabled ng-click="initEdit()"></paper-icon-button>
         <paper-icon-button icon="icons:delete" ng-click="confirmDelete()"></paper-icon-button>
         <paper-input label="search requirements" ng-model="filterReq.$"></paper-input>
       </div>
@@ -115,7 +115,7 @@
           <paper-dropdown class="dropdown">
             <core-menu class="menu">
               <paper-item>Become a lead developer</paper-item>
-              <paper-item ng-click="editRequirement = true">Edit requirement</paper-item>
+              <paper-item ng-click="editRequirement = true" disabled>Edit requirement</paper-item>
               <paper-item ng-click="followRequirement($event,req)">Follow requirement</paper-item>
               <paper-item ng-click="confirmDelete(req)">Delete requirement</paper-item>
             </core-menu>
@@ -144,7 +144,7 @@
         </div>
         <div ng-show="editRequirement" class="save-req-container">
           <paper-button ng-click="updateRequirement(req)">Save changes</paper-button>
-          <paper-icon-button ng-file-select ng-file-change="fileSelected($files)" icon="icons:attachment"></paper-icon-button>
+          <paper-icon-button ng-file-select ng-file-change="fileSelected($files)" hidden icon="icons:attachment"></paper-icon-button>
         </div>
 
         <!--List of contributors-->
@@ -241,7 +241,7 @@
         <div class="flex-space-between">
           <div class="flex-space-between">
             <paper-button ng-click="submitReq()">create</paper-button>
-            <paper-icon-button ng-file-select ng-file-change="newAttachments($files)" icon="icons:attachment"></paper-icon-button>
+            <paper-icon-button ng-file-select ng-file-change="newAttachments($files)" icon="icons:attachment" hidden></paper-icon-button>
           </div>
           <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
         </div>
