@@ -20,7 +20,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Submit a new Requirement
     * */
     $scope.submitReq = function(){
-      if(!UtilityService.isEmpty($scope.newName,'Choose requirement name') && !UtilityService.isEmpty($scope.newDesc,'Choose requirement description')) {
+      if(!UtilityService.isEmpty($scope.newName,'Choose requirement name') /*&& !UtilityService.isEmpty($scope.newDesc,'Choose requirement description')*/) {
         if($scope.createAttachments.length !== 0){
           //TODO save the attachments
           $scope.createAttachments = [];
