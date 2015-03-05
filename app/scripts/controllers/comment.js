@@ -63,7 +63,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteComment(id)
         .success(function (message) {
           console.log(message);
-          if(message.success !== 'true'){
+          if(message.success !== true){
             UtilityService.showFeedback('Warning: Comment was not deleted !');
           }else{
             // Delete the removed requirement from the list
@@ -73,6 +73,7 @@ angular.module('requirementsBazaarWebFrontendApp')
                 break;
               }
             }
+            UtilityService.showFeedback('Comment: ' + message.deletedItemText + ' deleted');
           }
         })
         .error(function (error) {

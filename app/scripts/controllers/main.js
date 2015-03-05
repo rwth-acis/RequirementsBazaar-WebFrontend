@@ -170,7 +170,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
         .success(function (message) {
           console.log(message);
-          if(message.success !== 'true'){
+          if(message.success !== true){
             UtilityService.showFeedback('Warning: Component was not deleted !');
           }else {
             for (var i = 0; i < $scope.components.length; i++) {
@@ -186,7 +186,7 @@ angular.module('requirementsBazaarWebFrontendApp')
               $scope.activeComponent = $scope.components[0];
             }
 
-            UtilityService.showFeedback('Component deleted');
+            UtilityService.showFeedback('Component: ' + message.deletedItemText + ' deleted');
           }
         })
         .error(function (error) {
@@ -200,7 +200,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       console.log('delete requirement');
       reqBazService.deleteRequirement(req.id)
         .success(function (message) {
-          if(message.success !== 'true'){
+          if(message.success !== true){
             UtilityService.showFeedback('Warning: Requirement was not deleted');
           }else{
             // Delete the removed requirement from the list
@@ -212,7 +212,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             }
             //No requirement selected
             $scope.selectedIndex = -1;
-            UtilityService.showFeedback('Requirement deleted');
+            UtilityService.showFeedback('Requirement: ' + message.deletedItemText + ' deleted');
           }
         })
         .error(function (error) {
