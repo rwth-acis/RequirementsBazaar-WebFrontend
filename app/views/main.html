@@ -9,8 +9,8 @@
     <!--Switch between projects-->
     <core-toolbar>
       <paper-item ng-click="showProjectSelection = !showProjectSelection" class="large-text">
-        <core-icon icon="icons:arrow-back" ng-show="!showProjectSelection"></core-icon>
-        <core-icon icon="icons:arrow-forward" ng-show="showProjectSelection"></core-icon>
+        <core-icon icon="icons:menu" ng-show="!showProjectSelection"></core-icon>
+        <core-icon icon="icons:menu" ng-show="showProjectSelection"></core-icon>
         <span ng-bind="activeProject.name"></span>
       </paper-item>
       <paper-icon-button icon="editor:mode-edit" hidden ng-click="editProject()" class="edit-project"></paper-icon-button>
