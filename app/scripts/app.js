@@ -20,7 +20,7 @@ angular
     'oauth',
     'angularFileUpload'
   ])
-  .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+  .config(['$routeProvider', '$locationProvider', function ($routeProvider) {
     $routeProvider
       .when('/access_token=:accessToken', {
         template: '',
@@ -57,5 +57,5 @@ angular
           $location.replace();
         }
       }
-    })
+    });
   });

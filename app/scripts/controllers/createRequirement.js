@@ -38,19 +38,15 @@ angular.module('requirementsBazaarWebFrontendApp')
                   UtilityService.showFeedback('Warning: Requirement was not created !');
               }
             } else {
-              //Add missing values to the newly created requirement
-              req.id = message.id;
-              req.creator = {firstName: 'loading'};
-              req.leadDeveloper = {firstName: 'loading'};
-              req.followers = [];
-              req.developers = [];
-              req.contributors = [];
-              req.attachments = [];
-              req.components = [];
-
-              //Add the requirement to the first position
-              $scope.requirements.splice(0, 0, req);
-              $scope.clearSubmit();
+              reqBazService.getRequirement(message.id)
+                .success(function (req) {
+                  $scope.requirements.splice(0, 0, req);
+                  $scope.clearSubmit();
+                })
+                .error(function (error) {
+                  console.log(error);
+                  UtilityService.showFeedback('Warning: Requirement was not retrieved !');
+                });
             }
           })
           .error(function (error) {

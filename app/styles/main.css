@@ -167,16 +167,9 @@ body {
   box-shadow: 0 2px 10px rgba(0,0,0,.2);
 }
 #addRequirementFab{
-  color: white;
-  cursor: pointer;
-  z-index: 1;
   position: fixed;
   right: 40px;
   bottom: 30px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #db4437;
 }
 
 /*

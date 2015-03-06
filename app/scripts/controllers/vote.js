@@ -27,6 +27,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             req.userVoted = 'UP_VOTE';
             req.upVotes += 1;
             req.downVotes -= 1;
+            UtilityService.showFeedback('Thank You');
           }
           else if(message.status === 'CREATED'){
             req.userVoted = 'UP_VOTE';
@@ -46,7 +47,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             if(message.errorCode === 'AUTHORIZATION'){
               UtilityService.showFeedback('You are not allowed to vote !');
             }else{
-              UtilityService.showFeedback('Warning: Vote not counted !');
+              UtilityService.showFeedback('Warning: Vote not counted, error occurred !');
             }
           }
           else if (message.status === 'UNCHANGED'){
@@ -56,6 +57,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             req.userVoted = 'DOWN_VOTE';
             req.upVotes -= 1;
             req.downVotes += 1;
+            UtilityService.showFeedback('Thank You');
           }
           else if(message.status === 'CREATED'){
             req.userVoted = 'DOWN_VOTE';

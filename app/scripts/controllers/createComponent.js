@@ -19,7 +19,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.submitComponent = function(){
       if(!UtilityService.isEmpty($scope.name,'Provide a name for the component')) {
         console.log('submit new component');
-        var comp = {description: $scope.desc, name: $scope.name, leaderId: 1, projectId: $scope.activeProject.id};
+        var comp = {description: $scope.desc, name: $scope.name, projectId: $scope.activeProject.id};
         reqBazService.createComponent($scope.activeProject.id,comp)
           .success(function (message) {
             console.log(message);
@@ -31,13 +31,18 @@ angular.module('requirementsBazaarWebFrontendApp')
               }
             }else {
               UtilityService.showFeedback('Component was created');
-              comp.id = message.id;
-
-              //The component is added to be the first element and will be active
-              $scope.activeComponent = comp;
-              $scope.components.splice(0, 0, $scope.activeComponent);
-              $scope.selectComp($scope.activeComponent);
-              $scope.clearComponentSubmit();
+              //Retrieve it from the server since we need the creator id that is on the server
+              reqBazService.getComponent(message.id)
+                .success(function (comp) {
+                  //The component is added to be the first element and will be active
+                  $scope.components.splice(0, 0, comp);
+                  $scope.selectComp(comp);
+                  $scope.clearSubmit();
+                })
+                .error(function (error) {
+                console.log(error);
+                UtilityService.showFeedback('Warning: Component was not retrieved !');
+              });
             }
           })
           .error(function (error) {

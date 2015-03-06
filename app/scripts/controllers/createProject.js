@@ -31,12 +31,18 @@ angular.module('requirementsBazaarWebFrontendApp')
               }
             }else {
               UtilityService.showFeedback('Project was created');
-              //The project is added to be the first element and will be active
-              proj.id = message.id;
-              $scope.activeProject = proj;
-              $scope.projects.splice(0, 0, $scope.activeProject);
-              $scope.selectProj($scope.activeProject);
-              $scope.clearSubmit();
+              //Retrieve it from the server to get all auto generated fields
+              reqBazService.getProject(message.id)
+                .success(function (proj) {
+                  //The project is added to be the first element and will be active
+                  $scope.projects.splice(0, 0, proj);
+                  $scope.selectProj(proj);
+                  $scope.clearSubmit();
+                })
+                .error(function (error) {
+                  console.log(error);
+                  UtilityService.showFeedback('Warning: Project was not retrieved !');
+                });
             }
           })
           .error(function (error) {

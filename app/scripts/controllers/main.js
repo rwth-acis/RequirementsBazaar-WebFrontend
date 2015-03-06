@@ -156,9 +156,9 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.editProject = function(){
       //Check if user is logged in
       if(AccessToken.get() !== null){
-        $scope.go('/project-management/'+$scope.activeProject.id)
+        $scope.go('/project-management/'+$scope.activeProject.id);
       }else{
-        UtilityService.showFeedback('You must be logged in to edit projects')
+        UtilityService.showFeedback('You must be logged in to edit projects');
       }
     };
 
@@ -183,7 +183,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             //set a new active component
             $scope.activeComponent = null;
             if ($scope.components !== null) {
-              $scope.activeComponent = $scope.components[0];
+              $scope.selectComp($scope.components[0]);
             }
 
             UtilityService.showFeedback('Component: ' + message.deletedItemText + ' deleted');
@@ -243,6 +243,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       UtilityService.showFeedback('Welcome back');
     });
     $scope.$on('oauth:logout', function() {
+      reqBazService.setAccessToken(undefined);
       UtilityService.showFeedback('You are logged out');
     });
 

@@ -16,8 +16,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     var accessTokenURL2 = '';
     this.setAccessToken = function(token){
       if(token !== undefined){
+        //Use logged in
         accessTokenURL = '/?access_token='+token;
         accessTokenURL2 = '&access_token='+token;
+      }else{
+        //User logged out
+        accessTokenURL = '';
+        accessTokenURL2 = '';
       }
     };
 
