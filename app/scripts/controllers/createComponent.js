@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CreateComponentCtrl', function ($scope, reqBazService, UtilityService) {
+  .controller('CreateComponentCtrl', function ($scope, reqBazService, UtilityService, AccessToken) {
 
     $scope.name = '';
     $scope.desc = '';

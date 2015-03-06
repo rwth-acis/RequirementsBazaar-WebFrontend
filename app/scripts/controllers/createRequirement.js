@@ -8,13 +8,24 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CreateRequirementCtrl', function ($scope, reqBazService, UtilityService, $upload) {
+  .controller('CreateRequirementCtrl', function ($scope, reqBazService, UtilityService, AccessToken, $upload) {
 
     $scope.showCreateDiv = false;
     $scope.newName = '';
     $scope.newDesc = '';
 
     $scope.createAttachments = [];
+
+    /*
+    * Is called to check if the user has rights to create requirements for a project, currently simply check if logged in
+    * */
+    $scope.startCreation = function(){
+      if(AccessToken.get() !== null){
+        $scope.showCreateDiv = true;
+      }else{
+        UtilityService.showFeedback('Please log in to create requirements');
+      }
+    };
 
     /*
     * Submit a new Requirement

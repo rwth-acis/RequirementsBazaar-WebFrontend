@@ -16,7 +16,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     /*
     * User has started editing a component
     * */
-    $scope.initEdit = function(){
+    $scope.startEdit = function(){
       //Create a copy of the component, that is shown for the user while editing
       $scope.dirtyComp = angular.copy($scope.activeComponent);
       $scope.isDirty = true;

@@ -37,6 +37,9 @@ angular.module('requirementsBazaarWebFrontendApp')
     //Used to filter requirements
     $scope.filterReq = {};
 
+
+    $scope.showCreateCompDiv = false;
+
     /*
     * Loads projects and then components ...
     * Called: only when the page loads
@@ -161,6 +164,29 @@ angular.module('requirementsBazaarWebFrontendApp')
         UtilityService.showFeedback('You must be logged in to edit projects');
       }
     };
+
+    /*
+     * Is called to check if the user has rights to create component for a project, currently simply check if logged in
+     * */
+    $scope.startCreationComp = function(){
+      if(AccessToken.get() !== null){
+        $scope.showCreateCompDiv = true;
+      }else{
+        UtilityService.showFeedback('Please log in to create components');
+      }
+    };
+
+    /*
+     * Is called to check if the user has rights to create component for a project, currently simply check if logged in
+     * */
+    $scope.startCreationProj = function(){
+      if(AccessToken.get() !== null){
+        $scope.showCreateProjDiv = true;
+      }else{
+        UtilityService.showFeedback('Please log in to create components');
+      }
+    };
+
 
     /*
     * Everything related to creating or deleting a new component
