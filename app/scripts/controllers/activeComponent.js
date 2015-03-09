@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('ActiveCompCtrl', function ($scope, reqBazService, UtilityService) {
+  .controller('ActiveCompCtrl', function ($scope, reqBazService, UtilityService, AccessToken) {
 
     $scope.dirtyComp = null;
     $scope.isDirty = false;
@@ -43,9 +43,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Initiate delete component
     * */
     $scope.confirmDelete = function(){
-      $scope.$parent.deleteDesc = 'The action cannot be undone. The requirements will be accessible under the default component.';
-      $scope.$parent.deleteElem = 'comp';
-      document.getElementById('confirmDelete').toggle();
+      if(AccessToken.get() !== null){
+        $scope.$parent.deleteDesc = 'The action cannot be undone. The requirements will be accessible under the default component.';
+        $scope.$parent.deleteElem = 'comp';
+        document.getElementById('confirmDelete').toggle();
+      }else{
+        UtilityService.showFeedback('Please log in to delete components');
+      }
     };
 
   });

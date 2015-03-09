@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CreateProjectCtrl', function ($scope, reqBazService, UtilityService) {
+  .controller('CreateProjectCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService) {
 
     $scope.name = '';
     $scope.desc = '';
@@ -23,13 +23,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createProject(proj)
           .success(function (message) {
             console.log(message);
-            if(message.hasOwnProperty('errorCode')){
-              if(message.errorCode === 'AUTHORIZATION'){
-                UtilityService.showFeedback('You are not allowed to create new projects!');
-              } else {
-                UtilityService.showFeedback('Warning: Project was not created !');
-              }
-            }else {
+            if(AuthorizationService.isAuthorized(message)) {
               UtilityService.showFeedback('Project was created');
               //Retrieve it from the server to get all auto generated fields
               reqBazService.getProject(message.id)

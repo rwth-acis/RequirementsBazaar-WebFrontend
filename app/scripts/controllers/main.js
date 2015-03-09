@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, $upload, Profile, $sce, oauthConfig, $location, AccessToken) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $upload, Profile, $sce, oauthConfig, $location, AccessToken, $routeParams) {
 
     $scope.projects = null;
     $scope.components = null;
@@ -49,8 +49,25 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (projs) {
           $scope.projects = projs;
           if($scope.projects.length !== 0){
-            $scope.activeProject = $scope.projects[0];
-            $scope.selectProj($scope.activeProject);
+            //Check if the user followed a bookmarked link
+            if($routeParams.projectId !== undefined){
+              var projectExists = false;
+              for(var i = 0; i < $scope.projects.length; i++){
+                if($routeParams.projectId === $scope.projects[i].id.toString()){
+                  $scope.activeProject = $scope.projects[i];
+                  $scope.selectProj($scope.activeProject);
+                  projectExists = true;
+                  break;
+                }
+              }
+              if(!projectExists){
+                $scope.activeProject = $scope.projects[0];
+                $scope.selectProj($scope.activeProject);
+              }
+            }else{
+              $scope.activeProject = $scope.projects[0];
+              $scope.selectProj($scope.activeProject);
+            }
           }else{
             //TODO somehow gracefully handle the fact that there are no projects
           }
@@ -68,11 +85,34 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.showProjectSelection = false;
       $scope.reloadComponents = false;
       $scope.activeProject = project;
+
+      console.log(window.location.hash);
+      //window.location.hash = "#/project/"+$scope.activeProject.id;
+      //$location.path('/project/'+$scope.activeProject.id).replace().notify(false);
+      //locationChanger.skipReload().withoutRefresh("http://localhost:9000/#/project/1", true);
+
       reqBazService.getComponents($scope.activeProject.id,'0','100')
         .success(function (comps) {
           $scope.components = comps;
-          $scope.activeComponent = $scope.components[0];
-          $scope.selectComp($scope.activeComponent);
+          //Check if the user followed a bookmarked link
+          if($routeParams.componentId !== undefined){
+            var compExists = false;
+            for(var i = 0; i < $scope.components.length; i++){
+              if($routeParams.componentId === $scope.components[i].id.toString()){
+                $scope.activeComponent = $scope.components[i];
+                $scope.selectComp($scope.activeComponent);
+                compExists = true;
+                break;
+              }
+            }
+            if(!compExists){
+              $scope.activeComponent = $scope.components[0];
+              $scope.selectComp($scope.activeComponent);
+            }
+          }else{
+            $scope.activeComponent = $scope.components[0];
+            $scope.selectComp($scope.activeComponent);
+          }
         })
         .error(function () {
           //Null the lists, otherwise user will see wrong components/requirements
@@ -112,7 +152,6 @@ angular.module('requirementsBazaarWebFrontendApp')
                 $scope.requirements[i].contributors = [];
                 $scope.requirements[i].attachments = [];
                 $scope.requirements[i].components = [];
-
                 $scope.requirements[i].comments = [];
               }
             }
@@ -183,7 +222,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(AccessToken.get() !== null){
         $scope.showCreateProjDiv = true;
       }else{
-        UtilityService.showFeedback('Please log in to create components');
+        UtilityService.showFeedback('Please log in to create projects');
       }
     };
 
@@ -226,10 +265,8 @@ angular.module('requirementsBazaarWebFrontendApp')
       console.log('delete requirement');
       reqBazService.deleteRequirement(req.id)
         .success(function (message) {
-          if(message.success !== true){
-            UtilityService.showFeedback('Warning: Requirement was not deleted');
-          }else{
-            // Delete the removed requirement from the list
+          if(AuthorizationService.isAuthorized(message)){
+            // Delete the requirement from the list
             for(var i = 0; i<$scope.requirements.length;i++){
               if($scope.requirements[i].id === req.id){
                 $scope.requirements.splice(i, 1);
@@ -250,10 +287,14 @@ angular.module('requirementsBazaarWebFrontendApp')
 
 
     $scope.confirmDelete = function(object){
-      $scope.deleteElem = 'req';
-      $scope.deleteObject = object;
-      $scope.deleteDesc = 'The action cannot be undone. All comments and attachments will be deleted!';
-      document.getElementById('confirmDelete').toggle();
+      if(AccessToken.get() !== null){
+        $scope.deleteElem = 'req';
+        $scope.deleteObject = object;
+        $scope.deleteDesc = 'The action cannot be undone. All comments and attachments will be deleted!';
+        document.getElementById('confirmDelete').toggle();
+      }else{
+        UtilityService.showFeedback('Please log in to delete requirements');
+      }
     };
 
 

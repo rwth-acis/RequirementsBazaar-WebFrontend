@@ -31,13 +31,13 @@ angular
           $location.replace();
         }
       })
-      .when('/', {
+      .when('/project/:projectId/component/:componentId', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
+      .when('/', {
+        templateUrl: 'views/main.html',
+        controller: 'MainCtrl'
       })
       .when('/project-management/:projectId', {
         templateUrl: 'views/project-management.html',
@@ -46,16 +46,4 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  }])
-  .run(function($rootScope, $location) {
-    $rootScope.$on('$routeChangeSuccess', function () {
-      if(sessionStorage.getItem('ngStorage-token') == null){
-        if($location.path().indexOf('/access_token') > -1){
-          //User is currently logging in
-        }else{
-          $location.path('/');
-          $location.replace();
-        }
-      }
-    });
-  });
+  }]);

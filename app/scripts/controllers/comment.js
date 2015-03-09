@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CommentCtrl', function ($scope, reqBazService, UtilityService) {
+  .controller('CommentCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService) {
 
     $scope.creatorName = 'anon';
     $scope.creatorProfileImage = '';
@@ -20,15 +20,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.submitComment = function(text,req){
       if(!UtilityService.isEmpty(text,'Comment cannot be empty')){
         console.log('post comment: '+text);
-        // user 1 is the current anon user
         var comment = {requirementId: req.id, message: text};
-
         reqBazService.createComment(req.id,comment)
           .success(function (message) {
             console.log(message);
-            if(message.hasOwnProperty('errorCode')){
-              UtilityService.showFeedback('Warning: Comment was not submitted !');
-            }else{
+            if(AuthorizationService.isAuthorized(message)) {
+
+              console.log($scope.activeUser);
               comment.creatorId = $scope.activeUser.preferred_username;
               comment.Id = message.id;
               //Instead of making a new server call, just approximate
@@ -44,17 +42,6 @@ angular.module('requirementsBazaarWebFrontendApp')
       }
     };
 
-    $scope.getUserName = function(id){
-      reqBazService.getUser(id).success(function (user) {
-        console.log(user);
-        $scope.creatorName = user.firstName;
-        return user;
-      })
-        .error(function () {
-          UtilityService.showFeedback('Could not load user for: comment');
-        });
-    };
-
     /*
      * Comment is deleted without further confirmation
      * Called: by the user
@@ -63,9 +50,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteComment(id)
         .success(function (message) {
           console.log(message);
-          if(message.success !== true){
-            UtilityService.showFeedback('Warning: Comment was not deleted !');
-          }else{
+          if(AuthorizationService.isAuthorized(message)) {
             // Delete the removed requirement from the list
             for(var i = 0; i<req.comments.length;i++){
               if(req.comments[i].Id === id){

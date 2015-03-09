@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, $upload) {
+  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $upload) {
 
     $scope.attachments = [];
     $scope.showRequirement = false;
@@ -138,7 +138,9 @@ angular.module('requirementsBazaarWebFrontendApp')
       console.log('become follower');
       reqBazService.addUserToFollowers(req.id)
         .success(function (message) {
-          console.log(message);
+          if(AuthorizationService.isAuthorized(message)){
+            UtilityService.showFeedback('Thank you for following');
+          }
         })
         .error(function (error) {
           console.log(error);
@@ -146,17 +148,18 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
-    //Become a follower of a requirement
+    //Become a developer of a requirement
     $scope.developRequirement = function(clickEvent,req){
       console.log('become developer');
       reqBazService.addUserToDevelopers(req.id)
         .success(function (message) {
-          console.log(message);
+          if(AuthorizationService.isAuthorized(message)){
+            UtilityService.showFeedback('Thank you for the initiative');
+          }
         })
         .error(function (error) {
           console.log(error);
           UtilityService.showFeedback('Warning: could not register as a developer');
         });
     };
-
   });

@@ -42,13 +42,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createRequirement($scope.activeProject.id, $scope.activeComponent.id, req)
           .success(function (message) {
             console.log(message);
-            if (message.hasOwnProperty('errorCode')) {
-              if(message.errorCode === 'AUTHORIZATION'){
-                UtilityService.showFeedback('You are not allowed to create new requirements!');
-              } else {
-                  UtilityService.showFeedback('Warning: Requirement was not created !');
-              }
-            } else {
+            if(AuthorizationService.isAuthorized(message)) {
               reqBazService.getRequirement(message.id)
                 .success(function (req) {
                   $scope.requirements.splice(0, 0, req);
