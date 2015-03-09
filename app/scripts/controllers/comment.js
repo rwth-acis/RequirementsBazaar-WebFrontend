@@ -25,13 +25,16 @@ angular.module('requirementsBazaarWebFrontendApp')
           .success(function (message) {
             console.log(message);
             if(AuthorizationService.isAuthorized(message)) {
-
-              console.log($scope.activeUser);
-              comment.creatorId = $scope.activeUser.preferred_username;
-              comment.Id = message.id;
-              //Instead of making a new server call, just approximate
-              comment.creationTime = Date();
-              req.comments.splice(0, 0, comment);
+              UtilityService.showFeedback('Thank for leaving feedback');
+              reqBazService.getComment($scope.activeComponent.id, message.id)
+                .success(function (commentNew) {
+                  comment = commentNew;
+                  req.comments.splice(0, 0, comment);
+                })
+                .error(function (error) {
+                  console.log(error);
+                  UtilityService.showFeedback('Please refresh the page !');
+                });
             }
           })
           .error(function (error) {

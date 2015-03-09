@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CreateRequirementCtrl', function ($scope, reqBazService, UtilityService, AccessToken, $upload) {
+  .controller('CreateRequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, AccessToken, $upload) {
 
     $scope.showCreateDiv = false;
     $scope.newName = '';

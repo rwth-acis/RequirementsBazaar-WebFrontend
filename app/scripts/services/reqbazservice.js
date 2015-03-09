@@ -150,6 +150,11 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $http.get(paginate(commentUrl,page,per_page));
     };
 
+    this.getComment = function(componentId,commentId){
+      var commentUrl = url + 'projects/' + 0 + '/components/' + componentId + '/requirements/' + 0 + '/comments/'+commentId;
+      return $http.get(commentUrl);
+    };
+
     this.createComment = function(requirementId,comment){
       var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/comments'+accessTokenURL;
       //commentUrl = commentUrl + accessTokenURL;

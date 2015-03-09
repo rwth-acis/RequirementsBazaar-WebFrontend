@@ -140,6 +140,14 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           if(AuthorizationService.isAuthorized(message)){
             UtilityService.showFeedback('Thank you for following');
+            reqBazService.getRequirement(req.id)
+              .success(function (reqNew) {
+                req.followers = reqNew.followers;
+              })
+              .error(function (error) {
+                console.log(error);
+                UtilityService.showFeedback('Please refresh the page !');
+              });
           }
         })
         .error(function (error) {
@@ -153,8 +161,17 @@ angular.module('requirementsBazaarWebFrontendApp')
       console.log('become developer');
       reqBazService.addUserToDevelopers(req.id)
         .success(function (message) {
+          console.log(message);
           if(AuthorizationService.isAuthorized(message)){
             UtilityService.showFeedback('Thank you for the initiative');
+            reqBazService.getRequirement(req.id)
+              .success(function (reqNew) {
+                req.developers = reqNew.developers;
+              })
+              .error(function (error) {
+                console.log(error);
+                UtilityService.showFeedback('Please refresh the page !');
+              });
           }
         })
         .error(function (error) {
