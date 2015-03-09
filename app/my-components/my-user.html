@@ -1,0 +1,23 @@
+
+<link rel="import" href="../../bower_components/core-tooltip/core-tooltip.html">
+
+<polymer-element name="my-user" attributes="width src name email">
+  <template>
+    <div>
+      <!--<core-tooltip large>-->
+        <p>
+          <img src="{{src}}" width="{{width}}" style="border-radius: 50%;">
+          {{name}}
+        </p>
+        <!--<div tip>-->
+          <!--There should be no email data from the service-->
+          <!--<span>{{email}}</span>-->
+        <!--</div>-->
+      <!--</core-tooltip>-->
+    </div>
+  </template>
+  <script>
+    Polymer('my-user',{
+    });
+  </script>
+</polymer-element>

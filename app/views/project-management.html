@@ -1,0 +1,122 @@
+<core-scaffold>
+  <!--
+
+    The Sidebar of the application
+
+    -->
+  <core-header-panel navigation flex mode="seamed">
+    <!--Switch between projects-->
+    <core-toolbar>
+      <paper-item class="large-text" ng-click="go('/')">
+        <core-icon icon="icons:arrow-back"></core-icon>
+        <span ng-bind="project.name"></span>
+      </paper-item>
+    </core-toolbar>
+
+    <!--List of projects-->
+    <core-menu class="sidebarMenu">
+      <p class="small-grey-text">Settings</p>
+      <paper-item ng-click="activeTab = 'settings'">General Settings</paper-item>
+      <paper-item ng-click="activeTab = 'users'">Manage Users</paper-item>
+      <paper-item ng-click="activeTab = 'log'">Latest Changes</paper-item>
+      <paper-item ng-click="confirmDelete()">Delete Project</paper-item>
+    </core-menu>
+  </core-header-panel>
+
+  <div tool id="main-toolbar" class="flex-space-between width-max">
+    <p class="ellipsis">Requirements Bazaar</p>
+    <div id="toolbar-log-in">
+      <!--Notifications-->
+      <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled></paper-icon-button>
+      <!--OAuth log in-->
+      <!--If scope is specified then the log in fails on firefox/IE-->
+      <!--scope={{oauthScope}}-->
+      <oauth
+        site={{oauthSite}}
+        client-id={{oauthClientId}}
+        data-scope={{oauthDataScope}}
+        redirect-uri={{oauthRedirectURI}}
+        profile-uri={{oauthProfileURI}}
+        template="../my-components/sign-in-button.html">
+      </oauth>
+    </div>
+  </div>
+  <!--
+
+    Main Content Pane
+
+    -->
+  <div class="content">
+    <!--
+
+    General project settings
+
+    -->
+    <div id="settings" ng-show="activeTab === 'settings'" style="background-color: #ffffff;padding: 12px;display: block">
+      <div style="display: flex">
+        <h2>Settings</h2>
+        <paper-icon-button icon="editor:mode-edit" ng-click="isDirty = true"></paper-icon-button>
+      </div>
+
+      <h4>Title</h4>
+      <p ng-bind="project.name" ng-show="!isDirty"></p>
+      <p contenteditable ng-model="dirtyProject.name" ng-show="isDirty" class="add-border"></p>
+
+      <h4>Description</h4>
+      <p ng-bind="project.description" ng-show="!isDirty"></p>
+      <p contenteditable ng-model="dirtyProject.description" ng-show="isDirty" class="add-border"></p>
+
+
+      <paper-radio-group ng-model="dirtyProject.visibility" ng-click="isDirty = true">
+        <paper-radio-button name="PUBLIC" label="public"></paper-radio-button>
+        <paper-radio-button name="PRIVATE" label="private"></paper-radio-button>
+      </paper-radio-group>
+      <br/>
+      <paper-button ng-click="saveChanges()" ng-show="isDirty">Save</paper-button>
+      <paper-button ng-click="cancelChanges()" ng-show="isDirty">Cancel</paper-button>
+    </div>
+    <!--
+
+    User management
+
+    -->
+    <div id="users" ng-show="activeTab === 'users'">
+      <h2 style="background-color: #ffffff; padding: 8px; margin-bottom: 0;margin-top: 8px">User Management</h2>
+      <div ng-repeat="roles in projectRoles.roles" style="background-color: #ffffff; margin-bottom: 8px; padding: 8px">
+        <h4>{{roles.role}}</h4>
+        <my-user src="https://api.learning-layers.eu/profile.png" width="30px" name="{{person}}" ng-repeat="person in roles.users"></my-user>
+        <paper-dropdown-menu label="select user">
+          <paper-dropdown class="dropdown">
+            <core-menu class="menu">
+              <paper-item>Max x</paper-item>
+              <paper-item>Max y</paper-item>
+            </core-menu>
+          </paper-dropdown>
+        </paper-dropdown-menu>
+        <paper-button>add</paper-button>
+      </div>
+    </div>
+    <!--
+
+    Log of latest changes
+
+    -->
+    <div id="log" ng-show="activeTab === 'log'">
+      <h2 style="background-color: #ffffff; padding: 8px; margin-bottom: 0px;margin-top: 8px">Latest Changes</h2>
+    </div>
+  </div>
+
+  <!--
+
+      Confirmation Dialogs for Projects and Components
+
+  -->
+  <paper-action-dialog id="confirmDelete" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading="Confirm Deletion">
+    <p>Delete project - cannot be undone!</p>
+    <paper-button dismissive >Decline</paper-button>
+    <paper-button affirmative ng-click="deleteProject()">Accept</paper-button>
+  </paper-action-dialog>
+
+  <!--Feedback toast-->
+  <paper-toast id="feedbackToast" text={{toastText}}></paper-toast>
+</core-scaffold>

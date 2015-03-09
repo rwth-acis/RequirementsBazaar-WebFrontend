@@ -28,6 +28,8 @@
     <link rel="import" href="bower_components/core-menu-button/core-menu-button.html">
     <link rel="import" href="bower_components/core-selector/core-selector.html">
     <link rel="import" href="bower_components/core-image/core-image.html">
+    <link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
+    <link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
 
     <!--Polymer Paper Imports-->
     <link rel="import" href="bower_components/paper-button/paper-button.html">
@@ -38,8 +40,13 @@
     <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
     <link rel="import" href="bower_components/paper-input/paper-input.html">
     <link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
+    <link rel="import" href="bower_components/paper-dialog/paper-action-dialog.html">
     <link rel="import" href="bower_components/paper-toast/paper-toast.html">
+    <link rel="import" href="bower_components/paper-fab/paper-fab.html">
+    <link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
 
+    <link rel="import" href="my-components/paper-dropdown-menu-ex.html">
+    <link rel="import" href="my-components/my-user.html">
 
     <!--Might be missing from bower-->
     <link rel="import" href="bower_components/paper-input/paper-input-decorator.html">
@@ -49,6 +56,10 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 
+    <!--Not added automatically-->
+    <link rel="import" href="my-components/mdi.html">
+    <link rel="import" href="my-components/sign-in-button.html">
+
   </head>
   <body unresolved>
     <!--[if lt IE 7]>
@@ -56,7 +67,7 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <div class="container" ng-view></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <!--<script>-->
@@ -86,14 +97,28 @@
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/ng-polymer-elements/ng-polymer-elements.js"></script>
+    <script src="bower_components/ngstorage/ngStorage.js"></script>
+    <script src="bower_components/oauth-ng/dist/oauth-ng.js"></script>
+    <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/config/oauthConfig.js"></script>
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/projectManagement.js"></script>
+        <script src="scripts/controllers/requirement.js"></script>
+        <script src="scripts/controllers/vote.js"></script>
+        <script src="scripts/controllers/comment.js"></script>
+        <script src="scripts/controllers/activeComponent.js"></script>
+        <script src="scripts/controllers/createRequirement.js"></script>
+        <script src="scripts/controllers/createComponent.js"></script>
+        <script src="scripts/controllers/createProject.js"></script>
         <script src="scripts/services/reqbazservice.js"></script>
+        <script src="scripts/services/utilityservice.js"></script>
+        <script src="scripts/services/authorizationservice.js"></script>
+        <script src="scripts/directives/contenteditable.js"></script>
         <!-- endbuild -->
 
 </body>

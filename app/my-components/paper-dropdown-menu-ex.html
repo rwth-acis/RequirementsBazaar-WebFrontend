@@ -1,0 +1,25 @@
+<polymer-element name="paper-dropdown-menu-ex" extends="paper-dropdown-menu">
+  <template>
+    <style>
+      :host{
+        border-bottom: none;
+        color:#000000;
+        margin: 0;
+      }
+    </style>
+    <shadow></shadow>
+  </template>
+  <script>
+    Polymer({
+      selectAction: function(e) {
+        var detail = e.detail;
+        if (detail.isSelected) {
+          this.$.label.classList.add('selectedItem');
+        } else {
+          this.$.label.classList.remove('selectedItem');
+          this.selectedItemLabel = '';
+        }
+      }
+    });
+  </script>
+</polymer-element>

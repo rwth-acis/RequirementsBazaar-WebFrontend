@@ -1,82 +1,176 @@
-
-/*html /deep/ paper-dialog {*/
-  /*color: green;*/
-/*}*/
-
-/*html /deep/ paper-dialog::shadow #scroller {*/
-  /*height: 300px;*/
-  /*width: 300px;*/
-/*}*/
-
-#deleteSomething{
-  position: fixed;
-  z-index: 12;
-  top: 0;
-  left: 8px;
-  right: 8px;
-  margin:32px;
-  background: white;
-}
-
+/*
+  Page wide utility rules
+*/
 body {
   font-family: sans-serif;
+}
+.small-grey-text {
+  font-size: smaller;
+  color: #808080;
+}
+.large-text {
+  font-size: large;
+}
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+.multiline-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  line-height: 20px;        /* fallback */
+  max-height: 60px;       /* fallback */
+}
+
+.add-border {
+  border: 1px solid #ccc;
+  border-color: rgba(0,0,0,.2);
+}
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+.width-max {
+  width: 100%;
+}
+
+
+/*
+  Main header
+*/
+#toolbar-log-in {
+  top: 12px;
+  position: relative;
+}
+#main-toolbar {
+  white-space: nowrap;
+}
+
+/*
+  Sidebar
+*/
+.sidebarMenu paper-item:hover {
   background-color: #ececec;
 }
 
-#componentSelection {
-  background-color: #fff;
-  margin: 0;
-  box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
-}
 
-#componentSelection paper-item:hover{
-  background-color: #ececec;
+/*
+  Main content
+*/
+#currentComponent {
+  background-color: white;
+  margin-bottom: 12px;
+  padding: 10px;
 }
-
+#loadRequirements {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
 .content {
-  max-width: 1040px;
+  max-width: 1020px;
   margin-left: auto;
   margin-right: auto;
   padding: 10px;
 }
-
-#currentComponent {
-  background: white;
-  margin-bottom: 12px;
+.requirement-container {
+  margin-top: 10px;
+  background-color: white;
+}
+.requirement-header {
+  border-bottom: 1px solid #ccc;
+  display: flex;
+}
+.contributors div {
+  min-width: 200px;
+}
+.requirement-header-title {
+  font-size: large;
+}
+.req-title {
+  margin-right: 12px;
+  min-width: 100px;
+}
+.vote-button-container {
+  display: flex;
+}
+.req-collapse {
   padding: 12px;
 }
-
-.collapse-content {
-  padding: 15px;
-  border: 1px solid #dedede;
+.attachment-image {
+  width: 100px;
+}
+.attachment-container {
+  display:flex;
+}
+.save-req-container {
+  margin-bottom: 10px;
+}
+.save-req-container paper-icon-button{
+  top: 8px;
+}
+.contributors p {
+  font-weight: bold;
+}
+.comment-container {
+  border-bottom: 1px solid #dedede;
+  margin: 8px;
+  padding: 2px;
+  display: flex;
+}
+.comment-container img {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}
+.comment-meta-container {
+  display: flex;
+}
+.confirm-submit paper-icon-button {
+  padding: 0;
+}
+.show-attachments {
+  margin: 1px;
 }
 
-#profileDiv, #NotificationDiv{
-  background: #fff;
-  color:black;
-  border: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
-  box-shadow: 0 2px 10px rgba(0,0,0,.2);
-  position: absolute;
-  right: 20px;
-  top: 68px;
+
+
+/*
+  pop up panels
+*/
+/*See if this can be improved*/
+.create-container{
+  z-index: 2;
+  right: 130px;
+  bottom: 0;
+  position: fixed;
+  display: flex;
+  justify-content: flex-end;
+}
+.create-div{
   width: 300px;
-  z-index:100;
+  margin-left: 16px;
+  margin-right: 16px;
 }
-#profileDivFooter{
-  background: #f5f5f5;
-  border-top: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
-  padding: 10px 0;
+.add-item-div{
+  background-color: white;
   width: 100%;
-  display: table;
+  padding: 10px;
+  margin-left: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
 }
-
-#profileDivFooter paper-button{
-  background-color: #669900;
-  color: white;
+#addRequirementFab{
+  position: fixed;
+  right: 40px;
+  bottom: 30px;
 }
-
 
 /*
 
@@ -84,13 +178,25 @@ CSS rules that apply to all core-elements
 
 */
 
-core-header-panel {
-  position: inherit;
+/*For Chrome*/
+core-scaffold /deep/ core-toolbar {
+  background-color: #669900;
+  color: white;
 }
+/*For Firefox and Internet Explorer*/
+core-scaffold core-toolbar {
+  background-color: #669900 !important;
+  color: white !important;
+}
+
 
 core-toolbar {
   background-color: #669900;
   color: white;
+}
+
+core-icon {
+  padding-right: 5px;
 }
 
 /*
@@ -99,24 +205,173 @@ CSS rules that apply to all paper elements
 
 */
 
-paper-dropdown-menu{
-  border-bottom: none;
-  color:#000000;
-}
-
-paper-dropdown-menu paper-item:hover{
-  background-color: #ececec;
-}
-
-paper-icon-button /deep/ core-icon[role=img] {
-  height: 35px;
-  width: 35px;
-}
-
-paper-dropdown-menu::shadow #label, paper-dropdown-menu::shadow #arrow{
+paper-button {
+  background-color: #669900;
   color: white;
 }
 
-paper-button {
-  margin: 10px;
+/*
+
+  Rules that apply to custom / extended elements
+
+*/
+
+paper-dropdown-menu-ex {
+  width: 36px;
+}
+
+/*For Chrome*/
+paper-dropdown-menu-ex /deep/ core-icon{
+  top: -2px;
+}
+/*For Firefox and Internet Explorer*/
+paper-dropdown-menu-ex core-icon{
+  top: -2px !important;
+}
+
+
+html /deep/ paper-dropdown-menu-ex paper-dropdown {
+  position: absolute;
+  overflow: visible;
+  min-height: 40px;
+  left: -210px;
+}
+paper-dropdown-menu-ex paper-dropdown {
+  position: absolute !important;
+  overflow: visible !important;
+  min-height: 40px !important;
+  left: -210px !important;
+}
+
+
+paper-dropdown-menu-ex paper-item:hover{
+  background-color: #ececec;
+}
+
+/*For Chrome*/
+paper-dropdown-menu-ex /deep/ #arrow, paper-dropdown-menu-ex /deep/ #label:not(.selectedItem){
+  color: black;
+}
+/*For Firefox and Internet Explorer*/
+#arrow{
+  color: black !important;
+}
+
+/*
+
+  GRID CSS
+
+  http://www.responsivegridsystem.com/ - Graham Miller
+
+  Offered under
+  http://creativecommons.org/licenses/by/3.0/
+*/
+
+
+/*  SECTIONS  ============================================================================= */
+
+.section {
+  clear: both;
+  padding: 0;
+  margin: 0;
+}
+
+/*  GROUPING  ============================================================================= */
+
+
+.group:before,
+.group:after {
+  content:"";
+  display:table;
+}
+.group:after {
+  clear:both;
+}
+.group {
+  zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}
+
+/*  GRID COLUMN SETUP   ==================================================================== */
+
+.col {
+  display: block;
+  float:left;
+}
+
+.col:first-child { margin-left: 0; } /* all browsers except IE6 and lower */
+
+
+/*  REMOVE MARGINS AS ALL GO FULL WIDTH AT 480 PIXELS */
+
+@media only screen and (max-width: 480px) {
+  .col {
+
+  }
+}
+
+
+
+/*  GRID OF EIGHT   ============================================================================= */
+
+
+.span_8_of_8 {
+  width: 100%;
+}
+
+.span_7_of_8 {
+  width: 87.3%;
+}
+
+.span_6_of_8 {
+  width: 74.6%;
+}
+
+.span_5_of_8 {
+  width: 61.9%;
+}
+
+.span_4_of_8 {
+  width: 49.2%;
+}
+
+.span_3_of_8 {
+  width: 36.5%;
+}
+
+.span_2_of_8 {
+  width: 23.8%;
+}
+
+.span_1_of_8 {
+  width: 11.1%;
+}
+
+
+/*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
+
+@media only screen and (max-width: 480px) {
+  .span_8_of_8 {
+    width: 100%;
+  }
+  .span_7_of_8 {
+    width: 100%;
+  }
+  .span_6_of_8 {
+    width: 100%;
+  }
+  .span_5_of_8 {
+    width: 100%;
+  }
+  .span_4_of_8 {
+    width: 100%;
+  }
+  .span_3_of_8 {
+    width: 100%;
+  }
+  .span_2_of_8 {
+    width: 100%;
+  }
+  .span_1_of_8 {
+    width: 100%;
+  }
 }
