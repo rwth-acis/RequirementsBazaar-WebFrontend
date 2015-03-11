@@ -20,7 +20,7 @@ angular
     'oauth',
     'angularFileUpload'
   ])
-  .config(['$routeProvider', '$locationProvider', function ($routeProvider) {
+  .config(function ($routeProvider, $httpProvider) {
     $routeProvider
       .when('/access_token=:accessToken', {
         template: '',
@@ -46,4 +46,28 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  }]);
+
+    //Includes the authorization header with every request
+    $httpProvider.interceptors.push('jwtInterceptor');
+
+  })
+  .factory('jwtInterceptor', function () {
+    return {
+      request: function (config) {
+        var ngStorageToken = window.sessionStorage.getItem('ngStorage-token');
+        if(ngStorageToken !== null){
+          var token = JSON.parse(ngStorageToken).access_token;
+          if(token !== undefined){
+            //For some reason this does not work?
+            //config.headers['Authorization'] = "Bearer "+token;
+            if(config.url.indexOf('?') > -1){
+              config.url += '&access_token='+token;
+            }else{
+              config.url += '?access_token='+token;
+            }
+          }
+        }
+        return config;
+      }
+    };
+  });

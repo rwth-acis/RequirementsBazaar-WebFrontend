@@ -302,15 +302,12 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Register a listener for the oauth login and if an existing token is still valid
      * */
     $scope.$on('oauth:login', function(event, token) {
-      reqBazService.setAccessToken(token.access_token);
       UtilityService.showFeedback('Welcome back');
     });
     $scope.$on('oauth:authorized', function(event, token) {
-      reqBazService.setAccessToken(token.access_token);
       UtilityService.showFeedback('Welcome back');
     });
     $scope.$on('oauth:logout', function() {
-      reqBazService.setAccessToken(undefined);
       UtilityService.showFeedback('You are logged out');
     });
 

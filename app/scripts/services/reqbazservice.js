@@ -11,28 +11,9 @@ angular.module('requirementsBazaarWebFrontendApp')
   .service('reqBazService', function reqBazService($http) {
     var url = 'http://localhost:8080/bazaar/';
 
-    //Access token
-    var accessTokenURL = '';
-    var accessTokenURL2 = '';
-    this.setAccessToken = function(token){
-      if(token !== undefined){
-        //Use logged in
-        accessTokenURL = '/?access_token='+token;
-        accessTokenURL2 = '&access_token='+token;
-      }else{
-        //User logged out
-        accessTokenURL = '';
-        accessTokenURL2 = '';
-      }
-    };
-
     var paginate = function (url,page,per_page){
-      if((typeof page !== 'undefined') && (typeof per_page !== 'undefined'))
-      {
+      if((typeof page !== 'undefined') && (typeof per_page !== 'undefined')){
         url += '?page=' + page + '&per_page=' + per_page;
-        url = url + accessTokenURL2;
-      }else{
-        url = url + accessTokenURL;
       }
       return url;
     };
@@ -44,13 +25,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     this.createProject = function(project) {
-      var projectUrl = url + 'projects'+accessTokenURL;
+      var projectUrl = url + 'projects';
       return $http.post(projectUrl, project);
     };
 
     this.getProject = function (projectId) {
       var projectUrl = url + 'projects';
-      return $http.get(projectUrl + '/' + projectId+accessTokenURL);
+      return $http.get(projectUrl + '/' + projectId);
     };
 
     ///COMPONENTS
@@ -61,18 +42,18 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     this.createComponent = function(projectId, component) {
-      var componentUrl = url + 'projects/' + projectId + '/components'+accessTokenURL;
+      var componentUrl = url + 'projects/' + projectId + '/components';
       return $http.post(componentUrl, component);
     };
 
     this.getComponent = function (componentId) {
       var componentUrl = url + 'projects/' + 0 + '/components';
-      return $http.get(componentUrl + '/' + componentId+accessTokenURL);
+      return $http.get(componentUrl + '/' + componentId);
     };
 
     this.deleteComponent = function(projectId,componentId){
       var componentUrl = url + 'projects/' + projectId + '/components';
-      return $http.delete(componentUrl + '/' + componentId+accessTokenURL);
+      return $http.delete(componentUrl + '/' + componentId);
     };
 
     ///REQUIREMENTS
@@ -87,30 +68,30 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     this.createRequirement = function(projectId, componentId, requirement){
-      var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements'+accessTokenURL;
+      var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements';
       return $http.post(reqUrl, requirement);
     };
 
     this.getRequirement = function(requirementId){
       var reqUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements';
-      return $http.get(reqUrl + '/' + requirementId+accessTokenURL);
+      return $http.get(reqUrl + '/' + requirementId);
     };
 
     this.deleteRequirement = function(requirementId) {
       var reqUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements';
-      return $http.delete(reqUrl + '/' + requirementId+accessTokenURL);
+      return $http.delete(reqUrl + '/' + requirementId);
     };
 
     //DEV LIST
 
     this.addUserToDevelopers = function(requirementId){
       var devUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/developers';
-      return $http.post(devUrl+accessTokenURL);
+      return $http.post(devUrl);
     };
 
     this.removeUserFromDevelopers = function(requirementId){
       var devUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/developers';
-      return $http.delete(devUrl+accessTokenURL);
+      return $http.delete(devUrl);
     };
 
     ///FOLLOWER LIST
@@ -118,12 +99,12 @@ angular.module('requirementsBazaarWebFrontendApp')
     //
     this.addUserToFollowers = function(requirementId){
       var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/followers';
-      return $http.post(followUrl+accessTokenURL);
+      return $http.post(followUrl);
     };
 
     this.removeUserFromFollowers = function(requirementId){
       var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/followers';
-      return $http.delete(followUrl+accessTokenURL);
+      return $http.delete(followUrl);
     };
 
     ///VOTE
@@ -134,7 +115,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       } else {
         voteUrl += '?direction=up';
       }
-      return $http.post(voteUrl+accessTokenURL2);
+      return $http.post(voteUrl);
     };
 
     //naming is wrong
@@ -156,14 +137,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     this.createComment = function(requirementId,comment){
-      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/comments'+accessTokenURL;
-      //commentUrl = commentUrl + accessTokenURL;
+      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/comments';
       return $http.post(commentUrl, comment);
     };
 
     this.deleteComment = function(commentId){
       var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/comments';
-      return $http.delete(commentUrl + '/' + commentId+accessTokenURL);
+      return $http.delete(commentUrl + '/' + commentId);
     };
 
     ///ATTACHMENTS
@@ -173,17 +153,17 @@ angular.module('requirementsBazaarWebFrontendApp')
 
       attachmentUrl+= '?attachmentType' + attachmentType;
 
-      return $http.post(attachmentUrl+accessTokenURL, attachment);
+      return $http.post(attachmentUrl, attachment);
     };
 
     this.deleteAttachment = function(attachmentId){
       var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/attachments';
-      return $http.delete(attachmentUrl + '/' + attachmentId+accessTokenURL);
+      return $http.delete(attachmentUrl + '/' + attachmentId);
     };
 
     /// USER
     this.getUser = function(userId) {
       var userUrl = url + 'users';
-      return $http.get(userUrl + '/' + userId+accessTokenURL);
+      return $http.get(userUrl + '/' + userId);
     };
   });
