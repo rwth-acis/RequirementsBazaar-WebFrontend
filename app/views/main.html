@@ -180,7 +180,10 @@
             <div class="width-max">
               <pre>{{comment.message}}</pre>
               <div class="comment-meta-container">
-                <p class="small-grey-text width-max">{{'BY'|translate}} {{comment.creator.userName}} {{'ON'|translate}} {{comment.creationTime}}</p>
+                <p class="small-grey-text width-max">
+                  {{comment.creator.userName}}
+                  <time is="relative-time" datetime={{comment.creationTime}}></time>
+                </p>
                 <paper-icon-button ng-click="deleteComment(comment.Id,req)" icon="icons:delete"></paper-icon-button>
               </div>
             </div>
