@@ -28,7 +28,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.saveChanges = function(){
       //TODO save the changes
       $scope.isDirty = false;
-      UtilityService.showFeedback('Not yet implemented');
+      UtilityService.showFeedback('WARN_NOT_IMPL');
     };
 
     /*
@@ -44,11 +44,11 @@ angular.module('requirementsBazaarWebFrontendApp')
     * */
     $scope.confirmDelete = function(){
       if(AccessToken.get() !== null){
-        $scope.$parent.deleteDesc = 'The action cannot be undone. The requirements will be accessible under the default component.';
+        $scope.$parent.deleteDesc = 'DEL_COMP_DESC';
         $scope.$parent.deleteElem = 'comp';
         document.getElementById('confirmDelete').toggle();
       }else{
-        UtilityService.showFeedback('Please log in to delete components');
+        UtilityService.showFeedback('LOGIN_COMP_DEL');
       }
     };
 

@@ -63,11 +63,11 @@ angular.module('requirementsBazaarWebFrontendApp')
             $scope.selectProj($scope.activeProject);
           }else{
             //TODO somehow gracefully handle the fact that there are no projects
-            UtilityService.showFeedback('No projects exist yet');
+            UtilityService.showFeedback('NO_PROJ_EXISTS');
           }
         })
         .error(function () {
-          UtilityService.showFeedback('Could not load projects, please reload !');
+          UtilityService.showFeedback('WARN_PROJS_NOT_LOADED');
         });
     })();
 
@@ -101,13 +101,13 @@ angular.module('requirementsBazaarWebFrontendApp')
           }else{
             //No components found, should not happen as default comp should exist
             $scope.components = $scope.activeComponent = $scope.requirements = null;
-            UtilityService.showFeedback('No components found');
+            UtilityService.showFeedback('WARN_COMPS_NOT_LOADED');
           }
         })
         .error(function () {
           //Null the lists, otherwise user will see wrong components/requirements
           $scope.components = $scope.activeComponent = $scope.requirements = null;
-          UtilityService.showFeedback('Could not load components');
+          UtilityService.showFeedback('WARN_COMPS_NOT_LOADED');
 
           //Show the reload requirements button
           $scope.reloadComponents = true;
@@ -129,13 +129,13 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (reqs) {
           $scope.requirements = reqs;
           if(reqs.length === 0){
-            UtilityService.showFeedback( 'This component has no requirements, feel free to create');
+            UtilityService.showFeedback('NO_REQ_EXIST');
           }
         })
         .error(function () {
           //Null the list, otherwise user will see wrong requirements
           $scope.requirements = null;
-          UtilityService.showFeedback('Could not load requirements');
+          UtilityService.showFeedback('WARN_REQS_NOT_LOADED');
 
           //Show the reload requirements button
           $scope.reloadRequirements = true;
@@ -152,7 +152,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.componentLeader = user;
         })
         .error(function () {
-          UtilityService.showFeedback('Could not load user for the component');
+          UtilityService.showFeedback('USER_NOT_LOADED');
         });
     }
 
@@ -165,7 +165,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(AccessToken.get() !== null){
         $scope.go('/project-management/'+$scope.activeProject.id);
       }else{
-        UtilityService.showFeedback('You must be logged in to edit projects');
+        UtilityService.showFeedback('LOGIN_PROJ');
       }
     };
 
@@ -176,7 +176,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(AccessToken.get() !== null){
         $scope.showCreateCompDiv = true;
       }else{
-        UtilityService.showFeedback('Please log in to create components');
+        UtilityService.showFeedback('LOGIN_COMP');
       }
     };
 
@@ -187,7 +187,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(AccessToken.get() !== null){
         $scope.showCreateProjDiv = true;
       }else{
-        UtilityService.showFeedback('Please log in to create projects');
+        UtilityService.showFeedback('LOGIN_PROJ');
       }
     };
 
@@ -201,7 +201,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           console.log(message);
           if(message.success !== true){
-            UtilityService.showFeedback('Warning: Component was not deleted !');
+            UtilityService.showFeedback('WARN_COMP_NOT_DEL');
           }else {
             for (var c in $scope.components) {
               if ($scope.components[c].id === $scope.activeComponent.id) {
@@ -216,12 +216,12 @@ angular.module('requirementsBazaarWebFrontendApp')
               $scope.selectComp($scope.components[0]);
             }
 
-            UtilityService.showFeedback('Component: ' + message.deletedItemText + ' deleted');
+            UtilityService.showFeedback('DEL_COMP',message.deletedItemText);
           }
         })
         .error(function (error) {
           console.log(error);
-          UtilityService.showFeedback('Warning: Component was not deleted !');
+          UtilityService.showFeedback('WARN_COMP_NOT_DEL');
         });
     };
 
@@ -240,13 +240,13 @@ angular.module('requirementsBazaarWebFrontendApp')
             }
             //No requirement selected
             $scope.selectedIndex = -1;
-            UtilityService.showFeedback('Requirement: ' + message.deletedItemText + ' deleted');
+            UtilityService.showFeedback('DEL_REQ',message.deletedItemText);
           }
         })
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
-          UtilityService.showFeedback('Warning: Requirement was not deleted');
+          UtilityService.showFeedback('WARN_REQ_NOT_DEL');
         });
     };
 
@@ -255,10 +255,10 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(AccessToken.get() !== null){
         $scope.deleteElem = 'req';
         $scope.deleteObject = object;
-        $scope.deleteDesc = 'The action cannot be undone. All comments and attachments will be deleted!';
+        $scope.deleteDesc = 'DEL_REQ_DESC';
         document.getElementById('confirmDelete').toggle();
       }else{
-        UtilityService.showFeedback('Please log in to delete requirements');
+        UtilityService.showFeedback('LOGIN_REQ_DEL');
       }
     };
 
@@ -267,13 +267,13 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Register a listener for the oauth login and if an existing token is still valid
      * */
     $scope.$on('oauth:login', function() {
-      UtilityService.showFeedback('Welcome back');
+      UtilityService.showFeedback('WELCOME_BACK');
     });
     $scope.$on('oauth:authorized', function() {
-      UtilityService.showFeedback('Welcome back');
+      UtilityService.showFeedback('WELCOME_BACK');
     });
     $scope.$on('oauth:logout', function() {
-      UtilityService.showFeedback('You are logged out');
+      UtilityService.showFeedback('LOGOUT');
     });
 
 

@@ -57,7 +57,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       }
 
       console.log($scope.attachments);
-      UtilityService.showFeedback('Warning: Not implemented');
+      UtilityService.showFeedback('WARN_NOT_IMPL');
 
 
       $scope.editRequirement = false;
@@ -113,7 +113,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             getComments(req);
           })
           .error(function () {
-            UtilityService.showFeedback('Warning: the requirement was not loaded !');
+            UtilityService.showFeedback('WARN_REQ_NOT_LOADED');
           });
       }
       $scope.showRequirement = !$scope.showRequirement;
@@ -128,7 +128,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
-          UtilityService.showFeedback('Warning: Could not get comments');
+          UtilityService.showFeedback('WARN_COMMENTS_NOT_LOADED');
         });
     };
 
@@ -139,20 +139,20 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.addUserToFollowers(req.id)
         .success(function (message) {
           if(AuthorizationService.isAuthorized(message)){
-            UtilityService.showFeedback('Thank you for following');
+            UtilityService.showFeedback('THANK_YOU_FOR_FOLLOWING');
             reqBazService.getRequirement(req.id)
               .success(function (reqNew) {
                 req.followers = reqNew.followers;
               })
               .error(function (error) {
                 console.log(error);
-                UtilityService.showFeedback('Please refresh the page !');
+                UtilityService.showFeedback('REFRESH_PLEASE');
               });
           }
         })
         .error(function (error) {
           console.log(error);
-          UtilityService.showFeedback('Warning: could not register as a follower');
+          UtilityService.showFeedback('WARN_NOT_REG_AS_FOLLOWER');
         });
     };
 
@@ -163,20 +163,20 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           console.log(message);
           if(AuthorizationService.isAuthorized(message)){
-            UtilityService.showFeedback('Thank you for the initiative');
+            UtilityService.showFeedback('THANK_FOR_INIT');
             reqBazService.getRequirement(req.id)
               .success(function (reqNew) {
                 req.developers = reqNew.developers;
               })
               .error(function (error) {
                 console.log(error);
-                UtilityService.showFeedback('Please refresh the page !');
+                UtilityService.showFeedback('REFRESH_PLEASE');
               });
           }
         })
         .error(function (error) {
           console.log(error);
-          UtilityService.showFeedback('Warning: could not register as a developer');
+          UtilityService.showFeedback('WARN_NOT_REG_AS_DEV');
         });
     };
   });

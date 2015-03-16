@@ -10,22 +10,19 @@
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CommentCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService) {
 
-    $scope.creatorName = 'anon';
-    $scope.creatorProfileImage = '';
-
     /*
      * Submits a comment, time of the post is initially approximate
      * Called: by the user
      * */
     $scope.submitComment = function(text,req){
-      if(!UtilityService.isEmpty(text,'Comment cannot be empty')){
+      if(!UtilityService.isEmpty(text,'COMMENT_TEXT_MISSING')){
         console.log('post comment: '+text);
         var comment = {requirementId: req.id, message: text};
         reqBazService.createComment(req.id,comment)
           .success(function (message) {
             console.log(message);
             if(AuthorizationService.isAuthorized(message)) {
-              UtilityService.showFeedback('Thank for leaving feedback');
+              UtilityService.showFeedback('THANKS_FOR_FEEDBACK');
               reqBazService.getComment($scope.activeComponent.id, message.id)
                 .success(function (commentNew) {
                   comment = commentNew;
@@ -33,14 +30,14 @@ angular.module('requirementsBazaarWebFrontendApp')
                 })
                 .error(function (error) {
                   console.log(error);
-                  UtilityService.showFeedback('Please refresh the page !');
+                  UtilityService.showFeedback('REFRESH_PLEASE');
                 });
             }
           })
           .error(function (error) {
             //This error only catches unknown server errors, usual errorCodes are sent with success message
             console.log(error);
-            UtilityService.showFeedback('Warning: Comment was not submitted !');
+            UtilityService.showFeedback('WARN_COMMENT_NOT_CREATED');
           });
       }
     };
@@ -61,13 +58,13 @@ angular.module('requirementsBazaarWebFrontendApp')
                 break;
               }
             }
-            UtilityService.showFeedback('Comment: ' + message.deletedItemText + ' deleted');
+            UtilityService.showFeedback('DEL_COMMENT',message.deletedItemText);
           }
         })
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
-          UtilityService.showFeedback('Warning: Comment was not deleted !');
+          UtilityService.showFeedback('WARN_COMMENT_NOT_DEL');
         });
     };
 

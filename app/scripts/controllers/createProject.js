@@ -17,14 +17,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Submit a new project
     * */
     $scope.submitProject = function(){
-      if(!UtilityService.isEmpty($scope.name,'Choose project name') && !UtilityService.isEmpty($scope.desc, 'Choose project description')){
+      if(!UtilityService.isEmpty($scope.name,'PROJ_NAME_MISSING') && !UtilityService.isEmpty($scope.desc, 'PROJ_DESC_MISSING')){
         console.log('submit new project');
         var proj = {description: $scope.desc, name: $scope.name, visibility: 'PUBLIC', leaderId: 1};
         reqBazService.createProject(proj)
           .success(function (message) {
             console.log(message);
             if(AuthorizationService.isAuthorized(message)) {
-              UtilityService.showFeedback('Project was created');
               //Retrieve it from the server to get all auto generated fields
               reqBazService.getProject(message.id)
                 .success(function (proj) {
@@ -35,13 +34,13 @@ angular.module('requirementsBazaarWebFrontendApp')
                 })
                 .error(function (error) {
                   console.log(error);
-                  UtilityService.showFeedback('Warning: Project was not retrieved !');
+                  UtilityService.showFeedback('WARN_PROJ_NOT_LOADED');
                 });
             }
           })
           .error(function (error) {
             console.log(error);
-            UtilityService.showFeedback('Warning: Project was not created !');
+            UtilityService.showFeedback('WARN_PROJ_NOT_CREATED');
           });
       }
     };

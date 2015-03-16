@@ -28,14 +28,14 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.dirtyProject = angular.copy(proj);
         })
         .error(function () {
-          UtilityService.showFeedback('Could not load projects, please reload !');
+          UtilityService.showFeedback('WARN_PROJ_NOT_LOADED');
         });
     })();
 
     $scope.saveChanges = function(){
       //TODO save changes
       $scope.isDirty = false;
-      UtilityService.showFeedback('not yet implemented');
+      UtilityService.showFeedback('WARN_NOT_IMPL');
     };
 
     $scope.cancelChanges = function(){
@@ -44,7 +44,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     $scope.deleteProject = function(){
-      UtilityService.showFeedback('not yet implemented');
+      UtilityService.showFeedback('WARN_NOT_IMPL');
     };
 
     $scope.confirmDelete = function(){

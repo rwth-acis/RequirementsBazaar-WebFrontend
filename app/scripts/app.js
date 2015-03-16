@@ -18,7 +18,8 @@ angular
     'ngTouch',
     'ng-polymer-elements',
     'oauth',
-    'angularFileUpload'
+    'angularFileUpload',
+    'pascalprecht.translate'
   ])
   .config(function ($routeProvider, $httpProvider) {
     $routeProvider
