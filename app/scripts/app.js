@@ -58,13 +58,8 @@ angular
         if(ngStorageToken !== null){
           var token = JSON.parse(ngStorageToken).access_token;
           if(token !== undefined){
-            //For some reason this does not work?
-            //config.headers['Authorization'] = "Bearer "+token;
-            if(config.url.indexOf('?') > -1){
-              config.url += '&access_token='+token;
-            }else{
-              config.url += '?access_token='+token;
-            }
+            //For some reason this does not work : config.headers['Authorization'] = "Bearer "+token;
+            config.url += (config.url.indexOf('?') > -1) ? '&access_token='+token : '?access_token='+token;
           }
         }
         return config;

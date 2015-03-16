@@ -122,28 +122,15 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.reloadRequirements = false;
       $scope.activeComponent = component;
       $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
-      getUser($scope.activeComponent.leaderId,'component');
+      setUser($scope.activeComponent.leaderId);
 
       //Load the requirements
       reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','100')
         .success(function (reqs) {
           $scope.requirements = reqs;
-            if($scope.requirements.length === 0){
-              UtilityService.showFeedback( 'This component has no requirements, feel free to create');
-            }else{
-              //Show the requirements
-              for(var i = 0; i<$scope.requirements.length;i++){
-                //This adds the missing attributes to the requirements
-                $scope.requirements[i].creator = {firstName : 'loading'};
-                $scope.requirements[i].leadDeveloper = {firstName : 'loading'};
-                $scope.requirements[i].followers = [];
-                $scope.requirements[i].developers = [];
-                $scope.requirements[i].contributors = [];
-                $scope.requirements[i].attachments = [];
-                $scope.requirements[i].components = [];
-                $scope.requirements[i].comments = [];
-              }
-            }
+          if(reqs.length === 0){
+            UtilityService.showFeedback( 'This component has no requirements, feel free to create');
+          }
         })
         .error(function () {
           //Null the list, otherwise user will see wrong requirements
@@ -159,24 +146,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Loads user information
     * Called: automatically, when a component/requirement etc is shown
     * */
-    function getUser(id,purpose){
+    function setUser(id){
       reqBazService.getUser(id)
         .success(function (user) {
-          if(purpose === 'component'){
-            $scope.componentLeader = user;
-          }
-          if(purpose === 'project'){
-            $scope.projectLeader = user;
-          }
+          $scope.componentLeader = user;
         })
         .error(function () {
-          if(purpose === 'component'){
-            $scope.componentLeader = null;
-          }
-          if(purpose === 'project'){
-            $scope.projectLeader = null;
-          }
-          UtilityService.showFeedback('Could not load user for: '+purpose);
+          UtilityService.showFeedback('Could not load user for the component');
         });
     }
 
@@ -227,9 +203,9 @@ angular.module('requirementsBazaarWebFrontendApp')
           if(message.success !== true){
             UtilityService.showFeedback('Warning: Component was not deleted !');
           }else {
-            for (var i = 0; i < $scope.components.length; i++) {
-              if ($scope.components[i].id === $scope.activeComponent.id) {
-                $scope.components.splice(i, 1);
+            for (var c in $scope.components) {
+              if ($scope.components[c].id === $scope.activeComponent.id) {
+                $scope.components.splice(c, 1);
                 break;
               }
             }
@@ -256,9 +232,9 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           if(AuthorizationService.isAuthorized(message)){
             // Delete the requirement from the list
-            for(var i = 0; i<$scope.requirements.length;i++){
-              if($scope.requirements[i].id === req.id){
-                $scope.requirements.splice(i, 1);
+            for(var r in $scope.requirements){
+              if($scope.requirements[r].id === req.id){
+                $scope.requirements.splice(r, 1);
                 break;
               }
             }
