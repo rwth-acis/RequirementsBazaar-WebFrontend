@@ -20,7 +20,7 @@ angular
     'oauth',
     'angularFileUpload'
   ])
-  .config(['$routeProvider', '$locationProvider', function ($routeProvider) {
+  .config(function ($routeProvider, $httpProvider) {
     $routeProvider
       .when('/access_token=:accessToken', {
         template: '',
@@ -46,4 +46,36 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  }]);
+
+    //Includes the authorization header with every request
+    $httpProvider.interceptors.push('jwtInterceptor');
+
+  })
+  .factory('jwtInterceptor', function () {
+    return {
+      request: function (config) {
+        var ngStorageToken = window.sessionStorage.getItem('ngStorage-token');
+        if(ngStorageToken !== null){
+          var token = JSON.parse(ngStorageToken).access_token;
+          if(token !== undefined){
+            //For some reason this does not work : config.headers['Authorization'] = "Bearer "+token;
+            config.url += (config.url.indexOf('?') > -1) ? '&access_token='+token : '?access_token='+token;
+          }
+        }
+        return config;
+      }
+    };
+  })
+  .run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
+  var original = $location.path;
+  $location.path = function (path, reload) {
+    if (reload === false) {
+      var lastRoute = $route.current;
+      var un = $rootScope.$on('$locationChangeSuccess', function () {
+        $route.current = lastRoute;
+        un();
+      });
+    }
+    return original.apply($location, [path]);
+  };
+}]);

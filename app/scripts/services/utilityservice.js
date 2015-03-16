@@ -21,14 +21,10 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     this.isEmpty = function(elem, text){
-      if(elem === ''){
+      if(elem === '' || elem === undefined){
         this.showFeedback(text);
         return true;
-      }else if(elem === undefined){
-        this.showFeedback(text);
-        return true;
-      }
-      else{
+      } else{
         return false;
       }
     };

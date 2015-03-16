@@ -66,8 +66,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Clear the input fields
     * */
     $scope.clearSubmit = function(){
-      $scope.newName = '';
-      $scope.newDesc = '';
+      $scope.newName = $scope.newDesc = '';
       $scope.showCreateDiv = false;
     };
 

@@ -48,28 +48,22 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.getProjects()
         .success(function (projs) {
           $scope.projects = projs;
-          if($scope.projects.length !== 0){
+          if(projs.length !== 0){
             //Check if the user followed a bookmarked link
+            var bmProj = null;
             if($routeParams.projectId !== undefined){
-              var projectExists = false;
-              for(var i = 0; i < $scope.projects.length; i++){
-                if($routeParams.projectId === $scope.projects[i].id.toString()){
-                  $scope.activeProject = $scope.projects[i];
-                  $scope.selectProj($scope.activeProject);
-                  projectExists = true;
+              for(var p in projs){
+                if($routeParams.projectId === projs[p].id.toString()){
+                  bmProj = p;
                   break;
                 }
               }
-              if(!projectExists){
-                $scope.activeProject = $scope.projects[0];
-                $scope.selectProj($scope.activeProject);
-              }
-            }else{
-              $scope.activeProject = $scope.projects[0];
-              $scope.selectProj($scope.activeProject);
             }
+            $scope.activeProject = (bmProj !== null) ? projs[bmProj] : projs[0];
+            $scope.selectProj($scope.activeProject);
           }else{
             //TODO somehow gracefully handle the fact that there are no projects
+            UtilityService.showFeedback('No projects exist yet');
           }
         })
         .error(function () {
@@ -86,39 +80,33 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.reloadComponents = false;
       $scope.activeProject = project;
 
-      console.log(window.location.hash);
-      //window.location.hash = "#/project/"+$scope.activeProject.id;
-      //$location.path('/project/'+$scope.activeProject.id).replace().notify(false);
-      //locationChanger.skipReload().withoutRefresh("http://localhost:9000/#/project/1", true);
-
       reqBazService.getComponents($scope.activeProject.id,'0','100')
         .success(function (comps) {
           $scope.components = comps;
-          //Check if the user followed a bookmarked link
-          if($routeParams.componentId !== undefined){
-            var compExists = false;
-            for(var i = 0; i < $scope.components.length; i++){
-              if($routeParams.componentId === $scope.components[i].id.toString()){
-                $scope.activeComponent = $scope.components[i];
-                $scope.selectComp($scope.activeComponent);
-                compExists = true;
-                break;
+          if(comps.length !== 0){
+            //Check if the user followed a bookmarked link
+            var bmComp = null;
+            if($routeParams.componentId !== undefined){
+              for(var c in comps){
+                if($routeParams.componentId === comps[c].id.toString()){
+                  bmComp=c;
+                  break;
+                }
               }
             }
-            if(!compExists){
-              $scope.activeComponent = $scope.components[0];
-              $scope.selectComp($scope.activeComponent);
-            }
-          }else{
-            $scope.activeComponent = $scope.components[0];
+            $scope.activeComponent = (bmComp !== null) ? comps[bmComp] : comps[0];
+            //Change the path without reloading the page
+            $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
             $scope.selectComp($scope.activeComponent);
+          }else{
+            //No components found, should not happen as default comp should exist
+            $scope.components = $scope.activeComponent = $scope.requirements = null;
+            UtilityService.showFeedback('No components found');
           }
         })
         .error(function () {
           //Null the lists, otherwise user will see wrong components/requirements
-          $scope.components = null;
-          $scope.activeComponent = null;
-          $scope.requirements = null;
+          $scope.components = $scope.activeComponent = $scope.requirements = null;
           UtilityService.showFeedback('Could not load components');
 
           //Show the reload requirements button
@@ -133,28 +121,16 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.selectComp = function (component) {
       $scope.reloadRequirements = false;
       $scope.activeComponent = component;
-      getUser($scope.activeComponent.leaderId,'component');
+      $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
+      setUser($scope.activeComponent.leaderId);
 
       //Load the requirements
       reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','100')
         .success(function (reqs) {
           $scope.requirements = reqs;
-            if($scope.requirements.length === 0){
-              UtilityService.showFeedback( 'This component has no requirements, feel free to create');
-            }else{
-              //Show the requirements
-              for(var i = 0; i<$scope.requirements.length;i++){
-                //This adds the missing attributes to the requirements
-                $scope.requirements[i].creator = {firstName : 'loading'};
-                $scope.requirements[i].leadDeveloper = {firstName : 'loading'};
-                $scope.requirements[i].followers = [];
-                $scope.requirements[i].developers = [];
-                $scope.requirements[i].contributors = [];
-                $scope.requirements[i].attachments = [];
-                $scope.requirements[i].components = [];
-                $scope.requirements[i].comments = [];
-              }
-            }
+          if(reqs.length === 0){
+            UtilityService.showFeedback( 'This component has no requirements, feel free to create');
+          }
         })
         .error(function () {
           //Null the list, otherwise user will see wrong requirements
@@ -170,24 +146,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Loads user information
     * Called: automatically, when a component/requirement etc is shown
     * */
-    function getUser(id,purpose){
+    function setUser(id){
       reqBazService.getUser(id)
         .success(function (user) {
-          if(purpose === 'component'){
-            $scope.componentLeader = user;
-          }
-          if(purpose === 'project'){
-            $scope.projectLeader = user;
-          }
+          $scope.componentLeader = user;
         })
         .error(function () {
-          if(purpose === 'component'){
-            $scope.componentLeader = null;
-          }
-          if(purpose === 'project'){
-            $scope.projectLeader = null;
-          }
-          UtilityService.showFeedback('Could not load user for: '+purpose);
+          UtilityService.showFeedback('Could not load user for the component');
         });
     }
 
@@ -238,9 +203,9 @@ angular.module('requirementsBazaarWebFrontendApp')
           if(message.success !== true){
             UtilityService.showFeedback('Warning: Component was not deleted !');
           }else {
-            for (var i = 0; i < $scope.components.length; i++) {
-              if ($scope.components[i].id === $scope.activeComponent.id) {
-                $scope.components.splice(i, 1);
+            for (var c in $scope.components) {
+              if ($scope.components[c].id === $scope.activeComponent.id) {
+                $scope.components.splice(c, 1);
                 break;
               }
             }
@@ -267,9 +232,9 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           if(AuthorizationService.isAuthorized(message)){
             // Delete the requirement from the list
-            for(var i = 0; i<$scope.requirements.length;i++){
-              if($scope.requirements[i].id === req.id){
-                $scope.requirements.splice(i, 1);
+            for(var r in $scope.requirements){
+              if($scope.requirements[r].id === req.id){
+                $scope.requirements.splice(r, 1);
                 break;
               }
             }
@@ -301,25 +266,20 @@ angular.module('requirementsBazaarWebFrontendApp')
     /*
      * Register a listener for the oauth login and if an existing token is still valid
      * */
-    $scope.$on('oauth:login', function(event, token) {
-      reqBazService.setAccessToken(token.access_token);
+    $scope.$on('oauth:login', function() {
       UtilityService.showFeedback('Welcome back');
     });
-    $scope.$on('oauth:authorized', function(event, token) {
-      reqBazService.setAccessToken(token.access_token);
+    $scope.$on('oauth:authorized', function() {
       UtilityService.showFeedback('Welcome back');
     });
     $scope.$on('oauth:logout', function() {
-      reqBazService.setAccessToken(undefined);
       UtilityService.showFeedback('You are logged out');
     });
 
 
     $scope.$on('oauth:profile', function() {
       $scope.activeUser = Profile.get();
-      console.log($scope.activeUser);
     });
-
 
     /*
     * Making sure that the URL passing works on custom elements
@@ -327,7 +287,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.trustSrc = function(src) {
       return $sce.trustAsResourceUrl(src);
     };
-
 
     $scope.go = function ( path ) {
       $location.path( path );

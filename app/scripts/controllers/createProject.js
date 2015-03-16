@@ -50,8 +50,7 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Clear the input fields
      * */
     $scope.clearSubmit = function(){
-      $scope.name = '';
-      $scope.desc = '';
+      $scope.name = $scope.desc = '';
       $scope.$parent.showCreateProjDiv = false;
     };
   });
