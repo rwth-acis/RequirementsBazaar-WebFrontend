@@ -274,6 +274,21 @@ angular.module('requirementsBazaarWebFrontendApp')
     });
     $scope.$on('oauth:logout', function() {
       UtilityService.showFeedback('LOGOUT');
+      //Reload projects, since now the user rights have changed
+      reqBazService.getProjects()
+        .success(function (projs) {
+          $scope.projects = projs;
+          if(projs.length !== 0){
+            $scope.activeProject = projs[0];
+            $scope.selectProj($scope.activeProject);
+          }else{
+            //Somehow gracefully handle the fact that there are no projects
+            UtilityService.showFeedback('NO_PROJ_EXISTS');
+          }
+        })
+        .error(function () {
+          UtilityService.showFeedback('WARN_PROJS_NOT_LOADED');
+        });
     });
 
 
