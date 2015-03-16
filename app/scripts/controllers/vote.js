@@ -15,24 +15,24 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function(message){
           if(AuthorizationService.isAuthorized(message)){
             if (message.status === 'UNCHANGED'){
-              UtilityService.showFeedback('You have already voted');
+              UtilityService.showFeedback('ALREADY_VOTED');
             }
             else if (message.status === 'CHANGED'){
               req.userVoted = 'UP_VOTE';
               req.upVotes += 1;
               req.downVotes -= 1;
-              UtilityService.showFeedback('Thank You');
+              UtilityService.showFeedback('THANK_YOU');
             }
             else if(message.status === 'CREATED'){
               req.userVoted = 'UP_VOTE';
               req.upVotes += 1;
-              UtilityService.showFeedback('Thank You');
+              UtilityService.showFeedback('THANK_YOU');
             }
           }
         })
         .error(function(error){
           console.log(error);
-          UtilityService.showFeedback('Warning: Vote was not counted, unknown reasons');
+          UtilityService.showFeedback('WARN_VOTE_NOT_COUNTED');
         });
     };
 
@@ -41,24 +41,24 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function(message){
           if(AuthorizationService.isAuthorized(message)) {
             if (message.status === 'UNCHANGED') {
-              UtilityService.showFeedback('You have already voted');
+              UtilityService.showFeedback('ALREADY_VOTED');
             }
             else if (message.status === 'CHANGED') {
               req.userVoted = 'DOWN_VOTE';
               req.upVotes -= 1;
               req.downVotes += 1;
-              UtilityService.showFeedback('Thank You');
+              UtilityService.showFeedback('THANK_YOU');
             }
             else if (message.status === 'CREATED') {
               req.userVoted = 'DOWN_VOTE';
               req.downVotes += 1;
-              UtilityService.showFeedback('Thank You');
+              UtilityService.showFeedback('THANK_YOU');
             }
           }
         })
         .error(function(error){
           console.log(error);
-          UtilityService.showFeedback('Warning: Vote was not counted, unknown reasons');
+          UtilityService.showFeedback('WARN_VOTE_NOT_COUNTED');
         });
     };
   });

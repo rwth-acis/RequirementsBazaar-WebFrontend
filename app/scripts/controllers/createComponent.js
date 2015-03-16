@@ -17,14 +17,13 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Submit a new component
      * */
     $scope.submitComponent = function(){
-      if(!UtilityService.isEmpty($scope.name,'Provide a name for the component')) {
+      if(!UtilityService.isEmpty($scope.name,'COMP_NAME_MISSING')) {
         console.log('submit new component');
         var comp = {description: $scope.desc, name: $scope.name, projectId: $scope.activeProject.id};
         reqBazService.createComponent($scope.activeProject.id,comp)
           .success(function (message) {
             console.log(message);
             if(AuthorizationService.isAuthorized(message)) {
-              UtilityService.showFeedback('Component was created');
               //Retrieve it from the server since we need the creator id that is on the server
               reqBazService.getComponent(message.id)
                 .success(function (comp) {
@@ -35,13 +34,13 @@ angular.module('requirementsBazaarWebFrontendApp')
                 })
                 .error(function (error) {
                 console.log(error);
-                UtilityService.showFeedback('Warning: Component was not retrieved !');
+                UtilityService.showFeedback('WARN_REQ_COMP_LOADED');
               });
             }
           })
           .error(function (error) {
             console.log(error);
-            UtilityService.showFeedback('Warning: Component was not created !');
+            UtilityService.showFeedback('WARN_COMP_NOT_CREATED');
           });
       }
     };
