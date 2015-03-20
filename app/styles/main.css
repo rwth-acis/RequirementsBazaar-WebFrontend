@@ -67,6 +67,9 @@ body {
   background-color: white;
   margin-bottom: 12px;
   padding: 10px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 #loadRequirements {
   display: block;
@@ -75,7 +78,7 @@ body {
   width: 40%;
 }
 .content {
-  max-width: 1020px;
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
   padding: 10px;
@@ -83,7 +86,15 @@ body {
 .requirement-container {
   margin-top: 10px;
   background-color: white;
+  width: 91%;
+  margin-left: auto;
+  margin-right: auto;
 }
+.requirement-container-selected {
+  margin-top: 10px;
+  background-color: white;
+}
+
 .requirement-header {
   border-bottom: 1px solid #ccc;
   display: flex;

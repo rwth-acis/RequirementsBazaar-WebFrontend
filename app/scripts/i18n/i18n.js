@@ -1,4 +1,4 @@
-
+'use strict';
 
 angular.module('requirementsBazaarWebFrontendApp').config(function ($translateProvider) {
   $translateProvider.translations('en', {

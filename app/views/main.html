@@ -97,10 +97,12 @@
     <paper-button id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)" ng-bind="'RELOAD'|translate"></paper-button>
 
     <!--List of requirements-->
-    <div ng-repeat="req in requirements | filter:filterReq:strict" class="requirement-container" ng-controller="RequirementCtrl">
+    <div ng-repeat="req in requirements | filter:filterReq:strict"
+         ng-controller="RequirementCtrl"
+         ng-class="showRequirement ? 'requirement-container-selected' : 'requirement-container'">
       <!--Requirement header-->
       <div class="requirement-header">
-        <paper-item ng-click="toggleRequirement(req)" class="requirement-header-title width-max">
+        <paper-item ng-click="setSelectedReqId(req.id)" class="requirement-header-title width-max">
           <span class="ellipsis req-title" ng-bind="req.title"></span>
         </paper-item>
         <div ng-controller="VoteCtrl" class="vote-button-container flex-space-between">
