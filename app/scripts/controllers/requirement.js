@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $location, SubmitToReqChange, $upload) {
+  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $location, SubmitToReqChange, $rootScope, $upload) {
 
     $scope.attachments = [];
     $scope.showRequirement = false;
@@ -99,6 +99,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         if($scope.showRequirement === false){
           $scope.showRequirement = true;
           $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id+'/requirement/'+$scope.req.id, false);
+          $scope.gotoAnchor($scope.req.id);
           reqBazService.getRequirement($scope.req.id)
             .success(function (requirement) {
               $scope.req.creator = requirement.creator;

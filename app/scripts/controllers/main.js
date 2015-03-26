@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $upload, Profile, $sce, oauthConfig, $location, $timeout, AccessToken, $routeParams, SubmitToReqChange) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $upload, Profile, $sce, oauthConfig, $location, $anchorScroll, $timeout, AccessToken, $routeParams, $rootScope, $window, SubmitToReqChange) {
 
     $scope.projects = null;
     $scope.components = null;
@@ -38,11 +38,38 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.filterReq = {};
 
     $scope.setSelectedReqId = function(id){
+      //var curReq = document.getElementsByClassName("requirement-container-selected");
+      //if(curReq.length > 0){
+      //  var height = curReq[0].offsetHeight || 0;
+      //}
+      //console.log(height);
+      //console.log($scope.scroll());
+
+      //$timeout(function(){
+      //  //At this time window scroll length is still showing for previous div
+      //  $window.top.scrollTo(0, $window.pageYOffset-500);
+      //});
+
       //Timeout is necessary, since otherwise the listeners from child controllers are not registered yet
       $timeout(function() {
-        SubmitToReqChange.emit(id);
+        SubmitToReqChange.emit(id, (1*-1));
       });
     };
+
+    $scope.gotoAnchor = function(x) {
+      var newHash = 'anchor' + x;
+      if ($location.hash() !== newHash) {
+        // set the $location.hash to `newHash` and
+        // $anchorScroll will automatically scroll to it
+        $location.hash('anchor' + x);
+      } else {
+        // call $anchorScroll() explicitly,
+        // since $location.hash hasn't changed
+        $anchorScroll();
+      }
+    };
+
+
 
     $scope.showCreateCompDiv = false;
 
