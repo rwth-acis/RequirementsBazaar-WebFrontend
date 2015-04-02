@@ -89,10 +89,17 @@ body {
   width: 91%;
   margin-left: auto;
   margin-right: auto;
+  -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
+  transition: width 0.3s;
 }
 .requirement-container-selected {
+  width: 100%;
   margin-top: 10px;
   background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
+  transition: width 0.3s;
 }
 
 .requirement-header {
