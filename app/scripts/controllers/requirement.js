@@ -8,12 +8,11 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $upload) {
+  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $location, SubmitToReqChange, $rootScope, $upload) {
 
     $scope.attachments = [];
     $scope.showRequirement = false;
     $scope.editRequirement = false;
-
 
     $scope.showContributors = false;
 
@@ -95,29 +94,68 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Toggles the visibility of a requirements
      * Called: user clicks on the requirement
      * */
-    $scope.toggleRequirement = function(req) {
+    var toggleRequirement = function(event, args){
+      if(parseInt(args.val) === $scope.req.id){
+        if($scope.showRequirement === false){
+          $scope.showRequirement = true;
+          $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id+'/requirement/'+$scope.req.id, false);
 
-      if($scope.showRequirement === false){
-        reqBazService.getRequirement(req.id)
-          .success(function (requirement) {
-            console.log(requirement);
-            req.creator = requirement.creator;
-            req.attachments = requirement.attachments;
-            req.components = requirement.components;
-            req.leadDeveloper = requirement.leadDeveloper;
-            req.followers = requirement.followers;
-            req.developers = requirement.developers;
-            req.contributors = requirement.contributors;
+          //Scroll the user to the opened requirement
+          var topPos = 0;
+          var scaffold = null;
+          var scrollArea = null;
+          if(args.newListIndex > args.oldListIndex){
+            topPos = 0;
+            var prevHeight = 0;
+            if(document.getElementById('req-'+args.newListIndex)){
+              topPos = document.getElementById('req-'+args.newListIndex).offsetTop;
+            }
+            if(document.getElementById('req-'+args.oldListIndex)){
+              prevHeight = document.getElementById('req-'+args.oldListIndex).clientHeight;
+            }
+            scaffold = document.querySelector('core-scaffold');
+            scrollArea = scaffold.shadowRoot.querySelector('core-header-panel');
+            scrollArea.scroller.scrollTop = topPos-prevHeight+100;
+          }else{
+            if(document.getElementById('req-'+args.newListIndex)){
+              topPos = document.getElementById('req-'+args.newListIndex).offsetTop;
+            }
+            scaffold = document.querySelector('core-scaffold');
+            scrollArea = scaffold.shadowRoot.querySelector('core-header-panel');
+            scrollArea.scroller.scrollTop = topPos-50;
+          }
 
-            //Load comments
-            getComments(req);
-          })
-          .error(function () {
-            UtilityService.showFeedback('WARN_REQ_NOT_LOADED');
-          });
+          reqBazService.getRequirement($scope.req.id)
+            .success(function (requirement) {
+              $scope.req.creator = requirement.creator;
+              $scope.req.attachments = requirement.attachments;
+              $scope.req.components = requirement.components;
+              $scope.req.leadDeveloper = requirement.leadDeveloper;
+              $scope.req.followers = requirement.followers;
+              $scope.req.developers = requirement.developers;
+              $scope.req.contributors = requirement.contributors;
+
+              //Load comments
+              getComments($scope.req);
+            })
+            .error(function () {
+              UtilityService.showFeedback('WARN_REQ_NOT_LOADED');
+            });
+        }else{
+          $scope.showRequirement = false;
+          $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
+        }
+      }else{
+        //Close if not selected
+        $scope.showRequirement = false;
       }
-      $scope.showRequirement = !$scope.showRequirement;
     };
+
+    /*
+     * A listener to call toggle requirement
+     * */
+    SubmitToReqChange.listen(toggleRequirement);
+
 
 
     var getComments = function(req){
