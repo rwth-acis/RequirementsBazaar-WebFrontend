@@ -37,39 +37,15 @@ angular.module('requirementsBazaarWebFrontendApp')
     //Used to filter requirements
     $scope.filterReq = {};
 
-    $scope.setSelectedReqId = function(id){
-      //var curReq = document.getElementsByClassName("requirement-container-selected");
-      //if(curReq.length > 0){
-      //  var height = curReq[0].offsetHeight || 0;
-      //}
-      //console.log(height);
-      //console.log($scope.scroll());
-
-      //$timeout(function(){
-      //  //At this time window scroll length is still showing for previous div
-      //  $window.top.scrollTo(0, $window.pageYOffset-500);
-      //});
-
+    var currentlyOpenReqListIndex = 0;
+    $scope.setSelectedReqId = function(id, newListIndex){
       //Timeout is necessary, since otherwise the listeners from child controllers are not registered yet
       $timeout(function() {
-        SubmitToReqChange.emit(id, (1*-1));
+        SubmitToReqChange.emit(id, currentlyOpenReqListIndex, newListIndex);
+        currentlyOpenReqListIndex = newListIndex;
       });
+
     };
-
-    $scope.gotoAnchor = function(x) {
-      var newHash = 'anchor' + x;
-      if ($location.hash() !== newHash) {
-        // set the $location.hash to `newHash` and
-        // $anchorScroll will automatically scroll to it
-        $location.hash('anchor' + x);
-      } else {
-        // call $anchorScroll() explicitly,
-        // since $location.hash hasn't changed
-        $anchorScroll();
-      }
-    };
-
-
 
     $scope.showCreateCompDiv = false;
 
@@ -159,7 +135,11 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.requirements = reqs;
           if(reqs.length !== 0){
             if($routeParams.requirementId !== undefined){
-              $scope.setSelectedReqId($routeParams.requirementId);
+              for(var r in reqs){
+                if($routeParams.requirementId === reqs[r].id.toString()){
+                  $scope.setSelectedReqId($routeParams.requirementId,r);
+                }
+              }
             }else{
               $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
             }

@@ -99,7 +99,32 @@ angular.module('requirementsBazaarWebFrontendApp')
         if($scope.showRequirement === false){
           $scope.showRequirement = true;
           $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id+'/requirement/'+$scope.req.id, false);
-          $scope.gotoAnchor($scope.req.id);
+
+          //Scroll the user to the opened requirement
+          var topPos = 0;
+          var scaffold = null;
+          var scrollArea = null;
+          if(args.newListIndex > args.oldListIndex){
+            topPos = 0;
+            var prevHeight = 0;
+            if(document.getElementById('req-'+args.newListIndex)){
+              topPos = document.getElementById('req-'+args.newListIndex).offsetTop;
+            }
+            if(document.getElementById('req-'+args.oldListIndex)){
+              prevHeight = document.getElementById('req-'+args.oldListIndex).clientHeight;
+            }
+            scaffold = document.querySelector('core-scaffold');
+            scrollArea = scaffold.shadowRoot.querySelector('core-header-panel');
+            scrollArea.scroller.scrollTop = topPos-prevHeight+100;
+          }else{
+            if(document.getElementById('req-'+args.newListIndex)){
+              topPos = document.getElementById('req-'+args.newListIndex).offsetTop;
+            }
+            scaffold = document.querySelector('core-scaffold');
+            scrollArea = scaffold.shadowRoot.querySelector('core-header-panel');
+            scrollArea.scroller.scrollTop = topPos-50;
+          }
+
           reqBazService.getRequirement($scope.req.id)
             .success(function (requirement) {
               $scope.req.creator = requirement.creator;

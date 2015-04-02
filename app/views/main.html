@@ -97,13 +97,12 @@
     <paper-button id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)" ng-bind="'RELOAD'|translate"></paper-button>
 
     <!--List of requirements-->
-    <div id="anchor{{req.id}}" class="anchor" ng-repeat="req in requirements | filter:filterReq:strict"
+    <div id="req-{{$index}}" ng-repeat="req in requirements | filter:filterReq:strict"
          ng-controller="RequirementCtrl"
-         ng-class="showRequirement ? 'requirement-container-selected' : 'requirement-container'"
-         scrollIf="showRequirement">
+         ng-class="showRequirement ? 'requirement-container-selected' : 'requirement-container'">
       <!--Requirement header-->
       <div class="requirement-header">
-        <paper-item ng-click="setSelectedReqId(req.id)" class="requirement-header-title width-max">
+        <paper-item ng-click="setSelectedReqId(req.id,$index)" class="requirement-header-title width-max">
           <span class="ellipsis req-title" ng-bind="req.title"></span>
         </paper-item>
         <div ng-controller="VoteCtrl" class="vote-button-container flex-space-between">
@@ -126,7 +125,7 @@
           </paper-dropdown>
         </paper-dropdown-menu-ex>
       </div>
-      <paper-item ng-show="!showRequirement" ng-click="setSelectedReqId(req.id)">
+      <paper-item ng-show="!showRequirement" ng-click="setSelectedReqId(req.id,$index)">
         <p class="multiline-ellipsis" ng-bind="req.description" style="color: #808080"></p>
       </paper-item>
 

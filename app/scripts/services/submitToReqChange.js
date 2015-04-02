@@ -10,8 +10,8 @@
 angular.module('requirementsBazaarWebFrontendApp')
   .service('SubmitToReqChange', function SubmitToReqChange($rootScope) {
 
-    this.emit = function(id,height) {
-      $rootScope.$emit('selectedReqIdChange',{'val':id, 'height':height});
+    this.emit = function(id,oldListIndex, newListIndex) {
+      $rootScope.$emit('selectedReqIdChange',{'val':id, 'oldListIndex':oldListIndex, 'newListIndex':newListIndex});
     };
 
     this.listen = function(callback) {
