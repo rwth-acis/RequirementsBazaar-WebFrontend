@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('ActiveCompCtrl', function ($scope, reqBazService, UtilityService, AccessToken) {
+  .controller('ActiveCompCtrl', function ($scope, reqBazService, UtilityService, AccessToken, AuthorizationService) {
 
     $scope.dirtyComp = null;
     $scope.isDirty = false;
@@ -26,9 +26,19 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Save changes of the modified component
     * */
     $scope.saveChanges = function(){
-      //TODO save the changes
-      $scope.isDirty = false;
-      UtilityService.showFeedback('WARN_NOT_IMPL');
+
+      reqBazService.updateComponent($scope.activeProject.id,$scope.dirtyComp.id,$scope.dirtyComp)
+        .success(function (message) {
+          console.log(message);
+          if(AuthorizationService.isAuthorized(message)) {
+            $scope.activeComponent = angular.copy($scope.dirtyComp);
+            $scope.dirtyComp = null;
+            $scope.isDirty = false;
+          }
+        })
+        .error(function () {
+          UtilityService.showFeedback('WARN_COMP_NOT_UPDATED');
+        });
     };
 
     /*

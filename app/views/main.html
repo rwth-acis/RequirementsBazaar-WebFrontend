@@ -87,7 +87,7 @@
       <div class="col span_2_of_8">
         <p ng-bind="'COMPONENT_LEAD' |translate" class="small-grey-text"></p>
         <my-user src={{trustSrc(componentLeader.profileImage)}} width="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}}></my-user>
-        <paper-icon-button icon="editor:mode-edit" disabled ng-click="startEdit()"></paper-icon-button>
+        <paper-icon-button icon="editor:mode-edit" ng-click="startEdit()"></paper-icon-button>
         <paper-icon-button icon="icons:delete" ng-click="confirmDelete()"></paper-icon-button>
         <paper-input label={{'SEARCH_REQUIREMENTS'|translate}} ng-model="filterReq.$"></paper-input>
       </div>
