@@ -29,8 +29,7 @@ body {
 }
 
 .add-border {
-  border: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
+  border: 2px dashed #D1C7AC;
 }
 .flex-space-between {
   display: flex;
@@ -51,14 +50,6 @@ body {
 #main-toolbar {
   white-space: nowrap;
 }
-
-/*
-  Sidebar
-*/
-.sidebarMenu paper-item:hover {
-  background-color: #ececec;
-}
-
 
 /*
   Main content
@@ -215,17 +206,6 @@ core-toolbar {
 
 core-icon {
   padding-right: 5px;
-}
-
-/*
-
-CSS rules that apply to all paper elements
-
-*/
-
-paper-button {
-  background-color: #669900;
-  color: white;
 }
 
 /*

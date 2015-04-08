@@ -66,6 +66,9 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     WARN_REQ_NOT_DEL: 'Warning: Requirement was not deleted',
     WARN_COMP_NOT_DEL: 'Warning: Component was not deleted !',
     WARN_COMMENT_NOT_DEL: 'Warning: Comment was not deleted !',
+    WARN_PROJ_NOT_UPDATED: 'Warning: Project was not updated',
+    WARN_COMP_NOT_UPDATED: 'Warning: Component was not updated',
+    WARN_REQ_NOT_UPDATED: 'Warning: Requirement was not updated',
 
     ALREADY_VOTED: 'You have already voted',
     WARN_VOTE_NOT_COUNTED: 'Warning: Vote was not counted, unknown reasons',
@@ -161,6 +164,9 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       WARN_REQ_NOT_DEL: 'Achtung: Requirement wurde nicht gelöscht!',
       WARN_COMP_NOT_DEL: 'Achtung: Komponente wurde nicht gelöscht!',
       WARN_COMMENT_NOT_DEL: 'Achtung: Kommentar wurde nicht gelöscht!',
+      WARN_PROJ_NOT_UPDATED: 'Achtung: Projekt wurde nicht aktualisiert',
+      WARN_COMP_NOT_UPDATED: 'Achtung: Komponent wurde nicht aktualisiert',
+      WARN_REQ_NOT_UPDATED: 'Achtung: Requirement wurde nicht aktualisiert',
 
       ALREADY_VOTED: 'Sie haben bereits abgestimmt',
       WARN_VOTE_NOT_COUNTED: 'Achtung: Stimme wurde nicht gezählt, unbekannte Gründe!',

@@ -12,9 +12,11 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     $scope.attachments = [];
     $scope.showRequirement = false;
-    $scope.editRequirement = false;
-
     $scope.showContributors = false;
+
+    $scope.dirtyReq = null;
+    $scope.isDirtyReq = false;
+
 
     /*
      * Currently only images, videos and pdfs are accepted as attachments
@@ -43,25 +45,52 @@ angular.module('requirementsBazaarWebFrontendApp')
     //});
 
 
+    /*
+     * User has started editing a requirement
+     * */
+    $scope.startEdit = function(req,index){
+      // open the requirement
+      if($scope.showRequirement === false){
+        $scope.setSelectedReqId(req,index);
+      }
+
+      //Create a copy of the component, that is shown for the user while editing
+      $scope.dirtyReq = angular.copy(req);
+      $scope.isDirtyReq = true;
+    };
+
+    /*
+    * User has cancelled the edit
+    * */
+    $scope.cancelChanges = function(){
+      $scope.isDirtyReq = false;
+      $scope.dirtyReq = null;
+    };
 
     /*
      * After the user has finished editing
      * Called: by the user, by clicking on submit requirement
      * */
-    $scope.updateRequirement = function(req){
-      console.log('save changes');
-      console.log('text : '+req.description);
-      if($scope.attachments !== null){
-        console.log('with attachments:');
-      }
+    $scope.saveChanges = function(){
+      reqBazService.updateRequirement($scope.activeProject.id,$scope.activeComponent.id, $scope.dirtyReq.id,$scope.dirtyReq)
+        .success(function (message) {
+          if(AuthorizationService.isAuthorized(message)) {
+            console.log(message);
+            for(var r in $scope.requirements){
+              if($scope.requirements[r].id === $scope.dirtyReq.id){
+                $scope.requirements[r].title = $scope.dirtyReq.title;
+                $scope.requirements[r].description = $scope.dirtyReq.description;
+                break;
+              }
+            }
+            $scope.isDirtyReq = false;
+            $scope.dirtyReq = null;
+          }
+        })
+        .error(function () {
+          UtilityService.showFeedback('WARN_REQ_NOT_UPDATED');
+        });
 
-      console.log($scope.attachments);
-      UtilityService.showFeedback('WARN_NOT_IMPL');
-
-
-      $scope.editRequirement = false;
-
-      //TODO update req text
       //TODO save all the attachments that did not exist before?
 
       //var url = 'http://localhost:8080/bazaar/';
@@ -87,6 +116,16 @@ angular.module('requirementsBazaarWebFrontendApp')
       //  return $http.post(attachmentUrl, attachment);
       //};
 
+    };
+
+
+
+    $scope.showContrib = function(req,index){
+      // open the requirement
+      if($scope.showRequirement === false){
+        $scope.setSelectedReqId(req,index);
+      }
+      $scope.showContributors = !$scope.showContributors;
     };
 
 
