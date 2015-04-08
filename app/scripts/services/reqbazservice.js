@@ -34,6 +34,11 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $http.get(projectUrl + '/' + projectId);
     };
 
+    this.updateProject = function(projectId,project){
+      var projectUrl = url + 'projects/' + projectId;
+      return $http.put(projectUrl, project);
+    };
+
     ///COMPONENTS
 
     this.getComponents = function(projectId,page, per_page){
@@ -85,6 +90,11 @@ angular.module('requirementsBazaarWebFrontendApp')
     this.deleteRequirement = function(requirementId) {
       var reqUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements';
       return $http.delete(reqUrl + '/' + requirementId);
+    };
+
+    this.updateRequirement = function(projectId,componentId,requirementId,requirement){
+      var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements/' + requirementId;
+      return $http.put(reqUrl, requirement);
     };
 
     //DEV LIST

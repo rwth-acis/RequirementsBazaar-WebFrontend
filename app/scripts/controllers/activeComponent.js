@@ -26,10 +26,8 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Save changes of the modified component
     * */
     $scope.saveChanges = function(){
-
       reqBazService.updateComponent($scope.activeProject.id,$scope.dirtyComp.id,$scope.dirtyComp)
         .success(function (message) {
-          console.log(message);
           if(AuthorizationService.isAuthorized(message)) {
             $scope.activeComponent = angular.copy($scope.dirtyComp);
             $scope.dirtyComp = null;

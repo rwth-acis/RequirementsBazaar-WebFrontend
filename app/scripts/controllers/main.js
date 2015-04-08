@@ -38,10 +38,10 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.filterReq = {};
 
     var currentlyOpenReqListIndex = 0;
-    $scope.setSelectedReqId = function(id, newListIndex){
+    $scope.setSelectedReqId = function(req, newListIndex){
       //Timeout is necessary, since otherwise the listeners from child controllers are not registered yet
       $timeout(function() {
-        SubmitToReqChange.emit(id, currentlyOpenReqListIndex, newListIndex);
+        SubmitToReqChange.emit(req.id, currentlyOpenReqListIndex, newListIndex);
         currentlyOpenReqListIndex = newListIndex;
       });
 
