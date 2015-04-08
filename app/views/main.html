@@ -231,7 +231,7 @@
 
     <div ng-controller="CreateRequirementCtrl" class="create-div">
       <paper-fab id="addRequirementFab" icon="icons:add" ng-click="startCreation()" title={{'CREATE_REQ'|translate}}></paper-fab>
-      <div class="add-item-div add-border" ng-show="showCreateDiv">
+      <div class="add-item-div" ng-show="showCreateDiv">
         <p ng-bind="'CREATE_REQ' | translate"></p>
         <paper-input-decorator label={{'TITLE'|translate}}>
           <paper-autogrow-textarea>
@@ -263,7 +263,7 @@
 
     <!--Create a new component-->
     <div ng-show="showCreateCompDiv" class="create-div">
-      <div ng-controller="CreateComponentCtrl" class="add-item-div add-border">
+      <div ng-controller="CreateComponentCtrl" class="add-item-div">
         <p ng-bind="'CREATE_COMP'|translate"></p>
         <paper-input-decorator label={{'TITLE'|translate}}>
           <paper-autogrow-textarea>
@@ -286,7 +286,7 @@
 
     <!--Create a new project-->
     <div ng-show="showCreateProjDiv" class="create-div">
-      <div ng-controller="CreateProjectCtrl" class="add-item-div add-border">
+      <div ng-controller="CreateProjectCtrl" class="add-item-div">
         <p ng-bind="'CREATE_PROJECT' | translate"></p>
         <paper-input-decorator label={{'TITLE'|translate}}>
           <paper-autogrow-textarea>
