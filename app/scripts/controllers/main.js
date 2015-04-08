@@ -178,7 +178,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.editProject = function(){
       //Check if user is logged in
       if(AccessToken.get() !== null){
-        $scope.go('/project-management/'+$scope.activeProject.id);
+        $location.path('/project-management/'+$scope.activeProject.id+'/', true);
       }else{
         UtilityService.showFeedback('LOGIN_PROJ');
       }
@@ -316,10 +316,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     * */
     $scope.trustSrc = function(src) {
       return $sce.trustAsResourceUrl(src);
-    };
-
-    $scope.go = function ( path ) {
-      $location.path( path );
     };
   });
 

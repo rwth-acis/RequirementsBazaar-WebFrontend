@@ -13,7 +13,7 @@
         <core-icon icon="icons:menu" ng-show="showProjectSelection"></core-icon>
         <span ng-bind="activeProject.name"></span>
       </paper-item>
-      <paper-icon-button icon="editor:mode-edit" hidden ng-click="editProject()" class="edit-project"></paper-icon-button>
+      <paper-icon-button icon="editor:mode-edit" ng-click="editProject()" class="edit-project"></paper-icon-button>
     </core-toolbar>
 
     <!--List of projects-->
@@ -22,7 +22,7 @@
       <paper-item ng-repeat="project in projects" ng-click="selectProj(project)" ng-bind="project.name" noink></paper-item>
       <hr>
       <!--Create a new project-->
-      <paper-button ng-click="startCreationProj()">
+      <paper-button raised ng-click="startCreationProj()">
         <core-icon icon="icons:add-circle"></core-icon>
         {{'PROJECT' | translate}}
       </paper-button>
@@ -34,12 +34,12 @@
       <paper-item ng-repeat="component in components | filter:filterComp:strict" ng-click="selectComp(component)" ng-bind="component.name" noink></paper-item>
       <hr>
       <!--Create a new component-->
-      <paper-button ng-click="startCreationComp()">
+      <paper-button raised ng-click="startCreationComp()">
         <core-icon icon="icons:add-circle"></core-icon>
         {{'COMPONENT' | translate}}
       </paper-button>
     </core-menu>
-    <paper-button id="loadComponents" ng-show="reloadComponents" ng-click="selectProj(activeProject)" ng-bind="'RELOAD'|translate"></paper-button>
+    <paper-button raised id="loadComponents" ng-show="reloadComponents" ng-click="selectProj(activeProject)" ng-bind="'RELOAD'|translate"></paper-button>
   </core-header-panel>
   <!--
 
@@ -80,8 +80,8 @@
         <div ng-show="isDirty">
           <h2 contenteditable ng-model="dirtyComp.name" style="margin-right: 10px"></h2>
           <p contenteditable ng-model="dirtyComp.description" class="add-border" style="padding: 10px;min-height: 50px;margin-right: 10px"></p>
-          <paper-button ng-click="saveChanges()" ng-bind="'SAVE'|translate" style="margin: 0px"></paper-button>
-          <paper-button ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"  style="margin: 0px"></paper-button>
+          <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE'|translate" style="margin: 0px"></paper-button>
+          <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"  style="margin: 0px"></paper-button>
         </div>
       </div>
       <div class="col span_2_of_8">
@@ -94,7 +94,7 @@
     </div>
 
     <!--If there is a network problem loading the requirements then this button is shown-->
-    <paper-button id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)" ng-bind="'RELOAD'|translate"></paper-button>
+    <paper-button raised id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)" ng-bind="'RELOAD'|translate"></paper-button>
 
     <!--List of requirements-->
     <div id="req-{{$index}}" ng-repeat="req in requirements | filter:filterReq:strict"
@@ -141,8 +141,8 @@
             <div contenteditable class="add-border" ng-file-drop ng-file-change="fileSelected($files,$event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="dirtyReq.description" style="padding: 10px;min-height: 150px;margin-bottom: 10px"></div>
             <div ng-no-file-drop contenteditable ng-model="dirtyReq.description" style="padding: 10px;min-height: 150px;margin-bottom: 10px"></div>
             <div ng-show="isDirtyReq" class="save-req-container">
-              <paper-button ng-click="saveChanges()" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
-              <paper-button ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"></paper-button>
+              <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
+              <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"></paper-button>
               <!--<paper-icon-button ng-file-select ng-file-change="fileSelected($files)" hidden icon="icons:attachment"></paper-icon-button>-->
             </div>
           </div>
@@ -203,7 +203,7 @@
               <textarea ng-model="newComment" required></textarea>
             </paper-autogrow-textarea>
           </paper-input-decorator>
-          <paper-button ng-click="submitComment(newComment,req);newComment='';" ng-bind="'SUBMIT' | translate"></paper-button>
+          <paper-button raised ng-click="submitComment(newComment,req);newComment='';" ng-bind="'SUBMIT' | translate"></paper-button>
         </div>
 
       </core-collapse>
@@ -216,9 +216,9 @@
   -->
   <paper-action-dialog id="confirmDelete" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading={{'CONFIRM_DEL'|translate}}>
     <p ng-bind="deleteDesc|translate"></p>
-    <paper-button dismissive ng-bind="'DECLINE' | translate"></paper-button>
-    <paper-button affirmative ng-click="deleteComponent()" ng-show="deleteElem === 'comp'" ng-bind="'ACCEPT' | translate"></paper-button>
-    <paper-button affirmative ng-click="deleteRequirement()" ng-show="deleteElem === 'req'" ng-bind="'ACCEPT' | translate"></paper-button>
+    <paper-button raised dismissive ng-bind="'DECLINE' | translate"></paper-button>
+    <paper-button raised affirmative ng-click="deleteComponent()" ng-show="deleteElem === 'comp'" ng-bind="'ACCEPT' | translate"></paper-button>
+    <paper-button raised affirmative ng-click="deleteRequirement()" ng-show="deleteElem === 'req'" ng-bind="'ACCEPT' | translate"></paper-button>
   </paper-action-dialog>
   <!--
 
@@ -253,7 +253,7 @@
         <!--Confirm or add attachments-->
         <div class="flex-space-between">
           <div class="flex-space-between">
-            <paper-button ng-click="submitReq()" ng-bind="'CREATE' | translate"></paper-button>
+            <paper-button raised ng-click="submitReq()" ng-bind="'CREATE' | translate"></paper-button>
             <paper-icon-button ng-file-select ng-file-change="newAttachments($files)" icon="icons:attachment" hidden></paper-icon-button>
           </div>
           <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
@@ -278,7 +278,7 @@
 
         <!--Confirm or cancel submit-->
         <div class="flex-space-between">
-          <paper-button ng-click="submitComponent()" ng-bind="'CREATE' | translate"></paper-button>
+          <paper-button raised ng-click="submitComponent()" ng-bind="'CREATE' | translate"></paper-button>
           <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
         </div>
       </div>
@@ -301,7 +301,7 @@
 
         <!--Confirm or cancel submit-->
         <div class="flex-space-between">
-          <paper-button ng-click="submitProject()" ng-bind="'CREATE' | translate"></paper-button>
+          <paper-button raised ng-click="submitProject()" ng-bind="'CREATE' | translate"></paper-button>
           <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
         </div>
       </div>
