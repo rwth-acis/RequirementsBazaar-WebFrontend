@@ -32,6 +32,10 @@ angular
           $location.replace();
         }
       })
+      .when('/welcome', {
+        templateUrl: 'views/welcome-page.html',
+        controller: 'WelcomeCtrl'
+      })
       .when('/project/:projectId/component/:componentId/requirement/:requirementId', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'

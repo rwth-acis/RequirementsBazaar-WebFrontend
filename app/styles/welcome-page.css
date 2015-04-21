@@ -1,0 +1,13 @@
+.core-header{
+  height: 60px;
+  line-height: 60px;
+  font-size: 18px;
+  padding: 0 10px;
+  background-color: #669900;
+  color: #FFF;
+  transition: height 0.2s;
+}
+
+/*oauth /deep/ paper-icon-button {*/
+  /*top: 8px;*/
+/*}*/

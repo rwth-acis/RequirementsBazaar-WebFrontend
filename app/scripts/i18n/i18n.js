@@ -197,5 +197,5 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       DEL_COMP_DESC: 'Die Aktion kann nicht rückgängig gemacht werden. Die Requirements werden im Rahmen des Standardkomponente zugänglich sein.'
   });
 
-  $translateProvider.preferredLanguage('de');
+  $translateProvider.preferredLanguage('en');
 });

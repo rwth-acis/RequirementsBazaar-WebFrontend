@@ -1,0 +1,32 @@
+<core-header-panel style="position: initial">
+  <div class="core-header flex-space-between">
+    Requirements Bazaar
+    <div style="display: flex">
+      <paper-button ng-click="goToMain()" style="display: flex">continue to site</paper-button>
+      <oauth
+        site={{oauthSite}}
+        client-id={{oauthClientId}}
+        data-scope={{oauthDataScope}}
+        redirect-uri={{oauthRedirectURI}}
+        profile-uri={{oauthProfileURI}}
+        template="../my-components/sign-in-button.html">
+      </oauth>
+    </div>
+
+  </div>
+  <div class="content" fit>
+    <p>
+      In years of research at RWTH Aachen we have developed and actually operated an Open Innovation Platform for gathering requirements for prototypes in large international academic projects. The last version of the current product is available under http://requirements-bazaar.org . End-users can enter their requirements by providing short descriptions including user stories, screenshots and other images. The requirements can then be shared amongst its users. On the other side of the chain, developers may take up ideas and transfer the accepted requirements to an issue system like JIRA.
+    </p>
+    <p>
+      Over the last years it turned out that people want more lightweight and mobile-friendly tools; we found the old monolithic system to be very hard to maintain to add new features. Therefore we are currently redeveloping it from scratch integrating many ideas from our users and incorporating new research findings. We are further driven by a mobile-first approach to support a wide variety of devices. We additionally want to support various social features like sharing on social networks or blogs and allowing discussions and rating amongst end-users and developers.
+    </p>
+    <p>
+      So briefly what is Requirement Bazaar? It is a web application that provides a user-friendly, yet developer usable way, how end-users and developers can share ideas/requirement/problems about a certain app.
+    </p>
+  </div>
+
+
+  <!--Feedback toast-->
+  <paper-toast id="feedbackToast" text={{toastText}}></paper-toast>
+</core-header-panel>
