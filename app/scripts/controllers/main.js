@@ -54,7 +54,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Called: only when the page loads
     * */
     (function(){
-      reqBazService.getProjects()
+      reqBazService.getProjects(0,100)
         .success(function (projs) {
           $scope.projects = projs;
           if(projs.length !== 0){

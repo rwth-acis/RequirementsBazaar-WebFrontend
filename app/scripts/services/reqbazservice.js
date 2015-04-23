@@ -9,7 +9,7 @@
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .service('reqBazService', function reqBazService($http) {
-    var url = 'http://localhost:8080/bazaar/';
+    var url = 'http://www.requirements-bazaar.org/bazaar/';
 
     var paginate = function (url,page,per_page){
       if((typeof page !== 'undefined') && (typeof per_page !== 'undefined')){
