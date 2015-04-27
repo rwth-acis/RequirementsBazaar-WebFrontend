@@ -78,7 +78,7 @@
           <div contenteditable="false" ng-model="activeComponent.description"></div>
         </div>
         <div ng-show="isDirty">
-          <h2 contenteditable ng-model="dirtyComp.name" style="margin-right: 10px"></h2>
+          <h2 contenteditable="plaintext-only" ng-model="dirtyComp.name" style="margin-right: 10px"></h2>
           <p contenteditable ng-model="dirtyComp.description" class="add-border" style="padding: 10px;min-height: 50px;margin-right: 10px"></p>
           <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE'|translate" style="margin: 0px"></paper-button>
           <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"  style="margin: 0px"></paper-button>
@@ -104,7 +104,7 @@
       <div class="requirement-header">
         <paper-item ng-click="setSelectedReqId(req,$index)" class="requirement-header-title width-max">
           <span ng-show="!isDirtyReq" contenteditable="false" ng-model="req.title" class="ellipsis req-title"></span>
-          <span ng-show="isDirtyReq" contenteditable ng-model="dirtyReq.title" class="req-title"></span>
+          <span ng-show="isDirtyReq" contenteditable="plaintext-only" ng-model="dirtyReq.title" class="req-title"></span>
         </paper-item>
         <div ng-controller="VoteCtrl" class="vote-button-container flex-space-between">
           <p ng-bind="req.upVotes" class="small-grey-text"></p>
