@@ -29,8 +29,7 @@ body {
 }
 
 .add-border {
-  border: 1px solid #ccc;
-  border-color: rgba(0,0,0,.2);
+  border: 2px dashed #D1C7AC;
 }
 .flex-space-between {
   display: flex;
@@ -39,7 +38,12 @@ body {
 .width-max {
   width: 100%;
 }
-
+pre {
+  white-space: pre-wrap;       /* CSS 3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
 
 /*
   Main header
@@ -53,20 +57,15 @@ body {
 }
 
 /*
-  Sidebar
-*/
-.sidebarMenu paper-item:hover {
-  background-color: #ececec;
-}
-
-
-/*
   Main content
 */
 #currentComponent {
   background-color: white;
   margin-bottom: 12px;
   padding: 10px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 #loadRequirements {
   display: block;
@@ -75,7 +74,7 @@ body {
   width: 40%;
 }
 .content {
-  max-width: 1020px;
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
   padding: 10px;
@@ -83,7 +82,22 @@ body {
 .requirement-container {
   margin-top: 10px;
   background-color: white;
+  width: 91%;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
+  transition: width 0.3s;
 }
+.requirement-container-selected {
+  width: 100%;
+  margin-top: 10px;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
+  transition: width 0.3s;
+}
+
 .requirement-header {
   border-bottom: 1px solid #ccc;
   display: flex;
@@ -197,17 +211,6 @@ core-toolbar {
 
 core-icon {
   padding-right: 5px;
-}
-
-/*
-
-CSS rules that apply to all paper elements
-
-*/
-
-paper-button {
-  background-color: #669900;
-  color: white;
 }
 
 /*

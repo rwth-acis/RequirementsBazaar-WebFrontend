@@ -23,7 +23,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(AccessToken.get() !== null){
         $scope.showCreateDiv = true;
       }else{
-        UtilityService.showFeedback('Please log in to create requirements');
+        UtilityService.showFeedback('LOGIN_REQ');
       }
     };
 
@@ -31,11 +31,11 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Submit a new Requirement
     * */
     $scope.submitReq = function(){
-      if(!UtilityService.isEmpty($scope.newName,'Choose requirement name') /*&& !UtilityService.isEmpty($scope.newDesc,'Choose requirement description')*/) {
+      if(!UtilityService.isEmpty($scope.newName,'REQ_NAME_MISSING')) {
         if($scope.createAttachments.length !== 0){
           //TODO save the attachments
           $scope.createAttachments = [];
-          UtilityService.showFeedback('Warning: Attachments were not included !');
+          UtilityService.showFeedback('ATTACHMENTS_NOT_INCLUDED');
         }
         console.log('submit requirement');
         var req = {title: $scope.newName, description: $scope.newDesc, projectId: $scope.activeProject.id, leadDeveloperId: 1};
@@ -50,14 +50,14 @@ angular.module('requirementsBazaarWebFrontendApp')
                 })
                 .error(function (error) {
                   console.log(error);
-                  UtilityService.showFeedback('Warning: Requirement was not retrieved !');
+                  UtilityService.showFeedback('WARN_REQ_NOT_LOADED');
                 });
             }
           })
           .error(function (error) {
             //This error only catches unknown server errors, usual errorCodes are sent with success message
             console.log(error);
-            UtilityService.showFeedback('Warning: Requirement was not created !');
+            UtilityService.showFeedback('WARN_REQ_NOT_CREATED');
           });
       }
     };
@@ -66,8 +66,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Clear the input fields
     * */
     $scope.clearSubmit = function(){
-      $scope.newName = '';
-      $scope.newDesc = '';
+      $scope.newName = $scope.newDesc = '';
       $scope.showCreateDiv = false;
     };
 

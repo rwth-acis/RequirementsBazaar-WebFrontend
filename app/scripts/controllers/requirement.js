@@ -8,14 +8,15 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $upload) {
+  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $location, SubmitToReqChange, $rootScope, $upload) {
 
     $scope.attachments = [];
     $scope.showRequirement = false;
-    $scope.editRequirement = false;
-
-
     $scope.showContributors = false;
+
+    $scope.dirtyReq = null;
+    $scope.isDirtyReq = false;
+
 
     /*
      * Currently only images, videos and pdfs are accepted as attachments
@@ -44,25 +45,52 @@ angular.module('requirementsBazaarWebFrontendApp')
     //});
 
 
+    /*
+     * User has started editing a requirement
+     * */
+    $scope.startEdit = function(req,index){
+      // open the requirement
+      if($scope.showRequirement === false){
+        $scope.setSelectedReqId(req,index);
+      }
+
+      //Create a copy of the component, that is shown for the user while editing
+      $scope.dirtyReq = angular.copy(req);
+      $scope.isDirtyReq = true;
+    };
+
+    /*
+    * User has cancelled the edit
+    * */
+    $scope.cancelChanges = function(){
+      $scope.isDirtyReq = false;
+      $scope.dirtyReq = null;
+    };
 
     /*
      * After the user has finished editing
      * Called: by the user, by clicking on submit requirement
      * */
-    $scope.updateRequirement = function(req){
-      console.log('save changes');
-      console.log('text : '+req.description);
-      if($scope.attachments !== null){
-        console.log('with attachments:');
-      }
+    $scope.saveChanges = function(){
+      reqBazService.updateRequirement($scope.activeProject.id,$scope.activeComponent.id, $scope.dirtyReq.id,$scope.dirtyReq)
+        .success(function (message) {
+          if(AuthorizationService.isAuthorized(message)) {
+            console.log(message);
+            for(var r in $scope.requirements){
+              if($scope.requirements[r].id === $scope.dirtyReq.id){
+                $scope.requirements[r].title = $scope.dirtyReq.title;
+                $scope.requirements[r].description = $scope.dirtyReq.description;
+                break;
+              }
+            }
+            $scope.isDirtyReq = false;
+            $scope.dirtyReq = null;
+          }
+        })
+        .error(function () {
+          UtilityService.showFeedback('WARN_REQ_NOT_UPDATED');
+        });
 
-      console.log($scope.attachments);
-      UtilityService.showFeedback('Warning: Not implemented');
-
-
-      $scope.editRequirement = false;
-
-      //TODO update req text
       //TODO save all the attachments that did not exist before?
 
       //var url = 'http://localhost:8080/bazaar/';
@@ -91,33 +119,82 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
 
+
+    $scope.showContrib = function(req,index){
+      // open the requirement
+      if($scope.showRequirement === false){
+        $scope.setSelectedReqId(req,index);
+      }
+      $scope.showContributors = !$scope.showContributors;
+    };
+
+
     /*
      * Toggles the visibility of a requirements
      * Called: user clicks on the requirement
      * */
-    $scope.toggleRequirement = function(req) {
+    var toggleRequirement = function(event, args){
+      if(parseInt(args.val) === $scope.req.id){
+        if($scope.showRequirement === false){
+          $scope.showRequirement = true;
+          $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id+'/requirement/'+$scope.req.id, false);
 
-      if($scope.showRequirement === false){
-        reqBazService.getRequirement(req.id)
-          .success(function (requirement) {
-            console.log(requirement);
-            req.creator = requirement.creator;
-            req.attachments = requirement.attachments;
-            req.components = requirement.components;
-            req.leadDeveloper = requirement.leadDeveloper;
-            req.followers = requirement.followers;
-            req.developers = requirement.developers;
-            req.contributors = requirement.contributors;
+          //Scroll the user to the opened requirement
+          var topPos = 0;
+          var scaffold = null;
+          var scrollArea = null;
+          if(args.newListIndex > args.oldListIndex){
+            topPos = 0;
+            var prevHeight = 0;
+            if(document.getElementById('req-'+args.newListIndex)){
+              topPos = document.getElementById('req-'+args.newListIndex).offsetTop;
+            }
+            if(document.getElementById('req-'+args.oldListIndex)){
+              prevHeight = document.getElementById('req-'+args.oldListIndex).clientHeight;
+            }
+            scaffold = document.querySelector('core-scaffold');
+            scrollArea = scaffold.shadowRoot.querySelector('core-header-panel');
+            scrollArea.scroller.scrollTop = topPos-prevHeight+100;
+          }else{
+            if(document.getElementById('req-'+args.newListIndex)){
+              topPos = document.getElementById('req-'+args.newListIndex).offsetTop;
+            }
+            scaffold = document.querySelector('core-scaffold');
+            scrollArea = scaffold.shadowRoot.querySelector('core-header-panel');
+            scrollArea.scroller.scrollTop = topPos-50;
+          }
 
-            //Load comments
-            getComments(req);
-          })
-          .error(function () {
-            UtilityService.showFeedback('Warning: the requirement was not loaded !');
-          });
+          reqBazService.getRequirement($scope.req.id)
+            .success(function (requirement) {
+              $scope.req.creator = requirement.creator;
+              $scope.req.attachments = requirement.attachments;
+              $scope.req.components = requirement.components;
+              $scope.req.leadDeveloper = requirement.leadDeveloper;
+              $scope.req.followers = requirement.followers;
+              $scope.req.developers = requirement.developers;
+              $scope.req.contributors = requirement.contributors;
+
+              //Load comments
+              getComments($scope.req);
+            })
+            .error(function () {
+              UtilityService.showFeedback('WARN_REQ_NOT_LOADED');
+            });
+        }else{
+          $scope.showRequirement = false;
+          $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
+        }
+      }else{
+        //Close if not selected
+        $scope.showRequirement = false;
       }
-      $scope.showRequirement = !$scope.showRequirement;
     };
+
+    /*
+     * A listener to call toggle requirement
+     * */
+    SubmitToReqChange.listen(toggleRequirement);
+
 
 
     var getComments = function(req){
@@ -128,7 +205,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .error(function (error) {
           //This error only catches unknown server errors, usual errorCodes are sent with success message
           console.log(error);
-          UtilityService.showFeedback('Warning: Could not get comments');
+          UtilityService.showFeedback('WARN_COMMENTS_NOT_LOADED');
         });
     };
 
@@ -139,20 +216,20 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.addUserToFollowers(req.id)
         .success(function (message) {
           if(AuthorizationService.isAuthorized(message)){
-            UtilityService.showFeedback('Thank you for following');
+            UtilityService.showFeedback('THANK_YOU_FOR_FOLLOWING');
             reqBazService.getRequirement(req.id)
               .success(function (reqNew) {
                 req.followers = reqNew.followers;
               })
               .error(function (error) {
                 console.log(error);
-                UtilityService.showFeedback('Please refresh the page !');
+                UtilityService.showFeedback('REFRESH_PLEASE');
               });
           }
         })
         .error(function (error) {
           console.log(error);
-          UtilityService.showFeedback('Warning: could not register as a follower');
+          UtilityService.showFeedback('WARN_NOT_REG_AS_FOLLOWER');
         });
     };
 
@@ -163,20 +240,20 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (message) {
           console.log(message);
           if(AuthorizationService.isAuthorized(message)){
-            UtilityService.showFeedback('Thank you for the initiative');
+            UtilityService.showFeedback('THANK_FOR_INIT');
             reqBazService.getRequirement(req.id)
               .success(function (reqNew) {
                 req.developers = reqNew.developers;
               })
               .error(function (error) {
                 console.log(error);
-                UtilityService.showFeedback('Please refresh the page !');
+                UtilityService.showFeedback('REFRESH_PLEASE');
               });
           }
         })
         .error(function (error) {
           console.log(error);
-          UtilityService.showFeedback('Warning: could not register as a developer');
+          UtilityService.showFeedback('WARN_NOT_REG_AS_DEV');
         });
     };
   });

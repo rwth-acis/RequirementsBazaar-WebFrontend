@@ -3,7 +3,7 @@
   <core-tooltip large>
     <paper-icon-button icon="mdi:login" class="logged-out" ng-show="show=='logged-out'" ng-click="login()"></paper-icon-button>
     <div tip>
-      <span>Log in</span>
+      <span ng-bind="'LOGIN' | translate"></span>
     </div>
   </core-tooltip>
 
@@ -16,5 +16,5 @@
     </div>
   </core-tooltip>
 
-  <a href="#" class="denied" ng-show="show=='denied'" ng-click="login()">Access denied.</a>
+  <a href="#" class="denied" ng-show="show=='denied'" ng-click="login()" ng-bind="'ACCESS_DENIED'|translate"></a>
 </span>

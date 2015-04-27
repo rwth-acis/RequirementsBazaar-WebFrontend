@@ -8,8 +8,9 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('ProjectManagementCtrl', function ($scope, $http, $routeParams, $location, UtilityService, reqBazService){
-    $scope.project = null;
+  .controller('ProjectManagementCtrl', function ($scope, $http, $routeParams, $location, UtilityService, reqBazService, AuthorizationService){
+    //Keep the current version of the project
+    var project = null;
     $scope.dirtyProject = null;
 
     $scope.activeTab = 'settings';
@@ -24,27 +25,35 @@ angular.module('requirementsBazaarWebFrontendApp')
     (function(){
       reqBazService.getProject($routeParams.projectId)
         .success(function (proj) {
-          $scope.project = proj;
+          project = angular.copy(proj);
+          //Create a copy of the project that the user can edit
           $scope.dirtyProject = angular.copy(proj);
         })
         .error(function () {
-          UtilityService.showFeedback('Could not load projects, please reload !');
+          UtilityService.showFeedback('WARN_PROJ_NOT_LOADED');
         });
     })();
 
     $scope.saveChanges = function(){
-      //TODO save changes
-      $scope.isDirty = false;
-      UtilityService.showFeedback('not yet implemented');
+      reqBazService.updateProject($scope.dirtyProject.id,$scope.dirtyProject)
+        .success(function (message) {
+          if(AuthorizationService.isAuthorized(message)) {
+            project = angular.copy($scope.dirtyProject);
+            $scope.isDirty = false;
+          }
+        })
+        .error(function () {
+          UtilityService.showFeedback('WARN_PROJ_NOT_UPDATED');
+        });
     };
 
     $scope.cancelChanges = function(){
       $scope.isDirty = false;
-      $scope.dirtyProject = angular.copy($scope.project);
+      $scope.dirtyProject = angular.copy(project);
     };
 
     $scope.deleteProject = function(){
-      UtilityService.showFeedback('not yet implemented');
+      UtilityService.showFeedback('WARN_NOT_IMPL');
     };
 
     $scope.confirmDelete = function(){

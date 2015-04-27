@@ -19,7 +19,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           UtilityService.showFeedback(message.message);
         }else{
           console.log(message.message);
-          UtilityService.showFeedback('Error occurred, unknown reasons !');
+          UtilityService.showFeedback('ERROR');
         }
         return false;
       }
