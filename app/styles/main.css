@@ -59,14 +59,6 @@ pre {
 /*
   Main content
 */
-#currentComponent {
-  background-color: white;
-  margin-bottom: 12px;
-  padding: 10px;
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-}
 #loadRequirements {
   display: block;
   margin-left: auto;
@@ -79,23 +71,57 @@ pre {
   margin-right: auto;
   padding: 10px;
 }
-.requirement-container {
-  margin-top: 10px;
+#currentComponent {
   background-color: white;
-  width: 91%;
+  margin-bottom: 12px;
   margin-left: auto;
   margin-right: auto;
-  -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
-  transition: width 0.3s;
 }
-.requirement-container-selected {
-  width: 100%;
-  margin-top: 10px;
-  background-color: white;
-  margin-left: auto;
-  margin-right: auto;
-  -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
-  transition: width 0.3s;
+
+/*Requirements are wider on small devices*/
+@media (max-width: 700px), handheld {
+  .current-component-width{
+    width: 100%;
+  }
+  .requirement-container {
+    margin-top: 10px;
+    background-color: white;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .requirement-container-selected {
+    width: 100%;
+    margin-top: 10px;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/*Requirements change width on desktop*/
+@media screen and (min-device-width: 701px){
+  .current-component-width{
+    width: 90%;
+  }
+  .requirement-container {
+    margin-top: 10px;
+    background-color: white;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
+    transition: width 0.3s;
+  }
+  .requirement-container-selected {
+    width: 100%;
+    margin-top: 10px;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
+    transition: width 0.3s;
+  }
 }
 
 .requirement-header {
