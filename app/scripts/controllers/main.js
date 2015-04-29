@@ -126,6 +126,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Called: User selects a new component/project or reloads requirements
     * */
     $scope.selectComp = function (component) {
+      document.querySelector('core-scaffold').closeDrawer();
       $scope.reloadRequirements = false;
       $scope.activeComponent = component;
       setUser($scope.activeComponent.leaderId);
@@ -133,17 +134,14 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','100')
         .success(function (reqs) {
           $scope.requirements = reqs;
-          if(reqs.length !== 0){
-            if($routeParams.requirementId !== undefined){
-              for(var r in reqs){
-                if($routeParams.requirementId === reqs[r].id.toString()){
-                  $scope.setSelectedReqId($routeParams.requirementId,r);
-                }
+          if(reqs.length !== 0 && $routeParams.requirementId !== undefined){
+            for(var r in reqs){
+              if($routeParams.requirementId === reqs[r].id.toString()){
+                $scope.setSelectedReqId($routeParams.requirementId,r);
               }
-            }else{
-              $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
             }
           }else{
+            $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
             UtilityService.showFeedback('NO_REQ_EXIST');
           }
         })
