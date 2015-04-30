@@ -27,7 +27,9 @@ body {
   line-height: 20px;        /* fallback */
   max-height: 60px;       /* fallback */
 }
-
+html /deep/ #mainContainer{
+  overflow: hidden;
+}
 .add-border {
   border: 2px dashed #D1C7AC;
 }

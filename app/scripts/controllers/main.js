@@ -25,6 +25,16 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.reloadRequirements = false;
     $scope.reloadComponents = false;
 
+
+    $scope.limit = 10;
+    $scope.addMoreItems = function(){
+      if($scope.requirements !== null){
+        if($scope.limit < $scope.requirements.length){
+          $scope.limit = $scope.limit + 10;
+        }
+      }
+    };
+
     $scope.showProjectSelection = false;
 
     $scope.oauthSite = oauthConfig.SITE;
@@ -131,7 +141,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.activeComponent = component;
       setUser($scope.activeComponent.leaderId);
       //Load the requirements
-      reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','100')
+      reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','300')
         .success(function (reqs) {
           $scope.requirements = reqs;
           if(reqs.length !== 0 && $routeParams.requirementId !== undefined){
