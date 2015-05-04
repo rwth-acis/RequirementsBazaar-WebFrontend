@@ -28,13 +28,9 @@ angular
         controller: function ($location, AccessToken) {
           var hash = $location.path().substr(1);
           AccessToken.setTokenFromString(hash);
-          $location.path('/');
+          $location.path('/project/1');
           $location.replace();
         }
-      })
-      .when('/welcome', {
-        templateUrl: 'views/welcome-page.html',
-        controller: 'WelcomeCtrl'
       })
       .when('/project/:projectId/component/:componentId/requirement/:requirementId', {
         templateUrl: 'views/main.html',
@@ -44,9 +40,13 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/', {
+      .when('/project/:projectId/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
+      })
+      .when('/', {
+        templateUrl: 'views/welcome-page.html',
+        controller: 'WelcomeCtrl'
       })
       .when('/project-management/:projectId', {
         templateUrl: 'views/project-management.html',

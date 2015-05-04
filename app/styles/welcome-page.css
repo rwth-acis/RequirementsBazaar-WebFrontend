@@ -1,4 +1,6 @@
 .core-header{
+  display: flex;
+  justify-content: space-between;
   height: 60px;
   line-height: 60px;
   font-size: 18px;
@@ -8,6 +10,19 @@
   transition: height 0.2s;
 }
 
-/*oauth /deep/ paper-icon-button {*/
-  /*top: 8px;*/
-/*}*/
+.core-header /deep/ paper-icon-button{
+  top: 8px;
+}
+
+#welcome-continue-main{
+  display: flex;
+  justify-content: flex-end;
+}
+
+#welcome-core-header-panel{
+  position: inherit;
+}
+
+.welcome-log-in{
+  margin-right: 50px;
+}

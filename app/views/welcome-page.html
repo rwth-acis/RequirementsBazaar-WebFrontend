@@ -1,8 +1,7 @@
-<core-header-panel style="position: initial">
-  <div class="core-header flex-space-between">
-    Requirements Bazaar
-    <div style="display: flex">
-      <paper-button ng-click="goToMain()" style="display: flex">continue to site</paper-button>
+<core-header-panel flex id="welcome-core-header-panel">
+  <div class="core-header">
+    <div>Requirements Bazaar</div>
+    <div class="welcome-log-in">
       <oauth
         site={{oauthSite}}
         client-id={{oauthClientId}}
@@ -12,9 +11,8 @@
         template="../my-components/sign-in-button.html">
       </oauth>
     </div>
-
   </div>
-  <div class="content" fit>
+  <div class="content">
     <p>
       In years of research at RWTH Aachen we have developed and actually operated an Open Innovation Platform for gathering requirements for prototypes in large international academic projects. The last version of the current product is available under http://requirements-bazaar.org . End-users can enter their requirements by providing short descriptions including user stories, screenshots and other images. The requirements can then be shared amongst its users. On the other side of the chain, developers may take up ideas and transfer the accepted requirements to an issue system like JIRA.
     </p>
@@ -24,9 +22,8 @@
     <p>
       So briefly what is Requirement Bazaar? It is a web application that provides a user-friendly, yet developer usable way, how end-users and developers can share ideas/requirement/problems about a certain app.
     </p>
+    <div id="welcome-continue-main">
+      <paper-button ng-click="goToMain()" >continue to site</paper-button>
+    </div>
   </div>
-
-
-  <!--Feedback toast-->
-  <paper-toast id="feedbackToast" text={{toastText}}></paper-toast>
 </core-header-panel>

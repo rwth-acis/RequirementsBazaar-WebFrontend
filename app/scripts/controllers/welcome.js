@@ -17,7 +17,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.oauthScope = oauthConfig.SCOPE;
 
     $scope.goToMain = function(){
-      $location.path('/', true);
+      $location.path('/project/1', true);
     }
 
   });
