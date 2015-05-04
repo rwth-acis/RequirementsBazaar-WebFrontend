@@ -144,11 +144,18 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','300')
         .success(function (reqs) {
           $scope.requirements = reqs;
-          if(reqs.length !== 0 && $routeParams.requirementId !== undefined){
-            for(var r in reqs){
-              if($routeParams.requirementId === reqs[r].id.toString()){
-                $scope.setSelectedReqId($routeParams.requirementId,r);
+          $timeout(function() {
+            $scope.$apply();
+          });
+          if(reqs.length !== 0){
+            if($routeParams.requirementId !== undefined){
+              for(var r in reqs){
+                if($routeParams.requirementId === reqs[r].id.toString()){
+                  $scope.setSelectedReqId($routeParams.requirementId,r);
+                }
               }
+            }else{
+              $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
             }
           }else{
             $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
