@@ -1,5 +1,5 @@
 <!--The main panel of the application-->
-<core-scaffold responsiveWidth="1700px">
+<core-scaffold>
   <!--
 
   The Sidebar of the application
@@ -137,10 +137,10 @@
         <core-collapse opened={{showRequirement}} class="req-collapse">
           <div class="flex-space-between">
             <!--Requirement text-->
-            <p ng-show="!isDirtyReq" ng-model="req.description" contenteditable="false" style="min-height: 150px;width: 100%;"></p>
+            <p ng-show="!isDirtyReq" ng-model="req.description" contenteditable="false" class="requirementDesc"></p>
             <div ng-show="isDirtyReq" style="width: 100%;">
-              <div contenteditable class="add-border" ng-file-drop ng-file-change="fileSelected($files,$event)" class="drop-box" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="dirtyReq.description" style="padding: 10px;min-height: 150px;margin-bottom: 10px"></div>
-              <div ng-no-file-drop contenteditable ng-model="dirtyReq.description" style="padding: 10px;min-height: 150px;margin-bottom: 10px"></div>
+              <div contenteditable class="add-border requirementDesc drop-box" ng-file-drop ng-file-change="fileSelected($files,$event)" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="dirtyReq.description"></div>
+              <div ng-no-file-drop contenteditable ng-model="dirtyReq.description" class="requirementDesc"></div>
               <div ng-show="isDirtyReq" class="save-req-container">
                 <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
                 <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"></paper-button>
@@ -182,7 +182,7 @@
           <!--Comments container-->
           <div ng-controller="CommentCtrl">
             <!--List of comments-->
-            <h2 ng-bind="'COMMENTS' | translate"></h2>
+            <h3 ng-bind="'COMMENTS' | translate"></h3>
             <div ng-repeat="comment in req.comments" class="comment-container">
               <img ng-src={{comment.creator.profileImage}}>
               <div class="width-max">
@@ -198,7 +198,6 @@
             </div>
 
             <!--Create comment-->
-            <h2 ng-bind="'LEAVE_A_COMMENT' | translate"></h2>
             <paper-input-decorator label={{'COMMENT_PLACEHOLDER'|translate}}>
               <paper-autogrow-textarea>
                 <textarea ng-model="newComment" required></textarea>

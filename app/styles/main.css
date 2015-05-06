@@ -139,6 +139,7 @@ pre {
 .req-title {
   margin-right: 12px;
   min-width: 100px;
+  font-weight: bold;
 }
 .vote-button-container {
   display: flex;
@@ -212,6 +213,12 @@ pre {
   position: fixed;
   right: 40px;
   bottom: 30px;
+}
+
+.requirementDesc{
+  padding: 10px;
+  min-height: 30px;
+  margin-bottom: 10px
 }
 
 /*
