@@ -103,7 +103,7 @@
            ng-class="showRequirement ? 'requirement-container-selected' : 'requirement-container'">
         <!--Requirement header-->
         <div class="requirement-header">
-          <paper-item ng-click="setSelectedReqId(req,$index)" class="requirement-header-title width-max">
+          <paper-item ng-click="setSelectedReqId(req.id,$index)" class="requirement-header-title width-max">
             <span ng-show="!isDirtyReq" contenteditable="false" ng-model="req.title" class="ellipsis req-title"></span>
             <span ng-show="isDirtyReq" contenteditable="plaintext-only" ng-model="dirtyReq.title" class="req-title"></span>
           </paper-item>
@@ -129,7 +129,7 @@
             </paper-dropdown>
           </paper-dropdown-menu-ex>
         </div>
-        <paper-item ng-show="!showRequirement" ng-click="setSelectedReqId(req,$index)">
+        <paper-item ng-show="!showRequirement" ng-click="setSelectedReqId(req.id,$index)">
           <p class="multiline-ellipsis" ng-model="req.description" contenteditable="false" style="color: #808080"></p>
         </paper-item>
 

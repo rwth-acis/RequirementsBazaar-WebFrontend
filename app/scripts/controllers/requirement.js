@@ -51,7 +51,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.startEdit = function(req,index){
       // open the requirement
       if($scope.showRequirement === false){
-        $scope.setSelectedReqId(req,index);
+        $scope.setSelectedReqId(req.id,index);
       }
 
       //Create a copy of the component, that is shown for the user while editing
@@ -123,7 +123,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.showContrib = function(req,index){
       // open the requirement
       if($scope.showRequirement === false){
-        $scope.setSelectedReqId(req,index);
+        $scope.setSelectedReqId(req.id,index);
       }
       $scope.showContributors = !$scope.showContributors;
     };
