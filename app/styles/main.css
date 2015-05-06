@@ -27,6 +27,12 @@ body {
   line-height: 20px;        /* fallback */
   max-height: 60px;       /* fallback */
 }
+html /deep/ #mainContainer{
+  overflow: hidden;
+}
+core-header-panel /deep/  #mainContainer{
+  overflow: auto;
+}
 .add-border {
   border: 2px dashed #D1C7AC;
 }
