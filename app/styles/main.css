@@ -187,7 +187,9 @@ pre {
   margin: 1px;
 }
 
-
+.vote-button-container paper-icon-button {
+  min-width: 16px;
+}
 
 /*
   pop up panels
@@ -259,6 +261,8 @@ core-icon {
 
 paper-dropdown-menu-ex {
   width: 36px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 /*For Chrome*/
