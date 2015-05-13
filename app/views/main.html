@@ -118,12 +118,12 @@
           <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert">
             <paper-dropdown class="dropdown">
               <core-menu class="menu">
-                <paper-item disabled>{{'BECOME_LEAD_DEV' | translate}}</paper-item>
-                <paper-item ng-click="startEdit(req,$index)" ng-show="!isDirtyReq">{{'EDIT_REQUIREMENT' | translate}}</paper-item>
-                <paper-item ng-click="startEdit(req,$index)" ng-show="isDirtyReq" disabled>{{'EDIT_REQUIREMENT' | translate}}</paper-item>
                 <paper-item ng-click="showContrib(req,$index)" ng-bind="'SHOW_CONTRIBUTORS'|translate"></paper-item>
                 <paper-item ng-click="followRequirement($event,req)">{{'FOLLOW_REQUIREMENT' | translate}}</paper-item>
                 <paper-item ng-click="developRequirement($event,req)">{{'DEVELOP_REQUIREMENT' | translate}}</paper-item>
+                <paper-item disabled>{{'BECOME_LEAD_DEV' | translate}}</paper-item>
+                <paper-item ng-click="startEdit(req,$index)" ng-show="!isDirtyReq">{{'EDIT_REQUIREMENT' | translate}}</paper-item>
+                <paper-item ng-click="startEdit(req,$index)" ng-show="isDirtyReq" disabled>{{'EDIT_REQUIREMENT' | translate}}</paper-item>
                 <paper-item ng-click="confirmDelete(req)">{{'DELETE_REQUIREMENT' | translate}}</paper-item>
               </core-menu>
             </paper-dropdown>
@@ -184,9 +184,9 @@
             <!--List of comments-->
             <h3 ng-bind="'COMMENTS' | translate"></h3>
             <div ng-repeat="comment in req.comments" class="comment-container">
-              <img ng-src={{comment.creator.profileImage}}>
+              <img ng-src={{comment.creator.profileImage}} fallback-src="images/no-image-found.gif">
               <div class="width-max">
-                <pre>{{comment.message}}</pre>
+                <p>{{comment.message}}</p>
                 <div class="comment-meta-container">
                   <p class="small-grey-text width-max">
                     {{comment.creator.userName}}

@@ -167,14 +167,15 @@ pre {
 }
 .comment-container {
   border-bottom: 1px solid #dedede;
-  margin: 8px;
-  padding: 2px;
+  margin-bottom: 8px;
   display: flex;
 }
 .comment-container img {
   border-radius: 50%;
   height: 50px;
   width: 50px;
+  margin-right: 8px;
+  margin-top: 1em;
 }
 .comment-meta-container {
   display: flex;
