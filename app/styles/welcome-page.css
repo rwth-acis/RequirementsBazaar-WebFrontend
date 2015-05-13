@@ -1,28 +1,8 @@
-.core-header{
-  display: flex;
-  justify-content: space-between;
-  height: 60px;
-  line-height: 60px;
-  font-size: 18px;
-  padding: 0 10px;
-  background-color: #669900;
-  color: #FFF;
-  transition: height 0.2s;
-}
-
-.core-header /deep/ paper-icon-button{
-  top: 8px;
-}
-
-#welcome-continue-main{
-  display: flex;
-  justify-content: flex-end;
-}
-
-#welcome-core-header-panel{
-  position: inherit;
-}
-
-.welcome-log-in{
-  margin-right: 50px;
+.welcome-content{
+  background-color: white;
+  margin-bottom: 12px;
+  padding: 10px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
