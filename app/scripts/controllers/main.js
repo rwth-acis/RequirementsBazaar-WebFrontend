@@ -37,13 +37,6 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     $scope.showProjectSelection = false;
 
-    $scope.oauthSite = oauthConfig.SITE;
-    $scope.oauthClientId = oauthConfig.CLIENT_ID;
-    $scope.oauthDataScope = oauthConfig.DATA_SCOPE;
-    $scope.oauthRedirectURI = oauthConfig.REDIRECT_URI;
-    $scope.oauthProfileURI = oauthConfig.PROFILE_URI;
-    $scope.oauthScope = oauthConfig.SCOPE;
-
     //Used to filter requirements
     $scope.filterReq = {};
 
