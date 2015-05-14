@@ -50,15 +50,19 @@ pre {
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
+
 /*
   Main header
 */
 #toolbar-log-in {
-  top: 12px;
-  position: relative;
+  display: flex;
 }
 #main-toolbar {
   white-space: nowrap;
+}
+
+oauth{
+  margin: auto;
 }
 
 /*
