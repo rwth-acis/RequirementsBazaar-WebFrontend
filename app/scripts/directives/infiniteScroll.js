@@ -1,18 +1,22 @@
-app.directive('infiniteScroll', [
+'use strict';
+
+angular.module('requirementsBazaarWebFrontendApp')
+  .directive('infiniteScroll', [
   '$rootScope', '$window', '$timeout', function($rootScope, $window, $timeout) {
     return {
       link: function(scope, elem, attrs) {
         var checkWhenEnabled, handler, scrollDistance, scrollEnabled;
         $window = angular.element($window);
         scrollDistance = 0;
-        if (attrs.infiniteScrollDistance != null) {
+        if (attrs.infiniteScrollDistance !== null) {
           scope.$watch(attrs.infiniteScrollDistance, function(value) {
-            return scrollDistance = parseInt(value, 10);
+            scrollDistance = parseInt(value, 10);
+            return scrollDistance;
           });
         }
         scrollEnabled = true;
         checkWhenEnabled = false;
-        if (attrs.infiniteScrollDisabled != null) {
+        if (attrs.infiniteScrollDisabled !== null) {
           scope.$watch(attrs.infiniteScrollDisabled, function(value) {
             scrollEnabled = !value;
             if (scrollEnabled && checkWhenEnabled) {
@@ -21,8 +25,8 @@ app.directive('infiniteScroll', [
             }
           });
         }
-        $rootScope.$on('refreshStart', function(event, parameters){
-          elem.animate({ scrollTop: "0" });
+        $rootScope.$on('refreshStart', function(){
+          elem.animate({ scrollTop: '0' });
         });
         handler = function() {
           var container, shouldScroll;
@@ -35,7 +39,8 @@ app.directive('infiniteScroll', [
               return scope.$apply(attrs.infiniteScroll);
             }
           } else if (shouldScroll) {
-            return checkWhenEnabled = true;
+            checkWhenEnabled = true;
+            return checkWhenEnabled;
           }
         };
         elem.on('scroll', handler);
