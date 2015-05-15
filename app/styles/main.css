@@ -27,7 +27,12 @@ body {
   line-height: 20px;        /* fallback */
   max-height: 60px;       /* fallback */
 }
-
+html /deep/ #mainContainer{
+  overflow: hidden;
+}
+core-header-panel /deep/  #mainContainer{
+  overflow: auto;
+}
 .add-border {
   border: 2px dashed #D1C7AC;
 }
@@ -45,28 +50,24 @@ pre {
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
+
 /*
   Main header
 */
 #toolbar-log-in {
-  top: 12px;
-  position: relative;
+  display: flex;
 }
 #main-toolbar {
   white-space: nowrap;
 }
 
+oauth{
+  margin: auto;
+}
+
 /*
   Main content
 */
-#currentComponent {
-  background-color: white;
-  margin-bottom: 12px;
-  padding: 10px;
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-}
 #loadRequirements {
   display: block;
   margin-left: auto;
@@ -79,23 +80,57 @@ pre {
   margin-right: auto;
   padding: 10px;
 }
-.requirement-container {
-  margin-top: 10px;
+#currentComponent {
   background-color: white;
-  width: 91%;
+  margin-bottom: 12px;
   margin-left: auto;
   margin-right: auto;
-  -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
-  transition: width 0.3s;
 }
-.requirement-container-selected {
-  width: 100%;
-  margin-top: 10px;
-  background-color: white;
-  margin-left: auto;
-  margin-right: auto;
-  -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
-  transition: width 0.3s;
+
+/*Requirements are wider on small devices*/
+@media (max-width: 700px), handheld {
+  .current-component-width{
+    width: 100%;
+  }
+  .requirement-container {
+    margin-top: 10px;
+    background-color: white;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .requirement-container-selected {
+    width: 100%;
+    margin-top: 10px;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/*Requirements change width on desktop*/
+@media screen and (min-device-width: 701px){
+  .current-component-width{
+    width: 90%;
+  }
+  .requirement-container {
+    margin-top: 10px;
+    background-color: white;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
+    transition: width 0.3s;
+  }
+  .requirement-container-selected {
+    width: 100%;
+    margin-top: 10px;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
+    transition: width 0.3s;
+  }
 }
 
 .requirement-header {
@@ -111,6 +146,7 @@ pre {
 .req-title {
   margin-right: 12px;
   min-width: 100px;
+  font-weight: bold;
 }
 .vote-button-container {
   display: flex;
@@ -135,14 +171,15 @@ pre {
 }
 .comment-container {
   border-bottom: 1px solid #dedede;
-  margin: 8px;
-  padding: 2px;
+  margin-bottom: 8px;
   display: flex;
 }
 .comment-container img {
   border-radius: 50%;
   height: 50px;
   width: 50px;
+  margin-right: 8px;
+  margin-top: 1em;
 }
 .comment-meta-container {
   display: flex;
@@ -154,7 +191,9 @@ pre {
   margin: 1px;
 }
 
-
+.vote-button-container paper-icon-button {
+  min-width: 16px;
+}
 
 /*
   pop up panels
@@ -184,6 +223,11 @@ pre {
   position: fixed;
   right: 40px;
   bottom: 30px;
+}
+.requirementDesc{
+  padding: 10px;
+  min-height: 30px;
+  margin-bottom: 10px
 }
 
 /*
@@ -221,6 +265,8 @@ core-icon {
 
 paper-dropdown-menu-ex {
   width: 36px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 /*For Chrome*/

@@ -25,23 +25,26 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.reloadRequirements = false;
     $scope.reloadComponents = false;
 
-    $scope.showProjectSelection = false;
 
-    $scope.oauthSite = oauthConfig.SITE;
-    $scope.oauthClientId = oauthConfig.CLIENT_ID;
-    $scope.oauthDataScope = oauthConfig.DATA_SCOPE;
-    $scope.oauthRedirectURI = oauthConfig.REDIRECT_URI;
-    $scope.oauthProfileURI = oauthConfig.PROFILE_URI;
-    $scope.oauthScope = oauthConfig.SCOPE;
+    $scope.limit = 10;
+    $scope.addMoreItems = function(){
+      if($scope.requirements !== null){
+        if($scope.limit < $scope.requirements.length){
+          $scope.limit = $scope.limit + 10;
+        }
+      }
+    };
+
+    $scope.showProjectSelection = false;
 
     //Used to filter requirements
     $scope.filterReq = {};
 
     var currentlyOpenReqListIndex = 0;
-    $scope.setSelectedReqId = function(req, newListIndex){
+    $scope.setSelectedReqId = function(reqId, newListIndex){
       //Timeout is necessary, since otherwise the listeners from child controllers are not registered yet
       $timeout(function() {
-        SubmitToReqChange.emit(req.id, currentlyOpenReqListIndex, newListIndex);
+        SubmitToReqChange.emit(reqId, currentlyOpenReqListIndex, newListIndex);
         currentlyOpenReqListIndex = newListIndex;
       });
 
@@ -126,13 +129,17 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Called: User selects a new component/project or reloads requirements
     * */
     $scope.selectComp = function (component) {
+      document.querySelector('core-scaffold').closeDrawer();
       $scope.reloadRequirements = false;
       $scope.activeComponent = component;
       setUser($scope.activeComponent.leaderId);
       //Load the requirements
-      reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','100')
+      reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','300')
         .success(function (reqs) {
           $scope.requirements = reqs;
+          $timeout(function() {
+            $scope.$apply();
+          });
           if(reqs.length !== 0){
             if($routeParams.requirementId !== undefined){
               for(var r in reqs){
@@ -144,6 +151,7 @@ angular.module('requirementsBazaarWebFrontendApp')
               $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
             }
           }else{
+            $location.path('/project/'+$scope.activeProject.id+'/component/'+$scope.activeComponent.id, false);
             UtilityService.showFeedback('NO_REQ_EXIST');
           }
         })

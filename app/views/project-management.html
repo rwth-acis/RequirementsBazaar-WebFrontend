@@ -55,7 +55,7 @@
     <div id="settings" ng-show="activeTab === 'settings'" style="background-color: #ffffff;padding: 12px;display: block">
       <div style="display: flex;justify-content: space-between">
         <h2 contenteditable="false" ng-model="dirtyProject.name" ng-show="!isDirty"></h2>
-        <h2 contenteditable="true" ng-model="dirtyProject.name" ng-show="isDirty"></h2>
+        <h2 contenteditable=="plaintext-only" ng-model="dirtyProject.name" ng-show="isDirty"></h2>
         <!--<paper-icon-button icon="editor:mode-edit" ng-click="isDirty = true"></paper-icon-button>-->
         <div>
           <paper-button raised ng-click="isDirty = true">Edit</paper-button>

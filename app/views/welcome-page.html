@@ -1,0 +1,73 @@
+<core-scaffold ng-controller="WelcomeCtrl">
+  <!--
+
+  The Sidebar of the application
+
+  -->
+  <core-header-panel navigation flex mode="seamed">
+    <!--Switch between projects-->
+    <core-toolbar>
+      <p ng-bind="'CHOOSE_PROJECT'|translate"></p>
+    </core-toolbar>
+
+    <!--List of projects-->
+    <core-menu class="sidebarMenu" >
+      <!--<p class="small-grey-text" ng-bind="'CHOOSE_PROJECT'|translate"></p>-->
+      <paper-item ng-repeat="project in projects" ng-click="selectProj(project)" ng-bind="project.name" noink></paper-item>
+    </core-menu>
+  </core-header-panel>
+  <!--
+
+  The top navigation bar except for the sidebar
+
+  -->
+  <div tool id="main-toolbar" class="flex-space-between width-max">
+    <p class="ellipsis">Requirements Bazaar</p>
+    <div id="toolbar-log-in">
+      <!--Notifications-->
+      <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled style="margin: auto"></paper-icon-button >
+      <!--OAuth log in-->
+      <!--If scope is specified then the log in fails on firefox/IE-->
+      <!--scope={{oauthScope}}-->
+      <oauth
+        site={{oauthSite}}
+        client-id={{oauthClientId}}
+        data-scope={{oauthDataScope}}
+        redirect-uri={{oauthRedirectURI}}
+        profile-uri={{oauthProfileURI}}
+        template={{oauthTemplateURI}}>
+      </oauth>
+    </div>
+  </div>
+  <!--
+
+  Main Content Pane
+
+  -->
+  <div class="content">
+    <div class="welcome-content">
+      <h3>Introduction</h3>
+      <p>
+        In years of research at RWTH Aachen we have developed and actually operated an Open Innovation Platform for gathering requirements for prototypes in large international academic projects. The last version of the current product is available under http://requirements-bazaar.org . End-users can enter their requirements by providing short descriptions including user stories, screenshots and other images. The requirements can then be shared amongst its users. On the other side of the chain, developers may take up ideas and transfer the accepted requirements to an issue system like JIRA.
+      </p>
+      <p>
+        Over the last years it turned out that people want more lightweight and mobile-friendly tools; we found the old monolithic system to be very hard to maintain to add new features. Therefore we are currently redeveloping it from scratch integrating many ideas from our users and incorporating new research findings. We are further driven by a mobile-first approach to support a wide variety of devices. We additionally want to support various social features like sharing on social networks or blogs and allowing discussions and rating amongst end-users and developers.
+      </p>
+      <p>
+        So briefly what is Requirement Bazaar? It is a web application that provides a user-friendly, yet developer usable way, how end-users and developers can share ideas/requirement/problems about a certain app.
+      </p>
+    </div>
+
+    <div class="welcome-content">
+      <h3>Leave Feedback</h3>
+      <p>Email: reqbaz@dbis.rwth-aachen.de</p>
+    </div>
+
+  </div>
+
+  <!--Feedback toast-->
+  <paper-toast role="alert" id="feedbackToast">
+    <div ng-bind="'HIDE' | translate" style="color: #ffff00;"></div>
+  </paper-toast>
+</core-scaffold>
+
