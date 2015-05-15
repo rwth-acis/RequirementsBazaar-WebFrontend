@@ -18,10 +18,10 @@
     <!--List of projects-->
     <core-menu class="sidebarMenu" ng-show="showProjectSelection">
       <p class="small-grey-text" ng-bind="'CHOOSE_PROJECT'|translate"></p>
-      <paper-item ng-repeat="project in projects" ng-click="selectProj(project)" ng-bind="project.name" noink></paper-item>
+      <paper-item ng-repeat="project in projects" ng-click="selectProj(project)" ng-bind="project.name" noink class="text-087"></paper-item>
       <hr>
       <!--Create a new project-->
-      <paper-button raised ng-click="startCreationProj()">
+      <paper-button raised ng-click="startCreationProj()"  class="text">
         <core-icon icon="icons:add-circle"></core-icon>
         {{'PROJECT' | translate}}
       </paper-button>
@@ -30,10 +30,10 @@
     <!--List of components-->
     <core-menu class="sidebarMenu" ng-show="!showProjectSelection">
       <paper-input label={{'FILTER_COMPONENTS'|translate}} ng-model="filterComp.name"></paper-input>
-      <paper-item ng-repeat="component in components | filter:filterComp:strict" ng-click="selectComp(component)" ng-bind="component.name" noink></paper-item>
+      <paper-item ng-repeat="component in components | filter:filterComp:strict" ng-click="selectComp(component)" ng-bind="component.name" noink class="text-087"></paper-item>
       <hr>
       <!--Create a new component-->
-      <paper-button raised ng-click="startCreationComp()">
+      <paper-button raised ng-click="startCreationComp()" class="text-087">
         <core-icon icon="icons:add-circle"></core-icon>
         {{'COMPONENT' | translate}}
       </paper-button>
@@ -72,12 +72,12 @@
     <div class="content">
       <!--Currently selected component-->
       <div id="currentComponent" class="flex-space-between current-component-width" ng-controller="ActiveCompCtrl">
-        <div style="padding: 16px">
+        <div style="padding: 16px" class="text-087">
           <div ng-show="!isDirty">
             <h2 contenteditable="false" ng-model="activeComponent.name"></h2>
             <div contenteditable="false" ng-model="activeComponent.description"></div>
           </div>
-          <div ng-show="isDirty">
+          <div ng-show="isDirty" class="text-087">
             <h2 contenteditable="plaintext-only" ng-model="dirtyComp.name" style="margin-right: 10px"></h2>
             <p contenteditable ng-model="dirtyComp.description" class="add-border" style="padding: 10px;min-height: 50px;margin-right: 10px"></p>
             <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE'|translate" style="margin: 0px"></paper-button>
@@ -86,7 +86,7 @@
         </div>
         <div style="padding: 16px">
           <p ng-bind="'COMPONENT_LEAD' |translate" class="small-grey-text"></p>
-          <my-user src={{trustSrc(componentLeader.profileImage)}} width="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}}></my-user>
+          <my-user src={{trustSrc(componentLeader.profileImage)}} width="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}} class="text-087"></my-user>
           <paper-icon-button icon="editor:mode-edit" ng-click="startEdit()"></paper-icon-button>
           <paper-icon-button icon="icons:delete" ng-click="confirmDelete()"></paper-icon-button>
           <br/>
@@ -95,7 +95,7 @@
       </div>
 
       <!--If there is a network problem loading the requirements then this button is shown-->
-      <paper-button raised id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)" ng-bind="'RELOAD'|translate"></paper-button>
+      <paper-button raised id="loadRequirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)" ng-bind="'RELOAD'|translate" class="text-087"></paper-button>
 
       <!--List of requirements-->
       <div id="req-{{$index}}" ng-repeat="req in requirements | filter:filterReq:strict | limitTo : limit track by req.id"
@@ -104,14 +104,14 @@
         <!--Requirement header-->
         <div class="requirement-header">
           <paper-item ng-click="setSelectedReqId(req.id,$index)" class="requirement-header-title width-max">
-            <div class="flex-space-between">
+            <div class="flex-space-between text-087">
               <span ng-show="!isDirtyReq" contenteditable="false" ng-model="req.title" class="ellipsis req-title"></span>
               <span ng-show="isDirtyReq" contenteditable="plaintext-only" ng-model="dirtyReq.title" class="req-title"></span>
             </div>
             <time is="relative-time" datetime={{req.creation_time}} class="small-grey-text"></time>
-            <span class="small-grey-text"> by {{req.creatorId}}</span>
+            <span class="small-grey-text"> by {{reqCreator}}</span>
           </paper-item>
-          <div ng-controller="VoteCtrl" class="vote-button-container flex-space-between">
+          <div ng-controller="VoteCtrl" class="vote-button-container">
             <p ng-bind="req.upVotes" class="small-grey-text"></p>
             <paper-icon-button ng-show="req.userVoted === 'UP_VOTE'" disabled icon="icons:thumb-up" ng-click="voteUp(req)" style="padding: 14px;"></paper-icon-button>
             <paper-icon-button ng-show="req.userVoted !== 'UP_VOTE'" icon="icons:thumb-up" ng-click="voteUp(req)" style="padding: 14px;"></paper-icon-button>
@@ -141,8 +141,8 @@
         <core-collapse opened={{showRequirement}} class="req-collapse">
           <div class="flex-space-between">
             <!--Requirement text-->
-            <p ng-show="!isDirtyReq" ng-model="req.description" contenteditable="false" class="requirementDesc"></p>
-            <div ng-show="isDirtyReq" style="width: 100%;">
+            <p ng-show="!isDirtyReq" ng-model="req.description" contenteditable="false" class="requirementDesc text-087"></p>
+            <div ng-show="isDirtyReq" style="width: 100%;" class="text-087">
               <div contenteditable class="add-border requirementDesc drop-box" ng-file-drop ng-file-change="fileSelected($files,$event)" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="dirtyReq.description"></div>
               <div ng-no-file-drop contenteditable ng-model="dirtyReq.description" class="requirementDesc"></div>
               <div ng-show="isDirtyReq" class="save-req-container">
@@ -186,10 +186,10 @@
           <!--Comments container-->
           <div ng-controller="CommentCtrl">
             <!--List of comments-->
-            <h3 ng-bind="'COMMENTS' | translate"></h3>
+            <h3 ng-bind="'COMMENTS' | translate" class="text-087"></h3>
             <div ng-repeat="comment in req.comments" class="comment-container">
               <img ng-src={{comment.creator.profileImage}} fallback-src="images/no-image-found.gif">
-              <div class="width-max">
+              <div class="width-max" class="text-087">
                 <p>{{comment.message}}</p>
                 <div class="comment-meta-container">
                   <p class="small-grey-text width-max">
@@ -207,7 +207,7 @@
                 <textarea ng-model="newComment" required></textarea>
               </paper-autogrow-textarea>
             </paper-input-decorator>
-            <paper-button raised ng-click="submitComment(newComment,req);newComment='';" ng-bind="'SUBMIT' | translate"></paper-button>
+            <paper-button raised ng-click="submitComment(newComment,req);newComment='';" ng-bind="'SUBMIT' | translate" class="text-087"></paper-button>
           </div>
         </core-collapse>
       </div>

@@ -50,6 +50,9 @@ pre {
   white-space: -o-pre-wrap;    /* Opera 7 */
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
+.text-087{
+  opacity: 0.87;
+}
 
 
 /*
@@ -265,6 +268,10 @@ core-icon {
   padding-right: 5px;
 }
 
+paper-icon-button{
+  opacity: 0.87;
+}
+
 /*
 
   Rules that apply to custom / extended elements
@@ -275,6 +282,8 @@ paper-dropdown-menu-ex {
   width: 36px;
   padding-left: 8px;
   padding-right: 8px;
+  display: block !important;
+  margin-top: 8px !important;
 }
 
 /*For Chrome*/

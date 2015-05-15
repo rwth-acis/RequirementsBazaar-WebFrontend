@@ -17,6 +17,25 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.dirtyReq = null;
     $scope.isDirtyReq = false;
 
+    $scope.reqCreator = 'NaN';
+
+    // Used to show user who created the requirement
+    (function(){
+      reqBazService.getUser($scope.req.creatorId)
+        .success(function (user) {
+          if(user !== undefined){
+            $scope.reqCreator = user.userName;
+          }else{
+            $scope.reqCreator = 'Unknown';
+            console.log('user not loaded');
+          }
+        })
+        .error(function () {
+          $scope.reqCreator = 'Unknown';
+          console.log('user not loaded');
+        });
+    })();
+
 
     /*
      * Currently only images, videos and pdfs are accepted as attachments
