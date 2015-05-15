@@ -49,7 +49,7 @@
     <p class="ellipsis">Requirements Bazaar</p>
     <div id="toolbar-log-in">
       <!--Notifications-->
-      <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled></paper-icon-button>
+      <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled style="margin: auto"></paper-icon-button>
       <!--OAuth log in-->
       <!--If scope is specified then the log in fails on firefox/IE-->
       <!--scope={{oauthScope}}-->
@@ -59,7 +59,7 @@
         data-scope={{oauthDataScope}}
         redirect-uri={{oauthRedirectURI}}
         profile-uri={{oauthProfileURI}}
-        template="my-components/sign-in-button.html">
+        template= {{oauthTemplateURI}}>
       </oauth>
     </div>
   </div>

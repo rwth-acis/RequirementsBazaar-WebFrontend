@@ -9,12 +9,6 @@
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('WelcomeCtrl', function ($scope, oauthConfig, $location, reqBazService, UtilityService){
-    $scope.oauthSite = oauthConfig.SITE;
-    $scope.oauthClientId = oauthConfig.CLIENT_ID;
-    $scope.oauthDataScope = oauthConfig.DATA_SCOPE;
-    $scope.oauthRedirectURI = oauthConfig.REDIRECT_URI;
-    $scope.oauthProfileURI = oauthConfig.PROFILE_URI;
-    $scope.oauthScope = oauthConfig.SCOPE;
 
     /*
      * Loads projects
