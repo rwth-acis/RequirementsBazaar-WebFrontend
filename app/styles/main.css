@@ -5,7 +5,7 @@ body {
   font-family: sans-serif;
 }
 .small-grey-text {
-  font-size: smaller;
+  font-size: small;
   color: #808080;
 }
 .large-text {
@@ -19,6 +19,7 @@ body {
   overflow: hidden;
 }
 .multiline-ellipsis {
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -143,6 +144,13 @@ oauth{
 .requirement-header-title {
   font-size: large;
 }
+.requirement-header-title /deep/ .button-content{
+  display: block !important;
+}
+.requirement-header-title .button-content{
+  display: block !important;
+}
+
 .req-title {
   margin-right: 12px;
   min-width: 100px;

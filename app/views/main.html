@@ -104,8 +104,12 @@
         <!--Requirement header-->
         <div class="requirement-header">
           <paper-item ng-click="setSelectedReqId(req.id,$index)" class="requirement-header-title width-max">
-            <span ng-show="!isDirtyReq" contenteditable="false" ng-model="req.title" class="ellipsis req-title"></span>
-            <span ng-show="isDirtyReq" contenteditable="plaintext-only" ng-model="dirtyReq.title" class="req-title"></span>
+            <div class="flex-space-between">
+              <span ng-show="!isDirtyReq" contenteditable="false" ng-model="req.title" class="ellipsis req-title"></span>
+              <span ng-show="isDirtyReq" contenteditable="plaintext-only" ng-model="dirtyReq.title" class="req-title"></span>
+            </div>
+            <time is="relative-time" datetime={{req.creation_time}} class="small-grey-text"></time>
+            <span class="small-grey-text"> by {{req.creatorId}}</span>
           </paper-item>
           <div ng-controller="VoteCtrl" class="vote-button-container flex-space-between">
             <p ng-bind="req.upVotes" class="small-grey-text"></p>
