@@ -17,7 +17,11 @@
 
     <!--List of projects-->
     <core-menu class="sidebarMenu" ng-show="showProjectSelection">
-      <p class="small-grey-text" ng-bind="'CHOOSE_PROJECT'|translate"></p>
+      <div class="group">
+        <input placeholder={{'FILTER_PROJECTS'|translate}} type="text" ng-model="filterComp.name">
+        <span class="highlight"></span>
+        <span class="bar"></span>
+      </div>
       <paper-item ng-repeat="project in projects" ng-click="selectProj(project)" ng-bind="project.name" noink class="text-087"></paper-item>
       <hr>
       <!--Create a new project-->
@@ -29,7 +33,11 @@
 
     <!--List of components-->
     <core-menu class="sidebarMenu" ng-show="!showProjectSelection">
-      <paper-input label={{'FILTER_COMPONENTS'|translate}} ng-model="filterComp.name"></paper-input>
+      <div class="group">
+        <input placeholder={{'FILTER_COMPONENTS'|translate}} type="text" ng-model="filterComp.name">
+        <span class="highlight"></span>
+        <span class="bar"></span>
+      </div>
       <paper-item ng-repeat="component in components | filter:filterComp:strict" ng-click="selectComp(component)" ng-bind="component.name" noink class="text-087"></paper-item>
       <hr>
       <!--Create a new component-->
@@ -90,7 +98,11 @@
           <paper-icon-button icon="editor:mode-edit" ng-click="startEdit()"></paper-icon-button>
           <paper-icon-button icon="icons:delete" ng-click="confirmDelete()"></paper-icon-button>
           <br/>
-          <paper-input label={{'SEARCH_REQUIREMENTS'|translate}} ng-model="filterReq.$"></paper-input>
+          <div class="group">
+            <input placeholder={{'SEARCH_REQUIREMENTS'|translate}} type="text" ng-model="filterReq.$">
+            <span class="highlight"></span>
+            <span class="bar"></span>
+          </div>
         </div>
       </div>
 

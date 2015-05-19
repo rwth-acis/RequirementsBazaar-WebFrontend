@@ -323,6 +323,89 @@ paper-dropdown-menu-ex /deep/ #arrow, paper-dropdown-menu-ex /deep/ #label:not(.
   color: black !important;
 }
 
+
+/*
+
+  Fake paper input element that works with angular two way databinding
+*/
+/* form starting stylings ------------------------------- */
+.group{
+  width: 100%;
+  position:relative;
+  margin-bottom:8px;
+}
+input 				{
+  font-size:100%;
+  padding:10px 0 10px 0;
+  display:block;
+  width:100%;
+  border:none;
+  border-bottom:1px solid #757575;
+}
+input:focus 		{ outline:none; }
+
+/* BOTTOM BARS ================================= */
+.bar 	{
+  position:relative;
+  display:block;
+  width:100%;
+}
+.bar:before, .bar:after 	{
+  content:'';
+  height:2px;
+  width:0;
+  bottom:1px;
+  position:absolute;
+  background:#5264AE;
+  transition:0.2s ease all;
+  -moz-transition:0.2s ease all;
+  -webkit-transition:0.2s ease all;
+}
+.bar:before {
+  left:50%;
+}
+.bar:after {
+  right:50%;
+}
+
+/* active state */
+input:focus ~ .bar:before, input:focus ~ .bar:after {
+  width:50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.highlight {
+  position:absolute;
+  height:60%;
+  width:100px;
+  top:25%;
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
+}
+
+ /*active state */
+input:focus ~ .highlight {
+  -webkit-animation:inputHighlighter 0.3s ease;
+  -moz-animation:inputHighlighter 0.3s ease;
+  animation:inputHighlighter 0.3s ease;
+}
+
+ /*ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+  from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+  from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+  from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+
+
 /*
 
   GRID CSS
@@ -441,3 +524,4 @@ paper-dropdown-menu-ex /deep/ #arrow, paper-dropdown-menu-ex /deep/ #label:not(.
     width: 100%;
   }
 }
+
