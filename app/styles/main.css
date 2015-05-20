@@ -33,6 +33,7 @@ html /deep/ #mainContainer{
 }
 core-header-panel /deep/  #mainContainer{
   overflow: auto;
+  box-shadow: 4px 0px 6px -3px rgba(0, 0, 0, 0.3);
 }
 .add-border {
   border: 2px dashed #D1C7AC;
@@ -251,13 +252,16 @@ CSS rules that apply to all core-elements
 core-scaffold /deep/ core-toolbar {
   background-color: #669900;
   color: white;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 /*For Firefox and Internet Explorer*/
 core-scaffold core-toolbar {
   background-color: #669900 !important;
   color: white !important;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.3) !important;
+  z-index: 1;
 }
-
 
 core-toolbar {
   background-color: #669900;
