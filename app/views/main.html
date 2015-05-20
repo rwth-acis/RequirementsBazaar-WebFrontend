@@ -140,7 +140,8 @@
             <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert">
               <paper-dropdown class="dropdown">
                 <core-menu class="menu">
-                  <paper-item ng-click="showContrib(req,$index)" ng-bind="'SHOW_CONTRIBUTORS'|translate"></paper-item>
+                  <paper-item ng-click="showContrib(req,$index)" ng-show="!showContributors" ng-bind="'SHOW_CONTRIBUTORS'|translate"></paper-item>
+                  <paper-item ng-click="hideContrib()" ng-show="showContributors && showRequirement" ng-bind="'HIDE_CONTRIBUTORS'|translate"></paper-item>
                   <paper-item ng-click="followRequirement($event,req)">{{'FOLLOW_REQUIREMENT' | translate}}</paper-item>
                   <paper-item ng-click="developRequirement($event,req)">{{'DEVELOP_REQUIREMENT' | translate}}</paper-item>
                   <paper-item disabled>{{'BECOME_LEAD_DEV' | translate}}</paper-item>
@@ -178,25 +179,17 @@
               </div>
 
               <!--List of contributors-->
-              <div style="max-width: 50%;margin: 10px;">
-                <core-collapse opened={{showContributors}}>
-                  <div class="section group contributors">
-                    <div class="col span_2_of_8">
-                      <p ng-bind="'FOLLOWERS' |translate"></p>
-                      <my-user ng-repeat="follower in req.followers" src={{trustSrc(follower.profileImage)}} width="30px" name={{follower.userName}} email={{follower.eMail}}></my-user>
-                    </div>
-                    <div class="col span_2_of_8">
-                      <p ng-bind="'DEVELOPERS' |translate"></p>
-                      <my-user ng-repeat="dev in req.developers" src={{trustSrc(dev.profileImage)}} width="30px" name={{dev.userName}} email={{dev.eMail}}></my-user>
-                    </div>
-                    <div class="col span_2_of_8">
-                      <p ng-bind="'CREATED_BY' |translate"></p>
-                      <my-user src={{trustSrc(req.creator.profileImage)}} width="30px" name={{req.creator.userName}} email={{req.creator.eMail}}></my-user>
-                    </div>
-                    <div class="col span_2_of_8">
-                      <p ng-bind="'LEADER' |translate"></p>
-                      <my-user src={{trustSrc(req.leadDeveloper.profileImage)}} width="30px" name={{req.leadDeveloper.userName}} email={{req.leadDeveloper.eMail}}></my-user>
-                    </div>
+              <div style="max-width: 50%;margin: 8px;">
+                <core-collapse opened={{showContributors}} style="margin-right: 16px;min-width: 200px;">
+                  <div class="contributors">
+                    <p ng-bind="'CREATED_BY' |translate" class="small-grey-text"></p>
+                    <my-user src={{trustSrc(req.creator.profileImage)}} width="30px" name={{req.creator.userName}} email={{req.creator.eMail}}></my-user>
+                    <p ng-bind="'LEADER' |translate" class="small-grey-text"></p>
+                    <my-user src={{trustSrc(req.leadDeveloper.profileImage)}} width="30px" name={{req.leadDeveloper.userName}} email={{req.leadDeveloper.eMail}}></my-user>
+                    <p ng-bind="'FOLLOWERS' |translate" class="small-grey-text"></p>
+                    <my-user ng-repeat="follower in req.followers" src={{trustSrc(follower.profileImage)}} width="30px" name={{follower.userName}} email={{follower.eMail}}></my-user>
+                    <p ng-bind="'DEVELOPERS' |translate" class="small-grey-text"></p>
+                    <my-user ng-repeat="dev in req.developers" src={{trustSrc(dev.profileImage)}} width="30px" name={{dev.userName}} email={{dev.eMail}}></my-user>
                   </div>
                 </core-collapse>
               </div>
