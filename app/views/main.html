@@ -251,7 +251,7 @@
         <p ng-bind="'CREATE_REQ' | translate"></p>
         <paper-input-decorator label={{'TITLE'|translate}}>
           <paper-autogrow-textarea>
-            <textarea ng-model="newName"></textarea>
+            <textarea ng-model="newName" maxlength="50"></textarea>
           </paper-autogrow-textarea>
         </paper-input-decorator>
         <paper-input-decorator label={{'DESC'|translate}}>
@@ -283,7 +283,7 @@
         <p ng-bind="'CREATE_COMP'|translate"></p>
         <paper-input-decorator label={{'TITLE'|translate}}>
           <paper-autogrow-textarea>
-            <textarea ng-model="name"></textarea>
+            <textarea ng-model="name" maxlength="50"></textarea>
           </paper-autogrow-textarea>
         </paper-input-decorator>
         <paper-input-decorator label={{'DESC'|translate}}>
@@ -306,7 +306,7 @@
         <p ng-bind="'CREATE_PROJECT' | translate"></p>
         <paper-input-decorator label={{'TITLE'|translate}}>
           <paper-autogrow-textarea>
-            <textarea ng-model="name"></textarea>
+            <textarea ng-model="name" maxlength="50"></textarea>
           </paper-autogrow-textarea>
         </paper-input-decorator>
         <paper-input-decorator label={{'DESC'|translate}}>
