@@ -5,7 +5,7 @@ body {
   font-family: sans-serif;
 }
 .small-grey-text {
-  font-size: smaller;
+  font-size: small;
   color: #808080;
 }
 .large-text {
@@ -19,6 +19,7 @@ body {
   overflow: hidden;
 }
 .multiline-ellipsis {
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -32,6 +33,7 @@ html /deep/ #mainContainer{
 }
 core-header-panel /deep/  #mainContainer{
   overflow: auto;
+  box-shadow: 4px 0px 6px -3px rgba(0, 0, 0, 0.3);
 }
 .add-border {
   border: 2px dashed #D1C7AC;
@@ -48,6 +50,9 @@ pre {
   white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
   white-space: -o-pre-wrap;    /* Opera 7 */
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+.text-087{
+  opacity: 0.87;
 }
 
 
@@ -143,6 +148,13 @@ oauth{
 .requirement-header-title {
   font-size: large;
 }
+.requirement-header-title /deep/ .button-content{
+  display: block !important;
+}
+.requirement-header-title .button-content{
+  display: block !important;
+}
+
 .req-title {
   margin-right: 12px;
   min-width: 100px;
@@ -227,7 +239,8 @@ oauth{
 .requirementDesc{
   padding: 10px;
   min-height: 30px;
-  margin-bottom: 10px
+  margin-bottom: 10px;
+  width: 100%;
 }
 
 /*
@@ -240,13 +253,16 @@ CSS rules that apply to all core-elements
 core-scaffold /deep/ core-toolbar {
   background-color: #669900;
   color: white;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 /*For Firefox and Internet Explorer*/
 core-scaffold core-toolbar {
   background-color: #669900 !important;
   color: white !important;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.3) !important;
+  z-index: 1;
 }
-
 
 core-toolbar {
   background-color: #669900;
@@ -255,6 +271,10 @@ core-toolbar {
 
 core-icon {
   padding-right: 5px;
+}
+
+paper-icon-button{
+  opacity: 0.87;
 }
 
 /*
@@ -267,6 +287,8 @@ paper-dropdown-menu-ex {
   width: 36px;
   padding-left: 8px;
   padding-right: 8px;
+  display: block !important;
+  margin-top: 8px !important;
 }
 
 /*For Chrome*/
@@ -306,121 +328,84 @@ paper-dropdown-menu-ex /deep/ #arrow, paper-dropdown-menu-ex /deep/ #label:not(.
   color: black !important;
 }
 
+
 /*
 
-  GRID CSS
-
-  http://www.responsivegridsystem.com/ - Graham Miller
-
-  Offered under
-  http://creativecommons.org/licenses/by/3.0/
+  Fake paper input element that works with angular two way databinding
 */
-
-
-/*  SECTIONS  ============================================================================= */
-
-.section {
-  clear: both;
-  padding: 0;
-  margin: 0;
-}
-
-/*  GROUPING  ============================================================================= */
-
-
-.group:before,
-.group:after {
-  content:"";
-  display:table;
-}
-.group:after {
-  clear:both;
-}
-.group {
-  zoom:1; /* For IE 6/7 (trigger hasLayout) */
-}
-
-/*  GRID COLUMN SETUP   ==================================================================== */
-
-.col {
-  display: block;
-  float:left;
-}
-
-.col:first-child { margin-left: 0; } /* all browsers except IE6 and lower */
-
-
-/*  REMOVE MARGINS AS ALL GO FULL WIDTH AT 480 PIXELS */
-
-@media only screen and (max-width: 480px) {
-  .col {
-
-  }
-}
-
-
-
-/*  GRID OF EIGHT   ============================================================================= */
-
-
-.span_8_of_8 {
+/* form starting stylings ------------------------------- */
+.group{
   width: 100%;
+  position:relative;
+  margin-bottom:8px;
+}
+input 				{
+  font-size:100%;
+  padding:10px 0 10px 0;
+  display:block;
+  width:100%;
+  border:none;
+  border-bottom:1px solid #757575;
+}
+input:focus 		{ outline:none; }
+
+/* BOTTOM BARS ================================= */
+.bar 	{
+  position:relative;
+  display:block;
+  width:100%;
+}
+.bar:before, .bar:after 	{
+  content:'';
+  height:2px;
+  width:0;
+  bottom:1px;
+  position:absolute;
+  background:#5264AE;
+  transition:0.2s ease all;
+  -moz-transition:0.2s ease all;
+  -webkit-transition:0.2s ease all;
+}
+.bar:before {
+  left:50%;
+}
+.bar:after {
+  right:50%;
 }
 
-.span_7_of_8 {
-  width: 87.3%;
+/* active state */
+input:focus ~ .bar:before, input:focus ~ .bar:after {
+  width:50%;
 }
 
-.span_6_of_8 {
-  width: 74.6%;
+/* HIGHLIGHTER ================================== */
+.highlight {
+  position:absolute;
+  height:60%;
+  width:100px;
+  top:25%;
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
 }
 
-.span_5_of_8 {
-  width: 61.9%;
+ /*active state */
+input:focus ~ .highlight {
+  -webkit-animation:inputHighlighter 0.3s ease;
+  -moz-animation:inputHighlighter 0.3s ease;
+  animation:inputHighlighter 0.3s ease;
 }
 
-.span_4_of_8 {
-  width: 49.2%;
+ /*ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+  from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
 }
-
-.span_3_of_8 {
-  width: 36.5%;
+@-moz-keyframes inputHighlighter {
+  from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
 }
-
-.span_2_of_8 {
-  width: 23.8%;
-}
-
-.span_1_of_8 {
-  width: 11.1%;
-}
-
-
-/*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
-
-@media only screen and (max-width: 480px) {
-  .span_8_of_8 {
-    width: 100%;
-  }
-  .span_7_of_8 {
-    width: 100%;
-  }
-  .span_6_of_8 {
-    width: 100%;
-  }
-  .span_5_of_8 {
-    width: 100%;
-  }
-  .span_4_of_8 {
-    width: 100%;
-  }
-  .span_3_of_8 {
-    width: 100%;
-  }
-  .span_2_of_8 {
-    width: 100%;
-  }
-  .span_1_of_8 {
-    width: 100%;
-  }
+@keyframes inputHighlighter {
+  from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
 }
