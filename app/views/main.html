@@ -213,12 +213,12 @@
               </div>
 
               <!--Create comment-->
-              <paper-input-decorator label={{'COMMENT_PLACEHOLDER'|translate}}>
+              <paper-input-decorator label={{'COMMENT_PLACEHOLDER'|translate}} style="margin-top: 32px;">
                 <paper-autogrow-textarea>
                   <textarea ng-model="newComment" required></textarea>
                 </paper-autogrow-textarea>
               </paper-input-decorator>
-              <paper-button raised ng-click="submitComment(newComment,req);newComment='';" ng-bind="'SUBMIT' | translate" class="text-087"></paper-button>
+              <paper-button raised ng-click="submitComment(newComment,req);newComment='';" ng-bind="'SUBMIT' | translate" ng-show="newComment"  class="text-087" style="float:right"></paper-button>
             </div>
           </core-collapse>
         </paper-shadow>
