@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $location, SubmitToReqChange, $rootScope, $upload) {
+  .controller('RequirementCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService, $location, SubmitToReqChange, $rootScope, $upload) {
 
     $scope.attachments = [];
     $scope.showRequirement = false;
@@ -100,7 +100,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.saveChanges = function(){
       reqBazService.updateRequirement($scope.activeProject.id,$scope.activeComponent.id, $scope.dirtyReq.id,$scope.dirtyReq)
         .success(function (message) {
-          if(AuthorizationService.isAuthorized(message)) {
+          if(HttpErrorHandlingService.isSuccess(message)) {
             console.log(message);
             for(var r in $scope.requirements){
               if($scope.requirements[r].id === $scope.dirtyReq.id){
@@ -244,7 +244,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       console.log('become follower');
       reqBazService.addUserToFollowers(req.id)
         .success(function (message) {
-          if(AuthorizationService.isAuthorized(message)){
+          if(HttpErrorHandlingService.isSuccess(message)){
             UtilityService.showFeedback('THANK_YOU_FOR_FOLLOWING');
             reqBazService.getRequirement(req.id)
               .success(function (reqNew) {
@@ -268,7 +268,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.addUserToDevelopers(req.id)
         .success(function (message) {
           console.log(message);
-          if(AuthorizationService.isAuthorized(message)){
+          if(HttpErrorHandlingService.isSuccess(message)){
             UtilityService.showFeedback('THANK_FOR_INIT');
             reqBazService.getRequirement(req.id)
               .success(function (reqNew) {

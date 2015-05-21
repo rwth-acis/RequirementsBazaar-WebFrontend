@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, $upload, Profile, $sce, oauthConfig, $location, $anchorScroll, $timeout, AccessToken, $routeParams, $rootScope, $window, SubmitToReqChange) {
+    .controller('MainCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService, $upload, Profile, $sce, oauthConfig, $location, $anchorScroll, $timeout, AccessToken, $routeParams, $rootScope, $window, SubmitToReqChange) {
 
     $scope.projects = null;
     $scope.components = null;
@@ -253,7 +253,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       console.log('delete requirement');
       reqBazService.deleteRequirement(req.id)
         .success(function (message) {
-          if(AuthorizationService.isAuthorized(message)){
+          if(HttpErrorHandlingService.isSuccess(message)){
             // Delete the requirement from the list
             for(var r in $scope.requirements){
               if($scope.requirements[r].id === req.id){

@@ -144,7 +144,7 @@
                   <paper-item ng-click="hideContrib()" ng-show="showContributors && showRequirement" ng-bind="'HIDE_CONTRIBUTORS'|translate"></paper-item>
                   <paper-item ng-click="followRequirement($event,req)">{{'FOLLOW_REQUIREMENT' | translate}}</paper-item>
                   <paper-item ng-click="developRequirement($event,req)">{{'DEVELOP_REQUIREMENT' | translate}}</paper-item>
-                  <paper-item ng-click="becomeLead($event,req)">{{'BECOME_LEAD_DEV' | translate}}</paper-item>
+                  <paper-item disabled ng-click="becomeLead($event,req)">{{'BECOME_LEAD_DEV' | translate}}</paper-item>
                   <paper-item ng-click="startEdit(req,$index)" ng-show="!isDirtyReq">{{'EDIT_REQUIREMENT' | translate}}</paper-item>
                   <paper-item ng-click="startEdit(req,$index)" ng-show="isDirtyReq" disabled>{{'EDIT_REQUIREMENT' | translate}}</paper-item>
                   <paper-item ng-click="confirmDelete(req)">{{'DELETE_REQUIREMENT' | translate}}</paper-item>

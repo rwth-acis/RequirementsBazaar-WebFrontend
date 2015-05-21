@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CreateProjectCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService) {
+  .controller('CreateProjectCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService) {
 
     $scope.name = '';
     $scope.desc = '';
@@ -23,7 +23,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createProject(proj)
           .success(function (message) {
             console.log(message);
-            if(AuthorizationService.isAuthorized(message)) {
+            if(HttpErrorHandlingService.isSuccess(message)) {
               //Retrieve it from the server to get all auto generated fields
               reqBazService.getProject(message.id)
                 .success(function (proj) {

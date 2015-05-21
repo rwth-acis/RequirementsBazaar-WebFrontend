@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CreateRequirementCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService, AccessToken, $upload) {
+  .controller('CreateRequirementCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService, AccessToken, $upload) {
 
     $scope.showCreateDiv = false;
     $scope.newName = '';
@@ -42,7 +42,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createRequirement($scope.activeProject.id, $scope.activeComponent.id, req)
           .success(function (message) {
             console.log(message);
-            if(AuthorizationService.isAuthorized(message)) {
+            if(HttpErrorHandlingService.isSuccess(message)) {
               reqBazService.getRequirement(message.id)
                 .success(function (req) {
                   $scope.requirements.splice(0, 0, req);

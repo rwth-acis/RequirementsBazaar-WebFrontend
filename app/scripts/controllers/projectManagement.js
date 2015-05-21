@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('ProjectManagementCtrl', function ($scope, $http, $routeParams, $location, UtilityService, reqBazService, AuthorizationService){
+  .controller('ProjectManagementCtrl', function ($scope, $http, $routeParams, $location, UtilityService, reqBazService, HttpErrorHandlingService){
     //Keep the current version of the project
     var project = null;
     $scope.dirtyProject = null;
@@ -37,7 +37,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.saveChanges = function(){
       reqBazService.updateProject($scope.dirtyProject.id,$scope.dirtyProject)
         .success(function (message) {
-          if(AuthorizationService.isAuthorized(message)) {
+          if(HttpErrorHandlingService.isSuccess(message)) {
             project = angular.copy($scope.dirtyProject);
             $scope.isDirty = false;
           }

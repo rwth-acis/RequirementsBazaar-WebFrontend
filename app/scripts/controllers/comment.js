@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CommentCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService) {
+  .controller('CommentCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService) {
 
     /*
      * Submits a comment, time of the post is initially approximate
@@ -21,7 +21,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createComment(req.id,comment)
           .success(function (message) {
             console.log(message);
-            if(AuthorizationService.isAuthorized(message)) {
+            if(HttpErrorHandlingService.isSuccess(message)) {
               UtilityService.showFeedback('THANKS_FOR_FEEDBACK');
               reqBazService.getComment($scope.activeComponent.id, message.id)
                 .success(function (commentNew) {
@@ -50,7 +50,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteComment(id)
         .success(function (message) {
           console.log(message);
-          if(AuthorizationService.isAuthorized(message)) {
+          if(HttpErrorHandlingService.isSuccess(message)) {
             // Delete the removed requirement from the list
             for(var i = 0; i<req.comments.length;i++){
               if(req.comments[i].Id === id){

@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('ActiveCompCtrl', function ($scope, reqBazService, UtilityService, AccessToken, AuthorizationService) {
+  .controller('ActiveCompCtrl', function ($scope, reqBazService, UtilityService, AccessToken, HttpErrorHandlingService) {
 
     $scope.dirtyComp = null;
     $scope.isDirty = false;
@@ -28,7 +28,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.saveChanges = function(){
       reqBazService.updateComponent($scope.activeProject.id,$scope.dirtyComp.id,$scope.dirtyComp)
         .success(function (message) {
-          if(AuthorizationService.isAuthorized(message)) {
+          if(HttpErrorHandlingService.isSuccess(message)) {
             $scope.activeComponent = angular.copy($scope.dirtyComp);
             $scope.dirtyComp = null;
             $scope.isDirty = false;
