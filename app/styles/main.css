@@ -264,6 +264,20 @@ core-scaffold core-toolbar {
   z-index: 1;
 }
 
+/*Necessary to keep the sidebar on top*/
+core-scaffold /deep/ #scrim{
+  z-index: 1;
+}
+core-scaffold /deep/ #drawer{
+  z-index: 1;
+}
+core-scaffold #scrim{
+  z-index: 1 !important;
+}
+core-scaffold #drawer{
+  z-index: 1 !important;
+}
+
 core-toolbar {
   background-color: #669900;
   color: white;
