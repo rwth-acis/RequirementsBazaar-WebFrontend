@@ -18,11 +18,11 @@
     <!--List of projects-->
     <core-menu class="sidebarMenu" ng-show="showProjectSelection">
       <div class="group">
-        <input placeholder={{'FILTER_PROJECTS'|translate}} type="text" ng-model="filterComp.name">
+        <input placeholder={{'FILTER_PROJECTS'|translate}} type="text" ng-model="filterProj.name">
         <span class="highlight"></span>
         <span class="bar"></span>
       </div>
-      <paper-item ng-repeat="project in projects" ng-click="selectProj(project)" ng-bind="project.name" noink class="text-087"></paper-item>
+      <paper-item ng-repeat="project in projects | filter:filterProj:strict" ng-click="selectProj(project)" ng-bind="project.name" noink class="text-087"></paper-item>
       <hr>
       <!--Create a new project-->
       <paper-button raised ng-click="startCreationProj()"  class="text">
@@ -144,7 +144,7 @@
                   <paper-item ng-click="hideContrib()" ng-show="showContributors && showRequirement" ng-bind="'HIDE_CONTRIBUTORS'|translate"></paper-item>
                   <paper-item ng-click="followRequirement($event,req)">{{'FOLLOW_REQUIREMENT' | translate}}</paper-item>
                   <paper-item ng-click="developRequirement($event,req)">{{'DEVELOP_REQUIREMENT' | translate}}</paper-item>
-                  <paper-item disabled>{{'BECOME_LEAD_DEV' | translate}}</paper-item>
+                  <paper-item ng-click="becomeLead($event,req)">{{'BECOME_LEAD_DEV' | translate}}</paper-item>
                   <paper-item ng-click="startEdit(req,$index)" ng-show="!isDirtyReq">{{'EDIT_REQUIREMENT' | translate}}</paper-item>
                   <paper-item ng-click="startEdit(req,$index)" ng-show="isDirtyReq" disabled>{{'EDIT_REQUIREMENT' | translate}}</paper-item>
                   <paper-item ng-click="confirmDelete(req)">{{'DELETE_REQUIREMENT' | translate}}</paper-item>
