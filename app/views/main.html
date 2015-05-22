@@ -96,7 +96,7 @@
             </div>
             <div style="padding: 16px">
               <p ng-bind="'COMPONENT_LEAD' |translate" class="small-grey-text"></p>
-              <my-user src={{trustSrc(componentLeader.profileImage)}} width="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}} class="text-087"></my-user>
+              <my-user src={{trustSrc(componentLeader.profileImage)}} size="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}} class="text-087"></my-user>
               <paper-icon-button icon="editor:mode-edit" ng-click="startEdit()"></paper-icon-button>
               <paper-icon-button icon="icons:delete" ng-click="confirmDelete()"></paper-icon-button>
               <br/>
@@ -179,17 +179,17 @@
               </div>
 
               <!--List of contributors-->
-              <div style="max-width: 50%;margin: 8px;">
-                <core-collapse opened={{showContributors}} style="margin-right: 16px;min-width: 200px;">
+              <div style="max-width: 50%;margin: 8px;flex: 0 0 auto;">
+                <core-collapse opened={{showContributors}}>
                   <div class="contributors">
                     <p ng-bind="'CREATED_BY' |translate" class="small-grey-text"></p>
-                    <my-user src={{trustSrc(req.creator.profileImage)}} width="30px" name={{req.creator.userName}} email={{req.creator.eMail}}></my-user>
+                    <my-user src={{trustSrc(req.creator.profileImage)}} size="30px" name={{req.creator.userName}} email={{req.creator.eMail}}></my-user>
                     <p ng-bind="'LEADER' |translate" class="small-grey-text"></p>
-                    <my-user src={{trustSrc(req.leadDeveloper.profileImage)}} width="30px" name={{req.leadDeveloper.userName}} email={{req.leadDeveloper.eMail}}></my-user>
+                    <my-user src={{trustSrc(req.leadDeveloper.profileImage)}} size="30px" name={{req.leadDeveloper.userName}} email={{req.leadDeveloper.eMail}}></my-user>
                     <p ng-bind="'FOLLOWERS' |translate" class="small-grey-text"></p>
-                    <my-user ng-repeat="follower in req.followers" src={{trustSrc(follower.profileImage)}} width="30px" name={{follower.userName}} email={{follower.eMail}}></my-user>
+                    <my-user ng-repeat="follower in req.followers" src={{trustSrc(follower.profileImage)}} size="30px" name={{follower.userName}} email={{follower.eMail}}></my-user>
                     <p ng-bind="'DEVELOPERS' |translate" class="small-grey-text"></p>
-                    <my-user ng-repeat="dev in req.developers" src={{trustSrc(dev.profileImage)}} width="30px" name={{dev.userName}} email={{dev.eMail}}></my-user>
+                    <my-user ng-repeat="dev in req.developers" src={{trustSrc(dev.profileImage)}} size="30px" name={{dev.userName}} email={{dev.eMail}}></my-user>
                   </div>
                 </core-collapse>
               </div>
@@ -199,9 +199,9 @@
               <!--List of comments-->
               <h3 ng-bind="'COMMENTS' | translate" class="text-087"></h3>
               <div ng-repeat="comment in req.comments" class="comment-container">
-                <img ng-src={{comment.creator.profileImage}} fallback-src="images/no-image-found.gif">
+                <img ng-src={{comment.creator.profileImage}} fallback-src="images/no-image-found.gif" height="50px" width="50px" style="flex: 0 0 auto;">
                 <div class="width-max" class="text-087">
-                  <p>{{comment.message}}</p>
+                  <p style="font-size: 90%">{{comment.message}}</p>
                   <div class="comment-meta-container">
                     <p class="small-grey-text width-max">
                       {{comment.creator.userName}}

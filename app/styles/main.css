@@ -188,8 +188,6 @@ oauth{
 }
 .comment-container img {
   border-radius: 50%;
-  height: 50px;
-  width: 50px;
   margin-right: 8px;
   margin-top: 1em;
 }
@@ -237,9 +235,7 @@ oauth{
   bottom: 30px;
 }
 .requirementDesc{
-  padding: 10px;
   min-height: 30px;
-  margin-bottom: 10px;
   width: 100%;
 }
 
