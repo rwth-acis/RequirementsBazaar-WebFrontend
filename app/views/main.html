@@ -249,12 +249,13 @@
       <paper-fab id="addRequirementFab" icon="icons:add" ng-click="startCreation()" title={{'CREATE_REQ'|translate}}></paper-fab>
       <div class="add-item-div" ng-show="showCreateDiv">
         <p ng-bind="'CREATE_REQ' | translate"></p>
-        <paper-input-decorator label={{'TITLE'|translate}}>
+        <paper-input-decorator label={{'TITLE'|translate}} floatingLabel>
           <paper-autogrow-textarea>
-            <textarea ng-model="newName" maxlength="50"></textarea>
+            <textarea ng-model="newName" maxlength="50" id="reqName"></textarea>
           </paper-autogrow-textarea>
+          <paper-char-counter class="counter" target="reqName"></paper-char-counter>
         </paper-input-decorator>
-        <paper-input-decorator label={{'DESC'|translate}}>
+        <paper-input-decorator label={{'DESC'|translate}} floatingLabel>
           <paper-autogrow-textarea>
             <textarea ng-model="newDesc"></textarea>
           </paper-autogrow-textarea>
@@ -281,12 +282,13 @@
     <div ng-show="showCreateCompDiv" class="create-div">
       <div ng-controller="CreateComponentCtrl" class="add-item-div">
         <p ng-bind="'CREATE_COMP'|translate"></p>
-        <paper-input-decorator label={{'TITLE'|translate}}>
+        <paper-input-decorator label={{'TITLE'|translate}} floatingLabel>
           <paper-autogrow-textarea>
-            <textarea ng-model="name" maxlength="50"></textarea>
+            <textarea ng-model="name" maxlength="50" id="compName"></textarea>
           </paper-autogrow-textarea>
+          <paper-char-counter class="counter" target="compName"></paper-char-counter>
         </paper-input-decorator>
-        <paper-input-decorator label={{'DESC'|translate}}>
+        <paper-input-decorator label={{'DESC'|translate}} floatingLabel>
           <paper-autogrow-textarea>
             <textarea ng-model="desc"></textarea>
           </paper-autogrow-textarea>
@@ -303,13 +305,14 @@
     <!--Create a new project-->
     <div ng-show="showCreateProjDiv" class="create-div">
       <div ng-controller="CreateProjectCtrl" class="add-item-div">
-        <p ng-bind="'CREATE_PROJECT' | translate"></p>
-        <paper-input-decorator label={{'TITLE'|translate}}>
+        <p ng-bind="'CREATE_PROJ' | translate"></p>
+        <paper-input-decorator label={{'TITLE'|translate}} floatingLabel>
           <paper-autogrow-textarea>
-            <textarea ng-model="name" maxlength="50"></textarea>
+            <textarea ng-model="name" maxlength="50" id="projName"></textarea>
           </paper-autogrow-textarea>
+          <paper-char-counter class="counter" target="projName"></paper-char-counter>
         </paper-input-decorator>
-        <paper-input-decorator label={{'DESC'|translate}}>
+        <paper-input-decorator label={{'DESC'|translate}} floatingLabel>
           <paper-autogrow-textarea>
             <textarea ng-model="desc"></textarea>
           </paper-autogrow-textarea>
