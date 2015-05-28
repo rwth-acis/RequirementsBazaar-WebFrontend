@@ -23,15 +23,22 @@ angular
   ])
   .config(function ($routeProvider, $httpProvider) {
     $routeProvider
+
+      /*
+      * Access token management turing log in
+      * */
       .when('/access_token=:accessToken', {
         template: '',
         controller: function ($location, AccessToken) {
           var hash = $location.path().substr(1);
           AccessToken.setTokenFromString(hash);
-          $location.path('/project/1');
+          $location.path('/');
           $location.replace();
         }
       })
+      /*
+      * Non log in situations
+      * */
       .when('/project/:projectId/component/:componentId/requirement/:requirementId', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
@@ -40,7 +47,7 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/project/:projectId/', {
+      .when('/project/:projectId', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })

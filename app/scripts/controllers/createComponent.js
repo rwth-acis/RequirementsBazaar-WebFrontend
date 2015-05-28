@@ -8,7 +8,7 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('CreateComponentCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService) {
+  .controller('CreateComponentCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService) {
 
     $scope.name = '';
     $scope.desc = '';
@@ -23,7 +23,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         reqBazService.createComponent($scope.activeProject.id,comp)
           .success(function (message) {
             console.log(message);
-            if(AuthorizationService.isAuthorized(message)) {
+            if(HttpErrorHandlingService.isSuccess(message)) {
               //Retrieve it from the server since we need the creator id that is on the server
               reqBazService.getComponent(message.id)
                 .success(function (comp) {

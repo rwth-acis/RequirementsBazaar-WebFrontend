@@ -188,8 +188,6 @@ oauth{
 }
 .comment-container img {
   border-radius: 50%;
-  height: 50px;
-  width: 50px;
   margin-right: 8px;
   margin-top: 1em;
 }
@@ -237,9 +235,7 @@ oauth{
   bottom: 30px;
 }
 .requirementDesc{
-  padding: 10px;
   min-height: 30px;
-  margin-bottom: 10px;
   width: 100%;
 }
 
@@ -262,6 +258,20 @@ core-scaffold core-toolbar {
   color: white !important;
   box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.3) !important;
   z-index: 1;
+}
+
+/*Necessary to keep the sidebar on top*/
+core-scaffold /deep/ #scrim{
+  z-index: 1;
+}
+core-scaffold /deep/ #drawer{
+  z-index: 1;
+}
+core-scaffold #scrim{
+  z-index: 1 !important;
+}
+core-scaffold #drawer{
+  z-index: 1 !important;
 }
 
 core-toolbar {

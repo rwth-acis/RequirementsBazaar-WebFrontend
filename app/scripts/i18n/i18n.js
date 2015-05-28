@@ -28,7 +28,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     CREATE_PROJ: 'Create a project',
     CREATE_COMP: 'Create a component',
     CREATE_REQ: 'Create a requirement',
-    TITLE: 'Title - 50 characters',
+    TITLE: 'Title',
     DESC: 'Description',
     ACCEPT: 'Accept',
     DECLINE: 'Decline',

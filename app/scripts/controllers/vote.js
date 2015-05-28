@@ -8,12 +8,12 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('VoteCtrl', function ($scope, reqBazService, UtilityService, AuthorizationService) {
+  .controller('VoteCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService) {
 
     $scope.voteUp = function(req){
       reqBazService.addVote(req.id,false)
         .success(function(message){
-          if(AuthorizationService.isAuthorized(message)){
+          if(HttpErrorHandlingService.isSuccess(message)){
             if (message.status === 'UNCHANGED'){
               UtilityService.showFeedback('ALREADY_VOTED');
             }
@@ -39,7 +39,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.voteDown = function(req){
       reqBazService.addVote(req.id,true)
         .success(function(message){
-          if(AuthorizationService.isAuthorized(message)) {
+          if(HttpErrorHandlingService.isSuccess(message)) {
             if (message.status === 'UNCHANGED') {
               UtilityService.showFeedback('ALREADY_VOTED');
             }

@@ -1,23 +1,28 @@
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 
-<!--<link rel="import" href="../../bower_components/core-tooltip/core-tooltip.html">-->
-
-<polymer-element name="my-user" attributes="width src name email">
+<polymer-element name="my-user" attributes="size src name email">
   <template>
+    <style>
+      #my-user-container:hover{
+        background-color: #EEEEEE;
+      }
+      #my-user-text{
+        font-size: 95%;
+        opacity: 0.87;
+      }
+    </style>
     <div>
-      <!--<core-tooltip large>-->
-        <p>
-          <img src="{{src}}" width="{{width}}" style="border-radius: 50%;">
-          {{name}}
-        </p>
-        <!--<div tip>-->
-          <!--There should be no email data from the service-->
-          <!--<span>{{email}}</span>-->
-        <!--</div>-->
-      <!--</core-tooltip>-->
+      <paper-item id="my-user-container" on-click={{showUser}}>
+        <img src="{{src}}" width="{{size}}" height="{{size}}" style="border-radius: 50%;">
+        <span id="my-user-text">{{name}}</span>
+      </paper-item>
     </div>
   </template>
   <script>
     Polymer('my-user',{
+      showUser: function() {
+        console.log('Not implemented');
+      }
     });
   </script>
 </polymer-element>
