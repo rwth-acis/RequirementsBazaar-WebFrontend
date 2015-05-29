@@ -25,6 +25,10 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.reloadRequirements = false;
     $scope.reloadComponents = false;
 
+    //Object and description to be deleted
+    $scope.deleteElem = '';
+    $scope.deleteDesc = '';
+    $scope.deleteObject = null;
 
     $scope.limit = 10;
     $scope.addMoreItems = function(){

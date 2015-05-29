@@ -225,17 +225,7 @@
       </div>
     </div>
   </div>
-  <!--
 
-      Confirmation Dialogs for projects, components and requirements
-
-  -->
-  <paper-action-dialog id="confirmDelete" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading={{'CONFIRM_DEL'|translate}}>
-    <p ng-bind="deleteDesc|translate"></p>
-    <paper-button raised dismissive ng-bind="'DECLINE' | translate"></paper-button>
-    <paper-button raised affirmative ng-click="deleteComponent()" ng-show="deleteElem === 'comp'" ng-bind="'ACCEPT' | translate"></paper-button>
-    <paper-button raised affirmative ng-click="deleteRequirement()" ng-show="deleteElem === 'req'" ng-bind="'ACCEPT' | translate"></paper-button>
-  </paper-action-dialog>
   <!--
 
       Create a Requirement / Component / Project
@@ -326,4 +316,17 @@
       </div>
     </div>
   </div>
+
 </core-scaffold>
+
+<!--
+
+      Confirmation Dialogs for projects, components and requirements
+
+    -->
+<paper-action-dialog id="confirmDelete" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading={{'CONFIRM_DEL'|translate}}>
+  <p ng-bind="deleteDesc|translate"></p>
+  <paper-button raised dismissive ng-bind="'DECLINE' | translate"></paper-button>
+  <paper-button raised affirmative ng-click="deleteComponent()" ng-show="deleteElem == 'comp'" ng-bind="'ACCEPT' | translate"></paper-button>
+  <paper-button raised affirmative ng-click="deleteRequirement()" ng-show="deleteElem == 'req'" ng-bind="'ACCEPT' | translate"></paper-button>
+</paper-action-dialog>
