@@ -6,3 +6,37 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+.landing-hero-div{
+  height: 600px;
+  display: flex;
+  justify-content: space-around;
+  background-color: #00A000;
+  background-image: url("background%20image-sepia.png");
+}
+.landing-motivation-div{
+  height: 350px;
+  background-color: #FFFFFA;
+  display: flex;
+  justify-content: space-around;
+  padding: 100px;
+}
+
+.landing-getstarted-div{
+  background-color: #7FB45D;
+  padding: 50px;
+}
+
+.landing-footer-div{
+  height: 200px;
+  background-color: #000000;
+}
+.landing-hero-div-motivation{
+  max-width: 400px;
+  padding-top: 100px;
+}
+.landing-page-contact{
+  width: 300px;
+  color: #ffffff;
+  padding: 30px;
+}
