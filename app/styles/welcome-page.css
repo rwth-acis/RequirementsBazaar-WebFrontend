@@ -1,42 +1,123 @@
-.welcome-content{
-  background-color: white;
-  margin-bottom: 12px;
-  padding: 10px;
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+p{
+  font-size: large;
+  text-align: center;
 }
-
-.landing-hero-div{
-  height: 600px;
+h1{
+  text-align: center;
+}
+#landing-header {
+  background-color: #669900;
+  color: white;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.3);
+  height: 60px;
+  width: 100%;
   display: flex;
-  justify-content: space-around;
-  background-color: #00A000;
-  background-image: url("background%20image-sepia.png");
+  position: fixed;
+  z-index: 1;
+  justify-content: space-between;
 }
-.landing-motivation-div{
-  height: 350px;
-  background-color: #FFFFFA;
-  display: flex;
-  justify-content: space-around;
-  padding: 100px;
+#landing-header-title{
+  padding-left: 16px;
+}
+#landing-header-right-container{
+  padding: 16px;
+}
+.landing-page-signin-button{
+  background-color: #FF8324;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 3px;
+  white-space: nowrap;
+  float: right;
+}
+#landing-header-explore{
+  color: white;
+  float: right;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 5px;
 }
 
-.landing-getstarted-div{
-  background-color: #7FB45D;
-  padding: 50px;
+
+@media screen and (min-device-width: 701px) {
+  #landing-hero-div {
+    padding: 60px 20px 0 20px;
+    height: 600px;
+    display: flex;
+    justify-content: space-around;
+    background-image: url("background%20image-sepia.png");
+  }
+  #landing-hero-image-container{
+    width: 50%;
+    margin-top: 50px;
+  }
+  #landing-hero-image-container img{
+    width: 100%;
+  }
+  #landing-hero-div-motivation {
+    max-width: 400px;
+    padding-top: 100px;
+  }
+  #landing-hero-div-motivation paper-button{
+    background-color: #FF8324;
+    color: white;
+    width: 100%;
+    margin-top: 50px;
+  }
+
+  #landing-motivation-div {
+    height: 350px;
+    background-color: #FFFFFA;
+    display: flex;
+    justify-content: space-around;
+    padding-top: 100px;
+  }
+  #landing-motivation-div div{
+    max-width: 200px;
+  }
+  #landing-motivation-div img{
+    width: 100%;
+  }
+  #landing-how-it-works{
+    padding: 32px 32px 32px 32px;
+    color: #ffffff;
+    background-color: #7FB45D;
+    /*background: -webkit-linear-gradient(#7FB45D 50%, #FFFFFA); *//* For Safari 5.1 to 6.0 */
+    /*background: -o-linear-gradient(#7FB45D 50%, #FFFFFA); *//* For Opera 11.1 to 12.0 */
+    /*background: -moz-linear-gradient(#7FB45D 50%, #FFFFFA); *//* For Firefox 3.6 to 15 */
+    /*background: linear-gradient(#7FB45D 50%, #FFFFFA); *//* Standard syntax (must be last) */
+  }
+  #landing-how-it-works p{
+    text-align: left;
+  }
+
+  #landing-all-devices{
+    background-image: url("office-583839_1920.jpg");
+    margin: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 1005px;
+    display: none;
+  }
+
+  .landing-getstarted-div {
+    background-color: #7FB45D;
+    padding: 50px;
+  }
+
+  .landing-footer-div {
+    height: 200px;
+    background-color: #000000;
+  }
+  .landing-page-contact {
+    width: 300px;
+    color: #ffffff;
+    padding: 30px;
+  }
 }
 
-.landing-footer-div{
-  height: 200px;
-  background-color: #000000;
-}
-.landing-hero-div-motivation{
-  max-width: 400px;
-  padding-top: 100px;
-}
-.landing-page-contact{
-  width: 300px;
-  color: #ffffff;
-  padding: 30px;
+@media (max-width: 700px), handheld {
+
 }
