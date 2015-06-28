@@ -1,15 +1,15 @@
 <div ng-controller="WelcomeCtrl">
   <div id="landing-header">
-    <h4 id="landing-header-title">Requirements Bazaar</h4>
+    <h3 id="landing-header-title" class="ellipsis">Requirements Bazaar</h3>
     <div id="landing-header-right-container">
-      <div class="landing-page-signin-button">Sign In</div>
+      <div id="landing-page-signin-button">Sign In</div>
       <div id="landing-header-explore">Explore</div>
     </div>
   </div>
   <div>
     <div id="landing-hero-div">
       <div id="landing-hero-image-container">
-        <img src="styles/distorted-req-baz.png" height="550">
+        <img src="styles/distorted-req-baz.png" >
       </div>
       <div id="landing-hero-div-motivation">
         <h1>CREATE BETTER PROJECTS WITH US</h1>
@@ -18,23 +18,20 @@
       </div>
     </div>
     <div id="landing-how-it-works">
-      <div style="display: flex;justify-content: space-around;">
-        <div style="width: 500px;">
-          <h1 style="margin: 0">How it works! Feedback in 3 steps</h1>
-          <p>1. Create a project on requirements bazaar</p>
-          <p>2. Direct users to your project</p>
-          <p>3. Respond to user requirements</p>
-          <p style="font-size: x-large;padding-top: 64px;">To learn more watch the video</p>
-        </div>
-        <div>
-          <iframe width="728" height="410" src="https://www.youtube.com/embed/u3f8xnEtT7I" frameborder="0" allowfullscreen></iframe>
-        </div>
+      <div id="landing-how-it-works-text">
+        <h1>How it works! Feedback in 3 steps</h1>
+        <p>1. Create a project on requirements bazaar</p>
+        <p>2. Direct users to your project</p>
+        <p>3. Respond to user requirements</p>
+        <p>To learn more watch the video</p>
       </div>
-
+      <div id="landing-how-it-works-video">
+        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/u3f8xnEtT7I" frameborder="0" allowfullscreen></iframe>
+      </div>
     </div>
-    <div id="landing-all-devices">
-      <h2>Use it on every device</h2>
-    </div>
+    <!--<div id="landing-all-devices">-->
+      <!--<h2>Use it on every device</h2>-->
+    <!--</div>-->
     <div id="landing-motivation-div">
       <div>
         <img src="styles/speech-bubble.svg" height="150px">
@@ -49,16 +46,10 @@
         <p>Save time and effort. Focus on the features that really matter to the users.</p>
       </div>
     </div>
-    <div class="landing-getstarted-div">
-      <p style="color: white;font-size: xx-large;">
-        Get Started
-      </p>
-      <p style="color: white;">
-        Don't miss out on talking to your users and increasing their and your satisfaction with the product!
-      </p>
-      <div style="width: 300px;margin: 0 auto;">
-        <paper-button style="background-color: #FF8324;color: white;margin-top: 50px;width: 100%">Create project</paper-button>
-      </div>
+    <div id="landing-getstarted">
+      <p>Get Started</p>
+      <p>Don't miss out on talking to your users and increasing their and your satisfaction with the product!</p>
+      <paper-button>Create project</paper-button>
     </div>
     <div class="landing-footer-div">
       <div class="landing-page-contact">

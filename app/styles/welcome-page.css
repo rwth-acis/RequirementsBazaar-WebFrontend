@@ -1,3 +1,7 @@
+/*
+* General rules that apply to the page regardless of the screen size. Responsive rules are at the bottom of the file.
+*/
+
 p{
   font-size: large;
   text-align: center;
@@ -8,7 +12,7 @@ h1{
 #landing-header {
   background-color: #669900;
   color: white;
-  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.3);
   height: 60px;
   width: 100%;
   display: flex;
@@ -20,9 +24,10 @@ h1{
   padding-left: 16px;
 }
 #landing-header-right-container{
-  padding: 16px;
+  display: flex;
+  flex-direction: row-reverse;
 }
-.landing-page-signin-button{
+#landing-page-signin-button{
   background-color: #FF8324;
   color: white;
   padding: 5px;
@@ -30,6 +35,7 @@ h1{
   border-radius: 3px;
   white-space: nowrap;
   float: right;
+  margin: 16px 8px 16px 8px;
 }
 #landing-header-explore{
   color: white;
@@ -37,87 +43,157 @@ h1{
   cursor: pointer;
   border-radius: 3px;
   padding: 5px;
+  margin: 16px 8px 16px 8px;
 }
 
+/*
+* Hero panel of the landing page, with image and text
+*/
 
-@media screen and (min-device-width: 701px) {
-  #landing-hero-div {
-    padding: 60px 20px 0 20px;
-    height: 600px;
-    display: flex;
-    justify-content: space-around;
-    background-image: url("background%20image-sepia.png");
-  }
-  #landing-hero-image-container{
-    width: 50%;
+#landing-hero-div {
+  padding: 64px 8px 0 8px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap-reverse;
+  background-image: url("background%20image-sepia.png");
+}
+#landing-hero-div-motivation paper-button{
+  background-color: #FF8324;
+  color: white;
+  width: 100%;
+  max-width: 400px;
+  margin: 50px 0 0 0;
+}
+#landing-hero-image-container img{
+  width: 100%;
+}
+
+/*
+* Explanation panel with text and video
+*/
+
+#landing-how-it-works{
+  padding: 32px 8px 32px 8px;
+  color: #ffffff;
+  background-color: #7FB45D;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+#landing-how-it-works p{
+  text-align: left;
+}
+
+/*
+* Motivation panel with three columns, each having icon and motivational text
+*/
+
+#landing-motivation-div {
+  background-color: #FFFFFA;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 64px 8px 64px 8px;
+}
+#landing-motivation-div div, #landing-motivation-div img{
+  max-width: 300px;
+  width: 100%;
+}
+
+/*
+* Get Started Div
+*/
+
+#landing-getstarted {
+  background-color: #7FB45D;
+  padding: 64px 8px 64px 8px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+#landing-getstarted p,paper-button {
+  color: white;
+  width: 100%;
+}
+#landing-getstarted p:first-child{
+  font-size: xx-large;
+  margin:0;
+}
+#landing-getstarted paper-button {
+  background-color: #FF8324;
+  margin: 50px 0 0 0;
+  max-width: 300px;
+  width: 100%;
+}
+
+/*
+* Footer div
+*/
+
+.landing-footer-div {
+  height: 200px;
+  background-color: #000000;
+}
+.landing-page-contact {
+  float: left;
+  color: #ffffff;
+  padding: 8px;
+}
+
+/*
+* Rules that change based on the device
+*/
+
+@media screen and (min-device-width: 901px) {
+  #landing-hero-image-container {
     margin-top: 50px;
-  }
-  #landing-hero-image-container img{
-    width: 100%;
+    width: 560px;
+    min-width:560px;
   }
   #landing-hero-div-motivation {
-    max-width: 400px;
+    width: 400px;
+    min-width: 400px;
     padding-top: 100px;
   }
-  #landing-hero-div-motivation paper-button{
-    background-color: #FF8324;
-    color: white;
-    width: 100%;
-    margin-top: 50px;
+  #landing-how-it-works-text {
+    width: 400px;
   }
-
-  #landing-motivation-div {
-    height: 350px;
-    background-color: #FFFFFA;
-    display: flex;
-    justify-content: space-around;
-    padding-top: 100px;
-  }
-  #landing-motivation-div div{
-    max-width: 200px;
-  }
-  #landing-motivation-div img{
-    width: 100%;
-  }
-  #landing-how-it-works{
-    padding: 32px 32px 32px 32px;
-    color: #ffffff;
-    background-color: #7FB45D;
-    /*background: -webkit-linear-gradient(#7FB45D 50%, #FFFFFA); *//* For Safari 5.1 to 6.0 */
-    /*background: -o-linear-gradient(#7FB45D 50%, #FFFFFA); *//* For Opera 11.1 to 12.0 */
-    /*background: -moz-linear-gradient(#7FB45D 50%, #FFFFFA); *//* For Firefox 3.6 to 15 */
-    /*background: linear-gradient(#7FB45D 50%, #FFFFFA); *//* Standard syntax (must be last) */
-  }
-  #landing-how-it-works p{
+  #landing-how-it-works-text h1 {
+    margin: 0;
     text-align: left;
   }
-
-  #landing-all-devices{
-    background-image: url("office-583839_1920.jpg");
-    margin: 0;
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 1005px;
-    display: none;
+  #landing-how-it-works-text p:last-child {
+    font-size: x-large;
+    padding-top: 64px;
   }
-
-  .landing-getstarted-div {
-    background-color: #7FB45D;
-    padding: 50px;
+  #landing-how-it-works-video {
+    width: 560px;
+    height: 315px;
   }
-
-  .landing-footer-div {
-    height: 200px;
-    background-color: #000000;
-  }
-  .landing-page-contact {
-    width: 300px;
-    color: #ffffff;
-    padding: 30px;
-  }
+  /*#landing-all-devices{*/
+    /*background-image: url("office-583839_1920.jpg");*/
+    /*margin: 0;*/
+    /*background-size: contain;*/
+    /*background-repeat: no-repeat;*/
+    /*width: 100%;*/
+    /*height: 1005px;*/
+    /*display: none;*/
+  /*}*/
 }
 
-@media (max-width: 700px), handheld {
-
+@media (max-width: 900px), handheld {
+  #landing-hero-image-container{
+    margin-top: 50px;
+  }
+  #landing-hero-div-motivation {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 400px;
+  }
+  #landing-how-it-works-video{
+    width: 100%;
+    margin: auto;
+    height: 315px;
+  }
 }
