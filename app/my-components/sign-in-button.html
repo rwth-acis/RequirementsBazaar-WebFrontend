@@ -1,11 +1,8 @@
 <span class="oauth">
   <!--Sign in style-->
-  <div class="logged-out" ng-show="show=='logged-out'" ng-click="login()" style="cursor: pointer;display: flex" title="Log in">
-    <svg style="width:24px;height:24px;" viewBox="0 0 24 24">
-      <path fill="#ffffff" d="M10,17.25V14H3V10H10V6.75L15.25,12L10,17.25M8,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H8A2,2 0 0,1 6,20V16H8V20H17V4H8V8H6V4A2,2 0 0,1 8,2Z" />
-    </svg>
+  <div class="logged-out" ng-show="show=='logged-out'" ng-click="login()" style="background-color: #FF8324;color: white;padding: 5px;cursor: pointer;border-radius: 3px;white-space: nowrap;font-size: large" title="Log in">
+    Sign In
   </div>
-
   <!--Sign out style-->
   <div class="logged-in" ng-show="show=='logged-in'" ng-click="logout()" style="cursor: pointer;display: flex" title="Log out">
     <svg style="width:24px;height:24px" viewBox="0 0 24 24">

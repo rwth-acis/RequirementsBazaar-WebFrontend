@@ -67,7 +67,8 @@ pre {
   white-space: nowrap;
 }
 oauth {
-  margin: auto;
+  margin: auto 8px auto 8px;
+  float: right;
 }
 .sidebarMenu paper-button {
   width:100%;

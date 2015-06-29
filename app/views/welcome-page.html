@@ -2,7 +2,14 @@
   <div id="landing-header">
     <h3 id="landing-header-title" class="ellipsis">Requirements Bazaar</h3>
     <div id="landing-header-right-container">
-      <div id="landing-page-signin-button">Sign In</div>
+      <oauth
+        site={{oauthSite}}
+        client-id={{oauthClientId}}
+        data-scope={{oauthDataScope}}
+        redirect-uri={{oauthRedirectURI}}
+        profile-uri={{oauthProfileURI}}
+        template= {{oauthTemplateURI}}>
+      </oauth>
       <div id="landing-header-explore" ng-click="exploreProjects()">Explore</div>
     </div>
   </div>

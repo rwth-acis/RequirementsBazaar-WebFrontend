@@ -1,7 +1,14 @@
 <div id="explore-page" ng-controller="ExploreCtrl" style="overflow: auto; height: 100vh;" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
   <div id="explore-header">
     <h3 id="explore-header-title" class="ellipsis">Requirements Bazaar</h3>
-    <div id="explore-page-signin-button">Sign In</div>
+    <oauth
+      site={{oauthSite}}
+      client-id={{oauthClientId}}
+      data-scope={{oauthDataScope}}
+      redirect-uri={{oauthRedirectURI}}
+      profile-uri={{oauthProfileURI}}
+      template= {{oauthTemplateURI}}>
+    </oauth>
   </div>
   <div style="max-width: 1080px;padding: 64px 8px 8px 8px;margin: auto;">
 

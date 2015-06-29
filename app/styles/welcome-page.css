@@ -13,7 +13,7 @@
   background-color: #669900;
   color: white;
   box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.3);
-  height: 60px;
+  height: 65px;
   width: 100%;
   display: flex;
   position: fixed;
@@ -35,7 +35,7 @@
   border-radius: 3px;
   white-space: nowrap;
   float: right;
-  margin: 16px 8px 16px 8px;
+  margin: auto 8px auto 8px;
 }
 #landing-header-explore{
   color: white;
@@ -43,7 +43,7 @@
   cursor: pointer;
   border-radius: 3px;
   padding: 5px;
-  margin: 16px 8px 16px 8px;
+  margin: auto 8px auto 8px;
 }
 
 /*
