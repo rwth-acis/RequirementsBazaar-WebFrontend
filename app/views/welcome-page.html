@@ -3,13 +3,13 @@
     <h3 id="landing-header-title" class="ellipsis">Requirements Bazaar</h3>
     <div id="landing-header-right-container">
       <div id="landing-page-signin-button">Sign In</div>
-      <div id="landing-header-explore">Explore</div>
+      <div id="landing-header-explore" ng-click="exploreProjects()">Explore</div>
     </div>
   </div>
   <div>
     <div id="landing-hero-div">
       <div id="landing-hero-image-container">
-        <img src="styles/distorted-req-baz.png" >
+        <img src="styles/hero-image.png" style="box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3);">
       </div>
       <div id="landing-hero-div-motivation">
         <h1>CREATE BETTER PROJECTS WITH US</h1>
@@ -29,9 +29,6 @@
         <iframe width="100%" height="100%" src="https://www.youtube.com/embed/u3f8xnEtT7I" frameborder="0" allowfullscreen></iframe>
       </div>
     </div>
-    <!--<div id="landing-all-devices">-->
-      <!--<h2>Use it on every device</h2>-->
-    <!--</div>-->
     <div id="landing-motivation-div">
       <div>
         <img src="styles/speech-bubble.svg" height="150px">
@@ -48,8 +45,8 @@
     </div>
     <div id="landing-getstarted">
       <p>Get Started</p>
-      <p>Don't miss out on talking to your users and increasing their and your satisfaction with the product!</p>
-      <paper-button>Create project</paper-button>
+      <p>Take a look at a few example project and if we have convinced you create your own</p>
+      <paper-button ng-click="exploreProjects()">Explore public projects</paper-button>
     </div>
     <div class="landing-footer-div">
       <div class="landing-page-contact">
