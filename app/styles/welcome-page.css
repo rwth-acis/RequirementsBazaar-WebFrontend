@@ -2,11 +2,11 @@
 * General rules that apply to the page regardless of the screen size. Responsive rules are at the bottom of the file.
 */
 
-p{
+#landing-page p{
   font-size: large;
   text-align: center;
 }
-h1{
+#landing-page h1{
   text-align: center;
 }
 #landing-header {
@@ -111,7 +111,7 @@ h1{
   justify-content: space-around;
   flex-wrap: wrap;
 }
-#landing-getstarted p,paper-button {
+#landing-getstarted p, #landing-getstarted paper-button {
   color: white;
   width: 100%;
 }
