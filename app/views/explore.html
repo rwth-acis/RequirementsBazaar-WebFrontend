@@ -1,0 +1,14 @@
+<div id="explore-page" ng-controller="ExploreCtrl" id="inf-scroll" style="overflow: auto; height: 100vh;" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
+  <div id="explore-header">
+    <h3 id="explore-header-title" class="ellipsis">Requirements Bazaar</h3>
+    <div id="explore-page-signin-button">Sign In</div>
+  </div>
+  <div style="max-width: 1080px;padding: 64px 8px 8px 8px;margin: auto;">
+
+    <h1>Featured</h1>
+    <req-baz-project ng-repeat="project in featured" name={{project.name}} desc={{project.description}} ng-click="selectProject(project)"></req-baz-project>
+
+    <h1>Public projects</h1>
+    <req-baz-project ng-repeat="project in projects | limitTo : limit track by project.id" name={{project.name}} desc={{project.description}} ng-click="selectProject(project)"></req-baz-project>
+  </div>
+</div>

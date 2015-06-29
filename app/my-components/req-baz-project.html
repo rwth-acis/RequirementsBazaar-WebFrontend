@@ -1,0 +1,31 @@
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+
+<polymer-element name="req-baz-project" attributes="name desc">
+  <template>
+    <style>
+      paper-item:hover{
+        background-color: #EEEEEE;
+      }
+      :host {
+        display: block
+      }
+    </style>
+    <div>
+      <paper-shadow z="1">
+        <paper-item>
+          <div>
+            <p style="font-size: x-large">{{name}}</p>
+            <p>{{desc}}</p>
+          </div>
+        </paper-item>
+      </paper-shadow>
+
+    </div>
+  </template>
+  <script>
+    Polymer('req-baz-project',{
+
+    });
+  </script>
+</polymer-element>

@@ -1,0 +1,32 @@
+#explore-header {
+  background-color: #669900;
+  color: white;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.3);
+  height: 60px;
+  width: 100%;
+  display: flex;
+  position: fixed;
+  z-index: 1;
+  justify-content: space-between;
+}
+#explore-header-title{
+  padding-left: 16px;
+}
+#explore-header-right-container{
+  display: flex;
+  flex-direction: row-reverse;
+}
+#explore-page-signin-button{
+  background-color: #FF8324;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 3px;
+  white-space: nowrap;
+  float: right;
+  margin: 16px 8px 16px 8px;
+}
+#explore-page req-baz-project {
+  margin: 8px;
+  background-color: white;
+}
