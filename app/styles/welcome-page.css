@@ -22,6 +22,7 @@
 }
 #landing-header-title{
   padding-left: 16px;
+  margin: auto 0 auto 0;
 }
 #landing-header-right-container{
   display: flex;

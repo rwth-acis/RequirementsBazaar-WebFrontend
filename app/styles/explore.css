@@ -5,12 +5,13 @@
   height: 65px;
   width: 100%;
   display: flex;
-  position: fixed;
+  /*position: fixed;*/
   z-index: 1;
   justify-content: space-between;
 }
 #explore-header-title{
   padding-left: 16px;
+  margin: auto 0 auto 0;
 }
 #explore-header-right-container{
   display: flex;
