@@ -1,8 +1,190 @@
-.welcome-content{
-  background-color: white;
-  margin-bottom: 12px;
-  padding: 10px;
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+/*
+* General rules that apply to the page regardless of the screen size. Responsive rules are at the bottom of the file.
+*/
+
+#landing-page p{
+  font-size: large;
+  text-align: center;
+}
+#landing-page h1{
+  text-align: center;
+}
+#landing-header {
+  background-color: #669900;
+  color: white;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.3);
+  height: 60px;
+  width: 100%;
+  display: flex;
+  position: fixed;
+  z-index: 1;
+  justify-content: space-between;
+}
+#landing-header-title{
+  padding-left: 16px;
+}
+#landing-header-right-container{
+  display: flex;
+  flex-direction: row-reverse;
+}
+#landing-page-signin-button{
+  background-color: #FF8324;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 3px;
+  white-space: nowrap;
+  float: right;
+  margin: 16px 8px 16px 8px;
+}
+#landing-header-explore{
+  color: white;
+  float: right;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 16px 8px 16px 8px;
+}
+
+/*
+* Hero panel of the landing page, with image and text
+*/
+
+#landing-hero-div {
+  padding: 64px 8px 64px 8px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap-reverse;
+  background-image: url("background%20image-sepia.png");
+}
+#landing-hero-div-motivation paper-button{
+  background-color: #FF8324;
+  color: white;
+  width: 100%;
+  max-width: 400px;
+  margin: 50px 0 0 0;
+}
+#landing-hero-image-container img{
+  width: 100%;
+}
+
+/*
+* Explanation panel with text and video
+*/
+
+#landing-how-it-works{
+  padding: 32px 8px 32px 8px;
+  color: #ffffff;
+  background-color: #7FB45D;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+#landing-how-it-works p{
+  text-align: left;
+}
+
+/*
+* Motivation panel with three columns, each having icon and motivational text
+*/
+
+#landing-motivation-div {
+  background-color: #FFFFFA;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 64px 8px 64px 8px;
+}
+#landing-motivation-div div, #landing-motivation-div img{
+  max-width: 300px;
+  width: 100%;
+}
+
+/*
+* Get Started Div
+*/
+
+#landing-getstarted {
+  background-color: #7FB45D;
+  padding: 64px 8px 64px 8px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+#landing-getstarted p, #landing-getstarted paper-button {
+  color: white;
+  width: 100%;
+}
+#landing-getstarted p:first-child{
+  font-size: xx-large;
+  margin:0;
+}
+#landing-getstarted paper-button {
+  background-color: #FF8324;
+  margin: 50px 0 0 0;
+  max-width: 300px;
+  width: 100%;
+}
+
+/*
+* Footer div
+*/
+
+.landing-footer-div {
+  height: 200px;
+  background-color: #000000;
+}
+.landing-page-contact {
+  float: left;
+  color: #ffffff;
+  padding: 8px;
+}
+
+/*
+* Rules that change based on the device
+*/
+
+@media screen and (min-device-width: 901px) {
+  #landing-hero-image-container {
+    margin-top: 50px;
+    width: 560px;
+    min-width:560px;
+  }
+  #landing-hero-div-motivation {
+    width: 400px;
+    min-width: 400px;
+    padding-top: 50px;
+  }
+  #landing-how-it-works-text {
+    width: 400px;
+  }
+  #landing-how-it-works-text h1 {
+    margin: 0;
+    text-align: left;
+  }
+  #landing-how-it-works-text p:last-child {
+    font-size: x-large;
+    padding-top: 64px;
+  }
+  #landing-how-it-works-video {
+    width: 560px;
+    height: 315px;
+  }
+}
+
+@media (max-width: 900px), handheld {
+  #landing-hero-image-container{
+    margin-top: 50px;
+  }
+  #landing-hero-div-motivation {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 400px;
+  }
+  #landing-how-it-works-video{
+    width: 100%;
+    margin: auto;
+    height: 315px;
+  }
 }
