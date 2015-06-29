@@ -13,7 +13,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.projects = null;
     $scope.featured = [];
 
-    $scope.limit = 20;
+    $scope.limit = 5;
     $scope.addMoreItems = function(){
       if($scope.projects !== null){
         if($scope.limit < $scope.projects.length){
