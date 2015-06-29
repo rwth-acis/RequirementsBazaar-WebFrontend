@@ -65,11 +65,13 @@ pre {
 #main-toolbar {
   white-space: nowrap;
 }
-
-oauth{
+oauth {
   margin: auto;
 }
-
+.sidebarMenu paper-button {
+  width:100%;
+  margin:0 0 32px 0;
+}
 /*
   Main content
 */

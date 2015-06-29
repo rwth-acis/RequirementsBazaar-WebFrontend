@@ -2,8 +2,8 @@
 
 angular.module('requirementsBazaarWebFrontendApp').config(function ($translateProvider) {
   $translateProvider.translations('en', {
-    COMPONENT: 'Component',
-    PROJECT: 'Project',
+    COMPONENT: 'Create component',
+    PROJECT: 'Create project',
     BECOME_LEAD_DEV: 'Become a lead developer',
     EDIT_REQUIREMENT: 'Edit requirement',
     FOLLOW_REQUIREMENT: 'Follow requirement',
@@ -101,8 +101,8 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
 
   })
     .translations('de', {
-      COMPONENT: 'Komponente',
-      PROJECT: 'Projekt',
+      COMPONENT: 'Neue Komponente',
+      PROJECT: 'Neues Projekt',
       BECOME_LEAD_DEV: 'Werden Sie ein leitender Entwickler',
       EDIT_REQUIREMENT: 'Requirement bearbeiten',
       FOLLOW_REQUIREMENT: 'Requirement folgen',
