@@ -8,57 +8,17 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('VoteCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService) {
+  .controller('VoteCtrl', function ($scope, reqBazService, HttpErrorHandlingService) {
 
-    $scope.voteUp = function(req){
-      reqBazService.addVote(req.id,false)
+    $scope.vote = function(req,upvote){
+      reqBazService.addVote(req.id,upvote)
         .success(function(message){
-          if(HttpErrorHandlingService.isSuccess(message)){
-            if (message.status === 'UNCHANGED'){
-              UtilityService.showFeedback('ALREADY_VOTED');
-            }
-            else if (message.status === 'CHANGED'){
-              req.userVoted = 'UP_VOTE';
-              req.upVotes += 1;
-              req.downVotes -= 1;
-              UtilityService.showFeedback('THANK_YOU');
-            }
-            else if(message.status === 'CREATED'){
-              req.userVoted = 'UP_VOTE';
-              req.upVotes += 1;
-              UtilityService.showFeedback('THANK_YOU');
-            }
-          }
+          req.userVoted = message.userVoted;
+          req.upVotes = message.upVotes;
+          req.downVotes = message.downVotes;
         })
         .error(function(error){
-          console.log(error);
-          UtilityService.showFeedback('WARN_VOTE_NOT_COUNTED');
-        });
-    };
-
-    $scope.voteDown = function(req){
-      reqBazService.addVote(req.id,true)
-        .success(function(message){
-          if(HttpErrorHandlingService.isSuccess(message)) {
-            if (message.status === 'UNCHANGED') {
-              UtilityService.showFeedback('ALREADY_VOTED');
-            }
-            else if (message.status === 'CHANGED') {
-              req.userVoted = 'DOWN_VOTE';
-              req.upVotes -= 1;
-              req.downVotes += 1;
-              UtilityService.showFeedback('THANK_YOU');
-            }
-            else if (message.status === 'CREATED') {
-              req.userVoted = 'DOWN_VOTE';
-              req.downVotes += 1;
-              UtilityService.showFeedback('THANK_YOU');
-            }
-          }
-        })
-        .error(function(error){
-          console.log(error);
-          UtilityService.showFeedback('WARN_VOTE_NOT_COUNTED');
+          HttpErrorHandlingService.handleError(error);
         });
     };
   });

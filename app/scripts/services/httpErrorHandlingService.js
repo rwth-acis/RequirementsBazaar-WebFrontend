@@ -26,4 +26,18 @@ angular.module('requirementsBazaarWebFrontendApp')
       return true;
     };
 
+    /*
+    * The API already has explanation for errors, just display it
+    * */
+    this.handleError = function (message,httpStatus) {
+      switch (httpStatus){
+        case '401':
+          UtilityService.showFeedback(message.message);
+          break;
+        default :
+          UtilityService.showFeedback(message.message);
+          break;
+      }
+    }
+
   });

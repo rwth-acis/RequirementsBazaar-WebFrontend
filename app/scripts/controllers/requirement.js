@@ -98,7 +98,7 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Called: by the user, by clicking on submit requirement
      * */
     $scope.saveChanges = function(){
-      reqBazService.updateRequirement($scope.activeProject.id,$scope.activeComponent.id, $scope.dirtyReq.id,$scope.dirtyReq)
+      reqBazService.updateRequirement($scope.dirtyReq.id,$scope.dirtyReq)
         .success(function (message) {
           if(HttpErrorHandlingService.isSuccess(message)) {
             console.log(message);
@@ -229,6 +229,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     var getComments = function(req){
       reqBazService.getComments(req.id,0,30)
         .success(function (comments) {
+          console.log(comments);
           req.comments = comments;
         })
         .error(function (error) {
@@ -241,48 +242,26 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     //Become a follower of a requirement
     $scope.followRequirement = function(clickEvent,req){
-      console.log('become follower');
       reqBazService.addUserToFollowers(req.id)
-        .success(function (message) {
-          if(HttpErrorHandlingService.isSuccess(message)){
-            UtilityService.showFeedback('THANK_YOU_FOR_FOLLOWING');
-            reqBazService.getRequirement(req.id)
-              .success(function (reqNew) {
-                req.followers = reqNew.followers;
-              })
-              .error(function (error) {
-                console.log(error);
-                UtilityService.showFeedback('REFRESH_PLEASE');
-              });
-          }
+        .success(function (requirement) {
+          console.log(requirement);
+          UtilityService.showFeedback('THANK_YOU_FOR_FOLLOWING');
+          req.followers = requirement.followers;
         })
-        .error(function (error) {
-          console.log(error);
-          UtilityService.showFeedback('WARN_NOT_REG_AS_FOLLOWER');
+        .error(function (error, httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
 
     //Become a developer of a requirement
     $scope.developRequirement = function(clickEvent,req){
-      console.log('become developer');
       reqBazService.addUserToDevelopers(req.id)
-        .success(function (message) {
-          console.log(message);
-          if(HttpErrorHandlingService.isSuccess(message)){
-            UtilityService.showFeedback('THANK_FOR_INIT');
-            reqBazService.getRequirement(req.id)
-              .success(function (reqNew) {
-                req.developers = reqNew.developers;
-              })
-              .error(function (error) {
-                console.log(error);
-                UtilityService.showFeedback('REFRESH_PLEASE');
-              });
-          }
+        .success(function (requirement) {
+          UtilityService.showFeedback('THANK_FOR_INIT');
+          req.developers = requirement.developers;
         })
-        .error(function (error) {
-          console.log(error);
-          UtilityService.showFeedback('WARN_NOT_REG_AS_DEV');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
   });

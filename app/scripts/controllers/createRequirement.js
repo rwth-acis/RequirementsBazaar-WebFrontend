@@ -38,8 +38,9 @@ angular.module('requirementsBazaarWebFrontendApp')
           UtilityService.showFeedback('ATTACHMENTS_NOT_INCLUDED');
         }
         console.log('submit requirement');
-        var req = {title: $scope.newName, description: $scope.newDesc, projectId: $scope.activeProject.id, leadDeveloperId: 1};
-        reqBazService.createRequirement($scope.activeProject.id, $scope.activeComponent.id, req)
+        var components = [{id:$scope.activeComponent.id}];
+        var req = {title: $scope.newName, description: $scope.newDesc, projectId: $scope.activeProject.id, components: components,leadDeveloperId: 1};
+        reqBazService.createRequirement(req)
           .success(function (message) {
             console.log(message);
             if(HttpErrorHandlingService.isSuccess(message)) {

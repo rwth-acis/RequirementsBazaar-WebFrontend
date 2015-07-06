@@ -122,23 +122,20 @@
             </paper-item>
             <div ng-controller="VoteCtrl" class="vote-button-container">
               <p ng-bind="req.upVotes" class="small-grey-text"></p>
-              <paper-icon-button ng-show="req.userVoted === 'UP_VOTE'" disabled icon="icons:thumb-up" ng-click="voteUp(req)" style="padding: 14px;"></paper-icon-button>
-              <paper-icon-button ng-show="req.userVoted !== 'UP_VOTE'" icon="icons:thumb-up" ng-click="voteUp(req)" style="padding: 14px;"></paper-icon-button>
+              <paper-icon-button ng-disabled="req.userVoted === 'UP_VOTE'" icon="icons:thumb-up" ng-click="vote(req,false)"></paper-icon-button>
               <p ng-bind="req.downVotes" class="small-grey-text"></p>
-              <paper-icon-button disabled ng-show="req.userVoted === 'DOWN_VOTE'" icon="icons:thumb-down" ng-click="voteDown(req)" style="padding: 14px;"></paper-icon-button>
-              <paper-icon-button ng-show="req.userVoted !== 'DOWN_VOTE'" icon="icons:thumb-down" ng-click="voteDown(req)" style="padding: 14px;"></paper-icon-button>
+              <paper-icon-button ng-disabled="req.userVoted === 'DOWN_VOTE'" icon="icons:thumb-down" ng-click="vote(req,true)"></paper-icon-button>
             </div>
             <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert">
               <paper-dropdown class="dropdown">
                 <core-menu class="menu">
                   <paper-item ng-click="showContrib(req,$index)" ng-show="!showContributors" ng-bind="'SHOW_CONTRIBUTORS'|translate"></paper-item>
                   <paper-item ng-click="hideContrib()" ng-show="showContributors && showRequirement" ng-bind="'HIDE_CONTRIBUTORS'|translate"></paper-item>
-                  <paper-item ng-click="followRequirement($event,req)">{{'FOLLOW_REQUIREMENT' | translate}}</paper-item>
-                  <paper-item ng-click="developRequirement($event,req)">{{'DEVELOP_REQUIREMENT' | translate}}</paper-item>
+                  <paper-item ng-click="followRequirement($event,req)" ng-disabled="activeUser === null">{{'FOLLOW_REQUIREMENT' | translate}}</paper-item>
+                  <paper-item ng-click="developRequirement($event,req)" ng-disabled="activeUser === null">{{'DEVELOP_REQUIREMENT' | translate}}</paper-item>
                   <paper-item disabled ng-click="becomeLead($event,req)">{{'BECOME_LEAD_DEV' | translate}}</paper-item>
-                  <paper-item ng-click="startEdit(req,$index)" ng-show="!isDirtyReq">{{'EDIT_REQUIREMENT' | translate}}</paper-item>
-                  <paper-item ng-click="startEdit(req,$index)" ng-show="isDirtyReq" disabled>{{'EDIT_REQUIREMENT' | translate}}</paper-item>
-                  <paper-item ng-click="confirmDelete(req)">{{'DELETE_REQUIREMENT' | translate}}</paper-item>
+                  <paper-item ng-click="startEdit(req,$index)" ng-disabled="isDirtyReq || activeUser === null">{{'EDIT_REQUIREMENT' | translate}}</paper-item>
+                  <paper-item ng-click="confirmDelete(req)" ng-disabled="activeUser === null">{{'DELETE_REQUIREMENT' | translate}}</paper-item>
                 </core-menu>
               </paper-dropdown>
             </paper-dropdown-menu-ex>
@@ -198,13 +195,13 @@
                       {{comment.creator.userName}}
                       <time is="relative-time" datetime={{comment.creationTime}}></time>
                     </p>
-                    <paper-icon-button ng-click="deleteComment(comment.Id,req)" icon="icons:delete"></paper-icon-button>
+                    <paper-icon-button ng-click="deleteComment(comment.Id,req)" icon="icons:delete" ng-hide="activeUser === null"></paper-icon-button>
                   </div>
                 </div>
               </div>
 
               <!--Create comment-->
-              <paper-input-decorator label={{'COMMENT_PLACEHOLDER'|translate}} style="margin-top: 32px;">
+              <paper-input-decorator label={{'COMMENT_PLACEHOLDER'|translate}} ng-hide="activeUser === null" style="margin-top: 32px;">
                 <paper-autogrow-textarea>
                   <textarea ng-model="newComment" required></textarea>
                 </paper-autogrow-textarea>

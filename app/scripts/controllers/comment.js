@@ -18,26 +18,16 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(!UtilityService.isEmpty(text,'COMMENT_TEXT_MISSING')){
         console.log('post comment: '+text);
         var comment = {requirementId: req.id, message: text};
-        reqBazService.createComment(req.id,comment)
-          .success(function (message) {
-            console.log(message);
-            if(HttpErrorHandlingService.isSuccess(message)) {
-              UtilityService.showFeedback('THANKS_FOR_FEEDBACK');
-              reqBazService.getComment($scope.activeComponent.id, message.id)
-                .success(function (commentNew) {
-                  comment = commentNew;
-                  req.comments.splice(0, 0, comment);
-                })
-                .error(function (error) {
-                  console.log(error);
-                  UtilityService.showFeedback('REFRESH_PLEASE');
-                });
-            }
+        reqBazService.createComment(comment)
+          .success(function (newComment) {
+            console.log(newComment);
+            UtilityService.showFeedback('THANKS_FOR_FEEDBACK');
+            newComment.creator = $scope.activeUser;
+            console.log(newComment);
+            req.comments.splice(0, 0, newComment);
           })
-          .error(function (error) {
-            //This error only catches unknown server errors, usual errorCodes are sent with success message
-            console.log(error);
-            UtilityService.showFeedback('WARN_COMMENT_NOT_CREATED');
+          .error(function (error,httpStatus) {
+            HttpErrorHandlingService.handleError(error,httpStatus);
           });
       }
     };
@@ -50,21 +40,16 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteComment(id)
         .success(function (message) {
           console.log(message);
-          if(HttpErrorHandlingService.isSuccess(message)) {
-            // Delete the removed requirement from the list
-            for(var i = 0; i<req.comments.length;i++){
-              if(req.comments[i].Id === id){
-                req.comments.splice(i, 1);
-                break;
-              }
+          for(var i = 0; i<req.comments.length;i++){
+            if(req.comments[i].Id === id){
+              req.comments.splice(i, 1);
+              break;
             }
-            UtilityService.showFeedback('DEL_COMMENT',message.deletedItemText);
           }
+          UtilityService.showFeedback('DEL_COMMENT',message.deletedItemText);
         })
-        .error(function (error) {
-          //This error only catches unknown server errors, usual errorCodes are sent with success message
-          console.log(error);
-          UtilityService.showFeedback('WARN_COMMENT_NOT_DEL');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
 

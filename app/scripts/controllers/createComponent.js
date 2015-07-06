@@ -20,7 +20,7 @@ angular.module('requirementsBazaarWebFrontendApp')
       if(!UtilityService.isEmpty($scope.name,'COMP_NAME_MISSING')) {
         console.log('submit new component');
         var comp = {description: $scope.desc, name: $scope.name, projectId: $scope.activeProject.id};
-        reqBazService.createComponent($scope.activeProject.id,comp)
+        reqBazService.createComponent(comp)
           .success(function (message) {
             console.log(message);
             if(HttpErrorHandlingService.isSuccess(message)) {

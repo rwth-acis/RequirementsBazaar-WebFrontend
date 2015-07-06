@@ -30,8 +30,8 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     this.getProject = function (projectId) {
-      var projectUrl = url + 'projects';
-      return $http.get(projectUrl + '/' + projectId);
+      var projectUrl = url + 'projects/' + projectId;
+      return $http.get(projectUrl);
     };
 
     this.updateProject = function(projectId,project){
@@ -46,23 +46,23 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $http.get(paginate(componentUrl,page,per_page));
     };
 
-    this.createComponent = function(projectId, component) {
-      var componentUrl = url + 'projects/' + projectId + '/components';
+    this.createComponent = function(component) {
+      var componentUrl = url + 'components';
       return $http.post(componentUrl, component);
     };
 
     this.getComponent = function (componentId) {
-      var componentUrl = url + 'projects/' + 0 + '/components';
-      return $http.get(componentUrl + '/' + componentId);
+      var componentUrl = url + 'components/' + componentId;
+      return $http.get(componentUrl);
     };
 
-    this.deleteComponent = function(projectId,componentId){
-      var componentUrl = url + 'projects/' + projectId + '/components';
-      return $http.delete(componentUrl + '/' + componentId);
+    this.deleteComponent = function(componentId){
+      var componentUrl = url + 'components/'+ componentId;
+      return $http.delete(componentUrl);
     };
 
-    this.updateComponent = function(projectId,componentId,component){
-      var componentUrl = url + 'projects/' + projectId + '/components/' + componentId;
+    this.updateComponent = function(componentId,component){
+      var componentUrl = url + 'components/' + componentId;
       return $http.put(componentUrl, component);
     };
 
@@ -72,40 +72,40 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $http.get(paginate(reqUrl,page,per_page));
     };
 
-    this.getRequirementsByComponent = function(projectId,componentId,page,per_page){
-      var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements';
+    this.getRequirementsByComponent = function(componentId,page,per_page){
+      var reqUrl = url + 'components/' + componentId + '/requirements';
       return $http.get(paginate(reqUrl,page,per_page));
     };
 
-    this.createRequirement = function(projectId, componentId, requirement){
-      var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements';
+    this.createRequirement = function(requirement){
+      var reqUrl = url + 'requirements';
       return $http.post(reqUrl, requirement);
     };
 
     this.getRequirement = function(requirementId){
-      var reqUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements';
-      return $http.get(reqUrl + '/' + requirementId);
+      var reqUrl = url + 'requirements/' + requirementId;
+      return $http.get(reqUrl);
     };
 
     this.deleteRequirement = function(requirementId) {
-      var reqUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements';
-      return $http.delete(reqUrl + '/' + requirementId);
+      var reqUrl = url + 'requirements/' + requirementId;
+      return $http.delete(reqUrl);
     };
 
-    this.updateRequirement = function(projectId,componentId,requirementId,requirement){
-      var reqUrl = url + 'projects/' + projectId + '/components/' + componentId + '/requirements/' + requirementId;
+    this.updateRequirement = function(requirementId,requirement){
+      var reqUrl = url + 'requirements/' + requirementId;
       return $http.put(reqUrl, requirement);
     };
 
     //DEV LIST
 
     this.addUserToDevelopers = function(requirementId){
-      var devUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/developers';
+      var devUrl = url + 'requirements/' + requirementId + '/developers';
       return $http.post(devUrl);
     };
 
     this.removeUserFromDevelopers = function(requirementId){
-      var devUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/developers';
+      var devUrl = url + 'requirements/' + requirementId + '/developers';
       return $http.delete(devUrl);
     };
 
@@ -113,18 +113,18 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     //
     this.addUserToFollowers = function(requirementId){
-      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/followers';
+      var followUrl = url + 'requirements/' + requirementId + '/followers';
       return $http.post(followUrl);
     };
 
     this.removeUserFromFollowers = function(requirementId){
-      var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/followers';
+      var followUrl = url + 'requirements/' + requirementId + '/followers';
       return $http.delete(followUrl);
     };
 
     ///VOTE
     this.addVote = function(requirementId, isDownvote){
-      var voteUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/vote';
+      var voteUrl = url + 'requirements/' + requirementId + '/vote';
       if (isDownvote){
         voteUrl += '?direction=down';
       } else {
@@ -133,38 +133,32 @@ angular.module('requirementsBazaarWebFrontendApp')
       return $http.post(voteUrl);
     };
 
-    //naming is wrong
-    //this.removeUserFromDevelopers = function(requirementId){
-    //  var followUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements' + requirementId + '/vote';
-    //  return $http.delete(reqUrl);
-    //};
-
     /// COMMENTS
 
     this.getComments = function(requirementId, page, per_page){
-      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/comments';
+      var commentUrl = url + 'requirements/' + requirementId + '/comments';
       return $http.get(paginate(commentUrl,page,per_page));
     };
 
-    this.getComment = function(componentId,commentId){
-      var commentUrl = url + 'projects/' + 0 + '/components/' + componentId + '/requirements/' + 0 + '/comments/'+commentId;
+    this.getComment = function(commentId){
+      var commentUrl = url + 'comments/'+commentId;
       return $http.get(commentUrl);
     };
 
-    this.createComment = function(requirementId,comment){
-      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + requirementId + '/comments';
+    this.createComment = function (comment){
+      var commentUrl = url + 'comments';
       return $http.post(commentUrl, comment);
     };
 
     this.deleteComment = function(commentId){
-      var commentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/comments';
-      return $http.delete(commentUrl + '/' + commentId);
+      var commentUrl = url + 'comments/' + commentId;
+      return $http.delete(commentUrl);
     };
 
     ///ATTACHMENTS
     //TODO Attachment Type? I think it is not implemented on backend
     this.createAttachment = function(attachmentType, attachment){
-      var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/attachments';
+      var attachmentUrl = url + 'attachments';
 
       attachmentUrl+= '?attachmentType' + attachmentType;
 
@@ -172,13 +166,19 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     this.deleteAttachment = function(attachmentId){
-      var attachmentUrl = url + 'projects/' + 0 + '/components/' + 0 + '/requirements/' + 0 + '/attachments';
-      return $http.delete(attachmentUrl + '/' + attachmentId);
+      var attachmentUrl = url + 'attachments/' + attachmentId;
+      return $http.delete(attachmentUrl);
     };
 
     /// USER
     this.getUser = function(userId) {
-      var userUrl = url + 'users';
-      return $http.get(userUrl + '/' + userId);
+      var userUrl = url + 'users/' + userId;
+      return $http.get(userUrl);
     };
+
+    this.getCurrentUser = function() {
+      var userCurrentUrl = url + 'users/current';
+      return $http.get(userCurrentUrl);
+    };
+
   });
