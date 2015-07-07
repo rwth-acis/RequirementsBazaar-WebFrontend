@@ -17,30 +17,17 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Submit a new component
      * */
     $scope.submitComponent = function(){
-      if(!UtilityService.isEmpty($scope.name,'COMP_NAME_MISSING')) {
-        console.log('submit new component');
+      if(!UtilityService.isEmpty($scope.name,'COMP_NAME_MISSING') && !UtilityService.isEmpty($scope.desc,'COMP_DESC_MISSING')) {
         var comp = {description: $scope.desc, name: $scope.name, projectId: $scope.activeProject.id};
         reqBazService.createComponent(comp)
-          .success(function (message) {
-            console.log(message);
-            if(HttpErrorHandlingService.isSuccess(message)) {
-              //Retrieve it from the server since we need the creator id that is on the server
-              reqBazService.getComponent(message.id)
-                .success(function (comp) {
-                  //The component is added to be the first element and will be active
-                  $scope.components.splice(0, 0, comp);
-                  $scope.selectComp(comp);
-                  $scope.clearSubmit();
-                })
-                .error(function (error) {
-                console.log(error);
-                UtilityService.showFeedback('WARN_REQ_COMP_LOADED');
-              });
-            }
+          .success(function (newComp) {
+            console.log(newComp);
+            $scope.components.splice(0, 0, newComp);
+            $scope.selectComp(newComp);
+            $scope.clearSubmit();
           })
-          .error(function (error) {
-            console.log(error);
-            UtilityService.showFeedback('WARN_COMP_NOT_CREATED');
+          .error(function (error,httpStatus) {
+            HttpErrorHandlingService.handleError(error,httpStatus);
           });
       }
     };

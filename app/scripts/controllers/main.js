@@ -228,28 +228,23 @@ angular.module('requirementsBazaarWebFrontendApp')
       reqBazService.deleteComponent($scope.activeComponent.id)
         .success(function (message) {
           console.log(message);
-          if(message.success !== true){
-            UtilityService.showFeedback('WARN_COMP_NOT_DEL');
-          }else {
-            for (var c in $scope.components) {
-              if ($scope.components[c].id === $scope.activeComponent.id) {
-                $scope.components.splice(c, 1);
-                break;
-              }
+          for (var c in $scope.components) {
+            if ($scope.components[c].id === $scope.activeComponent.id) {
+              $scope.components.splice(c, 1);
+              break;
             }
-
-            //set a new active component
-            $scope.activeComponent = null;
-            if ($scope.components !== null) {
-              $scope.selectComp($scope.components[0]);
-            }
-
-            UtilityService.showFeedback('DEL_COMP',message.deletedItemText);
           }
+
+          //set a new active component
+          $scope.activeComponent = null;
+          if ($scope.components !== null) {
+            $scope.selectComp($scope.components[0]);
+          }
+
+          UtilityService.showFeedback('DEL_COMP',message.name);
         })
-        .error(function (error) {
-          console.log(error);
-          UtilityService.showFeedback('WARN_COMP_NOT_DEL');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
 
@@ -257,24 +252,21 @@ angular.module('requirementsBazaarWebFrontendApp')
       var req = $scope.deleteObject;
       console.log('delete requirement');
       reqBazService.deleteRequirement(req.id)
-        .success(function (message) {
-          if(HttpErrorHandlingService.isSuccess(message)){
-            // Delete the requirement from the list
-            for(var r in $scope.requirements){
-              if($scope.requirements[r].id === req.id){
-                $scope.requirements.splice(r, 1);
-                break;
-              }
+        .success(function (deletedObject) {
+          // Delete the requirement from the list
+          for(var r in $scope.requirements){
+            if($scope.requirements[r].id === req.id){
+              $scope.requirements.splice(r, 1);
+              break;
             }
-            //No requirement selected
-            $scope.selectedReqId = -1;
-            UtilityService.showFeedback('DEL_REQ',message.deletedItemText);
           }
+          //No requirement selected
+          $scope.selectedReqId = -1;
+          UtilityService.showFeedback('DEL_REQ',req.title);
+
         })
-        .error(function (error) {
-          //This error only catches unknown server errors, usual errorCodes are sent with success message
-          console.log(error);
-          UtilityService.showFeedback('WARN_REQ_NOT_DEL');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
 

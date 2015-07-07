@@ -39,26 +39,15 @@ angular.module('requirementsBazaarWebFrontendApp')
         }
         console.log('submit requirement');
         var components = [{id:$scope.activeComponent.id}];
-        var req = {title: $scope.newName, description: $scope.newDesc, projectId: $scope.activeProject.id, components: components,leadDeveloperId: 1};
+        var req = {title: $scope.newName, description: $scope.newDesc, projectId: $scope.activeProject.id, components: components};
         reqBazService.createRequirement(req)
           .success(function (message) {
             console.log(message);
-            if(HttpErrorHandlingService.isSuccess(message)) {
-              reqBazService.getRequirement(message.id)
-                .success(function (req) {
-                  $scope.requirements.splice(0, 0, req);
-                  $scope.clearSubmit();
-                })
-                .error(function (error) {
-                  console.log(error);
-                  UtilityService.showFeedback('WARN_REQ_NOT_LOADED');
-                });
-            }
+            $scope.requirements.splice(0, 0, message);
+            $scope.clearSubmit();
           })
-          .error(function (error) {
-            //This error only catches unknown server errors, usual errorCodes are sent with success message
-            console.log(error);
-            UtilityService.showFeedback('WARN_REQ_NOT_CREATED');
+          .error(function (error,httpStatus) {
+            HttpErrorHandlingService.handleError(error,httpStatus);
           });
       }
     };

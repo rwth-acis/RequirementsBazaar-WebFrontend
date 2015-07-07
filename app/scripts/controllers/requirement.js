@@ -100,21 +100,20 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.saveChanges = function(){
       reqBazService.updateRequirement($scope.dirtyReq.id,$scope.dirtyReq)
         .success(function (message) {
-          if(HttpErrorHandlingService.isSuccess(message)) {
-            console.log(message);
-            for(var r in $scope.requirements){
-              if($scope.requirements[r].id === $scope.dirtyReq.id){
-                $scope.requirements[r].title = $scope.dirtyReq.title;
-                $scope.requirements[r].description = $scope.dirtyReq.description;
-                break;
-              }
+          console.log(message);
+          for(var r in $scope.requirements){
+            if($scope.requirements[r].id === message.id){
+              $scope.requirements[r].title = message.title;
+              $scope.requirements[r].description = message.description;
+              break;
             }
-            $scope.isDirtyReq = false;
-            $scope.dirtyReq = null;
           }
+          $scope.isDirtyReq = false;
+          $scope.dirtyReq = null;
+          UtilityService.showFeedback('EDIT_SUCCESSFUL');
         })
-        .error(function () {
-          UtilityService.showFeedback('WARN_REQ_NOT_UPDATED');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
 
       //TODO save all the attachments that did not exist before?
