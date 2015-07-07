@@ -8,10 +8,13 @@
  * Controller of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')
-  .controller('ExploreCtrl', function ($scope, oauthConfig, $location, reqBazService, UtilityService){
+  .controller('ExploreCtrl', function ($scope, oauthConfig, $location, reqBazService, AccessToken, UtilityService){
 
     $scope.projects = null;
     $scope.featured = [];
+
+    $scope.showCreateProjDiv = false;
+
 
     $scope.limit = 20;
     $scope.addMoreItems = function(){
@@ -49,6 +52,15 @@ angular.module('requirementsBazaarWebFrontendApp')
         }
       }
     };
+
+    /*
+     * Is called to check if the user has rights to create component for a project, currently simply check if logged in
+     * */
+    $scope.startCreationProj = function(){
+      console.log('dfdsf');
+      $scope.showCreateProjDiv = true;
+    };
+
 
     $scope.selectProject = function(project){
       $location.path('/project/'+project.id, true);

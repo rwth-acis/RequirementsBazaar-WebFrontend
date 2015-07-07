@@ -13,7 +13,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.projects = null;
     $scope.components = null;
     $scope.requirements = null;
-    $scope.activeUser = null;
 
     $scope.projectLeader = null;
     $scope.componentLeader = null;
@@ -208,17 +207,6 @@ angular.module('requirementsBazaarWebFrontendApp')
       }
     };
 
-    /*
-     * Is called to check if the user has rights to create component for a project, currently simply check if logged in
-     * */
-    $scope.startCreationProj = function(){
-      if(AccessToken.get() !== null){
-        $scope.showCreateProjDiv = true;
-      }else{
-        UtilityService.showFeedback('LOGIN_PROJ');
-      }
-    };
-
 
     /*
     * Everything related to creating or deleting a new component
@@ -287,53 +275,6 @@ angular.module('requirementsBazaarWebFrontendApp')
       $location.path('/explore/', true);
     };
 
-    /*
-     * Register a listener for the oauth login and if an existing token is still valid
-     * */
-    $scope.$on('oauth:login', function() {
-      UtilityService.showFeedback('WELCOME_BACK');
-    });
-    $scope.$on('oauth:authorized', function() {
-      UtilityService.showFeedback('WELCOME_BACK');
-    });
-    $scope.$on('oauth:logout', function() {
-      UtilityService.showFeedback('LOGOUT');
-      $scope.activeUser = null;
-      //Reload projects, since now the user rights have changed
-      reqBazService.getProjects()
-        .success(function (projs) {
-          $scope.projects = projs;
-          if(projs.length !== 0){
-            $scope.activeProject = projs[0];
-            $scope.selectProj($scope.activeProject);
-          }else{
-            //Somehow gracefully handle the fact that there are no projects
-            UtilityService.showFeedback('NO_PROJ_EXISTS');
-          }
-        })
-        .error(function () {
-          UtilityService.showFeedback('WARN_PROJS_NOT_LOADED');
-        });
-    });
-
-
-    $scope.$on('oauth:profile', function() {
-      reqBazService.getCurrentUser()
-        .success(function (user) {
-          console.log(user);
-          $scope.activeUser = user;
-        })
-        .error(function (error,httpStatus) {
-          HttpErrorHandlingService.handleError(error,httpStatus);
-        });
-    });
-
-    /*
-    * Making sure that the URL passing works on custom elements
-    * */
-    $scope.trustSrc = function(src) {
-      return $sce.trustAsResourceUrl(src);
-    };
   });
 
 

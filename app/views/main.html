@@ -6,25 +6,10 @@
 
   -->
   <core-header-panel navigation flex mode="seamed">
-    <!--Switch between projects-->
-    <core-toolbar>
-      <paper-item ng-click="showProjectSelection = !showProjectSelection" class="large-text">
-        <core-icon icon="icons:arrow-back" ng-show="showProjectSelection"></core-icon>
-        <span ng-bind="activeProject.name"></span>
-      </paper-item>
-      <paper-icon-button icon="editor:mode-edit" ng-click="editProject()" class="edit-project"></paper-icon-button>
-    </core-toolbar>
 
-    <!--List of projects and create new-->
-    <core-menu class="sidebarMenu" ng-show="showProjectSelection">
-      <paper-button raised ng-click="startCreationProj()"  class="text">{{'PROJECT' | translate}}</paper-button>
-      <div class="group">
-        <input placeholder={{'FILTER_PROJECTS'|translate}} type="text" ng-model="filterProj.name">
-        <span class="highlight"></span>
-        <span class="bar"></span>
-      </div>
-      <paper-item ng-repeat="project in projects | filter:filterProj:strict" ng-click="selectProj(project)" ng-bind="project.name" noink class="text-087"></paper-item>
-    </core-menu>
+    <core-toolbar>
+      <paper-item ng-bind="activeProject.name" ng-click="editProject()" style="font-size: large;width: 100%"></paper-item>
+    </core-toolbar>
 
     <!--List of components and create new-->
     <core-menu class="sidebarMenu" ng-show="!showProjectSelection">
@@ -281,29 +266,6 @@
       </div>
     </div>
 
-    <!--Create a new project-->
-    <div ng-show="showCreateProjDiv" class="create-div">
-      <div ng-controller="CreateProjectCtrl" class="add-item-div">
-        <p ng-bind="'CREATE_PROJ' | translate"></p>
-        <paper-input-decorator label={{'TITLE'|translate}} floatingLabel>
-          <paper-autogrow-textarea>
-            <textarea ng-model="name" maxlength="50" id="projName"></textarea>
-          </paper-autogrow-textarea>
-          <paper-char-counter class="counter" target="projName"></paper-char-counter>
-        </paper-input-decorator>
-        <paper-input-decorator label={{'DESC'|translate}} floatingLabel>
-          <paper-autogrow-textarea>
-            <textarea ng-model="desc"></textarea>
-          </paper-autogrow-textarea>
-        </paper-input-decorator>
-
-        <!--Confirm or cancel submit-->
-        <div class="flex-space-between">
-          <paper-button raised ng-click="submitProject()" ng-bind="'CREATE' | translate"></paper-button>
-          <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
-        </div>
-      </div>
-    </div>
   </div>
 
 </core-scaffold>
