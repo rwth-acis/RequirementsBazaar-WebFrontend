@@ -26,16 +26,15 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Save changes of the modified component
     * */
     $scope.saveChanges = function(){
-      reqBazService.updateComponent($scope.activeProject.id,$scope.dirtyComp.id,$scope.dirtyComp)
+      reqBazService.updateComponent($scope.dirtyComp.id,$scope.dirtyComp)
         .success(function (message) {
-          if(HttpErrorHandlingService.isSuccess(message)) {
-            $scope.activeComponent = angular.copy($scope.dirtyComp);
-            $scope.dirtyComp = null;
-            $scope.isDirty = false;
-          }
+          $scope.activeComponent = message;
+          $scope.dirtyComp = null;
+          $scope.isDirty = false;
+          UtilityService.showFeedback('EDIT_SUCCESSFUL');
         })
-        .error(function () {
-          UtilityService.showFeedback('WARN_COMP_NOT_UPDATED');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
 

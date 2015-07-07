@@ -13,7 +13,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.projects = null;
     $scope.components = null;
     $scope.requirements = null;
-    $scope.activeUser = {};
+    $scope.activeUser = null;
 
     $scope.projectLeader = null;
     $scope.componentLeader = null;
@@ -138,8 +138,9 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.activeComponent = component;
       setUser($scope.activeComponent.leaderId);
       //Load the requirements
-      reqBazService.getRequirementsByComponent($scope.activeProject.id,$scope.activeComponent.id,'0','300')
+      reqBazService.getRequirementsByComponent($scope.activeComponent.id,'0','300')
         .success(function (reqs) {
+          console.log(reqs);
           $scope.requirements = reqs;
           $timeout(function() {
             $scope.$apply();
@@ -224,31 +225,26 @@ angular.module('requirementsBazaarWebFrontendApp')
     *
     * */
     $scope.deleteComponent = function(){
-      reqBazService.deleteComponent($scope.activeProject.id,$scope.activeComponent.id)
+      reqBazService.deleteComponent($scope.activeComponent.id)
         .success(function (message) {
           console.log(message);
-          if(message.success !== true){
-            UtilityService.showFeedback('WARN_COMP_NOT_DEL');
-          }else {
-            for (var c in $scope.components) {
-              if ($scope.components[c].id === $scope.activeComponent.id) {
-                $scope.components.splice(c, 1);
-                break;
-              }
+          for (var c in $scope.components) {
+            if ($scope.components[c].id === $scope.activeComponent.id) {
+              $scope.components.splice(c, 1);
+              break;
             }
-
-            //set a new active component
-            $scope.activeComponent = null;
-            if ($scope.components !== null) {
-              $scope.selectComp($scope.components[0]);
-            }
-
-            UtilityService.showFeedback('DEL_COMP',message.deletedItemText);
           }
+
+          //set a new active component
+          $scope.activeComponent = null;
+          if ($scope.components !== null) {
+            $scope.selectComp($scope.components[0]);
+          }
+
+          UtilityService.showFeedback('DEL_COMP',message.name);
         })
-        .error(function (error) {
-          console.log(error);
-          UtilityService.showFeedback('WARN_COMP_NOT_DEL');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
 
@@ -256,24 +252,21 @@ angular.module('requirementsBazaarWebFrontendApp')
       var req = $scope.deleteObject;
       console.log('delete requirement');
       reqBazService.deleteRequirement(req.id)
-        .success(function (message) {
-          if(HttpErrorHandlingService.isSuccess(message)){
-            // Delete the requirement from the list
-            for(var r in $scope.requirements){
-              if($scope.requirements[r].id === req.id){
-                $scope.requirements.splice(r, 1);
-                break;
-              }
+        .success(function (deletedObject) {
+          // Delete the requirement from the list
+          for(var r in $scope.requirements){
+            if($scope.requirements[r].id === req.id){
+              $scope.requirements.splice(r, 1);
+              break;
             }
-            //No requirement selected
-            $scope.selectedReqId = -1;
-            UtilityService.showFeedback('DEL_REQ',message.deletedItemText);
           }
+          //No requirement selected
+          $scope.selectedReqId = -1;
+          UtilityService.showFeedback('DEL_REQ',req.title);
+
         })
-        .error(function (error) {
-          //This error only catches unknown server errors, usual errorCodes are sent with success message
-          console.log(error);
-          UtilityService.showFeedback('WARN_REQ_NOT_DEL');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
 
@@ -305,6 +298,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     });
     $scope.$on('oauth:logout', function() {
       UtilityService.showFeedback('LOGOUT');
+      $scope.activeUser = null;
       //Reload projects, since now the user rights have changed
       reqBazService.getProjects()
         .success(function (projs) {
@@ -324,7 +318,14 @@ angular.module('requirementsBazaarWebFrontendApp')
 
 
     $scope.$on('oauth:profile', function() {
-      $scope.activeUser = Profile.get();
+      reqBazService.getCurrentUser()
+        .success(function (user) {
+          console.log(user);
+          $scope.activeUser = user;
+        })
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
+        });
     });
 
     /*

@@ -36,14 +36,13 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     $scope.saveChanges = function(){
       reqBazService.updateProject($scope.dirtyProject.id,$scope.dirtyProject)
-        .success(function (message) {
-          if(HttpErrorHandlingService.isSuccess(message)) {
-            project = angular.copy($scope.dirtyProject);
-            $scope.isDirty = false;
-          }
+        .success(function (updatedProject) {
+          project = updatedProject;
+          $scope.isDirty = false;
+          UtilityService.showFeedback('EDIT_SUCCESSFUL');
         })
-        .error(function () {
-          UtilityService.showFeedback('WARN_PROJ_NOT_UPDATED');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
 
@@ -60,8 +59,8 @@ angular.module('requirementsBazaarWebFrontendApp')
       document.getElementById('confirmDelete').toggle();
     };
 
-    $scope.go = function ( path ) {
-      $location.path( path );
+    $scope.returnToProject = function () {
+      $location.path( '/project/'+ project.id);
     };
 
 

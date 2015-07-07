@@ -167,6 +167,10 @@ oauth {
 .vote-button-container {
   display: flex;
 }
+.vote-button-container paper-icon-button {
+  padding: 14px;
+}
+
 .req-collapse {
   padding: 12px;
 }
