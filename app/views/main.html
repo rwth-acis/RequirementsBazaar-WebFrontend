@@ -108,7 +108,8 @@
       <!--List of requirements-->
       <div id="req-{{$index}}" ng-repeat="req in requirements | filter:filterReq:strict | limitTo : limit track by req.id"
            ng-controller="RequirementCtrl"
-           ng-class="showRequirement ? 'requirement-container-selected' : 'requirement-container'">
+           ng-class="showRequirement ? 'requirement-container-selected' : 'requirement-container'"
+           ng-style="{ 'margin-bottom': $last ? '64px' : '0px' }">
         <!--Requirement header-->
         <paper-shadow z="1">
           <div class="requirement-header">
