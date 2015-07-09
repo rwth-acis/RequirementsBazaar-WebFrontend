@@ -58,8 +58,9 @@
       <div id="currentComponent" class="current-component-width" ng-controller="ActiveCompCtrl">
         <paper-shadow z="1">
           <div class="flex-space-between">
-            <div style="padding: 16px" class="text-087">
+            <div style="padding: 8px 16px 16px 8px" class="text-087">
               <div ng-show="!isDirty">
+                <span ng-show="activeProject.defaultComponentId === activeComponent.id" ng-bind="'DEFAULT'|translate" class="small-grey-text"></span>
                 <h2 contenteditable="false" ng-model="activeComponent.name"></h2>
                 <div contenteditable="false" ng-model="activeComponent.description"></div>
               </div>
@@ -70,12 +71,21 @@
                 <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"  style="margin: 0px"></paper-button>
               </div>
             </div>
-            <div style="padding: 16px">
-              <p ng-bind="'COMPONENT_LEAD' |translate" class="small-grey-text"></p>
+            <div style="padding: 8px">
+              <div style="display: flex">
+                <p ng-bind="'COMPONENT_LEAD' |translate" class="small-grey-text" style="width: 100%"></p>
+                <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert" style="padding: 0">
+                  <paper-dropdown class="dropdown">
+                    <core-menu class="menu">
+                      <paper-item ng-click="setDefaulComp()" ng-bind="'SET_DEFAULT_COMP'|translate"></paper-item>
+                      <paper-item disabled ng-click="">{{'BECOME_LEAD_DEV' | translate}}</paper-item>
+                      <paper-item ng-click="startEdit()" ng-disabled="isDirtyReq || activeUser === null">{{'EDIT_COMP' | translate}}</paper-item>
+                      <paper-item ng-click="confirmDelete()" ng-disabled="activeUser === null">{{'DELETE_COMP' | translate}}</paper-item>
+                    </core-menu>
+                  </paper-dropdown>
+                </paper-dropdown-menu-ex>
+              </div>
               <my-user src={{trustSrc(componentLeader.profileImage)}} size="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}} class="text-087"></my-user>
-              <paper-icon-button icon="editor:mode-edit" ng-click="startEdit()"></paper-icon-button>
-              <paper-icon-button icon="icons:delete" ng-click="confirmDelete()"></paper-icon-button>
-              <br/>
               <div class="group">
                 <input placeholder={{'SEARCH_REQUIREMENTS'|translate}} type="text" ng-model="filterReq.$">
                 <span class="highlight"></span>
@@ -119,7 +129,7 @@
                   <paper-item ng-click="hideContrib()" ng-show="showContributors && showRequirement" ng-bind="'HIDE_CONTRIBUTORS'|translate"></paper-item>
                   <paper-item ng-click="followRequirement($event,req)" ng-disabled="activeUser === null">{{'FOLLOW_REQUIREMENT' | translate}}</paper-item>
                   <paper-item ng-click="developRequirement($event,req)" ng-disabled="activeUser === null">{{'DEVELOP_REQUIREMENT' | translate}}</paper-item>
-                  <paper-item disabled ng-click="becomeLead($event,req)">{{'BECOME_LEAD_DEV' | translate}}</paper-item>
+                  <paper-item ng-click="becomeLead($event,req)" ng-disabled="activeUser === null || req.leadDeveloperId === activeUser.Id">{{'BECOME_LEAD_DEV' | translate}}</paper-item>
                   <paper-item ng-click="startEdit(req,$index)" ng-disabled="isDirtyReq || activeUser === null">{{'EDIT_REQUIREMENT' | translate}}</paper-item>
                   <paper-item ng-click="confirmDelete(req)" ng-disabled="activeUser === null">{{'DELETE_REQUIREMENT' | translate}}</paper-item>
                 </core-menu>

@@ -263,4 +263,22 @@ angular.module('requirementsBazaarWebFrontendApp')
           HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
+
+    /*
+    * Set currently logged in user as lead developer
+    * */
+    $scope.becomeLead = function(clickEvent,req){
+      var re = { id: req.id, leadDeveloperId: $scope.activeUser.Id};
+      reqBazService.updateRequirement(req.id,re)
+        .success(function (message) {
+          console.log(message);
+          req.leadDeveloperId = message.leadDeveloperId;
+          req.leadDeveloper = message.leadDeveloper;
+          UtilityService.showFeedback('THANK_FOR_INIT');
+        })
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
+        });
+    };
+
   });
