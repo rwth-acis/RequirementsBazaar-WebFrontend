@@ -10,6 +10,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     FOLLOW_REQUIREMENT: 'Follow requirement',
     DEVELOP_REQUIREMENT: 'Develop requirement',
     DELETE_REQUIREMENT: 'Delete requirement',
+    REALIZED_REQ: 'Realized requirements',
     DELETE_COMP: 'Delete component',
     SET_DEFAULT_COMP: 'Set as the default',
     COMMENTS:'Comments',
@@ -43,6 +44,8 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     CANCEL: 'cancel',
     CHOOSE_PROJECT: 'Choose project',
     ACCESS_DENIED: 'Access denied',
+    MARK_AS_DONE: 'Mark as done',
+    MARK_AS_UNDONE: 'reopen the requirement',
 
     //Toast messages
     THANK_YOU:'Thank You',
@@ -116,6 +119,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       FOLLOW_REQUIREMENT: 'Requirement folgen',
       DEVELOP_REQUIREMENT: 'Developer werden',
       DELETE_REQUIREMENT: 'Requirement löschen',
+      REALIZED_REQ: 'Umgesetzte Requirements',
       DELETE_COMP: 'Komponent löschen',
       SET_DEFAULT_COMP: 'Setze als default',
       COMMENTS:'Kommentare',
@@ -149,6 +153,8 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       CANCEL: 'Abbrechen',
       CHOOSE_PROJECT: 'Projekt auswählen',
       ACCESS_DENIED: 'Zugriff verweigert',
+      MARK_AS_DONE: 'Markiere als fertig',
+      MARK_AS_UNDONE: 'Nicht gelöst',
 
       //Toast messages
       THANK_YOU:'Danke sehr',

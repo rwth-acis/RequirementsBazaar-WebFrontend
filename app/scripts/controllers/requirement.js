@@ -281,4 +281,22 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
+    /*
+    * Mark requirement as done
+    * */
+    $scope.markDone = function(req, action){
+      if(action){
+        action = new Date();
+      }
+      var re = {id: req.id, realized: action};
+      reqBazService.updateRequirement(req.id,re)
+        .success(function (message) {
+          console.log(message);
+          UtilityService.showFeedback('THANK_FOR_INIT');
+        })
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
+        });
+    };
+
   });

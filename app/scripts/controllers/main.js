@@ -40,8 +40,13 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     $scope.showProjectSelection = false;
 
-    //Used to filter requirements
+    //Used to filter requirements, need to be objects
     $scope.filterReq = {};
+    $scope.showRealized = {value:false};
+    //This function is used for list filtering and is called A LOT, don't include anything too intense here
+    $scope.isRealizedFilter = function(req) {
+      return req.hasOwnProperty('realized') === $scope.showRealized.value;
+    };
 
     var currentlyOpenReqListIndex = 0;
     $scope.setSelectedReqId = function(reqId, newListIndex){
@@ -50,7 +55,6 @@ angular.module('requirementsBazaarWebFrontendApp')
         SubmitToReqChange.emit(reqId, currentlyOpenReqListIndex, newListIndex);
         currentlyOpenReqListIndex = newListIndex;
       });
-
     };
 
     $scope.showCreateCompDiv = false;

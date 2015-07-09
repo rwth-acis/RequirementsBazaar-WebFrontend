@@ -77,7 +77,11 @@ oauth {
 /*
   Main content
 */
-#loadRequirements {
+#inf-scroll {
+  overflow: auto;
+  height: 92vh;
+}
+#load-requirements {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -89,57 +93,29 @@ oauth {
   margin-right: auto;
   padding: 10px;
 }
-#currentComponent {
+#current-component {
   background-color: white;
-  margin-bottom: 12px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
+  width: 100%;
+  max-width: 1000px;
 }
-
-/*Requirements are wider on small devices*/
-@media (max-width: 700px), handheld {
-  .current-component-width{
-    width: 100%;
-  }
-  .requirement-container {
-    margin-top: 10px;
-    background-color: white;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .requirement-container-selected {
-    width: 100%;
-    margin-top: 10px;
-    background-color: white;
-    margin-left: auto;
-    margin-right: auto;
-  }
+#show-realized{
+  margin: 48px 0 8px 0;
+  display: flex;
 }
-
-/*Requirements change width on desktop*/
-@media screen and (min-device-width: 701px){
-  .current-component-width{
-    width: 90%;
-  }
-  .requirement-container {
-    margin-top: 10px;
-    background-color: white;
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
-    transition: width 0.3s;
-  }
-  .requirement-container-selected {
-    width: 100%;
-    margin-top: 10px;
-    background-color: white;
-    margin-left: auto;
-    margin-right: auto;
-    -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
-    transition: width 0.3s;
-  }
+#show-realized span{
+  margin: auto;
+  width: 100%;
+}
+#comp-lead-container {
+  display: flex;
+  margin-bottom: 8px;
+}
+#comp-lead-container p{
+  width: 100%;
+}
+#comp-lead-container paper-dropdown-menu-ex{
+  padding: 0;
 }
 
 .requirement-header {
