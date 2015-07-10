@@ -3,6 +3,7 @@
 */
 body {
   font-family: sans-serif;
+  margin: 0;
 }
 .small-grey-text {
   font-size: small;
@@ -31,10 +32,18 @@ body {
 html /deep/ #mainContainer{
   overflow: hidden;
 }
+#mainContainer{
+  overflow: hidden !important;
+}
 core-header-panel /deep/  #mainContainer{
   overflow: auto;
   box-shadow: 4px 0px 6px -3px rgba(0, 0, 0, 0.3);
 }
+#mainContainer{
+  overflow: auto !important;
+  box-shadow: 4px 0px 6px -3px rgba(0, 0, 0, 0.3) !important;
+}
+
 .add-border {
   border: 2px dashed #D1C7AC;
 }
@@ -59,21 +68,40 @@ pre {
 /*
   Main header
 */
+@media only screen
+and (max-device-width: 600px)
+and (-webkit-min-device-pixel-ratio: 2) {
+  .page-title{
+    display: none;
+  }
+}
+
 #toolbar-log-in {
   display: flex;
+  margin-bottom: auto;
+  margin-top: auto;
 }
 #main-toolbar {
   white-space: nowrap;
+  justify-content: space-between;
+  text-align: center;
 }
-
-oauth{
-  margin: auto;
+oauth {
+  margin: auto 8px auto 8px;
+  float: right;
 }
-
+.sidebarMenu paper-button {
+  width:100%;
+  margin:0 0 32px 0;
+}
 /*
   Main content
 */
-#loadRequirements {
+#inf-scroll {
+  overflow: auto;
+  height: 92vh;
+}
+#load-requirements {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -85,57 +113,29 @@ oauth{
   margin-right: auto;
   padding: 10px;
 }
-#currentComponent {
+#current-component {
   background-color: white;
-  margin-bottom: 12px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
+  width: 100%;
+  max-width: 1000px;
 }
-
-/*Requirements are wider on small devices*/
-@media (max-width: 700px), handheld {
-  .current-component-width{
-    width: 100%;
-  }
-  .requirement-container {
-    margin-top: 10px;
-    background-color: white;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .requirement-container-selected {
-    width: 100%;
-    margin-top: 10px;
-    background-color: white;
-    margin-left: auto;
-    margin-right: auto;
-  }
+#show-realized{
+  margin: 48px 0 8px 0;
+  display: flex;
 }
-
-/*Requirements change width on desktop*/
-@media screen and (min-device-width: 701px){
-  .current-component-width{
-    width: 90%;
-  }
-  .requirement-container {
-    margin-top: 10px;
-    background-color: white;
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
-    transition: width 0.3s;
-  }
-  .requirement-container-selected {
-    width: 100%;
-    margin-top: 10px;
-    background-color: white;
-    margin-left: auto;
-    margin-right: auto;
-    -webkit-transition: width 0.3s; /* For Safari 3.1 to 6.0 */
-    transition: width 0.3s;
-  }
+#show-realized span{
+  margin: auto;
+  width: 100%;
+}
+#comp-lead-container {
+  display: flex;
+  margin-bottom: 8px;
+}
+#comp-lead-container p{
+  width: 100%;
+}
+#comp-lead-container paper-dropdown-menu-ex{
+  padding: 0;
 }
 
 .requirement-header {
@@ -163,6 +163,10 @@ oauth{
 .vote-button-container {
   display: flex;
 }
+.vote-button-container paper-icon-button {
+  padding: 14px;
+}
+
 .req-collapse {
   padding: 12px;
 }
@@ -233,6 +237,7 @@ oauth{
   position: fixed;
   right: 40px;
   bottom: 30px;
+  z-index: 2;
 }
 .requirementDesc{
   min-height: 30px;

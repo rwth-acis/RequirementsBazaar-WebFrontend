@@ -7,7 +7,7 @@
   <core-header-panel navigation flex mode="seamed">
     <!--Switch between projects-->
     <core-toolbar>
-      <paper-item class="large-text" ng-click="go('/')">
+      <paper-item ng-click="returnToProject()" style="width: 100%;font-size: large">
         <core-icon icon="icons:arrow-back"></core-icon>
         <span ng-bind="dirtyProject.name"></span>
       </paper-item>
@@ -117,6 +117,4 @@
     <paper-button raised affirmative ng-click="deleteProject()">Accept</paper-button>
   </paper-action-dialog>
 
-  <!--Feedback toast-->
-  <paper-toast id="feedbackToast" text={{toastText}}></paper-toast>
 </core-scaffold>

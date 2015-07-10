@@ -32,7 +32,7 @@ angular
         controller: function ($location, AccessToken) {
           var hash = $location.path().substr(1);
           AccessToken.setTokenFromString(hash);
-          $location.path('/');
+          $location.path('/explore/');
           $location.replace();
         }
       })
@@ -54,6 +54,10 @@ angular
       .when('/', {
         templateUrl: 'views/welcome-page.html',
         controller: 'WelcomeCtrl'
+      })
+      .when('/explore', {
+        templateUrl: 'views/explore.html',
+        controller: 'ExploreCtrl'
       })
       .when('/project-management/:projectId', {
         templateUrl: 'views/project-management.html',

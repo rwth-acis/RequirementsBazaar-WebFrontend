@@ -2,7 +2,7 @@
 <html class="no-js" ng-app="requirementsBazaarWebFrontendApp">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Requirements Bazaar</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -45,13 +45,16 @@
     <link rel="import" href="bower_components/paper-input/paper-autogrow-textarea.html">
     <link rel="import" href="bower_components/paper-input/paper-char-counter.html">
     <link rel="import" href="bower_components/paper-shadow/paper-shadow.html">
+    <link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
 
     <link rel="import" href="my-components/paper-dropdown-menu-ex.html">
     <link rel="import" href="my-components/my-user.html">
+    <link rel="import" href="my-components/req-baz-project.html">
 
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/welcome-page.css">
+    <link rel="stylesheet" href="styles/explore.css">
 
     <!-- endbuild -->
 
@@ -60,7 +63,7 @@
     <link rel="import" href="my-components/sign-in-button.html">
 
   </head>
-  <body unresolved>
+  <body unresolved ng-controller="IndexCtrl">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -114,6 +117,7 @@
         <script src="scripts/config/oauthConfig.js"></script>
         <script src="scripts/config/bazaarServiceConfig.js"></script>
         <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/index.js"></script>
         <script src="scripts/controllers/projectManagement.js"></script>
         <script src="scripts/controllers/requirement.js"></script>
         <script src="scripts/controllers/vote.js"></script>
@@ -123,10 +127,12 @@
         <script src="scripts/controllers/createComponent.js"></script>
         <script src="scripts/controllers/createProject.js"></script>
         <script src="scripts/controllers/welcome.js"></script>
+        <script src="scripts/controllers/explore.js"></script>
         <script src="scripts/services/reqbazservice.js"></script>
         <script src="scripts/services/utilityservice.js"></script>
         <script src="scripts/services/httpErrorHandlingService.js"></script>
         <script src="scripts/services/submitToReqChange.js"></script>
+        <script src="scripts/services/dateParser.js"></script>
         <script src="scripts/directives/contenteditable.js"></script>
         <script src="scripts/directives/infiniteScroll.js"></script>
         <script src="scripts/directives/fallbackSrc.js"></script>

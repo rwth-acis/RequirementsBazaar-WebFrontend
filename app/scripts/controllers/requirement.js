@@ -98,23 +98,22 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Called: by the user, by clicking on submit requirement
      * */
     $scope.saveChanges = function(){
-      reqBazService.updateRequirement($scope.activeProject.id,$scope.activeComponent.id, $scope.dirtyReq.id,$scope.dirtyReq)
+      reqBazService.updateRequirement($scope.dirtyReq.id,$scope.dirtyReq)
         .success(function (message) {
-          if(HttpErrorHandlingService.isSuccess(message)) {
-            console.log(message);
-            for(var r in $scope.requirements){
-              if($scope.requirements[r].id === $scope.dirtyReq.id){
-                $scope.requirements[r].title = $scope.dirtyReq.title;
-                $scope.requirements[r].description = $scope.dirtyReq.description;
-                break;
-              }
+          console.log(message);
+          for(var r in $scope.requirements){
+            if($scope.requirements[r].id === message.id){
+              $scope.requirements[r].title = message.title;
+              $scope.requirements[r].description = message.description;
+              break;
             }
-            $scope.isDirtyReq = false;
-            $scope.dirtyReq = null;
           }
+          $scope.isDirtyReq = false;
+          $scope.dirtyReq = null;
+          UtilityService.showFeedback('EDIT_SUCCESSFUL');
         })
-        .error(function () {
-          UtilityService.showFeedback('WARN_REQ_NOT_UPDATED');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
 
       //TODO save all the attachments that did not exist before?
@@ -229,6 +228,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     var getComments = function(req){
       reqBazService.getComments(req.id,0,30)
         .success(function (comments) {
+          console.log(comments);
           req.comments = comments;
         })
         .error(function (error) {
@@ -241,48 +241,70 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     //Become a follower of a requirement
     $scope.followRequirement = function(clickEvent,req){
-      console.log('become follower');
       reqBazService.addUserToFollowers(req.id)
-        .success(function (message) {
-          if(HttpErrorHandlingService.isSuccess(message)){
-            UtilityService.showFeedback('THANK_YOU_FOR_FOLLOWING');
-            reqBazService.getRequirement(req.id)
-              .success(function (reqNew) {
-                req.followers = reqNew.followers;
-              })
-              .error(function (error) {
-                console.log(error);
-                UtilityService.showFeedback('REFRESH_PLEASE');
-              });
-          }
+        .success(function (requirement) {
+          console.log(requirement);
+          UtilityService.showFeedback('THANK_YOU_FOR_FOLLOWING');
+          req.followers = requirement.followers;
         })
-        .error(function (error) {
-          console.log(error);
-          UtilityService.showFeedback('WARN_NOT_REG_AS_FOLLOWER');
+        .error(function (error, httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
 
     //Become a developer of a requirement
     $scope.developRequirement = function(clickEvent,req){
-      console.log('become developer');
       reqBazService.addUserToDevelopers(req.id)
-        .success(function (message) {
-          console.log(message);
-          if(HttpErrorHandlingService.isSuccess(message)){
-            UtilityService.showFeedback('THANK_FOR_INIT');
-            reqBazService.getRequirement(req.id)
-              .success(function (reqNew) {
-                req.developers = reqNew.developers;
-              })
-              .error(function (error) {
-                console.log(error);
-                UtilityService.showFeedback('REFRESH_PLEASE');
-              });
-          }
+        .success(function (requirement) {
+          UtilityService.showFeedback('THANK_FOR_INIT');
+          req.developers = requirement.developers;
         })
-        .error(function (error) {
-          console.log(error);
-          UtilityService.showFeedback('WARN_NOT_REG_AS_DEV');
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };
+
+    /*
+    * Set currently logged in user as lead developer
+    * */
+    $scope.becomeLead = function(clickEvent,req){
+      var re = { id: req.id, leadDeveloperId: $scope.activeUser.Id};
+      reqBazService.updateRequirement(req.id,re)
+        .success(function (message) {
+          console.log(message);
+          req.leadDeveloperId = message.leadDeveloperId;
+          req.leadDeveloper = message.leadDeveloper;
+          UtilityService.showFeedback('THANK_FOR_INIT');
+        })
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
+        });
+    };
+
+    /*
+    * Mark requirement as done
+    * */
+    $scope.markDone = function(req, action){
+      var dateString = null;
+      if(action){
+        action = new Date();
+        var today = new Date();
+        dateString = today.format('mmm d, yyyy') +' ' + today.format('h:MM:ss TT');
+      }
+      var re = {id: req.id, realized: dateString};
+      reqBazService.updateRequirement(req.id,re)
+        .success(function (message) {
+          console.log(message);
+          if(message.hasOwnProperty('realized')){
+            req.realized = message.realized;
+          }else{
+            delete req.realized;
+          }
+          UtilityService.showFeedback('THANK_FOR_INIT');
+        })
+        .error(function (error,httpStatus) {
+          HttpErrorHandlingService.handleError(error,httpStatus);
+        });
+    };
+
   });

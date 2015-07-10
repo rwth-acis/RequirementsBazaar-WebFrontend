@@ -2,17 +2,22 @@
 
 angular.module('requirementsBazaarWebFrontendApp').config(function ($translateProvider) {
   $translateProvider.translations('en', {
-    COMPONENT: 'Component',
-    PROJECT: 'Project',
+    COMPONENT: 'Create component',
+    PROJECT: 'Create project',
     BECOME_LEAD_DEV: 'Become a lead developer',
     EDIT_REQUIREMENT: 'Edit requirement',
+    EDIT_COMP: 'Edit component',
     FOLLOW_REQUIREMENT: 'Follow requirement',
     DEVELOP_REQUIREMENT: 'Develop requirement',
     DELETE_REQUIREMENT: 'Delete requirement',
+    REALIZED_REQ: 'Realized requirements',
+    DELETE_COMP: 'Delete component',
+    SET_DEFAULT_COMP: 'Set as the default',
     COMMENTS:'Comments',
     SUBMIT:'Submit',
     LOGIN: 'Login',
     SEARCH_REQUIREMENTS: 'search requirements',
+    SEARCH_PROJECTS: 'Search for projects',
     FILTER_COMPONENTS: 'filter components',
     FILTER_PROJECTS: 'filter projects',
     COMPONENT_LEAD: 'Component lead:',
@@ -33,16 +38,20 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     ACCEPT: 'Accept',
     DECLINE: 'Decline',
     SAVE_CHANGES: 'Save changes',
+    DEFAULT:'default',
     RELOAD: 'Reload',
     SAVE: 'save',
     CANCEL: 'cancel',
     CHOOSE_PROJECT: 'Choose project',
     ACCESS_DENIED: 'Access denied',
+    MARK_AS_DONE: 'Mark as done',
+    MARK_AS_UNDONE: 'reopen the requirement',
 
     //Toast messages
     THANK_YOU:'Thank You',
     THANK_YOU_FOR_FOLLOWING: 'Thank you for following',
     THANK_FOR_INIT: 'Thank you for the initiative',
+    EDIT_SUCCESSFUL: 'Edit was successful',
     WARN_NOT_IMPL: 'Warning: Not implemented',
     THANKS_FOR_FEEDBACK: 'Thanks for leaving feedback',
     ERROR_UNKNOWN: 'Error occurred, unknown reasons !',
@@ -85,6 +94,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
 
     REQ_NAME_MISSING: 'Choose requirement name',
     COMP_NAME_MISSING: 'Choose component name',
+    COMP_DESC_MISSING: 'Choose component description',
     PROJ_NAME_MISSING: 'Choose project name',
     PROJ_DESC_MISSING: 'Choose project description',
     COMMENT_TEXT_MISSING: 'Comment cannot be empty',
@@ -101,17 +111,22 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
 
   })
     .translations('de', {
-      COMPONENT: 'Komponente',
-      PROJECT: 'Projekt',
+      COMPONENT: 'Neue Komponente',
+      PROJECT: 'Neues Projekt',
       BECOME_LEAD_DEV: 'Werden Sie ein leitender Entwickler',
       EDIT_REQUIREMENT: 'Requirement bearbeiten',
+      EDIT_COMP: 'Bearbeite Komponent',
       FOLLOW_REQUIREMENT: 'Requirement folgen',
       DEVELOP_REQUIREMENT: 'Developer werden',
       DELETE_REQUIREMENT: 'Requirement löschen',
+      REALIZED_REQ: 'Umgesetzte Requirements',
+      DELETE_COMP: 'Komponent löschen',
+      SET_DEFAULT_COMP: 'Setze als default',
       COMMENTS:'Kommentare',
       SUBMIT:'Kommentar senden',
       LOGIN: 'Anmelden',
       SEARCH_REQUIREMENTS: 'suche nach Requirements',
+      SEARCH_PROJECTS: 'suche nach Projekte',
       FILTER_COMPONENTS: 'suche Komponente',
       FILTER_PROJECTS: 'suche Projekte',
       COMPONENT_LEAD: 'Komponent Leiter:',
@@ -132,16 +147,20 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       ACCEPT: 'Akzeptieren',
       DECLINE: 'Ablehnen',
       SAVE_CHANGES: 'Übernehmen',
+      DEFAULT:'default',
       RELOAD: 'Neuladen',
       SAVE: 'Speichern',
       CANCEL: 'Abbrechen',
       CHOOSE_PROJECT: 'Projekt auswählen',
       ACCESS_DENIED: 'Zugriff verweigert',
+      MARK_AS_DONE: 'Markiere als fertig',
+      MARK_AS_UNDONE: 'Nicht gelöst',
 
       //Toast messages
       THANK_YOU:'Danke sehr',
       THANK_YOU_FOR_FOLLOWING: 'Danke fürs folgen',
       THANK_FOR_INIT: 'Danke für die Initiative',
+      EDIT_SUCCESSFUL: 'Änderungen wurden übernommen',
       WARN_NOT_IMPL: 'Achtung: noch nicht implementiert',
       THANKS_FOR_FEEDBACK: 'Danke für die Rückmeldung',
       ERROR_UNKNOWN: 'Fehler ist aufgetreten, unbekannte Gründe!',
@@ -184,8 +203,9 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
 
       REQ_NAME_MISSING: 'Bitte die Name von der Requirement hinzufügen',
       COMP_NAME_MISSING: 'Bitte die Name von das Komponent hinzufügen',
+      COMP_DESC_MISSING: 'Beschreibung fehlt',
       PROJ_NAME_MISSING: 'Bitte die Name von der Projekt hinzufügen',
-      PROJ_DESC_MISSING: 'Bitte die Beschreibung von der Projekt hinzufügen',
+      PROJ_DESC_MISSING: 'Beschreibung fehlt',
       COMMENT_TEXT_MISSING: 'Kommentar kann nicht leer sein',
       WARN_REQ_NOT_CREATED: 'Achtung: Requirement wurde nicht erstellt!',
       WARN_COMP_NOT_CREATED: 'Achtung: Komponente wurde nicht erstellt!',
@@ -199,5 +219,18 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       DEL_COMP_DESC: 'Die Aktion kann nicht rückgängig gemacht werden. Die Requirements werden im Rahmen des Standardkomponente zugänglich sein.'
   });
 
-  $translateProvider.preferredLanguage('en');
+
+  //Determine which language to use
+  $translateProvider.determinePreferredLanguage(function () {
+    var language = window.navigator.userLanguage || window.navigator.language;
+    console.log('The browser language is :'+language);
+
+    if(language.indexOf('de') > -1){
+      language = 'de';
+    }else{
+      language = 'en';
+    }
+
+    return language;
+  });
 });

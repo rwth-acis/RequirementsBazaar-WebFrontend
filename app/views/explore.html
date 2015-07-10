@@ -1,0 +1,70 @@
+<div id="explore-page" ng-controller="ExploreCtrl" style="overflow: auto; height: 100vh;background-color: #FAFAFA" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
+  <div id="explore-header">
+    <h3 id="explore-header-title" class="ellipsis">Requirements Bazaar</h3>
+    <oauth
+      site={{oauthSite}}
+      client-id={{oauthClientId}}
+      data-scope={{oauthDataScope}}
+      redirect-uri={{oauthRedirectURI}}
+      profile-uri={{oauthProfileURI}}
+      template= {{oauthTemplateURI}}>
+    </oauth>
+  </div>
+  <div style="max-width: 1080px;padding: 32px 8px 8px 8px;margin: auto;display: flex;justify-content: space-between;flex-wrap: wrap-reverse">
+    <div style="width: 100%;margin: auto;max-width: 700px;">
+      <div style="display: flex">
+        <h1 style="width: 200px">Featured</h1>
+        <div class="group" style="margin:auto;padding: 8px 8px 8px 0;">
+          <input placeholder={{'SEARCH_PROJECTS'|translate}} type="text" ng-model="filterReq.$">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+      <req-baz-project ng-repeat="project in featured" name={{project.name}} desc={{project.description}} ng-click="selectProject(project)"></req-baz-project>
+
+      <h1>Public projects</h1>
+      <req-baz-project ng-repeat="project in projects | filter:filterReq:strict | limitTo : limit track by project.id" name={{project.name}} desc={{project.description}} ng-click="selectProject(project)"></req-baz-project>
+    </div>
+
+      <div style="width: 300px;margin-top: 20px;" ng-show="activeUser">
+        <paper-shadow z="1">
+          <div style="background-color: #ffffff;padding: 8px;margin-bottom: 16px;">
+            <h4>Your Projects</h4>
+            <paper-item ng-repeat="project in projects | filter:{ leaderId: activeUser.Id }" ng-click="go(project.id)" style="width: 100%;margin: 8px 0 8px 0;">{{project.name}}</paper-item>
+            <paper-button ng-click="startCreationProj()" style="background-color: #FF8324;margin: 0px 0 0 0;max-width: 300px;width: 100%;color: white;">{{'PROJECT' | translate}}</paper-button>
+          </div>
+        </paper-shadow>
+
+        <paper-shadow z="1">
+          <div style="background-color: #ffffff;padding: 8px;margin-bottom: 16px;">
+            <h4>Recent Activity</h4>
+            <p>Coming soon</p>
+          </div>
+        </paper-shadow>
+      </div>
+
+
+  </div>
+
+  <!--Create a new project-->
+  <div ng-show="showCreateProjDiv" ng-controller="CreateProjectCtrl" style="position: fixed;bottom: 0px;right: 64px; width: 500px;margin-left: 16px;margin-right: 16px;background-color: white;padding: 8px;box-shadow: 0 2px 10px rgba(0,0,0,.2);">
+    <p ng-bind="'CREATE_PROJ' | translate"></p>
+    <paper-input-decorator label={{'TITLE'|translate}} floatingLabel>
+      <paper-autogrow-textarea>
+        <textarea ng-model="name" maxlength="50" id="projName"></textarea>
+      </paper-autogrow-textarea>
+      <paper-char-counter class="counter" target="projName"></paper-char-counter>
+    </paper-input-decorator>
+    <paper-input-decorator label={{'DESC'|translate}} floatingLabel>
+      <paper-autogrow-textarea>
+        <textarea ng-model="desc"></textarea>
+      </paper-autogrow-textarea>
+    </paper-input-decorator>
+
+    <!--Confirm or cancel submit-->
+    <div class="flex-space-between">
+      <paper-button raised ng-click="submitProject()" ng-bind="'CREATE' | translate"></paper-button>
+      <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
+    </div>
+  </div>
+</div>
