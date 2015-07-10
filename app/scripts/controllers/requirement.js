@@ -285,13 +285,21 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Mark requirement as done
     * */
     $scope.markDone = function(req, action){
+      var dateString = null;
       if(action){
         action = new Date();
+        var today = new Date();
+        dateString = today.format('mmm d, yyyy') +' ' + today.format('h:MM:ss TT');
       }
-      var re = {id: req.id, realized: action};
+      var re = {id: req.id, realized: dateString};
       reqBazService.updateRequirement(req.id,re)
         .success(function (message) {
           console.log(message);
+          if(message.hasOwnProperty('realized')){
+            req.realized = message.realized;
+          }else{
+            delete req.realized;
+          }
           UtilityService.showFeedback('THANK_FOR_INIT');
         })
         .error(function (error,httpStatus) {

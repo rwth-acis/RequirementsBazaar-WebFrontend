@@ -32,10 +32,18 @@ body {
 html /deep/ #mainContainer{
   overflow: hidden;
 }
+#mainContainer{
+  overflow: hidden !important;
+}
 core-header-panel /deep/  #mainContainer{
   overflow: auto;
   box-shadow: 4px 0px 6px -3px rgba(0, 0, 0, 0.3);
 }
+#mainContainer{
+  overflow: auto !important;
+  box-shadow: 4px 0px 6px -3px rgba(0, 0, 0, 0.3) !important;
+}
+
 .add-border {
   border: 2px dashed #D1C7AC;
 }
@@ -60,11 +68,23 @@ pre {
 /*
   Main header
 */
+@media only screen
+and (max-device-width: 600px)
+and (-webkit-min-device-pixel-ratio: 2) {
+  .page-title{
+    display: none;
+  }
+}
+
 #toolbar-log-in {
   display: flex;
+  margin-bottom: auto;
+  margin-top: auto;
 }
 #main-toolbar {
   white-space: nowrap;
+  justify-content: space-between;
+  text-align: center;
 }
 oauth {
   margin: auto 8px auto 8px;
@@ -217,6 +237,7 @@ oauth {
   position: fixed;
   right: 40px;
   bottom: 30px;
+  z-index: 2;
 }
 .requirementDesc{
   min-height: 30px;
