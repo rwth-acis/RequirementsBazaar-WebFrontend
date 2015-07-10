@@ -18,7 +18,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     * */
     $scope.submitProject = function(){
       if(!UtilityService.isEmpty($scope.name,'PROJ_NAME_MISSING') && !UtilityService.isEmpty($scope.desc, 'PROJ_DESC_MISSING')){
-        var proj = {description: $scope.desc, name: $scope.name, visibility: 'PUBLIC', leaderId: 1,id:2343};
+        var proj = {description: $scope.desc, name: $scope.name, visibility: 'PUBLIC'};
         reqBazService.createProject(proj)
           .success(function (newProj) {
             console.log(newProj);
