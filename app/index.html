@@ -13,6 +13,11 @@
 
     <!-- 1. Load webcomponents.js for polyfill support. -->
     <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!-- Don't remove, it breaks AngularJS databinding -->
+    <script>
+      window.Polymer = window.Polymer || {};
+      window.Polymer.dom = 'shadow';
+    </script>
 
     <!-- 2. Use an HTML Import to bring in the element. -->
     <!--Polymer Core imports-->
@@ -21,12 +26,15 @@
     <link rel="import" href="bower_components/paper-button/paper-button.html">
     <link rel="import" href="bower_components/paper-toast/paper-toast.html">
     <link rel="import" href="bower_components/iron-icons/social-icons.html">
+    <link rel="import" href="bower_components/iron-icons/iron-icons.html">
     <link rel="import" href="bower_components/iron-icon/iron-icon.html">
     <link rel="import" href="bower_components/paper-material/paper-material.html">
+    <link rel="import" href="bower_components/paper-input/paper-input.html">
+    <link rel="import" href="bower_components/paper-input/paper-textarea.html">
 
     <!--<link rel="import" href="my-components/paper-dropdown-menu-ex.html">-->
     <!--<link rel="import" href="my-components/my-user.html">-->
-    <!--<link rel="import" href="my-components/req-baz-project.html">-->
+    <link rel="import" href="my-components/req-baz-project.html">
 
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/index.css">
@@ -65,7 +73,7 @@
     </div>
 
     <!-- Add your site or application content here -->
-    <div ng-view style="padding-top: 64px;"></div>
+    <div ng-view style="padding-top:64px;"></div>
 
     <!--Feedback toast-->
     <paper-toast role="alert" id="feedbackToast">
