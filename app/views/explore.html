@@ -1,20 +1,21 @@
-<div id="explore-page" ng-controller="ExploreCtrl" style="background-color: #FAFAFA;overflow:auto;height: calc(100vh - 64px)" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
-  <div style="max-width: 1080px;padding: 32px 8px 8px 8px;margin: auto;display: flex;justify-content: space-between;flex-wrap: wrap-reverse">
-    <div style="width: 100%;margin-left: auto;margin-right:auto;max-width: 700px;">
+<div id="explore-page" ng-controller="ExploreCtrl" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
+  <div id="explore-left-panel">
+    <!-- Left hand side panel for a list of projects-->
+    <div id="project-list">
 
       <!-- Projects relevant to the user -->
       <div ng-show="activeUser">
-        <div style="display: flex;justify-content: space-between">
+        <div class="flex-space-between">
           <h1 ng-bind="'YOUR_PROJECTS'|translate"></h1>
-          <paper-button ng-click="startCreationProj()" style="background-color: #FF8324;margin: auto 8px auto 8px;color: white;">{{'PROJECT' | translate}}</paper-button>
+          <paper-button id="explore-create-project-button" ng-click="startCreationProj()">{{'PROJECT' | translate}}</paper-button>
         </div>
         <req-baz-project ng-repeat="project in projects | filter:{ leaderId: activeUser.Id }" name={{project.name}} desc={{project.description}} ng-click="selectProject(project)"></req-baz-project>
       </div>
 
       <!-- Public projects, always shown and infinite scroll -->
-      <div style="display: flex;justify-content: space-between">
+      <div class="flex-space-between">
         <h1 ng-bind="'PUBLIC_PROJECTS'|translate"></h1>
-        <div class="group" style="margin-bottom:auto;margin-top: auto;padding: 8px 8px 8px 0;width: 200px">
+        <div id="explore-search-projects" class="group">
           <input placeholder={{'SEARCH_PROJECTS'|translate}} type="text" ng-model="filterReq.$">
           <span class="highlight"></span>
           <span class="bar"></span>
@@ -23,19 +24,17 @@
       <req-baz-project ng-repeat="project in projects | filter:filterReq:strict | limitTo : limit track by project.id" name={{project.name}} desc={{project.description}} ng-click="selectProject(project)"></req-baz-project>
     </div>
 
-      <div style="width: 300px;margin-top: 20px;" ng-show="activeUser">
-        <paper-material elevation="1">
-          <div style="background-color: #ffffff;padding: 8px;margin-bottom: 16px;">
-            <h4 ng-bind="'RECENT_ACTIVITY'|translate"></h4>
-            <p ng-bind="'COMING_SOON'|translate"></p>
-          </div>
-        </paper-material>
-      </div>
-
+    <!-- Right hand side panel -->
+    <div id="explore-recent" ng-show="activeUser">
+      <paper-material elevation="1">
+        <h4 ng-bind="'RECENT_ACTIVITY'|translate"></h4>
+        <p ng-bind="'COMING_SOON'|translate"></p>
+      </paper-material>
+    </div>
   </div>
 
   <!--Create a new project-->
-  <div ng-show="showCreateProjDiv" ng-controller="CreateProjectCtrl" style="position: fixed;bottom: 0px;right: 64px; width: 500px;margin-left: 16px;margin-right: 16px;background-color: white;padding: 8px;box-shadow: 0 2px 10px rgba(0,0,0,.2);">
+  <div id="explore-create-project-container" ng-show="showCreateProjDiv" ng-controller="CreateProjectCtrl">
     <p ng-bind="'CREATE_PROJ' | translate"></p>
 
     <paper-input ng-model="name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
@@ -49,4 +48,5 @@
       </paper-button>
     </div>
   </div>
+
 </div>
