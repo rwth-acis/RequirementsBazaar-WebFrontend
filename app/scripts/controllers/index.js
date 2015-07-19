@@ -17,6 +17,10 @@ angular.module('requirementsBazaarWebFrontendApp')
       $location.path('/project/'+id, true);
     };
 
+    $scope.exploreProjects = function(){
+      $location.path('/explore/', true);
+    };
+
     /*
      * Register a listener for the oauth login and if an existing token is still valid
      * */

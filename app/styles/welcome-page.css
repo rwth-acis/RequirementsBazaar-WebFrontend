@@ -9,54 +9,17 @@
 #landing-page h1{
   text-align: center;
 }
-#landing-header {
-  background-color: #669900;
-  color: white;
-  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.3);
-  height: 65px;
-  width: 100%;
-  display: flex;
-  position: fixed;
-  z-index: 1;
-  justify-content: space-between;
-}
-#landing-header-title{
-  padding-left: 16px;
-  margin: auto 0 auto 0;
-}
-#landing-header-right-container{
-  display: flex;
-  flex-direction: row-reverse;
-}
-#landing-page-signin-button{
-  background-color: #FF8324;
-  color: white;
-  padding: 5px;
-  cursor: pointer;
-  border-radius: 3px;
-  white-space: nowrap;
-  float: right;
-  margin: auto 8px auto 8px;
-}
-#landing-header-explore{
-  color: white;
-  float: right;
-  cursor: pointer;
-  border-radius: 3px;
-  padding: 5px;
-  margin: auto 8px auto 8px;
-}
 
 /*
 * Hero panel of the landing page, with image and text
 */
 
 #landing-hero-div {
-  padding: 64px 8px 64px 8px;
+  padding: 0 8px 64px 8px;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap-reverse;
-  background-image: url("background%20image-sepia.png");
+  background-image: url("images/background%20image-sepia.png");
 }
 #landing-hero-div-motivation paper-button{
   background-color: #FF8324;

@@ -1,15 +1,4 @@
 <div id="explore-page" ng-controller="ExploreCtrl" style="overflow: auto; height: 100vh;background-color: #FAFAFA" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
-  <div id="explore-header">
-    <h3 id="explore-header-title" class="ellipsis">Requirements Bazaar</h3>
-    <oauth
-      site={{oauthSite}}
-      client-id={{oauthClientId}}
-      data-scope={{oauthDataScope}}
-      redirect-uri={{oauthRedirectURI}}
-      profile-uri={{oauthProfileURI}}
-      template= {{oauthTemplateURI}}>
-    </oauth>
-  </div>
   <div style="max-width: 1080px;padding: 32px 8px 8px 8px;margin: auto;display: flex;justify-content: space-between;flex-wrap: wrap-reverse">
     <div style="width: 100%;margin: auto;max-width: 700px;">
       <div style="display: flex">
@@ -27,20 +16,20 @@
     </div>
 
       <div style="width: 300px;margin-top: 20px;" ng-show="activeUser">
-        <paper-shadow z="1">
+        <paper-material elevation="1">
           <div style="background-color: #ffffff;padding: 8px;margin-bottom: 16px;">
             <h4>Your Projects</h4>
             <paper-item ng-repeat="project in projects | filter:{ leaderId: activeUser.Id }" ng-click="go(project.id)" style="width: 100%;margin: 8px 0 8px 0;">{{project.name}}</paper-item>
             <paper-button ng-click="startCreationProj()" style="background-color: #FF8324;margin: 0px 0 0 0;max-width: 300px;width: 100%;color: white;">{{'PROJECT' | translate}}</paper-button>
           </div>
-        </paper-shadow>
+        </paper-material>
 
-        <paper-shadow z="1">
+        <paper-material elevation="1">
           <div style="background-color: #ffffff;padding: 8px;margin-bottom: 16px;">
             <h4>Recent Activity</h4>
             <p>Coming soon</p>
           </div>
-        </paper-shadow>
+        </paper-material>
       </div>
 
 

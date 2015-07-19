@@ -164,7 +164,7 @@ module.exports = function (grunt) {
     wiredep: {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
-        exclude: ['polymer.js'],
+        exclude: ['polymer.js','webcomponents.js'],
         ignorePath:  /\.\.\//
       }
     },

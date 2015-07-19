@@ -39,30 +39,30 @@ angular
       /*
       * Non log in situations
       * */
-      .when('/project/:projectId/component/:componentId/requirement/:requirementId', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/project/:projectId/component/:componentId', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/project/:projectId', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
+      //.when('/project/:projectId/component/:componentId/requirement/:requirementId', {
+      //  templateUrl: 'views/main.html',
+      //  controller: 'MainCtrl'
+      //})
+      //.when('/project/:projectId/component/:componentId', {
+      //  templateUrl: 'views/main.html',
+      //  controller: 'MainCtrl'
+      //})
+      //.when('/project/:projectId', {
+      //  templateUrl: 'views/main.html',
+      //  controller: 'MainCtrl'
+      //})
       .when('/', {
         templateUrl: 'views/welcome-page.html',
-        controller: 'WelcomeCtrl'
+        controller: 'IndexCtrl'
       })
       .when('/explore', {
         templateUrl: 'views/explore.html',
         controller: 'ExploreCtrl'
       })
-      .when('/project-management/:projectId', {
-        templateUrl: 'views/project-management.html',
-        controller: 'ProjectManagementCtrl'
-      })
+      //.when('/project-management/:projectId', {
+      //  templateUrl: 'views/project-management.html',
+      //  controller: 'ProjectManagementCtrl'
+      //})
       .otherwise({
         redirectTo: '/'
       });
