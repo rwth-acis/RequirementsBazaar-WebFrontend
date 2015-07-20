@@ -16,6 +16,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.activeTab = 'pm-settings';
     $scope.isDirty = false;
 
+    $scope.pmSavingInprogress = false;
     /*
      * Loads the project
      * */
@@ -32,13 +33,16 @@ angular.module('requirementsBazaarWebFrontendApp')
     })();
 
     $scope.saveChanges = function(){
+      $scope.pmSavingInprogress = true;
       reqBazService.updateProject($scope.dirtyProject.id,$scope.dirtyProject)
         .success(function (updatedProject) {
           project = updatedProject;
           $scope.isDirty = false;
+          $scope.pmSavingInprogress = false;
           UtilityService.showFeedback('EDIT_SUCCESSFUL');
         })
         .error(function (error,httpStatus) {
+          $scope.pmSavingInprogress = false;
           HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };

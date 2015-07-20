@@ -4,10 +4,10 @@
 
     <!-- Sidebar navigation -->
     <p class="small-grey-text pm-settings-text" ng-bind="'SETTINGS'|translate"></p>
-    <paper-button ng-click="activeTab = 'pm-settings'" ng-bind="'GENERAL_SETTINGS'|translate"></paper-button>
-    <paper-button ng-click="activeTab = 'users'" ng-bind="'MANAGE_USERS'|translate"></paper-button>
-    <paper-button ng-click="activeTab = 'log'" ng-bind="'RECENT_CHANGES'|translate"></paper-button>
-    <paper-button ng-click="confirmDelete()" ng-bind="'DELETE_PROJECT'|translate"></paper-button>
+    <paper-button raised ng-click="activeTab = 'pm-settings'" ng-bind="'GENERAL_SETTINGS'|translate"></paper-button>
+    <paper-button disabled ng-click="activeTab = 'users'" ng-bind="'MANAGE_USERS'|translate"></paper-button>
+    <paper-button disabled ng-click="activeTab = 'log'" ng-bind="'RECENT_CHANGES'|translate"></paper-button>
+    <paper-button disabled ng-bind="'DELETE_PROJECT'|translate"></paper-button>
 
   </div>
   <div class="drawer-main" main>
@@ -42,8 +42,9 @@
             <paper-radio-button name="PRIVATE">private</paper-radio-button>
           </paper-radio-group>
           <br/>
-          <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
-          <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"></paper-button>
+          <paper-spinner ng-show="pmSavingInprogress" active alt="saving in process"></paper-spinner>
+          <paper-button raised ng-click="saveChanges()" ng-disabled="pmSavingInprogress" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
+          <paper-button raised ng-click="cancelChanges()" ng-disabled="pmSavingInprogress" ng-bind="'CANCEL'|translate"></paper-button>
         </div>
       </div>
 
