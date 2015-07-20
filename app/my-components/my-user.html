@@ -1,28 +1,46 @@
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
-
-<polymer-element name="my-user" attributes="size src name email">
+<dom-module id="my-user">
+  <style>
+    :host { display: block }
+    #my-user-container{
+      padding: 8px;
+    }
+    #my-user-container:hover{
+      background-color: #EEEEEE;
+    }
+    #my-user-text{
+      font-size: 95%;
+      opacity: 0.87;
+    }
+  </style>
   <template>
-    <style>
-      #my-user-container:hover{
-        background-color: #EEEEEE;
-      }
-      #my-user-text{
-        font-size: 95%;
-        opacity: 0.87;
-      }
-    </style>
-    <div>
-      <paper-item id="my-user-container" on-click={{showUser}}>
-        <img src="{{src}}" width="{{size}}" height="{{size}}" style="border-radius: 50%;">
-        <span id="my-user-text">{{name}}</span>
-      </paper-item>
+    <div id="my-user-container">
+      <img id="profileImage" width="{{size}}" height="{{size}}" style="border-radius: 50%;margin:auto">
+      <span id="my-user-text">{{name}}</span>
     </div>
   </template>
+
   <script>
-    Polymer('my-user',{
-      showUser: function() {
-        console.log('Not implemented');
+    Polymer({
+      is: "my-user",
+
+      properties: {
+        src: {
+          type:String,
+          observer: '_UrlAvailable'
+        },
+        size: String,
+        name: String
+      },
+
+      _UrlAvailable: function(){
+        // exclude trustSrc, since it comes from AngularJS, too early before evaluating
+        if(this.src && this.src.indexOf('trustSrc') === -1){
+          this.$.profileImage.src = this.src;
+        }
+
       }
+
     });
   </script>
-</polymer-element>
+
+</dom-module>

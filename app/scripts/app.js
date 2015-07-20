@@ -39,18 +39,18 @@ angular
       /*
       * Non log in situations
       * */
-      //.when('/project/:projectId/component/:componentId/requirement/:requirementId', {
-      //  templateUrl: 'views/main.html',
-      //  controller: 'MainCtrl'
-      //})
-      //.when('/project/:projectId/component/:componentId', {
-      //  templateUrl: 'views/main.html',
-      //  controller: 'MainCtrl'
-      //})
-      //.when('/project/:projectId', {
-      //  templateUrl: 'views/main.html',
-      //  controller: 'MainCtrl'
-      //})
+      .when('/project/:projectId/component/:componentId/requirement/:requirementId', {
+        templateUrl: 'views/main.html',
+        controller: 'MainCtrl'
+      })
+      .when('/project/:projectId/component/:componentId', {
+        templateUrl: 'views/main.html',
+        controller: 'MainCtrl'
+      })
+      .when('/project/:projectId', {
+        templateUrl: 'views/main.html',
+        controller: 'MainCtrl'
+      })
       .when('/', {
         templateUrl: 'views/welcome-page.html',
         controller: 'IndexCtrl'

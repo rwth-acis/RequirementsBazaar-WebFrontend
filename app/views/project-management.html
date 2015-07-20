@@ -37,9 +37,8 @@
 
           <h4 ng-bind="'VISIBILITY'|translate"></h4>
           <paper-radio-group ng-model="dirtyProject.visibility">
-            <!-- The binding for translate is not working -->
-            <paper-radio-button name="PUBLIC">public</paper-radio-button>
-            <paper-radio-button name="PRIVATE">private</paper-radio-button>
+            <paper-radio-button name="PUBLIC">{{'PUBLIC' | translate}}</paper-radio-button>
+            <paper-radio-button name="PRIVATE">{{'PRIVATE' | translate}}</paper-radio-button>
           </paper-radio-group>
           <br/>
           <paper-spinner ng-show="pmSavingInprogress" active alt="saving in process"></paper-spinner>
