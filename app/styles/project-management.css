@@ -1,0 +1,15 @@
+.pm-settings-text{
+  margin-left: 8px;
+}
+#pm-settings{
+  background-color: #ffffff;
+  padding: 12px;
+  display: block;
+  margin-bottom: 64px;
+}
+#pm-title-edit paper-radio-button{
+  display: block;
+}
+#pm-title-edit paper-radio-group :last-child{
+  margin-bottom: 32px;
+}

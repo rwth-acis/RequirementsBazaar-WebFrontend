@@ -59,10 +59,10 @@ angular
         templateUrl: 'views/explore.html',
         controller: 'ExploreCtrl'
       })
-      //.when('/project-management/:projectId', {
-      //  templateUrl: 'views/project-management.html',
-      //  controller: 'ProjectManagementCtrl'
-      //})
+      .when('/project-management/:projectId', {
+        templateUrl: 'views/project-management.html',
+        controller: 'ProjectManagementCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

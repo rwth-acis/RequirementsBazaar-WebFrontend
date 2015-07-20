@@ -1,3 +1,12 @@
+
+pre{
+  font-family: sans-serif;
+  margin: 0;
+  display: block;
+  opacity: 0.87;
+}
+
+/* Header that is used throughout the whole site*/
 #header {
   background-color: #669900;
   color: white;
@@ -34,4 +43,21 @@
   border-radius: 3px;
   padding: 5px;
   margin: auto 8px auto 8px;
+}
+
+/*
+  The drawer panel used in the main and project management page
+*/
+paper-drawer-panel{
+  background-color: #FAFAFA;
+}
+.drawer-sidebar{
+  padding-top: 70px;
+  border-right: 1px solid #e0e0e0;
+  overflow: auto;
+}
+.drawer-main{
+  margin-top: 64px;
+  overflow: auto;
+  height: calc(100vh - 64px);
 }
