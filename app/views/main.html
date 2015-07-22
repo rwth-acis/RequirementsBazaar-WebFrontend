@@ -117,7 +117,7 @@
             </div>
           </div>
           <div ng-show="!showRequirement" ng-click="setSelectedReqId(req.id,$index)" style="padding: 8px 16px 8px 16px;cursor: pointer">
-            <p class="multiline-ellipsis" ng-model="req.description" style="color: #808080"></p>
+            <p class="multiline-ellipsis" ng-bind="req.description" style="color: #808080"></p>
           </div>
 
           <!--Requirement content-->
