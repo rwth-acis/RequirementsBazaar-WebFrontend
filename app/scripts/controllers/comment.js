@@ -10,23 +10,29 @@
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CommentCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService) {
 
+    $scope.newComment = '';
+    $scope.mainCommentSavingInprogress = false;
+
+
     /*
      * Submits a comment, time of the post is initially approximate
      * Called: by the user
      * */
     $scope.submitComment = function(text,req){
       if(!UtilityService.isEmpty(text,'COMMENT_TEXT_MISSING')){
-        console.log('post comment: '+text);
+        $scope.mainCommentSavingInprogress = true;
         var comment = {requirementId: req.id, message: text};
         reqBazService.createComment(comment)
           .success(function (newComment) {
             console.log(newComment);
             UtilityService.showFeedback('THANKS_FOR_FEEDBACK');
             newComment.creator = $scope.activeUser;
-            console.log(newComment);
             req.comments.splice(0, 0, newComment);
+            $scope.mainCommentSavingInprogress = false;
+            $scope.newComment ='';
           })
           .error(function (error,httpStatus) {
+            $scope.mainCommentSavingInprogress = false;
             HttpErrorHandlingService.handleError(error,httpStatus);
           });
       }

@@ -1,19 +1,22 @@
 <paper-drawer-panel>
 
-  <!-- Left hand sidebar for component selection and project settigns-->
+  <!-- Left hand sidebar for component selection and project settings-->
   <div class="drawer-sidebar" drawer>
 
     <!-- Project name, settings -->
-    <div style="display: flex;justify-content: space-between">
-      <h4 ng-bind="activeProject.name" style="text-align: center;"></h4>
-      <iron-icon ng-show="activeUser !== null" icon="settings" ng-click="editProject()" style="padding: 8px;margin: auto;cursor: pointer;min-width: 24px;"></iron-icon>
+    <div id="main-project-settings" class="flex-space-between">
+      <h4 ng-bind="activeProject.name" style="flex-grow: 1;"></h4>
+      <div class="drop" ng-show="activeUser !== null" style="margin: auto">
+        <iron-icon icon="icons:more-vert"></iron-icon>
+        <ul>
+          <li ng-click="editProject()" ng-bind="'SETTINGS'|translate"></li>
+          <li ng-click="startCreationComp()" ng-bind="'COMPONENT'|translate"></li>
+        </ul>
+      </div>
     </div>
 
-    <!-- Create new component -->
-    <paper-button raised ng-click="startCreationComp()" ng-show="activeUser !== null" ng-bind="'COMPONENT'|translate" class="text-087"></paper-button>
-
     <!-- List of components and filter -->
-    <div class="group" style="padding: 8px">
+    <div class="group main-component-list">
       <input placeholder={{'FILTER_COMPONENTS'|translate}} type="text" ng-model="filterComp.name">
       <span class="highlight"></span>
       <span class="bar"></span>
@@ -29,17 +32,18 @@
       <div id="current-component" class="current-component-width" ng-controller="ActiveCompCtrl">
         <paper-material elevation="1">
           <div class="flex-space-between" style="padding: 8px">
-            <div class="text-087">
+            <div class="text-087" style="flex-grow: 1;padding-right: 8px;">
               <div ng-show="!isDirty">
                 <span ng-show="activeProject.defaultComponentId === activeComponent.id" ng-bind="'DEFAULT'|translate" class="small-grey-text"></span>
                 <h2 contenteditable="false" ng-model="activeComponent.name"></h2>
                 <div contenteditable="false" ng-model="activeComponent.description"></div>
               </div>
               <div ng-show="isDirty" class="text-087">
-                <h2 contenteditable="plaintext-only" ng-model="dirtyComp.name" style="margin-right: 10px"></h2>
-                <p contenteditable ng-model="dirtyComp.description" style="padding: 10px;min-height: 50px;margin-right: 10px"></p>
-                <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE'|translate" style="margin: 0px"></paper-button>
-                <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"  style="margin: 0px"></paper-button>
+                <paper-input ng-model="dirtyComp.name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+                <paper-textarea ng-model="dirtyComp.description" label={{'DESC'|translate}}></paper-textarea>
+                <paper-spinner ng-show="mainCompSavingInprogress" active alt="saving in process"></paper-spinner>
+                <paper-button raised ng-click="saveChanges()" ng-disabled="mainCompSavingInprogress" ng-bind="'SAVE'|translate"></paper-button>
+                <paper-button raised ng-click="cancelChanges()" ng-disabled="mainCompSavingInprogress" ng-bind="'CANCEL'|translate"></paper-button>
               </div>
             </div>
             <div>
@@ -78,7 +82,7 @@
       <div id="req-{{$index}}" ng-repeat="req in requirements | filter:isRealizedFilter |filter:filterReq:strict |  limitTo : limit track by req.id"
            ng-controller="RequirementCtrl"
            class="requirement-container"
-           ng-style="{ 'margin-bottom': $last ? '64px' : '0px' }"
+           ng-style="{ 'margin-bottom': $last ? '128px' : '0px' }"
            style="margin-top: 10px;background-color: white;width: 100%;margin-left: auto;margin-right: auto;max-width: 1000px;">
         <!--Requirement header-->
         <paper-material elevation="1">
@@ -113,11 +117,12 @@
             </div>
           </div>
           <div ng-show="!showRequirement" ng-click="setSelectedReqId(req.id,$index)" style="padding: 8px 16px 8px 16px;cursor: pointer">
-            <p class="multiline-ellipsis" ng-model="req.description" contenteditable="false" style="color: #808080"></p>
+            <p class="multiline-ellipsis" ng-model="req.description" style="color: #808080"></p>
           </div>
 
           <!--Requirement content-->
-          <div ng-show="showRequirement" class="req-collapse">
+          <!--ng-show="showRequirement"-->
+          <div ng-class="showRequirement ? 'req-collapse-show' : 'req-collapse-hidden'">
             <div class="flex-space-between">
               <!--Requirement text view mode-->
               <pre ng-show="!isDirtyReq" ng-bind="req.description" class="requirementDesc text-087"></pre>
@@ -135,8 +140,9 @@
                   <paper-textarea ng-model="dirtyReq.description" label={{'DESC'|translate}}></paper-textarea>
                 </div>
                 <div ng-show="isDirtyReq" class="save-req-container">
-                  <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
-                  <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"></paper-button>
+                  <paper-spinner ng-show="mainReqSavingInprogress" active alt="saving in process"></paper-spinner>
+                  <paper-button raised ng-click="saveChanges()" ng-disabled="mainReqSavingInprogress" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
+                  <paper-button raised ng-click="cancelChanges()" ng-disabled="mainReqSavingInprogress" ng-bind="'CANCEL'|translate"></paper-button>
                   <!--<paper-icon-button ng-file-select ng-file-change="fileSelected($files)" hidden icon="icons:attachment"></paper-icon-button>-->
                 </div>
               </div>
@@ -158,24 +164,23 @@
               <!--List of comments-->
               <h3 ng-bind="'COMMENTS' | translate" class="text-087"></h3>
               <div ng-repeat="comment in req.comments" class="comment-container">
-                <img ng-src={{comment.creator.profileImage}} fallback-src="images/no-image-found.gif" height="40px" width="40px" style="flex: 0 0 auto;">
+                <img ng-src={{comment.creator.profileImage}} fallback-src="images/no-image-found.gif" height="40px" width="40px">
                 <div class="width-max" class="text-087">
                   <pre style="font-size: 90%">{{comment.message}}</pre>
-                  <div class="comment-meta-container">
-                    <p class="small-grey-text width-max">
+                  <div class="main-comment-author flex-space-between small-grey-text">
+                    <p>
                       {{comment.creator.userName}}
                       <time is="relative-time" datetime={{comment.creationTime}}></time>
                     </p>
-                    <paper-button ng-click="deleteComment(comment.Id,req)" ng-hide="activeUser === null">
-                      <iron-icon icon="icons:delete"></iron-icon>
-                    </paper-button>
+                    <span ng-click="deleteComment(comment.Id,req)" ng-hide="activeUser === null" ng-bind="'REMOVE'|translate"></span>
                   </div>
                 </div>
               </div>
 
               <!--Create comment-->
               <paper-textarea ng-model="newComment" label={{'COMMENT_PLACEHOLDER'|translate}} ng-hide="activeUser === null" style="margin-top: 32px;"></paper-textarea>
-              <paper-button raised ng-click="submitComment(newComment,req);newComment='';" ng-bind="'SUBMIT'|translate" ng-show="newComment"  class="text-087"></paper-button>
+              <paper-spinner ng-show="mainCommentSavingInprogress" active alt="saving in process"></paper-spinner>
+              <paper-button raised ng-click="submitComment(newComment,req)" ng-disabled="mainCommentSavingInprogress" ng-bind="'SUBMIT'|translate" ng-show="newComment"  class="text-087"></paper-button>
             </div>
           </div>
         </paper-material>
@@ -187,48 +192,43 @@
 
     <!--
 
-  Create a Requirement / Component / Project
+  Create a Requirement / Component
 
   -->
+    <div ng-controller="CreateRequirementCtrl">
+      <paper-fab id="addRequirementFab" icon="add" ng-click="startCreation()" title={{'CREATE_REQ'|translate}}></paper-fab>
+      <div class="add-item-div create-container" ng-show="showCreateDiv">
+        <p ng-bind="'CREATE_REQ' | translate"></p>
+        <paper-input ng-model="newName" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+        <paper-textarea ng-model="newDesc" label={{'DESC'|translate}}></paper-textarea>
 
-    <div class="create-container">
-      <!--Create a new requirement-->
-
-      <div ng-controller="CreateRequirementCtrl" class="create-div">
-        <paper-fab id="addRequirementFab" icon="add" ng-click="startCreation()" title={{'CREATE_REQ'|translate}}></paper-fab>
-        <div class="add-item-div" ng-show="showCreateDiv">
-          <p ng-bind="'CREATE_REQ' | translate"></p>
-          <paper-input ng-model="newName" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
-          <paper-textarea ng-model="newDesc" label={{'DESC'|translate}}></paper-textarea>
-
-          <!--Confirm or add attachments-->
-          <div class="flex-space-between">
-            <paper-button raised ng-click="submitReq()" ng-bind="'CREATE' | translate"></paper-button>
-            <paper-button ng-click="clearSubmit()">
-              <iron-icon icon="icons:delete"></iron-icon>
-            </paper-button>
-          </div>
+        <!--Confirm or add attachments-->
+        <div class="flex-space-between">
+          <paper-spinner ng-show="createReqInprogress" active alt="saving in process"></paper-spinner>
+          <paper-button raised ng-click="submitReq()" ng-disabled="createReqInprogress" ng-bind="'CREATE' | translate"></paper-button>
+          <paper-button ng-click="clearSubmit()" ng-disabled="createReqInprogress">
+            <iron-icon icon="icons:clear"></iron-icon>
+          </paper-button>
         </div>
       </div>
-
-      <!--Create a new component-->
-      <div ng-show="showCreateCompDiv" class="create-div">
-        <div ng-controller="CreateComponentCtrl" class="add-item-div">
-          <p ng-bind="'CREATE_COMP'|translate"></p>
-          <paper-input ng-model="name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
-          <paper-textarea ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
-
-          <!--Confirm or cancel submit-->
-          <div class="flex-space-between">
-            <paper-button raised ng-click="submitComponent()" ng-bind="'CREATE' | translate"></paper-button>
-            <paper-button ng-click="clearSubmit()">
-              <iron-icon icon="icons:delete"></iron-icon>
-            </paper-button>
-          </div>
-        </div>
-      </div>
-
     </div>
+
+    <!--Create a new component-->
+    <div ng-show="showCreateCompDiv" ng-controller="CreateComponentCtrl" class="create-container" style="right: 150px;">
+      <p ng-bind="'CREATE_COMP'|translate"></p>
+      <paper-input ng-model="name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+      <paper-textarea ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
+
+      <!--Confirm or cancel submit-->
+      <div class="flex-space-between">
+        <paper-spinner ng-show="createCompInprogress" active alt="saving in process"></paper-spinner>
+        <paper-button raised ng-click="submitComponent()" ng-disabled="createCompInprogress" ng-bind="'CREATE' | translate"></paper-button>
+        <paper-button ng-click="clearSubmit()" ng-disabled="createCompInprogress">
+          <iron-icon icon="icons:clear"></iron-icon>
+        </paper-button>
+      </div>
+    </div>
+
 
   </div>
 </paper-drawer-panel>
@@ -238,8 +238,8 @@
       Confirmation Dialogs for projects, components and requirements
 
     -->
-<paper-dialog id="confirmDelete" heading={{'CONFIRM_DEL'|translate}}>
-  <h2 ng-bind="deleteDesc|translate"></h2>
+<paper-dialog id="confirmDelete" heading={{'CONFIRM_DEL'|translate}} with-backdrop style="max-width: 400px">
+  <h2 ng-bind="deleteDesc|translate" style="white-space: normal;"></h2>
   <div class="buttons">
     <paper-button dialog-dismiss ng-bind="'DECLINE' | translate"></paper-button>
     <paper-button dialog-confirm ng-click="deleteComponent()" ng-show="deleteElem == 'comp'" ng-bind="'ACCEPT' | translate"></paper-button>

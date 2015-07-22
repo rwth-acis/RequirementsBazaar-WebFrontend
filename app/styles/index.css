@@ -104,14 +104,13 @@ paper-drawer-panel{
   margin-top: 64px;
   border-right: 1px solid #e0e0e0;
   overflow: auto;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 64px) !important;
 }
 .drawer-main{
   margin-top: 64px;
   overflow: auto;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 64px) !important;
 }
-
 
 /*
   Since Polymer dropdown does not exist yet, create own
@@ -119,6 +118,7 @@ paper-drawer-panel{
 .drop {
   position: relative;
   cursor: pointer;
+  min-width: 40px;
 }
 .drop ul {
   padding:8px;

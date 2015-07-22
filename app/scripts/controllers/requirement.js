@@ -16,6 +16,7 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     $scope.dirtyReq = null;
     $scope.isDirtyReq = false;
+    $scope.mainReqSavingInprogress = false;
 
     $scope.reqCreator = 'NaN';
 
@@ -98,6 +99,7 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Called: by the user, by clicking on submit requirement
      * */
     $scope.saveChanges = function(){
+      $scope.mainReqSavingInprogress = true;
       reqBazService.updateRequirement($scope.dirtyReq.id,$scope.dirtyReq)
         .success(function (message) {
           console.log(message);
@@ -110,9 +112,11 @@ angular.module('requirementsBazaarWebFrontendApp')
           }
           $scope.isDirtyReq = false;
           $scope.dirtyReq = null;
+          $scope.mainReqSavingInprogress = false;
           UtilityService.showFeedback('EDIT_SUCCESSFUL');
         })
         .error(function (error,httpStatus) {
+          $scope.mainReqSavingInprogress = false;
           HttpErrorHandlingService.handleError(error,httpStatus);
         });
 

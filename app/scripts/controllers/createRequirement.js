@@ -16,6 +16,8 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     $scope.createAttachments = [];
 
+    $scope.createReqInprogress  = false;
+
     /*
     * Is called to check if the user has rights to create requirements for a project, currently simply check if logged in
     * */
@@ -38,6 +40,7 @@ angular.module('requirementsBazaarWebFrontendApp')
           UtilityService.showFeedback('ATTACHMENTS_NOT_INCLUDED');
         }
         console.log('submit requirement');
+        $scope.createReqInprogress  = true;
         var components = [{id:$scope.activeComponent.id}];
         var req = {title: $scope.newName, description: $scope.newDesc, projectId: $scope.activeProject.id, components: components};
         reqBazService.createRequirement(req)
@@ -45,8 +48,10 @@ angular.module('requirementsBazaarWebFrontendApp')
             console.log(message);
             $scope.requirements.splice(0, 0, message);
             $scope.clearSubmit();
+            $scope.createReqInprogress  = false;
           })
           .error(function (error,httpStatus) {
+            $scope.createReqInprogress  = false;
             HttpErrorHandlingService.handleError(error,httpStatus);
           });
       }
