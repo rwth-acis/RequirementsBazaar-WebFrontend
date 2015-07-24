@@ -19,6 +19,12 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Submit a new component
      * */
     $scope.submitComponent = function(){
+      // There is a data binding problem in Firefox, check manually if something has been inserted
+      if(!$scope.name && !$scope.desc){
+        $scope.name = document.getElementById('createCompName').value;
+        $scope.desc = document.getElementById('createCompDesc').value;
+      }
+
       if(!UtilityService.isEmpty($scope.name,'COMP_NAME_MISSING') && !UtilityService.isEmpty($scope.desc,'COMP_DESC_MISSING')) {
         $scope.createCompInprogress = true;
         var comp = {description: $scope.desc, name: $scope.name, projectId: $scope.activeProject.id};
@@ -41,8 +47,10 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Clear the input fields
      * */
     $scope.clearSubmit = function(){
-      $scope.name = '';
-      $scope.desc = '';
+      $scope.desc = $scope.name = '';
+      // Data binding is not working on some browsers, set it manually also
+      document.getElementById('createCompName').value = '';
+      document.getElementById('createCompDesc').value = '';
       $scope.$parent.showCreateCompDiv = false;
     };
   });

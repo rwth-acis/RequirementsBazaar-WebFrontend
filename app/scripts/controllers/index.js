@@ -28,12 +28,12 @@ angular.module('requirementsBazaarWebFrontendApp')
       UtilityService.showFeedback('WELCOME_BACK');
     });
     $scope.$on('oauth:authorized', function() {
-      UtilityService.showFeedback('WELCOME_BACK');
+
     });
     $scope.$on('oauth:logout', function() {
       UtilityService.showFeedback('LOGOUT');
       $scope.activeUser = null;
-      $location.path('/explore/', true);
+      $location.path($location.$$path, true);
     });
 
 

@@ -1,4 +1,4 @@
-<div id="explore-page" ng-controller="ExploreCtrl" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
+<div id="explore-page" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
   <div id="explore-left-panel">
     <!-- Left hand side panel for a list of projects-->
     <div id="project-list">
@@ -37,14 +37,14 @@
   <div id="explore-create-project-container" ng-show="showCreateProjDiv" ng-controller="CreateProjectCtrl">
     <p ng-bind="'CREATE_PROJ' | translate"></p>
 
-    <paper-input ng-model="name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
-    <paper-textarea ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
+    <paper-input id="createProjName" ng-model="name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+    <paper-textarea id="createProjDesc" ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
 
     <!--Confirm or cancel submit-->
     <div class="flex-space-between">
       <paper-button raised ng-click="submitProject()" ng-bind="'CREATE' | translate"></paper-button>
       <paper-button ng-click="clearSubmit()">
-        <iron-icon icon="icons:delete"></iron-icon>
+        <iron-icon icon="icons:clear"></iron-icon>
       </paper-button>
     </div>
   </div>

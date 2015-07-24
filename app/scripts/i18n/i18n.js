@@ -7,6 +7,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     BECOME_LEAD_DEV: 'Become a lead developer',
     CANCEL: 'cancel',
     CHOOSE_PROJECT: 'Choose project',
+    COMING_SOON: 'Coming soon',
     COMMENT_PLACEHOLDER: 'Leave a comment',
     COMMENTS:'Comments',
     COMPONENT: 'Create component',
@@ -42,7 +43,9 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     PRIVATE: 'Private',
     PROJECT: 'Create project',
     PUBLIC:'Public',
+    PUBLIC_PROJECTS: 'Public projects',
     REALIZED_REQ: 'Show Realized',
+    RECENT_ACTIVITY: 'Recent changes',
     RECENT_CHANGES: 'Recent changes',
     RELOAD: 'Reload',
     REMOVE: 'remove',
@@ -57,6 +60,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     TITLE: 'Title',
     TITLE_AND_DESCRIPTION:'Title and description',
     VISIBILITY: 'Visibility of the project',
+    YOUR_PROJECTS: 'Your projects',
 
     //Toast messages
     THANK_YOU:'Thank You',
@@ -127,6 +131,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       BECOME_LEAD_DEV: 'Werden Sie ein leitender Entwickler',
       CANCEL: 'Abbrechen',
       CHOOSE_PROJECT: 'Projekt auswählen',
+      COMING_SOON: 'Kommt bald',
       COMMENT_PLACEHOLDER: 'Ihr Beitrag',
       COMMENTS:'Kommentare',
       COMPONENT: 'Neue Komponente',
@@ -162,7 +167,9 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       PRIVATE: 'Privat',
       PROJECT: 'Neues Projekt',
       PUBLIC:'Öffentlich',
+      PUBLIC_PROJECTS: 'Öffentliche Projekte',
       REALIZED_REQ: 'Zeige umgesetzt',
+      RECENT_ACTIVITY: 'Letzte Änderungen',
       RECENT_CHANGES: 'Letzte Änderungen',
       RELOAD: 'Neuladen',
       REMOVE: 'löschen',
@@ -177,6 +184,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       TITLE: 'Titel - maximal 50 Zeichen',
       TITLE_AND_DESCRIPTION:'Titel und Beschreibung',
       VISIBILITY: 'Sichtbarkeit des Projektes',
+      YOUR_PROJECTS: 'Deine Projekte',
 
       //Toast messages
       THANK_YOU:'Danke sehr',

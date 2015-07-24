@@ -35,8 +35,8 @@
             <div class="text-087" style="flex-grow: 1;padding-right: 8px;">
               <div ng-show="!isDirty">
                 <span ng-show="activeProject.defaultComponentId === activeComponent.id" ng-bind="'DEFAULT'|translate" class="small-grey-text"></span>
-                <h2 contenteditable="false" ng-model="activeComponent.name"></h2>
-                <div contenteditable="false" ng-model="activeComponent.description"></div>
+                <h2 ng-bind="activeComponent.name"></h2>
+                <pre ng-bind="activeComponent.description"></pre>
               </div>
               <div ng-show="isDirty" class="text-087">
                 <paper-input ng-model="dirtyComp.name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
@@ -121,7 +121,6 @@
           </div>
 
           <!--Requirement content-->
-          <!--ng-show="showRequirement"-->
           <div ng-class="showRequirement ? 'req-collapse-show' : 'req-collapse-hidden'">
             <div class="flex-space-between">
               <!--Requirement text view mode-->
@@ -199,8 +198,8 @@
       <paper-fab id="addRequirementFab" icon="add" ng-click="startCreation()" title={{'CREATE_REQ'|translate}}></paper-fab>
       <div class="add-item-div create-container" ng-show="showCreateDiv">
         <p ng-bind="'CREATE_REQ' | translate"></p>
-        <paper-input ng-model="newName" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
-        <paper-textarea ng-model="newDesc" label={{'DESC'|translate}}></paper-textarea>
+        <paper-input id="createReqName" ng-model="newName" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+        <paper-textarea id="createReqDesc" ng-model="newDesc" label={{'DESC'|translate}}></paper-textarea>
 
         <!--Confirm or add attachments-->
         <div class="flex-space-between">
@@ -216,8 +215,8 @@
     <!--Create a new component-->
     <div ng-show="showCreateCompDiv" ng-controller="CreateComponentCtrl" class="create-container" style="right: 150px;">
       <p ng-bind="'CREATE_COMP'|translate"></p>
-      <paper-input ng-model="name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
-      <paper-textarea ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
+      <paper-input id="createCompName" ng-model="name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+      <paper-textarea id="createCompDesc" ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
 
       <!--Confirm or cancel submit-->
       <div class="flex-space-between">

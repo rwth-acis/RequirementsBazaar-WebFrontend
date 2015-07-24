@@ -47,7 +47,14 @@ angular.module('requirementsBazaarWebFrontendApp')
       $scope.mainCompSavingInprogress = true;
       reqBazService.updateComponent($scope.dirtyComp.id,$scope.dirtyComp)
         .success(function (message) {
-          $scope.activeComponent = message;
+          //Find the component
+          for(var comp in $scope.components){
+            if($scope.components[comp].id === message.id){
+              console.log('found');
+              $scope.components[comp] = message;
+              $scope.selectComp(message);
+            }
+          }
           $scope.dirtyComp = null;
           $scope.isDirty = false;
           $scope.mainCompSavingInprogress = false;

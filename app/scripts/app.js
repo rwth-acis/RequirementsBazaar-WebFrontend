@@ -52,8 +52,7 @@ angular
         controller: 'MainCtrl'
       })
       .when('/', {
-        templateUrl: 'views/welcome-page.html',
-        controller: 'IndexCtrl'
+        templateUrl: 'views/welcome-page.html'
       })
       .when('/explore', {
         templateUrl: 'views/explore.html',
@@ -99,3 +98,8 @@ angular
     return original.apply($location, [path]);
   };
 }]);
+
+
+window.addEventListener('WebComponentsReady', function() {
+  angular.bootstrap(wrap(document), ['requirementsBazaarWebFrontendApp']);
+});

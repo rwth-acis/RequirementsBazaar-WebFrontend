@@ -124,9 +124,6 @@ angular.module('requirementsBazaarWebFrontendApp')
         .success(function (reqs) {
           console.log(reqs);
           $scope.requirements = reqs;
-          $timeout(function() {
-            $scope.$apply();
-          });
           if(reqs.length !== 0){
             if($routeParams.requirementId !== undefined){
               for(var r in reqs){
