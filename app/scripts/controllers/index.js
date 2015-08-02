@@ -27,9 +27,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.$on('oauth:login', function() {
       UtilityService.showFeedback('WELCOME_BACK');
     });
-    $scope.$on('oauth:authorized', function() {
-
-    });
+    $scope.$on('oauth:authorized', function() {});
     $scope.$on('oauth:logout', function() {
       UtilityService.showFeedback('LOGOUT');
       $scope.activeUser = null;

@@ -43,7 +43,6 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Is called to check if the user has rights to create component for a project, currently simply check if logged in
      * */
     $scope.startCreationProj = function(){
-      console.log('dfdsf');
       $scope.showCreateProjDiv = true;
     };
 

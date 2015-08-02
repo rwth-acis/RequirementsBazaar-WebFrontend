@@ -17,12 +17,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Submit a new project
     * */
     $scope.submitProject = function(){
-      // There is a data binding problem in Firefox, check manually if something has been inserted
-      if(!$scope.name && !$scope.desc){
-        $scope.name = document.getElementById('createProjName').value;
-        $scope.desc = document.getElementById('createProjDesc').value;
-      }
-
       if(!UtilityService.isEmpty($scope.name,'PROJ_NAME_MISSING') && !UtilityService.isEmpty($scope.desc, 'PROJ_DESC_MISSING')){
         var proj = {description: $scope.desc, name: $scope.name, visibility: 'PUBLIC'};
         reqBazService.createProject(proj)
@@ -42,11 +36,6 @@ angular.module('requirementsBazaarWebFrontendApp')
      * */
     $scope.clearSubmit = function(){
       $scope.name = $scope.desc = '';
-
-      // Data binding is not working on some browsers, set it manually also
-      document.getElementById('createProjName').value = '';
-      document.getElementById('createProjDesc').value = '';
-
       $scope.$parent.showCreateProjDiv = false;
     };
   });

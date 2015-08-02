@@ -33,11 +33,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Submit a new Requirement
     * */
     $scope.submitReq = function(){
-      // There is a data binding problem in Firefox, check manually if something has been inserted
-      if(!$scope.newName && !$scope.newDesc){
-        $scope.newName = document.getElementById('createReqName').value;
-        $scope.newDesc = document.getElementById('createReqDesc').value;
-      }
       if(!UtilityService.isEmpty($scope.newName,'REQ_NAME_MISSING')) {
         if($scope.createAttachments.length !== 0){
           //TODO save the attachments
@@ -67,10 +62,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     * */
     $scope.clearSubmit = function(){
       $scope.newName = $scope.newDesc = '';
-      // Data binding is not working on some browsers, set it manually also
-      document.getElementById('createReqName').value = '';
-      document.getElementById('createReqDesc').value = '';
-
       $scope.showCreateDiv = false;
     };
 

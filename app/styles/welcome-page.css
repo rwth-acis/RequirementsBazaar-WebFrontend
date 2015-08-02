@@ -19,7 +19,7 @@
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap-reverse;
-  background-image: url("images/background%20image-sepia.png");
+  background-image: url("../images/background%20image-sepia.png");
 }
 #landing-hero-div-motivation paper-button{
   background-color: #FF8324;
