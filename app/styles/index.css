@@ -64,6 +64,7 @@ body {
   justify-content: space-between;
 }
 #header-title{
+  cursor: pointer;
   padding-left: 16px;
   margin: auto 0 auto 0;
 }

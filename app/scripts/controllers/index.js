@@ -12,11 +12,9 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     $scope.activeUser = null;
 
-    $scope.go = function(id){
-      console.log(id);
-      $location.path('/project/'+id, true);
+    $scope.goWelcomePage = function(){
+      $location.path('/', true);
     };
-
     $scope.exploreProjects = function(){
       $location.path('/explore/', true);
     };
