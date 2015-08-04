@@ -62,6 +62,10 @@
     <div id="header">
       <h3 id="header-title" class="ellipsis" ng-click="goWelcomePage()">Requirements Bazaar</h3>
       <div id="header-right-container">
+        <div id="header-explore" ng-click="exploreProjects()">Explore</div>
+        <paper-button style="opacity: 0.5">
+          <iron-icon icon="social:notifications-none"></iron-icon>
+        </paper-button>
         <oauth
           site={{oauthSite}}
           client-id={{oauthClientId}}
@@ -70,10 +74,6 @@
           profile-uri={{oauthProfileURI}}
           template= {{oauthTemplateURI}}>
         </oauth>
-        <paper-button style="margin: auto;opacity: 0.5">
-          <iron-icon icon="social:notifications-none"></iron-icon>
-        </paper-button>
-        <div id="header-explore" ng-click="exploreProjects()">Explore</div>
       </div>
     </div>
 
