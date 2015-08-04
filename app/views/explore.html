@@ -5,7 +5,7 @@
 
       <!-- Projects relevant to the user -->
       <div ng-show="activeUser">
-        <div class="flex-space-between">
+        <div class="flex-space-between explore-own-projects">
           <h1 ng-bind="'YOUR_PROJECTS'|translate"></h1>
           <paper-button id="explore-create-project-button" ng-click="startCreationProj()">{{'PROJECT' | translate}}</paper-button>
         </div>
@@ -13,7 +13,7 @@
       </div>
 
       <!-- Public projects, always shown and infinite scroll -->
-      <div class="flex-space-between">
+      <div class="flex-space-between explore-public-projects">
         <h1 ng-bind="'PUBLIC_PROJECTS'|translate"></h1>
         <div id="explore-search-projects" class="group">
           <input placeholder={{'SEARCH_PROJECTS'|translate}} type="text" ng-model="filterReq.$">

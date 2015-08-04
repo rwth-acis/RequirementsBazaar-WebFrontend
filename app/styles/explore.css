@@ -17,6 +17,19 @@
   margin-right:auto;
   max-width: 700px;
 }
+.explore-own-projects h1{
+  margin: 0;
+}
+.explore-own-projects{
+  margin: 0 8px 16px 8px;
+}
+.explore-public-projects{
+  margin:32px 0 16px 0;
+}
+.explore-public-projects h1 {
+  margin: 0;
+  padding: 8px;
+}
 #explore-search-projects{
   margin-bottom:auto;
   margin-top: auto;
@@ -25,8 +38,10 @@
 }
 #explore-create-project-button{
   background-color: #FF8324;
-  margin: auto 8px auto 8px;
   color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 #explore-recent{
   width: 300px;

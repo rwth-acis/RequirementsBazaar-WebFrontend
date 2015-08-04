@@ -24,16 +24,21 @@ angular.module('requirementsBazaarWebFrontendApp')
      * */
     $scope.$on('oauth:login', function() {
       UtilityService.showFeedback('WELCOME_BACK');
+      setActiveUser();
     });
-    $scope.$on('oauth:authorized', function() {});
+    $scope.$on('oauth:authorized', function() {
+      setActiveUser();
+    });
     $scope.$on('oauth:logout', function() {
       UtilityService.showFeedback('LOGOUT');
       $scope.activeUser = null;
       $location.path($location.$$path, true);
     });
-
-
     $scope.$on('oauth:profile', function() {
+      setActiveUser();
+    });
+
+    var setActiveUser = function(){
       reqBazService.getCurrentUser()
         .success(function (user) {
           console.log(user);
@@ -42,7 +47,7 @@ angular.module('requirementsBazaarWebFrontendApp')
         .error(function (error,httpStatus) {
           HttpErrorHandlingService.handleError(error,httpStatus);
         });
-    });
+    };
 
     /*
      * Making sure that the URL passing works on custom elements
