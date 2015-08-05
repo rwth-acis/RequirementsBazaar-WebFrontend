@@ -1,31 +1,43 @@
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
 
-<polymer-element name="req-baz-project" attributes="name desc">
+<dom-module id="req-baz-project" attributes="name desc">
+  <style>
+    :host { display: block }
+    paper-material {
+      display: inline-block;
+      width: 100%;
+      cursor: pointer;
+    }
+    paper-material:hover{
+      background-color: #EEEEEE;
+    }
+    #name{
+      font-size: x-large;
+      margin: 8px;
+    }
+    #desc{
+      margin: 8px;
+    }
+    pre{
+      font-family: sans-serif;
+      margin: 0;
+      display: block;
+      opacity: 0.87;
+      white-space: pre-wrap;       /* CSS 3 */
+      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+      white-space: -o-pre-wrap;    /* Opera 7 */
+      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    }
+  </style>
   <template>
-    <style>
-      paper-item:hover{
-        background-color: #EEEEEE;
-      }
-      :host {
-        display: block
-      }
-    </style>
-    <div>
-      <paper-shadow z="1">
-        <paper-item>
-          <div>
-            <p style="font-size: x-large">{{name}}</p>
-            <p>{{desc}}</p>
-          </div>
-        </paper-item>
-      </paper-shadow>
-
-    </div>
+    <paper-material elevation="1">
+      <p id="name">{{name}}</p>
+      <pre id="desc">{{desc}}</pre>
+    </paper-material>
   </template>
-  <script>
-    Polymer('req-baz-project',{
 
-    });
+  <script>
+    Polymer({is: "req-baz-project"});
   </script>
-</polymer-element>
+
+</dom-module>

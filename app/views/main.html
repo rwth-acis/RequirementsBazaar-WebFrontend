@@ -1,94 +1,69 @@
-<!--The main panel of the application-->
-<core-scaffold>
-  <!--
+<paper-drawer-panel>
 
-  The Sidebar of the application
+  <!-- Left hand sidebar for component selection and project settings-->
+  <div class="drawer-sidebar" drawer>
 
-  -->
-  <core-header-panel navigation flex mode="seamed">
-
-    <core-toolbar>
-      <paper-item ng-bind="activeProject.name" ng-click="editProject()" style="font-size: large;width: 100%"></paper-item>
-    </core-toolbar>
-
-    <!--List of components and create new-->
-    <core-menu class="sidebarMenu" ng-show="!showProjectSelection">
-      <paper-button raised ng-click="startCreationComp()" class="text-087">{{'COMPONENT' | translate}}</paper-button>
-      <div class="group">
-        <input placeholder={{'FILTER_COMPONENTS'|translate}} type="text" ng-model="filterComp.name">
-        <span class="highlight"></span>
-        <span class="bar"></span>
+    <!-- Project name, settings -->
+    <div id="main-project-settings" class="flex-space-between">
+      <h4 ng-bind="activeProject.name" style="flex-grow: 1;"></h4>
+      <div class="drop" ng-show="activeUser !== null" style="margin: auto">
+        <iron-icon icon="icons:more-vert"></iron-icon>
+        <ul>
+          <li ng-click="editProject()" ng-bind="'SETTINGS'|translate"></li>
+          <li ng-click="startCreationComp()" ng-bind="'COMPONENT'|translate"></li>
+        </ul>
       </div>
-      <paper-item ng-repeat="component in components | filter:filterComp:strict" ng-click="selectComp(component)" ng-bind="component.name" noink class="text-087"></paper-item>
-    </core-menu>
-    <paper-button raised id="loadComponents" ng-show="reloadComponents" ng-click="selectProj(activeProject)" ng-bind="'RELOAD'|translate"></paper-button>
-  </core-header-panel>
-  <!--
-
-  The top navigation bar except for the sidebar
-
-  -->
-  <div tool id="main-toolbar" class="flex-space-between width-max">
-    <p class="ellipsis page-title">Requirements Bazaar</p>
-    <div id="toolbar-log-in">
-      <!--Notifications-->
-      <div ng-click="exploreProjects()" style="font-size: large;color: white;float: right;cursor: pointer;border-radius: 3px;padding: 5px;margin:auto">Explore</div>
-      <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled style="margin: auto"></paper-icon-button>
-      <!--OAuth log in-->
-      <!--If scope is specified then the log in fails on firefox/IE-->
-      <!--scope={{oauthScope}}-->
-      <oauth
-        site={{oauthSite}}
-        client-id={{oauthClientId}}
-        data-scope={{oauthDataScope}}
-        redirect-uri={{oauthRedirectURI}}
-        profile-uri={{oauthProfileURI}}
-        template= {{oauthTemplateURI}}>
-      </oauth>
     </div>
+
+    <!-- List of components and filter -->
+    <div class="group main-component-list">
+      <input placeholder={{'FILTER_COMPONENTS'|translate}} type="text" ng-model="filterComp.name">
+      <span class="highlight"></span>
+      <span class="bar"></span>
+    </div>
+    <paper-button ng-repeat="component in components | filter:filterComp:strict | filter:{id:activeProject.defaultComponentId}" ng-click="selectComp(component)" ng-bind="component.name" noink class="text-087"></paper-button>
+    <paper-button ng-repeat="component in components | filter:filterComp:strict | filter:{id:'!'+activeProject.defaultComponentId}" ng-click="selectComp(component)" ng-bind="component.name" noink class="text-087"></paper-button>
+    <paper-button raised id="loadComponents" ng-show="reloadComponents" ng-click="selectProj(activeProject)" ng-bind="'RELOAD'|translate"></paper-button>
   </div>
-  <!--
 
-  Main Content Pane
-
-  -->
-  <div id="inf-scroll" infinite-scroll="addMoreItems()" infinite-scroll-distance="2">
+  <!-- The main content panel -->
+  <div class="drawer-main" main id="inf-scroll" infinite-scroll="addMoreItems()" infinite-scroll-distance="2">
     <div class="content">
       <!--Currently selected component-->
       <div id="current-component" class="current-component-width" ng-controller="ActiveCompCtrl">
-        <paper-shadow z="1">
+        <paper-material elevation="1">
           <div class="flex-space-between" style="padding: 8px">
-            <div class="text-087">
+            <div class="text-087" style="flex-grow: 1;padding-right: 8px;">
               <div ng-show="!isDirty">
                 <span ng-show="activeProject.defaultComponentId === activeComponent.id" ng-bind="'DEFAULT'|translate" class="small-grey-text"></span>
-                <h2 contenteditable="false" ng-model="activeComponent.name"></h2>
-                <div contenteditable="false" ng-model="activeComponent.description"></div>
+                <h2 ng-bind="activeComponent.name"></h2>
+                <pre ng-bind="activeComponent.description"></pre>
               </div>
               <div ng-show="isDirty" class="text-087">
-                <h2 contenteditable="plaintext-only" ng-model="dirtyComp.name" style="margin-right: 10px"></h2>
-                <p contenteditable ng-model="dirtyComp.description" class="add-border" style="padding: 10px;min-height: 50px;margin-right: 10px"></p>
-                <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE'|translate" style="margin: 0px"></paper-button>
-                <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"  style="margin: 0px"></paper-button>
+                <paper-input ng-model="dirtyComp.name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+                <paper-textarea ng-model="dirtyComp.description" label={{'DESC'|translate}}></paper-textarea>
+                <paper-spinner ng-show="mainCompSavingInprogress" active alt="saving in process"></paper-spinner>
+                <paper-button raised ng-click="saveChanges()" ng-disabled="mainCompSavingInprogress" ng-bind="'SAVE'|translate"></paper-button>
+                <paper-button raised ng-click="cancelChanges()" ng-disabled="mainCompSavingInprogress" ng-bind="'CANCEL'|translate"></paper-button>
               </div>
             </div>
             <div>
               <div id="comp-lead-container">
                 <p ng-bind="'COMPONENT_LEAD' |translate" class="small-grey-text"></p>
-                <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert">
-                  <paper-dropdown class="dropdown">
-                    <core-menu class="menu">
-                      <paper-item ng-click="setDefaulComp()" ng-disabled="activeUser === null" ng-bind="'SET_DEFAULT_COMP'|translate"></paper-item>
-                      <paper-item disabled ng-click="">{{'BECOME_LEAD_DEV' | translate}}</paper-item>
-                      <paper-item ng-click="startEdit()" ng-disabled="isDirtyReq || activeUser === null">{{'EDIT_COMP' | translate}}</paper-item>
-                      <paper-item ng-click="confirmDelete()" ng-disabled="activeUser === null">{{'DELETE_COMP' | translate}}</paper-item>
-                    </core-menu>
-                  </paper-dropdown>
-                </paper-dropdown-menu-ex>
+                <div class="drop" ng-show="activeUser !== null">
+                  <iron-icon icon="icons:more-vert"></iron-icon>
+                  <ul>
+                    <li ng-click="setDefaulComp()" ng-bind="'SET_DEFAULT_COMP'|translate"></li>
+                    <li ng-show="false" ng-click="" ng-bind="'BECOME_LEAD_DEV'|translate"></li>
+                    <li ng-click="startEdit()" ng-disabled="isDirtyReq" ng-bind="'EDIT_COMP'|translate"></li>
+                    <li ng-click="confirmDelete()" ng-bind="'DELETE_COMP'|translate"></li>
+                  </ul>
+                </div>
               </div>
-              <my-user src={{trustSrc(componentLeader.profileImage)}} size="30px" name={{componentLeader.userName}} email={{componentLeader.eMail}} class="text-087"></my-user>
+              <my-user src={{trustSrc(componentLeader.profileImage)}} size="30" name={{componentLeader.userName}} class="text-087"></my-user>
               <div id="show-realized">
                 <span>{{'REALIZED_REQ' | translate}}</span>
-                <paper-checkbox label="" ng-model="showRealized.value"></paper-checkbox>
+                <paper-toggle-button ng-model="showRealized.value"></paper-toggle-button>
               </div>
               <div class="group">
                 <input placeholder={{'SEARCH_REQUIREMENTS'|translate}} type="text" ng-model="filterReq.$">
@@ -97,200 +72,150 @@
               </div>
             </div>
           </div>
-        </paper-shadow>
+        </paper-material>
       </div>
-
 
       <!--If there is a network problem loading the requirements then this button is shown-->
       <paper-button raised id="load-requirements" ng-show="reloadRequirements" ng-click="selectComp(activeComponent)" ng-bind="'RELOAD'|translate" class="text-087"></paper-button>
+
 
       <!-- List of requirements , WARNING, don't include any css classes to this div, causes bugs -->
       <div id="req-{{$index}}" ng-repeat="req in requirements | filter:isRealizedFilter |filter:filterReq:strict |  limitTo : limit track by req.id"
            ng-controller="RequirementCtrl"
            class="requirement-container"
-           ng-style="{ 'margin-bottom': $last ? '64px' : '0px' }"
+           ng-style="{ 'margin-bottom': $last ? '128px' : '0px' }"
            style="margin-top: 10px;background-color: white;width: 100%;margin-left: auto;margin-right: auto;max-width: 1000px;">
         <!--Requirement header-->
-        <paper-shadow z="1">
+        <paper-material elevation="1">
           <div class="requirement-header">
-            <paper-item ng-click="setSelectedReqId(req.id,$index)" class="requirement-header-title width-max">
+            <div ng-click="setSelectedReqId(req.id,$index)" class="requirement-header-title">
               <div class="flex-space-between text-087">
-                <span ng-show="!isDirtyReq" contenteditable="false" ng-model="req.title" class="ellipsis req-title"></span>
-                <span ng-show="isDirtyReq" contenteditable="plaintext-only" ng-model="dirtyReq.title" class="req-title"></span>
+                <span ng-bind="req.title" class="ellipsis req-title"></span>
               </div>
               <time is="relative-time" datetime={{req.creation_time}} class="small-grey-text"></time>
               <span class="small-grey-text"> by {{reqCreator}}</span>
-            </paper-item>
-            <div ng-controller="VoteCtrl" class="vote-button-container">
-              <p ng-bind="req.upVotes" class="small-grey-text"></p>
-              <paper-icon-button ng-disabled="req.userVoted === 'UP_VOTE'" icon="icons:thumb-up" ng-click="vote(req,false)"></paper-icon-button>
-              <p ng-bind="req.downVotes" class="small-grey-text"></p>
-              <paper-icon-button ng-disabled="req.userVoted === 'DOWN_VOTE'" icon="icons:thumb-down" ng-click="vote(req,true)"></paper-icon-button>
             </div>
-            <paper-dropdown-menu-ex label="" closedIcon="icons:more-vert">
-              <paper-dropdown class="dropdown">
-                <core-menu class="menu">
-                  <paper-item ng-click="showContrib(req,$index)" ng-show="!showContributors" ng-bind="'SHOW_CONTRIBUTORS'|translate"></paper-item>
-                  <paper-item ng-click="hideContrib()" ng-show="showContributors && showRequirement" ng-bind="'HIDE_CONTRIBUTORS'|translate"></paper-item>
-                  <paper-item ng-click="markDone(req, 'done')" ng-show="activeUser !== null && !req.realized" ng-bind="'MARK_AS_DONE'|translate"></paper-item>
-                  <paper-item ng-click="markDone(req, null)" ng-show="activeUser !== null && req.realized" ng-bind="'MARK_AS_UNDONE'|translate"></paper-item>
-                  <paper-item ng-click="followRequirement($event,req)" ng-disabled="activeUser === null">{{'FOLLOW_REQUIREMENT' | translate}}</paper-item>
-                  <paper-item ng-click="developRequirement($event,req)" ng-disabled="activeUser === null">{{'DEVELOP_REQUIREMENT' | translate}}</paper-item>
-                  <paper-item ng-click="becomeLead($event,req)" ng-disabled="activeUser === null || req.leadDeveloperId === activeUser.Id">{{'BECOME_LEAD_DEV' | translate}}</paper-item>
-                  <paper-item ng-click="startEdit(req,$index)" ng-disabled="isDirtyReq || activeUser === null">{{'EDIT_REQUIREMENT' | translate}}</paper-item>
-                  <paper-item ng-click="confirmDelete(req)" ng-disabled="activeUser === null">{{'DELETE_REQUIREMENT' | translate}}</paper-item>
-                </core-menu>
-              </paper-dropdown>
-            </paper-dropdown-menu-ex>
+            <div ng-controller="VoteCtrl" class="vote-button-container">
+              <paper-button style="min-width: 30px" ng-click="vote(req,false)">
+                <iron-icon ng-show="req.userVoted === 'UP_VOTE'" icon="icons:star"></iron-icon>
+                <iron-icon ng-show="req.userVoted !== 'UP_VOTE'" icon="icons:star-border"></iron-icon>
+              </paper-button>
+              <p ng-bind="req.upVotes" class="small-grey-text"></p>
+            </div>
+            <div class="drop">
+              <iron-icon icon="icons:more-vert"></iron-icon>
+              <ul>
+                <li ng-click="showContrib(req,$index)" ng-show="!showContributors || !showRequirement" ng-bind="'SHOW_CONTRIBUTORS'|translate"></li>
+                <li ng-click="hideContrib()" ng-show="showContributors && showRequirement" ng-bind="'HIDE_CONTRIBUTORS'|translate"></li>
+                <li ng-click="markDone(req, 'done')" ng-show="activeUser !== null && !req.realized" ng-bind="'MARK_AS_DONE'|translate"></li>
+                <li ng-click="markDone(req, null)" ng-show="activeUser !== null && req.realized" ng-bind="'MARK_AS_UNDONE'|translate"></li>
+                <li ng-click="followRequirement($event,req)" ng-show="activeUser !== null" ng-bind="'FOLLOW_REQUIREMENT'|translate"></li>
+                <li ng-click="developRequirement($event,req)" ng-show="activeUser !== null" ng-bind="'DEVELOP_REQUIREMENT'|translate"></li>
+                <li ng-click="becomeLead($event,req)" ng-show="activeUser !== null || req.leadDeveloperId === activeUser.Id" ng-bind="'BECOME_LEAD_DEV'|translate"></li>
+                <li ng-click="startEdit(req,$index)" ng-show="isDirtyReq || activeUser !== null" ng-bind="'EDIT_REQUIREMENT'|translate"></li>
+                <li ng-click="confirmDelete(req)" ng-show="activeUser" ng-bind="'DELETE_REQUIREMENT'|translate"></li>
+              </ul>
+            </div>
           </div>
-          <paper-item ng-show="!showRequirement" ng-click="setSelectedReqId(req.id,$index)">
-            <p class="multiline-ellipsis" ng-model="req.description" contenteditable="false" style="color: #808080"></p>
-          </paper-item>
+          <div ng-show="!showRequirement" ng-click="setSelectedReqId(req.id,$index)" style="padding: 8px 16px 8px 16px;cursor: pointer">
+            <p class="multiline-ellipsis" ng-bind="req.description" style="color: #808080"></p>
+          </div>
 
           <!--Requirement content-->
-          <core-collapse opened={{showRequirement}} class="req-collapse">
+          <div ng-class="showRequirement ? 'req-collapse-show' : 'req-collapse-hidden'">
             <div class="flex-space-between">
-              <!--Requirement text-->
-              <p ng-show="!isDirtyReq" ng-model="req.description" contenteditable="false" class="requirementDesc text-087"></p>
+              <!--Requirement text view mode-->
+              <pre ng-show="!isDirtyReq" ng-bind="req.description" class="requirementDesc text-087"></pre>
+
+              <!-- Requirement edit mode -->
               <div ng-show="isDirtyReq" style="width: 100%;" class="text-087">
-                <div contenteditable class="add-border requirementDesc drop-box" ng-file-drop ng-file-change="fileSelected($files,$event)" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*" ng-model="dirtyReq.description"></div>
-                <div ng-no-file-drop contenteditable ng-model="dirtyReq.description" class="requirementDesc"></div>
+                <div ng-file-drop ng-file-change="fileSelected($files,$event)" drag-over-class="dragover" allow-dir="true" accept="image/*,application/pdf,video/*">
+                  <h4 ng-bind="'TITLE_AND_DESCRIPTION'|translate"></h4>
+                  <paper-input ng-model="dirtyReq.title" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+                  <paper-textarea ng-model="dirtyReq.description" label={{'DESC'|translate}}></paper-textarea>
+                </div>
+                <div ng-no-file-drop>
+                  <h4 ng-bind="'TITLE_AND_DESCRIPTION'|translate"></h4>
+                  <paper-input ng-model="dirtyReq.title" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+                  <paper-textarea ng-model="dirtyReq.description" label={{'DESC'|translate}}></paper-textarea>
+                </div>
                 <div ng-show="isDirtyReq" class="save-req-container">
-                  <paper-button raised ng-click="saveChanges()" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
-                  <paper-button raised ng-click="cancelChanges()" ng-bind="'CANCEL'|translate"></paper-button>
+                  <paper-spinner ng-show="mainReqSavingInprogress" active alt="saving in process"></paper-spinner>
+                  <paper-button raised ng-click="saveChanges()" ng-disabled="mainReqSavingInprogress" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
+                  <paper-button raised ng-click="cancelChanges()" ng-disabled="mainReqSavingInprogress" ng-bind="'CANCEL'|translate"></paper-button>
                   <!--<paper-icon-button ng-file-select ng-file-change="fileSelected($files)" hidden icon="icons:attachment"></paper-icon-button>-->
                 </div>
               </div>
 
-              <!--Attachments-->
-              <img ng-repeat="img in attachments | filter: attachments.URL : !null"  ng-src="{{img.URL}}" class="attachment-image"/>
-              <div ng-repeat="attachment in attachments" class="add-border attachment-container">
-                <p ng-bind="attachment.file.name" class="width-max"></p>
-                <paper-icon-button ng-click="attachments.splice($index, 1)" icon="icons:delete"></paper-icon-button>
-              </div>
-
               <!--List of contributors-->
-              <core-collapse opened={{showContributors}} style="max-width: 50%;margin: 8px;flex: 0 0 auto;min-width: 200px;">
+              <div id="main-contributors-container" ng-show="showContributors">
                 <p ng-bind="'CREATED_BY' |translate" class="small-grey-text"></p>
-                <my-user src={{trustSrc(req.creator.profileImage)}} size="30px" name={{req.creator.userName}} email={{req.creator.eMail}}></my-user>
+                <my-user src={{trustSrc(req.creator.profileImage)}} size="30" name={{req.creator.userName}}></my-user>
                 <p ng-bind="'LEADER' |translate" class="small-grey-text"></p>
-                <my-user src={{trustSrc(req.leadDeveloper.profileImage)}} size="30px" name={{req.leadDeveloper.userName}} email={{req.leadDeveloper.eMail}}></my-user>
+                <my-user src={{trustSrc(req.leadDeveloper.profileImage)}} size="30" name={{req.leadDeveloper.userName}}></my-user>
                 <p ng-bind="'FOLLOWERS' |translate" class="small-grey-text"></p>
-                <my-user ng-repeat="follower in req.followers" src={{trustSrc(follower.profileImage)}} size="30px" name={{follower.userName}} email={{follower.eMail}}></my-user>
+                <my-user ng-repeat="follower in req.followers" src={{trustSrc(follower.profileImage)}} size="30" name={{follower.userName}}></my-user>
                 <p ng-bind="'DEVELOPERS' |translate" class="small-grey-text"></p>
-                <my-user ng-repeat="dev in req.developers" src={{trustSrc(dev.profileImage)}} size="30px" name={{dev.userName}} email={{dev.eMail}}></my-user>
-              </core-collapse>
+                <my-user ng-repeat="dev in req.developers" src={{trustSrc(dev.profileImage)}} size="30" name={{dev.userName}}></my-user>
+              </div>
             </div>
             <!--Comments container-->
             <div ng-controller="CommentCtrl">
               <!--List of comments-->
               <h3 ng-bind="'COMMENTS' | translate" class="text-087"></h3>
               <div ng-repeat="comment in req.comments" class="comment-container">
-                <img ng-src={{comment.creator.profileImage}} fallback-src="images/no-image-found.gif" height="50px" width="50px" style="flex: 0 0 auto;">
+                <img ng-src={{comment.creator.profileImage}} fallback-src="images/no-image-found.gif" height="40px" width="40px">
                 <div class="width-max" class="text-087">
-                  <p style="font-size: 90%">{{comment.message}}</p>
-                  <div class="comment-meta-container">
-                    <p class="small-grey-text width-max">
+                  <pre style="font-size: 90%">{{comment.message}}</pre>
+                  <div class="main-comment-author flex-space-between small-grey-text">
+                    <p>
                       {{comment.creator.userName}}
                       <time is="relative-time" datetime={{comment.creationTime}}></time>
                     </p>
-                    <paper-icon-button ng-click="deleteComment(comment.Id,req)" icon="icons:delete" ng-hide="activeUser === null"></paper-icon-button>
+                    <span ng-click="deleteComment(comment.Id,req)" ng-hide="activeUser === null" ng-bind="'REMOVE'|translate"></span>
                   </div>
                 </div>
               </div>
 
               <!--Create comment-->
-              <paper-input-decorator label={{'COMMENT_PLACEHOLDER'|translate}} ng-hide="activeUser === null" style="margin-top: 32px;">
-                <paper-autogrow-textarea>
-                  <textarea ng-model="newComment" required></textarea>
-                </paper-autogrow-textarea>
-              </paper-input-decorator>
-              <paper-button raised ng-click="submitComment(newComment,req);newComment='';" ng-bind="'SUBMIT' | translate" ng-show="newComment"  class="text-087" style="float:right"></paper-button>
+              <paper-textarea ng-model="newComment" label={{'COMMENT_PLACEHOLDER'|translate}} ng-hide="activeUser === null" style="margin-top: 32px;"></paper-textarea>
+              <paper-spinner ng-show="mainCommentSavingInprogress" active alt="saving in process"></paper-spinner>
+              <paper-button raised ng-click="submitComment(newComment,req)" ng-disabled="mainCommentSavingInprogress" ng-bind="'SUBMIT'|translate" ng-show="newComment"  class="text-087"></paper-button>
             </div>
-          </core-collapse>
-        </paper-shadow>
+          </div>
+        </paper-material>
       </div>
+
+
     </div>
-  </div>
 
-  <!--
 
-      Create a Requirement / Component / Project
+    <!--
+
+  Create a Requirement / Component
 
   -->
-
-  <div class="create-container">
-    <!--Create a new requirement-->
-
-    <div ng-controller="CreateRequirementCtrl" class="create-div">
-      <paper-fab id="addRequirementFab" icon="icons:add" ng-click="startCreation()" title={{'CREATE_REQ'|translate}}></paper-fab>
-      <div class="add-item-div" ng-show="showCreateDiv">
-        <p ng-bind="'CREATE_REQ' | translate"></p>
-        <paper-input-decorator label={{'TITLE'|translate}} floatingLabel>
-          <paper-autogrow-textarea>
-            <textarea ng-model="newName" maxlength="50" id="reqName"></textarea>
-          </paper-autogrow-textarea>
-          <paper-char-counter class="counter" target="reqName"></paper-char-counter>
-        </paper-input-decorator>
-        <paper-input-decorator label={{'DESC'|translate}} floatingLabel>
-          <paper-autogrow-textarea>
-            <textarea ng-model="newDesc"></textarea>
-          </paper-autogrow-textarea>
-        </paper-input-decorator>
-
-        <!--Show the list of added attachments-->
-        <div ng-repeat="attachment in createAttachments" class="show-attachments add-border flex-space-between">
-          <p  ng-bind="attachment.file.name"></p>
-          <paper-icon-button ng-click="createAttachments.splice($index, 1)" icon="icons:delete"></paper-icon-button>
-        </div>
-
-        <!--Confirm or add attachments-->
-        <div class="flex-space-between">
-          <div class="flex-space-between">
-            <paper-button raised ng-click="submitReq()" ng-bind="'CREATE' | translate"></paper-button>
-            <paper-icon-button ng-file-select ng-file-change="newAttachments($files)" icon="icons:attachment" hidden></paper-icon-button>
-          </div>
-          <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
-        </div>
-      </div>
-    </div>
-
-    <!--Create a new component-->
-    <div ng-show="showCreateCompDiv" class="create-div">
-      <div ng-controller="CreateComponentCtrl" class="add-item-div">
-        <p ng-bind="'CREATE_COMP'|translate"></p>
-        <paper-input-decorator label={{'TITLE'|translate}} floatingLabel>
-          <paper-autogrow-textarea>
-            <textarea ng-model="name" maxlength="50" id="compName"></textarea>
-          </paper-autogrow-textarea>
-          <paper-char-counter class="counter" target="compName"></paper-char-counter>
-        </paper-input-decorator>
-        <paper-input-decorator label={{'DESC'|translate}} floatingLabel>
-          <paper-autogrow-textarea>
-            <textarea ng-model="desc"></textarea>
-          </paper-autogrow-textarea>
-        </paper-input-decorator>
-
-        <!--Confirm or cancel submit-->
-        <div class="flex-space-between">
-          <paper-button raised ng-click="submitComponent()" ng-bind="'CREATE' | translate"></paper-button>
-          <paper-icon-button ng-click="clearSubmit()" icon="icons:delete"></paper-icon-button>
-        </div>
-      </div>
-    </div>
-
+  <div ng-controller="CreateRequirementCtrl">
+    <paper-fab id="addRequirementFab" icon="add" ng-click="startCreation()" title={{'CREATE_REQ'|translate}}></paper-fab>
+    <div create="requirement"></div>
   </div>
 
-</core-scaffold>
+  <div create="component"></div>
+
+
+  </div>
+</paper-drawer-panel>
 
 <!--
 
       Confirmation Dialogs for projects, components and requirements
 
     -->
-<paper-action-dialog id="confirmDelete" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading={{'CONFIRM_DEL'|translate}}>
-  <p ng-bind="deleteDesc|translate"></p>
-  <paper-button raised dismissive ng-bind="'DECLINE' | translate"></paper-button>
-  <paper-button raised affirmative ng-click="deleteComponent()" ng-show="deleteElem == 'comp'" ng-bind="'ACCEPT' | translate"></paper-button>
-  <paper-button raised affirmative ng-click="deleteRequirement()" ng-show="deleteElem == 'req'" ng-bind="'ACCEPT' | translate"></paper-button>
-</paper-action-dialog>
+<paper-dialog id="confirmDelete" heading={{'CONFIRM_DEL'|translate}} with-backdrop style="max-width: 400px">
+  <h2 ng-bind="deleteDesc|translate" style="white-space: normal;"></h2>
+  <div class="buttons">
+    <paper-button dialog-dismiss ng-bind="'DECLINE' | translate"></paper-button>
+    <paper-button dialog-confirm ng-click="deleteComponent()" ng-show="deleteElem == 'comp'" ng-bind="'ACCEPT' | translate"></paper-button>
+    <paper-button dialog-confirm ng-click="deleteRequirement()" ng-show="deleteElem == 'req'" ng-bind="'ACCEPT' | translate"></paper-button>
+  </div>
+</paper-dialog>

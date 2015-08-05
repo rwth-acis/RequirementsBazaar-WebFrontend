@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name requirementsBazaarWebFrontendApp.directive:contenteditable
+ * @name requirementsBazaarWebFrontendApp.directive:fallbackSrc
  * @description
- * # contenteditable
+ * # fallbackSrc
  * directive of the requirementsBazaarWebFrontendApp
  */
 angular.module('requirementsBazaarWebFrontendApp')

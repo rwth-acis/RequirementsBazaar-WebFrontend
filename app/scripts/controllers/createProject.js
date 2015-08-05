@@ -16,7 +16,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     /*
     * Submit a new project
     * */
-    $scope.submitProject = function(){
+    $scope.submit = function(){
       if(!UtilityService.isEmpty($scope.name,'PROJ_NAME_MISSING') && !UtilityService.isEmpty($scope.desc, 'PROJ_DESC_MISSING')){
         var proj = {description: $scope.desc, name: $scope.name, visibility: 'PUBLIC'};
         reqBazService.createProject(proj)
@@ -36,6 +36,10 @@ angular.module('requirementsBazaarWebFrontendApp')
      * */
     $scope.clearSubmit = function(){
       $scope.name = $scope.desc = '';
+      var mobileDialog = document.getElementById('create-dialog-project');
+      if(mobileDialog){
+        document.getElementById('create-dialog-project').close();
+      }
       $scope.$parent.showCreateProjDiv = false;
     };
   });

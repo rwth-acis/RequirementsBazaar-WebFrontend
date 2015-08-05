@@ -13,6 +13,8 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.dirtyComp = null;
     $scope.isDirty = false;
 
+    $scope.mainCompSavingInprogress = false;
+
     /*
     * Set the default component
     * */
@@ -42,14 +44,24 @@ angular.module('requirementsBazaarWebFrontendApp')
     * Save changes of the modified component
     * */
     $scope.saveChanges = function(){
+      $scope.mainCompSavingInprogress = true;
       reqBazService.updateComponent($scope.dirtyComp.id,$scope.dirtyComp)
         .success(function (message) {
-          $scope.activeComponent = message;
+          //Find the component
+          for(var comp in $scope.components){
+            if($scope.components[comp].id === message.id){
+              console.log('found');
+              $scope.components[comp] = message;
+              $scope.selectComp(message);
+            }
+          }
           $scope.dirtyComp = null;
           $scope.isDirty = false;
+          $scope.mainCompSavingInprogress = false;
           UtilityService.showFeedback('EDIT_SUCCESSFUL');
         })
         .error(function (error,httpStatus) {
+          $scope.mainCompSavingInprogress = false;
           HttpErrorHandlingService.handleError(error,httpStatus);
         });
     };

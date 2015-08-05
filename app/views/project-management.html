@@ -1,120 +1,66 @@
-<core-scaffold>
-  <!--
+<paper-drawer-panel>
+  <div class="drawer-sidebar" drawer>
+    <paper-button ng-click="returnToProject()" ng-bind="'EXIT_SETTINGS'|translate"></paper-button>
 
-    The Sidebar of the application
+    <!-- Sidebar navigation -->
+    <p class="small-grey-text pm-settings-text" ng-bind="'SETTINGS'|translate"></p>
+    <paper-button raised ng-click="activeTab = 'pm-settings'" ng-bind="'GENERAL_SETTINGS'|translate"></paper-button>
+    <paper-button disabled ng-click="activeTab = 'users'" ng-bind="'MANAGE_USERS'|translate"></paper-button>
+    <paper-button disabled ng-click="activeTab = 'log'" ng-bind="'RECENT_CHANGES'|translate"></paper-button>
+    <paper-button disabled ng-bind="'DELETE_PROJECT'|translate"></paper-button>
 
-    -->
-  <core-header-panel navigation flex mode="seamed">
-    <!--Switch between projects-->
-    <core-toolbar>
-      <paper-item ng-click="returnToProject()" style="width: 100%;font-size: large">
-        <core-icon icon="icons:arrow-back"></core-icon>
-        <span ng-bind="dirtyProject.name"></span>
-      </paper-item>
-    </core-toolbar>
-
-    <!--List of projects-->
-    <core-menu class="sidebarMenu">
-      <p class="small-grey-text">Settings</p>
-      <paper-item ng-click="activeTab = 'settings'">General Settings</paper-item>
-      <paper-item ng-click="activeTab = 'users'" disabled>Manage Users</paper-item>
-      <paper-item ng-click="activeTab = 'log'" disabled>Latest Changes</paper-item>
-      <paper-item ng-click="confirmDelete()" disabled>Delete Project</paper-item>
-    </core-menu>
-  </core-header-panel>
-
-  <div tool id="main-toolbar" class="flex-space-between width-max">
-    <p class="ellipsis">Requirements Bazaar</p>
-    <div id="toolbar-log-in">
-      <!--Notifications-->
-      <paper-icon-button icon="social:notifications-none" ng-click="isNotificationsOpen = !isNotificationsOpen" disabled></paper-icon-button>
-      <!--OAuth log in-->
-      <!--If scope is specified then the log in fails on firefox/IE-->
-      <!--scope={{oauthScope}}-->
-      <oauth
-        site={{oauthSite}}
-        client-id={{oauthClientId}}
-        data-scope={{oauthDataScope}}
-        redirect-uri={{oauthRedirectURI}}
-        profile-uri={{oauthProfileURI}}
-        template="../my-components/sign-in-button.html">
-      </oauth>
-    </div>
   </div>
-  <!--
+  <div class="drawer-main" main>
+    <div class="content">
+      <!-- General project settings -->
+      <div id="pm-settings" ng-show="activeTab === 'pm-settings'">
 
-    Main Content Pane
+        <!-- View mode -->
+        <div ng-show="!isDirty">
+          <div class="flex-space-between">
+            <h2 ng-bind="dirtyProject.name"></h2>
+            <paper-button raised ng-click="isDirty = true" ng-bind="'EDIT'|translate"></paper-button>
+          </div>
 
-    -->
-  <div class="content">
-    <!--
+          <h4 ng-bind="'DESCRIPTION'|translate"></h4>
+          <pre ng-bind="dirtyProject.description"></pre>
 
-    General project settings
+          <h4 ng-bind="'VISIBILITY'|translate"></h4>
+          <p ng-bind="dirtyProject.visibility|translate"></p>
+        </div>
 
-    -->
-    <div id="settings" ng-show="activeTab === 'settings'" style="background-color: #ffffff;padding: 12px;display: block">
-      <div style="display: flex;justify-content: space-between">
-        <h2 contenteditable="false" ng-model="dirtyProject.name" ng-show="!isDirty"></h2>
-        <h2 contenteditable=="plaintext-only" ng-model="dirtyProject.name" ng-show="isDirty"></h2>
-        <!--<paper-icon-button icon="editor:mode-edit" ng-click="isDirty = true"></paper-icon-button>-->
-        <div>
-          <paper-button raised ng-click="isDirty = true">Edit</paper-button>
+        <!-- Edit mode -->
+        <div id="pm-title-edit" ng-show="isDirty">
+          <h4 ng-bind="'TITLE_AND_DESCRIPTION'|translate"></h4>
+          <paper-input ng-model="dirtyProject.name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
+          <paper-textarea ng-model="dirtyProject.description" label={{'DESC'|translate}}></paper-textarea>
+
+          <h4 ng-bind="'VISIBILITY'|translate"></h4>
+          <paper-radio-group ng-model="dirtyProject.visibility">
+            <paper-radio-button name="PUBLIC">{{'PUBLIC' | translate}}</paper-radio-button>
+            <paper-radio-button name="PRIVATE">{{'PRIVATE' | translate}}</paper-radio-button>
+          </paper-radio-group>
+          <br/>
+          <paper-spinner ng-show="pmSavingInprogress" active alt="saving in process"></paper-spinner>
+          <paper-button raised ng-click="saveChanges()" ng-disabled="pmSavingInprogress" ng-bind="'SAVE_CHANGES'|translate"></paper-button>
+          <paper-button raised ng-click="cancelChanges()" ng-disabled="pmSavingInprogress" ng-bind="'CANCEL'|translate"></paper-button>
         </div>
       </div>
 
-      <h4>Description</h4>
-      <p contenteditable="false" ng-model="dirtyProject.description" ng-show="!isDirty"></p>
-      <p contenteditable="true" ng-model="dirtyProject.description" ng-show="isDirty" class="add-border" style="padding: 10px;min-height: 150px"></p>
 
+      <!-- User management -->
+      <div id="users" ng-show="activeTab === 'users'">
 
-      <paper-radio-group ng-model="dirtyProject.visibility" ng-click="isDirty = true">
-        <paper-radio-button name="PUBLIC" label="public"></paper-radio-button>
-        <paper-radio-button name="PRIVATE" label="private"></paper-radio-button>
-      </paper-radio-group>
-      <br/>
-      <paper-button raised ng-click="saveChanges()" ng-show="isDirty">Save</paper-button>
-      <paper-button raised ng-click="cancelChanges()" ng-show="isDirty">Cancel</paper-button>
-    </div>
-    <!--
-
-    User management
-
-    -->
-    <div id="users" ng-show="activeTab === 'users'">
-      <h2 style="background-color: #ffffff; padding: 8px; margin-bottom: 0;margin-top: 8px">User Management</h2>
-      <div ng-repeat="roles in projectRoles.roles" style="background-color: #ffffff; margin-bottom: 8px; padding: 8px">
-        <h4>{{roles.role}}</h4>
-        <my-user src="https://api.learning-layers.eu/profile.png" width="30px" name="{{person}}" ng-repeat="person in roles.users"></my-user>
-        <paper-dropdown-menu label="select user">
-          <paper-dropdown class="dropdown">
-            <core-menu class="menu">
-              <paper-item>Max x</paper-item>
-              <paper-item>Max y</paper-item>
-            </core-menu>
-          </paper-dropdown>
-        </paper-dropdown-menu>
-        <paper-button raised>add</paper-button>
       </div>
-    </div>
-    <!--
 
-    Log of latest changes
 
-    -->
-    <div id="log" ng-show="activeTab === 'log'">
-      <h2 style="background-color: #ffffff; padding: 8px; margin-bottom: 0px;margin-top: 8px">Latest Changes</h2>
+      <!-- Log of latest changes -->
+      <div id="log" ng-show="activeTab === 'log'">
+
+      </div>
+
+
     </div>
   </div>
 
-  <!--
-
-      Confirmation Dialogs for Projects and Components
-
-  -->
-  <paper-action-dialog id="confirmDelete" backdrop role="dialog" autoclosedisabled layout vertical layered="false" transition="core-transition-center" tabindex="-1" heading="Confirm Deletion">
-    <p>Delete project - cannot be undone!</p>
-    <paper-button raised dismissive >Decline</paper-button>
-    <paper-button raised affirmative ng-click="deleteProject()">Accept</paper-button>
-  </paper-action-dialog>
-
-</core-scaffold>
+</paper-drawer-panel>

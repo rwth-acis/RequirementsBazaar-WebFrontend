@@ -4,14 +4,14 @@
     Sign In
   </div>
   <!--Sign out style-->
-  <div class="logged-in" ng-show="show=='logged-in'" ng-click="logout()" style="cursor: pointer;display: flex" title="Log out">
+  <div class="logged-in" ng-show="show=='logged-in'" ng-click="logout()" style="cursor: pointer;display: flex;min-width: 24px;" title="Log out">
     <svg style="width:24px;height:24px" viewBox="0 0 24 24">
       <path fill="#ffffff" d="M17,17.25V14H10V10H17V6.75L22.25,12L17,17.25M13,2A2,2 0 0,1 15,4V8H13V4H4V20H13V16H15V20A2,2 0 0,1 13,22H4A2,2 0 0,1 2,20V4A2,2 0 0,1 4,2H13Z" />
     </svg>
   </div>
 
   <!--Sign in style-->
-  <div class="denied" ng-show="show=='denied'" ng-click="login()" style="cursor: pointer;display: flex" title="Access Denied">
+  <div class="denied" ng-show="show=='denied'" ng-click="login()" style="cursor: pointer;display: flex;min-width: 24px;" title="Access Denied">
     <svg style="width:24px;height:24px;" viewBox="0 0 24 24">
       <path fill="#ffffff" d="M10,17.25V14H3V10H10V6.75L15.25,12L10,17.25M8,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H8A2,2 0 0,1 6,20V16H8V20H17V4H8V8H6V4A2,2 0 0,1 8,2Z" />
     </svg>

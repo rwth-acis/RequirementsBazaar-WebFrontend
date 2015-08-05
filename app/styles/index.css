@@ -1,0 +1,257 @@
+/*
+  Site wide utility rules
+*/
+pre{
+  font-family: sans-serif;
+  margin: 0;
+  display: block;
+  opacity: 0.87;
+  white-space: pre-wrap;       /* CSS 3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+.text-087{
+  opacity: 0.87;
+}
+body {
+  font-family: sans-serif;
+  margin: 0;
+}
+.small-grey-text {
+  font-size: small;
+  color: #808080;
+}
+.large-text {
+  font-size: large;
+}
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+.multiline-ellipsis {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  line-height: 20px;        /* fallback */
+  max-height: 60px;       /* fallback */
+}
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+.width-max {
+  width: 100%;
+}
+
+
+/* Header that is used throughout the whole site*/
+#header {
+  background-color: #669900;
+  color: white;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.3);
+  height: 65px;
+  width: 100%;
+  display: flex;
+  position: fixed;
+  z-index: 1;
+  justify-content: space-between;
+}
+#header > *{
+  cursor: pointer;
+}
+#header-title{
+  padding-left: 16px;
+  line-height: 54px;
+  margin: 5px;
+}
+#header-right-container{
+  margin-right: 12px;
+  display: flex;
+}
+#header-right-container > *{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#signin-button{
+  background-color: #FF8324;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+#header-explore{
+  line-height: 54px;
+  color: white;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.create-dialog > div{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  margin: 0;
+}
+.create-dialog{
+  margin: 0;
+  width:calc(100% - 24px);
+  top: 12px;
+  height: calc(100vh - 24px);
+  max-height: 9999px;
+}
+
+/*
+  The drawer panel used in the main and project management page
+*/
+paper-drawer-panel{
+  background-color: #FAFAFA;
+}
+.drawer-sidebar{
+  margin-top: 64px;
+  border-right: 1px solid #e0e0e0;
+  overflow: auto;
+  height: calc(100vh - 64px) !important;
+}
+.drawer-main{
+  margin-top: 64px;
+  overflow: auto;
+  height: calc(100vh - 64px) !important;
+}
+
+/*
+  Since Polymer dropdown does not exist yet, create own
+*/
+.drop {
+  position: relative;
+  cursor: pointer;
+  min-width: 40px;
+}
+.drop ul {
+  padding:8px;
+  background-color: white;
+  z-index: 2;
+  position: absolute;
+  right: 0;
+  top: -0.5em;
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transform-origin: 50% 0;
+  -ms-transform-origin: 50% 0;
+  transform-origin: 80% 0;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 8px 0 rgba(0, 0, 0, 0.12);
+}
+.drop ul li {
+  display: block;
+  margin:0;
+  white-space: nowrap;
+  padding: 12px;
+}
+.drop ul li:hover {
+  background: #ebebeb;
+}
+.drop:hover ul {
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
+.drop iron-icon{
+  height: 24px;
+  width: 24px;
+  padding: 8px;
+}
+
+
+
+
+/*
+
+  Fake paper input element that works with angular two way databinding
+
+*/
+/* form starting stylings ------------------------------- */
+.group{
+  position:relative;
+  margin-bottom:8px;
+}
+input 				{
+  font-size:100%;
+  padding:10px 0 10px 0;
+  display:block;
+  width:100%;
+  border:none;
+  border-bottom:1px solid #757575;
+}
+input:focus 		{ outline:none; }
+
+/* BOTTOM BARS ================================= */
+.bar 	{
+  position:relative;
+  display:block;
+  width:100%;
+}
+.bar:before, .bar:after 	{
+  content:'';
+  height:2px;
+  width:0;
+  bottom:1px;
+  position:absolute;
+  background:#5264AE;
+  transition:0.2s ease all;
+  -moz-transition:0.2s ease all;
+  -webkit-transition:0.2s ease all;
+}
+.bar:before {
+  left:50%;
+}
+.bar:after {
+  right:50%;
+}
+
+/* active state */
+input:focus ~ .bar:before, input:focus ~ .bar:after {
+  width:50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.highlight {
+  position:absolute;
+  height:60%;
+  width:100px;
+  top:25%;
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
+}
+
+/*active state */
+input:focus ~ .highlight {
+  -webkit-animation:inputHighlighter 0.3s ease;
+  -moz-animation:inputHighlighter 0.3s ease;
+  animation:inputHighlighter 0.3s ease;
+}
+
+/*ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+  from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+  from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+  from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
