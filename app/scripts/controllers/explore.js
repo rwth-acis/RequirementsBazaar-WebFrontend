@@ -55,6 +55,6 @@ angular.module('requirementsBazaarWebFrontendApp')
 
 
     $scope.selectProject = function(project){
-      $location.path('/project/'+project.id, true);
+      $location.path('/project/'+project.id+'/component/'+project.defaultComponentId, true);
     };
   });
