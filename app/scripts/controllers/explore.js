@@ -40,9 +40,16 @@ angular.module('requirementsBazaarWebFrontendApp')
     })();
 
     /*
-     * Is called to check if the user has rights to create component for a project, currently simply check if logged in
+     * Open the panel to start creating a project
      * */
     $scope.startCreationProj = function(){
+      var mobileDialog = document.getElementById('create-dialog-project');
+      if(mobileDialog){
+        // If there is no delay then the overlay is closed right away
+        setTimeout( function(){
+          document.getElementById('create-dialog-project').open();
+        },400);
+      }
       $scope.showCreateProjDiv = true;
     };
 

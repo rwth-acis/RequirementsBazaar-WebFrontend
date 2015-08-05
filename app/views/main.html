@@ -194,39 +194,12 @@
   Create a Requirement / Component
 
   -->
-    <div ng-controller="CreateRequirementCtrl">
-      <paper-fab id="addRequirementFab" icon="add" ng-click="startCreation()" title={{'CREATE_REQ'|translate}}></paper-fab>
-      <div class="add-item-div create-container" ng-show="showCreateDiv">
-        <p ng-bind="'CREATE_REQ' | translate"></p>
-        <paper-input id="createReqName" ng-model="newName" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
-        <paper-textarea id="createReqDesc" ng-model="newDesc" label={{'DESC'|translate}}></paper-textarea>
+  <div ng-controller="CreateRequirementCtrl">
+    <paper-fab id="addRequirementFab" icon="add" ng-click="startCreation()" title={{'CREATE_REQ'|translate}}></paper-fab>
+    <div create="requirement"></div>
+  </div>
 
-        <!--Confirm or add attachments-->
-        <div class="flex-space-between">
-          <paper-spinner ng-show="createReqInprogress" active alt="saving in process"></paper-spinner>
-          <paper-button raised ng-click="submitReq()" ng-disabled="createReqInprogress" ng-bind="'CREATE' | translate"></paper-button>
-          <paper-button ng-click="clearSubmit()" ng-disabled="createReqInprogress">
-            <iron-icon icon="icons:clear"></iron-icon>
-          </paper-button>
-        </div>
-      </div>
-    </div>
-
-    <!--Create a new component-->
-    <div ng-show="showCreateCompDiv" ng-controller="CreateComponentCtrl" class="create-container" style="right: 150px;">
-      <p ng-bind="'CREATE_COMP'|translate"></p>
-      <paper-input id="createCompName" ng-model="name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
-      <paper-textarea id="createCompDesc" ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
-
-      <!--Confirm or cancel submit-->
-      <div class="flex-space-between">
-        <paper-spinner ng-show="createCompInprogress" active alt="saving in process"></paper-spinner>
-        <paper-button raised ng-click="submitComponent()" ng-disabled="createCompInprogress" ng-bind="'CREATE' | translate"></paper-button>
-        <paper-button ng-click="clearSubmit()" ng-disabled="createCompInprogress">
-          <iron-icon icon="icons:clear"></iron-icon>
-        </paper-button>
-      </div>
-    </div>
+  <div create="component"></div>
 
 
   </div>

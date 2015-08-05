@@ -3,6 +3,7 @@
     :host { display: block }
     #my-user-container{
       padding: 8px;
+      display: inline-flex;
     }
     #my-user-container:hover{
       background-color: #EEEEEE;
@@ -15,7 +16,7 @@
   <template>
     <div id="my-user-container">
       <img id="profileImage" width="{{size}}" height="{{size}}" style="border-radius: 50%;margin:auto">
-      <span id="my-user-text">{{name}}</span>
+      <p id="my-user-text">{{name}}</p>
     </div>
   </template>
 

@@ -34,19 +34,6 @@
   </div>
 
   <!--Create a new project-->
-  <div id="explore-create-project-container" ng-show="showCreateProjDiv" ng-controller="CreateProjectCtrl">
-    <p ng-bind="'CREATE_PROJ' | translate"></p>
-
-    <paper-input id="createProjName" ng-model="name" label={{'TITLE'|translate}} maxlength="50" char-counter></paper-input>
-    <paper-textarea id="createProjDesc" ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
-
-    <!--Confirm or cancel submit-->
-    <div class="flex-space-between">
-      <paper-button raised ng-click="submitProject()" ng-bind="'CREATE' | translate"></paper-button>
-      <paper-button ng-click="clearSubmit()">
-        <iron-icon icon="icons:clear"></iron-icon>
-      </paper-button>
-    </div>
-  </div>
+  <div create="project"></div>
 
 </div>

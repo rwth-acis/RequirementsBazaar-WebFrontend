@@ -94,6 +94,21 @@ body {
   padding: 5px;
 }
 
+.create-dialog > div{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  margin: 0;
+}
+.create-dialog{
+  margin: 0;
+  width:calc(100% - 24px);
+  top: 12px;
+  height: calc(100vh - 24px);
+  max-height: 9999px;
+}
+
 /*
   The drawer panel used in the main and project management page
 */
