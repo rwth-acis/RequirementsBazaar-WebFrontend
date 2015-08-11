@@ -43,14 +43,13 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Open the panel to start creating a project
      * */
     $scope.startCreationProj = function(){
-      var mobileDialog = document.getElementById('create-dialog-project');
-      if(mobileDialog){
-        // If there is no delay then the overlay is closed right away
+      if($scope.isMobile){
         setTimeout( function(){
           document.getElementById('create-dialog-project').open();
         },400);
+      }else{
+        $scope.showCreateProjDiv = true;
       }
-      $scope.showCreateProjDiv = true;
     };
 
 

@@ -23,14 +23,13 @@ angular.module('requirementsBazaarWebFrontendApp')
     * */
     $scope.startCreation = function(){
       if(AccessToken.get() !== null){
-        var mobileDialog = document.getElementById('create-dialog-requirement');
-        if(mobileDialog){
-          // If there is no delay then the overlay is closed right away
+        if($scope.isMobile){
           setTimeout( function(){
             document.getElementById('create-dialog-requirement').open();
           },400);
+        }else{
+          $scope.showCreateDiv = true;
         }
-        $scope.showCreateDiv = true;
       }else{
         UtilityService.showFeedback('LOGIN_REQ');
       }
