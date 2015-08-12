@@ -1,67 +1,50 @@
-<div id="landing-page" ng-controller="WelcomeCtrl">
-  <div id="landing-header">
-    <h3 id="landing-header-title" class="ellipsis">Requirements Bazaar</h3>
-    <div id="landing-header-right-container">
-      <oauth
-        site={{oauthSite}}
-        client-id={{oauthClientId}}
-        data-scope={{oauthDataScope}}
-        redirect-uri={{oauthRedirectURI}}
-        profile-uri={{oauthProfileURI}}
-        template= {{oauthTemplateURI}}>
-      </oauth>
-      <div id="landing-header-explore" ng-click="exploreProjects()">Explore</div>
+<div id="landing-page">
+  <div id="landing-hero-div">
+    <div id="landing-hero-image-container">
+      <img src="images/hero-image.png" style="box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3);">
+    </div>
+    <div id="landing-hero-div-motivation">
+      <h1 ng-bind="'CREATE_BETTER_PROJECTS_WITH_US'|translate"></h1>
+      <p ng-bind="'MOTIVATION_MAIN'|translate"></p>
     </div>
   </div>
-  <div>
-    <div id="landing-hero-div">
-      <div id="landing-hero-image-container">
-        <img src="../styles/images/hero-image.png" style="box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3);">
-      </div>
-      <div id="landing-hero-div-motivation">
-        <h1>CREATE BETTER PROJECTS WITH US</h1>
-        <p>Requirements Bazaar lets users give you valuable feedback and lets you concentrate on features that really matter.</p>
-        <!--<paper-button>Start reacting to user needs - cannot be done right now</paper-button>-->
-      </div>
+  <div id="landing-how-it-works">
+    <div id="landing-how-it-works-text">
+      <h1 ng-bind="'HOW_IT_WORKS'|translate"></h1>
+      <p ng-bind="'STEP_1'|translate"></p>
+      <p ng-bind="'STEP_2'|translate"></p>
+      <p ng-bind="'STEP_3'|translate"></p>
+      <p ng-bind="'LEARN_MORE'|translate"></p>
     </div>
-    <div id="landing-how-it-works">
-      <div id="landing-how-it-works-text">
-        <h1>How it works! Feedback in 3 steps</h1>
-        <p>1. Create a project on requirements bazaar</p>
-        <p>2. Direct users to your project</p>
-        <p>3. Respond to user requirements</p>
-        <p>To learn more watch the video</p>
-      </div>
-      <div id="landing-how-it-works-video">
-        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/u3f8xnEtT7I" frameborder="0" allowfullscreen></iframe>
-      </div>
+    <div id="landing-how-it-works-video">
+      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/u3f8xnEtT7I" frameborder="0" allowfullscreen></iframe>
     </div>
-    <div id="landing-motivation-div">
-      <div>
-        <img src="../styles/images/speech-bubble.svg" height="150px">
-        <p>Listen to your users and react to their needs</p>
-      </div>
-      <div>
-        <img src="../styles/images/motivational-arrow.svg" height="150px">
-        <p>Continuous innovation. Bring together user, developers and operators in a user friendly manner.</p>
-      </div>
-      <div>
-        <img src="../styles/images/motivational-clock.svg" height="150px">
-        <p>Save time and effort. Focus on the features that really matter to the users.</p>
-      </div>
+  </div>
+  <div id="landing-motivation-div">
+    <div>
+      <img src="images/speech-bubble.svg" height="150px">
+      <p ng-bind="'IMAGE_TEXT_1'|translate"></p>
     </div>
-    <div id="landing-getstarted">
-      <p>Get Started</p>
-      <p>Take a look at a few example project and if we have convinced you create your own</p>
-      <paper-button ng-click="exploreProjects()">Explore public projects</paper-button>
+    <div>
+      <img src="images/motivational-arrow.svg" height="150px">
+      <p ng-bind="'IMAGE_TEXT_1'|translate"></p>
     </div>
-    <div class="landing-footer-div">
-      <div class="landing-page-contact">
-        <p>Contact</p>
-        <span>Chair of Computer Science 5 RWTH</span>
-        <br/>
-        <span>reqbaz@dbis.rwth-aachen.de</span>
-      </div>
+    <div>
+      <img src="images/motivational-clock.svg" height="150px">
+      <p ng-bind="'IMAGE_TEXT_1'|translate"></p>
+    </div>
+  </div>
+  <div id="landing-getstarted">
+    <p ng-bind="'GET_STARTED'|translate"></p>
+    <p ng-bind="'GET_STARTED_DESC'|translate"></p>
+    <paper-button ng-click="exploreProjects()" ng-bind="'EXPLORE_PUBLIC_PROJECTS'|translate"></paper-button>
+  </div>
+  <div class="landing-footer-div">
+    <div class="landing-page-contact">
+      <p ng-bind="'CONTACT'|translate"></p>
+      <span ng-bind="'CHAIR'|translate"></span>
+      <br/>
+      <span ng-bind="'EMAIL'|translate">e</span>
     </div>
   </div>
 </div>

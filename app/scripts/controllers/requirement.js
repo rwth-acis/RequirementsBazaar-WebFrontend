@@ -16,6 +16,7 @@ angular.module('requirementsBazaarWebFrontendApp')
 
     $scope.dirtyReq = null;
     $scope.isDirtyReq = false;
+    $scope.mainReqSavingInprogress = false;
 
     $scope.reqCreator = 'NaN';
 
@@ -98,6 +99,7 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Called: by the user, by clicking on submit requirement
      * */
     $scope.saveChanges = function(){
+      $scope.mainReqSavingInprogress = true;
       reqBazService.updateRequirement($scope.dirtyReq.id,$scope.dirtyReq)
         .success(function (message) {
           console.log(message);
@@ -110,9 +112,11 @@ angular.module('requirementsBazaarWebFrontendApp')
           }
           $scope.isDirtyReq = false;
           $scope.dirtyReq = null;
+          $scope.mainReqSavingInprogress = false;
           UtilityService.showFeedback('EDIT_SUCCESSFUL');
         })
         .error(function (error,httpStatus) {
+          $scope.mainReqSavingInprogress = false;
           HttpErrorHandlingService.handleError(error,httpStatus);
         });
 
@@ -169,7 +173,6 @@ angular.module('requirementsBazaarWebFrontendApp')
 
           //Scroll the user to the opened requirement
           var topPos = 0;
-          var scaffold = null;
           var scrollArea = null;
           if(args.newListIndex > args.oldListIndex){
             topPos = 0;
@@ -180,16 +183,14 @@ angular.module('requirementsBazaarWebFrontendApp')
             if(document.getElementById('req-'+args.oldListIndex)){
               prevHeight = document.getElementById('req-'+args.oldListIndex).clientHeight;
             }
-            scaffold = document.querySelector('core-scaffold');
-            scrollArea = scaffold.shadowRoot.querySelector('core-header-panel');
-            scrollArea.scroller.scrollTop = topPos-prevHeight+100;
+            scrollArea = document.querySelector('.drawer-main');
+            scrollArea.scrollTop = topPos-prevHeight;
           }else{
             if(document.getElementById('req-'+args.newListIndex)){
               topPos = document.getElementById('req-'+args.newListIndex).offsetTop;
             }
-            scaffold = document.querySelector('core-scaffold');
-            scrollArea = scaffold.shadowRoot.querySelector('core-header-panel');
-            scrollArea.scroller.scrollTop = topPos-50;
+            scrollArea = document.querySelector('.drawer-main');
+            scrollArea.scrollTop = topPos-100;
           }
 
           reqBazService.getRequirement($scope.req.id)

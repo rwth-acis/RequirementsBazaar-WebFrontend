@@ -15,7 +15,7 @@ angular.module('requirementsBazaarWebFrontendApp')
      * Called: automatic
      * */
     this.showFeedback = function(text, param){
-      var toast = document.getElementById('feedbackToast');
+      var toast = document.querySelector('#feedbackToast');
       toast.text = (param !== undefined) ? $translate.instant(text) + param : $translate.instant(text);
       toast.show();
     };
@@ -28,6 +28,4 @@ angular.module('requirementsBazaarWebFrontendApp')
         return false;
       }
     };
-
-
   });

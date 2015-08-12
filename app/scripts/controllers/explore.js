@@ -11,12 +11,9 @@ angular.module('requirementsBazaarWebFrontendApp')
   .controller('ExploreCtrl', function ($scope, oauthConfig, $location, reqBazService, AccessToken, UtilityService){
 
     $scope.projects = null;
-    $scope.featured = [];
-
     $scope.showCreateProjDiv = false;
 
-
-    $scope.limit = 20;
+    $scope.limit = 10;
     $scope.addMoreItems = function(){
       if($scope.projects !== null){
         if($scope.limit < $scope.projects.length){
@@ -35,8 +32,6 @@ angular.module('requirementsBazaarWebFrontendApp')
           $scope.projects = projs;
           if(projs.length === 0){
             UtilityService.showFeedback('NO_PROJ_EXISTS');
-          }else{
-            getFeatured();
           }
         })
         .error(function () {
@@ -44,25 +39,21 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     })();
 
-    var getFeatured = function(){
-      for(var i in $scope.projects){
-        if($scope.projects[i].id === 2 || $scope.projects[i].id === 125 || $scope.projects[i].id === 133){
-          $scope.featured.push($scope.projects[i]);
-          $scope.projects.splice(i, 1);
-        }
-      }
-    };
-
     /*
-     * Is called to check if the user has rights to create component for a project, currently simply check if logged in
+     * Open the panel to start creating a project
      * */
     $scope.startCreationProj = function(){
-      console.log('dfdsf');
-      $scope.showCreateProjDiv = true;
+      if($scope.isMobile){
+        setTimeout( function(){
+          document.getElementById('create-dialog-project').open();
+        },400);
+      }else{
+        $scope.showCreateProjDiv = true;
+      }
     };
 
 
     $scope.selectProject = function(project){
-      $location.path('/project/'+project.id, true);
+      $location.path('/project/'+project.id+'/component/'+project.defaultComponentId, true);
     };
   });
