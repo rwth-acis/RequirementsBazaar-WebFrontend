@@ -50,13 +50,14 @@
 .requirement-header-title {
   font-size: large;
   padding: 16px;
-  width: 100%;
+  overflow: auto;
   cursor: pointer;
+  flex-grow: 1;
 }
 .req-title {
-  margin-right: 12px;
   min-width: 100px;
   font-weight: bold;
+  margin: 0;
 }
 .vote-button-container {
   display: flex;

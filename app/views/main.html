@@ -89,11 +89,9 @@
         <paper-material elevation="1">
           <div class="requirement-header">
             <div ng-click="setSelectedReqId(req.id,$index)" class="requirement-header-title">
-              <div class="flex-space-between text-087">
-                <span ng-bind="req.title" class="ellipsis req-title"></span>
-              </div>
+              <p ng-bind="req.title" class="ellipsis req-title text-087"></p>
               <time is="relative-time" datetime={{req.creation_time}} class="small-grey-text"></time>
-              <span class="small-grey-text"> by {{reqCreator}}</span>
+              <span class="small-grey-text">{{' by ' + reqCreator}}</span>
             </div>
             <div ng-controller="VoteCtrl" class="vote-button-container">
               <paper-button style="min-width: 30px" ng-click="vote(req,false)">
