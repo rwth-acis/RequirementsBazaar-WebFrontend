@@ -56,7 +56,7 @@
                     <li ng-click="setDefaulComp()" ng-bind="'SET_DEFAULT_COMP'|translate"></li>
                     <li ng-show="false" ng-click="" ng-bind="'BECOME_LEAD_DEV'|translate"></li>
                     <li ng-click="startEdit()" ng-disabled="isDirtyReq" ng-bind="'EDIT_COMP'|translate"></li>
-                    <li ng-click="confirmDelete()" ng-bind="'DELETE_COMP'|translate"></li>
+                    <li ng-click="confirmDeleteComp()" ng-bind="'DELETE_COMP'|translate"></li>
                   </ul>
                 </div>
               </div>
@@ -93,7 +93,7 @@
               <time is="relative-time" datetime={{req.creation_time}} class="small-grey-text"></time>
               <span class="small-grey-text">{{' by ' + reqCreator}}</span>
             </div>
-            <div ng-controller="VoteCtrl" class="vote-button-container">
+            <div class="vote-button-container">
               <paper-button style="min-width: 30px" ng-click="vote(req,false)">
                 <iron-icon ng-show="req.userVoted === 'UP_VOTE'" icon="icons:star"></iron-icon>
                 <iron-icon ng-show="req.userVoted !== 'UP_VOTE'" icon="icons:star-border"></iron-icon>

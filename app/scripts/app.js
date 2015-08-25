@@ -25,7 +25,7 @@ angular
     $routeProvider
 
       /*
-      * Access token management turing log in
+      * Catch the log in result and navigate the user to explore page
       * */
       .when('/access_token=:accessToken', {
         template: '',
@@ -77,7 +77,8 @@ angular
         if(ngStorageToken !== null){
           var token = JSON.parse(ngStorageToken).access_token;
           if(token !== undefined){
-            //For some reason this does not work : config.headers['Authorization'] = "Bearer "+token;
+            // Use this as soon as the service allows. config.headers['Authorization'] = "Bearer "+token;
+            // It will then also require the modification of the routing
             config.url += (config.url.indexOf('?') > -1) ? '&access_token='+token : '?access_token='+token;
           }
         }
@@ -99,7 +100,12 @@ angular
   };
 }]);
 
-
+/*
+* Bootstrap the angular application
+*
+* Problem: The WebComponentsReady event is fired at the wrong time. Only some of the components are ready when it fires.
+* But hey, at least the toast problem was fixed
+* */
 window.addEventListener('WebComponentsReady', function() {
   angular.bootstrap(wrap(document), ['requirementsBazaarWebFrontendApp']);
 });

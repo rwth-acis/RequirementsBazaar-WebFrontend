@@ -1,6 +1,6 @@
 <paper-drawer-panel>
   <div class="drawer-sidebar" drawer>
-    <paper-button ng-click="returnToProject()" ng-bind="'EXIT_SETTINGS'|translate"></paper-button>
+    <paper-button ng-click="goToProject(dirtyProject.id)" ng-bind="'EXIT_SETTINGS'|translate"></paper-button>
 
     <!-- Sidebar navigation -->
     <p class="small-grey-text pm-settings-text" ng-bind="'SETTINGS'|translate"></p>
@@ -49,16 +49,11 @@
 
 
       <!-- User management -->
-      <div id="users" ng-show="activeTab === 'users'">
-
-      </div>
+      <div id="users" ng-show="activeTab === 'users'"></div>
 
 
       <!-- Log of latest changes -->
-      <div id="log" ng-show="activeTab === 'log'">
-
-      </div>
-
+      <div id="log" ng-show="activeTab === 'log'"></div>
 
     </div>
   </div>

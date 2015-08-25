@@ -6,6 +6,10 @@
  * @description
  * # reqBazService
  * Service in the requirementsBazaarWebFrontendApp.
+ *
+ * This service is used to make the http calls to the reqbaz service. Every call should run over this service. It
+ * returns promises. Has paginate support.
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .service('reqBazService', function reqBazService($http, bazaarServiceConfig) {
@@ -156,19 +160,18 @@ angular.module('requirementsBazaarWebFrontendApp')
     };
 
     ///ATTACHMENTS
-    //TODO Attachment Type? I think it is not implemented on backend
-    this.createAttachment = function(attachmentType, attachment){
-      var attachmentUrl = url + 'attachments';
-
-      attachmentUrl+= '?attachmentType' + attachmentType;
-
-      return $http.post(attachmentUrl, attachment);
-    };
-
-    this.deleteAttachment = function(attachmentId){
-      var attachmentUrl = url + 'attachments/' + attachmentId;
-      return $http.delete(attachmentUrl);
-    };
+    //this.createAttachment = function(attachmentType, attachment){
+    //  var attachmentUrl = url + 'attachments';
+    //
+    //  attachmentUrl+= '?attachmentType' + attachmentType;
+    //
+    //  return $http.post(attachmentUrl, attachment);
+    //};
+    //
+    //this.deleteAttachment = function(attachmentId){
+    //  var attachmentUrl = url + 'attachments/' + attachmentId;
+    //  return $http.delete(attachmentUrl);
+    //};
 
     /// USER
     this.getUser = function(userId) {

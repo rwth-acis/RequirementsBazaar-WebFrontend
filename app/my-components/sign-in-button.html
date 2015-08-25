@@ -1,3 +1,7 @@
+<!--
+  Template used by the oauth library to display the different states of the button
+-->
+
 <span class="oauth">
   <!--Sign in style-->
   <div class="logged-out" ng-show="show=='logged-out'" ng-click="login()" style="background-color: #FF8324;color: white;padding: 5px;cursor: pointer;border-radius: 3px;white-space: nowrap;font-size: large" title="Log in">
@@ -9,7 +13,6 @@
       <path fill="#ffffff" d="M17,17.25V14H10V10H17V6.75L22.25,12L17,17.25M13,2A2,2 0 0,1 15,4V8H13V4H4V20H13V16H15V20A2,2 0 0,1 13,22H4A2,2 0 0,1 2,20V4A2,2 0 0,1 4,2H13Z" />
     </svg>
   </div>
-
   <!--Sign in style-->
   <div class="denied" ng-show="show=='denied'" ng-click="login()" style="cursor: pointer;display: flex;min-width: 24px;" title="Access Denied">
     <svg style="width:24px;height:24px;" viewBox="0 0 24 24">

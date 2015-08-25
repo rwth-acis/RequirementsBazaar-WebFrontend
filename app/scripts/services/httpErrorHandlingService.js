@@ -6,6 +6,9 @@
  * @description
  * # HttpErrorHandlingService
  * Service in the requirementsBazaarWebFrontendApp.
+ *
+ * Error handling service, so far simply display the error that is sent.
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .service('HttpErrorHandlingService', function HttpErrorHandlingService(UtilityService) {

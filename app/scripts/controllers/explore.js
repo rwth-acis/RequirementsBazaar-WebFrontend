@@ -6,6 +6,12 @@
  * @description
  * # ExploreCtrl
  * Controller of the requirementsBazaarWebFrontendApp
+ *
+ * Functionality
+ *   1. Populates the list of projects
+ *   2. opens div to create a new project
+ *   3. holds infinite scroll params for the explore page
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('ExploreCtrl', function ($scope, oauthConfig, $location, reqBazService, AccessToken, UtilityService){
@@ -13,6 +19,7 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.projects = null;
     $scope.showCreateProjDiv = false;
 
+    // Infinite scroll parameters
     $scope.limit = 10;
     $scope.addMoreItems = function(){
       if($scope.projects !== null){
@@ -44,16 +51,12 @@ angular.module('requirementsBazaarWebFrontendApp')
      * */
     $scope.startCreationProj = function(){
       if($scope.isMobile){
+        // The timeout is used as sometimes the panel instantly closes itself
         setTimeout( function(){
           document.getElementById('create-dialog-project').open();
         },400);
       }else{
         $scope.showCreateProjDiv = true;
       }
-    };
-
-
-    $scope.selectProject = function(project){
-      $location.path('/project/'+project.id+'/component/'+project.defaultComponentId, true);
     };
   });

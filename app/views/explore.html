@@ -9,7 +9,7 @@
           <h1 ng-bind="'YOUR_PROJECTS'|translate"></h1>
           <paper-button id="explore-create-project-button" ng-click="startCreationProj()">{{'PROJECT' | translate}}</paper-button>
         </div>
-        <req-baz-project ng-repeat="project in projects | filter:{ leaderId: activeUser.Id }" name={{project.name}} desc={{project.description}} ng-click="selectProject(project)"></req-baz-project>
+        <req-baz-project ng-repeat="project in projects | filter:{ leaderId: activeUser.Id }" name={{project.name}} desc={{project.description}} ng-click="goToProject(project.id,project.defaultComponentId)"></req-baz-project>
       </div>
 
       <!-- Public projects, always shown and infinite scroll -->
@@ -21,7 +21,7 @@
           <span class="bar"></span>
         </div>
       </div>
-      <req-baz-project ng-repeat="project in projects | filter:filterReq:strict | limitTo : limit track by project.id" name={{project.name}} desc={{project.description}} ng-click="selectProject(project)"></req-baz-project>
+      <req-baz-project ng-repeat="project in projects | filter:filterReq:strict | limitTo : limit track by project.id" name={{project.name}} desc={{project.description}} ng-click="goToProject(project.id,project.defaultComponentId)"></req-baz-project>
     </div>
 
     <!-- Right hand side panel -->
