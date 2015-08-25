@@ -4,6 +4,8 @@
     #my-user-container{
       padding: 8px;
       display: inline-flex;
+      align-items: center;
+      width: 100%;
     }
     #my-user-container:hover{
       background-color: #EEEEEE;
@@ -11,11 +13,15 @@
     #my-user-text{
       font-size: 95%;
       opacity: 0.87;
+      margin-left: 8px;
+    }
+    #profileImage{
+      border-radius: 50%;
     }
   </style>
   <template>
     <div id="my-user-container">
-      <img id="profileImage" width="{{size}}" height="{{size}}" style="border-radius: 50%;margin:auto">
+      <img id="profileImage" width="{{size}}" height="{{size}}">
       <p id="my-user-text">{{name}}</p>
     </div>
   </template>

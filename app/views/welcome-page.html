@@ -37,14 +37,16 @@
   <div id="landing-getstarted">
     <p ng-bind="'GET_STARTED'|translate"></p>
     <p ng-bind="'GET_STARTED_DESC'|translate"></p>
-    <paper-button ng-click="exploreProjects()" ng-bind="'EXPLORE_PUBLIC_PROJECTS'|translate"></paper-button>
+    <paper-button ng-click="goToProject(2)">Requirements Bazaar</paper-button>
+    <paper-button ng-click="goToProject(125)">Anatomy 2.0</paper-button>
+    <paper-button ng-click="exploreProjects()" ng-bind="'OTHER'|translate"></paper-button>
   </div>
   <div class="landing-footer-div">
     <div class="landing-page-contact">
       <p ng-bind="'CONTACT'|translate"></p>
       <span ng-bind="'CHAIR'|translate"></span>
       <br/>
-      <span ng-bind="'EMAIL'|translate">e</span>
+      <span ng-bind="'EMAIL'|translate"></span>
     </div>
   </div>
 </div>

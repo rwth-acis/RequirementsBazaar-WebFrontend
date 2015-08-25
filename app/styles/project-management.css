@@ -13,8 +13,3 @@
 #pm-title-edit paper-radio-group :last-child{
   margin-bottom: 32px;
 }
-
-.drawer-sidebar paper-button{
-  width: 99%;
-  margin: 8px 0 8px 0;
-}

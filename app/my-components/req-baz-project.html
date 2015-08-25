@@ -28,11 +28,28 @@
       white-space: -o-pre-wrap;    /* Opera 7 */
       word-wrap: break-word;       /* Internet Explorer 5.5+ */
     }
+    .ellipsis {
+      text-overflow: ellipsis;
+
+      /* Required for text-overflow to do anything */
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .multiline-ellipsis {
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3; /* number of lines to show */
+      line-height: 20px;        /* fallback */
+      max-height: 60px;       /* fallback */
+    }
   </style>
   <template>
     <paper-material elevation="1">
-      <p id="name">{{name}}</p>
-      <pre id="desc">{{desc}}</pre>
+      <p id="name" class="ellipsis">{{name}}</p>
+      <pre id="desc" class="multiline-ellipsis">{{desc}}</pre>
     </paper-material>
   </template>
 

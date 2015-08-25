@@ -108,6 +108,7 @@
                 <li ng-click="markDone(req, 'done')" ng-show="activeUser !== null && !req.realized" ng-bind="'MARK_AS_DONE'|translate"></li>
                 <li ng-click="markDone(req, null)" ng-show="activeUser !== null && req.realized" ng-bind="'MARK_AS_UNDONE'|translate"></li>
                 <li ng-click="followRequirement($event,req)" ng-show="activeUser !== null" ng-bind="'FOLLOW_REQUIREMENT'|translate"></li>
+                <!--<li ng-click="unfollowRequirement($event,req)" ng-show="activeUser !== null" ng-bind="'UNFOLLOW_REQUIREMENT'|translate"></li>-->
                 <li ng-click="developRequirement($event,req)" ng-show="activeUser !== null" ng-bind="'DEVELOP_REQUIREMENT'|translate"></li>
                 <li ng-click="becomeLead($event,req)" ng-show="activeUser !== null || req.leadDeveloperId === activeUser.Id" ng-bind="'BECOME_LEAD_DEV'|translate"></li>
                 <li ng-click="startEdit(req,$index)" ng-show="isDirtyReq || activeUser !== null" ng-bind="'EDIT_REQUIREMENT'|translate"></li>
@@ -219,7 +220,7 @@
         <paper-textarea  ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
 
         <!--Confirm or cancel submit-->
-        <div class="flex-space-between" style="flex-grow: 1; align-items: flex-end; padding-bottom: 32px;">
+        <div class="flex-space-between" style="flex-grow: 1; align-items: flex-end; padding-bottom: 8px;">
           <paper-button raised ng-click="submit()" ng-bind="'CREATE' | translate"></paper-button>
           <paper-button ng-click="clearSubmit()">
             <iron-icon icon="icons:clear"></iron-icon>
@@ -252,7 +253,7 @@
       <paper-textarea  ng-model="desc" label={{'DESC'|translate}}></paper-textarea>
 
       <!--Confirm or cancel submit-->
-      <div class="flex-space-between" style="flex-grow: 1; align-items: flex-end; padding-bottom: 32px;">
+      <div class="flex-space-between" style="flex-grow: 1; align-items: flex-end; padding-bottom: 8px;">
         <paper-button raised ng-click="submit()" ng-bind="'CREATE' | translate"></paper-button>
         <paper-button ng-click="clearSubmit()">
           <iron-icon icon="icons:clear"></iron-icon>

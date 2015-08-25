@@ -126,6 +126,11 @@ paper-drawer-panel{
   overflow: auto;
   height: calc(100vh - 64px) !important;
 }
+.drawer-sidebar paper-button{
+  width: 99%;
+  margin: 8px 0 8px 0;
+  text-align: left;
+}
 
 /*
   Since Polymer dropdown does not exist yet, create own
