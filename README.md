@@ -29,7 +29,7 @@ grunt serve
 
 Usage / Deployment
 ----------
-If you are not interested in developing the project, then you can just build the project, then follow the steps in develop section until ```grunt serve```. Now open the bazaarServiceConfig.js file in app/scripts/config and fill in the bazaar service location and the oauth endpoint. After changing this run ```grunt build```. This creates a dist folder where you can find the minimized project, that can be deployed on any web server. Important, the build currently does not include the bower components, so you need to copy this into the dist.
+If you are not interested in developing the project, then you can just build the project, then follow the steps in develop section until ```grunt serve```. Now open the bazaarServiceConfig.js file in app/scripts/config and fill in the bazaar service location and the oauth endpoint. After changing this run ```grunt build```. This creates a dist folder where you can find the minimized project, that can be deployed on any web server.
 
 
 License
