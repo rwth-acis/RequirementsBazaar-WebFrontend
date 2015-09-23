@@ -20,11 +20,11 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.showCreateProjDiv = false;
 
     // Infinite scroll parameters
-    $scope.limit = 10;
+    $scope.limit = 15;
     $scope.addMoreItems = function(){
       if($scope.projects !== null){
         if($scope.limit < $scope.projects.length){
-          $scope.limit = $scope.limit + 10;
+          $scope.limit = $scope.limit + 15;
         }
       }
     };
