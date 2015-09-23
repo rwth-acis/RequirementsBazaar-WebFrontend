@@ -21,7 +21,35 @@
           <span class="bar"></span>
         </div>
       </div>
-      <req-baz-project ng-repeat="project in projects | filter:filterReq:strict | limitTo : limit track by project.id" name={{project.name}} desc={{project.description}} ng-click="goToProject(project.id,project.defaultComponentId)"></req-baz-project>
+      <template id="projectsList" is="dom-bind">
+
+        <iron-ajax
+          url="https://requirements-bazaar.org/bazaar/projects/"
+          last-response="{{data}}"
+          params='{"page":"0", "per_page":"100"}'
+          auto></iron-ajax>
+
+        <template is="dom-repeat" items="{{data}}">
+
+          <paper-card heading="[[item.name]]" on-click="goToProject">
+            <div class="card-content">[[item.description]]</div>
+          </paper-card>
+        </template>
+
+        <script>
+          projectsList.goToProject = function(e) {
+            var model = e.model;
+            window.location = '#/project/' + model.item.id + '/component/' + model.item.defaultComponentId;
+          };
+
+        </script>
+
+      </template>
+
+      <!--
+            <req-baz-project ng-repeat="project in projects | filter:filterReq:strict | limitTo : limit track by project.id" name={{project.name}} desc={{project.description}} ng-click="goToProject(project.id,project.defaultComponentId)"></req-baz-project>
+-->
+
     </div>
 
     <!-- Right hand side panel -->

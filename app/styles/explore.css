@@ -68,3 +68,16 @@
   box-shadow: 0 2px 15px rgba(0,0,0,.3);
   border: 1px solid #ccc;
 }
+
+/**
+ * Polymer
+ */
+
+paper-card {
+  display: block;
+  margin-bottom: 16px;
+}
+
+paper-card .card-content {
+  padding: 16px;
+}
