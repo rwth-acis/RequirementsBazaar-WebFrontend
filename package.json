@@ -1,6 +1,6 @@
 {
-  "name": "requirementsbazaarwebfrontend",
-  "version": "0.0.0",
+  "name": "RequirementsBazaar-WebFrontend",
+  "version": "0.2.2",
   "dependencies": {
     "wiredep": "^2.2.0"
   },
