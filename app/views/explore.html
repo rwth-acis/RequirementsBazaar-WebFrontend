@@ -3,33 +3,53 @@
     <!-- Left hand side panel for a list of projects-->
     <div id="project-list">
 
-      <!-- Projects relevant to the user -->
-      <div ng-show="activeUser">
-        <div class="flex-space-between explore-own-projects">
-          <h1 ng-bind="'YOUR_PROJECTS'|translate"></h1>
-          <paper-button id="explore-create-project-button" ng-click="startCreationProj()">{{'PROJECT' | translate}}</paper-button>
-        </div>
-        <req-baz-project ng-repeat="project in projects | filter:{ leaderId: activeUser.Id }" name={{project.name}} desc={{project.description}} ng-click="goToProject(project.id,project.defaultComponentId)"></req-baz-project>
-      </div>
+      <input type="hidden" id="activeUserId" value="{{activeUser.Id}}"/>
+      <input type="hidden" id="projectTranslation" value="{{'PROJECT' | translate}}"/>
+      <input type="hidden" id="searchProjectsTranslation" value="{{'SEARCH_PROJECTS' | translate}}"/>
 
-      <!-- Public projects, always shown and infinite scroll -->
-      <div class="flex-space-between explore-public-projects">
-        <h1 ng-bind="'PUBLIC_PROJECTS'|translate"></h1>
-        <div id="explore-search-projects" class="group">
-          <input placeholder={{'SEARCH_PROJECTS'|translate}} type="text" ng-model="filterReq.$">
-          <span class="highlight"></span>
-          <span class="bar"></span>
-        </div>
-      </div>
       <template id="projectsList" is="dom-bind">
 
         <iron-ajax
           url="https://requirements-bazaar.org/bazaar/projects/"
           last-response="{{data}}"
-          params='{"page":"0", "per_page":"100"}'
+          params='{"page":"0", "per_page":"150"}'
           auto></iron-ajax>
 
-        <template is="dom-repeat" items="{{data}}">
+      <!-- Projects relevant to the user -->
+      <div ng-show="activeUser">
+        <div class="flex-space-between explore-own-projects">
+          <h1 ng-bind="'YOUR_PROJECTS'|translate"></h1>
+          <paper-button id="explore-create-project-button" ng-click="startCreationProj()">{{projectTranslation}}</paper-button>
+        </div>
+
+        <template is="dom-repeat" items="{{data}}" filter="privateSearchFilter">
+
+          <paper-card heading="[[item.name]]" on-click="goToProject">
+            <div class="card-content">[[item.description]]</div>
+          </paper-card>
+        </template>
+
+        <!--
+        <req-baz-project ng-repeat="project in projects | filter:{ leaderId: activeUser.Id }" name={{project.name}} desc={{project.description}} ng-click="goToProject(project.id,project.defaultComponentId)"></req-baz-project>
+        -->
+      </div>
+
+      <!-- Public projects, always shown and infinite scroll -->
+      <div class="flex-space-between explore-public-projects">
+        <h1 ng-bind="'PUBLIC_PROJECTS'|translate"></h1>
+        <!--
+        <div id="explore-search-projects" class="group">
+          <input placeholder={{'SEARCH_PROJECTS'|translate}} type="text" ng-model="filterReq.$">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+        </div>
+        -->
+      </div>
+
+
+        <paper-input label$="[[searchProjectsTranslation]]" value="{{publicFilterVal}}"></paper-input>
+
+        <template is="dom-repeat" items="{{data}}" filter="{{publicSearchFilter(publicFilterVal)}}">
 
           <paper-card heading="[[item.name]]" on-click="goToProject">
             <div class="card-content">[[item.description]]</div>
@@ -37,10 +57,27 @@
         </template>
 
         <script>
+
+          projectsList.projectTranslation = document.getElementById("projectTranslation").value;
+          projectsList.searchProjectsTranslation = document.getElementById("searchProjectsTranslation").value;
+
           projectsList.goToProject = function(e) {
             var model = e.model;
             window.location = '#/project/' + model.item.id + '/component/' + model.item.defaultComponentId;
           };
+
+          projectsList.privateSearchFilter = function(item) {
+            var activeUserId = document.getElementById("activeUserId").value;
+            return item.leaderId == activeUserId;
+          }
+
+          // thanks goes to http://jcrowther.io/2015/06/09/polymer-dom-repeat-filtering-and-sorting/ for the great help
+          projectsList.publicSearchFilter = function(val) {
+            return function(item) {
+              if (!val) return true;
+              return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
+            }
+          }
 
         </script>
 
