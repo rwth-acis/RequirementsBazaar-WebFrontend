@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/Gruntfile.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/elements/elements.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/scripts/config/bazaarServiceConfig.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/scripts/controllers/explore.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/styles/explore.css" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/views/explore.html" charset="UTF-8" />
+  </component>
 </project>

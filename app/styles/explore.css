@@ -68,3 +68,29 @@
   box-shadow: 0 2px 15px rgba(0,0,0,.3);
   border: 1px solid #ccc;
 }
+
+/**
+ * Polymer
+ */
+
+#explore-page {
+  overflow-y: scroll;
+}
+
+#project-list paper-input {
+  margin-bottom: 16px;
+}
+
+#project-list paper-card {
+  display: block;
+  margin-bottom: 16px;
+}
+
+#project-list paper-card:hover {
+  cursor: pointer;
+  background-color: #ebebeb;
+}
+
+#project-list paper-card .card-content {
+  padding: 16px;
+}
