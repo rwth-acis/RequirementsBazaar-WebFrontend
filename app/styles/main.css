@@ -141,7 +141,8 @@
   width: 300px;
   padding: 8px;
   background-color: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+  box-shadow: 0 2px 15px rgba(0,0,0,.3);
+  border: 1px solid #ccc;
 }
 #addRequirementFab{
   position: fixed;

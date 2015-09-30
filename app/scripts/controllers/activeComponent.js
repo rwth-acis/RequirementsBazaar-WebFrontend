@@ -6,7 +6,12 @@
  * @description
  * # ActiveCompCtrl
  * Controller of the requirementsBazaarWebFrontendApp
+ *
+ * Functionality
+ *   1. edit the name and description
+ *   2. set as default
  */
+
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('ActiveCompCtrl', function ($scope, reqBazService, UtilityService, AccessToken, HttpErrorHandlingService) {
 
@@ -72,19 +77,6 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.cancelChanges = function(){
       $scope.isDirty = false;
       $scope.dirtyComp = null;
-    };
-
-    /*
-    * Initiate delete component
-    * */
-    $scope.confirmDelete = function(){
-      if(AccessToken.get() !== null){
-        $scope.$parent.deleteDesc = 'DEL_COMP_DESC';
-        $scope.$parent.deleteElem = 'comp';
-        document.getElementById('confirmDelete').toggle();
-      }else{
-        UtilityService.showFeedback('LOGIN_COMP_DEL');
-      }
     };
 
   });

@@ -1,3 +1,14 @@
+<!--
+
+  Displays the project, which currently just means a title and a description under it.
+
+  So basic, so why as a component? Because, I imagine that this component is something that the project leaders can include
+  on other platforms as quick link to their project and also it should offer more exciting information like number of
+  likes, requirements etc.
+
+-->
+
+
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 
 <dom-module id="req-baz-project" attributes="name desc">
@@ -28,11 +39,28 @@
       white-space: -o-pre-wrap;    /* Opera 7 */
       word-wrap: break-word;       /* Internet Explorer 5.5+ */
     }
+    .ellipsis {
+      text-overflow: ellipsis;
+
+      /* Required for text-overflow to do anything */
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .multiline-ellipsis {
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3; /* number of lines to show */
+      line-height: 20px;        /* fallback */
+      max-height: 60px;       /* fallback */
+    }
   </style>
   <template>
     <paper-material elevation="1">
-      <p id="name">{{name}}</p>
-      <pre id="desc">{{desc}}</pre>
+      <p id="name" class="ellipsis">{{name}}</p>
+      <pre id="desc" class="multiline-ellipsis">{{desc}}</pre>
     </paper-material>
   </template>
 

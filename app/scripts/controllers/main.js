@@ -6,6 +6,17 @@
  * @description
  * # MainCtrl
  * Controller of the requirementsBazaarWebFrontendApp
+ *
+ * Controller for the main page, aka the requirement list for a component
+ *
+ * Functionality
+ *   1. Loading the view in order Project -> component -> requirements
+ *   2. Switching between components
+ *   3. Opening the requirements
+ *   4. Deleting requirements
+ *   5. Deleting components
+ *   6. Open create component pane
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
     .controller('MainCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService, $upload, Profile, $sce, oauthConfig, $location, $anchorScroll, $timeout, AccessToken, $routeParams, $rootScope, $window, SubmitToReqChange) {
@@ -28,6 +39,9 @@ angular.module('requirementsBazaarWebFrontendApp')
     $scope.deleteDesc = '';
     $scope.deleteObject = null;
 
+    $scope.showCreateCompDiv = false;
+
+    // Infinite scroll parameters
     $scope.limit = 10;
     $scope.addMoreItems = function(){
       if($scope.requirements !== null){
@@ -37,15 +51,15 @@ angular.module('requirementsBazaarWebFrontendApp')
       }
     };
 
-
-    //Used to filter requirements, need to be objects
+    // Used to filter requirements, need to be objects
     $scope.filterReq = {};
     $scope.showRealized = {value:false};
-    //This function is used for list filtering and is called A LOT, don't include anything too intense here
+    // This function is used for list filtering
     $scope.isRealizedFilter = function(req) {
       return req.hasOwnProperty('realized') === $scope.showRealized.value;
     };
 
+    // This is used to signal which requirement should open itself
     var currentlyOpenReqListIndex = 0;
     $scope.setSelectedReqId = function(reqId, newListIndex){
       //Timeout is necessary, since otherwise the listeners from child controllers are not registered yet
@@ -54,8 +68,6 @@ angular.module('requirementsBazaarWebFrontendApp')
         currentlyOpenReqListIndex = newListIndex;
       });
     };
-
-    $scope.showCreateCompDiv = false;
 
     /*
     * Loads projects and then components ...
@@ -194,10 +206,21 @@ angular.module('requirementsBazaarWebFrontendApp')
       }
     };
 
+    /*
+     * Called when used clicks delete component, this pops up a confirmation panel
+     * */
+    $scope.confirmDeleteComp = function(){
+      if(AccessToken.get() !== null){
+        $scope.deleteDesc = 'DEL_COMP_DESC';
+        $scope.deleteElem = 'comp';
+        document.getElementById('confirmDelete').toggle();
+      }else{
+        UtilityService.showFeedback('LOGIN_COMP_DEL');
+      }
+    };
 
     /*
-    * Everything related to creating or deleting a new component
-    *
+    * Called after the user confirms the deletion of the component
     * */
     $scope.deleteComponent = function(){
       reqBazService.deleteComponent($scope.activeComponent.id)
@@ -210,7 +233,7 @@ angular.module('requirementsBazaarWebFrontendApp')
             }
           }
 
-          //set a new active component
+          //set a new active component, just take the first
           $scope.activeComponent = null;
           if ($scope.components !== null) {
             $scope.selectComp($scope.components[0]);
@@ -223,6 +246,23 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
+    /*
+     * Called when used clicks delete requirement, this pops up a confirmation panel
+     * */
+    $scope.confirmDelete = function(object){
+      if(AccessToken.get() !== null){
+        $scope.deleteElem = 'req';
+        $scope.deleteObject = object;
+        $scope.deleteDesc = 'DEL_REQ_DESC';
+        document.getElementById('confirmDelete').toggle();
+      }else{
+        UtilityService.showFeedback('LOGIN_REQ_DEL');
+      }
+    };
+
+    /*
+    * Called when the user has confirmed the deletion
+    * */
     $scope.deleteRequirement = function(){
       var req = $scope.deleteObject;
       console.log('delete requirement');
@@ -245,17 +285,4 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
-
-    $scope.confirmDelete = function(object){
-      if(AccessToken.get() !== null){
-        $scope.deleteElem = 'req';
-        $scope.deleteObject = object;
-        $scope.deleteDesc = 'DEL_REQ_DESC';
-        document.getElementById('confirmDelete').toggle();
-      }else{
-        UtilityService.showFeedback('LOGIN_REQ_DEL');
-      }
-    };
   });
-
-

@@ -6,17 +6,26 @@
  * @description
  * # ProjectManagementCtrl
  * Controller of the requirementsBazaarWebFrontendApp
+ *
+ * Functionality
+ *   1. Edit the project
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('ProjectManagementCtrl', function ($scope, $http, $routeParams, $location, UtilityService, reqBazService, HttpErrorHandlingService){
-    //Keep the current version of the project
+
+    // Keep the current version of the project
     var project = null;
+
+    // Modified version of the project, this is what the user interacts with
     $scope.dirtyProject = null;
-
-    $scope.activeTab = 'pm-settings';
     $scope.isDirty = false;
-
     $scope.pmSavingInprogress = false;
+
+    // Used for navigation
+    $scope.activeTab = 'pm-settings';
+
+
     /*
      * Loads the project
      * */
@@ -32,6 +41,9 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     })();
 
+    /*
+    * Tries to save the changes the user has made
+    * */
     $scope.saveChanges = function(){
       $scope.pmSavingInprogress = true;
       reqBazService.updateProject($scope.dirtyProject.id,$scope.dirtyProject)
@@ -47,14 +59,11 @@ angular.module('requirementsBazaarWebFrontendApp')
         });
     };
 
+    /*
+    * Clears the changes and resets the dirty project
+    * */
     $scope.cancelChanges = function(){
       $scope.isDirty = false;
       $scope.dirtyProject = angular.copy(project);
     };
-
-    $scope.returnToProject = function () {
-      $location.path( '/project/'+ project.id);
-    };
-
-
   });

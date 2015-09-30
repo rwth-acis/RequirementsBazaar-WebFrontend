@@ -6,6 +6,13 @@
  * @description
  * # CreateRequirementCtrl
  * Controller of the requirementsBazaarWebFrontendApp
+ *
+ * Functionality
+ *   1. Create requirement
+ *
+ * Currently contains some code that is not used. The file uploading is not yet done on the server side and thus is not
+ * used.
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CreateRequirementCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService, AccessToken, $upload) {

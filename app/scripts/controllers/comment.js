@@ -6,6 +6,11 @@
  * @description
  * # CommentCtrl
  * Controller of the requirementsBazaarWebFrontendApp
+ *
+ * Functionality
+ *   1. Create comments
+ *   2. Delete comments
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CommentCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService) {

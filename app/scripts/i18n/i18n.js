@@ -1,6 +1,26 @@
 'use strict';
 
+/*
+* For internationalization the https://angular-translate.github.io/ lib is used
+*
+* */
+
 angular.module('requirementsBazaarWebFrontendApp').config(function ($translateProvider) {
+
+  //Determine which language to use
+  $translateProvider.determinePreferredLanguage(function () {
+    var language = window.navigator.userLanguage || window.navigator.language;
+    console.log('The browser language is :'+language);
+
+    if(language.indexOf('de') > -1){
+      language = 'de';
+    }else{
+      language = 'en';
+    }
+
+    return language;
+  });
+
   $translateProvider.translations('en', {
 
     //Welcome page
@@ -8,7 +28,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     CONTACT: 'Contact',
     CREATE_BETTER_PROJECTS_WITH_US: 'Create better projects with us',
     EMAIL: 'reqbaz@dbis.rwth-aachen.de',
-    EXPLORE_PUBLIC_PROJECTS: 'Explore public projects',
+    OTHER: 'other',
     GET_STARTED: 'Get Started',
     GET_STARTED_DESC: 'Take a look at a few example project and if we have convinced you create your own',
     HOW_IT_WORKS:'How it works! Feedback in 3 steps',
@@ -71,7 +91,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
     REMOVE: 'remove',
     SAVE: 'save',
     SAVE_CHANGES: 'Save changes',
-    SEARCH_PROJECTS: 'Search for projects',
+    SEARCH_PROJECTS: 'Search projects',
     SEARCH_REQUIREMENTS: 'search requirements',
     SET_DEFAULT_COMP: 'Set as the default',
     SETTINGS:'Settings',
@@ -152,7 +172,7 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       CONTACT: 'Kontakt',
       CREATE_BETTER_PROJECTS_WITH_US: 'Lass uns zusammen bessere Projekte realisieren',
       EMAIL: 'reqbaz@dbis.rwth-aachen.de',
-      EXPLORE_PUBLIC_PROJECTS: 'Öffentliche Projekte erkunden',
+      OTHER: 'alle',
       GET_STARTED: 'Loslegen',
       GET_STARTED_DESC: 'Erkunde die Beispielprojekte und erstelle dein eigenes Projekt',
       HOW_IT_WORKS:'Wie\'s funktioniert: Feedback in drei Schritten',
@@ -211,13 +231,13 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       REALIZED_REQ: 'Realisierte Anforderungen',
       RECENT_ACTIVITY: 'Letzte Änderungen',
       RECENT_CHANGES: 'Letzte Änderungen',
-      RELOAD: 'Aktuallisieren',
+      RELOAD: 'Aktualisieren',
       REMOVE: 'Löschen',
       SAVE: 'Speichern',
       SAVE_CHANGES: 'Übernehmen',
-      SEARCH_PROJECTS: 'suche nach Projekte',
-      SEARCH_REQUIREMENTS: 'suche nach Anforderungen',
-      SET_DEFAULT_COMP: 'Setze als Hauptkomponente',
+      SEARCH_PROJECTS: 'Projekte durchsuchen',
+      SEARCH_REQUIREMENTS: 'Nach Anforderungen suchen',
+      SET_DEFAULT_COMP: 'Als Hauptkomponente setzen',
       SETTINGS:'Einstellungen',
       SHOW_CONTRIBUTORS: 'Zeige Mitwirkende',
       SUBMIT:'Kommentar senden',
@@ -289,18 +309,4 @@ angular.module('requirementsBazaarWebFrontendApp').config(function ($translatePr
       DEL_COMP_DESC: 'Die Aktion kann nicht rückgängig gemacht werden. Die Anforderungen werden in der Standardkomponente zugänglich sein.'
   });
 
-
-  //Determine which language to use
-  $translateProvider.determinePreferredLanguage(function () {
-    var language = window.navigator.userLanguage || window.navigator.language;
-    console.log('The browser language is :'+language);
-
-    if(language.indexOf('de') > -1){
-      language = 'de';
-    }else{
-      language = 'en';
-    }
-
-    return language;
-  });
 });

@@ -6,6 +6,10 @@
  * @description
  * # CreateComponentCtrl
  * Controller of the requirementsBazaarWebFrontendApp
+ *
+ * Functionality
+ *   1. Create component
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CreateComponentCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService) {

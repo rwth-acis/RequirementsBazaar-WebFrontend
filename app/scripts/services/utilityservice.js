@@ -6,6 +6,13 @@
  * @description
  * # UtilityService
  * Service in the requirementsBazaarWebFrontendApp.
+ *
+ * This is a collection of random items that can be used throughout the service.
+ *
+ * Functionality
+ *   1. Feedback toast
+ *   2. check if field is empty
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .service('UtilityService', function UtilityService($translate) {

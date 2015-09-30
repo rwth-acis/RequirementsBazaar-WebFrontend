@@ -1,5 +1,12 @@
 'use strict';
 
+/*
+* Infinite scrolling inside a div
+*
+* I copied the code from either Stackoverflow or some JSFiddle, which I now cannot find
+*
+* */
+
 angular.module('requirementsBazaarWebFrontendApp')
   .directive('infiniteScroll', [
   '$rootScope', '$window', '$timeout', function($rootScope, $window, $timeout) {

@@ -1,9 +1,19 @@
+<!--
+
+  The component shows a user profile, look at the template and you know what it does.
+
+  Currently this includes just the name and profile image, later a redirectURL could be included to open the user page.
+
+-->
+
 <dom-module id="my-user">
   <style>
     :host { display: block }
     #my-user-container{
       padding: 8px;
       display: inline-flex;
+      align-items: center;
+      width: 100%;
     }
     #my-user-container:hover{
       background-color: #EEEEEE;
@@ -11,11 +21,15 @@
     #my-user-text{
       font-size: 95%;
       opacity: 0.87;
+      margin-left: 8px;
+    }
+    #profileImage{
+      border-radius: 50%;
     }
   </style>
   <template>
     <div id="my-user-container">
-      <img id="profileImage" width="{{size}}" height="{{size}}" style="border-radius: 50%;margin:auto">
+      <img id="profileImage" width="{{size}}" height="{{size}}">
       <p id="my-user-text">{{name}}</p>
     </div>
   </template>
@@ -25,11 +39,15 @@
       is: "my-user",
 
       properties: {
+        // Profile image src
         src: {
           type:String,
           observer: '_UrlAvailable'
         },
+        // Size of the image
         size: String,
+
+        // Name of the user
         name: String
       },
 

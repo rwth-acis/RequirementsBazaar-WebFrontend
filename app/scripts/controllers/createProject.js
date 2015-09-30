@@ -6,6 +6,10 @@
  * @description
  * # CreateProjectCtrl
  * Controller of the requirementsBazaarWebFrontendApp
+ *
+ * Functionality
+ *   1. Create project
+ *
  */
 angular.module('requirementsBazaarWebFrontendApp')
   .controller('CreateProjectCtrl', function ($scope, reqBazService, UtilityService, HttpErrorHandlingService) {
