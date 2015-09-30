@@ -105,17 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <p>This is the projects section</p>
           </paper-material>
 
-          <iron-ajax
-            url="https://requirements-bazaar.org/bazaar/projects/"
-            last-response="{{projects}}"
-            params='{"page":"0", "per_page":"150"}'
-            auto></iron-ajax>
-
-          <template is="dom-repeat" items="{{projects}}">
-            <paper-card heading="[[item.name]]">
-              <div class="card-content">[[item.description]]</div>
-            </paper-card>
-          </template>
+          <projects-list></projects-list>
 
         </section>
 
