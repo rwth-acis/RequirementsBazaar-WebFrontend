@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<dom-module id="projects-list">
+<dom-module id="components-list">
   <template>
     <style>
       :host {
@@ -15,12 +15,12 @@
     </style>
 
     <iron-ajax
-      url="https://requirements-bazaar.org/bazaar/projects/"
-      last-response="{{projects}}"
+      url="https://requirements-bazaar.org/bazaar/projects/2/components/"
+      last-response="{{components}}"
       params='{"page":"0", "per_page":"150"}'
       auto></iron-ajax>
 
-    <template is="dom-repeat" items="{{projects}}">
+    <template is="dom-repeat" items="{{components}}">
       <div class="layout vertical center">
         <paper-card heading="[[item.name]]">
           <div class="card-content">[[item.description]]</div>
@@ -35,9 +35,9 @@
       'use strict';
 
       Polymer({
-        is: 'projects-list',
+        is: 'components-list',
         properties: {
-          projects: {
+          components: {
             type: Array,
             notify: true
           }

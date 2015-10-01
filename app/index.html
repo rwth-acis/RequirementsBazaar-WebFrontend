@@ -94,7 +94,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <span>Contact</span>
             </a>
 
-            <a data-route="projects" href="/projects/2">Requirements Bazaar</a>
+            <a href="/projects/2">Requirements Bazaar</a>
+
+            <a href="/components/2">Requirements Bazaar</a>
           </paper-material>
         </section>
 
@@ -117,6 +119,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <div>This is <span>{{params.projectId}}</span>'s section</div>
           </paper-material>
+
+          <components-list></components-list>
+        </section>
+
+        <section data-route="component-info">
+          <paper-material elevation="1">
+            <h2 class="page-title">
+              Component:<span>{{params.componentId}}</span>
+            </h2>
+
+            <div>This is <span>{{params.componentId}}</span>'s section</div>
+          </paper-material>
+
+          <requirements-list></requirements-list>
         </section>
 
         <section data-route="users">
