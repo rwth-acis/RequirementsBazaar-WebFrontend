@@ -89,12 +89,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-material elevation="1">
             <my-greeting></my-greeting>
 
-            <p class="paper-font-subhead">You now have:</p>
-            <my-list></my-list>
+            <a data-route="projects" href="/projects" on-click="onDataRouteClick">
+              <iron-icon icon="info"></iron-icon>
+              <span>Contact</span>
+            </a>
 
-            <p class="paper-font-body2">Looking for more Web App layouts? Check out our <a
-              href="https://github.com/PolymerElements/app-layout-templates">layouts</a> collection. You can also <a
-              href="http://polymerelements.github.io/app-layout-templates/">preview</a> them live.</p>
+            <a data-route="projects" href="/projects/2">Requirements Bazaar</a>
           </paper-material>
         </section>
 
@@ -109,22 +109,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         </section>
 
+        <section data-route="project-info">
+          <paper-material elevation="1">
+            <h2 class="page-title">
+              Project:<span>{{params.projectId}}</span>
+            </h2>
+
+            <div>This is <span>{{params.projectId}}</span>'s section</div>
+          </paper-material>
+        </section>
+
         <section data-route="users">
           <paper-material elevation="1">
             <h2 class="page-title">Users</h2>
 
             <p>This is the users section</p>
             <a href="/users/Rob">Rob</a>
-          </paper-material>
-        </section>
-
-        <section data-route="user-info">
-          <paper-material elevation="1">
-            <h2 class="page-title">
-              User:<span>{{params.name}}</span>
-            </h2>
-
-            <div>This is <span>{{params.name}}</span>'s section</div>
           </paper-material>
         </section>
 
