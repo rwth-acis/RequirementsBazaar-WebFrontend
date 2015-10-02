@@ -7,10 +7,15 @@
         display: block;
       }
 
-      paper-card {
+      paper-material {
         width: 100%;
         max-width: 700px;
         margin-bottom: 16px;
+      }
+
+      paper-toolbar {
+        background-color: #FFFFFF;
+        color: #000000;
       }
     </style>
 
@@ -22,12 +27,18 @@
 
     <template is="dom-repeat" items="{{requirements}}">
       <div class="layout vertical center">
-        <paper-card heading="[[item.title]]">
-          <div class="card-content">[[item.description]]</div>
-        </paper-card>
+        <paper-material>
+          <paper-toolbar class="middle">
+            <div class="title">[[item.title]]</div>
+            <paper-icon-button icon="star-border" on-tap="moreAction"></paper-icon-button>
+            <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+          </paper-toolbar>
+
+          <div>[[item.description]]</div>
+
+        </paper-material>
       </div>
     </template>
-
   </template>
 
   <script>
