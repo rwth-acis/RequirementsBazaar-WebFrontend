@@ -123,18 +123,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <components-list></components-list>
         </section>
 
-        <section data-route="component-info">
-          <paper-material elevation="1">
-            <h2 class="page-title">
-              Component:<span>{{params.componentId}}</span>
-            </h2>
+        <!-- REQUIREMENTS LIST -->
+        <section data-route="component-info" class="flex">
 
-            <div>This is <span>{{params.componentId}}</span>'s section</div>
-          </paper-material>
+          <paper-scroll-header-panel condenses keep-condensed-header class="flex" style="height:100%;">
+            <paper-toolbar class="tall">
+              <div>Component:<span>{{params.componentId}}</span></div>
+            </paper-toolbar>
+
+            <div class="content">
+              <requirements-list></requirements-list>
+            </div>
+          </paper-scroll-header-panel>
 
           <paper-fab icon="add"></paper-fab>
-
-          <requirements-list></requirements-list>
         </section>
 
         <section data-route="users">

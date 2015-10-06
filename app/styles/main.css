@@ -12,3 +12,13 @@ body {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #333;
 }
+
+paper-fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
+
+paper-toolbar {
+  background-color: var(--google-blue-500, #4285f4);
+}
