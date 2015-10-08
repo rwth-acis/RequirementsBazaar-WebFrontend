@@ -21,7 +21,7 @@
                 auto></iron-ajax>
 
         <template is="dom-repeat" items="{{components}}">
-            <div class="layout vertical center">
+            <div class="layout vertical center" on-tap="onComponentTap">
                 <paper-card heading="[[item.name]]">
                     <div class="card-content">[[item.description]]</div>
                 </paper-card>
@@ -54,7 +54,12 @@
                 },
 
                 computeResourceURL: function(projectId) {
-                    return "https://requirements-bazaar.org/bazaar/projects/" + projectId + "/components/";
+                    return 'https://requirements-bazaar.org/bazaar/projects/' + projectId + '/components/';
+                },
+
+                onComponentTap: function(e) {
+                    var model = e.model;
+                    page('/components/' + model.item.id);
                 }
             });
         })();

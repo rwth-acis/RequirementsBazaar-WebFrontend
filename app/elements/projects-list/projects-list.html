@@ -1,51 +1,57 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="projects-list">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
 
-      paper-card {
-        width: 100%;
-        max-width: 700px;
-        margin-bottom: 16px;
-      }
-    </style>
+            paper-card {
+                width: 100%;
+                max-width: 700px;
+                margin-bottom: 16px;
+            }
+        </style>
 
-    <iron-ajax
-      url="https://requirements-bazaar.org/bazaar/projects/"
-      last-response="{{projects}}"
-      params='{"page":"0", "per_page":"150"}'
-      auto></iron-ajax>
+        <iron-ajax
+                url="https://requirements-bazaar.org/bazaar/projects/"
+                last-response="{{projects}}"
+                params='{"page":"0", "per_page":"150"}'
+                auto></iron-ajax>
 
-    <template is="dom-repeat" items="{{projects}}">
-      <div class="layout vertical center">
-        <paper-card heading="[[item.name]]">
-          <div class="card-content">[[item.description]]</div>
-        </paper-card>
-      </div>
+        <template is="dom-repeat" items="{{projects}}">
+            <div class="layout vertical center" on-tap="onProjectTap">
+                <paper-card heading="[[item.name]]">
+                    <div class="card-content">[[item.description]]</div>
+                </paper-card>
+            </div>
+        </template>
+
     </template>
 
-  </template>
+    <script>
+        (function () {
+            'use strict';
 
-  <script>
-    (function () {
-      'use strict';
+            Polymer({
+                is: 'projects-list',
+                properties: {
+                    projects: {
+                        type: Array,
+                        notify: true
+                    }
+                },
 
-      Polymer({
-        is: 'projects-list',
-        properties: {
-          projects: {
-            type: Array,
-            notify: true
-          }
-        },
-        ready: function () {
-        }
-      });
-    })();
-  </script>
+                ready: function () {
+                },
+
+                onProjectTap: function(e) {
+                    var model = e.model;
+                    page('/projects/' + model.item.id);
+                }
+            });
+        })();
+    </script>
 
 </dom-module>
