@@ -121,7 +121,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div>This is <span>{{params.projectId}}</span>'s section</div>
           </paper-material>
 
-          <components-list></components-list>
+          <components-list project-id="{{params.projectId}}"></components-list>
         </section>
 
         <section data-route="component-info" style="height:100%;">
@@ -132,7 +132,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-toolbar>
 
             <div style="padding-top:20px;">
-              <requirements-list></requirements-list>
+              <requirements-list component-id="{{params.componentId}}"></requirements-list>
 
             </div>
 

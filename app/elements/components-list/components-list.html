@@ -1,51 +1,63 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="components-list">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
 
-      paper-card {
-        width: 100%;
-        max-width: 700px;
-        margin-bottom: 16px;
-      }
-    </style>
+            paper-card {
+                width: 100%;
+                max-width: 700px;
+                margin-bottom: 16px;
+            }
+        </style>
 
-    <iron-ajax
-      url="https://requirements-bazaar.org/bazaar/projects/2/components/"
-      last-response="{{components}}"
-      params='{"page":"0", "per_page":"150"}'
-      auto></iron-ajax>
+        <iron-ajax
+                url="{{resourceURL}}"
+                last-response="{{components}}"
+                params='{"page":"0", "per_page":"150"}'
+                auto></iron-ajax>
 
-    <template is="dom-repeat" items="{{components}}">
-      <div class="layout vertical center">
-        <paper-card heading="[[item.name]]">
-          <div class="card-content">[[item.description]]</div>
-        </paper-card>
-      </div>
+        <template is="dom-repeat" items="{{components}}">
+            <div class="layout vertical center">
+                <paper-card heading="[[item.name]]">
+                    <div class="card-content">[[item.description]]</div>
+                </paper-card>
+            </div>
+        </template>
+
     </template>
 
-  </template>
+    <script>
+        (function () {
+            'use strict';
 
-  <script>
-    (function () {
-      'use strict';
+            Polymer({
+                is: 'components-list',
+                properties: {
+                    projectId: {
+                        type: Number
+                    },
+                    resourceURL: {
+                        type: String,
+                        computed: 'computeResourceURL(projectId)'
+                    },
+                    components: {
+                        type: Array,
+                        notify: true
+                    }
+                },
 
-      Polymer({
-        is: 'components-list',
-        properties: {
-          components: {
-            type: Array,
-            notify: true
-          }
-        },
-        ready: function () {
-        }
-      });
-    })();
-  </script>
+                ready: function () {
+                },
+
+                computeResourceURL: function(projectId) {
+                    return "https://requirements-bazaar.org/bazaar/projects/" + projectId + "/components/";
+                }
+            });
+        })();
+    </script>
 
 </dom-module>

@@ -1,62 +1,74 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="requirements-list">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
 
-      paper-material {
-        width: 100%;
-        max-width: 700px;
-        margin-bottom: 16px;
-      }
+            paper-material {
+                width: 100%;
+                max-width: 700px;
+                margin-bottom: 16px;
+            }
 
-      paper-toolbar {
-        background-color: #FFFFFF;
-        color: #000000;
-      }
-    </style>
+            paper-toolbar {
+                background-color: #FFFFFF;
+                color: #000000;
+            }
+        </style>
 
-    <iron-ajax
-      url="https://requirements-bazaar.org/bazaar/components/2/requirements/"
-      last-response="{{requirements}}"
-      params='{"page":"0", "per_page":"150"}'
-      auto></iron-ajax>
+        <iron-ajax
+                url="{{resourceURL}}"
+                last-response="{{requirements}}"
+                params='{"page":"0", "per_page":"150"}'
+                auto></iron-ajax>
 
-    <template is="dom-repeat" items="{{requirements}}">
-      <div class="layout vertical center">
-        <paper-material>
-          <paper-toolbar class="middle">
-            <div class="title">[[item.title]]</div>
-            <paper-icon-button icon="star-border" on-tap="moreAction"></paper-icon-button>
-            <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
-          </paper-toolbar>
+        <template is="dom-repeat" items="{{requirements}}">
+            <div class="layout vertical center">
+                <paper-material>
+                    <paper-toolbar class="middle">
+                        <div class="title">[[item.title]]</div>
+                        <paper-icon-button icon="star-border" on-tap="moreAction"></paper-icon-button>
+                        <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+                    </paper-toolbar>
 
-          <div>[[item.description]]</div>
+                    <div>[[item.description]]</div>
 
-        </paper-material>
-      </div>
+                </paper-material>
+            </div>
+        </template>
     </template>
-  </template>
 
-  <script>
-    (function () {
-      'use strict';
+    <script>
+        (function () {
+            'use strict';
 
-      Polymer({
-        is: 'requirements-list',
-        properties: {
-          components: {
-            type: Array,
-            notify: true
-          }
-        },
-        ready: function () {
-        }
-      });
-    })();
-  </script>
+            Polymer({
+                is: 'requirements-list',
+                properties: {
+                    componentId: {
+                        type: Number
+                    },
+                    resourceURL: {
+                        type: String,
+                        computed: 'computeResourceURL(componentId)'
+                    },
+                    requirements: {
+                        type: Array,
+                        notify: true
+                    }
+                },
+
+                ready: function () {
+                },
+
+                computeResourceURL: function (componentId) {
+                    return "https://requirements-bazaar.org/bazaar/components/" + componentId + "/requirements/";
+                }
+            });
+        })();
+    </script>
 
 </dom-module>
