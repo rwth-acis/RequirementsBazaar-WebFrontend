@@ -21,8 +21,8 @@
                 auto></iron-ajax>
 
         <template is="dom-repeat" items="{{projects}}">
-            <div class="layout vertical center" on-tap="onProjectTap">
-                <paper-card heading="[[item.name]]">
+            <div class="layout vertical center">
+                <paper-card heading="[[item.name]]" on-tap="onProjectTap">
                     <div class="card-content">[[item.description]]</div>
                 </paper-card>
             </div>
