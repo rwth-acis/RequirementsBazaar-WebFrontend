@@ -1,0 +1,94 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="components-menu">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+
+            paper-item {
+            --paper-item: {
+                 cursor: pointer;
+             };
+            }
+
+        </style>
+
+        <iron-ajax
+                url="{{componentResourceURL}}"
+                last-response="{{component}}"
+                auto></iron-ajax>
+
+        <iron-ajax
+                url="{{componentsResourceURL}}"
+                last-response="{{components}}"
+                params='{"page":"0", "per_page":"150"}'
+                auto></iron-ajax>
+
+        <paper-menu>
+
+            <template is="dom-repeat" items="{{components}}">
+                <paper-item on-tap="onComponentTap">[[item.name]]</paper-item>
+            </template>
+
+        </paper-menu>
+    </template>
+
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'components-menu',
+                properties: {
+                    componentId: {
+                        type: Number,
+                        notify: true
+                    },
+                    projectId: {
+                        type: Number,
+                        computed: 'computeProjectId(component)'
+                    },
+                    componentResourceURL: {
+                        type: String,
+                        computed: 'computeComponentResourceURL(componentId)'
+                    },
+                    componentsResourceURL: {
+                        type: String,
+                        computed: 'computeComponentsResourceURL(projectId)'
+                    },
+                    component: {
+                        type: Object,
+                        notify: true
+                    },
+                    components: {
+                        type: Array,
+                        notify: true
+                    }
+                },
+
+                ready: function () {
+                },
+
+                computeComponentResourceURL: function(componentId) {
+                    return 'https://requirements-bazaar.org/bazaar/components/' + componentId;
+                },
+
+                computeProjectId: function(component) {
+                    return component.projectId;
+                },
+
+                computeComponentsResourceURL: function(projectId) {
+                    return 'https://requirements-bazaar.org/bazaar/projects/' + projectId + '/components/';
+                },
+
+                onComponentTap: function (e) {
+                    var model = e.model;
+                    page('/components/' + model.item.id);
+                }
+            });
+        })();
+    </script>
+
+</dom-module>
