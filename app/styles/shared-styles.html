@@ -1,22 +1,27 @@
 <!-- shared styles for all elements and index.html -->
 <dom-module id="shared-styles">
-  <template>
-    <style>
-      .page-title {
-        @apply(--paper-font-display2);
-      }
+    <template>
+        <style>
+            .page-title {
+            @apply(- -paper-font-display2);
+            }
 
-      @media (max-width: 600px) {
-        .page-title {
-          font-size: 24px!important;
-        }
-      }
+            @media (max-width: 600px) {
+                .page-title {
+                    font-size: 24px !important;
+                }
+            }
 
-      [data-route="component-info"] [main] paper-toolbar {
-        background-color: white;
-        color: black;
-        @apply(--shadow-elevation-3dp);
-      }
-    </style>
-  </template>
+            [drawer] {
+                @apply(--shadow-elevation-3dp);
+            }
+
+            [data-route="component-info"] [main] paper-toolbar {
+                @apply(--shadow-elevation-3dp);
+                background-color: white;
+                color: black;
+                margin: 0px 15px;
+            }
+        </style>
+    </template>
 </dom-module>

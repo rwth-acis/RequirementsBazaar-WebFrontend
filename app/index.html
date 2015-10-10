@@ -106,9 +106,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <h2 class="page-title">Projects</h2>
 
                         <p>This is the projects section</p>
+
+                        <paper-input class="large" label="Search projects" value="{{projectFilterVal}}">
+                            <iron-icon icon="search" prefix></iron-icon>
+                            <paper-icon-button suffix onclick="clearInput()"
+                                               icon="clear" alt="clear" title="clear" tabindex="0">
+                            </paper-icon-button>
+                        </paper-input>
                     </paper-material>
 
-                    <projects-list></projects-list>
+                    <projects-list filter="{{projectSearchFilter(projectFilterVal)}}"></projects-list>
 
                 </section>
 

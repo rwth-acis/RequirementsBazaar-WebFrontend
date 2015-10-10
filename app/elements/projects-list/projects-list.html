@@ -20,7 +20,7 @@
                 params='{"page":"0", "per_page":"150"}'
                 auto></iron-ajax>
 
-        <template is="dom-repeat" items="{{projects}}">
+        <template is="dom-repeat" items="{{projects}}" filter="{{filter}}">
             <div class="layout vertical center">
                 <paper-card heading="[[item.name]]" on-tap="onProjectTap">
                     <div class="card-content">[[item.description]]</div>
