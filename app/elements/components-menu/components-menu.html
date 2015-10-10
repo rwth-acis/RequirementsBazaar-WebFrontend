@@ -76,10 +76,16 @@
                 },
 
                 computeProjectId: function(component) {
+                    if (component === null) {
+                        return null;
+                    }
                     return component.projectId;
                 },
 
                 computeComponentsResourceURL: function(projectId) {
+                    if (projectId === null) {
+                        return null;
+                    }
                     return 'https://requirements-bazaar.org/bazaar/projects/' + projectId + '/components/';
                 },
 

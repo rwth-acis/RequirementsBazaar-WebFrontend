@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="comments-list">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <iron-ajax
+                url="{{resourceURL}}"
+                last-response="{{components}}"
+                params='{"page":"0", "per_page":"150"}'
+                auto></iron-ajax>
+
+        <template is="dom-repeat" items="{{components}}">
+            <div>[[item.message]]</div>
+        </template>
+
+    </template>
+
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'comments-list',
+                properties: {
+                    requirementId: {
+                        type: Number
+                    },
+                    resourceURL: {
+                        type: String,
+                        computed: 'computeResourceURL(requirementId)'
+                    },
+                    components: {
+                        type: Array,
+                        notify: true
+                    }
+                },
+
+                ready: function () {
+                },
+
+                computeResourceURL: function(requirementId) {
+                    return 'https://requirements-bazaar.org/bazaar/requirements/' + requirementId + '/comments/';
+                }
+            });
+        })();
+    </script>
+
+</dom-module>

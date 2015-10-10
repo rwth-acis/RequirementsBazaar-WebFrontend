@@ -11,6 +11,11 @@
                 width: 100%;
                 max-width: 700px;
                 margin-bottom: 16px;
+                cursor: pointer;
+            }
+
+            paper-card:hover {
+                background-color: var(--list-hover-background-color);
             }
         </style>
 
@@ -20,13 +25,13 @@
                 params='{"page":"0", "per_page":"150"}'
                 auto></iron-ajax>
 
-        <template is="dom-repeat" items="{{components}}">
-            <div class="layout vertical center">
+        <div class="layout vertical center">
+            <template is="dom-repeat" items="{{components}}">
                 <paper-card heading="[[item.name]]" on-tap="onComponentTap">
                     <div class="card-content">[[item.description]]</div>
                 </paper-card>
-            </div>
-        </template>
+            </template>
+        </div>
 
     </template>
 
@@ -53,11 +58,11 @@
                 ready: function () {
                 },
 
-                computeResourceURL: function(projectId) {
+                computeResourceURL: function (projectId) {
                     return 'https://requirements-bazaar.org/bazaar/projects/' + projectId + '/components/';
                 },
 
-                onComponentTap: function(e) {
+                onComponentTap: function (e) {
                     var model = e.model;
                     page('/components/' + model.item.id);
                 }
