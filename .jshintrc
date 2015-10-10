@@ -1,7 +1,7 @@
 {
   "node": true,
   "browser": true,
-  "bitwise": true,
+  "bitwise": false, /* changed this because needed in search filters */
   "camelcase": true,
   "curly": true,
   "eqeqeq": true,

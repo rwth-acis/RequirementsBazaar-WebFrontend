@@ -73,12 +73,4 @@
         document.getElementById('mainContainer').scrollTop = 0;
     };
 
-    // thanks goes to http://jcrowther.io/2015/06/09/polymer-dom-repeat-filtering-and-sorting/ for the great help
-    app.projectSearchFilter = function(val) {
-        return function(item) {
-            if (!val) return true;
-            return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
-        }
-    }
-
 })(document);
