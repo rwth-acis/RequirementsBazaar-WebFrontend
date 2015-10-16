@@ -5,17 +5,51 @@
         <style>
             :host {
                 display: block;
+                font-size: 90%;
+
+            }
+
+            /**
+             * Inspired by http://stackoverflow.com/questions/25685227/how-to-display-user-profile-image-in-circle
+             */
+            .profileImage {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%; /*don't forget prefixes*/
+                background-position: center center;
+                /* as mentioned by Vad: */
+                background-size: cover;
+                margin-right: 10px;
+            }
+
+            .noComments {
+                font-style: italic;
+            }
+
+            .info {
+                margin: 5px 0 10px 0;
+                font-size: small;
             }
         </style>
 
         <iron-ajax
                 url="{{resourceURL}}"
-                last-response="{{components}}"
+                last-response="{{comments}}"
                 params='{"page":"0", "per_page":"150"}'
                 auto></iron-ajax>
 
-        <template is="dom-repeat" items="{{components}}">
-            <div>[[item.message]]</div>
+        <div class="noComments" hidden="[[hideNoComments]]">No comments yet</div>
+
+        <template is="dom-repeat" items="{{comments}}">
+            <div class="layout horizontal">
+                <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
+                <div class="layout vertical flex">
+                    <div>[[item.message]]</div>
+                    <div class="info">
+                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> by <span>[[item.creator.userName]]</span>
+                    </div>
+                </div>
+            </div>
         </template>
 
     </template>
@@ -34,9 +68,13 @@
                         type: String,
                         computed: 'computeResourceURL(requirementId)'
                     },
-                    components: {
+                    comments: {
                         type: Array,
                         notify: true
+                    },
+                    hideNoComments: {
+                        type: Boolean,
+                        computed: 'computeHide(comments)'
                     }
                 },
 
@@ -45,6 +83,14 @@
 
                 computeResourceURL: function(requirementId) {
                     return 'https://requirements-bazaar.org/bazaar/requirements/' + requirementId + '/comments/';
+                },
+
+                computeHide: function(comments) {
+                    return !(comments.length === 0);
+                },
+
+                getProfileStyle: function(profileImage) {
+                    return 'background-image: url("' + profileImage + '");';
                 }
             });
         })();
