@@ -152,10 +152,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <components-menu id="componentsMenu"></components-menu>
                         </paper-scroll-header-panel>
 
-                        <paper-scroll-header-panel main condenses keep-condensed-header>
+                        <paper-scroll-header-panel condensed-header-height="45" main condenses keep-condensed-header>
 
-                            <paper-toolbar class="tall">
-                                <div>Component <span>{{component.name}}</span></div>
+                            <paper-toolbar id="componentToolbar" class="tall">
+                                <div class="middle middle-container center horizontal layout">
+                                    <div class="component-name"><span>{{component.name}}</span></div>
+                                </div>
+
+                                <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
                             </paper-toolbar>
 
                             <div style="padding-top:20px;">

@@ -100,12 +100,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     padding: 0 16px;
   }
 
-  paper-toolbar.tall .app-name {
+  paper-toolbar.tall .component-name {
     font-size: 40px;
-    font-weight: 300;
+    font-weight: 400;
     /* Required for main area's paper-scroll-header-panel custom condensing transformation */
     -webkit-transform-origin: left center;
     transform-origin: left center;
+  }
+
+  paper-toolbar.tall paper-icon-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
   }
 
   #mainToolbar .middle-container  {
