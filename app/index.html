@@ -120,19 +120,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </section>
 
                 <section data-route="project-info" style="height:100%;">
+
+                    <iron-ajax url="[[getProjectURL(params.projectId)]]" last-response="{{project}}" auto></iron-ajax>
+
                     <paper-material elevation="1">
-                        <h2 class="page-title">
-                            Project:<span>{{params.projectId}}</span>
-                        </h2>
+                        <h2 class="page-title">Project <span>{{project.name}}</span></h2>
 
                         <div>This is <span>{{params.projectId}}</span>'s section</div>
                     </paper-material>
 
                     <components-list project-id="{{params.projectId}}"></components-list>
+
                 </section>
 
                 <section data-route="component-info" style="height:100%;">
-
                     <paper-drawer-panel>
                         <!-- Drawer Scroll Header Panel -->
                         <paper-scroll-header-panel drawer fixed>

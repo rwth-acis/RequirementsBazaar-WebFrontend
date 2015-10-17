@@ -33,10 +33,10 @@
         </style>
 
         <iron-ajax
+                id="commentsLoader"
                 url="{{resourceURL}}"
                 last-response="{{comments}}"
-                params='{"page":"0", "per_page":"150"}'
-                auto></iron-ajax>
+                params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
         <div class="noComments" hidden="[[hideNoComments]]">No comments yet</div>
 
@@ -86,11 +86,15 @@
                 },
 
                 computeHide: function(comments) {
-                    return !(comments.length === 0);
+                    return comments.length !== 0;
                 },
 
                 getProfileStyle: function(profileImage) {
                     return 'background-image: url("' + profileImage + '");';
+                },
+
+                loadComments: function() {
+                    this.$.commentsLoader.generateRequest();
                 }
             });
         })();

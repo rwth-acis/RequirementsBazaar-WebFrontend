@@ -34,11 +34,20 @@
 
             paper-toolbar .title {
                 margin-left: 0px;
+                margin-bottom: 10px;
             }
 
             paper-toolbar .bottom {
                 font-size: small;
+                font-weight: normal;
                 padding: 16px;
+            }
+
+            paper-toolbar {
+                --paper-toolbar: {
+                    font-weight: bold;
+                    font-size: large;
+                };
             }
 
             paper-material > div {
@@ -111,7 +120,12 @@
                 },
 
                 toggleCollapsible: function(e) {
-                    Polymer.dom(e.currentTarget).querySelector('iron-collapse').toggle();
+                    var contentNode = Polymer.dom(e.currentTarget).querySelector('iron-collapse');
+                    if (!contentNode.opened) {
+                        // since we are about to open it, trigger loading the comments
+                        Polymer.dom(e.currentTarget).querySelector('comments-list').loadComments();
+                    }
+                    contentNode.toggle();
                 }
             });
         })();

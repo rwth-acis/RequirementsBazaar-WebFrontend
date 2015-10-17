@@ -15,7 +15,7 @@
     // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
     var app = document.querySelector('#app');
 
-    app.displayInstalledToast = function () {
+    app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
         if (!document.querySelector('platinum-sw-cache').disabled) {
             document.querySelector('#caching-complete').show();
@@ -24,12 +24,12 @@
 
     // Listen for template bound event to know when bindings
     // have resolved and content has been stamped to the page
-    app.addEventListener('dom-change', function () {
+    app.addEventListener('dom-change', function() {
         console.log('Our app is ready to rock!');
     });
 
     // See https://github.com/Polymer/polymer/issues/1381
-    window.addEventListener('WebComponentsReady', function () {
+    window.addEventListener('WebComponentsReady', function() {
         // imports are loaded and elements have been registered
     });
 
@@ -61,7 +61,7 @@
      */
 
     // Close drawer after menu item is selected if drawerPanel is narrow
-    app.onDataRouteClick = function () {
+    app.onDataRouteClick = function() {
         var drawerPanel = document.querySelector('#paperDrawerPanel');
         if (drawerPanel.narrow) {
             drawerPanel.closeDrawer();
@@ -69,8 +69,28 @@
     };
 
     // Scroll page to top and expand header
-    app.scrollPageToTop = function () {
+    app.scrollPageToTop = function() {
         document.getElementById('mainContainer').scrollTop = 0;
+    };
+
+    /**
+     * Returns the URL from where to get information about a specific project.
+     *
+     * @param projectId the id of the project to query.
+     * @returns {string} the URL of the resource to query.
+     */
+    app.getProjectURL = function(projectId) {
+        return 'https://requirements-bazaar.org/bazaar/projects/' + projectId;
+    };
+
+    /**
+     * Returns the URL from where to get information about a specific component.
+     *
+     * @param componentId the id of the component to query.
+     * @returns {string} the URL of the resource to query.
+     */
+    app.getComponentURL = function(componentId) {
+        return 'https://requirements-bazaar.org/bazaar/components/' + componentId;
     };
 
 })(document);
