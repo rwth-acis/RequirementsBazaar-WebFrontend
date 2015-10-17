@@ -123,7 +123,7 @@
                     var contentNode = Polymer.dom(e.currentTarget).querySelector('iron-collapse');
                     if (!contentNode.opened) {
                         // since we are about to open it, trigger loading the comments
-                        Polymer.dom(e.currentTarget).querySelector('comments-list').loadComments();
+                        Polymer.dom(e.currentTarget).querySelector('comments-list').load();
                     }
                     contentNode.toggle();
                 }

@@ -93,4 +93,19 @@
         return 'https://requirements-bazaar.org/bazaar/components/' + componentId;
     };
 
+    /**
+     * Lazyloads the project info page.
+     *
+     * @param projectId the id of the project to load.
+     */
+    app.loadProjectInfo = function(projectId) {
+        // load the basic project info that is shown in the header
+        this.$.projectInfoLoader.url = app.getProjectURL(projectId);
+        this.$.projectInfoLoader.generateRequest();
+
+        // load the components of the project
+        this.$.componentsList.projectId = projectId;
+        this.$.componentsList.load();
+    }
+
 })(document);

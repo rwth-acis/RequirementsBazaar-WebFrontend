@@ -6,7 +6,6 @@
             :host {
                 display: block;
                 font-size: 90%;
-
             }
 
             /**
@@ -30,6 +29,10 @@
                 margin: 5px 0 10px 0;
                 font-size: small;
             }
+
+            .comment {
+                margin-bottom: 5px;
+            }
         </style>
 
         <iron-ajax
@@ -41,7 +44,7 @@
         <div class="noComments" hidden="[[hideNoComments]]">No comments yet</div>
 
         <template is="dom-repeat" items="{{comments}}">
-            <div class="layout horizontal">
+            <div class="comment layout horizontal">
                 <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
                 <div class="layout vertical flex">
                     <div>[[item.message]]</div>
@@ -93,7 +96,7 @@
                     return 'background-image: url("' + profileImage + '");';
                 },
 
-                loadComments: function() {
+                load: function() {
                     this.$.commentsLoader.generateRequest();
                 }
             });

@@ -20,10 +20,10 @@
         </style>
 
         <iron-ajax
+                id="componentsLoader"
                 url="{{resourceURL}}"
                 last-response="{{components}}"
-                params='{"page":"0", "per_page":"150"}'
-                auto></iron-ajax>
+                params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
         <div class="layout vertical center">
             <template is="dom-repeat" items="{{components}}">
@@ -65,6 +65,10 @@
                 onComponentTap: function (e) {
                     var model = e.model;
                     page('/components/' + model.item.id);
+                },
+
+                load: function() {
+                    this.$.componentsLoader.generateRequest();
                 }
             });
         })();

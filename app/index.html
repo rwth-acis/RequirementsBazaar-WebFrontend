@@ -121,7 +121,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 <section data-route="project-info" style="height:100%;">
 
-                    <iron-ajax url="[[getProjectURL(params.projectId)]]" last-response="{{project}}" auto></iron-ajax>
+                    <iron-ajax id="projectInfoLoader"
+                               last-response="{{project}}"></iron-ajax>
 
                     <paper-material elevation="1">
                         <h2 class="page-title">Project <span>{{project.name}}</span></h2>
@@ -129,7 +130,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <div>This is <span>{{params.projectId}}</span>'s section</div>
                     </paper-material>
 
-                    <components-list project-id="{{params.projectId}}"></components-list>
+                    <components-list id="componentsList"></components-list>
 
                 </section>
 
