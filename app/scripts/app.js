@@ -114,6 +114,10 @@
      * @param componentId the id of the component to load.
      */
     app.loadComponentInfo = function(componentId) {
+        // load the basic component info that is shown in the header
+        this.$.componentInfoLoader.url = app.getComponentURL(componentId);
+        this.$.componentInfoLoader.generateRequest();
+
         // load the components-menu on the left
         this.$.componentsMenu.componentId = componentId;
         this.$.componentsMenu.load();

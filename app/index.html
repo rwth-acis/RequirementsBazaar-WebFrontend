@@ -135,6 +135,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </section>
 
                 <section data-route="component-info" style="height:100%;">
+
+                    <iron-ajax id="componentInfoLoader"
+                               last-response="{{component}}"></iron-ajax>
+
                     <paper-drawer-panel>
                         <!-- Drawer Scroll Header Panel -->
                         <paper-scroll-header-panel drawer fixed>
@@ -151,7 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <paper-scroll-header-panel main condenses keep-condensed-header>
 
                             <paper-toolbar class="tall">
-                                <div>Component <span>{{params.componentId}}</span></div>
+                                <div>Component <span>{{component.name}}</span></div>
                             </paper-toolbar>
 
                             <div style="padding-top:20px;">
@@ -163,6 +167,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     </paper-drawer-panel>
 
                     <paper-fab icon="add"></paper-fab>
+
                 </section>
 
             </iron-pages>
