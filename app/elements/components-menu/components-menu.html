@@ -8,23 +8,22 @@
             }
 
             paper-item {
-            --paper-item: {
-                 cursor: pointer;
-             };
+                --paper-item: {
+                    cursor: pointer;
+                };
             }
 
         </style>
 
         <iron-ajax
+                id="componentLoader"
                 url="{{componentResourceURL}}"
-                last-response="{{component}}"
-                auto></iron-ajax>
+                last-response="{{component}}"></iron-ajax>
 
         <iron-ajax
-                url="{{componentsResourceURL}}"
+                id="componentsLoader"
                 last-response="{{components}}"
-                params='{"page":"0", "per_page":"150"}'
-                auto></iron-ajax>
+                params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
         <paper-menu>
 
@@ -54,13 +53,10 @@
                         type: String,
                         computed: 'computeComponentResourceURL(componentId)'
                     },
-                    componentsResourceURL: {
-                        type: String,
-                        computed: 'computeComponentsResourceURL(projectId)'
-                    },
                     component: {
                         type: Object,
-                        notify: true
+                        notify: true,
+                        observer: '_componentChanged'
                     },
                     components: {
                         type: Array,
@@ -68,11 +64,23 @@
                     }
                 },
 
-                ready: function () {
+                ready: function() {
                 },
 
                 computeComponentResourceURL: function(componentId) {
                     return 'https://requirements-bazaar.org/bazaar/components/' + componentId;
+                },
+
+                getComponentsResourceURL: function(projectId) {
+                    if (projectId === null) {
+                        return null;
+                    }
+                    return 'https://requirements-bazaar.org/bazaar/projects/' + projectId + '/components/';
+                },
+
+                _componentChanged: function(newValue) {
+                    this.$.componentsLoader.url = this.getComponentsResourceURL(newValue.projectId);
+                    this.$.componentsLoader.generateRequest();
                 },
 
                 computeProjectId: function(component) {
@@ -82,16 +90,13 @@
                     return component.projectId;
                 },
 
-                computeComponentsResourceURL: function(projectId) {
-                    if (projectId === null) {
-                        return null;
-                    }
-                    return 'https://requirements-bazaar.org/bazaar/projects/' + projectId + '/components/';
-                },
-
-                onComponentTap: function (e) {
+                onComponentTap: function(e) {
                     var model = e.model;
                     page('/components/' + model.item.id);
+                },
+
+                load: function() {
+                    this.$.componentLoader.generateRequest();
                 }
             });
         })();

@@ -106,6 +106,21 @@
         // load the components of the project
         this.$.componentsList.projectId = projectId;
         this.$.componentsList.load();
-    }
+    };
+
+    /**
+     * Lazyloads the component info page.
+     *
+     * @param componentId the id of the component to load.
+     */
+    app.loadComponentInfo = function(componentId) {
+        // load the components-menu on the left
+        this.$.componentsMenu.componentId = componentId;
+        this.$.componentsMenu.load();
+
+        // load requirements-list
+        this.$.requirementsList.componentId = componentId;
+        this.$.requirementsList.load();
+    };
 
 })(document);

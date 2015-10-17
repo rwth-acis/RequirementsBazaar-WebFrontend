@@ -60,10 +60,10 @@
         </style>
 
         <iron-ajax
+                id="requirementsLoader"
                 url="{{resourceURL}}"
                 last-response="{{requirements}}"
-                params='{"page":"0", "per_page":"150"}'
-                auto></iron-ajax>
+                params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
         <template is="dom-repeat" items="{{requirements}}">
             <div class="layout vertical center">
@@ -126,6 +126,10 @@
                         Polymer.dom(e.currentTarget).querySelector('comments-list').load();
                     }
                     contentNode.toggle();
+                },
+
+                load: function() {
+                    this.$.requirementsLoader.generateRequest();
                 }
             });
         })();

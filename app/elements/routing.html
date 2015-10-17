@@ -38,6 +38,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     page('/components/:componentId', scrollToTop, function(data) {
+      app.loadComponentInfo(data.params.componentId);
       app.route = 'component-info';
       app.params = data.params;
     });

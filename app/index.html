@@ -145,7 +145,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </paper-toolbar>
 
                             <!-- Drawer Content -->
-                            <components-menu component-id="{{params.componentId}}"></components-menu>
+                            <components-menu id="componentsMenu"></components-menu>
                         </paper-scroll-header-panel>
 
                         <paper-scroll-header-panel main condenses keep-condensed-header>
@@ -155,8 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </paper-toolbar>
 
                             <div style="padding-top:20px;">
-                                <requirements-list component-id="{{params.componentId}}"></requirements-list>
-
+                                <requirements-list id="requirementsList"></requirements-list>
                             </div>
 
                         </paper-scroll-header-panel>
