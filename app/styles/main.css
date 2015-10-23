@@ -17,6 +17,7 @@ paper-input.large {
   width: 100%;
 }
 
+/*
 paper-icon-button {
   color: var(--paper-red-300);
   --paper-icon-button-ink-color: var(--paper-red-a100);
@@ -24,3 +25,5 @@ paper-icon-button {
   --iron-icon-height: 15px;
   padding: 0px 4px;
 }
+*/
+

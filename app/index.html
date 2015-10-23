@@ -166,11 +166,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <requirements-list id="requirementsList"></requirements-list>
                             </div>
 
+                            <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"
+                                          exit-animation="fade-out-animation" no-cancel-on-outside-click
+                                          no-cancel-on-esc-key>
+                                <h2>Create a Requirement</h2>
+                                <paper-input char-counter maxlength="50" label="Title" id="newRequirementTitle"></paper-input>
+                                <paper-textarea label="Description" id="newRequirementDesc"></paper-textarea>
+
+                                <div class="buttons">
+                                    <paper-button dialog-dismiss>Cancel</paper-button>
+                                    <paper-button dialog-confirm autofocus>Save</paper-button>
+                                </div>
+                            </paper-dialog>
+
                         </paper-scroll-header-panel>
 
                     </paper-drawer-panel>
 
-                    <paper-fab icon="add"></paper-fab>
+                    <paper-fab on-tap="showCreateRequirement" icon="add"></paper-fab>
 
                 </section>
 
