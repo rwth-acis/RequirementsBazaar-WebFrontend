@@ -43,6 +43,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app.params = data.params;
     });
 
+    page('/components/:componentId/create', scrollToTop, function(data) {
+      app.loadComponentInfo(data.params.componentId);
+      app.route = 'component-info';
+      app.params = data.params;
+      // open create new requirement dialog
+      app.showCreateRequirement();
+    });
+
     // add #! before urls
     page({
       hashbang: true

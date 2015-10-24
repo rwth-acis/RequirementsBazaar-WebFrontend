@@ -93,7 +93,7 @@
     };
 
     /**
-     * Lazyloads the project info page.
+     * Loads the project info page.
      *
      * @param projectId the id of the project to load.
      */
@@ -108,7 +108,7 @@
     };
 
     /**
-     * Lazyloads the component info page.
+     * Loads the component info page.
      *
      * @param componentId the id of the component to load.
      */
@@ -129,6 +129,21 @@
     app.showCreateRequirement = function() {
         var createDialog = document.getElementById('createRequirement');
         createDialog.open();
+    };
+
+    app.onCreateRequirementTap = function(e) {
+        page('/components/' + app.params.componentId + '/create');
+        e.preventDefault();
+    };
+
+    app.onCreateRequirementClosed = function(e) {
+        if (e.detail.confirmed) {
+            window.alert('saving...');
+        } else if (e.detail.canceled) {
+            window.alert('canceled');
+        }
+        page('/components/' + app.params.componentId);
+        e.preventDefault();
     };
 
 })(document);
