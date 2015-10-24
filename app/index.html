@@ -86,6 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="content" style="height:100%;">
             <iron-pages attr-for-selected="data-route" selected="{{route}}" style="height:100%;">
 
+                <!-- LANDING PAGE -->
                 <section data-route="home" style="height:100%;">
 
                     <paper-material elevation="1">
@@ -101,6 +102,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 </section>
 
+                <!-- LIST OF PROJECTS -->
                 <section data-route="projects" style="height:100%;">
                     <paper-material elevation="1" style="height:200px;">
                         <h2 class="page-title">Projects</h2>
@@ -119,6 +121,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 </section>
 
+                <!-- LIST OF COMPONENTS OF A PROJECT -->
                 <section data-route="project-info" style="height:100%;">
 
                     <iron-ajax id="projectInfoLoader"
@@ -134,6 +137,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 </section>
 
+                <!-- REQUIREMENTS VIEW -->
                 <section data-route="component-info" style="height:100%;">
 
                     <iron-ajax id="componentInfoLoader"
@@ -152,14 +156,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <components-menu id="componentsMenu"></components-menu>
                         </paper-scroll-header-panel>
 
-                        <paper-scroll-header-panel condensed-header-height="45" main condenses keep-condensed-header>
+                        <paper-scroll-header-panel main condenses condensed-header-height="45" keep-condensed-header>-->
 
                             <paper-toolbar id="componentToolbar" class="tall">
                                 <div class="middle middle-container center horizontal layout">
                                     <div class="component-name"><span>{{component.name}}</span></div>
                                 </div>
 
-                                <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:fixed;right:20px;">
+                                    <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                    <paper-menu class="dropdown-content">
+                                        <paper-item>Set as default</paper-item>
+                                        <paper-item>Edit component</paper-item>
+                                        <paper-item>Delete component</paper-item>
+                                    </paper-menu>
+                                </paper-menu-button>
+
                             </paper-toolbar>
 
                             <div style="padding-top:20px;">

@@ -33,6 +33,7 @@
         // imports are loaded and elements have been registered
     });
 
+    /*
     // Main area's paper-scroll-header-panel custom condensing transformation of
     // the appName in the middle-container and the bottom title in the bottom-container.
     // The appName is moved to top and shrunk on condensing. The bottom sub title
@@ -58,6 +59,7 @@
         //Polymer.Base.transform('scale(' + scaleMiddle + ') translateZ(0)', appName);
         Polymer.Base.transform('scale(' + scaleMiddle + ') translate3d(0,' + yRatio * 100 + '%,0)', appName);
     });
+    */
 
     // Close drawer after menu item is selected if drawerPanel is narrow
     app.onDataRouteClick = function() {
