@@ -10,51 +10,57 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <script src="../bower_components/page/page.js"></script>
 <script>
-  window.addEventListener('WebComponentsReady', function() {
+    window.addEventListener('WebComponentsReady', function() {
 
-    // We use Page.js for routing. This is a Micro
-    // client-side router inspired by the Express router
-    // More info: https://visionmedia.github.io/page.js/
+        // We use Page.js for routing. This is a Micro
+        // client-side router inspired by the Express router
+        // More info: https://visionmedia.github.io/page.js/
 
-    // Middleware
-    function scrollToTop(ctx, next) {
-      app.scrollPageToTop();
-      next();
-    }
+        // Middleware
+        function scrollToTop(ctx, next) {
+            app.scrollPageToTop();
+            next();
+        }
 
-    // Routes
-    page('/', scrollToTop, function() {
-      app.route = 'home';
+        // Routes
+        page('/', scrollToTop, function() {
+            app.route = 'home';
+        });
+
+        page('/projects', scrollToTop, function() {
+            app.route = 'projects';
+        });
+
+        page('/projects/:projectId', scrollToTop, function(data) {
+            app.loadProjectInfo(data.params.projectId);
+            app.route = 'project-info';
+            app.params = data.params;
+        });
+
+        page('/components/:componentId', scrollToTop, function(data) {
+            app.loadComponentInfo(data.params.componentId);
+            app.route = 'component-info';
+            app.params = data.params;
+        });
+
+        page('/components/:componentId/create', scrollToTop, function(data) {
+            app.loadComponentInfo(data.params.componentId);
+            app.route = 'component-info';
+            app.params = data.params;
+            // open create new requirement dialog
+            app.showCreateRequirement();
+        });
+
+        page('/components/:componentId/edit', scrollToTop, function(data) {
+            app.loadComponentInfo(data.params.componentId);
+            app.route = 'component-info';
+            app.params = data.params;
+        });
+
+        // add #! before urls
+        page({
+            hashbang: true
+        });
+
     });
-
-    page('/projects', scrollToTop, function() {
-      app.route = 'projects';
-    });
-
-    page('/projects/:projectId', scrollToTop, function(data) {
-      app.loadProjectInfo(data.params.projectId);
-      app.route = 'project-info';
-      app.params = data.params;
-    });
-
-    page('/components/:componentId', scrollToTop, function(data) {
-      app.loadComponentInfo(data.params.componentId);
-      app.route = 'component-info';
-      app.params = data.params;
-    });
-
-    page('/components/:componentId/create', scrollToTop, function(data) {
-      app.loadComponentInfo(data.params.componentId);
-      app.route = 'component-info';
-      app.params = data.params;
-      // open create new requirement dialog
-      app.showCreateRequirement();
-    });
-
-    // add #! before urls
-    page({
-      hashbang: true
-    });
-
-  });
 </script>

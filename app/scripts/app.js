@@ -146,4 +146,10 @@
         e.preventDefault();
     };
 
+    app.onComponentMenuSelected = function(e) {
+        console.log(e.detail.item.innerText);
+        this.$.componentInfoMenu.select(this.$.componentInfoMenu.selectedItem);
+        e.preventDefault();
+    };
+
 })(document);

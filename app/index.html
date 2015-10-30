@@ -165,7 +165,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                 <paper-menu-button horizontal-align="right" vertical-align="top" style="position:fixed;right:20px;">
                                     <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                    <paper-menu class="dropdown-content">
+                                    <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
                                         <paper-item>Set as default</paper-item>
                                         <paper-item>Edit component</paper-item>
                                         <paper-item>Delete component</paper-item>
