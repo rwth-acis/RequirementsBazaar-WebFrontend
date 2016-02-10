@@ -72,6 +72,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span class="flex"></span>
 
             <!-- Toolbar icons -->
+            <a href="/projects">
+                <paper-button elevation="2"><iron-icon icon="icons:visibility"></iron-icon>Explore</paper-button>
+            </a>
             <paper-icon-button icon="social:notifications"></paper-icon-button>
             <!--<paper-icon-button icon="search"></paper-icon-button>-->
 
@@ -95,9 +98,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             Welcome to Requirements Bazaar!
                         </h2>
 
-                        <a href="/projects">Projects</a>
-                        <a href="/projects/2">Specific project</a>
-                        <a href="/components/2">Specific component</a>
+                        <!--<a href="/projects">Projects</a>-->
+                        <!--<a href="/projects/2">Specific project</a>-->
+                        <!--<a href="/components/2">Specific component</a>-->
                     </paper-material>
 
                 </section>
@@ -109,7 +112,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                         <p>This is the projects section</p>
 
-                        <paper-input class="large" label="Search project names and descriptions" value="{{projectFilterVal}}" autofocus>
+                        <paper-input id="searchInput" class="large" label="Search project names and descriptions" value="{{projectFilterVal}}" autofocus>
                             <iron-icon icon="search" prefix class="big"></iron-icon>
                             <paper-icon-button suffix onclick="clearInput()"
                                                icon="clear" alt="clear" title="clear" tabindex="0">

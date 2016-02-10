@@ -17,13 +17,19 @@ paper-input.large {
   width: 100%;
 }
 
-/*
-paper-icon-button {
-  color: var(--paper-red-300);
-  --paper-icon-button-ink-color: var(--paper-red-a100);
-  --iron-icon-width: 15px;
-  --iron-icon-height: 15px;
-  padding: 0px 4px;
+a {
+  text-decoration: none !important;
+  color: inherit;
 }
-*/
+
+
+
+/*paper-icon-button {*/
+  /*color: var(--paper-red-300);*/
+  /*--paper-icon-button-ink-color: var(--paper-red-a100);*/
+  /*--iron-icon-width: 15px;*/
+  /*--iron-icon-height: 15px;*/
+  /*padding: 0px 4px;*/
+/*}*/
+
 
