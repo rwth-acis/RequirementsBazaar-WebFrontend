@@ -157,16 +157,34 @@
     };
 
     app.toggCompDrawer = function(e){
-        if (document.querySelector('#drawer').style.display != 'none'){
-            document.querySelector('#drawer').style.display = 'none';
+        if (document.querySelectorAll('#drawer')[1].style.display != 'none'){
+            document.querySelectorAll('#drawer')[1].style.display = 'none';
         } else {
-            document.querySelector('#drawer').style.display = 'block';
+            document.querySelectorAll('#drawer')[1].style.display = 'block';
         }
-        if (document.querySelector('#main').style.left != '0px'){
-            document.querySelector('#main').style.left = '0px';
+        if (document.querySelectorAll('#main')[1].style.left != '0px'){
+            document.querySelectorAll('#main')[1].style.left = '0px';
         } else {
-            document.querySelector('#main').style.left = '256px';
+            document.querySelectorAll('#main')[1].style.left = '256px';
         }
     };
+
+    window.onload = function() {
+        document.getElementById('drawer').className += " hidden";
+    };
+
+    app.toggNotDrawer = function(e){
+        if (document.querySelector('#drawer').classList.contains("hidden")){
+            document.querySelector('#drawer').classList.remove("hidden");
+            document.querySelectorAll('#main')[1].style.right = '256px';
+        } else {
+            document.querySelector('#drawer').classList.add("hidden");
+            document.querySelectorAll('#main')[1].style.right = '0px';
+        }
+    };
+
+    document.onload = function () {
+        document.querySelector('#drawer').style.display = 'none';
+    }
 
 })(document);

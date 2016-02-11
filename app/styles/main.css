@@ -8,28 +8,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 body {
-  background: #fafafa;
-  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: #333;
+    background: #fafafa;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
 }
 
 paper-input.large {
-  width: 100%;
+    width: 100%;
 }
 
 a {
-  text-decoration: none !important;
-  color: inherit;
+    text-decoration: none !important;
+    color: inherit;
 }
 
-
+.hidden {
+    display: none;
+}
 
 /*paper-icon-button {*/
-  /*color: var(--paper-red-300);*/
-  /*--paper-icon-button-ink-color: var(--paper-red-a100);*/
-  /*--iron-icon-width: 15px;*/
-  /*--iron-icon-height: 15px;*/
-  /*padding: 0px 4px;*/
+/*color: var(--paper-red-300);*/
+/*--paper-icon-button-ink-color: var(--paper-red-a100);*/
+/*--iron-icon-width: 15px;*/
+/*--iron-icon-height: 15px;*/
+/*padding: 0px 4px;*/
 /*}*/
 
 
