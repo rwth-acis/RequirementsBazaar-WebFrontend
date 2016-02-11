@@ -152,8 +152,8 @@
         e.preventDefault();
     };
 
-})(document);
+    app.clearInput = function(e){
+        this.$.searchInput.value = '';
+    };
 
-function clearInput(){
-    document.getElementById('searchInput').value = '';
-}
+})(document);
