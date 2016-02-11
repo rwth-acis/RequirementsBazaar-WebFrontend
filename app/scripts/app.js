@@ -152,6 +152,7 @@
         e.preventDefault();
     };
 
+    //clear form on x click
     app.clearInput = function(e){
         app.$.searchInput.value = '';
     };
