@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <!--
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
@@ -68,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar">
-            <paper-icon-button id="paperToggle" icon="menu"></paper-icon-button>
+            <paper-icon-button id="paperToggle" icon="menu" onclick="{{toggCompDrawer}}"></paper-icon-button>
             <span class="flex"></span>
 
             <!-- Toolbar icons -->
@@ -148,7 +148,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                     <paper-drawer-panel>
                         <!-- Drawer Scroll Header Panel -->
-                        <paper-scroll-header-panel drawer fixed>
+                        <paper-scroll-header-panel drawer fixed id="reqDrawer">
 
                             <!-- Drawer Toolbar -->
                             <paper-toolbar id="drawerToolbar">
@@ -159,7 +159,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <components-menu id="componentsMenu"></components-menu>
                         </paper-scroll-header-panel>
 
-                        <paper-scroll-header-panel main condenses condensed-header-height="45" keep-condensed-header>-->
+                        <paper-scroll-header-panel main condenses condensed-header-height="45" keep-condensed-header>
 
                             <paper-toolbar id="componentToolbar" class="tall">
                                 <div class="middle middle-container center horizontal layout">

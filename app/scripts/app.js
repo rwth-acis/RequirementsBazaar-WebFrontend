@@ -156,4 +156,17 @@
         this.$.searchInput.value = '';
     };
 
+    app.toggCompDrawer = function(e){
+        if (document.querySelector('#drawer').style.display != 'none'){
+            document.querySelector('#drawer').style.display = 'none';
+        } else {
+            document.querySelector('#drawer').style.display = 'block';
+        }
+        if (document.querySelector('#main').style.left != '0px'){
+            document.querySelector('#main').style.left = '0px';
+        } else {
+            document.querySelector('#main').style.left = '256px';
+        }
+    };
+
 })(document);
