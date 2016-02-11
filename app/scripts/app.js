@@ -157,16 +157,22 @@
     };
 
     app.toggCompDrawer = function(e){
+        //closes left drawer
         if (document.querySelectorAll('#drawer')[1].style.display != 'none'){
+            app.$.reqDrawer.closeDrawer();
             document.querySelectorAll('#drawer')[1].style.display = 'none';
-        } else {
-            document.querySelectorAll('#drawer')[1].style.display = 'block';
-        }
-        if (document.querySelectorAll('#main')[1].style.left != '0px'){
             document.querySelectorAll('#main')[1].style.left = '0px';
         } else {
+            //opens left drawer
+            document.querySelectorAll('#drawer')[1].style.display = 'block';
+            app.$.reqDrawer.openDrawer();
             document.querySelectorAll('#main')[1].style.left = '256px';
         }
+        //if (document.querySelectorAll('#main')[1].style.left != '0px'){
+        //    document.querySelectorAll('#main')[1].style.left = '0px';
+        //} else {
+        //    document.querySelectorAll('#main')[1].style.left = '256px';
+        //}
     };
 
     window.onload = function() {
@@ -174,17 +180,17 @@
     };
 
     app.toggNotDrawer = function(e){
+        //opens right drawer
         if (document.querySelector('#drawer').classList.contains("hidden")){
             document.querySelector('#drawer').classList.remove("hidden");
             document.querySelectorAll('#main')[1].style.right = '256px';
+            app.$.notDrawer.openDrawer();
         } else {
+            //closes right drawer
             document.querySelector('#drawer').classList.add("hidden");
             document.querySelectorAll('#main')[1].style.right = '0px';
+            app.$.notDrawer.closeDrawer();
         }
     };
-
-    document.onload = function () {
-        document.querySelector('#drawer').style.display = 'none';
-    }
 
 })(document);
