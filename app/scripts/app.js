@@ -153,7 +153,7 @@
     };
 
     app.clearInput = function(e){
-        this.$.searchInput.value = '';
+        app.$.searchInput.value = '';
     };
 
     app.toggCompDrawer = function(e){

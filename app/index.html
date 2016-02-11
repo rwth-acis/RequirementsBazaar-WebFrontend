@@ -114,7 +114,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                         <paper-input id="searchInput" class="large" label="Search project names and descriptions" value="{{projectFilterVal}}" autofocus>
                             <iron-icon icon="search" prefix class="big"></iron-icon>
-                            <paper-icon-button suffix onclick="clearInput()"
+                            <paper-icon-button suffix onclick="{{clearInput}}"
                                                icon="clear" alt="clear" title="clear" tabindex="0">
                             </paper-icon-button>
                         </paper-input>
@@ -145,10 +145,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                     <iron-ajax id="componentInfoLoader"
                                last-response="{{component}}"></iron-ajax>
-
+                    <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer">
                         <paper-scroll-header-panel drawer fixed>
-                            <paper-toolbar id="notificationToolbar">
+                            <paper-toolbar id="drawerToolbar">
                                 <span class="paper-font-title">Notifications</span>
                             </paper-toolbar>
 
