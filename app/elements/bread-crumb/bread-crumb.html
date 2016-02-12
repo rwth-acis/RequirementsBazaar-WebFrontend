@@ -1,0 +1,54 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="bread-crumb">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <span><a href="/">Requirements Bazaar</a></span>
+        <span><a href="/projects"> | Projects</a></span>
+        <template is="dom-if" if="[[project.name]]">
+            <span> > <a href="/projects/[[project.id]]">[[project.name]]</a></span>
+        </template>
+        <template is="dom-if" if="[[component.name]]">
+            <span> > <a href="/components/[[component.id]]">[[component.name]]</a></span>
+        </template>
+
+    </template>
+
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'bread-crumb',
+                properties: {
+                    project: {
+                        type: Object,
+                        notify: true
+                    },
+                    component: {
+                        type: Object,
+                        notify: true
+                    },
+                    route: {
+                        type: String,
+                        observer: '_checkRoute'
+                    }
+                },
+
+                _checkRoute: function(){
+                    if (this.route === 'project-info'){
+                        this.component = null;
+                    }
+                }
+
+            });
+        })
+        ();
+    </script>
+
+</dom-module>

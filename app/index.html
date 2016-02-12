@@ -80,14 +80,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <!-- Application Breadcrumb -->
             <div class="middle middle-container center horizontal layout">
-                <div class="app-name"><a href="/">Requirements Bazaar</a>
-                    <span><a href="/projects"> | Projects</a></span>
-                    <template is="dom-if" if="[[project.name]]">
-                        <span> > <a href="/projects/[[project.id]]">[[project.name]]</a></span>
-                    </template>
-                    <template is="dom-if" if="[[component.name]]">
-                        <span> > <a href="/components/[[component.id]]">[[component.name]]</a></span>
-                    </template>
+                <div class="app-name">
+                    <bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb>
                 </div>
             </div>
 
