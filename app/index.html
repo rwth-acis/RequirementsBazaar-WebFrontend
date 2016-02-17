@@ -78,10 +78,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-icon-button icon="social:notifications" onclick="{{toggNotDrawer}}"></paper-icon-button>
             <!--<paper-icon-button icon="search"></paper-icon-button>-->
 
-            <!-- Application Breadcrumb -->
+            <!-- Application name -->
             <div class="middle middle-container center horizontal layout">
                 <div class="app-name">
-                    <bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb>
+                    Requirements Bazaar
                 </div>
             </div>
 
@@ -109,20 +109,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 <!-- LIST OF PROJECTS -->
                 <section data-route="projects" style="height:100%;">
-                    <paper-material elevation="1" style="height:200px;">
-                        <h2 class="page-title">Projects</h2>
 
-                        <p>This is the projects section</p>
 
-                        <paper-input id="searchInput" class="large" label="Search project names and descriptions" value="{{projectFilterVal}}" autofocus>
-                            <iron-icon icon="search" prefix class="big"></iron-icon>
-                            <paper-icon-button suffix onclick="{{clearInput}}"
-                                               icon="clear" alt="clear" title="clear" tabindex="0">
-                            </paper-icon-button>
-                        </paper-input>
-                    </paper-material>
+                    <paper-scroll-header-panel>
+                        <paper-toolbar>
+                            <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
 
-                    <projects-list filter-value="{{projectFilterVal}}"></projects-list>
+                            <!--<paper-material class="bottom fit">-->
+                                <!--<paper-input id="searchInput" class="large" label="Search project names and descriptions" value="{{projectFilterVal}}" autofocus>-->
+                                    <!--<iron-icon icon="search" prefix class="big"></iron-icon>-->
+                                    <!--<paper-icon-button suffix onclick="{{clearInput}}"-->
+                                                       <!--icon="clear" alt="clear" title="clear" tabindex="0">-->
+                                    <!--</paper-icon-button>-->
+                                <!--</paper-input>-->
+                            <!--</paper-material>-->
+                        </paper-toolbar>
+                        <paper-material elevation="1" style="height:150px;">
+                            <!--<h2 class="page-title">Projects</h2>-->
+
+                            <p>This is the projects section</p>
+
+                            <paper-input id="searchInput" class="large" label="Search project names and descriptions" value="{{projectFilterVal}}" autofocus>
+                                <iron-icon icon="search" prefix class="big"></iron-icon>
+                                <paper-icon-button suffix onclick="{{clearInput}}"
+                                                   icon="clear" alt="clear" title="clear" tabindex="0">
+                                </paper-icon-button>
+                            </paper-input>
+                        </paper-material>
+                        <projects-list filter-value="{{projectFilterVal}}"></projects-list>
+                    </paper-scroll-header-panel>
 
                 </section>
 
@@ -132,13 +147,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax id="projectInfoLoader"
                                last-response="{{project}}"></iron-ajax>
 
-                    <paper-material elevation="1">
-                        <h2 class="page-title">Project <span>{{project.name}}</span></h2>
+                    <paper-scroll-header-panel>
 
-                        <div>This is <span>{{params.projectId}}</span>'s section</div>
-                    </paper-material>
+                        <paper-toolbar>
+                            <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
+                        </paper-toolbar>
 
-                    <components-list id="componentsList"></components-list>
+                        <paper-material elevation="1">
+                            <!--<h2 class="page-title">Project <span>{{project.name}}</span></h2>-->
+
+                            <div>This is <span>{{params.projectId}}</span>'s section</div>
+                        </paper-material>
+
+                        <components-list id="componentsList"></components-list>
+                    </paper-scroll-header-panel>
 
                 </section>
 
