@@ -199,16 +199,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                         <paper-scroll-header-panel main condenses condensed-header-height="45" keep-condensed-header>
 
-                            <paper-toolbar>
-                                <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
-                            </paper-toolbar>
+                            <!--<paper-toolbar>-->
+                                <!--<h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>-->
+                            <!--</paper-toolbar>-->
 
                             <paper-toolbar id="componentToolbar" class="tall">
                                 <div class="middle middle-container center horizontal layout">
                                     <div class="component-name"><span>{{component.name}}</span></div>
                                 </div>
 
-                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:20px;">
+                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;">
                                     <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                     <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
                                         <paper-item>Set as default</paper-item>
