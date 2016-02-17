@@ -67,22 +67,29 @@
 
         <template is="dom-repeat" items="{{requirements}}">
             <div class="layout vertical center">
-                <paper-material on-tap="toggleCollapsible">
-                    <paper-toolbar class="medium-tall">
-                        <div class="title">[[item.title]]</div>
-                        <paper-icon-button icon="star-border" disabled></paper-icon-button>
-                        <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+                <paper-material>
+                    <div on-tap="toggleCollapsible">
 
-                        <div class="bottom fit"><time is="relative-time" datetime$="[[item.creation_time]]"></time></div>
-                    </paper-toolbar>
+                        <paper-toolbar class="medium-tall">
+                            <div class="title">[[item.title]]</div>
+                            <paper-icon-button icon="star-border" disabled></paper-icon-button>
+                            <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+
+                            <div class="bottom fit"><time is="relative-time" datetime$="[[item.creation_time]]"></time></div>
+                        </paper-toolbar>
+
+                        <div>[[item.description]]</div>
+
+                    </div>
 
                     <div>
-                        <div>[[item.description]]</div>
 
                         <iron-collapse>
                             <h3>Comments</h3>
                             <comments-list requirement-id="[[item.id]]"></comments-list>
+                            <paper-input autofocus label="Add a comment..."></paper-input>
                         </iron-collapse>
+
                     </div>
 
                 </paper-material>
@@ -120,10 +127,10 @@
                 },
 
                 toggleCollapsible: function(e) {
-                    var contentNode = Polymer.dom(e.currentTarget).querySelector('iron-collapse');
+                    var contentNode = Polymer.dom(e.currentTarget).parentNode.querySelector('iron-collapse');
                     if (!contentNode.opened) {
                         // since we are about to open it, trigger loading the comments
-                        Polymer.dom(e.currentTarget).querySelector('comments-list').load();
+                        Polymer.dom(e.currentTarget).parentNode.querySelector('comments-list').load();
                     }
                     contentNode.toggle();
                 },
