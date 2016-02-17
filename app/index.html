@@ -197,13 +197,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <components-menu id="componentsMenu"></components-menu>
                         </paper-scroll-header-panel>
 
-                        <paper-scroll-header-panel main condenses condensed-header-height="45" keep-condensed-header>
+                        <paper-scroll-header-panel main condenses condensed-header-height="60" keep-condensed-header>
 
                             <!--<paper-toolbar>-->
                                 <!--<h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>-->
                             <!--</paper-toolbar>-->
 
                             <paper-toolbar id="componentToolbar" class="tall">
+                                <div class="top middle-container horizontal layout">
+                                    <bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb>
+                                </div>
+
                                 <div class="middle middle-container center horizontal layout">
                                     <div class="component-name"><span>{{component.name}}</span></div>
                                 </div>
@@ -217,7 +221,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     </paper-menu>
                                 </paper-menu-button>
 
-                                <div class="bottom bottom-container"><span>{{component.description}}</span></div>
+                                <div class="bottom bottom-container horizontal layout"><span>{{component.description}}</span></div>
 
                             </paper-toolbar>
 
