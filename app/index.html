@@ -81,7 +81,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <!-- Application name -->
             <div class="middle middle-container center horizontal layout">
                 <div class="app-name">
-                    Requirements Bazaar
+                    <a href="/">
+                        Requirements Bazaar
+                    </a>
                 </div>
             </div>
 
@@ -154,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </paper-toolbar>
 
                         <paper-material elevation="1">
-                            <!--<h2 class="page-title">Project <span>{{project.name}}</span></h2>-->
+                            <h2 class="page-title">Project <span>{{project.name}}</span></h2>
 
                             <div>This is <span>{{params.projectId}}</span>'s section</div>
                         </paper-material>
@@ -169,6 +171,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                     <iron-ajax id="componentInfoLoader"
                                last-response="{{component}}"></iron-ajax>
+
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer">
                         <paper-scroll-header-panel drawer fixed>
@@ -196,12 +199,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                         <paper-scroll-header-panel main condenses condensed-header-height="45" keep-condensed-header>
 
+                            <paper-toolbar>
+                                <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
+                            </paper-toolbar>
+
                             <paper-toolbar id="componentToolbar" class="tall">
                                 <div class="middle middle-container center horizontal layout">
                                     <div class="component-name"><span>{{component.name}}</span></div>
                                 </div>
 
-                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:fixed;right:20px;">
+                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:20px;">
                                     <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                     <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
                                         <paper-item>Set as default</paper-item>
