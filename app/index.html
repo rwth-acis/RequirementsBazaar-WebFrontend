@@ -68,7 +68,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar">
-            <paper-icon-button id="paperToggle" icon="menu" onclick="{{toggCompDrawer}}"></paper-icon-button>
+            <template is="dom-if" if="{{componentPage(route)}}">
+                <paper-icon-button id="paperToggle" icon="menu" onclick="{{toggCompDrawer}}"></paper-icon-button>
+            </template>
+            <template is="dom-if" if="{{!componentPage(route)}}">
+                <a href="/">
+                    <paper-icon-button icon="home"></paper-icon-button>
+                </a>
+            </template>
             <span class="flex"></span>
 
             <!-- Toolbar icons -->

@@ -194,4 +194,8 @@
         }
     };
 
+    app.componentPage = function(rt){
+        return rt === 'component-info';
+    }
+
 })(document);
