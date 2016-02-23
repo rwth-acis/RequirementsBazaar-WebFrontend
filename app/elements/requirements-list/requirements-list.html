@@ -57,6 +57,23 @@
             h3 {
                 margin-bottom: 10px;
             }
+
+            paper-fab {
+                --paper-fab-background: var(--default-primary-color);
+            }
+
+            .flex-horizontal {
+                @apply(--layout-horizontal);
+            }
+
+            .flexchild {
+                @apply(--layout-flex);
+            }
+
+            .flex-end-align {
+                margin-top: auto;
+                margin-bottom: auto;
+            }
         </style>
 
         <iron-ajax
@@ -87,7 +104,12 @@
                         <iron-collapse>
                             <h3>Comments</h3>
                             <comments-list requirement-id="[[item.id]]"></comments-list>
-                            <paper-input autofocus label="Add a comment..."></paper-input>
+                            <div class="container flex-horizontal">
+                                <paper-input autofocus is="iron-input" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
+                                <template is="dom-if" if="{{newComment}}">
+                                    <paper-fab mini icon="send" class="flex-end-align"></paper-fab>
+                                </template>
+                            </div>
                         </iron-collapse>
 
                     </div>
