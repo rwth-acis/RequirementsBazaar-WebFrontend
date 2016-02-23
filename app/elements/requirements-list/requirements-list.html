@@ -60,6 +60,7 @@
 
             paper-fab {
                 --paper-fab-background: var(--default-primary-color);
+                display: none;
             }
 
             .flex-horizontal {
@@ -105,10 +106,8 @@
                             <h3>Comments</h3>
                             <comments-list requirement-id="[[item.id]]"></comments-list>
                             <div class="container flex-horizontal" id="[[item.id]]">
-                                <paper-input id="[[item.id]]input" autofocus is="iron-input" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
-                                <template is="dom-if" if="{{newComment}}">
-                                    <paper-fab mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
-                                </template>
+                                <paper-input id="[[item.id]]input" is="iron-input" on-input="showButton" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
+                                <paper-fab id="[[item.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
                             </div>
                         </iron-collapse>
 
@@ -170,7 +169,16 @@
                     alert('Commented: ' + this.newComment + ' on req: ' + currentReqId);
                     this.newComment = '';
                     document.getElementById(currentInpId).value = null;
+                },
 
+                showButton: function(e){
+                    var fabId = e.currentTarget.parentNode.id + 'fab';
+                    console.log(fabId);
+                    if (this.newComment){
+                        document.getElementById(fabId).style.display = 'block';
+                    } else {
+                        document.getElementById(fabId).style.display = 'none';
+                    }
                 }
             });
         })();
