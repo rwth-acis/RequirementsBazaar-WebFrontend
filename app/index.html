@@ -103,21 +103,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <!-- LANDING PAGE -->
                 <section data-route="home" style="height:100%;">
 
+                    <!--&lt;!&ndash;Notification Drawer&ndash;&gt;-->
+                    <!--<paper-drawer-panel right-drawer="true" id="notificationDrawer">-->
+                        <!--<paper-scroll-header-panel drawer fixed force-narrow="true">-->
+                            <!--<paper-toolbar id="drawerToolbar">-->
+                                <!--<span class="paper-font-title">Notifications</span>-->
+                            <!--</paper-toolbar>-->
+
+                            <!--&lt;!&ndash; Drawer Content &ndash;&gt;-->
+                            <!--<div>Notifications will be shown here</div>-->
+                        <!--</paper-scroll-header-panel>-->
+
+                    <!--</paper-drawer-panel>-->
+
                     <paper-material elevation="1">
 
                         <h2 class="page-title">
                             Welcome to Requirements Bazaar!
                         </h2>
 
-                        <!--<a href="/projects">Projects</a>-->
-                        <!--<a href="/projects/2">Specific project</a>-->
-                        <!--<a href="/components/2">Specific component</a>-->
+                        <a href="/projects">Projects</a>
+                        <a href="/projects/2">Specific project</a>
+                        <a href="/components/2">Specific component</a>
                     </paper-material>
 
                 </section>
 
                 <!-- LIST OF PROJECTS -->
                 <section data-route="projects" style="height:100%;">
+
+                    <!--Notification Drawer-->
+                    <!--<paper-drawer-panel right-drawer="true" id="notificationDrawer">-->
+                        <!--<paper-scroll-header-panel drawer fixed>-->
+                            <!--<paper-toolbar id="drawerToolbar">-->
+                                <!--<span class="paper-font-title">Notifications</span>-->
+                            <!--</paper-toolbar>-->
+
+                            <!--&lt;!&ndash; Drawer Content &ndash;&gt;-->
+                            <!--<div>Notifications will be shown here</div>-->
+                        <!--</paper-scroll-header-panel>-->
+                    <!--</paper-drawer-panel>-->
 
 
                     <paper-scroll-header-panel>
@@ -153,6 +178,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <!-- LIST OF COMPONENTS OF A PROJECT -->
                 <section data-route="project-info" style="height:100%;">
 
+                    <!--Notification Drawer-->
+                    <!--<paper-drawer-panel right-drawer="true" id="notificationDrawerr">-->
+                        <!--<paper-scroll-header-panel drawer fixed>-->
+                            <!--<paper-toolbar id="drawerToolbar">-->
+                                <!--<span class="paper-font-title">Notifications</span>-->
+                            <!--</paper-toolbar>-->
+
+                            <!--&lt;!&ndash; Drawer Content &ndash;&gt;-->
+                            <!--<div>Something here</div>-->
+                        <!--</paper-scroll-header-panel>-->
+                    <!--</paper-drawer-panel>-->
+
+
                     <iron-ajax id="projectInfoLoader"
                                last-response="{{project}}"></iron-ajax>
 
@@ -187,7 +225,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </paper-toolbar>
 
                             <!-- Drawer Content -->
-                            <div>Something here</div>
+                            <div>Notifications will be written here</div>
                         </paper-scroll-header-panel>
                     </paper-drawer-panel>
 

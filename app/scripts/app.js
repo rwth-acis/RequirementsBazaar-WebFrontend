@@ -177,7 +177,7 @@
     };
 
     window.onload = function() {
-        document.getElementById('drawer').className += " hidden";
+        document.querySelector('#drawer').classList.add("hidden");
     };
 
     app.toggNotDrawer = function(e){

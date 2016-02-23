@@ -104,10 +104,10 @@
                         <iron-collapse>
                             <h3>Comments</h3>
                             <comments-list requirement-id="[[item.id]]"></comments-list>
-                            <div class="container flex-horizontal">
-                                <paper-input autofocus is="iron-input" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
+                            <div class="container flex-horizontal" id="[[item.id]]">
+                                <paper-input id="[[item.id]]input" autofocus is="iron-input" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
                                 <template is="dom-if" if="{{newComment}}">
-                                    <paper-fab mini icon="send" class="flex-end-align"></paper-fab>
+                                    <paper-fab mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
                                 </template>
                             </div>
                         </iron-collapse>
@@ -138,6 +138,9 @@
                     requirements: {
                         type: Array,
                         notify: true
+                    },
+                    newComment: {
+                        type: String
                     }
                 },
 
@@ -159,6 +162,15 @@
 
                 load: function() {
                     this.$.requirementsLoader.generateRequest();
+                },
+
+                addComment: function(e){
+                    var currentReqId = e.currentTarget.parentNode.id;
+                    var currentInpId = currentReqId + 'input';
+                    alert('Commented: ' + this.newComment + ' on req: ' + currentReqId);
+                    this.newComment = '';
+                    document.getElementById(currentInpId).value = null;
+
                 }
             });
         })();
