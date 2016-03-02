@@ -198,4 +198,8 @@
         return rt === 'component-info';
     }
 
+    app.handleSigninSuccess = function(e){
+        console.log(e);
+    }
+
 })(document);
