@@ -64,7 +64,7 @@
 
                 onComponentTap: function (e) {
                     var model = e.model;
-                    page('/components/' + model.item.id);
+                    page('/projects/'+ this.projectId +'/components/' + model.item.id);
                 },
 
                 load: function() {

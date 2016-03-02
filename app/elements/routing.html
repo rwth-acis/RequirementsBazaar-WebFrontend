@@ -37,13 +37,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             app.params = data.params;
         });
 
-        page('/components/:componentId', scrollToTop, function(data) {
+        page('/projects/:projectId/components/:componentId', scrollToTop, function(data) {
             app.loadComponentInfo(data.params.componentId);
             app.route = 'component-info';
             app.params = data.params;
         });
 
-        page('/components/:componentId/create', scrollToTop, function(data) {
+        page('/projects/:projectId/components/:componentId/create', scrollToTop, function(data) {
             app.loadComponentInfo(data.params.componentId);
             app.route = 'component-info';
             app.params = data.params;
@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             app.showCreateRequirement();
         });
 
-        page('/components/:componentId/edit', scrollToTop, function(data) {
+        page('/projects/:projectId/components/:componentId/edit', scrollToTop, function(data) {
             app.loadComponentInfo(data.params.componentId);
             app.route = 'component-info';
             app.params = data.params;
