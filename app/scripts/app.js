@@ -132,7 +132,7 @@
     };
 
     app.onCreateRequirementTap = function(e) {
-        page('/components/' + app.params.componentId + '/create');
+        page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/create');
         e.preventDefault();
     };
 
@@ -142,7 +142,8 @@
         } else if (e.detail.canceled) {
             window.alert('canceled');
         }
-        page('/components/' + app.params.componentId);
+        page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId);
+
         e.preventDefault();
     };
 
