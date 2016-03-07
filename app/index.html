@@ -79,12 +79,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span class="flex"></span>
 
             <!-- Toolbar icons -->
-            <openidconnect-signin scopes="openid profile" client-id="a4b3f15a-eaec-489a-af08-1dc9cf57347e"
-                                  server="https://api.learning-layers.eu/o/oauth2" on-openidconnect-success="handleSigninSuccess"></openidconnect-signin>
             <a href="/projects">
                 <paper-icon-button id="paperToggle" icon="icons:visibility"></paper-icon-button>
             </a>
             <paper-icon-button icon="social:notifications" onclick="{{toggNotDrawer}}"></paper-icon-button>
+            <openidconnect-signin scopes="openid profile" client-id="a4b3f15a-eaec-489a-af08-1dc9cf57347e"
+                                  server="https://api.learning-layers.eu/o/oauth2" on-openidconnect-success="handleSigninSuccess"></openidconnect-signin>
             <!--<paper-icon-button icon="search"></paper-icon-button>-->
 
             <!-- Application name -->
