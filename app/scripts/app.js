@@ -138,9 +138,9 @@
 
     app.onCreateRequirementClosed = function(e) {
         if (e.detail.confirmed) {
-            window.alert('saving...');
+            window.alert('title:'+ this.$.newRequirementTitle.value + ' description:' + this.$.newRequirementDesc.value + ' on req:' + app.params.componentId);
         } else if (e.detail.canceled) {
-            window.alert('canceled');
+            console.log('cancelled');
         }
         page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId);
 
