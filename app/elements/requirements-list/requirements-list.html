@@ -30,6 +30,8 @@
                 background: none;
                 color: #000000;
                 height: 75px;
+                margin-right: 75px;
+                right:15px;
             }
 
             paper-toolbar .title {
@@ -75,6 +77,11 @@
                 margin-top: auto;
                 margin-bottom: auto;
             }
+
+            .req-icons {
+                position: relative;
+                float:right;
+            }
         </style>
 
         <iron-ajax
@@ -86,17 +93,27 @@
         <template is="dom-repeat" items="{{requirements}}">
             <div class="layout vertical center">
                 <paper-material>
-                    <div on-tap="toggleCollapsible">
+                    <div>
 
-                        <paper-toolbar class="medium">
-                            <div class="title">[[item.title]]</div>
+                        <div class="req-icons layout horizontal center">
                             <paper-icon-button icon="star-border" disabled></paper-icon-button>
-                            <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+                            <paper-menu-button horizontal-align="right" vertical-align="top">
+                                <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+                                    <paper-item>Set as default</paper-item>
+                                    <paper-item>Edit component</paper-item>
+                                    <paper-item>Delete component</paper-item>
+                                </paper-menu>
+                            </paper-menu-button>
+                        </div>
+
+                        <paper-toolbar class="medium" on-tap="toggleCollapsible">
+                            <div class="title">[[item.title]]</div>
 
                             <div class="bottom fit"><time is="relative-time" datetime$="[[item.creation_time]]"></time></div>
                         </paper-toolbar>
 
-                        <div>[[item.description]]</div>
+                        <div on-tap="toggleCollapsible">[[item.description]]</div>
 
                     </div>
 
@@ -151,10 +168,10 @@
                 },
 
                 toggleCollapsible: function(e) {
-                    var contentNode = Polymer.dom(e.currentTarget).parentNode.querySelector('iron-collapse');
+                    var contentNode = Polymer.dom(e.currentTarget).parentNode.parentNode.querySelector('iron-collapse');
                     if (!contentNode.opened) {
                         // since we are about to open it, trigger loading the comments
-                        Polymer.dom(e.currentTarget).parentNode.querySelector('comments-list').load();
+                        Polymer.dom(e.currentTarget).parentNode.parentNode.querySelector('comments-list').load();
                     }
                     contentNode.toggle();
                 },
@@ -179,6 +196,10 @@
                     } else {
                         document.getElementById(fabId).style.display = 'none';
                     }
+                },
+
+                moreAction: function(e){
+                    alert('button pressed');
                 }
             });
         })();
