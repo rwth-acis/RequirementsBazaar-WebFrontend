@@ -1,0 +1,47 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="req-user">
+    <template>
+        <style>
+
+        </style>
+
+        <iron-ajax
+                auto
+                url="{{usersUrl}}"
+                last-response="{{user}}"></iron-ajax>
+
+        <span>{{user.userName}}</span>
+
+    </template>
+
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'req-user',
+                properties: {
+                    userId: {
+                        type: Number
+                    },
+                    user:{
+                        type: Object,
+                        notify: true
+                    },
+                    usersUrl: {
+                        type: String,
+                        computed: 'computeUsersUrl(userId)'
+                    }
+                },
+
+                computeUsersUrl: function(userId){
+                    return "https://requirements-bazaar.org/bazaar/users/" + userId;
+                }
+
+            });
+        })
+        ();
+    </script>
+
+</dom-module>

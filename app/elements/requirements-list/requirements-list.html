@@ -90,6 +90,7 @@
                 last-response="{{requirements}}"
                 params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
+
         <template is="dom-repeat" items="{{requirements}}">
             <div class="layout vertical center">
                 <paper-material>
@@ -101,9 +102,8 @@
                             <paper-menu-button horizontal-align="right" vertical-align="top">
                                 <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                 <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
-                                    <paper-item>Set as default</paper-item>
-                                    <paper-item>Edit component</paper-item>
-                                    <paper-item>Delete component</paper-item>
+                                    <paper-item>Edit requirement</paper-item>
+                                    <paper-item>Delete requirement</paper-item>
                                 </paper-menu>
                             </paper-menu-button>
                         </div>
@@ -111,7 +111,11 @@
                         <paper-toolbar class="medium" on-tap="toggleCollapsible">
                             <div class="title">[[item.title]]</div>
 
-                            <div class="bottom fit"><time is="relative-time" datetime$="[[item.creation_time]]"></time></div>
+                            <div class="bottom fit">
+                                <time is="relative-time" datetime$="[[item.creation_time]]"></time>
+                                 by
+                                <req-user user-id="[[item.creatorId]]"></req-user>
+                            </div>
                         </paper-toolbar>
 
                         <div on-tap="toggleCollapsible">[[item.description]]</div>
