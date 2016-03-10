@@ -2,7 +2,42 @@
 
 <dom-module id="req-user">
     <template>
-        <style>
+        <style is="custom-style">
+
+            paper-tooltip.custom img {
+                width: 40px;
+                padding-right: 10px;
+                padding-bottom: 10px;
+                float: left;
+            }
+            .custom {
+                --paper-tooltip-background: white;
+                --paper-tooltip-text-color: black;
+                --paper-tooltip-opacity: 1;
+                width: 250px;
+            }
+
+            .profileImage {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%; /*don't forget prefixes*/
+                background-position: center center;
+                /* as mentioned by Vad: */
+                background-size: cover;
+                margin-right: 10px;
+            }
+
+            .name {
+                font-size: 18px;
+                font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+                font-weight: 400;
+            }
+
+            .username {
+                font-size: 12px;
+                font-style: italic;
+                padding-top: 5px;
+            }
 
         </style>
 
@@ -11,7 +46,16 @@
                 url="{{usersUrl}}"
                 last-response="{{user}}"></iron-ajax>
 
-        <span>{{user.userName}}</span>
+        <span id="user">{{user.userName}}</span>
+
+        <paper-tooltip for="user" class="custom" animation-delay="0">
+            <img src="{{user.profileImage}}" class="profileImage">
+            <div class="name">
+                <span>{{user.firstName}}</span>
+                <span>{{user.lastName}}</span>
+            </div>
+            <div class="username">{{user.userName}}</div>
+        </paper-tooltip>
 
     </template>
 
