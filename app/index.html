@@ -63,6 +63,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <span id="browser-sync-binding"></span>
 <template is="dom-bind" id="app">
 
+    <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
+
     <!-- Main Area -->
     <paper-scroll-header-panel fixed>
 
@@ -85,6 +87,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <openidconnect-signin scopes="openid profile" client-id="a4b3f15a-eaec-489a-af08-1dc9cf57347e"
                                   server="https://api.learning-layers.eu/o/oauth2" on-openidconnect-success="handleSigninSuccess"></openidconnect-signin>
             <paper-icon-button icon="social:notifications" onclick="{{toggNotDrawer}}"></paper-icon-button>
+            <openidconnect-signin scopes="openid profile" client-id="a4b3f15a-eaec-489a-af08-1dc9cf57347e"
+                                  server="https://api.learning-layers.eu/o/oauth2" on-openidconnect-success="handleSigninSuccess"></openidconnect-signin>
             <!--<paper-icon-button icon="search"></paper-icon-button>-->
 
             <!-- Application name -->
@@ -290,7 +294,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 </div>
                             </paper-dialog>
 
-                            <paper-fab on-tap="onCreateRequirementTap" icon="add"></paper-fab>
+                            <template is="dom-if" if="{{isAuthorized}}">
+                                <paper-fab on-tap="onCreateRequirementTap" icon="add"></paper-fab>
+                            </template>
 
                         </paper-scroll-header-panel>
 
