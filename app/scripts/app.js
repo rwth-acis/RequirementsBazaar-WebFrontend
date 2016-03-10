@@ -15,6 +15,13 @@
     // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
     var app = document.querySelector('#app');
 
+    /**
+     * Whether the user is logged in to the OIDC server.
+     *
+     * @type {boolean}
+     */
+    app.isAuthorized = false;
+
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
         if (!document.querySelector('platinum-sw-cache').disabled) {

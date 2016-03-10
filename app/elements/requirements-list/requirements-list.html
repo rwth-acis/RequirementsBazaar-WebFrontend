@@ -77,6 +77,8 @@
             }
         </style>
 
+        <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
+
         <iron-ajax
                 id="requirementsLoader"
                 url="{{resourceURL}}"
@@ -105,10 +107,12 @@
                         <iron-collapse>
                             <h3>Comments</h3>
                             <comments-list requirement-id="[[item.id]]"></comments-list>
-                            <div class="container flex-horizontal" id="[[item.id]]">
-                                <paper-input id="[[item.id]]input" is="iron-input" on-input="showButton" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
-                                <paper-fab id="[[item.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
-                            </div>
+                            <template is="dom-if" if="{{isAuthorized}}">
+                                <div class="container flex-horizontal" id="[[item.id]]">
+                                    <paper-input id="[[item.id]]input" is="iron-input" on-input="showButton" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
+                                    <paper-fab id="[[item.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+                                </div>
+                            </template>
                         </iron-collapse>
 
                     </div>
@@ -140,7 +144,8 @@
                     },
                     newComment: {
                         type: String
-                    }
+                    },
+                    isAuthorized: Boolean
                 },
 
                 ready: function () {

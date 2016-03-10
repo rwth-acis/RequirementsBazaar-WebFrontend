@@ -63,6 +63,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <span id="browser-sync-binding"></span>
 <template is="dom-bind" id="app">
 
+    <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
+
     <!-- Main Area -->
     <paper-scroll-header-panel fixed>
 
@@ -290,7 +292,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 </div>
                             </paper-dialog>
 
-                            <paper-fab on-tap="onCreateRequirementTap" icon="add"></paper-fab>
+                            <template is="dom-if" if="{{isAuthorized}}">
+                                <paper-fab on-tap="onCreateRequirementTap" icon="add"></paper-fab>
+                            </template>
 
                         </paper-scroll-header-panel>
 
