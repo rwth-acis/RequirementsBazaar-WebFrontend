@@ -106,19 +106,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <!-- LANDING PAGE -->
                 <section data-route="home" style="height:100%;">
 
-                    <!--&lt;!&ndash;Notification Drawer&ndash;&gt;-->
-                    <!--<paper-drawer-panel right-drawer="true" id="notificationDrawer">-->
-                        <!--<paper-scroll-header-panel drawer fixed force-narrow="true">-->
-                            <!--<paper-toolbar id="drawerToolbar">-->
-                                <!--<span class="paper-font-title">Notifications</span>-->
-                            <!--</paper-toolbar>-->
-
-                            <!--&lt;!&ndash; Drawer Content &ndash;&gt;-->
-                            <!--<div>Notifications will be shown here</div>-->
-                        <!--</paper-scroll-header-panel>-->
-
-                    <!--</paper-drawer-panel>-->
-
                     <paper-material elevation="1">
 
                         <h2 class="page-title">
@@ -136,33 +123,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <section data-route="projects" style="height:100%;">
 
                     <!--Notification Drawer-->
-                    <!--<paper-drawer-panel right-drawer="true" id="notificationDrawer">-->
-                        <!--<paper-scroll-header-panel drawer fixed>-->
-                            <!--<paper-toolbar id="drawerToolbar">-->
-                                <!--<span class="paper-font-title">Notifications</span>-->
-                            <!--</paper-toolbar>-->
+                    <paper-drawer-panel right-drawer="true" id="notDrawer0">
+                        <paper-scroll-header-panel drawer fixed>
+                            <paper-toolbar id="drawerToolbar">
+                                <span class="paper-font-title">Notifications</span>
+                            </paper-toolbar>
 
-                            <!--&lt;!&ndash; Drawer Content &ndash;&gt;-->
-                            <!--<div>Notifications will be shown here</div>-->
-                        <!--</paper-scroll-header-panel>-->
-                    <!--</paper-drawer-panel>-->
+                            <!-- Drawer Content -->
+                            <div>Notifications will be written here</div>
+                        </paper-scroll-header-panel>
+                    </paper-drawer-panel>
 
+                    <paper-scroll-header-panel id="scrollProjects">
 
-                    <paper-scroll-header-panel>
-                        <paper-toolbar>
+                        <paper-material elevation="1" style="height:180px;">
                             <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
-
-                            <!--<paper-material class="bottom fit">-->
-                                <!--<paper-input id="searchInput" class="large" label="Search project names and descriptions" value="{{projectFilterVal}}" autofocus>-->
-                                    <!--<iron-icon icon="search" prefix class="big"></iron-icon>-->
-                                    <!--<paper-icon-button suffix onclick="{{clearInput}}"-->
-                                                       <!--icon="clear" alt="clear" title="clear" tabindex="0">-->
-                                    <!--</paper-icon-button>-->
-                                <!--</paper-input>-->
-                            <!--</paper-material>-->
-                        </paper-toolbar>
-                        <paper-material elevation="1" style="height:150px;">
-                            <!--<h2 class="page-title">Projects</h2>-->
 
                             <p>This is the projects section</p>
 
@@ -182,29 +157,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <section data-route="project-info" style="height:100%;">
 
                     <!--Notification Drawer-->
-                    <!--<paper-drawer-panel right-drawer="true" id="notificationDrawerr">-->
-                        <!--<paper-scroll-header-panel drawer fixed>-->
-                            <!--<paper-toolbar id="drawerToolbar">-->
-                                <!--<span class="paper-font-title">Notifications</span>-->
-                            <!--</paper-toolbar>-->
+                    <paper-drawer-panel right-drawer="true" id="notDrawer1">
+                        <paper-scroll-header-panel drawer fixed>
+                            <paper-toolbar id="drawerToolbar">
+                                <span class="paper-font-title">Notifications</span>
+                            </paper-toolbar>
 
-                            <!--&lt;!&ndash; Drawer Content &ndash;&gt;-->
-                            <!--<div>Something here</div>-->
-                        <!--</paper-scroll-header-panel>-->
-                    <!--</paper-drawer-panel>-->
-
+                            <!-- Drawer Content -->
+                            <div>Notifications will be written here</div>
+                        </paper-scroll-header-panel>
+                    </paper-drawer-panel>
 
                     <iron-ajax id="projectInfoLoader"
                                last-response="{{project}}"></iron-ajax>
 
-                    <paper-scroll-header-panel>
-
-                        <paper-toolbar>
-                            <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
-                        </paper-toolbar>
+                    <paper-scroll-header-panel id="scrollComponents">
 
                         <paper-material elevation="1">
-                            <h2 class="page-title">Project <span>{{project.name}}</span></h2>
+                            <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
 
                             <div>This is <span>{{params.projectId}}</span>'s section</div>
                         </paper-material>
@@ -246,10 +216,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </paper-scroll-header-panel>
 
                         <paper-scroll-header-panel main condenses condensed-header-height="60" keep-condensed-header>
-
-                            <!--<paper-toolbar>-->
-                                <!--<h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>-->
-                            <!--</paper-toolbar>-->
 
                             <paper-toolbar id="componentToolbar" class="tall">
                                 <div class="top middle-container horizontal layout">

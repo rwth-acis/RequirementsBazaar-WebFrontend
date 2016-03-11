@@ -149,6 +149,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--text-primary-color);
     }
 
+    paper-drawer-panel {
+        --paper-drawer-panel-main-container: {
+            right: 0px;
+        };
+    }
+
     paper-dialog.create {
         position: fixed;
         bottom: 0px;
@@ -158,6 +164,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-bottom: 0px;
         /*overflow: grow;*/
         background-color: white;
+    }
+
+    paper-drawer-panel {
+        --paper-drawer-panel-right-drawer-container: {
+            display: none;
+        };
     }
 
     /* Height of the scroll area */

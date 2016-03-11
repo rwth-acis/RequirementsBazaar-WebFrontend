@@ -169,37 +169,51 @@
 
     app.toggCompDrawer = function(e){
         //closes left drawer
-        if (document.querySelectorAll('#drawer')[1].style.display != 'none'){
+        if (document.querySelectorAll('#drawer')[3].style.display != 'none'){
             app.$.reqDrawer.closeDrawer();
-            document.querySelectorAll('#drawer')[1].style.display = 'none';
-            document.querySelectorAll('#main')[1].style.left = '0px';
+            document.querySelectorAll('#drawer')[3].style.display = 'none';
+            document.querySelectorAll('#main')[3].style.left = '0px';
         } else {
             //opens left drawer
-            document.querySelectorAll('#drawer')[1].style.display = 'block';
+            document.querySelectorAll('#drawer')[3].style.display = 'block';
             app.$.reqDrawer.openDrawer();
-            document.querySelectorAll('#main')[1].style.left = '256px';
+            document.querySelectorAll('#main')[3].style.left = '256px';
         }
-        //if (document.querySelectorAll('#main')[1].style.left != '0px'){
-        //    document.querySelectorAll('#main')[1].style.left = '0px';
-        //} else {
-        //    document.querySelectorAll('#main')[1].style.left = '256px';
-        //}
     };
 
-    window.onload = function() {
-        document.querySelector('#drawer').classList.add("hidden");
-    };
 
     app.toggNotDrawer = function(e){
         //opens right drawer
-        if (document.querySelector('#drawer').classList.contains("hidden")){
-            document.querySelector('#drawer').classList.remove("hidden");
-            document.querySelectorAll('#main')[1].style.right = '256px';
+        if (document.querySelector('#drawer').style.display != 'block'){
+            document.querySelector('#drawer').style.display = 'block';
+            document.querySelector('#scrollProjects').style.marginRight = '256px';
+            app.$.notDrawer0.openDrawer();
+        } else {
+            //closes right drawer
+            document.querySelector('#drawer').style.display = 'none';
+            document.querySelector('#scrollProjects').style.marginRight = '0px';
+            app.$.notDrawer0.closeDrawer();
+        }
+
+        if (document.querySelectorAll('#drawer')[1].style.display != 'block'){
+            document.querySelectorAll('#drawer')[1].style.display = 'block';
+            document.querySelector('#scrollComponents').style.marginRight = '256px';
+            app.$.notDrawer1.openDrawer();
+        } else {
+            //closes right drawer
+            document.querySelectorAll('#drawer')[1].style.display = 'none';
+            document.querySelector('#scrollComponents').style.marginRight = '0px';
+            app.$.notDrawer1.closeDrawer();
+        }
+
+        if (document.querySelectorAll('#drawer')[2].style.display != 'block'){
+            document.querySelectorAll('#drawer')[2].style.display = 'block';
+            document.querySelectorAll('#main')[3].style.right = '256px';
             app.$.notDrawer.openDrawer();
         } else {
             //closes right drawer
-            document.querySelector('#drawer').classList.add("hidden");
-            document.querySelectorAll('#main')[1].style.right = '0px';
+            document.querySelectorAll('#drawer')[2].style.display = 'none';
+            document.querySelectorAll('#main')[3].style.right = '0px';
             app.$.notDrawer.closeDrawer();
         }
     };
