@@ -143,16 +143,47 @@
         e.preventDefault();
     };
 
+    app.onCreateProjectTap = function(e) {
+        var createDialog = document.getElementById('createProject');
+        createDialog.open();
+    };
+
+    app.onCreateComponentTap = function(e) {
+        var createDialog = document.getElementById('createComponent');
+        createDialog.open();
+    };
+
     app.onCreateRequirementClosed = function(e) {
         if (e.detail.confirmed) {
             window.alert('title:'+ this.$.newRequirementTitle.value + ' description:' + this.$.newRequirementDesc.value + ' on req:' + app.params.componentId);
             this.$.newRequirementTitle.value = null;
             this.$.newRequirementDesc.value = null;
         } else if (e.detail.canceled) {
-            console.log('cancelled');
+            this.$.newRequirementTitle.value = null;
+            this.$.newRequirementDesc.value = null;
         }
         page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId);
 
+        e.preventDefault();
+    };
+
+    app.onCreateProjectClosed = function(e) {
+        if (e.detail.confirmed) {
+            window.alert('Created project with title:'+ this.$.newProjectTitle.value + ' description:' + this.$.newProjectDesc.value);
+            this.$.newProjectTitle.value = null;
+            this.$.newProjectDesc.value = null;
+            this.$.projectsList.load();
+        }
+        e.preventDefault();
+    };
+
+    app.onCreateComponentClosed = function(e) {
+        if (e.detail.confirmed) {
+            window.alert('Created component with title:'+ this.$.newComponentTitle.value + ' description:' + this.$.newComponentDesc.value);
+            this.$.newComponentTitle.value = null;
+            this.$.newComponentDesc.value = null;
+            this.$.componentsList.load();
+        }
         e.preventDefault();
     };
 

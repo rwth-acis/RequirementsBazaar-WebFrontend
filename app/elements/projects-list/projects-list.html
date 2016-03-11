@@ -20,6 +20,7 @@
         </style>
 
         <iron-ajax
+                id="projectsLoader"
                 url="https://requirements-bazaar.org/bazaar/projects/"
                 last-response="{{projects}}"
                 params='{"page":"0", "per_page":"150"}'
@@ -73,6 +74,10 @@
                         //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
                         return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
                     };
+                },
+
+                load: function() {
+                    this.$.projectsLoader.generateRequest();
                 }
 
             });

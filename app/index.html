@@ -148,8 +148,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 </paper-icon-button>
                             </paper-input>
                         </paper-material>
-                        <projects-list filter-value="{{projectFilterVal}}"></projects-list>
+                        <projects-list filter-value="{{projectFilterVal}}" id="projectsList"></projects-list>
                     </paper-scroll-header-panel>
+
+                    <paper-dialog id="createProject" class="create" entry-animation="fade-in-animation"
+                                  exit-animation="fade-out-animation" no-cancel-on-outside-click
+                                  no-cancel-on-esc-key
+                                  on-iron-overlay-closed="onCreateProjectClosed">
+                        <h2>Create a Project</h2>
+                        <paper-input char-counter maxlength="50" label="Title" id="newProjectTitle"></paper-input>
+                        <paper-textarea label="Description" id="newProjectDesc"></paper-textarea>
+
+                        <div class="buttons">
+                            <paper-button dialog-dismiss>Cancel</paper-button>
+                            <paper-button dialog-confirm autofocus>Save</paper-button>
+                        </div>
+                    </paper-dialog>
+
+                    <template is="dom-if" if="{{isAuthorized}}">
+                        <paper-fab on-tap="onCreateProjectTap" icon="add"></paper-fab>
+                    </template>
 
                 </section>
 
@@ -176,11 +194,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <paper-material elevation="1">
                             <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
 
-                            <div>This is <span>{{params.projectId}}</span>'s section</div>
+                            <div>{{project.description}}</div>
                         </paper-material>
 
                         <components-list id="componentsList"></components-list>
                     </paper-scroll-header-panel>
+
+                    <paper-dialog id="createComponent" class="create" entry-animation="fade-in-animation"
+                                  exit-animation="fade-out-animation" no-cancel-on-outside-click
+                                  no-cancel-on-esc-key
+                                  on-iron-overlay-closed="onCreateComponentClosed">
+                        <h2>Create a Component</h2>
+                        <paper-input char-counter maxlength="50" label="Title" id="newComponentTitle"></paper-input>
+                        <paper-textarea label="Description" id="newComponentDesc"></paper-textarea>
+
+                        <div class="buttons">
+                            <paper-button dialog-dismiss>Cancel</paper-button>
+                            <paper-button dialog-confirm autofocus>Save</paper-button>
+                        </div>
+                    </paper-dialog>
+
+                    <template is="dom-if" if="{{isAuthorized}}">
+                        <paper-fab on-tap="onCreateComponentTap" icon="add"></paper-fab>
+                    </template>
 
                 </section>
 
