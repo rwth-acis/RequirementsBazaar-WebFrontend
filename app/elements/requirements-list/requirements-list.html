@@ -92,6 +92,14 @@
                 last-response="{{requirements}}"
                 params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
+        <iron-ajax
+                id="makePostRequest"
+                url="{{postUrl}}"
+                method="POST"
+                body="{{body}}"
+                handle-as="json"
+                last-response="{{postResponse}}"></iron-ajax>
+
 
         <template is="dom-repeat" items="{{requirements}}">
             <div class="layout vertical center">
@@ -167,7 +175,10 @@
                     newComment: {
                         type: String
                     },
-                    isAuthorized: Boolean
+                    isAuthorized: Boolean,
+                    postUrl: String,
+                    body: Object,
+                    postResponse: Object
                 },
 
                 ready: function () {
@@ -193,7 +204,11 @@
                 addComment: function(e){
                     var currentReqId = e.currentTarget.parentNode.id;
                     var currentInpId = currentReqId + 'input';
-                    alert('Commented: ' + this.newComment + ' on req: ' + currentReqId);
+                    this.body = {'requirementId': parseInt(currentReqId), 'message': this.newComment};
+                    this.postUrl = 'https://requirements-bazaar.org/bazaar/comments';
+                    this.$.makePostRequest.generateRequest();
+                    console.log(this.postResponse);
+//                    alert('Commented: ' + this.newComment + ' on req: ' + currentReqId);
                     this.newComment = '';
                     document.getElementById(currentInpId).value = null;
                 },
