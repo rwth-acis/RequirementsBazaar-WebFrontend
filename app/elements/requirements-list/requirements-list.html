@@ -16,6 +16,7 @@
                 max-width: 800px;
                 background: white;
                 cursor: pointer;
+                display: block;
             }
 
             /*
@@ -112,8 +113,8 @@
                             <paper-menu-button horizontal-align="right" vertical-align="top">
                                 <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                 <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
-                                    <paper-item>Edit requirement</paper-item>
-                                    <paper-item>Delete requirement</paper-item>
+                                    <paper-item on-tap="editRequirement">Edit requirement</paper-item>
+                                    <paper-item on-tap="deleteRequirement">Delete requirement</paper-item>
                                 </paper-menu>
                             </paper-menu-button>
                         </div>
@@ -225,8 +226,36 @@
 
                 moreAction: function(e){
                     alert('button pressed');
+                },
+
+                editRequirement: function(e) {
+
+                },
+
+                deleteRequirement: function(e) {
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+
+                    element.parentNode.removeChild(element);
+
+                    //TO-DO request to server for deletion
                 }
             });
+
+            function findUpTag(el, tag) {
+                while (el.parentNode) {
+                    el = el.parentNode;
+                    if (el.tagName === tag)
+                        return el;
+                }
+                return null;
+            }
         })();
     </script>
 
