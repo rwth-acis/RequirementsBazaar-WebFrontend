@@ -83,6 +83,17 @@
                 position: relative;
                 float:right;
             }
+
+            paper-input, paper-textarea {
+                display: none;
+                margin: 20px;
+            }
+
+            paper-button {
+                display: none;
+                float: right;
+                margin: 20px;
+            }
         </style>
 
         <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
@@ -104,8 +115,8 @@
 
         <template is="dom-repeat" items="{{requirements}}">
             <div class="layout vertical center">
-                <paper-material>
-                    <div>
+                <paper-material class="req" id="[[item.id]]">
+                    <div class="reqbody">
 
                         <div class="req-icons layout horizontal center">
                             <paper-icon-button icon="star-border" disabled></paper-icon-button>
@@ -122,6 +133,7 @@
                         <paper-toolbar class="medium" on-tap="toggleCollapsible">
                             <div class="title">[[item.title]]</div>
 
+
                             <div class="bottom fit">
                                 <time is="relative-time" datetime$="[[item.creation_time]]"></time>
                                  by
@@ -129,11 +141,11 @@
                             </div>
                         </paper-toolbar>
 
-                        <div on-tap="toggleCollapsible">[[item.description]]</div>
-
                     </div>
 
-                    <div>
+                    <div on-tap="toggleCollapsible" class="description">[[item.description]]</div>
+
+                    <div class="comments">
 
                         <iron-collapse>
                             <h3>Comments</h3>
@@ -147,6 +159,10 @@
                         </iron-collapse>
 
                     </div>
+
+                    <paper-input label="Title" class="title" value="{{item.title}}"></paper-input>
+                    <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
+                    <paper-button raised on-tap="saveEditReq" data-args="[[item.title]]"> Save </paper-button>
 
                 </paper-material>
             </div>
@@ -229,7 +245,33 @@
                 },
 
                 editRequirement: function(e) {
+                    //get top node
+                    var parentEl = this.findUpTag(e.currentTarget.parentNode.parentNode.parentNode, 'PAPER-MATERIAL');
+                    //hide card elements
+                    parentEl.querySelector('.reqbody').style.display = 'none';
+                    parentEl.querySelector('.comments').style.display = 'none';
+                    parentEl.querySelector('.description').style.display = 'none';
+                    //show form elements
+                    parentEl.querySelector('PAPER-INPUT').style.display = 'block';
+                    parentEl.querySelector('PAPER-TEXTAREA').style.display = 'block';
+                    parentEl.querySelector('PAPER-BUTTON').style.display = 'block';
+                },
 
+                saveEditReq: function(e){
+                    var title = e.currentTarget.parentNode.querySelector('PAPER-INPUT').value;
+                    var description = e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').value;
+                    var id = e.currentTarget.parentNode.id;
+
+                    alert('title: ' + title + ' description:' + description + ' on req ' + id);
+
+                    //revert the look
+                    e.currentTarget.parentNode.querySelector('PAPER-INPUT').style.display = 'none';
+                    e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').style.display = 'none';
+                    e.currentTarget.parentNode.querySelector('PAPER-BUTTON').style.display = 'none';
+
+                    e.currentTarget.parentNode.querySelector('.reqbody').style.display = 'block';
+                    e.currentTarget.parentNode.querySelector('.comments').style.display = 'block';
+                    e.currentTarget.parentNode.querySelector('.description').style.display = 'block';
                 },
 
                 deleteRequirement: function(e) {
@@ -245,17 +287,18 @@
                     element.parentNode.removeChild(element);
 
                     //TO-DO request to server for deletion
+                },
+
+                findUpTag: function(el, tag) {
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            return el;
+                    }
+                    return null;
                 }
             });
 
-            function findUpTag(el, tag) {
-                while (el.parentNode) {
-                    el = el.parentNode;
-                    if (el.tagName === tag)
-                        return el;
-                }
-                return null;
-            }
         })();
     </script>
 
