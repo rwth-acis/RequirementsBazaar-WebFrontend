@@ -84,7 +84,7 @@
                 float:right;
             }
 
-            paper-input, paper-textarea {
+            .editTitle, paper-textarea {
                 display: none;
                 margin: 20px;
             }
@@ -160,13 +160,17 @@
 
                     </div>
 
-                    <paper-input label="Title" class="title" value="{{item.title}}"></paper-input>
+                    <paper-input class="editTitle" label="Title" class="title" value="{{item.title}}"></paper-input>
                     <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
                     <paper-button raised on-tap="saveEditReq" data-args="[[item.title]]"> Save </paper-button>
 
                 </paper-material>
             </div>
         </template>
+
+        <paper-button raised onclick="toast2.open()">Styled toast</paper-button>
+
+        <paper-toast id="toast" text="[[feedback]]"></paper-toast>
     </template>
 
     <script src="../../bower_components/time-elements/time-elements.js"></script>
@@ -195,7 +199,8 @@
                     isAuthorized: Boolean,
                     postUrl: String,
                     body: Object,
-                    postResponse: Object
+                    postResponse: Object,
+                    feedback: String
                 },
 
                 ready: function () {
@@ -221,11 +226,12 @@
                 addComment: function(e){
                     var currentReqId = e.currentTarget.parentNode.id;
                     var currentInpId = currentReqId + 'input';
-                    this.body = {'requirementId': parseInt(currentReqId), 'message': this.newComment};
-                    this.postUrl = 'https://requirements-bazaar.org/bazaar/comments';
-                    this.$.makePostRequest.generateRequest();
-                    console.log(this.postResponse);
-//                    alert('Commented: ' + this.newComment + ' on req: ' + currentReqId);
+//                    this.body = {'requirementId': parseInt(currentReqId), 'message': this.newComment};
+//                    this.postUrl = 'https://requirements-bazaar.org/bazaar/comments';
+//                    this.$.makePostRequest.generateRequest();
+//                    console.log(this.postResponse);
+                    this.feedback = 'Commented: ' + this.newComment + ' on req: ' + currentReqId;
+                    this.$.toast.open();
                     this.newComment = '';
                     document.getElementById(currentInpId).value = null;
                 },
@@ -264,6 +270,9 @@
 
                     alert('title: ' + title + ' description:' + description + ' on req ' + id);
 
+                    this.feedback = "Requirement edited successfully!";
+                    this.$.toast.open();
+
                     //revert the look
                     e.currentTarget.parentNode.querySelector('PAPER-INPUT').style.display = 'none';
                     e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').style.display = 'none';
@@ -285,6 +294,10 @@
                     }
 
                     element.parentNode.removeChild(element);
+
+                    this.feedback = "Requirement deleted successfully!";
+
+                    this.$.toast.open();
 
                     //TO-DO request to server for deletion
                 },
