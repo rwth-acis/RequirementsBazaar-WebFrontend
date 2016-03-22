@@ -49,7 +49,7 @@
                 <div class="layout vertical flex">
                     <div>[[item.message]]</div>
                     <div class="info">
-                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> by <span>[[item.creator.userName]]</span>
+                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> by <req-user user-id="[[item.creatorId]]"></req-user>
                     </div>
                 </div>
             </div>
