@@ -52,6 +52,7 @@
                         <time is="relative-time" datetime$="[[item.creationTime]]"></time> by <req-user user-id="[[item.creatorId]]"></req-user>
                     </div>
                 </div>
+                <paper-icon-button id="[[item.Id]]" on-tap="deleteComment" icon="close"></paper-icon-button>
             </div>
         </template>
 
@@ -98,6 +99,11 @@
 
                 load: function() {
                     this.$.commentsLoader.generateRequest();
+                },
+
+                deleteComment: function(e) {
+                    alert('Deleting comment ' + e.currentTarget.id);
+                    e.currentTarget.parentNode.style.display = 'none';
                 }
             });
         })();
