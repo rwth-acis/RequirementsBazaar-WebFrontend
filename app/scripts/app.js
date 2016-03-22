@@ -251,10 +251,18 @@
 
     app.componentPage = function(rt){
         return rt === 'component-info';
-    }
+    };
 
     app.handleSigninSuccess = function(e){
         console.log(e);
-    }
+    };
+
+    app.editComponent = function(e){
+        alert('Edit component');
+    };
+
+    app.deleteComponent = function(e){
+        alert('Are you sure that you want to delete this component?');
+    };
 
 })(document);

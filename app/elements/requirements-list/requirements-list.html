@@ -84,13 +84,12 @@
                 float:right;
             }
 
-            .editTitle, paper-textarea {
+            .editForm {
                 display: none;
-                margin: 20px;
             }
 
             paper-button {
-                display: none;
+                /*display: none;*/
                 float: right;
                 margin: 20px;
             }
@@ -160,15 +159,17 @@
 
                     </div>
 
-                    <paper-input class="editTitle" label="Title" class="title" value="{{item.title}}"></paper-input>
-                    <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
-                    <paper-button raised on-tap="saveEditReq" data-args="[[item.title]]"> Save </paper-button>
+                    <div class="editForm">
+
+                        <paper-input class="editTitle" label="Title" class="title" value="{{item.title}}"></paper-input>
+                        <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
+                        <paper-button raised on-tap="saveEditReq" data-args="[[item.title]]"> Save </paper-button>
+
+                    </div>
 
                 </paper-material>
             </div>
         </template>
-
-        <paper-button raised onclick="toast2.open()">Styled toast</paper-button>
 
         <paper-toast id="toast" text="[[feedback]]"></paper-toast>
     </template>
@@ -253,20 +254,21 @@
                 editRequirement: function(e) {
                     //get top node
                     var parentEl = this.findUpTag(e.currentTarget.parentNode.parentNode.parentNode, 'PAPER-MATERIAL');
+
                     //hide card elements
                     parentEl.querySelector('.reqbody').style.display = 'none';
                     parentEl.querySelector('.comments').style.display = 'none';
                     parentEl.querySelector('.description').style.display = 'none';
                     //show form elements
-                    parentEl.querySelector('PAPER-INPUT').style.display = 'block';
-                    parentEl.querySelector('PAPER-TEXTAREA').style.display = 'block';
-                    parentEl.querySelector('PAPER-BUTTON').style.display = 'block';
+                    parentEl.querySelector('.editForm').style.display = 'block';
+//                    parentEl.querySelector('PAPER-TEXTAREA').style.display = 'block';
+//                    parentEl.querySelector('PAPER-BUTTON').style.display = 'block';
                 },
 
                 saveEditReq: function(e){
                     var title = e.currentTarget.parentNode.querySelector('PAPER-INPUT').value;
                     var description = e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').value;
-                    var id = e.currentTarget.parentNode.id;
+                    var id = e.currentTarget.parentNode.parentNode.id;
 
                     alert('title: ' + title + ' description:' + description + ' on req ' + id);
 
@@ -274,13 +276,11 @@
                     this.$.toast.open();
 
                     //revert the look
-                    e.currentTarget.parentNode.querySelector('PAPER-INPUT').style.display = 'none';
-                    e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').style.display = 'none';
-                    e.currentTarget.parentNode.querySelector('PAPER-BUTTON').style.display = 'none';
+                    e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
 
-                    e.currentTarget.parentNode.querySelector('.reqbody').style.display = 'block';
-                    e.currentTarget.parentNode.querySelector('.comments').style.display = 'block';
-                    e.currentTarget.parentNode.querySelector('.description').style.display = 'block';
+                    e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
+                    e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
+                    e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
                 },
 
                 deleteRequirement: function(e) {
