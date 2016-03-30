@@ -63,7 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <span id="browser-sync-binding"></span>
 <template is="dom-bind" id="app">
 
-    <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
+    <openidconnect-signin-aware is-authorized="{{isAuthorized}}" on-openidconnect-signin-aware-success="handleSigninSuccess"></openidconnect-signin-aware>
 
     <!-- Main Area -->
     <paper-scroll-header-panel fixed>
@@ -86,7 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </a>
             <paper-icon-button icon="social:notifications" onclick="{{toggNotDrawer}}"></paper-icon-button>
             <openidconnect-signin scopes="openid profile" client-id="a4b3f15a-eaec-489a-af08-1dc9cf57347e"
-                                  server="https://api.learning-layers.eu/o/oauth2" on-openidconnect-success="handleSigninSuccess"></openidconnect-signin>
+                                  server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
 
             <!-- Application name -->
             <div class="middle middle-container center horizontal layout">
@@ -292,6 +292,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <paper-button dialog-confirm autofocus>Save</paper-button>
                                 </div>
                             </paper-dialog>
+
+                            <iron-ajax
+                                    id="postNewRequirement"
+                                    url="https://requirements-bazaar.org/bazaar/requirements"
+                                    handle-as="json"
+                                    content-type="application/json"
+                                    method="POST"
+                                    params="{{header}}"
+                                    on-response="handleResponse"></iron-ajax>
+
+                            <paper-toast id="mainToast"></paper-toast>
 
                             <template is="dom-if" if="{{isAuthorized}}">
                                 <paper-fab on-tap="onCreateRequirementTap" icon="add"></paper-fab>

@@ -21,6 +21,8 @@
      * @type {boolean}
      */
     app.isAuthorized = false;
+    app.access_token = null;
+    app.hresponse = null;
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -155,7 +157,14 @@
 
     app.onCreateRequirementClosed = function(e) {
         if (e.detail.confirmed) {
-            window.alert('title:'+ this.$.newRequirementTitle.value + ' description:' + this.$.newRequirementDesc.value + ' on req:' + app.params.componentId);
+            var request = document.querySelector('#postNewRequirement');
+            var components = [{id: parseInt(app.params.componentId)}];
+            request.body = JSON.stringify({
+                            "title": this.$.newRequirementTitle.value,
+                            "description": this.$.newRequirementDesc.value,
+                            "projectId": parseInt(app.params.projectId),
+                            "components": components});
+            request.generateRequest();
             this.$.newRequirementTitle.value = null;
             this.$.newRequirementDesc.value = null;
         } else if (e.detail.canceled) {
@@ -166,6 +175,16 @@
 
         e.preventDefault();
     };
+
+    app.handleResponse = function(data){
+        if (data != null) {
+            document.querySelector("#requirementsList").load();
+            this.$.mainToast.text = "Requirement created successfully!";
+        } else {
+            this.$.mainToast.text = "Some error occurred while creating the requirement!";
+        }
+        this.$.mainToast.open();
+    }
 
     app.onCreateProjectClosed = function(e) {
         if (e.detail.confirmed) {
@@ -259,10 +278,16 @@
 
     app.editComponent = function(e){
         alert('Edit component');
+        console.log(this.access);
     };
 
     app.deleteComponent = function(e){
         alert('Are you sure that you want to delete this component?');
+    };
+
+    app.handleSigninSuccess = function(e){
+        this.access_token = e.detail.access_token;
+        this.header = {access_token: this.access_token };
     };
 
 })(document);
