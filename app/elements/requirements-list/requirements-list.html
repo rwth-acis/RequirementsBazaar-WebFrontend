@@ -129,6 +129,15 @@
                 params="{{header}}"
                 on-response="handleResponseDeleteReq"></iron-ajax>
 
+        <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement">
+            <h2>Delete Requirement?</h2>
+            <p>This action can't be undone at the momemt! Are you sure that you want to permanently delete this requirement?</p>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm autofocus>DELETE</paper-button>
+            </div>
+        </paper-dialog>
+
 
         <template is="dom-repeat" items="{{requirements}}">
             <div class="layout vertical center">
@@ -142,7 +151,7 @@
                                 <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                 <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
                                     <paper-item on-tap="editRequirement">Edit requirement</paper-item>
-                                    <paper-item on-tap="deleteRequirement">Delete requirement</paper-item>
+                                    <paper-item on-tap="createModal">Delete requirement</paper-item>
                                 </paper-menu>
                             </paper-menu-button>
                         </div>
@@ -220,7 +229,8 @@
                     body: Object,
                     postResponse: Object,
                     feedback: String,
-                    header: Object
+                    header: Object,
+                    elem: Object
                 },
 
                 ready: function () {
@@ -333,27 +343,36 @@
                     this.$.toast.open();
                 },
 
-                deleteRequirement: function(e) {
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-                    var request = this.$.postDeleteRequirement;
+                createModal: function(e){
+                    this.$.modal.open();
+                    this.elem = e.currentTarget;
+                },
 
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
+
+                deleteRequirement: function(e) {
+                    if (e.detail.confirmed) {
+                        var el = this.elem;
+                        var tag = "PAPER-MATERIAL";
+                        var element;
+                        var request = this.$.postDeleteRequirement;
+
+                        while (el.parentNode) {
+                            el = el.parentNode;
+                            if (el.tagName === tag)
+                                element = el;
+                        }
+
+                        request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id;
+
+                        request.generateRequest();
+
+                        element.parentNode.removeChild(element);
+
+                        this.feedback = "Requirement deleted successfully!";
+
+                        this.$.toast.open();
                     }
 
-                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id;
-
-                    request.generateRequest();
-
-                    element.parentNode.removeChild(element);
-
-                    this.feedback = "Requirement deleted successfully!";
-
-                    this.$.toast.open();
                 },
 
                 findUpTag: function(el, tag) {
