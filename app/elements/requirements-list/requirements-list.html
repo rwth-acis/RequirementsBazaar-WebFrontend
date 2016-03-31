@@ -106,12 +106,20 @@
         <iron-ajax
                 id="postCommentRequest"
                 handle-as="json"
-                url="https://requirements-bazaar.org/bazaar/comments";
+                url="https://requirements-bazaar.org/bazaar/comments"
                 content-type="application/json"
                 method="POST"
                 params="{{header}}"
                 on-response="handleResponseComment"
-                last-response="{{postResponse}}"></iron-ajax>
+                last-response="{{postResponse}}">
+
+        </iron-ajax><iron-ajax
+                id="postUpdateRequirement"
+                handle-as="json"
+                content-type="application/json"
+                method="PUT"
+                params="{{header}}"
+                on-response="handleResponseEditReq"></iron-ajax>
 
 
         <template is="dom-repeat" items="{{requirements}}">
@@ -281,18 +289,40 @@
                     var title = e.currentTarget.parentNode.querySelector('PAPER-INPUT').value;
                     var description = e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').value;
                     var id = e.currentTarget.parentNode.parentNode.id;
+                    var request = this.$.postUpdateRequirement;
+                    var components = [{id: parseInt(app.params.componentId)}];
+                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + id;
 
-                    alert('title: ' + title + ' description:' + description + ' on req ' + id);
+                    if (title != '' && description != ''){
+                        request.body = JSON.stringify({
+                            "id": parseInt(id),
+                            "title": title,
+                            "description": description,
+                            "projectId": parseInt(app.params.projectId),
+                            "components": components
+                        });
+                        request.generateRequest();
 
-                    this.feedback = "Requirement edited successfully!";
+                        //revert the look
+                        e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
+
+                        e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
+                        e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
+                        e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
+                    } else {
+                        this.feedback = "Fields can't be empty!";
+                        this.$.toast.open();
+                    }
+
+                },
+
+                handleResponseEditReq: function(data) {
+                    if (data != null){
+                        this.feedback = "Requirement edited successfully!";
+                    } else {
+                        this.feedback = "Some error happened while editing the requirement!";
+                    }
                     this.$.toast.open();
-
-                    //revert the look
-                    e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
-
-                    e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
-                    e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
-                    e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
                 },
 
                 deleteRequirement: function(e) {
