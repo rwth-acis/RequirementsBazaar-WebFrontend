@@ -174,6 +174,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             params="{{header}}"
                             on-response="handleResponseProject"></iron-ajax>
 
+                    <paper-toast id="projToast"></paper-toast>
+
                     <template is="dom-if" if="{{isAuthorized}}">
                         <paper-fab on-tap="onCreateProjectTap" icon="add"></paper-fab>
                     </template>
@@ -222,6 +224,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <paper-button dialog-confirm autofocus>Save</paper-button>
                         </div>
                     </paper-dialog>
+
+                    <iron-ajax
+                            id="postComponentRequest"
+                            handle-as="json"
+                            url="https://requirements-bazaar.org/bazaar/components";
+                            content-type="application/json"
+                            method="POST"
+                            params="{{header}}"
+                            on-response="handleResponseComponent"></iron-ajax>
+
+                    <paper-toast id="compToast"></paper-toast>
 
                     <template is="dom-if" if="{{isAuthorized}}">
                         <paper-fab on-tap="onCreateComponentTap" icon="add"></paper-fab>

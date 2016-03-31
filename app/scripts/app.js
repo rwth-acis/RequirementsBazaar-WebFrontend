@@ -188,7 +188,7 @@
 
     app.onCreateProjectClosed = function(e) {
         if (e.detail.confirmed) {
-            var request = document.querySelector('#postRequirementRequest');
+            var request = document.querySelector('#postProjectRequest');
             request.body = JSON.stringify({
                 "description": this.$.newProjectDesc.value,
                 "name": this.$.newProjectTitle.value,
@@ -204,21 +204,36 @@
     app.handleResponseProject = function(data){
         if (data != null){
             this.$.projectsList.load();
-            this.$.mainToast.text = "Project created successfully!";
+            this.$.projToast.text = "Project created successfully!";
         } else {
-            this.$.mainToast.text = "Some error occurred while creating the project!";
+            this.$.projToast.text = "Some error occurred while creating the project!";
         }
-        this.$.mainToast.open();
+        this.$.projToast.open();
     };
 
     app.onCreateComponentClosed = function(e) {
         if (e.detail.confirmed) {
-            window.alert('Created component with title:'+ this.$.newComponentTitle.value + ' description:' + this.$.newComponentDesc.value);
+            var request = document.querySelector('#postComponentRequest');
+            request.body = JSON.stringify({
+                "description": this.$.newComponentDesc.value,
+                "name": this.$.newComponentTitle.value,
+                "projectId": parseInt(app.params.projectId)
+            });
+            request.generateRequest();
             this.$.newComponentTitle.value = null;
             this.$.newComponentDesc.value = null;
-            this.$.componentsList.load();
         }
         e.preventDefault();
+    };
+
+    app.handleResponseComponent = function(data){
+        if (data != null){
+            this.$.componentsList.load();
+            this.$.compToast.text = "Component created successfully!";
+        } else {
+            this.$.compToast.text = "Some error occurred while creating component!";
+        }
+        this.$.compToast.open();
     };
 
     app.onComponentMenuSelected = function(e) {
