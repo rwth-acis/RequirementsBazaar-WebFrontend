@@ -104,11 +104,13 @@
                 params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
         <iron-ajax
-                id="makePostRequest"
-                url="{{postUrl}}"
-                method="POST"
-                body="{{body}}"
+                id="postCommentRequest"
                 handle-as="json"
+                url="https://requirements-bazaar.org/bazaar/comments";
+                content-type="application/json"
+                method="POST"
+                params="{{header}}"
+                on-response="handleResponseComment"
                 last-response="{{postResponse}}"></iron-ajax>
 
 
@@ -148,7 +150,7 @@
 
                         <iron-collapse>
                             <h3>Comments</h3>
-                            <comments-list requirement-id="[[item.id]]"></comments-list>
+                            <comments-list requirement-id="[[item.id]]" data-a="[[item.id]]"></comments-list>
                             <template is="dom-if" if="{{isAuthorized}}">
                                 <div class="container flex-horizontal" id="[[item.id]]">
                                     <paper-input id="[[item.id]]input" is="iron-input" on-input="showButton" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
@@ -201,7 +203,8 @@
                     postUrl: String,
                     body: Object,
                     postResponse: Object,
-                    feedback: String
+                    feedback: String,
+                    header: Object
                 },
 
                 ready: function () {
@@ -227,14 +230,25 @@
                 addComment: function(e){
                     var currentReqId = e.currentTarget.parentNode.id;
                     var currentInpId = currentReqId + 'input';
-//                    this.body = {'requirementId': parseInt(currentReqId), 'message': this.newComment};
-//                    this.postUrl = 'https://requirements-bazaar.org/bazaar/comments';
-//                    this.$.makePostRequest.generateRequest();
-//                    console.log(this.postResponse);
-                    this.feedback = 'Commented: ' + this.newComment + ' on req: ' + currentReqId;
-                    this.$.toast.open();
+                    var request = this.$.postCommentRequest;
+                    if (this.newComment != null && this.newComment != ''){
+                        request.body = JSON.stringify({
+                            "requirementId": parseInt(currentReqId),
+                            "message": this.newComment
+                        });
+                        request.generateRequest();
+                    } else {
+                        this.feedback = "Comment can't be empty!";
+                        this.$.toast.open();
+                    }
                     this.newComment = '';
                     document.getElementById(currentInpId).value = null;
+                },
+
+                handleResponseComment: function(data){
+                    var str = ''+ this.postResponse.requirementId + 'input';
+                    var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
+                    el.load();
                 },
 
                 showButton: function(e){
