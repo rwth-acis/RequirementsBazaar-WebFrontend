@@ -157,7 +157,7 @@
 
     app.onCreateRequirementClosed = function(e) {
         if (e.detail.confirmed) {
-            var request = document.querySelector('#postNewRequirement');
+            var request = document.querySelector('#postRequirementRequest');
             var components = [{id: parseInt(app.params.componentId)}];
             request.body = JSON.stringify({
                             "title": this.$.newRequirementTitle.value,
@@ -176,7 +176,7 @@
         e.preventDefault();
     };
 
-    app.handleResponse = function(data){
+    app.handleResponseRequirement = function(data){
         if (data != null) {
             document.querySelector("#requirementsList").load();
             this.$.mainToast.text = "Requirement created successfully!";
@@ -188,12 +188,27 @@
 
     app.onCreateProjectClosed = function(e) {
         if (e.detail.confirmed) {
-            window.alert('Created project with title:'+ this.$.newProjectTitle.value + ' description:' + this.$.newProjectDesc.value);
+            var request = document.querySelector('#postRequirementRequest');
+            request.body = JSON.stringify({
+                "description": this.$.newProjectDesc.value,
+                "name": this.$.newProjectTitle.value,
+                "visibility": 'PUBLIC'
+            });
+            request.generateRequest();
             this.$.newProjectTitle.value = null;
             this.$.newProjectDesc.value = null;
-            this.$.projectsList.load();
         }
         e.preventDefault();
+    };
+
+    app.handleResponseProject = function(data){
+        if (data != null){
+            this.$.projectsList.load();
+            this.$.mainToast.text = "Project created successfully!";
+        } else {
+            this.$.mainToast.text = "Some error occurred while creating the project!";
+        }
+        this.$.mainToast.open();
     };
 
     app.onCreateComponentClosed = function(e) {

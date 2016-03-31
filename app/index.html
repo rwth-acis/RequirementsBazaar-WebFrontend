@@ -165,6 +165,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </div>
                     </paper-dialog>
 
+                    <iron-ajax
+                            id="postProjectRequest"
+                            handle-as="json"
+                            url="https://requirements-bazaar.org/bazaar/projects";
+                            content-type="application/json"
+                            method="POST"
+                            params="{{header}}"
+                            on-response="handleResponseProject"></iron-ajax>
+
                     <template is="dom-if" if="{{isAuthorized}}">
                         <paper-fab on-tap="onCreateProjectTap" icon="add"></paper-fab>
                     </template>
@@ -294,13 +303,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </paper-dialog>
 
                             <iron-ajax
-                                    id="postNewRequirement"
-                                    url="https://requirements-bazaar.org/bazaar/requirements"
+                                    id="postRequirementRequest"
                                     handle-as="json"
+                                    url="https://requirements-bazaar.org/bazaar/requirements";
                                     content-type="application/json"
                                     method="POST"
                                     params="{{header}}"
-                                    on-response="handleResponse"></iron-ajax>
+                                    on-response="handleResponseRequirement"></iron-ajax>
 
                             <paper-toast id="mainToast"></paper-toast>
 
