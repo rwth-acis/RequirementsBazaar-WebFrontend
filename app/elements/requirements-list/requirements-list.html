@@ -121,6 +121,14 @@
                 params="{{header}}"
                 on-response="handleResponseEditReq"></iron-ajax>
 
+        </iron-ajax><iron-ajax
+                id="postDeleteRequirement"
+                handle-as="json"
+                content-type="application/json"
+                method="DELETE"
+                params="{{header}}"
+                on-response="handleResponseDeleteReq"></iron-ajax>
+
 
         <template is="dom-repeat" items="{{requirements}}">
             <div class="layout vertical center">
@@ -329,19 +337,23 @@
                     var el = e.currentTarget;
                     var tag = "PAPER-MATERIAL";
                     var element;
+                    var request = this.$.postDeleteRequirement;
+
                     while (el.parentNode) {
                         el = el.parentNode;
                         if (el.tagName === tag)
                             element = el;
                     }
 
+                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id;
+
+                    request.generateRequest();
+
                     element.parentNode.removeChild(element);
 
                     this.feedback = "Requirement deleted successfully!";
 
                     this.$.toast.open();
-
-                    //TO-DO request to server for deletion
                 },
 
                 findUpTag: function(el, tag) {
