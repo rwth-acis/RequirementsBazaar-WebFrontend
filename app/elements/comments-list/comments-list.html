@@ -39,7 +39,28 @@
                 id="commentsLoader"
                 url="{{resourceURL}}"
                 last-response="{{comments}}"
-                params='{"page":"0", "per_page":"150"}'></iron-ajax>
+                params='{"page":"0", "per_page":"150"}'>
+        </iron-ajax>
+
+
+        <iron-ajax
+            id="postDeleteComment"
+            handle-as="json"
+            content-type="application/json"
+            method="DELETE"
+            on-response="handleResponseDeleteComm">
+
+        </iron-ajax>
+
+        <paper-dialog id="modal" modal on-iron-overlay-closed="deleteComment" entry-animation="fade-in-animation"
+                      exit-animation="fade-out-animation">
+            <h2>Delete Comment?</h2>
+            <p>This action can't be undone! Are you sure that you want to permanently delete this comment?</p>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm autofocus>DELETE</paper-button>
+            </div>
+        </paper-dialog>
 
         <div class="noComments" hidden="[[hideNoComments]]">No comments yet</div>
 
@@ -52,7 +73,7 @@
                         <time is="relative-time" datetime$="[[item.creationTime]]"></time> by <req-user user-id="[[item.creatorId]]"></req-user>
                     </div>
                 </div>
-                <paper-icon-button id="[[item.Id]]" on-tap="deleteComment" icon="close"></paper-icon-button>
+                <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
             </div>
         </template>
 
@@ -79,7 +100,8 @@
                     hideNoComments: {
                         type: Boolean,
                         computed: 'computeHide(comments)'
-                    }
+                    },
+                    elem: Object
                 },
 
                 ready: function () {
@@ -101,9 +123,19 @@
                     this.$.commentsLoader.generateRequest();
                 },
 
+                createModal: function(e){
+                    this.$.modal.open();
+                    this.elem = e.currentTarget;
+                },
+
                 deleteComment: function(e) {
-                    alert('Deleting comment ' + e.currentTarget.id);
-                    e.currentTarget.parentNode.style.display = 'none';
+                    if (e.detail.confirmed) {
+                        var request = this.$.postDeleteComment;
+                        request.url = "https://requirements-bazaar.org/bazaar/requirements/" + this.elem.id;
+                        request.params = app.header;
+                        request.generateRequest();
+                        this.elem.parentNode.style.display = 'none';
+                    }
                 }
             });
         })();
