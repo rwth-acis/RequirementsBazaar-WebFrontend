@@ -30,6 +30,14 @@ paper-icon-button {
     display: block;
 }
 
+.editForm {
+    display: none;
+}
+
+.editHeader {
+    display: block;
+}
+
 /*paper-icon-button {*/
 /*color: var(--paper-red-300);*/
 /*--paper-icon-button-ink-color: var(--paper-red-a100);*/

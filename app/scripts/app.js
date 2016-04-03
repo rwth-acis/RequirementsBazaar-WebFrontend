@@ -307,6 +307,39 @@
         console.log(e);
     };
 
+    app.editProject = function(e){
+        document.querySelector('.editHeader').style.display = 'none';
+        document.querySelector('.editForm').style.display = 'block';
+    };
+
+    app.saveEditProj = function(e){
+        document.querySelector('.editHeader').style.display = 'block';
+        document.querySelector('.editForm').style.display = 'none';
+        var title = document.querySelector('.editForm > .editTitle').value;
+        var desc = document.querySelector('.editForm > .editDesc').value;
+        var el = document.getElementById('postUpdateProject');
+        el.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
+        el.body = JSON.stringify({
+            "id": parseInt(this.params.projectId),
+            "name": title,
+            "description": desc
+        });
+        el.generateRequest();
+    };
+
+    app.handleResponseEditProj = function(data) {
+        if (data != null){
+            this.$.superToast.text = "Project edited successfully!";
+        } else {
+            this.$.superToast.text = "Some error happened while editing the requirement!";
+        }
+        this.$.superToast.open();
+    },
+
+    app.deleteProject = function(e){
+        alert('deleting this project');
+    };
+
     app.editComponent = function(e){
         alert('Edit component');
         console.log(this.access);

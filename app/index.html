@@ -233,10 +233,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-scroll-header-panel id="scrollComponents">
 
                         <paper-material elevation="1">
-                            <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
 
-                            <div>{{project.description}}</div>
+                            <template is="dom-if" if="{{isAuthorized}}">
+
+                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;">
+                                    <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                    <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+                                        <paper-item on-tap="editProject">Edit Project</paper-item>
+                                        <paper-item on-tap="deleteProject">Delete Project</paper-item>
+                                    </paper-menu>
+                                </paper-menu-button>
+
+                            </template>
+
+                            <div class="editHeader">
+
+                                <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
+
+                                <div>{{project.description}}</div>
+
+                            </div>
+
+                            <div class="editForm">
+
+                                <paper-input class="editTitle" label="Title" value="{{project.name}}"></paper-input>
+                                <paper-textarea class="editDesc" label="Description" value="{{project.description}}"></paper-textarea>
+                                <paper-button raised on-tap="saveEditProj" data-args="[[project.title]]"> Save </paper-button>
+
+                            </div>
                         </paper-material>
+
+                        <iron-ajax
+                                id="postUpdateProject"
+                                handle-as="json"
+                                content-type="application/json"
+                                method="PUT"
+                                params="{{header}}"
+                                on-response="handleResponseEditProj"></iron-ajax>
 
                         <components-list id="componentsList"></components-list>
                     </paper-scroll-header-panel>
