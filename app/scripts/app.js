@@ -23,6 +23,7 @@
     app.isAuthorized = false;
     app.access_token = null;
     app.hresponse = null;
+    app.currentUser = null;
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -88,7 +89,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getProjectURL = function(projectId) {
-        return 'https://requirements-bazaar.org/bazaar/projects/' + projectId;
+        return 'https://requirements-bazaar.org/betabazaar/projects/' + projectId;
     };
 
     /**
@@ -98,7 +99,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getComponentURL = function(componentId) {
-        return 'https://requirements-bazaar.org/bazaar/components/' + componentId;
+        return 'https://requirements-bazaar.org/betabazaar/components/' + componentId;
     };
 
     /**
@@ -318,6 +319,7 @@
     app.handleSigninSuccess = function(e){
         this.access_token = e.detail.access_token;
         this.header = {access_token: this.access_token };
+        document.getElementById('getUsr').generateRequest();
     };
 
 })(document);
