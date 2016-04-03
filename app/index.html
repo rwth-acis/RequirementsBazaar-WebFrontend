@@ -150,11 +150,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                         <paper-material elevation="1" style="height:180px;">
 
+                            <template is="dom-if" if="{{isAuthorized}}">
+                                <paper-button raised
+                                              on-tap="onCreateProjectTap"
+                                              horizontal-align="right"
+                                              vertical-align="top"
+                                              style="position:absolute;right:10px;">New Project</paper-button>
+                            </template>
+
                             <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
 
                             <template is="dom-if" if="{{isAuthorized}}">
 
-                                <div horizontal-align="right" vertical-align="top" style="position:absolute;right:20px;text-align: center">
+                                <div horizontal-align="right" vertical-align="top" style="position:absolute;right:20px;text-align:center;">
                                     <div id="toggleText"> All Projects</div>
                                     <paper-toggle-button on-tap="toggleProjects"></paper-toggle-button>
                                 </div>
