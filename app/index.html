@@ -227,6 +227,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </paper-scroll-header-panel>
                     </paper-drawer-panel>
 
+                    <paper-dialog id="modal1" modal on-iron-overlay-closed="deleteProject" entry-animation="fade-in-animation"
+                                  exit-animation="fade-out-animation">
+                        <h2>Delete Project?</h2>
+                        <p>This action can't be undone! Are you sure that you want to permanently delete this project?</p>
+                        <div class="buttons">
+                            <paper-button dialog-dismiss>Cancel</paper-button>
+                            <paper-button dialog-confirm autofocus>DELETE</paper-button>
+                        </div>
+                    </paper-dialog>
+
                     <iron-ajax id="projectInfoLoader"
                                last-response="{{project}}"></iron-ajax>
 
@@ -240,7 +250,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                     <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
                                         <paper-item on-tap="editProject">Edit Project</paper-item>
-                                        <paper-item on-tap="deleteProject">Delete Project</paper-item>
+                                        <paper-item on-tap="createModal">Delete Project</paper-item>
                                     </paper-menu>
                                 </paper-menu-button>
 
@@ -258,7 +268,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                 <paper-input class="editTitle" label="Title" value="{{project.name}}"></paper-input>
                                 <paper-textarea class="editDesc" label="Description" value="{{project.description}}"></paper-textarea>
-                                <paper-button raised on-tap="saveEditProj" data-args="[[project.title]]"> Save </paper-button>
+                                <paper-button raised on-tap="cancEditProj"> Cancel </paper-button>
+                                <paper-button raised on-tap="saveEditProj"> Save </paper-button>
 
                             </div>
                         </paper-material>
@@ -267,7 +278,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 id="postUpdateProject"
                                 handle-as="json"
                                 content-type="application/json"
-                                method="PUT"
                                 params="{{header}}"
                                 on-response="handleResponseEditProj"></iron-ajax>
 
