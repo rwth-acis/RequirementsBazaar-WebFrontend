@@ -74,6 +74,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             params="{{header}}"
             last-response="{{currentUser}}"></iron-ajax>
 
+    <paper-toast id="superToast"></paper-toast>
+
 
     <!-- Main Area -->
     <paper-scroll-header-panel fixed>
@@ -148,14 +150,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                         <paper-material elevation="1" style="height:180px;">
 
-                            <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;">
-                                <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
-                                    <!--TO-DO-->
-                                    <paper-item on-tap="">My Projects</paper-item>
-                                    <paper-item on-tap="">All Projects</paper-item>
-                                </paper-menu>
-                            </paper-menu-button>
+                            <template is="dom-if" if="{{isAuthorized}}">
+
+                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;">
+                                    <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                    <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+                                        <!--TO-DO-->
+                                        <paper-item on-tap="">My Projects</paper-item>
+                                        <paper-item on-tap="">All Projects</paper-item>
+                                    </paper-menu>
+                                </paper-menu-button>
+
+                            </template>
 
                             <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
 
@@ -188,7 +194,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax
                             id="postProjectRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/betabazaar/projects";
+                            url="https://requirements-bazaar.org/bazaar/projects";
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -248,7 +254,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax
                             id="postComponentRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/betabazaar/components";
+                            url="https://requirements-bazaar.org/bazaar/components";
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -338,7 +344,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <iron-ajax
                                     id="postRequirementRequest"
                                     handle-as="json"
-                                    url="https://requirements-bazaar.org/betabazaar/requirements";
+                                    url="https://requirements-bazaar.org/bazaar/requirements";
                                     content-type="application/json"
                                     method="POST"
                                     params="{{header}}"

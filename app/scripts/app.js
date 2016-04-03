@@ -89,7 +89,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getProjectURL = function(projectId) {
-        return 'https://requirements-bazaar.org/betabazaar/projects/' + projectId;
+        return 'https://requirements-bazaar.org/bazaar/projects/' + projectId;
     };
 
     /**
@@ -99,7 +99,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getComponentURL = function(componentId) {
-        return 'https://requirements-bazaar.org/betabazaar/components/' + componentId;
+        return 'https://requirements-bazaar.org/bazaar/components/' + componentId;
     };
 
     /**
@@ -320,6 +320,15 @@
         this.access_token = e.detail.access_token;
         this.header = {access_token: this.access_token };
         document.getElementById('getUsr').generateRequest();
+        window.setTimeout(sayHi,500);
     };
+
+    function sayHi() {
+        if (app.currentUser != null) {
+            var tst = document.getElementById('superToast');
+            tst.text = "Welcome back " + app.currentUser.firstName;
+            tst.open();
+        }
+    }
 
 })(document);
