@@ -27,10 +27,20 @@
                 auto></iron-ajax>
 
         <div class="layout vertical center">
-            <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue)}}">
-                <paper-card heading="[[item.name]]" on-tap="onProjectTap">
-                    <div class="card-content">[[item.description]]</div>
-                </paper-card>
+            <template is="dom-if" if="{{!specific}}">
+                <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue)}}">
+                    <paper-card heading="[[item.name]]" on-tap="onProjectTap">
+                        <div class="card-content">[[item.description]]</div>
+                    </paper-card>
+                </template>
+            </template>
+
+            <template is="dom-if" if="{{specific}}">
+                <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter2(filterValue)}}">
+                    <paper-card heading="[[item.name]]" on-tap="onProjectTap">
+                        <div class="card-content">[[item.description]]</div>
+                    </paper-card>
+                </template>
             </template>
         </div>
 
@@ -50,6 +60,10 @@
                     filterValue: {
                         type: String,
                         value: ''
+                    },
+                    specific: {
+                        type: Boolean,
+                        value: false
                     }
                 },
 
@@ -78,7 +92,23 @@
 
                 load: function() {
                     this.$.projectsLoader.generateRequest();
-                }
+                },
+
+                //to toggle between all projects and my projects
+                toggle: function() {
+                    this.specific = ! this.specific;
+                },
+
+                searchFilter2: function (val) {
+                    return function (item) {
+                        if (!val) {
+//                            console.log(app.currentUser);
+                            return item.leaderId == app.currentUser.Id;
+                        }
+                        //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
+                        return (item.leaderId == app.currentUser.Id && item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.leaderId == app.currentUser.Id && item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
+                    };
+                },
 
             });
         })

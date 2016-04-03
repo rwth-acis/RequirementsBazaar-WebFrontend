@@ -323,6 +323,16 @@
         window.setTimeout(sayHi,500);
     };
 
+    app.toggleProjects = function () {
+        document.getElementById('projectsList').toggle();
+        var txt = document.querySelector('#toggleText');
+        if (txt.textContent != 'My Projects'){
+            txt.textContent = 'My Projects';
+        } else {
+            txt.textContent = 'All Projects';
+        }
+    };
+
     function sayHi() {
         if (app.currentUser != null) {
             var tst = document.getElementById('superToast');

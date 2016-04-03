@@ -150,20 +150,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                         <paper-material elevation="1" style="height:180px;">
 
+                            <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
+
                             <template is="dom-if" if="{{isAuthorized}}">
 
-                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;">
-                                    <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                    <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
-                                        <!--TO-DO-->
-                                        <paper-item on-tap="">My Projects</paper-item>
-                                        <paper-item on-tap="">All Projects</paper-item>
-                                    </paper-menu>
-                                </paper-menu-button>
+                                <div horizontal-align="right" vertical-align="top" style="position:absolute;right:20px;text-align: center">
+                                    <div id="toggleText"> All Projects</div>
+                                    <paper-toggle-button on-tap="toggleProjects"></paper-toggle-button>
+                                </div>
 
                             </template>
-
-                            <h3><bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb></h3>
 
                             <p>This is the projects section</p>
 
