@@ -250,7 +250,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                     <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
                                         <paper-item on-tap="editProject">Edit Project</paper-item>
-                                        <paper-item on-tap="createModal">Delete Project</paper-item>
+                                        <paper-item on-tap="createModal1">Delete Project</paper-item>
                                     </paper-menu>
                                 </paper-menu-button>
 
@@ -362,7 +362,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
                                         <paper-item>Set as default</paper-item>
                                         <paper-item on-tap="editComponent">Edit component</paper-item>
-                                        <paper-item on-tap="deleteComponent">Delete component</paper-item>
+                                        <paper-item on-tap="createModal2">Delete component</paper-item>
                                     </paper-menu>
                                 </paper-menu-button>
 
@@ -388,16 +388,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 </div>
                             </paper-dialog>
 
+                            <paper-dialog id="modal2" modal on-iron-overlay-closed="deleteComponent" entry-animation="fade-in-animation"
+                                          exit-animation="fade-out-animation">
+                                <h2>Delete Component?</h2>
+                                <p>This action can't be undone! Are you sure that you want to permanently delete this component?</p>
+                                <div class="buttons">
+                                    <paper-button dialog-dismiss>Cancel</paper-button>
+                                    <paper-button dialog-confirm autofocus>DELETE</paper-button>
+                                </div>
+                            </paper-dialog>
+
                             <iron-ajax
                                     id="postRequirementRequest"
                                     handle-as="json"
-                                    url="https://requirements-bazaar.org/bazaar/requirements";
+                                    url="https://requirements-bazaar.org/bazaar/requirements"
                                     content-type="application/json"
                                     method="POST"
                                     params="{{header}}"
                                     on-response="handleResponseRequirement"></iron-ajax>
 
-                            <paper-toast id="mainToast"></paper-toast>
+                            <iron-ajax  id="componentRequest"
+                                        handle-as="json"
+                                        content-type="application/json"
+                                        params="{{header}}"
+                                        on-response="compResponse"></iron-ajax>
 
                             <template is="dom-if" if="{{isAuthorized}}">
                                 <paper-fab on-tap="onCreateRequirementTap" icon="add"></paper-fab>

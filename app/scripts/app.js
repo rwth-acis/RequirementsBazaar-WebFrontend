@@ -24,6 +24,7 @@
     app.access_token = null;
     app.hresponse = null;
     app.currentUser = null;
+    app.compResponse = null;
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -180,11 +181,11 @@
     app.handleResponseRequirement = function(data){
         if (data != null) {
             document.querySelector("#requirementsList").load();
-            this.$.mainToast.text = "Requirement created successfully!";
+            this.$.superToast.text = "Requirement created successfully!";
         } else {
-            this.$.mainToast.text = "Some error occurred while creating the requirement!";
+            this.$.superToast.text = "Some error occurred while creating the requirement!";
         }
-        this.$.mainToast.open();
+        this.$.superToast.open();
     }
 
     app.onCreateProjectClosed = function(e) {
@@ -342,8 +343,12 @@
         this.$.superToast.open();
     };
 
-    app.createModal = function(e){
+    app.createModal1 = function(e){
         document.getElementById('modal1').open();
+    };
+
+    app.createModal2 = function(e){
+        document.getElementById('modal2').open();
     };
 
     app.deleteProject = function(e){
@@ -353,12 +358,9 @@
             request.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
             request.method = "DELETE";
             request.generateRequest();
-
-            page('/projects');
-            this.$.superToast.text = "Project deleted successfully!";
-            this.$.superToast.open();
         }
     };
+
 
     app.editComponent = function(e){
         alert('Edit component');
@@ -366,7 +368,21 @@
     };
 
     app.deleteComponent = function(e){
-        alert('Are you sure that you want to delete this component?');
+        if (e.detail.confirmed) {
+            var request = document.getElementById('componentRequest');
+
+            request.url = "https://requirements-bazaar.org/bazaar/components/" + this.params.componentId;
+            request.method = "DELETE";
+            request.generateRequest();
+        }
+    };
+
+    app.compResponse = function(data){
+        if (data != null){
+            page('/projects/' + this.params.projectId);
+            this.$.superToast.text = "Component deleted successfully!";
+            this.$.superToast.open();
+        }
     };
 
     app.handleSigninSuccess = function(e){
