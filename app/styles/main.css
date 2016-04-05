@@ -38,6 +38,18 @@ paper-icon-button {
     display: block;
 }
 
+.cmpTitle {
+    display: block;
+}
+
+.cmpDesc{
+    display: block;
+}
+
+.editFormComp{
+    display: none;
+}
+
 /*paper-icon-button {*/
 /*color: var(--paper-red-300);*/
 /*--paper-icon-button-ink-color: var(--paper-red-a100);*/

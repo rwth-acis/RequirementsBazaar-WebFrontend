@@ -353,7 +353,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb>
                                 </div>
 
-                                <div class="middle middle-container center horizontal layout">
+                                <div class="cmpTitle middle middle-container center horizontal layout">
                                     <div class="component-name"><span>{{component.name}}</span></div>
                                 </div>
 
@@ -366,7 +366,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     </paper-menu>
                                 </paper-menu-button>
 
-                                <div class="bottom bottom-container horizontal layout"><span>{{component.description}}</span></div>
+                                <div class="cmpDesc bottom bottom-container horizontal layout"><span>{{component.description}}</span></div>
+
+                                <div class="editFormComp middle middle-container center layout" style="margin-top: 20px">
+
+                                    <paper-input class="editTitle" label="Title" value="{{component.name}}"></paper-input>
+                                    <paper-textarea class="editDesc" label="Description" value="{{component.description}}"></paper-textarea>
+                                    <paper-button raised on-tap="cancEditComp"> Cancel </paper-button>
+                                    <paper-button raised on-tap="saveEditComp"> Save </paper-button>
+
+                                </div>
 
                             </paper-toolbar>
 
@@ -412,6 +421,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         content-type="application/json"
                                         params="{{header}}"
                                         on-response="compResponse"></iron-ajax>
+
+                            <iron-ajax  id="componentRequestPUT"
+                                        handle-as="json"
+                                        content-type="application/json"
+                                        params="{{header}}"
+                                        on-response="compResponsePUT"></iron-ajax>
 
                             <template is="dom-if" if="{{isAuthorized}}">
                                 <paper-fab on-tap="onCreateRequirementTap" icon="add"></paper-fab>

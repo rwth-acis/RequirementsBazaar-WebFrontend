@@ -363,8 +363,39 @@
 
 
     app.editComponent = function(e){
-        alert('Edit component');
-        console.log(this.access);
+        document.querySelector('.cmpTitle').style.display = 'none';
+        document.querySelector('.cmpDesc').style.display = 'none';
+        document.querySelector('.editFormComp').style.display = 'block';
+    };
+
+    app.cancEditComp = function(e){
+        document.querySelector('.cmpTitle').style.display = 'block';
+        document.querySelector('.cmpDesc').style.display = 'block';
+        document.querySelector('.editFormComp').style.display = 'none';
+    };
+
+    app.saveEditComp = function(e){
+        var title = document.querySelector('.editFormComp > .editTitle').value;
+        var desc = document.querySelector('.editFormComp > .editDesc').value;
+        var el = document.getElementById('componentRequestPUT');
+        el.url = "https://requirements-bazaar.org/bazaar/components/" + this.params.componentId;
+        el.body = JSON.stringify({
+            "id": parseInt(this.params.componentId),
+            "name": title,
+            "description": desc
+        });
+        el.method = "PUT";
+        el.generateRequest();
+    };
+
+    app.compResponsePUT = function(data){
+        if (data != null){
+            document.querySelector('.cmpTitle').style.display = 'block';
+            document.querySelector('.cmpDesc').style.display = 'block';
+            document.querySelector('.editFormComp').style.display = 'none';
+            this.$.superToast.text = "Component edited successfully!";
+            this.$.superToast.open();
+        }
     };
 
     app.deleteComponent = function(e){
