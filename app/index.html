@@ -355,16 +355,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <spann class="component-name"><span>{{component.name}}</span></spann>
                                 </span>
 
-                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
-                                    <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                    <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
-                                        <paper-item>Set as default</paper-item>
-                                        <paper-item on-tap="editComponent">Edit component</paper-item>
-                                        <paper-item on-tap="createModal2">Delete component</paper-item>
-                                    </paper-menu>
-                                </paper-menu-button>
-
-                                <div class="cmpDesc middle title"><span>{{component.description}}</span></div>
+                                <div class="cmpDesc middle"><span>{{component.description}}</span></div>
 
                                 <div class="bottom-container bottom">
                                     <div class="timing">
@@ -389,6 +380,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <paper-button raised on-tap="saveEditComp"> Save </paper-button>
 
                                 </div>
+
+                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
+                                    <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                    <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+                                        <paper-item>Set as default</paper-item>
+                                        <paper-item on-tap="editComponent">Edit component</paper-item>
+                                        <paper-item on-tap="createModal2">Delete component</paper-item>
+                                    </paper-menu>
+                                </paper-menu-button>
 
 
                             </paper-toolbar>

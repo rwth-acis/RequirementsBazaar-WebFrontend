@@ -195,6 +195,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             font-weight: 400;
         }
 
+        .timing{
+            display: none;
+        }
+
         #drawer .paper-toolbar {
             margin-left: 16px;
         }
@@ -221,13 +225,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         .component-name {
-            display:inline-block;
+            display: inline-block;
+            font-size: 34px;
             text-overflow: ellipsis;
-            width: 90%;
+            width: 200px;
             white-space: nowrap;
             overflow: hidden;
         }
 
+        .breadCrumb{
+            display: none;
+        }
+
+        .timing > paper-icon-item{
+            font-size: 12px;
+            display:inline-block;
+        }
     }
 
     /* Tablet+ */
