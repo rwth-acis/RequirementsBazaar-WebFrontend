@@ -40,14 +40,25 @@ paper-icon-button {
 
 .cmpTitle {
     display: block;
+    text-overflow: ellipsis;
 }
 
 .cmpDesc{
     display: block;
+    text-overflow: ellipsis;
 }
 
 .editFormComp{
     display: none;
+}
+
+#paperToggle{
+    margin-right: 0px;
+}
+
+.breadCrumb{
+    margin-top: 10px;
+    margin-bottom: -5px;
 }
 
 /*paper-icon-button {*/

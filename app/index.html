@@ -90,29 +90,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-icon-button icon="home"></paper-icon-button>
                 </a>
             </template>
-            <span class="flex"></span>
-
-            <!-- Toolbar icons -->
-            <a href="/projects">
-                <paper-icon-button id="paperToggle" icon="icons:visibility"></paper-icon-button>
-            </a>
-            <paper-icon-button icon="social:notifications" onclick="{{toggNotDrawer}}"></paper-icon-button>
-            <openidconnect-signin scopes="openid email profile" client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
-                                  server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
-
             <!-- Application name -->
-            <div class="middle middle-container center horizontal layout">
+
                 <div class="app-name">
                     <a href="/">
                         Requirements Bazaar
                     </a>
                 </div>
-            </div>
+            <span class="flex"></span>
+
+            <!-- Toolbar icons -->
+            <a href="/projects">
+                <paper-icon-button icon="icons:visibility"></paper-icon-button>
+            </a>
+            <paper-icon-button icon="social:notifications" onclick="{{toggNotDrawer}}"></paper-icon-button>
+            <openidconnect-signin scopes="openid email profile" client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
+                                  server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
 
         </paper-toolbar>
 
         <!-- Main Content -->
-        <div class="content" style="height:100%;">
+        <span class="content" style="height:100%;">
             <iron-pages attr-for-selected="data-route" selected="{{route}}" style="height:100%;">
 
                 <!-- LANDING PAGE -->
@@ -349,15 +347,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <paper-scroll-header-panel main condenses condensed-header-height="60" keep-condensed-header>
 
                             <paper-toolbar id="componentToolbar" class="tall">
-                                <div class="top middle-container horizontal layout">
-                                    <bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb>
-                                </div>
 
-                                <div class="cmpTitle middle middle-container center horizontal layout">
-                                    <div class="component-name"><span>{{component.name}}</span></div>
-                                </div>
+                                <span class="cmpTitle">
+                                    <div class="breadCrumb">
+                                        <bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb>
+                                    </div>
+                                    <spann class="component-name"><span>{{component.name}}</span></spann>
+                                </span>
 
-                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;">
+                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
                                     <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                     <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
                                         <paper-item>Set as default</paper-item>
@@ -366,9 +364,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     </paper-menu>
                                 </paper-menu-button>
 
-                                <div class="cmpDesc bottom bottom-container horizontal layout"><span>{{component.description}}</span></div>
+                                <span class="cmpDesc middle title"><span>{{component.description}}</span></span>
 
-                                <div class="editFormComp middle middle-container center layout" style="margin-top: 20px">
+                                <div class="editFormComp middle middle-container center layout">
 
                                     <paper-input class="editTitle" label="Title" value="{{component.name}}"></paper-input>
                                     <paper-textarea class="editDesc" label="Description" value="{{component.description}}"></paper-textarea>
@@ -376,6 +374,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <paper-button raised on-tap="saveEditComp"> Save </paper-button>
 
                                 </div>
+
 
                             </paper-toolbar>
 

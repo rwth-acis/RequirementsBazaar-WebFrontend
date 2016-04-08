@@ -147,6 +147,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     .app-name a:link, .app-name :visited, .app-name :active {
         text-decoration: none;
         color: var(--text-primary-color);
+        text-overflow: ellipsis;
     }
 
     paper-drawer-panel {
@@ -217,6 +218,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         paper-textarea, paper-input {
             margin-bottom: 35px;
+        }
+
+        .component-name {
+            display:inline-block;
+            text-overflow: ellipsis;
+            width: 90%;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
     }
