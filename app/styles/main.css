@@ -61,6 +61,22 @@ paper-icon-button {
     margin-bottom: -5px;
 }
 
+.bottom-container {
+    font-style: italic;
+    font-size: 0.4em;
+    display: flex;
+    width: -moz-available;
+    width: 100%;
+}
+
+.timing {
+    flex: 1;
+}
+
+.leader {
+    float:right;
+}
+
 /*paper-icon-button {*/
 /*color: var(--paper-red-300);*/
 /*--paper-icon-button-ink-color: var(--paper-red-a100);*/

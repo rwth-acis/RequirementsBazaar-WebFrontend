@@ -110,7 +110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-toolbar>
 
         <!-- Main Content -->
-        <span class="content" style="height:100%;">
+        <div class="content" style="height:100%;">
             <iron-pages attr-for-selected="data-route" selected="{{route}}" style="height:100%;">
 
                 <!-- LANDING PAGE -->
@@ -364,7 +364,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     </paper-menu>
                                 </paper-menu-button>
 
-                                <span class="cmpDesc middle title"><span>{{component.description}}</span></span>
+                                <div class="cmpDesc middle title"><span>{{component.description}}</span></div>
+
+                                <div class="bottom-container bottom">
+                                    <div class="timing">
+                                        <paper-icon-item>
+                                            <iron-icon item-icon class="big" icon="alarm"></iron-icon>
+                                            <paper-item-body two-line>
+                                                <div>Created <time is="relative-time" datetime$="[[component.creation_time]]"></time></div>
+                                                <div>Last updated <time is="relative-time" datetime$="[[component.lastupdated_time]]"></time></div>
+                                            </paper-item-body>
+                                        </paper-icon-item>
+                                    </div>
+                                    <div class="leader">
+                                        <req-user user-id="{{component.leaderId}}" full-view></req-user>
+                                    </div>
+                                </div>
 
                                 <div class="editFormComp middle middle-container center layout">
 

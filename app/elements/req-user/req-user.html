@@ -43,16 +43,35 @@
                 url="{{usersUrl}}"
                 last-response="{{user}}"></iron-ajax>
 
-        <span id="user">{{user.userName}}</span>
+        <template is="dom-if" if="{{!fullView}}">
 
-        <paper-tooltip for="user" class="custom" animation-delay="0">
-            <img src="{{user.profileImage}}" class="profileImage">
-            <div class="name">
-                <span>{{user.firstName}}</span>
-                <span>{{user.lastName}}</span>
-            </div>
-            <div class="username">{{user.userName}}</div>
-        </paper-tooltip>
+            <span id="user">{{user.userName}}</span>
+
+            <paper-tooltip for="user" class="custom" animation-delay="0">
+                <img src="{{user.profileImage}}" class="profileImage">
+                <div class="name">
+                    <span>{{user.firstName}}</span>
+                    <span>{{user.lastName}}</span>
+                </div>
+                <div class="username">{{user.userName}}</div>
+            </paper-tooltip>
+
+        </template>
+
+        <template is="dom-if" if="{{fullView}}">
+
+            <paper-item>
+                <img src="{{user.profileImage}}" class="profileImage">
+                <paper-item-body two-line>
+                    <div class="name">
+                        <span>{{user.firstName}}</span>
+                        <span>{{user.lastName}}</span>
+                    </div>
+                    <div secondary>{{user.userName}}</div>
+                </paper-item-body>
+            </paper-item>
+
+        </template>
 
     </template>
 
@@ -73,6 +92,10 @@
                     usersUrl: {
                         type: String,
                         computed: 'computeUsersUrl(userId)'
+                    },
+                    fullView: {
+                        type: Boolean,
+                        value: false
                     }
                 },
 
