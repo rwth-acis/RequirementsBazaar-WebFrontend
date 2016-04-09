@@ -77,6 +77,10 @@ paper-icon-button {
     float:right;
 }
 
+#componentInfoMenu{
+    z-index: 10;
+}
+
 /*paper-icon-button {*/
 /*color: var(--paper-red-300);*/
 /*--paper-icon-button-ink-color: var(--paper-red-a100);*/

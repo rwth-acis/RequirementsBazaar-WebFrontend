@@ -381,15 +381,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                 </div>
 
-                                <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
-                                    <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                    <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
-                                        <paper-item>Set as default</paper-item>
-                                        <paper-item on-tap="editComponent">Edit component</paper-item>
-                                        <paper-item on-tap="createModal2">Delete component</paper-item>
-                                    </paper-menu>
-                                </paper-menu-button>
-
+                                <template is="dom-if" if="{{isAuthorized}}">
+                                    <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
+                                        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                        <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+                                            <paper-item>Set as default</paper-item>
+                                            <paper-item on-tap="editComponent">Edit component</paper-item>
+                                            <paper-item on-tap="createModal2">Delete component</paper-item>
+                                        </paper-menu>
+                                    </paper-menu-button>
+                                </template>
 
                             </paper-toolbar>
 

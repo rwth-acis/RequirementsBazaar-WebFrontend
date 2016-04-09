@@ -161,14 +161,19 @@
         if (e.detail.confirmed) {
             var request = document.querySelector('#postRequirementRequest');
             var components = [{id: parseInt(app.params.componentId)}];
-            request.body = JSON.stringify({
-                            "title": this.$.newRequirementTitle.value,
-                            "description": this.$.newRequirementDesc.value,
-                            "projectId": parseInt(app.params.projectId),
-                            "components": components});
-            request.generateRequest();
-            this.$.newRequirementTitle.value = null;
-            this.$.newRequirementDesc.value = null;
+            if (this.$.newRequirementTitle.value == '' || this.$.newRequirementDesc.value == '' || this.$.newRequirementTitle.value == null || this.$.newRequirementDesc.value == null ){
+                this.$.superToast.text = "Requirement isn't posted! Fields should not be empty!";
+                this.$.superToast.open();
+            } else {
+                request.body = JSON.stringify({
+                    "title": this.$.newRequirementTitle.value,
+                    "description": this.$.newRequirementDesc.value,
+                    "projectId": parseInt(app.params.projectId),
+                    "components": components});
+                request.generateRequest();
+                this.$.newRequirementTitle.value = null;
+                this.$.newRequirementDesc.value = null;
+            }
         } else if (e.detail.canceled) {
             this.$.newRequirementTitle.value = null;
             this.$.newRequirementDesc.value = null;
@@ -191,14 +196,19 @@
     app.onCreateProjectClosed = function(e) {
         if (e.detail.confirmed) {
             var request = document.querySelector('#postProjectRequest');
-            request.body = JSON.stringify({
-                "description": this.$.newProjectDesc.value,
-                "name": this.$.newProjectTitle.value,
-                "visibility": 'PUBLIC'
-            });
-            request.generateRequest();
-            this.$.newProjectTitle.value = null;
-            this.$.newProjectDesc.value = null;
+            if (this.$.newProjectDesc.value == '' || this.$.newProjectTitle.value == '' || this.$.newProjectDesc.value == null || this.$.newProjectTitle.value == null ){
+                this.$.superToast.text = "Project isn't posted! Fields should not be empty!";
+                this.$.superToast.open();
+            } else {
+                request.body = JSON.stringify({
+                    "description": this.$.newProjectDesc.value,
+                    "name": this.$.newProjectTitle.value,
+                    "visibility": 'PUBLIC'
+                });
+                request.generateRequest();
+                this.$.newProjectTitle.value = null;
+                this.$.newProjectDesc.value = null;
+            }
         }
         e.preventDefault();
     };
@@ -216,14 +226,19 @@
     app.onCreateComponentClosed = function(e) {
         if (e.detail.confirmed) {
             var request = document.querySelector('#postComponentRequest');
-            request.body = JSON.stringify({
-                "description": this.$.newComponentDesc.value,
-                "name": this.$.newComponentTitle.value,
-                "projectId": parseInt(app.params.projectId)
-            });
-            request.generateRequest();
-            this.$.newComponentTitle.value = null;
-            this.$.newComponentDesc.value = null;
+            if (this.$.newComponentDesc.value == '' || this.$.newComponentTitle.value == '' || this.$.newComponentDesc.value == null || this.$.newComponentTitle.value == null ){
+                this.$.superToast.text = "Component isn't posted! Fields should not be empty!";
+                this.$.superToast.open();
+            } else {
+                request.body = JSON.stringify({
+                    "description": this.$.newComponentDesc.value,
+                    "name": this.$.newComponentTitle.value,
+                    "projectId": parseInt(app.params.projectId)
+                });
+                request.generateRequest();
+                this.$.newComponentTitle.value = null;
+                this.$.newComponentDesc.value = null;
+            }
         }
         e.preventDefault();
     };
@@ -314,19 +329,24 @@
     };
 
     app.saveEditProj = function(e){
-        document.querySelector('.editHeader').style.display = 'block';
-        document.querySelector('.editForm').style.display = 'none';
         var title = document.querySelector('.editForm > .editTitle').value;
         var desc = document.querySelector('.editForm > .editDesc').value;
         var el = document.getElementById('postUpdateProject');
         el.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
-        el.body = JSON.stringify({
-            "id": parseInt(this.params.projectId),
-            "name": title,
-            "description": desc
-        });
-        el.method = "PUT";
-        el.generateRequest();
+        if (title == '' || desc == '' || title == null || desc == null ){
+            this.$.superToast.text = "You can't have empty fields!";
+            this.$.superToast.open();
+        } else {
+            el.body = JSON.stringify({
+                "id": parseInt(this.params.projectId),
+                "name": title,
+                "description": desc
+            });
+            el.method = "PUT";
+            el.generateRequest();
+            document.querySelector('.editHeader').style.display = 'block';
+            document.querySelector('.editForm').style.display = 'none';
+        }
     };
 
     app.cancEditProj = function(e){
@@ -365,12 +385,14 @@
     app.editComponent = function(e){
         document.querySelector('.cmpTitle').style.display = 'none';
         document.querySelector('.cmpDesc').style.display = 'none';
+        document.querySelector('.bottom-container').style.display = 'none';
         document.querySelector('.editFormComp').style.display = 'block';
     };
 
     app.cancEditComp = function(e){
         document.querySelector('.cmpTitle').style.display = 'block';
         document.querySelector('.cmpDesc').style.display = 'block';
+        document.querySelector('.bottom-container').style.display = 'flex';
         document.querySelector('.editFormComp').style.display = 'none';
     };
 
@@ -379,21 +401,30 @@
         var desc = document.querySelector('.editFormComp > .editDesc').value;
         var el = document.getElementById('componentRequestPUT');
         el.url = "https://requirements-bazaar.org/bazaar/components/" + this.params.componentId;
-        el.body = JSON.stringify({
-            "id": parseInt(this.params.componentId),
-            "name": title,
-            "description": desc
-        });
-        el.method = "PUT";
-        el.generateRequest();
+        if (title == '' || desc == '' || title == null || desc == null ){
+            this.$.superToast.text = "You can't have empty fields!";
+            this.$.superToast.open();
+        } else {
+            el.body = JSON.stringify({
+                "id": parseInt(this.params.componentId),
+                "name": title,
+                "description": desc
+            });
+            el.method = "PUT";
+            el.generateRequest();
+        }
     };
 
     app.compResponsePUT = function(data){
         if (data != null){
             document.querySelector('.cmpTitle').style.display = 'block';
             document.querySelector('.cmpDesc').style.display = 'block';
+            document.querySelector('.bottom-container').style.display = 'flex';
             document.querySelector('.editFormComp').style.display = 'none';
             this.$.superToast.text = "Component edited successfully!";
+            this.$.superToast.open();
+        } else {
+            this.$.superToast.text = "Some error happened while editing the requirement!";
             this.$.superToast.open();
         }
     };

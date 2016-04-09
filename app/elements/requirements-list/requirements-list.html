@@ -149,15 +149,22 @@
                     <div class="reqbody">
 
                         <div class="req-icons layout horizontal center">
-                            <paper-icon-button icon="star-border" disabled></paper-icon-button>
+                            <template is="dom-if" if="{{!isAuthorized}}">
+                                <paper-icon-button icon="star-border" disabled></paper-icon-button>
+                            </template>
+                            <template is="dom-if" if="{{isAuthorized}}">
+                                <paper-icon-button icon="star-border" on-tap="starUp"></paper-icon-button>
+                            </template>
                             <div>[[item.upVotes]]</div>
-                            <paper-menu-button horizontal-align="right" vertical-align="top">
-                                <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
-                                    <paper-item on-tap="editRequirement">Edit requirement</paper-item>
-                                    <paper-item on-tap="createModal">Delete requirement</paper-item>
-                                </paper-menu>
-                            </paper-menu-button>
+                            <template is="dom-if" if="{{isAuthorized}}">
+                                <paper-menu-button horizontal-align="right" vertical-align="top">
+                                    <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                    <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+                                        <paper-item on-tap="editRequirement">Edit requirement</paper-item>
+                                        <paper-item on-tap="createModal">Delete requirement</paper-item>
+                                    </paper-menu>
+                                </paper-menu-button>
+                            </template>
                         </div>
 
                         <paper-toolbar class="medium" on-tap="toggleCollapsible">
@@ -173,7 +180,8 @@
 
                     </div>
 
-                    <div on-tap="toggleCollapsible" class="description">[[item.description]]</div>
+                    <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
+                    <div class="description">[[item.description]]</div>
 
                     <div class="comments">
 
@@ -386,6 +394,10 @@
                             return el;
                     }
                     return null;
+                },
+
+                starUp: function(e){
+                    alert('Star Up');
                 }
             });
 
