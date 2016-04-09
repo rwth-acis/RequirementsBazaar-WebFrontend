@@ -81,6 +81,10 @@ paper-icon-button {
     z-index: 10;
 }
 
+.paper-tooltip-0 #tooltip.paper-tooltip {
+    display: flex;
+}
+
 /*paper-icon-button {*/
 /*color: var(--paper-red-300);*/
 /*--paper-icon-button-ink-color: var(--paper-red-a100);*/

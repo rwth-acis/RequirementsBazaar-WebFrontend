@@ -11,7 +11,8 @@
                 --paper-tooltip-background: white;
                 --paper-tooltip-text-color: black;
                 --paper-tooltip-opacity: 1;
-                width: 250px;
+                width: auto;
+                box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
             }
 
             .profileImage {
@@ -49,11 +50,13 @@
 
             <paper-tooltip for="user" class="custom" animation-delay="0">
                 <img src="{{user.profileImage}}" class="profileImage">
+                <paper-item-body two-line>
                 <div class="name">
                     <span>{{user.firstName}}</span>
                     <span>{{user.lastName}}</span>
                 </div>
                 <div class="username">{{user.userName}}</div>
+                </paper-item-body>
             </paper-tooltip>
 
         </template>
