@@ -153,6 +153,22 @@
                 params="{{header}}"
                 on-response="handleResponseUnfollowReq"></iron-ajax>
 
+        <iron-ajax
+                id="developReq"
+                handle-as="json"
+                content-type="application/json"
+                method="POST"
+                params="{{header}}"
+                on-response="handleResponseDevelopReq"></iron-ajax>
+
+        <iron-ajax
+                id="undevelopReq"
+                handle-as="json"
+                content-type="application/json"
+                method="DELETE"
+                params="{{header}}"
+                on-response="handleResponseUndevelopReq"></iron-ajax>
+
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
             <h2>Delete Requirement?</h2>
@@ -188,7 +204,12 @@
                                         <template is="dom-if" if="{{isFollower}}">
                                             <paper-item on-tap="unfollowReq">Unfollow Requirement</paper-item>
                                         </template>
-                                        <paper-item on-tap="developReq">Develop Requirement</paper-item>
+                                        <template is="dom-if" if="{{!isDeveloper}}">
+                                            <paper-item on-tap="developReq">Develop Requirement</paper-item>
+                                        </template>
+                                        <template is="dom-if" if="{{isDeveloper}}">
+                                            <paper-item on-tap="undevelopReq">Undevelop Requirement</paper-item>
+                                        </template>
                                         <paper-item on-tap="editRequirement">Edit requirement</paper-item>
                                         <paper-item on-tap="createModal">Delete requirement</paper-item>
                                     </paper-menu>
@@ -282,6 +303,10 @@
                         value: false
                     },
                     isFollower: {
+                        type: Boolean,
+                        value: false
+                    },
+                    isDeveloper: {
                         type: Boolean,
                         value: false
                     }
@@ -503,6 +528,58 @@
                         this.isFollower = false;
                     } else {
                         this.feedback = "Some error happened while unfollowing the requirement!";
+                    }
+                    this.$.toast.open();
+                },
+
+                developReq: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    var request = this.$.developReq;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+
+                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id + "/developers";
+                    request.generateRequest();
+                },
+
+                handleResponseDevelopReq: function(data){
+                    if (data != null){
+                        this.feedback = "You are now developer for this requirement!";
+                        this.isDeveloper = true;
+                    } else {
+                        this.feedback = "Some error happened while developing the requirement!";
+                    }
+                    this.$.toast.open();
+                },
+
+                undevelopReq: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    var request = this.$.undevelopReq;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+
+                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id + "/developers";
+                    request.generateRequest();
+                },
+
+                handleResponseUndevelopReq: function(data){
+                    if (data != null){
+                        this.feedback = "You are not developing this requirement anymore!";
+                        this.isDeveloper = false;
+                    } else {
+                        this.feedback = "Some error happened while undeveloping the requirement!";
                     }
                     this.$.toast.open();
                 }
