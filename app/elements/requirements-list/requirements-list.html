@@ -93,6 +93,11 @@
                 float: right;
                 margin: 20px;
             }
+
+            .contributers {
+                display:flex;
+                padding:10px;
+            }
         </style>
 
         <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
@@ -159,7 +164,10 @@
                             <template is="dom-if" if="{{isAuthorized}}">
                                 <paper-menu-button horizontal-align="right" vertical-align="top">
                                     <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                    <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+                                    <paper-menu id="componentInfoMenu" class="dropdown-content">
+                                        <paper-item on-tap="toggleContributers">Show Contributers</paper-item>
+                                        <paper-item on-tap="followReq">Follow Requirement</paper-item>
+                                        <paper-item on-tap="developReq">Develop Requirement</paper-item>
                                         <paper-item on-tap="editRequirement">Edit requirement</paper-item>
                                         <paper-item on-tap="createModal">Delete requirement</paper-item>
                                     </paper-menu>
@@ -167,7 +175,7 @@
                             </template>
                         </div>
 
-                        <paper-toolbar class="medium" on-tap="toggleCollapsible">
+                        <paper-toolbar class="title" on-tap="toggleCollapsible">
                             <div class="title">[[item.title]]</div>
 
 
@@ -179,6 +187,13 @@
                         </paper-toolbar>
 
                     </div>
+
+                    <template is="dom-if" if="{{showContributers}}">
+                        <div class="contributers">
+                            <div>Creator: <req-user user-id="[[item.creatorId]]" full-view></req-user></div>
+                            <div>Lead Developer: <req-user user-id="[[item.leadDeveloperId]]" full-view></req-user></div>
+                        </div>
+                    </template>
 
                     <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
                     <div class="description">[[item.description]]</div>
@@ -242,7 +257,11 @@
                     postResponse: Object,
                     feedback: String,
                     header: Object,
-                    elem: Object
+                    elem: Object,
+                    showContributers: {
+                        type:Boolean,
+                        value: false
+                    }
                 },
 
                 ready: function () {
@@ -396,8 +415,13 @@
                     return null;
                 },
 
-                starUp: function(e){
-                    alert('Star Up');
+                toggleContributers: function(e){
+                    if (this.showContributers){
+                        e.currentTarget.innerText = "Show Contributers";
+                    } else {
+                        e.currentTarget.innerText = "Hide Contributers";
+                    }
+                    this.showContributers = ! this.showContributers;
                 }
             });
 
