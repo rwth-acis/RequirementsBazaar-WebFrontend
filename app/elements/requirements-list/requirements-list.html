@@ -174,11 +174,8 @@
                                 </paper-menu-button>
                             </template>
                         </div>
-
                         <paper-toolbar class="title" on-tap="toggleCollapsible">
                             <div class="title">[[item.title]]</div>
-
-
                             <div class="bottom fit">
                                 <time is="relative-time" datetime$="[[item.creation_time]]"></time>
                                  by
@@ -217,7 +214,8 @@
 
                         <paper-input class="editTitle" label="Title" class="title" value="{{item.title}}"></paper-input>
                         <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
-                        <paper-button raised on-tap="saveEditReq" data-args="[[item.title]]"> Save </paper-button>
+                        <paper-button raised on-tap="saveEditReq" data-args="[[item.title]]">Save</paper-button>
+                        <paper-button raised on-tap="cancelRequirement" data-args="[[item.title]]">Cancel</paper-button>
 
                     </div>
 
@@ -332,6 +330,14 @@
                     parentEl.querySelector('.description').style.display = 'none';
                     //show form elements
                     parentEl.querySelector('.editForm').style.display = 'block';
+                },
+
+                cancelRequirement: function(e){
+                    e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
+
+                    e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
+                    e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
+                    e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
                 },
 
                 saveEditReq: function(e){
