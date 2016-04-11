@@ -137,6 +137,22 @@
                 params="{{header}}"
                 on-response="handleResponseDeleteReq"></iron-ajax>
 
+        <iron-ajax
+                id="followReq"
+                handle-as="json"
+                content-type="application/json"
+                method="POST"
+                params="{{header}}"
+                on-response="handleResponseFollowReq"></iron-ajax>
+
+        <iron-ajax
+                id="unfollowReq"
+                handle-as="json"
+                content-type="application/json"
+                method="DELETE"
+                params="{{header}}"
+                on-response="handleResponseUnfollowReq"></iron-ajax>
+
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
             <h2>Delete Requirement?</h2>
@@ -166,7 +182,12 @@
                                     <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                     <paper-menu id="componentInfoMenu" class="dropdown-content">
                                         <paper-item on-tap="toggleContributers">Show Contributers</paper-item>
-                                        <paper-item on-tap="followReq">Follow Requirement</paper-item>
+                                        <template is="dom-if" if="{{!isFollower}}">
+                                            <paper-item on-tap="followReq">Follow Requirement</paper-item>
+                                        </template>
+                                        <template is="dom-if" if="{{isFollower}}">
+                                            <paper-item on-tap="unfollowReq">Unfollow Requirement</paper-item>
+                                        </template>
                                         <paper-item on-tap="developReq">Develop Requirement</paper-item>
                                         <paper-item on-tap="editRequirement">Edit requirement</paper-item>
                                         <paper-item on-tap="createModal">Delete requirement</paper-item>
@@ -257,7 +278,11 @@
                     header: Object,
                     elem: Object,
                     showContributers: {
-                        type:Boolean,
+                        type: Boolean,
+                        value: false
+                    },
+                    isFollower: {
+                        type: Boolean,
                         value: false
                     }
                 },
@@ -428,6 +453,58 @@
                         e.currentTarget.innerText = "Hide Contributers";
                     }
                     this.showContributers = ! this.showContributers;
+                },
+
+                followReq: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    var request = this.$.followReq;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+
+                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id + "/followers";
+                    request.generateRequest();
+                },
+
+                handleResponseFollowReq: function(data){
+                    if (data != null){
+                        this.feedback = "You are now following this requirement!";
+                        this.isFollower = true;
+                    } else {
+                        this.feedback = "Some error happened while following the requirement!";
+                    }
+                    this.$.toast.open();
+                },
+
+                unfollowReq: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    var request = this.$.unfollowReq;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+
+                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id + "/followers";
+                    request.generateRequest();
+                },
+
+                handleResponseUnfollowReq: function(data){
+                    if (data != null){
+                        this.feedback = "You are not following this requirement anymore!";
+                        this.isFollower = false;
+                    } else {
+                        this.feedback = "Some error happened while unfollowing the requirement!";
+                    }
+                    this.$.toast.open();
                 }
             });
 
