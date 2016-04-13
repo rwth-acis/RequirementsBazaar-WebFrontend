@@ -19,6 +19,10 @@
                 display: block;
             }
 
+            .colored {
+                color: var(--paper-orange-500);
+            }
+
             /*
             deactivated as a) on mobile it was always gray when clicked b) on desktop we can't make e.g. the comments
              section gray then.
@@ -106,7 +110,7 @@
                 id="requirementsLoader"
                 url="{{resourceURL}}"
                 last-response="{{requirements}}"
-                params='{"page":"0", "per_page":"150"}'></iron-ajax>
+                params="{{header}}"></iron-ajax>
 
         <iron-ajax
                 id="postCommentRequest"
@@ -176,6 +180,14 @@
                 on-response="handleResponseUndevelopReq"
                 on-error="errorHandler"></iron-ajax>
 
+        <iron-ajax
+                id="starReq"
+                handle-as="json"
+                content-type="application/json"
+                params="{{header}}"
+                on-response="load"
+                on-error="errorHandler"></iron-ajax>
+
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
             <h2>Delete Requirement?</h2>
@@ -197,7 +209,12 @@
                                 <paper-icon-button icon="star-border" disabled></paper-icon-button>
                             </template>
                             <template is="dom-if" if="{{isAuthorized}}">
-                                <paper-icon-button icon="star-border" on-tap="starUp"></paper-icon-button>
+                                <template is="dom-if" if="{{userVoted(item.userVoted)}}">
+                                    <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
+                                </template>
+                                <template is="dom-if" if="{{!userVoted(item.userVoted)}}">
+                                    <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
+                                </template>
                             </template>
                             <div>[[item.upVotes]]</div>
                             <template is="dom-if" if="{{isAuthorized}}">
@@ -337,6 +354,26 @@
 
                 load: function() {
                     this.$.requirementsLoader.generateRequest();
+                },
+
+                starRequest: function(e){
+                    var req = this.$.starReq;
+                    var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    req.method = "POST";
+                    req.url = "https://requirements-bazaar.org/bazaar/requirements/" + reqId + "/vote";
+                    req.body = JSON.stringify({
+                        "requirementId": reqId,
+                        "direction": "up"
+                    });
+                    req.generateRequest();
+                },
+
+                starDelRequest: function(e){
+                    var req = this.$.starReq;
+                    var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    req.method = "DELETE";
+                    req.url = "https://requirements-bazaar.org/bazaar/requirements/" + reqId + "/vote";
+                    req.generateRequest();
                 },
 
                 addComment: function(e){
@@ -594,6 +631,13 @@
                         this.feedback = "Some error happened while undeveloping the requirement!";
                     }
                     this.$.toast.open();
+                },
+
+                userVoted: function(vote){
+                    if (vote == "NO_VOTE"){
+                        return false;
+                    }
+                    return true;
                 }
             });
 
