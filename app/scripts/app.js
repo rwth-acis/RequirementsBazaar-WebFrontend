@@ -253,11 +253,11 @@
         this.$.compToast.open();
     };
 
-    app.onComponentMenuSelected = function(e) {
-        console.log(e.detail.item.innerText);
-        this.$.componentInfoMenu.select(this.$.componentInfoMenu.selectedItem);
-        e.preventDefault();
-    };
+    //app.onComponentMenuSelected = function(e) {
+    //    console.log(e.detail.item.innerText);
+    //    this.$.componentInfoMenu.select(this.$.componentInfoMenu.selectedItem);
+    //    e.preventDefault();
+    //};
 
     //clear form on x click
     app.clearInput = function(e){
@@ -349,6 +349,11 @@
         }
     };
 
+    app.errorHandler = function (e, detail){
+        this.$.superToast.text = detail.error.message;
+        this.$.superToast.open();
+    };
+
     app.cancEditProj = function(e){
         document.querySelector('.editHeader').style.display = 'block';
         document.querySelector('.editForm').style.display = 'none';
@@ -381,6 +386,16 @@
         }
     };
 
+    app.setDefault = function(e){
+        var req = this.$.postUpdateProject;
+        req.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
+        req.method = "PUT";
+        req.body = JSON.stringify({
+            "id": parseInt(this.params.projectId),
+            "defaultComponentId": parseInt(this.params.componentId)
+        });
+        req.generateRequest();
+    };
 
     app.editComponent = function(e){
         document.querySelector('.cmpTitle').style.display = 'none';

@@ -116,7 +116,8 @@
                 method="POST"
                 params="{{header}}"
                 on-response="handleResponseComment"
-                last-response="{{postResponse}}">
+                last-response="{{postResponse}}"
+                on-error="errorHandler">
 
         </iron-ajax>
 
@@ -126,7 +127,8 @@
                 content-type="application/json"
                 method="PUT"
                 params="{{header}}"
-                on-response="handleResponseEditReq"></iron-ajax>
+                on-response="handleResponseEditReq"
+                on-error="errorHandler"></iron-ajax>
 
 
         <iron-ajax
@@ -135,7 +137,8 @@
                 content-type="application/json"
                 method="DELETE"
                 params="{{header}}"
-                on-response="handleResponseDeleteReq"></iron-ajax>
+                on-response="handleResponseDeleteReq"
+                on-error="errorHandler"></iron-ajax>
 
         <iron-ajax
                 id="followReq"
@@ -143,7 +146,8 @@
                 content-type="application/json"
                 method="POST"
                 params="{{header}}"
-                on-response="handleResponseFollowReq"></iron-ajax>
+                on-response="handleResponseFollowReq"
+                on-error="errorHandler"></iron-ajax>
 
         <iron-ajax
                 id="unfollowReq"
@@ -151,7 +155,8 @@
                 content-type="application/json"
                 method="DELETE"
                 params="{{header}}"
-                on-response="handleResponseUnfollowReq"></iron-ajax>
+                on-response="handleResponseUnfollowReq"
+                on-error="errorHandler"></iron-ajax>
 
         <iron-ajax
                 id="developReq"
@@ -159,7 +164,8 @@
                 content-type="application/json"
                 method="POST"
                 params="{{header}}"
-                on-response="handleResponseDevelopReq"></iron-ajax>
+                on-response="handleResponseDevelopReq"
+                on-error="errorHandler"></iron-ajax>
 
         <iron-ajax
                 id="undevelopReq"
@@ -167,7 +173,8 @@
                 content-type="application/json"
                 method="DELETE"
                 params="{{header}}"
-                on-response="handleResponseUndevelopReq"></iron-ajax>
+                on-response="handleResponseUndevelopReq"
+                on-error="errorHandler"></iron-ajax>
 
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
@@ -364,6 +371,11 @@
                     } else {
                         document.getElementById(fabId).style.display = 'none';
                     }
+                },
+
+                errorHandler: function (e, detail){
+                    this.$.toast.text = detail.error.message;
+                    this.$.toast.open();
                 },
 
                 moreAction: function(e){

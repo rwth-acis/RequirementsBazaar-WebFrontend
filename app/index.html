@@ -200,7 +200,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
-                            on-response="handleResponseProject"></iron-ajax>
+                            on-response="handleResponseProject"
+                            on-error="errorHandler"></iron-ajax>
 
                     <paper-toast id="projToast"></paper-toast>
 
@@ -277,7 +278,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 handle-as="json"
                                 content-type="application/json"
                                 params="{{header}}"
-                                on-response="handleResponseEditProj"></iron-ajax>
+                                on-response="handleResponseEditProj"
+                                on-error="errorHandler"></iron-ajax>
 
                         <components-list id="componentsList"></components-list>
                     </paper-scroll-header-panel>
@@ -303,7 +305,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
-                            on-response="handleResponseComponent"></iron-ajax>
+                            on-response="handleResponseComponent"
+                            on-error="errorHandler"></iron-ajax>
 
                     <paper-toast id="compToast"></paper-toast>
 
@@ -348,6 +351,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                             <paper-toolbar id="componentToolbar" class="tall">
 
+                                <template is="dom-if" if="{{isAuthorized}}">
+                                    <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
+                                        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                        <paper-menu id="componentInfoMenu" class="dropdown-content">
+                                            <paper-item on-tap="setDefault">Set as default</paper-item>
+                                            <paper-item on-tap="editComponent">Edit component</paper-item>
+                                            <paper-item on-tap="createModal2">Delete component</paper-item>
+                                        </paper-menu>
+                                    </paper-menu-button>
+                                </template>
+
                                 <span class="cmpTitle">
                                     <div class="breadCrumb">
                                         <bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb>
@@ -380,18 +394,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <paper-button raised on-tap="saveEditComp"> Save </paper-button>
 
                                 </div>
-
-                                <template is="dom-if" if="{{isAuthorized}}">
-                                    <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
-                                        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                        <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
-                                            <paper-item>Set as default</paper-item>
-                                            <paper-item on-tap="editComponent">Edit component</paper-item>
-                                            <paper-item on-tap="createModal2">Delete component</paper-item>
-                                        </paper-menu>
-                                    </paper-menu-button>
-                                </template>
-
                             </paper-toolbar>
 
                             <div style="padding-top:20px;">
@@ -429,19 +431,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     content-type="application/json"
                                     method="POST"
                                     params="{{header}}"
-                                    on-response="handleResponseRequirement"></iron-ajax>
+                                    on-response="handleResponseRequirement"
+                                    on-error="errorHandler"></iron-ajax>
 
                             <iron-ajax  id="componentRequest"
                                         handle-as="json"
                                         content-type="application/json"
                                         params="{{header}}"
-                                        on-response="compResponse"></iron-ajax>
+                                        on-response="compResponse"
+                                        on-error="errorHandler"></iron-ajax>
 
                             <iron-ajax  id="componentRequestPUT"
                                         handle-as="json"
                                         content-type="application/json"
                                         params="{{header}}"
-                                        on-response="compResponsePUT"></iron-ajax>
+                                        on-response="compResponsePUT"
+                                        on-error="errorHandler"></iron-ajax>
 
                             <template is="dom-if" if="{{isAuthorized}}">
                                 <paper-fab on-tap="onCreateRequirementTap" icon="add"></paper-fab>
