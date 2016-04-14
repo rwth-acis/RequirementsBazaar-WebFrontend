@@ -8,7 +8,7 @@
  */
 
 (function(document) {
-    'use strict';
+    //'use strict';
 
     // Grab a reference to our auto-binding template
     // and give it some initial binding values
@@ -19,7 +19,7 @@
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        // app.baseUrl = '/polymer-starter-kit/';
+        //app.baseUrl = '/beta/';
     }
     /**
      * Whether the user is logged in to the OIDC server.

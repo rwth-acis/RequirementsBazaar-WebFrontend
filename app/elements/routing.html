@@ -16,34 +16,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // client-side router inspired by the Express router
         // More info: https://visionmedia.github.io/page.js/
 
+        if (window.location.port === '') {  // if production
+            page.base(app.baseUrl.replace(/\/$/, ''));
+        }
+
         // Middleware
         function scrollToTop(ctx, next) {
             app.scrollPageToTop();
             next();
         }
 
+        page('*', scrollToTop, function(ctx, next) {
+            next();
+        });
+
         // Routes
-        page('/', scrollToTop, function() {
+        page('/', function() {
             app.route = 'home';
         });
 
-        page('/projects', scrollToTop, function() {
+        page(app.baseUrl, function() {
+            app.route = 'home';
+        });
+
+        page('/projects', function() {
             app.route = 'projects';
         });
 
-        page('/projects/:projectId', scrollToTop, function(data) {
+        page('/projects/:projectId', function(data) {
             app.loadProjectInfo(data.params.projectId);
             app.route = 'project-info';
             app.params = data.params;
         });
 
-        page('/projects/:projectId/components/:componentId', scrollToTop, function(data) {
+        page('/projects/:projectId/components/:componentId', function(data) {
             app.loadComponentInfo(data.params.componentId);
             app.route = 'component-info';
             app.params = data.params;
         });
 
-        page('/projects/:projectId/components/:componentId/create', scrollToTop, function(data) {
+        page('/projects/:projectId/components/:componentId/create', function(data) {
             app.loadComponentInfo(data.params.componentId);
             app.route = 'component-info';
             app.params = data.params;
@@ -51,10 +63,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             app.showCreateRequirement();
         });
 
-        page('/projects/:projectId/components/:componentId/edit', scrollToTop, function(data) {
+        page('/projects/:projectId/components/:componentId/edit', function(data) {
             app.loadComponentInfo(data.params.componentId);
             app.route = 'component-info';
             app.params = data.params;
+        });
+
+        page('*', function() {
+            app.$.superToast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
+            app.$.superToast.show();
+            page.redirect(app.baseUrl);
         });
 
         // add #! before urls

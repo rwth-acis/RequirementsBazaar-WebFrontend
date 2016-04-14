@@ -93,7 +93,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <!-- Application name -->
 
                 <div class="app-name">
-                    <a href="/">
+                    <a href$="{{baseUrl}}">
                         Requirements Bazaar
                     </a>
                 </div>
@@ -114,7 +114,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-pages attr-for-selected="data-route" selected="{{route}}" style="height:100%;">
 
                 <!-- LANDING PAGE -->
-                <section data-route="home" style="height:100%;">
+                <section data-route="home" href="{{baseUrl}}" style="height:100%;">
 
                     <paper-material elevation="1">
 
@@ -122,15 +122,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             Welcome to Requirements Bazaar!
                         </h2>
 
-                        <a href="/projects">Projects</a>
-                        <a href="/projects/2">Specific project</a>
-                        <a href="/projects/2/components/2">Specific component</a>
+                        <a href$="{{baseUrl}}projects">Projects</a>
+                        <a href$="{{baseUrl}}projects/2">Specific project</a>
+                        <a href$="{{baseUrl}}projects/2/components/2">Specific component</a>
                     </paper-material>
 
                 </section>
 
                 <!-- LIST OF PROJECTS -->
-                <section data-route="projects" style="height:100%;">
+                <section data-route="projects" href="{{baseUrl}}projects" style="height:100%;">
 
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer0">
@@ -212,7 +212,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </section>
 
                 <!-- LIST OF COMPONENTS OF A PROJECT -->
-                <section data-route="project-info" style="height:100%;">
+                <section data-route="project-info" href="{{baseUrl}}project-info" style="height:100%;">
 
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer1">
@@ -317,7 +317,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </section>
 
                 <!-- REQUIREMENTS VIEW -->
-                <section data-route="component-info" style="height:100%;">
+                <section data-route="component-info" href="{{baseUrl}}component-info" style="height:100%;">
 
                     <iron-ajax id="componentInfoLoader"
                                last-response="{{component}}"></iron-ajax>
