@@ -110,7 +110,7 @@
                 },
 
                 computeResourceURL: function(requirementId) {
-                    return 'https://requirements-bazaar.org/bazaar/requirements/' + requirementId + '/comments/';
+                    return 'https://requirements-bazaar.org/betabazaar/requirements/' + requirementId + '/comments/';
                 },
 
                 computeHide: function(comments) {
@@ -133,7 +133,7 @@
                 deleteComment: function(e) {
                     if (e.detail.confirmed) {
                         var request = this.$.postDeleteComment;
-                        request.url = "https://requirements-bazaar.org/bazaar/requirements/" + this.elem.id;
+                        request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + this.elem.id;
                         request.params = app.header;
                         request.generateRequest();
                         this.elem.parentNode.style.display = 'none';

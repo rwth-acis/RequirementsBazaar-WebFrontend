@@ -68,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-ajax
             id="getUsr"
             handle-as="json"
-            url="https://requirements-bazaar.org/bazaar/users/current";
+            url="https://requirements-bazaar.org/betabazaar/users/current";
             content-type="application/json"
             method="GET"
             params="{{header}}"
@@ -83,7 +83,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar">
             <template is="dom-if" if="{{componentPage(route)}}">
-                <paper-icon-button id="paperToggle" icon="menu" onclick="{{toggCompDrawer}}"></paper-icon-button>
+                <paper-icon-button id="paperToggle" icon="menu" on-tap="toggCompDrawer"></paper-icon-button>
             </template>
             <template is="dom-if" if="{{!componentPage(route)}}">
                 <a href="/">
@@ -103,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <!--<a href="/projects">-->
                 <!--<paper-icon-button icon="icons:visibility"></paper-icon-button>-->
             <!--</a>-->
-            <paper-icon-button icon="social:notifications" onclick="{{toggNotDrawer}}"></paper-icon-button>
+            <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
             <openidconnect-signin scopes="openid email profile" client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
                                   server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
 
@@ -196,7 +196,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax
                             id="postProjectRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/bazaar/projects";
+                            url="https://requirements-bazaar.org/betabazaar/projects";
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -301,7 +301,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax
                             id="postComponentRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/bazaar/components";
+                            url="https://requirements-bazaar.org/betabazaar/components";
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -427,7 +427,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <iron-ajax
                                     id="postRequirementRequest"
                                     handle-as="json"
-                                    url="https://requirements-bazaar.org/bazaar/requirements"
+                                    url="https://requirements-bazaar.org/betabazaar/requirements"
                                     content-type="application/json"
                                     method="POST"
                                     params="{{header}}"

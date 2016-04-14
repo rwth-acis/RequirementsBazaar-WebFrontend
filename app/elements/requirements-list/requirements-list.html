@@ -115,7 +115,7 @@
         <iron-ajax
                 id="postCommentRequest"
                 handle-as="json"
-                url="https://requirements-bazaar.org/bazaar/comments"
+                url="https://requirements-bazaar.org/betabazaar/comments"
                 content-type="application/json"
                 method="POST"
                 params="{{header}}"
@@ -340,7 +340,7 @@
                 },
 
                 computeResourceURL: function (componentId) {
-                    return 'https://requirements-bazaar.org/bazaar/components/' + componentId + '/requirements/';
+                    return 'https://requirements-bazaar.org/betabazaar/components/' + componentId + '/requirements/';
                 },
 
                 toggleCollapsible: function(e) {
@@ -360,7 +360,7 @@
                     var req = this.$.starReq;
                     var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
                     req.method = "POST";
-                    req.url = "https://requirements-bazaar.org/bazaar/requirements/" + reqId + "/vote";
+                    req.url = "https://requirements-bazaar.org/betabazaar/requirements/" + reqId + "/vote";
                     req.body = JSON.stringify({
                         "requirementId": reqId,
                         "direction": "up"
@@ -372,7 +372,7 @@
                     var req = this.$.starReq;
                     var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
                     req.method = "DELETE";
-                    req.url = "https://requirements-bazaar.org/bazaar/requirements/" + reqId + "/vote";
+                    req.url = "https://requirements-bazaar.org/betabazaar/requirements/" + reqId + "/vote";
                     req.generateRequest();
                 },
 
@@ -445,7 +445,7 @@
                     var id = e.currentTarget.parentNode.parentNode.id;
                     var request = this.$.postUpdateRequirement;
                     var components = [{id: parseInt(app.params.componentId)}];
-                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + id;
+                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + id;
 
                     if (title != '' && description != ''){
                         request.body = JSON.stringify({
@@ -498,7 +498,7 @@
                                 element = el;
                         }
 
-                        request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id;
+                        request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id;
 
                         request.generateRequest();
 
@@ -541,7 +541,7 @@
                             element = el;
                     }
 
-                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id + "/followers";
+                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id + "/followers";
                     request.generateRequest();
                 },
 
@@ -567,7 +567,7 @@
                             element = el;
                     }
 
-                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id + "/followers";
+                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id + "/followers";
                     request.generateRequest();
                 },
 
@@ -593,7 +593,7 @@
                             element = el;
                     }
 
-                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id + "/developers";
+                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id + "/developers";
                     request.generateRequest();
                 },
 
@@ -619,7 +619,7 @@
                             element = el;
                     }
 
-                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id + "/developers";
+                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id + "/developers";
                     request.generateRequest();
                 },
 
