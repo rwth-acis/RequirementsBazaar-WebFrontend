@@ -73,7 +73,9 @@
                         <time is="relative-time" datetime$="[[item.creationTime]]"></time> by <req-user user-id="[[item.creatorId]]"></req-user>
                     </div>
                 </div>
-                <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
+                <template is="dom-if" if="{{isCreator(item.creatorId)}}">
+                    <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
+                </template>
             </div>
         </template>
 
@@ -101,7 +103,7 @@
                         type: Boolean,
                         computed: 'computeHide(comments)'
                     },
-                    elem: Object
+                    elem: Object,
                 },
 
                 ready: function () {
@@ -136,6 +138,15 @@
                         request.generateRequest();
                         this.elem.parentNode.style.display = 'none';
                     }
+                },
+
+                isCreator: function(usrId){
+                    if(app.isAuthorized){
+                        if (usrId == app.currentUser.Id){
+                            return true;
+                        }
+                    }
+                    return false;
                 }
             });
         })();
