@@ -102,7 +102,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getProjectURL = function(projectId) {
-        return 'https://requirements-bazaar.org/betabazaar/projects/' + projectId;
+        return 'https://requirements-bazaar.org/bazaar/projects/' + projectId;
     };
 
     /**
@@ -112,7 +112,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getComponentURL = function(componentId) {
-        return 'https://requirements-bazaar.org/betabazaar/components/' + componentId;
+        return 'https://requirements-bazaar.org/bazaar/components/' + componentId;
     };
 
     /**
@@ -147,6 +147,23 @@
         // load requirements-list
         this.$.requirementsList.componentId = componentId;
         this.$.requirementsList.load();
+    };
+
+    app.scrollToReq = function (componentId, requirementId) {
+        this.loadComponentInfo(componentId);
+        setTimeout(function(){
+            var el = document.getElementById(requirementId);
+            if (el === null) {
+                app.$.superToast.text = 'Requirement is deleted!. Redirected you to Component Page';
+                app.$.superToast.show();
+                page.redirect('/projects/' + app.params.projectId + "/components/" + componentId);
+                return 0;
+            }
+            var scroller = document.getElementById("mainScroller");
+            scroller.scroll(el.offsetTop - 70, true);
+            document.getElementById('requirementsList').toggleCollapsible(null, el);
+        }, 1000);
+        window.scrollTo(0, 75);
     };
 
     app.showCreateRequirement = function() {
@@ -358,7 +375,7 @@
         var title = document.querySelector('.editForm > .editTitle').value;
         var desc = document.querySelector('.editForm > .editDesc').value;
         var el = document.getElementById('postUpdateProject');
-        el.url = "https://requirements-bazaar.org/betabazaar/projects/" + this.params.projectId;
+        el.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
         if (title == '' || desc == '' || title == null || desc == null ){
             this.$.superToast.text = "You can't have empty fields!";
             this.$.superToast.open();
@@ -406,7 +423,7 @@
         if (e.detail.confirmed) {
             var request = document.getElementById('postUpdateProject');
 
-            request.url = "https://requirements-bazaar.org/betabazaar/projects/" + this.params.projectId;
+            request.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
             request.method = "DELETE";
             request.generateRequest();
         }
@@ -414,7 +431,7 @@
 
     app.setDefault = function(e){
         var req = this.$.postUpdateProject;
-        req.url = "https://requirements-bazaar.org/betabazaar/projects/" + this.params.projectId;
+        req.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
         req.method = "PUT";
         req.body = JSON.stringify({
             "id": parseInt(this.params.projectId),
@@ -441,7 +458,7 @@
         var title = document.querySelector('.editFormComp > .editTitle').value;
         var desc = document.querySelector('.editFormComp > .editDesc').value;
         var el = document.getElementById('componentRequestPUT');
-        el.url = "https://requirements-bazaar.org/betabazaar/components/" + this.params.componentId;
+        el.url = "https://requirements-bazaar.org/bazaar/components/" + this.params.componentId;
         if (title == '' || desc == '' || title == null || desc == null ){
             this.$.superToast.text = "You can't have empty fields!";
             this.$.superToast.open();
@@ -474,7 +491,7 @@
         if (e.detail.confirmed) {
             var request = document.getElementById('componentRequest');
 
-            request.url = "https://requirements-bazaar.org/betabazaar/components/" + this.params.componentId;
+            request.url = "https://requirements-bazaar.org/bazaar/components/" + this.params.componentId;
             request.method = "DELETE";
             request.generateRequest();
         }

@@ -68,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-ajax
             id="getUsr"
             handle-as="json"
-            url="https://requirements-bazaar.org/betabazaar/users/current";
+            url="https://requirements-bazaar.org/bazaar/users/current";
             content-type="application/json"
             method="GET"
             params="{{header}}"
@@ -196,7 +196,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax
                             id="postProjectRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/betabazaar/projects";
+                            url="https://requirements-bazaar.org/bazaar/projects";
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -301,7 +301,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax
                             id="postComponentRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/betabazaar/components";
+                            url="https://requirements-bazaar.org/bazaar/components";
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -347,7 +347,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <components-menu id="componentsMenu"></components-menu>
                         </paper-scroll-header-panel>
 
-                        <paper-scroll-header-panel main condenses condensed-header-height="60" keep-condensed-header>
+                        <paper-scroll-header-panel id="mainScroller" main condenses condensed-header-height="60" keep-condensed-header>
 
                             <paper-toolbar id="componentToolbar" class="tall">
 
@@ -427,7 +427,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <iron-ajax
                                     id="postRequirementRequest"
                                     handle-as="json"
-                                    url="https://requirements-bazaar.org/betabazaar/requirements"
+                                    url="https://requirements-bazaar.org/bazaar/requirements"
                                     content-type="application/json"
                                     method="POST"
                                     params="{{header}}"

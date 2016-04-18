@@ -69,6 +69,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             app.params = data.params;
         });
 
+        page('/projects/:projectId/components/:componentId/requirements/:requirementId', function(data) {
+            app.scrollToReq(data.params.componentId, data.params.requirementId);
+            app.route = 'component-info';
+            app.params = data.params;
+        });
+
+
         page('*', function() {
             app.$.superToast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
             app.$.superToast.show();
