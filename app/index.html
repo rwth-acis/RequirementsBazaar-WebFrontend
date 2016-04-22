@@ -68,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-ajax
             id="getUsr"
             handle-as="json"
-            url="https://requirements-bazaar.org/bazaar/users/current";
+            url="https://requirements-bazaar.org/bazaar/users/current"
             content-type="application/json"
             method="GET"
             params="{{header}}"
@@ -103,6 +103,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <!--<a href="/projects">-->
                 <!--<paper-icon-button icon="icons:visibility"></paper-icon-button>-->
             <!--</a>-->
+            <template is="dom-if" if="isAuthorized">
+                <req-user user-id="[[currentUser.Id]]" mini on-tap="openUserDialog"></req-user>
+                <paper-dialog id="userSettings" class="user" entry-animation="fade-in-animation"
+                              exit-animation="fade-out-animation">
+                    <req-user user-id="[[currentUser.Id]]" full-view></req-user>
+
+                    <p>Settings</p>
+                </paper-dialog>
+            </template>
             <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
             <openidconnect-signin scopes="openid email profile" client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
                                   server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
@@ -301,7 +310,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax
                             id="postComponentRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/bazaar/components";
+                            url="https://requirements-bazaar.org/bazaar/components"
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -325,9 +334,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer">
                         <paper-scroll-header-panel drawer fixed>
-                            <paper-toolbar id="drawerToolbar">
-                                <span class="paper-font-title">Activity</span>
-                            </paper-toolbar>
 
                             <!-- Drawer Content -->
                             <activity-tracker></activity-tracker>

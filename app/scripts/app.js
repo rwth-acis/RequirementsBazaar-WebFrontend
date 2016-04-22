@@ -186,6 +186,10 @@
         createDialog.open();
     };
 
+    app.openUserDialog = function(e){
+        document.getElementById('userSettings').toggle();
+    };
+
     app.onCreateRequirementClosed = function(e) {
         if (e.detail.confirmed) {
             var request = document.querySelector('#postRequirementRequest');
