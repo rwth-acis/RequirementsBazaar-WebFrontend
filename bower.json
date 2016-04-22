@@ -10,6 +10,7 @@
     "page": "visionmedia/page.js#~1.6.3",
     "time-elements": "~0.4.0",
     "openidconnect-signin": "rwth-acis/openidconnect-signin",
+    "activity-tracker": "rwth-acis/activity-tracker",
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2"
   },
   "devDependencies": {
