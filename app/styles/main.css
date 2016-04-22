@@ -85,6 +85,68 @@ paper-icon-button {
     display: flex;
 }
 
+#landing-top {
+    padding: 0 8px 64px 8px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap-reverse;
+    background-image: url("../images/landing-background.png");
+}
+
+#landing-top-image {
+    width: 100%;
+}
+
+#landing-how-it-works{
+    padding: 32px 8px 32px 8px;
+    color: #ffffff;
+    background-color: #7FB45D;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+#landing-how-it-works p{
+    text-align: left;
+}
+
+#landing-page p{
+    font-size: large;
+}
+#landing-page h1{
+    text-align: center;
+}
+
+@media screen and (min-device-width: 901px) {
+    #landing-top-image {
+        margin-top: 50px;
+        width: 560px;
+        min-width: 560px;
+    }
+
+    #landing-hero-div-motivation {
+        width: 400px;
+        min-width: 400px;
+        padding-top: 50px;
+    }
+
+    #landing-how-it-works-text {
+        width: 400px;
+    }
+    #landing-how-it-works-text h1 {
+        margin: 0;
+        text-align: left;
+    }
+    #landing-how-it-works-text p:last-child {
+        font-size: x-large;
+        padding-top: 64px;
+    }
+    #landing-how-it-works-video {
+        width: 560px;
+        height: 315px;
+    }
+}
+
 /*paper-icon-button {*/
 /*color: var(--paper-red-300);*/
 /*--paper-icon-button-ink-color: var(--paper-red-a100);*/

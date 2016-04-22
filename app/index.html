@@ -55,7 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- endreplace-->
 
     <!-- For shared styles, shared-styles.html import in elements.html -->
-    <style is="custom-style" include="shared-styles"></style>
+    <style is="custom-style" include="shared-styles iron-flex iron-flex-alignment"></style>
 
 </head>
 
@@ -115,6 +115,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 <!-- LANDING PAGE -->
                 <section data-route="home" href="{{baseUrl}}" style="height:100%;">
+
+                    <div class="layout vertical" id="landing-page">
+
+                        <div id="landing-top">
+                            <div class="layout horizontal">
+                                <div id="landing-top-image">
+                                    <img src="images/landing-screenshot.png" style="box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3); width:100%">
+                                </div>
+                                <div>
+                                    <h1>Lass uns zusammen bessere Projekte realisieren</h1>
+                                    <p>Requirements Bazaar lässt Benutzer nützliches Feedback eingeben damit du dich auf die wichtigen Funktionen konzentrieren kannst</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="landing-how-it-works">
+                            <div id="landing-how-it-works-text">
+                                <h1>Wie's funktioniert: Feedback in drei Schritten</h1>
+                                <p>1. Erstelle ein neues Projekt auf Requirements Bazaar</p>
+                                <p>2. Führe Benutzer zu deinem Projekt</p>
+                                <p>3. Reagiere auf das Feedback</p>
+                                <p>Schau dir das Video an um mehr zu erfahren</p>
+                            </div>
+                            <div id="landing-how-it-works-video">
+                                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/u3f8xnEtT7I" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+
+                    </div>
 
                     <paper-material elevation="1">
 
