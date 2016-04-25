@@ -99,10 +99,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </div>
             <span class="flex"></span>
 
-            <!-- Toolbar icons -->
-            <!--<a href="/projects">-->
-                <!--<paper-icon-button icon="icons:visibility"></paper-icon-button>-->
-            <!--</a>-->
             <template is="dom-if" if="isAuthorized">
                 <req-user user-id="[[currentUser.Id]]" mini on-tap="openUserDialog"></req-user>
                 <paper-dialog id="userSettings" class="user" entry-animation="fade-in-animation"
@@ -134,6 +130,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <a href$="{{baseUrl}}projects">Projects</a>
                         <a href$="{{baseUrl}}projects/2">Specific project</a>
                         <a href$="{{baseUrl}}projects/2/components/2">Specific component</a>
+                        <p>"Days" in Spanish is <i18n-msg msgid="days"></i18n-msg>!</p>
                     </paper-material>
 
                 </section>
@@ -144,9 +141,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer0">
                         <paper-scroll-header-panel drawer fixed>
-                            <paper-toolbar id="drawerToolbar">
-                                <div class="paper-font-title">Activity</div>
-                            </paper-toolbar>
 
                             <!-- Drawer Content -->
                             <activity-tracker></activity-tracker>
@@ -226,9 +220,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer1">
                         <paper-scroll-header-panel drawer fixed>
-                            <paper-toolbar id="drawerToolbar">
-                                <span class="paper-font-title">Activity</span>
-                            </paper-toolbar>
 
                             <!-- Drawer Content -->
                             <activity-tracker></activity-tracker>
