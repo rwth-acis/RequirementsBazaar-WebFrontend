@@ -201,91 +201,94 @@
 
         <template is="dom-repeat" items="{{requirements}}">
             <div class="layout vertical center">
-                <paper-material class="req" id="[[item.id]]">
-                    <div class="reqbody">
+                <template is="dom-if" if="{{!item.realized}}">
+                    <paper-material class="req" id="[[item.id]]">
+                        <div class="reqbody">
 
-                        <div class="req-icons layout horizontal center">
-                            <template is="dom-if" if="{{!isAuthorized}}">
-                                <paper-icon-button icon="star-border" disabled></paper-icon-button>
-                            </template>
-                            <template is="dom-if" if="{{isAuthorized}}">
-                                <template is="dom-if" if="{{userVoted(item.userVoted)}}">
-                                    <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
+                            <div class="req-icons layout horizontal center">
+                                <template is="dom-if" if="{{!isAuthorized}}">
+                                    <paper-icon-button icon="star-border" disabled></paper-icon-button>
                                 </template>
-                                <template is="dom-if" if="{{!userVoted(item.userVoted)}}">
-                                    <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
+                                <template is="dom-if" if="{{isAuthorized}}">
+                                    <template is="dom-if" if="{{userVoted(item.userVoted)}}">
+                                        <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
+                                    </template>
+                                    <template is="dom-if" if="{{!userVoted(item.userVoted)}}">
+                                        <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
+                                    </template>
                                 </template>
-                            </template>
-                            <div>[[item.upVotes]]</div>
-                            <template is="dom-if" if="{{isAuthorized}}">
-                                <paper-menu-button horizontal-align="right" vertical-align="top">
-                                    <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                    <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                        <paper-item on-tap="toggleContributers">Show Contributers</paper-item>
-                                        <template is="dom-if" if="{{!isFollower}}">
-                                            <paper-item on-tap="followReq">Follow Requirement</paper-item>
-                                        </template>
-                                        <template is="dom-if" if="{{isFollower}}">
-                                            <paper-item on-tap="unfollowReq">Unfollow Requirement</paper-item>
-                                        </template>
-                                        <template is="dom-if" if="{{!isDeveloper}}">
-                                            <paper-item on-tap="developReq">Develop Requirement</paper-item>
-                                        </template>
-                                        <template is="dom-if" if="{{isDeveloper}}">
-                                            <paper-item on-tap="undevelopReq">Undevelop Requirement</paper-item>
-                                        </template>
-                                        <paper-item on-tap="editRequirement">Edit requirement</paper-item>
-                                        <paper-item on-tap="createModal">Delete requirement</paper-item>
-                                    </paper-menu>
-                                </paper-menu-button>
-                            </template>
-                        </div>
-                        <paper-toolbar class="title" on-tap="toggleCollapsible">
-                            <div class="title">[[item.title]]</div>
-                            <div class="bottom fit">
-                                <time is="relative-time" datetime$="[[item.creation_time]]"></time>
-                                 by
-                                <req-user user-id="[[item.creatorId]]" normal-view></req-user>
+                                <div>[[item.upVotes]]</div>
+                                <template is="dom-if" if="{{isAuthorized}}">
+                                    <paper-menu-button horizontal-align="right" vertical-align="top">
+                                        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                        <paper-menu id="componentInfoMenu" class="dropdown-content">
+                                            <paper-item on-tap="toggleContributers">Show Contributers</paper-item>
+                                            <paper-item on-tap="doneRequirement">Mark as done</paper-item>
+                                            <template is="dom-if" if="{{!isFollower}}">
+                                                <paper-item on-tap="followReq">Follow Requirement</paper-item>
+                                            </template>
+                                            <template is="dom-if" if="{{isFollower}}">
+                                                <paper-item on-tap="unfollowReq">Unfollow Requirement</paper-item>
+                                            </template>
+                                            <template is="dom-if" if="{{!isDeveloper}}">
+                                                <paper-item on-tap="developReq">Develop Requirement</paper-item>
+                                            </template>
+                                            <template is="dom-if" if="{{isDeveloper}}">
+                                                <paper-item on-tap="undevelopReq">Undevelop Requirement</paper-item>
+                                            </template>
+                                            <paper-item on-tap="editRequirement">Edit requirement</paper-item>
+                                            <paper-item on-tap="createModal">Delete requirement</paper-item>
+                                        </paper-menu>
+                                    </paper-menu-button>
+                                </template>
                             </div>
-                        </paper-toolbar>
-
-                    </div>
-
-                    <template is="dom-if" if="{{showContributers}}">
-                        <div class="contributers">
-                            <div>Creator: <req-user user-id="[[item.creatorId]]" full-view></req-user></div>
-                            <div>Lead Developer: <req-user user-id="[[item.leadDeveloperId]]" full-view></req-user></div>
-                        </div>
-                    </template>
-
-                    <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
-                    <div class="description">[[item.description]]</div>
-
-                    <div class="comments">
-
-                        <iron-collapse>
-                            <h3>Comments</h3>
-                            <comments-list requirement-id="[[item.id]]" data-a="[[item.id]]"></comments-list>
-                            <template is="dom-if" if="{{isAuthorized}}">
-                                <div class="container flex-horizontal" id="[[item.id]]">
-                                    <paper-input id="[[item.id]]input" is="iron-input" on-input="showButton" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
-                                    <paper-fab id="[[item.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+                            <paper-toolbar class="title" on-tap="toggleCollapsible">
+                                <div class="title">[[item.title]]</div>
+                                <div class="bottom fit">
+                                    <time is="relative-time" datetime$="[[item.creation_time]]"></time>
+                                     by
+                                    <req-user user-id="[[item.creatorId]]" normal-view></req-user>
                                 </div>
-                            </template>
-                        </iron-collapse>
+                            </paper-toolbar>
 
-                    </div>
+                        </div>
 
-                    <div class="editForm">
+                        <template is="dom-if" if="{{showContributers}}">
+                            <div class="contributers">
+                                <div>Creator: <req-user user-id="[[item.creatorId]]" full-view></req-user></div>
+                                <div>Lead Developer: <req-user user-id="[[item.leadDeveloperId]]" full-view></req-user></div>
+                            </div>
+                        </template>
 
-                        <paper-input class="editTitle" label="Title" class="title" value="{{item.title}}"></paper-input>
-                        <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
-                        <paper-button raised on-tap="saveEditReq" data-args="[[item.title]]">Save</paper-button>
-                        <paper-button raised on-tap="cancelRequirement" data-args="[[item.title]]">Cancel</paper-button>
+                        <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
+                        <div class="description">[[item.description]]</div>
 
-                    </div>
+                        <div class="comments">
 
-                </paper-material>
+                            <iron-collapse>
+                                <h3>Comments</h3>
+                                <comments-list requirement-id="[[item.id]]" data-a="[[item.id]]"></comments-list>
+                                <template is="dom-if" if="{{isAuthorized}}">
+                                    <div class="container flex-horizontal" id="[[item.id]]">
+                                        <paper-input id="[[item.id]]input" is="iron-input" on-input="showButton" label="Add a comment..." bind-value="{{newComment}}" class="flexchild"></paper-input>
+                                        <paper-fab id="[[item.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+                                    </div>
+                                </template>
+                            </iron-collapse>
+
+                        </div>
+
+                        <div class="editForm">
+
+                            <paper-input class="editTitle" label="Title" class="title" value="{{item.title}}"></paper-input>
+                            <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
+                            <paper-button raised on-tap="saveEditReq" data-args="[[item.title]]">Save</paper-button>
+                            <paper-button raised on-tap="cancelRequirement" data-args="[[item.title]]">Cancel</paper-button>
+
+                        </div>
+
+                    </paper-material>
+                </template>
             </div>
         </template>
 
@@ -428,6 +431,41 @@
                     alert('button pressed');
                 },
 
+                doneRequirement: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    var request = this.$.postUpdateRequirement;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+
+                    request.url = "https://requirements-bazaar.org/bazaar/requirements/" + element.id;
+                    var today = new Date();
+                    var month = today.toDateString().substring(4, 7);
+                    var date = today.getDate();
+                    var year = today.getUTCFullYear();
+                    var hours = today.getHours();
+                    var minutes = today.getMinutes();
+                    var seconds = today.getSeconds();
+                    var ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    minutes = minutes < 10 ? '0'+minutes : minutes;
+                    seconds = seconds < 10 ? '0'+seconds : seconds;
+                    var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+                    var dateString = month + ' ' + date + ', ' + year + ' ' + strTime;
+                    request.body = JSON.stringify({
+                        "id": parseInt(element.id),
+                        "realized": dateString
+                    });
+
+                    request.generateRequest();
+                },
+
                 editRequirement: function(e) {
                     //get top node
                     var parentEl = this.findUpTag(e.currentTarget.parentNode.parentNode.parentNode, 'PAPER-MATERIAL');
@@ -482,6 +520,7 @@
                 handleResponseEditReq: function(data) {
                     if (data != null){
                         this.feedback = "Requirement edited successfully!";
+                        this.load();
                     } else {
                         this.feedback = "Some error happened while editing the requirement!";
                     }
