@@ -1,0 +1,27 @@
+{
+  "settings": {
+    "description": "Settings label",
+    "message": "Einstellungen"
+  },
+
+  "lp-title": {
+    "description": "Let us realize better projects together",
+    "message": "Lass uns zusammen bessere Projekte realisieren"
+  },
+
+  "lp-desc": {
+    "description": "...",
+    "message": "Requirements Bazaar lässt Benutzer nützliches Feedback eingeben damit du dich auf die wichtigen Funktionen konzentrieren kannst"
+  },
+
+  "lp-steps": {
+    "description": "...",
+    "message": "<h1>Wie's funktioniert: Feedback in drei Schritten</h1> <p>1. Erstelle ein neues Projekt auf Requirements Bazaar</p> <p>2. Führe Benutzer zu deinem Projekt</p> <p>3. Reagiere auf das Feedback</p> <p>Schau dir das Video an um mehr zu erfahren</p>"
+  },
+
+  "lp-mot": {
+    "description": "...",
+    "message": "Höre auf deine Benutzer und reagiere auf ihr Feedback"
+  }
+
+}

@@ -1,14 +1,26 @@
 {
-  "days": {
-    "description": "...",
-    "message": "days"
+  "settings": {
+    "description": "Settings label",
+    "message": "Settings"
   },
-  "hours": {
-    "description": "...",
-    "message": "hours"
+
+  "lp-title": {
+    "description": "Let us realize better projects",
+    "message": "Create better projects with us"
   },
-  "minutes": {
+
+  "lp-desc": {
     "description": "...",
-    "message": "minutes"
+    "message": "Requirements Bazaar lets users give you valuable feedback and lets you concentrate on features that really matter"
+  },
+
+  "lp-steps": {
+    "description": "...",
+    "message": "<h1>How it works! Feedback in 3 steps</h1> <p>1. Create a project on requirements bazaar</p> <p>2. Direct users to your project</p> <p>3. Respond to user requirements</p> <p>To learn more watch the video</p>"
+  },
+
+  "lp-mot": {
+    "description": "...",
+    "message": "Listen to your users and react to their needs"
   }
 }

@@ -105,12 +105,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                               exit-animation="fade-out-animation">
                     <req-user user-id="[[currentUser.Id]]" full-view></req-user>
 
-                    <p>Settings</p>
+                    <p><i18n-msg msgid="settings"></i18n-msg></p>
                 </paper-dialog>
             </template>
             <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
             <openidconnect-signin scopes="openid email profile" client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
                                   server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
+
+            <paper-menu-button>
+                <paper-icon-button icon="language" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+                    <paper-item on-tap="english">EN</paper-item>
+                    <paper-item on-tap="deutsch">DE</paper-item>
+                </paper-menu>
+            </paper-menu-button>
 
         </paper-toolbar>
 
@@ -128,17 +136,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <img src="images/landing-screenshot.png" style="box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3); width:100%">
                             </div>
                             <div id="landing-top-motivation">
-                                <h1>Lass uns zusammen bessere Projekte realisieren</h1>
-                                <p>Requirements Bazaar lässt Benutzer nützliches Feedback eingeben damit du dich auf die wichtigen Funktionen konzentrieren kannst</p>
+                                <h1><i18n-msg msgid="lp-title"></i18n-msg></h1>
+                                <p><i18n-msg msgid="lp-desc"></i18n-msg></p>
                             </div>
                         </div>
                         <div id="landing-how-it-works">
                             <div id="landing-how-it-works-text">
-                                <h1>Wie's funktioniert: Feedback in drei Schritten</h1>
-                                <p>1. Erstelle ein neues Projekt auf Requirements Bazaar</p>
-                                <p>2. Führe Benutzer zu deinem Projekt</p>
-                                <p>3. Reagiere auf das Feedback</p>
-                                <p>Schau dir das Video an um mehr zu erfahren</p>
+                                <i18n-msg msgid="lp-steps"></i18n-msg>
                             </div>
                             <div id="landing-how-it-works-video">
                                 <iframe width="100%" height="100%" src="https://www.youtube.com/embed/u3f8xnEtT7I" frameborder="0" allowfullscreen></iframe>
@@ -147,16 +151,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <div id="landing-motivation">
                             <div>
                                 <img src="images/speech-bubble.svg" height="150px">
-                                <p>Höre auf deine Benutzer und reagiere auf ihr Feedback</p>
+                                <p><i18n-msg msgid="lp-mot"></i18n-msg></p>
                             </div>
                             <div>
                                 <img src="images/motivational-arrow.svg" height="150px">
-                                <p>Höre auf deine Benutzer und reagiere auf ihr Feedback</p>
-                            </div>
+                                <p><i18n-msg msgid="lp-mot"></i18n-msg></p>                            </div>
                             <div>
                                 <img src="images/motivational-clock.svg" height="150px">
-                                <p>Höre auf deine Benutzer und reagiere auf ihr Feedback</p>
-                            </div>
+                                <p><i18n-msg msgid="lp-mot"></i18n-msg></p>                            </div>
                         </div>
 
                         <div id="landing-get-started">
@@ -174,19 +176,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </div>
 
                     </div>
-
-                    <!--<paper-material elevation="1">
-
-                        <h2 class="page-title">
-                            Welcome to Requirements Bazaar!
-                        </h2>
-
-                        <a href$="{{baseUrl}}projects">Projects</a>
-                        <a href$="{{baseUrl}}projects/2">Specific project</a>
-                        <a href$="{{baseUrl}}projects/2/components/2">Specific component</a>
-                        <p>"Days" in Spanish is <i18n-msg msgid="days"></i18n-msg>!</p>
-                    </paper-material>
-                    </paper-material>-->
 
                 </section>
 

@@ -62,6 +62,16 @@
         Platform.performMicrotaskCheckpoint();
     });
 
+    app.english = function(){
+        I18nMsg.lang = 'en';
+        Platform.performMicrotaskCheckpoint();
+    };
+
+    app.deutsch = function(){
+        I18nMsg.lang = 'de';
+        Platform.performMicrotaskCheckpoint();
+    };
+
     // Main area's paper-scroll-header-panel custom condensing transformation of
     // the appName in the middle-container and the bottom title in the bottom-container.
     // The appName is moved to top and shrunk on condensing. The bottom sub title
