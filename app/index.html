@@ -119,14 +119,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <div class="layout vertical" id="landing-page">
 
                         <div id="landing-top">
-                            <div class="layout horizontal">
-                                <div id="landing-top-image">
-                                    <img src="images/landing-screenshot.png" style="box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3); width:100%">
-                                </div>
-                                <div>
-                                    <h1>Lass uns zusammen bessere Projekte realisieren</h1>
-                                    <p>Requirements Bazaar lässt Benutzer nützliches Feedback eingeben damit du dich auf die wichtigen Funktionen konzentrieren kannst</p>
-                                </div>
+                            <div id="landing-top-image">
+                                <img src="images/landing-screenshot.png" style="box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3); width:100%">
+                            </div>
+                            <div id="landing-top-motivation">
+                                <h1>Lass uns zusammen bessere Projekte realisieren</h1>
+                                <p>Requirements Bazaar lässt Benutzer nützliches Feedback eingeben damit du dich auf die wichtigen Funktionen konzentrieren kannst</p>
                             </div>
                         </div>
                         <div id="landing-how-it-works">
@@ -141,10 +139,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <iframe width="100%" height="100%" src="https://www.youtube.com/embed/u3f8xnEtT7I" frameborder="0" allowfullscreen></iframe>
                             </div>
                         </div>
+                        <div id="landing-motivation">
+                            <div>
+                                <img src="images/speech-bubble.svg" height="150px">
+                                <p>Höre auf deine Benutzer und reagiere auf ihr Feedback</p>
+                            </div>
+                            <div>
+                                <img src="images/motivational-arrow.svg" height="150px">
+                                <p>Höre auf deine Benutzer und reagiere auf ihr Feedback</p>
+                            </div>
+                            <div>
+                                <img src="images/motivational-clock.svg" height="150px">
+                                <p>Höre auf deine Benutzer und reagiere auf ihr Feedback</p>
+                            </div>
+                        </div>
+
+                        <div id="landing-get-started">
+                            <p>Get started</p>
+                            <p>Take a look at a few example project and if we have convinced you create your own!</p>
+                            <a href$="{{baseUrl}}projects"><paper-button>Explore Public Projects</paper-button></a>
+                        </div>
+                        <div class="landing-footer">
+                            <div class="landing-page-contact">
+                                <p>Contact</p>
+                                <span>Lehrstuhl Informatik 5 RWTH </span>
+                                <br/>
+                                <span>reqbaz@dbis.rwth-aachen.de</span>
+                            </div>
+                        </div>
 
                     </div>
 
-                    <paper-material elevation="1">
+                    <!--<paper-material elevation="1">
 
                         <h2 class="page-title">
                             Welcome to Requirements Bazaar!
@@ -153,7 +179,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <a href$="{{baseUrl}}projects">Projects</a>
                         <a href$="{{baseUrl}}projects/2">Specific project</a>
                         <a href$="{{baseUrl}}projects/2/components/2">Specific component</a>
-                    </paper-material>
+                    </paper-material>-->
 
                 </section>
 

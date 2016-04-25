@@ -112,9 +112,66 @@ paper-icon-button {
 
 #landing-page p{
     font-size: large;
+    text-align: center;
 }
 #landing-page h1{
     text-align: center;
+}
+
+/*
+* Motivation panel with three columns, each having icon and motivational text
+*/
+
+#landing-motivation {
+    background-color: #FFFFFA;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 64px 8px 64px 8px;
+}
+#landing-motivation div, #landing-motivation img{
+    max-width: 300px;
+    width: 100%;
+}
+
+/*
+* Get Started Div
+*/
+
+#landing-get-started {
+    background-color: #7FB45D;
+    padding: 64px 8px 64px 8px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+#landing-get-started p, #landing-get-started paper-button {
+    color: white;
+    width: 100%;
+}
+#landing-get-started p:first-child{
+    font-size: xx-large;
+    margin:0;
+}
+#landing-get-started paper-button {
+    background-color: #FF8324;
+    margin: 50px 0 0 0;
+    max-width: 300px;
+    width: 100%;
+}
+
+/*
+* Footer div
+*/
+
+.landing-footer {
+    height: 150px;
+    background-color: #000000;
+}
+.landing-page-contact {
+    float: left;
+    color: #ffffff;
+    padding: 8px;
 }
 
 @media screen and (min-device-width: 901px) {
@@ -124,7 +181,7 @@ paper-icon-button {
         min-width: 560px;
     }
 
-    #landing-hero-div-motivation {
+    #landing-top-motivation {
         width: 400px;
         min-width: 400px;
         padding-top: 50px;
@@ -143,6 +200,23 @@ paper-icon-button {
     }
     #landing-how-it-works-video {
         width: 560px;
+        height: 315px;
+    }
+}
+
+@media (max-width: 900px), handheld {
+    #landing-top-image{
+        margin-top: 50px;
+    }
+    #landing-top-motivation {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        max-width: 400px;
+    }
+    #landing-how-it-works-video{
+        width: 100%;
+        margin: auto;
         height: 315px;
     }
 }
