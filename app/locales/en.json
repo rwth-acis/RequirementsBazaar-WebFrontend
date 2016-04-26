@@ -22,5 +22,85 @@
   "lp-mot": {
     "description": "...",
     "message": "Listen to your users and react to their needs"
+  },
+
+  "project": {
+    "description": "...",
+    "message": "Project"
+  },
+
+  "projects": {
+    "description": "...",
+    "message": "Projects"
+  },
+
+  "new": {
+    "description": "...",
+    "message": "New"
+  },
+
+  "all": {
+    "description": "...",
+    "message": "All"
+  },
+
+  "createProject": {
+    "description": "...",
+    "message": "Create a Project"
+  },
+
+  "pr-desc": {
+    "description": "...",
+    "message": "This is the projects section"
+  },
+
+  "searchLabel": {
+    "description": "...",
+    "message": "Search a project by name or description"
+  },
+
+  "formTitle": {
+    "description": "...",
+    "message": "Title"
+  },
+
+  "formDesc": {
+    "description": "...",
+    "message": "Description"
+  },
+
+  "cancel": {
+    "description": "...",
+    "message": "Cancel"
+  },
+
+  "save": {
+    "description": "...",
+    "message": "Save"
+  },
+
+  "delete": {
+    "description": "...",
+    "message": "DELETE"
+  },
+
+  "deleteProjectTitle": {
+    "description": "...",
+    "message": "Delete Project"
+  },
+
+  "deleteProjectDesc": {
+    "description": "...",
+    "message": "This action can't be undone! Are you sure that you want to permanently delete this project?"
+  },
+
+  "editProject": {
+    "description": "...",
+    "message": "Edit Project"
+  },
+
+  "createComponent": {
+    "description": "...",
+    "message": "Create Component"
   }
 }

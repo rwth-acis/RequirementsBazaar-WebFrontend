@@ -22,6 +22,85 @@
   "lp-mot": {
     "description": "...",
     "message": "Höre auf deine Benutzer und reagiere auf ihr Feedback"
-  }
+  },
 
+  "project": {
+    "description": "...",
+    "message": "Projekt"
+  },
+
+  "projects": {
+    "description": "...",
+    "message": "Projekte"
+  },
+
+  "new": {
+    "description": "...",
+    "message": "Neues"
+  },
+
+  "all": {
+    "description": "...",
+    "message": "Alle"
+  },
+
+  "createProject": {
+    "description": "...",
+    "message": "Projekt Erstellen"
+  },
+
+  "pr-desc": {
+    "description": "...",
+    "message": "Das ist der Projektes Abschnitt"
+  },
+
+  "searchLabel": {
+    "description": "...",
+    "message": "Suchen Sie einen Projekt"
+  },
+
+  "formTitle": {
+    "description": "...",
+    "message": "Titel"
+  },
+
+  "formDesc": {
+    "description": "...",
+    "message": "Beschreibung"
+  },
+
+  "cancel": {
+    "description": "...",
+    "message": "Absagen"
+  },
+
+  "save": {
+    "description": "...",
+    "message": "Speichern"
+  },
+
+  "delete": {
+    "description": "...",
+    "message": "LÖSCHEN"
+  },
+
+  "deleteProjectTitle": {
+    "description": "...",
+    "message": "Projekt Löschen"
+  },
+
+  "deleteProjectDesc": {
+    "description": "...",
+    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie dieses Projekt löschen möchten?"
+  },
+
+  "editProject": {
+    "description": "...",
+    "message": "Projekt bearbeiten"
+  },
+
+  "createComponent": {
+    "description": "...",
+    "message": "Komponent Erstellen"
+  }
 }

@@ -76,7 +76,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-toast id="superToast"></paper-toast>
 
-
     <!-- Main Area -->
     <paper-scroll-header-panel fixed>
 
@@ -199,23 +198,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                               on-tap="onCreateProjectTap"
                                               horizontal-align="right"
                                               vertical-align="top"
-                                              style="position:absolute;right:10px;">New Project</paper-button>
+                                              style="position:absolute;right:10px;"> <i18n-msg msgid="new"></i18n-msg> <i18n-msg msgid="project"></i18n-msg></paper-button>
                             </template>
 
-                            <h2>Projects</h2>
+                            <h2><i18n-msg msgid="projects"></i18n-msg></h2>
 
                             <template is="dom-if" if="{{isAuthorized}}">
 
                                 <div horizontal-align="right" vertical-align="top" style="position:absolute;right:20px;text-align:center;">
-                                    <div id="toggleText"> All Projects</div>
+                                    <div id="toggleText"><i18n-msg msgid="all"></i18n-msg> <i18n-msg msgid="projects"></i18n-msg></div>
                                     <paper-toggle-button on-tap="toggleProjects"></paper-toggle-button>
                                 </div>
 
                             </template>
 
-                            <p>This is the projects section</p>
+                            <p><i18n-msg msgid="pr-desc"></i18n-msg></p>
 
-                            <paper-input id="searchInput" class="large" label="Search project names and descriptions" value="{{projectFilterVal}}" autofocus>
+                            <i18n-msg class="i18nLabel" msgid="searchLabel" msg="{{srchlbl}}"></i18n-msg>
+
+                            <paper-input id="searchInput" class="large" label$="[[srchlbl]]" value="{{projectFilterVal}}" autofocus>
                                 <iron-icon icon="search" prefix class="big"></iron-icon>
                                 <paper-icon-button suffix onclick="{{clearInput}}"
                                                    icon="clear" alt="clear" title="clear" tabindex="0">
@@ -229,20 +230,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                   exit-animation="fade-out-animation" no-cancel-on-outside-click
                                   no-cancel-on-esc-key
                                   on-iron-overlay-closed="onCreateProjectClosed">
-                        <h2>Create a Project</h2>
-                        <paper-input char-counter maxlength="50" label="Title" id="newProjectTitle"></paper-input>
-                        <paper-textarea label="Description" id="newProjectDesc"></paper-textarea>
+                        <h2><i18n-msg msgid="createProject"></i18n-msg></h2>
+                        <i18n-msg class="i18nLabel" msgid="formTitle" msg="{{formTitle}}"></i18n-msg>
+                        <paper-input char-counter maxlength="50" label$="[[formTitle]]" id="newProjectTitle"></paper-input>
+                        <i18n-msg class="i18nLabel" msgid="formDesc" msg="{{formDesc}}"></i18n-msg>
+                        <paper-textarea label="[[formDesc]]" id="newProjectDesc"></paper-textarea>
 
                         <div class="buttons">
-                            <paper-button dialog-dismiss>Cancel</paper-button>
-                            <paper-button dialog-confirm autofocus>Save</paper-button>
+                            <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+                            <paper-button dialog-confirm autofocus><i18n-msg msgid="save"></i18n-msg></paper-button>
                         </div>
                     </paper-dialog>
 
                     <iron-ajax
                             id="postProjectRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/bazaar/projects";
+                            url="https://requirements-bazaar.org/bazaar/projects"
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -271,11 +274,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                     <paper-dialog id="modal1" modal on-iron-overlay-closed="deleteProject" entry-animation="fade-in-animation"
                                   exit-animation="fade-out-animation">
-                        <h2>Delete Project?</h2>
-                        <p>This action can't be undone! Are you sure that you want to permanently delete this project?</p>
+                        <h2><i18n-msg msgid="deleteProjectTitle"></i18n-msg>?</h2>
+                        <p><i18n-msg msgid="deleteProjectDesc"></i18n-msg></p>
                         <div class="buttons">
-                            <paper-button dialog-dismiss>Cancel</paper-button>
-                            <paper-button dialog-confirm autofocus>DELETE</paper-button>
+                            <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+                            <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
                         </div>
                     </paper-dialog>
 
@@ -291,8 +294,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;">
                                     <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                     <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
-                                        <paper-item on-tap="editProject">Edit Project</paper-item>
-                                        <paper-item on-tap="createModal1">Delete Project</paper-item>
+                                        <paper-item on-tap="editProject"><i18n-msg msgid="editProject"></i18n-msg></paper-item>
+                                        <paper-item on-tap="createModal1"><i18n-msg msgid="deleteProjectTitle"></i18n-msg></paper-item>
                                     </paper-menu>
                                 </paper-menu-button>
 
@@ -308,10 +311,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                             <div class="editForm">
 
-                                <paper-input class="editTitle" label="Title" value="{{project.name}}"></paper-input>
-                                <paper-textarea class="editDesc" label="Description" value="{{project.description}}"></paper-textarea>
-                                <paper-button raised on-tap="cancEditProj"> Cancel </paper-button>
-                                <paper-button raised on-tap="saveEditProj"> Save </paper-button>
+                                <paper-input class="editTitle" label="[[formTitle]]" value="{{project.name}}"></paper-input>
+                                <paper-textarea class="editDesc" label="[[formDesc]]" value="{{project.description}}"></paper-textarea>
+                                <paper-button raised on-tap="cancEditProj"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
+                                <paper-button raised on-tap="saveEditProj"> <i18n-msg msgid="save"></i18n-msg> </paper-button>
 
                             </div>
                         </paper-material>
@@ -331,13 +334,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                   exit-animation="fade-out-animation" no-cancel-on-outside-click
                                   no-cancel-on-esc-key
                                   on-iron-overlay-closed="onCreateComponentClosed">
-                        <h2>Create a Component</h2>
-                        <paper-input char-counter maxlength="50" label="Title" id="newComponentTitle"></paper-input>
-                        <paper-textarea label="Description" id="newComponentDesc"></paper-textarea>
+                        <h2><i18n-msg msgid="createComponent"></i18n-msg></h2>
+                        <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newComponentTitle"></paper-input>
+                        <paper-textarea label="[[formDesc]]" id="newComponentDesc"></paper-textarea>
 
                         <div class="buttons">
-                            <paper-button dialog-dismiss>Cancel</paper-button>
-                            <paper-button dialog-confirm autofocus>Save</paper-button>
+                            <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+                            <paper-button dialog-confirm autofocus><i18n-msg msgid="save"></i18n-msg></paper-button>
                         </div>
                     </paper-dialog>
 

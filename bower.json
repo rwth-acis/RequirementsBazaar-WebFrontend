@@ -12,7 +12,7 @@
     "openidconnect-signin": "rwth-acis/openidconnect-signin",
     "activity-tracker": "rwth-acis/activity-tracker",
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2",
-    "i18n-msg": "^1.0.4"
+    "i18n-msg": "ebidel/i18n-msg"
   },
   "devDependencies": {
     "web-component-tester": "*",
