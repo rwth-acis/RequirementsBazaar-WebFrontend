@@ -32,6 +32,7 @@
     app.currentUser = null;
     app.compResponse = null;
     app.isMobile = false; //initiate as false
+    app.i18n = null;
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -54,6 +55,7 @@
     // See https://github.com/Polymer/polymer/issues/1381
     window.addEventListener('WebComponentsReady', function() {
         // imports are loaded and elements have been registered
+        this.i18n = document.querySelector('i18n-msg');
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
@@ -170,7 +172,7 @@
         setTimeout(function(){
             var el = document.getElementById(requirementId);
             if (el === null) {
-                app.$.superToast.text = 'Requirement is deleted!. Redirected you to Component Page';
+                app.$.superToast.text = i18n.getMsg('noRequirement');
                 app.$.superToast.show();
                 page.redirect('/projects/' + app.params.projectId + "/components/" + componentId);
                 return 0;
@@ -211,7 +213,7 @@
             var request = document.querySelector('#postRequirementRequest');
             var components = [{id: parseInt(app.params.componentId)}];
             if (this.$.newRequirementTitle.value == '' || this.$.newRequirementDesc.value == '' || this.$.newRequirementTitle.value == null || this.$.newRequirementDesc.value == null ){
-                this.$.superToast.text = "Requirement isn't posted! Fields should not be empty!";
+                this.$.superToast.text = i18n.getMsg('fieldsNotEmptyReq');
                 this.$.superToast.open();
             } else {
                 request.body = JSON.stringify({
@@ -235,9 +237,9 @@
     app.handleResponseRequirement = function(data){
         if (data != null) {
             document.querySelector("#requirementsList").load();
-            this.$.superToast.text = "Requirement created successfully!";
+            this.$.superToast.text = i18n.getMsg('reqCreatedSucc');
         } else {
-            this.$.superToast.text = "Some error occurred while creating the requirement!";
+            this.$.superToast.text = i18n.getMsg('errorCreReq');
         }
         this.$.superToast.open();
     }
@@ -246,7 +248,7 @@
         if (e.detail.confirmed) {
             var request = document.querySelector('#postProjectRequest');
             if (this.$.newProjectDesc.value == '' || this.$.newProjectTitle.value == '' || this.$.newProjectDesc.value == null || this.$.newProjectTitle.value == null ){
-                this.$.superToast.text = "Project isn't posted! Fields should not be empty!";
+                this.$.superToast.text = i18n.getMsg('fieldsNotEmptyPrj');
                 this.$.superToast.open();
             } else {
                 request.body = JSON.stringify({
@@ -265,9 +267,9 @@
     app.handleResponseProject = function(data){
         if (data != null){
             this.$.projectsList.load();
-            this.$.projToast.text = "Project created successfully!";
+            this.$.projToast.text = i18n.getMsg('prjCreatedSucc');
         } else {
-            this.$.projToast.text = "Some error occurred while creating the project!";
+            this.$.projToast.text = i18n.getMsg('errorCrePrj');
         }
         this.$.projToast.open();
     };
@@ -276,7 +278,7 @@
         if (e.detail.confirmed) {
             var request = document.querySelector('#postComponentRequest');
             if (this.$.newComponentDesc.value == '' || this.$.newComponentTitle.value == '' || this.$.newComponentDesc.value == null || this.$.newComponentTitle.value == null ){
-                this.$.superToast.text = "Component isn't posted! Fields should not be empty!";
+                this.$.superToast.text = i18n.getMsg('fieldsNotEmptyCmp');
                 this.$.superToast.open();
             } else {
                 request.body = JSON.stringify({
@@ -295,9 +297,9 @@
     app.handleResponseComponent = function(data){
         if (data != null){
             this.$.componentsList.load();
-            this.$.compToast.text = "Component created successfully!";
+            this.$.compToast.text = i18n.getMsg('cmpCreatedSucc');
         } else {
-            this.$.compToast.text = "Some error occurred while creating component!";
+            this.$.compToast.text = i18n.getMsg('errorCreCmp');
         }
         this.$.compToast.open();
     };
@@ -424,9 +426,7 @@
 
     app.handleResponseEditProj = function(data) {
         if (data != null){
-            this.$.superToast.text = "Project edited successfully!";
-        } else {
-            this.$.superToast.text = "Some error happened while editing the requirement!";
+            this.$.superToast.text = i18n.getMsg('prjEditSucc');
         }
         this.$.superToast.open();
     };
@@ -480,7 +480,7 @@
         var el = document.getElementById('componentRequestPUT');
         el.url = "https://requirements-bazaar.org/bazaar/components/" + this.params.componentId;
         if (title == '' || desc == '' || title == null || desc == null ){
-            this.$.superToast.text = "You can't have empty fields!";
+            this.$.superToast.text = i18n.getMsg('noEmptyFields');
             this.$.superToast.open();
         } else {
             el.body = JSON.stringify({
@@ -499,10 +499,7 @@
             document.querySelector('.cmpDesc').style.display = 'block';
             document.querySelector('.bottom-container').style.display = 'flex';
             document.querySelector('.editFormComp').style.display = 'none';
-            this.$.superToast.text = "Component edited successfully!";
-            this.$.superToast.open();
-        } else {
-            this.$.superToast.text = "Some error happened while editing the requirement!";
+            this.$.superToast.text = i18n.getMsg('cmpEditSucc');
             this.$.superToast.open();
         }
     };
@@ -520,7 +517,7 @@
     app.compResponse = function(data){
         if (data != null){
             page('/projects/' + this.params.projectId);
-            this.$.superToast.text = "Component deleted successfully!";
+            this.$.superToast.text = i18n.getMsg('cmpDelSucc');
             this.$.superToast.open();
         }
     };
@@ -535,17 +532,17 @@
     app.toggleProjects = function () {
         document.getElementById('projectsList').toggle();
         var txt = document.querySelector('#toggleText');
-        if (txt.textContent != 'My Projects'){
-            txt.textContent = 'My Projects';
+        if (txt.textContent != i18n.getMsg('myProjects')){
+            txt.textContent = i18n.getMsg('myProjects');
         } else {
-            txt.textContent = 'All Projects';
+            txt.textContent = i18n.getMsg('allProjects');
         }
     };
 
     function sayHi() {
         if (app.currentUser != null) {
             var tst = document.getElementById('superToast');
-            tst.text = "Welcome back " + app.currentUser.firstName;
+            tst.text = i18n.getMsg('welcome') + app.currentUser.firstName;
             tst.open();
         }
     }

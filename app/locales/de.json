@@ -102,5 +102,195 @@
   "createComponent": {
     "description": "...",
     "message": "Komponent Erstellen"
+  },
+
+  "components": {
+    "description": "...",
+    "message": "Komponenten"
+  },
+
+  "setAsDefault": {
+    "description": "...",
+    "message": "Als Standard einstellen"
+  },
+
+  "deleteComponent": {
+    "description": "...",
+    "message": "Komponent Löschen"
+  },
+
+  "editComponent": {
+    "description": "...",
+    "message": "Komponent Bearbeiten"
+  },
+
+  "created": {
+    "description": "...",
+    "message": "Erstellt"
+  },
+
+  "updated": {
+    "description": "...",
+    "message": "Aktualisiert"
+  },
+
+  "createRequirement": {
+    "description": "...",
+    "message": "Anforderung Erstellen"
+  },
+
+  "deleteCompDesc": {
+    "description": "...",
+    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie dieses Komponent löschen möchten?"
+  },
+
+  "noRequirement": {
+    "description": "...",
+    "message": "Diese Anforderung eksistiert nicht. Sie sind umgeleitet zu Komponenten Seite."
+  },
+
+  "fieldsNotEmptyReq": {
+    "description": "...",
+    "message": "Anforderung ist nicht erstellt! Die Lükke dürfen nicht leer sein!"
+  },
+
+  "reqCreatedSucc": {
+    "description": "...",
+    "message": "Requirement created successfully!"
+  },
+
+  "errorCreReq": {
+    "description": "...",
+    "message": "Some error occurred while creating the requirement!"
+  },
+
+  "fieldsNotEmptyPrj": {
+    "description": "...",
+    "message": "Project isn't posted! Fields should not be empty!"
+  },
+
+  "prjCreatedSucc": {
+    "description": "...",
+    "message": "Project created successfully!"
+  },
+
+  "errorCrePrj": {
+    "description": "...",
+    "message": "Some error occurred while creating the project!"
+  },
+
+  "fieldsNotEmptyCmp": {
+    "description": "...",
+    "message": "Component isn't posted! Fields should not be empty!"
+  },
+
+  "cmpCreatedSucc": {
+    "description": "...",
+    "message": "Component created successfully!"
+  },
+
+  "errorCreCmp": {
+    "description": "...",
+    "message": "Some error occurred while creating the component!"
+  },
+
+  "prjEditSucc": {
+    "description": "...",
+    "message": "Project edited successfully!"
+  },
+
+  "cmpDelSucc": {
+    "description": "...",
+    "message": "Component deleted successfully!"
+  },
+
+  "cmpEditSucc": {
+    "description": "...",
+    "message": "Component edited successfully!"
+  },
+
+  "noEmptyFields": {
+    "description": "...",
+    "message": "You can't have empty fields!"
+  },
+
+  "allProjects": {
+    "description": "...",
+    "message": "Alle Projekte"
+  },
+
+  "myProjects": {
+    "description": "...",
+    "message": "Meine Projekte"
+  },
+
+  "welcome": {
+    "description": "...",
+    "message": "Willkommen "
+  },
+
+  "delCommTitle": {
+    "description": "...",
+    "message": "Delete Comment"
+  },
+
+  "delCommDesc": {
+    "description": "...",
+    "message": "This action can't be undone! Are you sure that you want to permanently delete this comment?"
+  },
+
+  "noComments": {
+    "description": "...",
+    "message": "Noch keine Kommentare..."
+  },
+
+  "by": {
+    "description": "...",
+    "message": " von "
+  },
+
+  "deleteRequirement": {
+    "description": "...",
+    "message": "Delete Requirement"
+  },
+
+  "deleteRequirementDesc": {
+    "description": "...",
+    "message": "This action can't be undone! Are you sure that you want to permanently delete this requirement?"
+  },
+
+  "showContributers": {
+    "description": "...",
+    "message": "Show Contributers"
+  },
+
+  "markAsDone": {
+    "description": "...",
+    "message": "Mark as done"
+  },
+
+  "followRequirement": {
+    "description": "...",
+    "message": "Follow Requirement"
+  },
+
+  "unfollowRequirement": {
+    "description": "...",
+    "message": "Unfollow Requirement"
+  },
+
+  "developRequirement": {
+    "description": "...",
+    "message": "Develop Requirement"
+  },
+
+  "undevelopRequirement": {
+    "description": "...",
+    "message": "Undevelop Requirement"
+  },
+
+  "editRequirement": {
+    "description": "...",
+    "message": "Edit Requirement"
   }
 }

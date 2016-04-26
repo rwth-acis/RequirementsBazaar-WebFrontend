@@ -54,15 +54,15 @@
 
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteComment" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
-            <h2>Delete Comment?</h2>
-            <p>This action can't be undone! Are you sure that you want to permanently delete this comment?</p>
+            <h2><i18n-msg msgid="delCommTitle"></i18n-msg>?</h2>
+            <p><i18n-msg msgid="delCommDesc"></i18n-msg></p>
             <div class="buttons">
-                <paper-button dialog-dismiss>Cancel</paper-button>
-                <paper-button dialog-confirm autofocus>DELETE</paper-button>
+                <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+                <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
             </div>
         </paper-dialog>
 
-        <div class="noComments" hidden="[[hideNoComments]]">No comments yet</div>
+        <div class="noComments" hidden="[[hideNoComments]]"><i18n-msg msgid="noComments"></i18n-msg></div>
 
         <template is="dom-repeat" items="{{comments}}">
             <div class="comment layout horizontal">
@@ -70,7 +70,7 @@
                 <div class="layout vertical flex">
                     <div>[[item.message]]</div>
                     <div class="info">
-                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> by <req-user user-id="[[item.creatorId]]" normal-view></req-user>
+                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user-id="[[item.creatorId]]" normal-view></req-user>
                     </div>
                 </div>
                 <template is="dom-if" if="{{isCreator(item.creatorId)}}">
