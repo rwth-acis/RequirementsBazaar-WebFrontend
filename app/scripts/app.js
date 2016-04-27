@@ -59,7 +59,16 @@
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
-        I18nMsg.lang = 'en';
+        switch (navigator.language.substring(0,2)) {
+            case "en":
+                I18nMsg.lang = 'en';
+                break;
+            case "de":
+                I18nMsg.lang = 'de';
+                break;
+            default:
+                I18nMsg.lang = 'en';
+        }
         I18nMsg.url = 'locales'; // optionally use custom folder for locales.
         Platform.performMicrotaskCheckpoint();
     });
