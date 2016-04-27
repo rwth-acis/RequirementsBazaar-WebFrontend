@@ -228,7 +228,7 @@
                                     <paper-menu-button horizontal-align="right" vertical-align="top">
                                         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                         <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                            <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
+                                            <!--<paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>-->
                                             <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
                                             <template is="dom-if" if="{{!isFollower}}">
                                                 <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
@@ -333,8 +333,7 @@
                     header: Object,
                     elem: Object,
                     showContributers: {
-                        type: Boolean,
-                        value: false
+                        type: Boolean
                     },
                     isFollower: {
                         type: Boolean,
@@ -570,15 +569,6 @@
                             return el;
                     }
                     return null;
-                },
-
-                toggleContributers: function(e){
-                    if (this.showContributers){
-                        e.currentTarget.innerText = this.i18n.getMsg('showContributers');
-                    } else {
-                        e.currentTarget.innerText = this.i18n.getMsg('showContributers');
-                    }
-                    this.showContributers = ! this.showContributers;
                 },
 
                 followReq: function(e){

@@ -113,7 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                               exit-animation="fade-out-animation">
                     <req-user user-id="[[currentUser.Id]]" full-view></req-user>
 
-                    <p><i18n-msg msgid="settings"></i18n-msg></p>
+                    <!--<div><i18n-msg msgid="settings"></i18n-msg></div>-->
                 </paper-dialog>
             </template>
             <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
@@ -401,6 +401,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                         <paper-menu id="componentInfoMenu" class="dropdown-content">
                                             <paper-item on-tap="setDefault"><i18n-msg msgid="setAsDefault"></i18n-msg></paper-item>
+                                            <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
                                             <paper-item on-tap="editComponent"><i18n-msg msgid="editComponent"></i18n-msg></paper-item>
                                             <paper-item on-tap="createModal2"><i18n-msg msgid="deleteComponent"></i18n-msg></paper-item>
                                         </paper-menu>
@@ -442,7 +443,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </paper-toolbar>
 
                             <div style="padding-top:20px;">
-                                <requirements-list id="requirementsList" header="{{header}}"></requirements-list>
+                                <requirements-list id="requirementsList" header="{{header}}" show-contributers="{{showContributers}}"></requirements-list>
                             </div>
 
                             <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"
