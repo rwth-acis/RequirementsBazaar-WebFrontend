@@ -401,7 +401,7 @@
                         });
                         request.generateRequest();
                     } else {
-                        this.feedback = "Comment can't be empty!";
+                        this.feedback = app.i18n.getMsg('');
                         this.$.toast.open();
                     }
                     this.newComment = '';
@@ -427,10 +427,6 @@
                 errorHandler: function (e, detail){
                     this.$.toast.text = detail.error.message;
                     this.$.toast.open();
-                },
-
-                moreAction: function(e){
-                    alert('button pressed');
                 },
 
                 doneRequirement: function(e){
@@ -513,7 +509,7 @@
                         e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
                         e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
                     } else {
-                        this.feedback = "Fields can't be empty!";
+                        this.feedback = app.i18n.getMsg('fieldsNotEmptyReq');
                         this.$.toast.open();
                     }
 
@@ -521,10 +517,8 @@
 
                 handleResponseEditReq: function(data) {
                     if (data != null){
-                        this.feedback = "Requirement edited successfully!";
+                        this.feedback = app.i18n.getMsg('reqEditSucc');
                         this.load();
-                    } else {
-                        this.feedback = "Some error happened while editing the requirement!";
                     }
                     this.$.toast.open();
                 },
@@ -554,7 +548,7 @@
 
                         element.parentNode.removeChild(element);
 
-                        this.feedback = "Requirement deleted successfully!";
+                        this.feedback = app.i18n.getMsg('reqDelSucc');
 
                         this.$.toast.open();
                     }
@@ -572,9 +566,9 @@
 
                 toggleContributers: function(e){
                     if (this.showContributers){
-                        e.currentTarget.innerText = "Show Contributers";
+                        e.currentTarget.innerText = app.i18n.getMsg('showContributers');
                     } else {
-                        e.currentTarget.innerText = "Hide Contributers";
+                        e.currentTarget.innerText = app.i18n.getMsg('showContributers');
                     }
                     this.showContributers = ! this.showContributers;
                 },
@@ -597,10 +591,8 @@
 
                 handleResponseFollowReq: function(data){
                     if (data != null){
-                        this.feedback = "You are now following this requirement!";
+                        this.feedback = app.i18n.getMsg('fdbFollowReq');
                         this.isFollower = true;
-                    } else {
-                        this.feedback = "Some error happened while following the requirement!";
                     }
                     this.$.toast.open();
                 },
@@ -623,10 +615,8 @@
 
                 handleResponseUnfollowReq: function(data){
                     if (data != null){
-                        this.feedback = "You are not following this requirement anymore!";
+                        this.feedback = app.i18n.getMsg('fdbUnfollowReq');
                         this.isFollower = false;
-                    } else {
-                        this.feedback = "Some error happened while unfollowing the requirement!";
                     }
                     this.$.toast.open();
                 },
@@ -649,10 +639,8 @@
 
                 handleResponseDevelopReq: function(data){
                     if (data != null){
-                        this.feedback = "You are now developer for this requirement!";
+                        this.feedback = app.i18n.getMsg('fdbDevelopReq');
                         this.isDeveloper = true;
-                    } else {
-                        this.feedback = "Some error happened while developing the requirement!";
                     }
                     this.$.toast.open();
                 },
@@ -675,10 +663,8 @@
 
                 handleResponseUndevelopReq: function(data){
                     if (data != null){
-                        this.feedback = "You are not developing this requirement anymore!";
+                        this.feedback = app.i18n.getMsg('fdbUndevelopReq');
                         this.isDeveloper = false;
-                    } else {
-                        this.feedback = "Some error happened while undeveloping the requirement!";
                     }
                     this.$.toast.open();
                 },

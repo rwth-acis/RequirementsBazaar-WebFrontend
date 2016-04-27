@@ -292,5 +292,65 @@
   "editRequirement": {
     "description": "...",
     "message": "Edit Requirement"
+  },
+
+  "creator": {
+    "description": "...",
+    "message": "Creator"
+  },
+
+  "leadDeveloper": {
+    "description": "...",
+    "message": "Lead Developer"
+  },
+
+  "comments": {
+    "description": "...",
+    "message": "Comments"
+  },
+
+  "addComment": {
+    "description": "...",
+    "message": "Add a comment..."
+  },
+
+  "commentNoEmpty": {
+    "description": "...",
+    "message": "Comment can't be empty!"
+  },
+
+  "reqEditSucc": {
+    "description": "...",
+    "message": "Requirement edited successfully!"
+  },
+
+  "reqDelSucc": {
+    "description": "...",
+    "message": "Requirement deleted successfully!"
+  },
+
+  "hideContributers": {
+    "description": "...",
+    "message": "Hide Contributers"
+  },
+
+  "fdbFollowReq": {
+    "description": "...",
+    "message": "You are now following this requirement!"
+  },
+
+  "fdbUnfollowReq": {
+    "description": "...",
+    "message": "You are not following this requirement anymore!"
+  },
+
+  "fdbDevelopReq": {
+    "description": "...",
+    "message": "You are now developer for this requirement!"
+  },
+
+  "fdbUndevelopReq": {
+    "description": "...",
+    "message": "You are not developing this requirement anymore!"
   }
 }
