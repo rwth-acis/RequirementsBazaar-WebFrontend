@@ -105,6 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <paper-menu id="componentInfoMenu" class="dropdown-content">
                     <paper-item on-tap="english">EN</paper-item>
                     <paper-item on-tap="deutsch">DE</paper-item>
+                    <paper-item on-tap="albanian">AL</paper-item>
                 </paper-menu>
             </paper-menu-button>
             <template is="dom-if" if="{{isAuthorized}}">
@@ -256,7 +257,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-toast id="projToast"></paper-toast>
 
                     <template is="dom-if" if="{{isAuthorized}}">
-                        <paper-fab on-tap="onCreateProjectTap" icon="add"></paper-fab>
+                        <paper-fab class="fabAdd" on-tap="onCreateProjectTap" icon="add"></paper-fab>
                     </template>
 
                 </section>
@@ -359,7 +360,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-toast id="compToast"></paper-toast>
 
                     <template is="dom-if" if="{{isAuthorized}}">
-                        <paper-fab on-tap="onCreateComponentTap" icon="add"></paper-fab>
+                        <paper-fab class="fabAdd" on-tap="onCreateComponentTap" icon="add"></paper-fab>
                     </template>
 
                 </section>
@@ -495,7 +496,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         on-error="errorHandler"></iron-ajax>
 
                             <template is="dom-if" if="{{isAuthorized}}">
-                                <paper-fab on-tap="onCreateRequirementTap" icon="add"></paper-fab>
+                                <paper-fab class="fabAdd" on-tap="onCreateRequirementTap" icon="add"></paper-fab>
                             </template>
 
                         </paper-scroll-header-panel>

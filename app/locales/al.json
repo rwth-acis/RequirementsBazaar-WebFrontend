@@ -1,0 +1,356 @@
+{
+  "settings": {
+    "description": "Settings label",
+    "message": "Settings"
+  },
+
+  "lp-title": {
+    "description": "Let us realize better projects",
+    "message": "Krijo projekte më të mira me ne"
+  },
+
+  "lp-desc": {
+    "description": "...",
+    "message": "Requirements Bazaar lejon përdoruesit t'ju japin feedback te vlefshëm dhe ju mundëson juve të përqendroheni në të rejat me rëndësi"
+  },
+
+  "lp-steps": {
+    "description": "...",
+    "message": "<h1>Si funksionon?! Feedback në 3 etapa</h1> <p>1. Krijo një projekt në requirements bazaar</p> <p>2. Drejtoji përdoruesit në projektin tuaj</p> <p>3. Përgjigjju kërkesave</p> <p>Për më tepër shikoni videon</p>"
+  },
+
+  "lp-mot": {
+    "description": "...",
+    "message": "Dëgjoni përdoruesit tuaj dhe përgjigjuni nevojave të tyre"
+  },
+
+  "project": {
+    "description": "...",
+    "message": "Projekt"
+  },
+
+  "projects": {
+    "description": "...",
+    "message": "Projekte"
+  },
+
+  "new": {
+    "description": "...",
+    "message": ""
+  },
+
+  "all": {
+    "description": "...",
+    "message": "Të gjithë"
+  },
+
+  "createProject": {
+    "description": "...",
+    "message": "Krijo një Projekt"
+  },
+
+  "pr-desc": {
+    "description": "...",
+    "message": "Kjo është seksioni i projektit"
+  },
+
+  "searchLabel": {
+    "description": "...",
+    "message": "Kërko një projekt me emër ose përshkrim"
+  },
+
+  "formTitle": {
+    "description": "...",
+    "message": "Titull"
+  },
+
+  "formDesc": {
+    "description": "...",
+    "message": "Pershkrim"
+  },
+
+  "cancel": {
+    "description": "...",
+    "message": "Anullo"
+  },
+
+  "save": {
+    "description": "...",
+    "message": "Ruaj"
+  },
+
+  "delete": {
+    "description": "...",
+    "message": "FSHI"
+  },
+
+  "deleteProjectTitle": {
+    "description": "...",
+    "message": "Fshi Projektin"
+  },
+
+  "deleteProjectDesc": {
+    "description": "...",
+    "message": "Ky aksion nuk mund te zhbëhet! Jeni të sigurt që doni ta fshini përfundimisht këtë projekt?"
+  },
+
+  "editProject": {
+    "description": "...",
+    "message": "Korrigjo Projektin"
+  },
+
+  "createComponent": {
+    "description": "...",
+    "message": "Krijo Komponent"
+  },
+
+  "components": {
+    "description": "...",
+    "message": "Komponente"
+  },
+
+  "setAsDefault": {
+    "description": "...",
+    "message": "Vendose Default"
+  },
+
+  "deleteComponent": {
+    "description": "...",
+    "message": "Fshije Komponentin"
+  },
+
+  "editComponent": {
+    "description": "...",
+    "message": "Korrigjo Komponentin"
+  },
+
+  "created": {
+    "description": "...",
+    "message": "Krijuar"
+  },
+
+  "updated": {
+    "description": "...",
+    "message": "Updatuar"
+  },
+
+  "createRequirement": {
+    "description": "...",
+    "message": "Krijo Kërkesë"
+  },
+
+  "deleteCompDesc": {
+    "description": "...",
+    "message": "Ky aksion nuk mund te zhbëhet! Jeni të sigurt që doni ta fshini përfundimisht këtë komponent?"
+  },
+
+  "noRequirement": {
+    "description": "...",
+    "message": "Kërkesa nuk ekziston!"
+  },
+
+  "fieldsNotEmptyReq": {
+    "description": "...",
+    "message": "Kërkesa nuk u postua! Elementët nuk mund te jenë bosh."
+  },
+
+  "reqCreatedSucc": {
+    "description": "...",
+    "message": "Kërkesa u krijua me sukses!"
+  },
+
+  "errorCreReq": {
+    "description": "...",
+    "message": "Disa gabime ndodhën gjatë krimit të kërkesës!"
+  },
+
+  "fieldsNotEmptyPrj": {
+    "description": "...",
+    "message": "Projekti nuk u postua! Elementët nuk mund te jenë bosh."
+  },
+
+  "prjCreatedSucc": {
+    "description": "...",
+    "message": "Projekti u krijua me sukses!"
+  },
+
+  "errorCrePrj": {
+    "description": "...",
+    "message": "Disa gabime ndodhën gjatë krimit të projektit!"
+  },
+
+  "fieldsNotEmptyCmp": {
+    "description": "...",
+    "message": "Komponenti nuk u postua! Elementët nuk mund te jenë bosh."
+  },
+
+  "cmpCreatedSucc": {
+    "description": "...",
+    "message": "Komponenti u krijua me sukses!"
+  },
+
+  "errorCreCmp": {
+    "description": "...",
+    "message": "Disa gabime ndodhën gjatë krimit të komponentit!"
+  },
+
+  "prjEditSucc": {
+    "description": "...",
+    "message": "Projekti u korrigjua me sukses!"
+  },
+
+  "cmpDelSucc": {
+    "description": "...",
+    "message": "Komponenti u fshi me sukses!"
+  },
+
+  "cmpEditSucc": {
+    "description": "...",
+    "message": "Komponenti u korrigjua me sukses!"
+  },
+
+  "noEmptyFields": {
+    "description": "...",
+    "message": "Nuk mund te keni elemente bosh!"
+  },
+
+  "allProjects": {
+    "description": "...",
+    "message": "Te gjithë Projektet"
+  },
+
+  "myProjects": {
+    "description": "...",
+    "message": "Projektet e mia"
+  },
+
+  "welcome": {
+    "description": "...",
+    "message": "Mirë se erdhët "
+  },
+
+  "delCommTitle": {
+    "description": "...",
+    "message": "Fshi Komentin"
+  },
+
+  "delCommDesc": {
+    "description": "...",
+    "message": "Ky aksion nuk mund te zhbëhet! Jeni të sigurt që doni ta fshini përfundimisht këtë koment?"
+  },
+
+  "noComments": {
+    "description": "...",
+    "message": "S'ka komente..."
+  },
+
+  "by": {
+    "description": "...",
+    "message": " nga "
+  },
+
+  "deleteRequirement": {
+    "description": "...",
+    "message": "Fshi Kërkesën"
+  },
+
+  "deleteRequirementDesc": {
+    "description": "...",
+    "message": "Ky aksion nuk mund te zhbëhet! Jeni të sigurt që doni ta fshini përfundimisht këtë kërkesë?"
+  },
+
+  "showContributers": {
+    "description": "...",
+    "message": "Shfaq Kontribuesit"
+  },
+
+  "markAsDone": {
+    "description": "...",
+    "message": "Markoje të bërë"
+  },
+
+  "followRequirement": {
+    "description": "...",
+    "message": "Ndiqe Kërkesë"
+  },
+
+  "unfollowRequirement": {
+    "description": "...",
+    "message": "Mos e ndiq Kërkesën"
+  },
+
+  "developRequirement": {
+    "description": "...",
+    "message": "Zhvillo Kërkesën"
+  },
+
+  "undevelopRequirement": {
+    "description": "...",
+    "message": "Mos e zhvillo Kërkesën"
+  },
+
+  "editRequirement": {
+    "description": "...",
+    "message": "Korrigjo Kërkesën"
+  },
+
+  "creator": {
+    "description": "...",
+    "message": "Krijuesi"
+  },
+
+  "leadDeveloper": {
+    "description": "...",
+    "message": "Zhvilluesi lider"
+  },
+
+  "comments": {
+    "description": "...",
+    "message": "Komentet"
+  },
+
+  "addComment": {
+    "description": "...",
+    "message": "Shto koment..."
+  },
+
+  "commentNoEmpty": {
+    "description": "...",
+    "message": "Komenti s'mund të jetë bosh!"
+  },
+
+  "reqEditSucc": {
+    "description": "...",
+    "message": "Kërkesa u korrigjua me sukses!"
+  },
+
+  "reqDelSucc": {
+    "description": "...",
+    "message": "Kërkesa u fshi me sukses!"
+  },
+
+  "hideContributers": {
+    "description": "...",
+    "message": "Fshih Kontribuesit"
+  },
+
+  "fdbFollowReq": {
+    "description": "...",
+    "message": "Ti je ndjekës tani!"
+  },
+
+  "fdbUnfollowReq": {
+    "description": "...",
+    "message": "Ti nuk je më ndjekës!"
+  },
+
+  "fdbDevelopReq": {
+    "description": "...",
+    "message": "Ti je zhvillues tani!"
+  },
+
+  "fdbUndevelopReq": {
+    "description": "...",
+    "message": "Ti nuk je më zhvillues!"
+  }
+}

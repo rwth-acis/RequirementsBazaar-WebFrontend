@@ -67,6 +67,9 @@
             case "de":
                 I18nMsg.lang = 'de';
                 break;
+            case "al":
+                I18nMsg.lang = 'al';
+                break;
             default:
                 I18nMsg.lang = 'en';
         }
@@ -81,6 +84,11 @@
 
     app.deutsch = function(){
         I18nMsg.lang = 'de';
+        Platform.performMicrotaskCheckpoint();
+    };
+
+    app.albanian = function(){
+        I18nMsg.lang = 'al';
         Platform.performMicrotaskCheckpoint();
     };
 
@@ -346,18 +354,28 @@
 
 
     app.toggNotDrawer = function(e){
+        var fabs = document.getElementsByClassName('fabAdd');
         //opens right drawer
         if (document.querySelector('#drawer').style.display != 'block'){
             document.querySelector('#drawer').style.display = 'block';
             document.querySelector('#drawer').style.zIndex = 1;
-            if (!this.isMobile)
+            if (!this.isMobile){
                 document.querySelector('#scrollProjects').style.marginRight = '256px';
+                for (var i = 0; i < fabs.length; i++){
+                    fabs[i].style.right = '286px';
+                }
+            }
             app.$.notDrawer0.openDrawer();
         } else {
             //closes right drawer
             document.querySelector('#drawer').style.display = 'none';
-            if (!this.isMobile)
+            if (!this.isMobile){
                 document.querySelector('#scrollProjects').style.marginRight = '0px';
+                for (var i = 0; i < fabs.length; i++){
+                    fabs[i].style.right = '30px';
+                }
+            }
+
             app.$.notDrawer0.closeDrawer();
         }
 

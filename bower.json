@@ -11,8 +11,7 @@
     "time-elements": "~0.4.0",
     "openidconnect-signin": "rwth-acis/openidconnect-signin",
     "activity-tracker": "rwth-acis/activity-tracker",
-    "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2",
-    "i18n-msg": "ebidel/i18n-msg"
+    "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2"
   },
   "devDependencies": {
     "web-component-tester": "*",
