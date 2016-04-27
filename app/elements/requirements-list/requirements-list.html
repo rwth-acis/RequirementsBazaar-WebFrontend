@@ -102,9 +102,15 @@
                 display:flex;
                 padding:10px;
             }
+
+            .hide {
+                display: none;
+            }
         </style>
 
         <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
+
+        <i18n-msg class="hide" id="i18n"></i18n-msg>
 
         <iron-ajax
                 id="requirementsLoader"
@@ -338,10 +344,12 @@
                         type: Boolean,
                         value: false
                     },
-                    commentlbl: String
+                    commentlbl: String,
+                    i18n: Object
                 },
 
                 ready: function () {
+                    this.i18n = this.$.i18n;
                 },
 
                 computeResourceURL: function (componentId) {
@@ -401,7 +409,7 @@
                         });
                         request.generateRequest();
                     } else {
-                        this.feedback = app.i18n.getMsg('');
+                        this.feedback = this.i18n.getMsg('');
                         this.$.toast.open();
                     }
                     this.newComment = '';
@@ -509,7 +517,7 @@
                         e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
                         e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
                     } else {
-                        this.feedback = app.i18n.getMsg('fieldsNotEmptyReq');
+                        this.feedback = this.i18n.getMsg('fieldsNotEmptyReq');
                         this.$.toast.open();
                     }
 
@@ -517,7 +525,7 @@
 
                 handleResponseEditReq: function(data) {
                     if (data != null){
-                        this.feedback = app.i18n.getMsg('reqEditSucc');
+                        this.feedback = this.i18n.getMsg('reqEditSucc');
                         this.load();
                     }
                     this.$.toast.open();
@@ -548,7 +556,7 @@
 
                         element.parentNode.removeChild(element);
 
-                        this.feedback = app.i18n.getMsg('reqDelSucc');
+                        this.feedback = this.i18n.getMsg('reqDelSucc');
 
                         this.$.toast.open();
                     }
@@ -566,9 +574,9 @@
 
                 toggleContributers: function(e){
                     if (this.showContributers){
-                        e.currentTarget.innerText = app.i18n.getMsg('showContributers');
+                        e.currentTarget.innerText = this.i18n.getMsg('showContributers');
                     } else {
-                        e.currentTarget.innerText = app.i18n.getMsg('showContributers');
+                        e.currentTarget.innerText = this.i18n.getMsg('showContributers');
                     }
                     this.showContributers = ! this.showContributers;
                 },
@@ -591,7 +599,7 @@
 
                 handleResponseFollowReq: function(data){
                     if (data != null){
-                        this.feedback = app.i18n.getMsg('fdbFollowReq');
+                        this.feedback = this.i18n.getMsg('fdbFollowReq');
                         this.isFollower = true;
                     }
                     this.$.toast.open();
@@ -615,7 +623,7 @@
 
                 handleResponseUnfollowReq: function(data){
                     if (data != null){
-                        this.feedback = app.i18n.getMsg('fdbUnfollowReq');
+                        this.feedback = this.i18n.getMsg('fdbUnfollowReq');
                         this.isFollower = false;
                     }
                     this.$.toast.open();
@@ -639,7 +647,7 @@
 
                 handleResponseDevelopReq: function(data){
                     if (data != null){
-                        this.feedback = app.i18n.getMsg('fdbDevelopReq');
+                        this.feedback = this.i18n.getMsg('fdbDevelopReq');
                         this.isDeveloper = true;
                     }
                     this.$.toast.open();
@@ -663,7 +671,7 @@
 
                 handleResponseUndevelopReq: function(data){
                     if (data != null){
-                        this.feedback = app.i18n.getMsg('fdbUndevelopReq');
+                        this.feedback = this.i18n.getMsg('fdbUndevelopReq');
                         this.isDeveloper = false;
                     }
                     this.$.toast.open();
