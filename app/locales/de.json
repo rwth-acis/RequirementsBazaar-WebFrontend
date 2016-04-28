@@ -11,12 +11,12 @@
 
   "lp-desc": {
     "description": "...",
-    "message": "Requirements Bazaar lässt Benutzer nützliches Feedback eingeben damit du dich auf die wichtigen Funktionen konzentrieren kannst"
+    "message": "Requirements Bazaar lässt seine Benutzer nützliches Feedback geben, damit du dich auf die wichtigen Funktionen konzentrieren kannst"
   },
 
   "lp-steps": {
     "description": "...",
-    "message": "<h1>Wie's funktioniert: Feedback in drei Schritten</h1> <p>1. Erstelle ein neues Projekt auf Requirements Bazaar</p> <p>2. Führe Benutzer zu deinem Projekt</p> <p>3. Reagiere auf das Feedback</p> <p>Schau dir das Video an um mehr zu erfahren</p>"
+    "message": "<h1>So funktioniert es! Feedback in drei Schritten</h1> <p>1. Erstelle ein neues Projekt auf Requirements Bazaar</p> <p>2. Lade Benutzer zu deinem Projekt ein</p> <p>3. Reagiere auf das Feedback</p> <p>Schau dir das Video an um mehr zu erfahren</p>"
   },
 
   "lp-mot": {
@@ -46,17 +46,17 @@
 
   "createProject": {
     "description": "...",
-    "message": "Projekt Erstellen"
+    "message": "Projekt erstellen"
   },
 
   "pr-desc": {
     "description": "...",
-    "message": "Das ist der Projektes Abschnitt"
+    "message": "Das ist die Projekt Beschreibung"
   },
 
   "searchLabel": {
     "description": "...",
-    "message": "Suchen Sie einen Projekt"
+    "message": "Suchen Sie ein Projekt"
   },
 
   "formTitle": {
@@ -71,7 +71,7 @@
 
   "cancel": {
     "description": "...",
-    "message": "Absagen"
+    "message": "Verwerfen"
   },
 
   "save": {
@@ -86,7 +86,7 @@
 
   "deleteProjectTitle": {
     "description": "...",
-    "message": "Projekt Löschen"
+    "message": "Projekt löschen"
   },
 
   "deleteProjectDesc": {
@@ -101,7 +101,7 @@
 
   "createComponent": {
     "description": "...",
-    "message": "Komponent Erstellen"
+    "message": "Komponente erstellen"
   },
 
   "components": {
@@ -116,12 +116,12 @@
 
   "deleteComponent": {
     "description": "...",
-    "message": "Komponent Löschen"
+    "message": "Komponente löschen"
   },
 
   "editComponent": {
     "description": "...",
-    "message": "Komponent Bearbeiten"
+    "message": "Komponente bearbeiten"
   },
 
   "created": {
@@ -136,82 +136,82 @@
 
   "createRequirement": {
     "description": "...",
-    "message": "Anforderung Erstellen"
+    "message": "Anforderung erstellen"
   },
 
   "deleteCompDesc": {
     "description": "...",
-    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie dieses Komponent löschen möchten?"
+    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie dieses Komponente löschen möchten?"
   },
 
   "noRequirement": {
     "description": "...",
-    "message": "Diese Anforderung eksistiert nicht. Sie sind umgeleitet zu Komponenten Seite."
+    "message": "Diese Anforderung existiert nicht. Sie wurden zur Komponenten Seite umgeleitet."
   },
 
   "fieldsNotEmptyReq": {
     "description": "...",
-    "message": "Anforderung ist nicht erstellt! Die Lükke dürfen nicht leer sein!"
+    "message": "Anforderung wurde nicht erstellt! Die Eingabe-Felder müssen gefüllt sein!"
   },
 
   "reqCreatedSucc": {
     "description": "...",
-    "message": "Requirement created successfully!"
+    "message": "Anforderung erfolgreich erstellt!"
   },
 
   "errorCreReq": {
     "description": "...",
-    "message": "Some error occurred while creating the requirement!"
+    "message": "Es traten Fehler auf beim Anlegen der neuen Anforderung!"
   },
 
   "fieldsNotEmptyPrj": {
     "description": "...",
-    "message": "Project isn't posted! Fields should not be empty!"
+    "message": "Projekt wurde nicht erstellt! Die Eingabe-Felder müssen gefüllt sein!"
   },
 
   "prjCreatedSucc": {
     "description": "...",
-    "message": "Project created successfully!"
+    "message": "Projekt erfolgreich erstellt!"
   },
 
   "errorCrePrj": {
     "description": "...",
-    "message": "Some error occurred while creating the project!"
+    "message": "Es traten Fehler auf beim Anlegen des neuen Projekts!"
   },
 
   "fieldsNotEmptyCmp": {
     "description": "...",
-    "message": "Component isn't posted! Fields should not be empty!"
+    "message": "Komponents wurde nicht erstellt! Die Eingabe-Felder müssen gefüllt sein!"
   },
 
   "cmpCreatedSucc": {
     "description": "...",
-    "message": "Component created successfully!"
+    "message": "Komponente erfolgreich erstellt!"
   },
 
   "errorCreCmp": {
     "description": "...",
-    "message": "Some error occurred while creating the component!"
+    "message": "Es traten Fehler auf beim Anlegen der neuen Komponente!"
   },
 
   "prjEditSucc": {
     "description": "...",
-    "message": "Project edited successfully!"
+    "message": "Projekt erfolgreich aktualisiert!"
   },
 
   "cmpDelSucc": {
     "description": "...",
-    "message": "Component deleted successfully!"
+    "message": "Komponente erfolgreich gelöscht!"
   },
 
   "cmpEditSucc": {
     "description": "...",
-    "message": "Component edited successfully!"
+    "message": "Komponente erfolgreich aktualisiert!"
   },
 
   "noEmptyFields": {
     "description": "...",
-    "message": "You can't have empty fields!"
+    "message": "Eingabe-Felder müssen gefüllt sein!"
   },
 
   "allProjects": {
@@ -231,12 +231,12 @@
 
   "delCommTitle": {
     "description": "...",
-    "message": "Delete Comment"
+    "message": "Lösche Kommentar"
   },
 
   "delCommDesc": {
     "description": "...",
-    "message": "This action can't be undone! Are you sure that you want to permanently delete this comment?"
+    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie dieses Kommentar löschen möchten?"
   },
 
   "noComments": {
@@ -251,106 +251,106 @@
 
   "deleteRequirement": {
     "description": "...",
-    "message": "Delete Requirement"
+    "message": "Lösche Anforderung"
   },
 
   "deleteRequirementDesc": {
     "description": "...",
-    "message": "This action can't be undone! Are you sure that you want to permanently delete this requirement?"
+    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie diese Anforderung löschen möchten?"
   },
 
   "showContributers": {
     "description": "...",
-    "message": "Show Contributers"
+    "message": "Zeige alle Beteiligten"
   },
 
   "markAsDone": {
     "description": "...",
-    "message": "Mark as done"
+    "message": "Markiere als erledigt"
   },
 
   "followRequirement": {
     "description": "...",
-    "message": "Follow Requirement"
+    "message": "Anforderung folgen"
   },
 
   "unfollowRequirement": {
     "description": "...",
-    "message": "Unfollow Requirement"
+    "message": "Anforderung nicht mehr folgen"
   },
 
   "developRequirement": {
     "description": "...",
-    "message": "Develop Requirement"
+    "message": "Anforderung entwickeln"
   },
 
   "undevelopRequirement": {
     "description": "...",
-    "message": "Undevelop Requirement"
+    "message": "Anforderung nicht mehr entwickeln"
   },
 
   "editRequirement": {
     "description": "...",
-    "message": "Edit Requirement"
+    "message": "Anforderung bearbeiten"
   },
 
   "creator": {
     "description": "...",
-    "message": "Creator"
+    "message": "Ersteller"
   },
 
   "leadDeveloper": {
     "description": "...",
-    "message": "Lead Developer"
+    "message": "Hauptentwickler"
   },
 
   "comments": {
     "description": "...",
-    "message": "Comments"
+    "message": "Kommentare"
   },
 
   "addComment": {
     "description": "...",
-    "message": "Add a comment..."
+    "message": "Für ein Kommentar hinzu ..."
   },
 
   "commentNoEmpty": {
     "description": "...",
-    "message": "Comment can't be empty!"
+    "message": "Kommentar muss gefüllt sein!"
   },
 
   "reqEditSucc": {
     "description": "...",
-    "message": "Requirement edited successfully!"
+    "message": "Anforderung erfolgreich aktualisiert!"
   },
 
   "reqDelSucc": {
     "description": "...",
-    "message": "Requirement deleted successfully!"
+    "message": "Anforderung erfolgreich gelöscht!"
   },
 
   "hideContributers": {
     "description": "...",
-    "message": "Hide Contributers"
+    "message": "Blende Beteiligt aus"
   },
 
   "fdbFollowReq": {
     "description": "...",
-    "message": "You are now following this requirement!"
+    "message": "Sie folgen nun dieser Anforderung!"
   },
 
   "fdbUnfollowReq": {
     "description": "...",
-    "message": "You are not following this requirement anymore!"
+    "message": "Sie folgend dieser Anforderung nicht länger!"
   },
 
   "fdbDevelopReq": {
     "description": "...",
-    "message": "You are now developer for this requirement!"
+    "message": "Sie entwickeln nun diese Anforderung!"
   },
 
   "fdbUndevelopReq": {
     "description": "...",
-    "message": "You are not developing this requirement anymore!"
+    "message": "Sie entwickeln diese Anforderung nicht länger!"
   }
 }
