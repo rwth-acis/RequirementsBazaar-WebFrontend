@@ -442,6 +442,10 @@
         return rt === 'component-info';
     };
 
+    app.landingPage = function(rt){
+        return rt === 'home';
+    };
+
     app.handleSigninSuccess = function(e){
         console.log(e);
     };

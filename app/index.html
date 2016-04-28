@@ -85,11 +85,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <template is="dom-if" if="{{componentPage(route)}}">
                 <paper-icon-button id="paperToggle" icon="menu" on-tap="toggCompDrawer"></paper-icon-button>
             </template>
-            <template is="dom-if" if="{{!componentPage(route)}}">
-                <a href="/">
-                    <paper-icon-button icon="home"></paper-icon-button>
-                </a>
-            </template>
+            <!--<template is="dom-if" if="{{!componentPage(route)}}">-->
+                <!--<a href="/">-->
+                    <!--<paper-icon-button icon="home"></paper-icon-button>-->
+                <!--</a>-->
+            <!--</template>-->
             <!-- Application name -->
 
                 <div class="app-name">
@@ -117,7 +117,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--<div><i18n-msg msgid="settings"></i18n-msg></div>-->
                 </paper-dialog>
             </template>
-            <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
+            <template is="dom-if" if="{{!landingPage(route)}}">
+                <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
+            </template>
+
             <openidconnect-signin scopes="openid email profile" client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
                                   server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
 
