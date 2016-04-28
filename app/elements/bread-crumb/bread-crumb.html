@@ -2,18 +2,29 @@
 
 <dom-module id="bread-crumb">
     <template>
-        <style>
+        <style is="custom-style">
             :host {
                 display: block;
             }
         </style>
 
-        <span><a href="/projects">Projects</a></span>
+        <iron-ajax
+                id="projectLoader"
+                url="https://requirements-bazaar.org/betabazaar/projects/[[projectId]]"
+                last-response="{{project}}"></iron-ajax>
+
+        <iron-ajax
+                id="componentLoader"
+                url="https://requirements-bazaar.org/betabazaar/components/[[componentId]]"
+                last-response="{{component}}"></iron-ajax>
+
+
+        <span><a href="{{app.baseUrl}}projects">Projects</a></span>
         <template is="dom-if" if="[[project.name]]">
-            <span> > <a href="/projects/[[project.id]]">[[project.name]]</a></span>
+            <span> > <a href$="{{app.baseUrl}}projects/[[project.id]]">[[project.name]]</a></span>
         </template>
         <template is="dom-if" if="[[component.name]]">
-            <span> > <a href="/projects/[[project.id]]/components/[[component.id]]">[[component.name]]</a></span>
+            <span> > <a href$="{{app.baseUrl}}projects/[[project.id]]/components/[[component.id]]">[[component.name]]</a></span>
         </template>
 
     </template>
@@ -26,30 +37,30 @@
                 is: 'bread-crumb',
                 properties: {
                     project: {
-                        type: Object,
-                        observer: '_checkRoute'
+                        type: Object
                     },
                     component: {
-                        type: Object,
-                        observer: '_checkRoute'
+                        type: Object
                     },
-                    route: {
+                    projectId: {
                         type: String,
-                        observer: '_checkRoute'
+                        observer: '_getProject'
+                    },
+                    componentId: {
+                        type: String,
+                        observer: '_getComponent'
                     }
                 },
 
-                _checkRoute: function(){
-                    if (this.route === 'project-info'){
-                        this.component = null;
+                _getProject: function(){
+                    if (this.projectId !== null){
+                        this.$.projectLoader.generateRequest();
                     }
-                    if (this.route === 'projects'){
-                        this.project = null;
-                        this.component = null;
-                    }
-                    if (this.route === 'home'){
-                        this.project = null;
-                        this.component = null;
+                },
+
+                _getComponent: function(){
+                    if (this.componentId !== null){
+                        this.$.componentLoader.generateRequest();
                     }
                 }
 
