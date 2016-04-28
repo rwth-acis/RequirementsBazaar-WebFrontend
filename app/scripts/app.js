@@ -33,7 +33,6 @@
     app.compResponse = null;
     app.isMobile = false; //initiate as false
     app.i18n = null;
-    app.showContributers = false;
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -599,15 +598,6 @@
         } else {
             txt.textContent = i18n.getMsg('allProjects');
         }
-    };
-
-    app.toggleContributers = function(e){
-        if (this.showContributers){
-            e.currentTarget.innerText = i18n.getMsg('showContributers');
-        } else {
-            e.currentTarget.innerText = i18n.getMsg('hideContributers');
-        }
-        this.showContributers = ! this.showContributers;
     };
 
     function sayHi() {

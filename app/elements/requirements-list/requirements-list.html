@@ -99,7 +99,7 @@
             }
 
             .contributers {
-                display:flex;
+                display:none;
                 padding:10px;
             }
 
@@ -224,11 +224,11 @@
                                     </template>
                                 </template>
                                 <div>[[item.upVotes]]</div>
-                                <template is="dom-if" if="{{isAuthorized}}">
+                                <!--<template is="dom-if" if="{{isAuthorized}}">-->
                                     <paper-menu-button horizontal-align="right" vertical-align="top">
                                         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                         <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                            <!--<paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>-->
+                                            <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
                                             <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
                                             <template is="dom-if" if="{{!isFollower}}">
                                                 <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
@@ -246,7 +246,7 @@
                                             <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
                                         </paper-menu>
                                     </paper-menu-button>
-                                </template>
+                                <!--</template>-->
                             </div>
                             <paper-toolbar class="title" on-tap="toggleCollapsible">
                                 <div class="title">[[item.title]]</div>
@@ -259,12 +259,10 @@
 
                         </div>
 
-                        <template is="dom-if" if="{{showContributers}}">
-                            <div class="contributers">
-                                <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[item.creatorId]]" full-view></req-user></div>
-                                <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[item.leadDeveloperId]]" full-view></req-user></div>
-                            </div>
-                        </template>
+                        <div class="contributers">
+                            <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[item.creatorId]]" full-view></req-user></div>
+                            <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[item.leadDeveloperId]]" full-view></req-user></div>
+                        </div>
 
                         <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
                         <div class="description">[[item.description]]</div>
@@ -340,6 +338,10 @@
                         value: false
                     },
                     isDeveloper: {
+                        type: Boolean,
+                        value: false
+                    },
+                    showContributers: {
                         type: Boolean,
                         value: false
                     },
@@ -665,6 +667,26 @@
                         this.isDeveloper = false;
                     }
                     this.$.toast.open();
+                },
+
+                toggleContributers: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+                    if (this.showContributers){
+                        e.currentTarget.innerText = i18n.getMsg('showContributers');
+                        element.querySelector('.contributers').style.display = "none";
+                    } else {
+                        e.currentTarget.innerText = i18n.getMsg('hideContributers');
+                        element.querySelector('.contributers').style.display = "flex";
+                    }
+                    this.showContributers = ! this.showContributers;
                 },
 
                 userVoted: function(vote){
