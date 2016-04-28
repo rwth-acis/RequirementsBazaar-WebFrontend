@@ -178,6 +178,17 @@ paper-icon-button {
     display: none;
 }
 
+#notDrawer > iron-selector > #main > #scrim {
+    z-index: 1;
+}
+
+#notDrawer0 > iron-selector > #main > #scrim {
+    z-index: 1;
+}
+#notDrawer1 > iron-selector > #main > #scrim {
+    z-index: 1;
+}
+
 @media screen and (min-device-width: 901px) {
     #landing-top-image {
         margin-top: 50px;

@@ -57,9 +57,6 @@
     window.addEventListener('WebComponentsReady', function() {
         // imports are loaded and elements have been registered
         this.i18n = document.querySelector('i18n-msg');
-        if (this.isMobile){
-
-        }
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
@@ -374,47 +371,70 @@
                 for (var i = 0; i < fabs.length; i++){
                     fabs[i].style.right = '286px';
                 }
+            } else {
+                this.$.notDrawer.forceNarrow = true;
+                this.$.notDrawer.closeDrawer();
             }
-            app.$.notDrawer0.openDrawer();
         } else {
             //closes right drawer
-            document.querySelector('#drawer').style.display = 'none';
             if (!this.isMobile){
+                document.querySelector('#drawer').style.display = 'none';
                 document.querySelector('#scrollProjects').style.marginRight = '0px';
                 for (var i = 0; i < fabs.length; i++){
                     fabs[i].style.right = '30px';
                 }
             }
-
-            app.$.notDrawer0.closeDrawer();
         }
 
         if (document.querySelectorAll('#drawer')[1].style.display != 'block'){
             document.querySelectorAll('#drawer')[1].style.display = 'block';
             document.querySelectorAll('#drawer')[1].style.zIndex = 1;
-            if (!this.isMobile)
+            if (!this.isMobile) {
                 document.querySelector('#scrollComponents').style.marginRight = '256px';
-            app.$.notDrawer1.openDrawer();
+            } else {
+                this.$.notDrawer0.forceNarrow = true;
+                this.$.notDrawer0.closeDrawer();
+            }
         } else {
             //closes right drawer
-            document.querySelectorAll('#drawer')[1].style.display = 'none';
-            if (!this.isMobile)
+            if (!this.isMobile) {
+                document.querySelectorAll('#drawer')[1].style.display = 'none';
                 document.querySelector('#scrollComponents').style.marginRight = '0px';
-            app.$.notDrawer1.closeDrawer();
+            }
         }
 
         if (document.querySelectorAll('#drawer')[2].style.display != 'block'){
             document.querySelectorAll('#drawer')[2].style.display = 'block';
             document.querySelectorAll('#drawer')[2].style.zIndex = 1;
-            if (!this.isMobile)
+            if (!this.isMobile) {
                 document.querySelectorAll('#main')[3].style.right = '256px';
-            app.$.notDrawer.openDrawer();
+            } else {
+                this.$.notDrawer1.forceNarrow = true;
+                this.$.notDrawer1.closeDrawer();
+            }
         } else {
             //closes right drawer
-            document.querySelectorAll('#drawer')[2].style.display = 'none';
-            if (!this.isMobile)
+            if (!this.isMobile){
+                document.querySelectorAll('#drawer')[2].style.display = 'none';
                 document.querySelectorAll('#main')[3].style.right = '0px';
-            app.$.notDrawer.closeDrawer();
+            }
+        }
+
+        if (this.isMobile){
+            if (this.route === "component-info"){
+                this.$.notDrawer.disableSwipe = true;
+                this.$.notDrawer.togglePanel();
+            }
+
+            if (this.route === "projects"){
+                this.$.notDrawer0.disableSwipe = true;
+                this.$.notDrawer0.togglePanel();
+            }
+
+            if (this.route === "project-info"){
+                this.$.notDrawer1.disableSwipe = true;
+                this.$.notDrawer1.togglePanel();
+            }
         }
     };
 
