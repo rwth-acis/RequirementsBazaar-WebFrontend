@@ -40,6 +40,7 @@ paper-icon-button {
 
 .cmpTitle {
     display: block;
+    margin-top:10px;
     text-overflow: ellipsis;
 }
 
@@ -58,7 +59,6 @@ paper-icon-button {
 
 .breadCrumb{
     margin-top: 10px;
-    margin-bottom: -5px;
 }
 
 .bottom-container {
@@ -71,6 +71,7 @@ paper-icon-button {
 
 .timing {
     flex: 1;
+    font-size: medium;
 }
 
 .leader {

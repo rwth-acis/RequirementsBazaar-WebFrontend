@@ -396,7 +396,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <components-menu id="componentsMenu"></components-menu>
                         </paper-scroll-header-panel>
 
-                        <paper-scroll-header-panel id="mainScroller" main condenses condensed-header-height="60" keep-condensed-header>
+                        <paper-scroll-header-panel id="mainScroller" main>
 
                             <paper-toolbar id="componentToolbar" class="tall">
 
@@ -412,28 +412,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     </paper-menu-button>
                                 </template>
 
-                                <span class="cmpTitle">
+                                <div class="cmpTitle">
                                     <div class="breadCrumb">
                                         <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}"></bread-crumb>
                                     </div>
-                                    <spann class="component-name"><span>{{component.name}}</span></spann>
-                                </span>
+                                    <div class="component-name"><span>{{component.name}}</span></div>
+                                </div>
 
                                 <div class="cmpDesc middle"><span>{{component.description}}</span></div>
 
                                 <div class="bottom-container bottom">
                                     <div class="timing">
-                                        <paper-icon-item>
-                                            <iron-icon item-icon class="big" icon="alarm"></iron-icon>
-                                            <paper-item-body two-line>
-                                                <div><i18n-msg msgid="created"></i18n-msg> <time is="relative-time" datetime$="[[component.creation_time]]"></time></div>
-                                                <div><i18n-msg msgid="updated"></i18n-msg> <time is="relative-time" datetime$="[[component.lastupdated_time]]"></time></div>
-                                            </paper-item-body>
-                                        </paper-icon-item>
+                                        <i18n-msg msgid="created"></i18n-msg>
+                                        <time is="relative-time" datetime$="[[component.creation_time]]"></time>
+                                        <i18n-msg msgid="by"></i18n-msg>
+                                        <req-user user-id="{{component.leaderId}}" normal-view></req-user>
                                     </div>
-                                    <div class="leader">
-                                        <req-user user-id="{{component.leaderId}}" full-view></req-user>
-                                    </div>
+                                    <!--<div class="timing">-->
+                                        <!--<paper-icon-item>-->
+                                            <!--<paper-item-body two-line>-->
+                                                <!--<div><i18n-msg msgid="created"></i18n-msg> <time is="relative-time" datetime$="[[component.creation_time]]"></time></div>-->
+                                            <!--</paper-item-body>-->
+                                        <!--</paper-icon-item>-->
+                                    <!--</div>-->
+                                    <!--<div class="leader">-->
+                                        <!--<req-user user-id="{{component.leaderId}}" full-view></req-user>-->
+                                    <!--</div>-->
                                 </div>
 
                                 <div class="editFormComp middle middle-container center layout">
