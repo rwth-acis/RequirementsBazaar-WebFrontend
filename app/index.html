@@ -189,7 +189,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <!-- Drawer Content -->
                             <activity-tracker></activity-tracker>
                         </paper-scroll-header-panel>
-                        <div main></div>
                     </paper-drawer-panel>
 
                     <paper-scroll-header-panel id="scrollProjects">
@@ -306,7 +305,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                             <div class="editHeader">
 
-                                <bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb>
+                                <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}"></bread-crumb>
                                 <h2>{{project.name}}</h2>
 
                                 <div>{{project.description}}</div>
@@ -412,7 +411,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                 <span class="cmpTitle">
                                     <div class="breadCrumb">
-                                        <bread-crumb project="{{project}}" component="{{component}}" route="{{route}}"></bread-crumb>
+                                        <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}"></bread-crumb>
                                     </div>
                                     <spann class="component-name"><span>{{component.name}}</span></spann>
                                 </span>
