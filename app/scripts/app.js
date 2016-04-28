@@ -57,6 +57,9 @@
     window.addEventListener('WebComponentsReady', function() {
         // imports are loaded and elements have been registered
         this.i18n = document.querySelector('i18n-msg');
+        if (this.isMobile){
+
+        }
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
@@ -120,7 +123,7 @@
 
     // Close drawer after menu item is selected if drawerPanel is narrow
     app.onDataRouteClick = function() {
-        var drawerPanel = document.querySelector('#paperDrawerPanel');
+        var drawerPanel = document.querySelector('#reqDrawer');
         if (drawerPanel.narrow) {
             drawerPanel.closeDrawer();
         }
@@ -138,7 +141,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getProjectURL = function(projectId) {
-        return 'https://requirements-bazaar.org/bazaar/projects/' + projectId;
+        return 'https://requirements-bazaar.org/betabazaar/projects/' + projectId;
     };
 
     /**
@@ -148,7 +151,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getComponentURL = function(componentId) {
-        return 'https://requirements-bazaar.org/bazaar/components/' + componentId;
+        return 'https://requirements-bazaar.org/betabazaar/components/' + componentId;
     };
 
     /**
@@ -347,8 +350,15 @@
                 document.querySelectorAll('#main')[3].style.left = '256px';
             }
         } else {
-            this.$.reqDrawer.forceNarrow = true;
-            this.$.reqDrawer.togglePanel();
+
+            if (document.querySelectorAll('#main')[3].style.left === '256px'){
+                document.querySelectorAll('#main')[3].style.left = '0px';
+                this.$.reqDrawer.forceNarrow = true;
+                this.$.reqDrawer.closeDrawer();
+            } else {
+                this.$.reqDrawer.forceNarrow = true;
+                this.$.reqDrawer.togglePanel();
+            }
         }
     };
 
@@ -425,7 +435,7 @@
         var title = document.querySelector('.editForm > .editTitle').value;
         var desc = document.querySelector('.editForm > .editDesc').value;
         var el = document.getElementById('postUpdateProject');
-        el.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
+        el.url = "https://requirements-bazaar.org/betabazaar/projects/" + this.params.projectId;
         if (title == '' || desc == '' || title == null || desc == null ){
             this.$.superToast.text = "You can't have empty fields!";
             this.$.superToast.open();
@@ -471,7 +481,7 @@
         if (e.detail.confirmed) {
             var request = document.getElementById('postUpdateProject');
 
-            request.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
+            request.url = "https://requirements-bazaar.org/betabazaar/projects/" + this.params.projectId;
             request.method = "DELETE";
             request.generateRequest();
         }
@@ -479,7 +489,7 @@
 
     app.setDefault = function(e){
         var req = this.$.postUpdateProject;
-        req.url = "https://requirements-bazaar.org/bazaar/projects/" + this.params.projectId;
+        req.url = "https://requirements-bazaar.org/betabazaar/projects/" + this.params.projectId;
         req.method = "PUT";
         req.body = JSON.stringify({
             "id": parseInt(this.params.projectId),
@@ -506,7 +516,7 @@
         var title = document.querySelector('.editFormComp > .editTitle').value;
         var desc = document.querySelector('.editFormComp > .editDesc').value;
         var el = document.getElementById('componentRequestPUT');
-        el.url = "https://requirements-bazaar.org/bazaar/components/" + this.params.componentId;
+        el.url = "https://requirements-bazaar.org/betabazaar/components/" + this.params.componentId;
         if (title == '' || desc == '' || title == null || desc == null ){
             this.$.superToast.text = i18n.getMsg('noEmptyFields');
             this.$.superToast.open();
@@ -536,7 +546,7 @@
         if (e.detail.confirmed) {
             var request = document.getElementById('componentRequest');
 
-            request.url = "https://requirements-bazaar.org/bazaar/components/" + this.params.componentId;
+            request.url = "https://requirements-bazaar.org/betabazaar/components/" + this.params.componentId;
             request.method = "DELETE";
             request.generateRequest();
         }
