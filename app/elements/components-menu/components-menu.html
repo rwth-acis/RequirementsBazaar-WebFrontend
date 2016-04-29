@@ -93,6 +93,7 @@
                 onComponentTap: function(e) {
                     var model = e.model;
                     page('/projects/'+ this.projectId +'/components/' + model.item.id);
+                    document.querySelector("#reqDrawer").togglePanel();
                 },
 
                 load: function() {

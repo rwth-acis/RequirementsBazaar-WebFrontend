@@ -224,7 +224,7 @@
                                     </template>
                                 </template>
                                 <div>[[item.upVotes]]</div>
-                                <!--<template is="dom-if" if="{{isAuthorized}}">-->
+                                <template is="dom-if" if="{{isAuthorized}}">
                                     <paper-menu-button horizontal-align="right" vertical-align="top">
                                         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                         <paper-menu id="componentInfoMenu" class="dropdown-content">
@@ -246,7 +246,7 @@
                                             <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
                                         </paper-menu>
                                     </paper-menu-button>
-                                <!--</template>-->
+                                </template>
                             </div>
                             <paper-toolbar class="title" on-tap="toggleCollapsible">
                                 <div class="title">[[item.title]]</div>
