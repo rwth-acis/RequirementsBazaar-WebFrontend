@@ -19,11 +19,11 @@
                 last-response="{{component}}"></iron-ajax>
 
 
-        <span><a href="{{app.baseUrl}}projects">Projects</a></span>
-        <template is="dom-if" if="[[project.name]]">
-            <span> > <a href$="{{app.baseUrl}}projects/[[project.id]]">[[project.name]]</a></span>
+        <span><a href="{{baseUrl}}projects">Projects</a></span>
+        <template is="dom-if" if$="[[project]]">
+            <span> > <a href$="{{baseUrl}}projects/[[project.id]]">[[project.name]]</a></span>
         </template>
-        <template is="dom-if" if="[[component.name]]">
+        <template is="dom-if" if$="[[component]]">
             <span> > <a href$="{{app.baseUrl}}projects/[[project.id]]/components/[[component.id]]">[[component.name]]</a></span>
         </template>
 
@@ -49,6 +49,9 @@
                     componentId: {
                         type: String,
                         observer: '_getComponent'
+                    },
+                    baseUrl: {
+                        type: String
                     }
                 },
 
