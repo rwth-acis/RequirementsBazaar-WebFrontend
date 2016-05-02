@@ -600,6 +600,16 @@
         }
     };
 
+    app.changeUserSettings = function(){
+        var request = document.getElementById('usrSettings');
+
+        request.body = JSON.stringify({
+            "id": parseInt(this.currentUser.Id),
+            "mailDefault": ! this.currentUser.mailDefault
+        });
+        request.generateRequest();
+    };
+
     function sayHi() {
         if (app.currentUser != null) {
             var tst = document.getElementById('superToast');

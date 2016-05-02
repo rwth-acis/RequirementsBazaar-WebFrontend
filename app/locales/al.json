@@ -352,5 +352,10 @@
   "fdbUndevelopReq": {
     "description": "...",
     "message": "Ti nuk je më zhvillues!"
+  },
+
+  "mailDefault": {
+    "description": "...",
+    "message": "Merr Emaile"
   }
 }

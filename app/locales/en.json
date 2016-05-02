@@ -352,5 +352,10 @@
   "fdbUndevelopReq": {
     "description": "...",
     "message": "You are not developing this requirement anymore!"
+  },
+
+  "mailDefault": {
+    "description": "...",
+    "message": "Get mails"
   }
 }

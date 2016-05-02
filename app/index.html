@@ -74,6 +74,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             params="{{header}}"
             last-response="{{currentUser}}"></iron-ajax>
 
+    <iron-ajax
+            id="usrSettings"
+            handle-as="json"
+            url="https://requirements-bazaar.org/betabazaar/users/current"
+            content-type="application/json"
+            method="PUT"
+            params="{{header}}"></iron-ajax>
+
     <paper-toast id="superToast"></paper-toast>
     <i18n-msg class="i18nlabel"></i18n-msg>
 
@@ -114,7 +122,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                               exit-animation="fade-out-animation">
                     <req-user user-id="[[currentUser.Id]]" full-view></req-user>
 
-                    <!--<div><i18n-msg msgid="settings"></i18n-msg></div>-->
+                    <div class="section-name"><i18n-msg msgid="settings"></i18n-msg></div>
+                    <div>
+                        <i18n-msg msgid="mailDefault"></i18n-msg>:
+                        <paper-toggle-button checked="[[currentUser.mailDefault]]" on-tap="changeUserSettings"></paper-toggle-button>
+                    </div>
                 </paper-dialog>
             </template>
             <template is="dom-if" if="{{!landingPage(route)}}">

@@ -352,5 +352,10 @@
   "fdbUndevelopReq": {
     "description": "...",
     "message": "Sie entwickeln diese Anforderung nicht länger!"
+  },
+
+  "mailDefault": {
+    "description": "...",
+    "message": "E-mail empfangen"
   }
 }
