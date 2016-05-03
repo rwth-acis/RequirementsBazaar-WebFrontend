@@ -117,10 +117,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </paper-menu>
             </paper-menu-button>
             <template is="dom-if" if="{{isAuthorized}}">
-                <req-user user-id="[[currentUser.Id]]" mini on-tap="openUserDialog"></req-user>
+                <req-user user-id="[[currentUser.id]]" mini on-tap="openUserDialog"></req-user>
                 <paper-dialog id="userSettings" class="user" entry-animation="fade-in-animation"
                               exit-animation="fade-out-animation">
-                    <req-user user-id="[[currentUser.Id]]" full-view></req-user>
+                    <req-user user-id="[[currentUser.id]]" full-view></req-user>
 
                     <div class="section-name"><i18n-msg msgid="settings"></i18n-msg></div>
                     <div>
