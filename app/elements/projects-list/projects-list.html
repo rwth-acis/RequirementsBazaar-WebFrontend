@@ -103,10 +103,10 @@
                     return function (item) {
                         if (!val) {
 //                            console.log(app.currentUser);
-                            return item.leaderId == app.currentUser.Id;
+                            return item.leaderId == app.currentUser.id;
                         }
                         //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
-                        return (item.leaderId == app.currentUser.Id && item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.leaderId == app.currentUser.Id && item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
+                        return (item.leaderId == app.currentUser.id && item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.leaderId == app.currentUser.id && item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
                     };
                 },
 

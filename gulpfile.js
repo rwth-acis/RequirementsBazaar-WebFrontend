@@ -134,6 +134,14 @@ gulp.task('copy', function () {
     'bower_components/**/*'
   ]).pipe(gulp.dest('dist/bower_components'));
 
+  var locales = gulp.src([
+    'app/locales/*'
+  ]).pipe(gulp.dest('dist/locales'));
+
+  var htmlStyles = gulp.src([
+    'app/styles/*.html'
+  ]).pipe(gulp.dest('dist/styles'));
+
   var elements = gulp.src(['app/elements/**/*.html',
                            'app/elements/**/*.css',
                            'app/elements/**/*.js'])
@@ -149,7 +157,7 @@ gulp.task('copy', function () {
     .pipe($.rename('elements.vulcanized.html'))
     .pipe(gulp.dest('dist/elements'));
 
-  return merge(app, bower, elements, vulcanized, swBootstrap, swToolbox)
+  return merge(app, bower, locales, htmlStyles, elements, vulcanized, swBootstrap, swToolbox)
     .pipe($.size({title: 'copy'}));
 });
 
@@ -263,23 +271,26 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
 // Build and serve the output from the dist build
 gulp.task('serve:dist', ['default'], function () {
   browserSync({
-    port: 5001,
-    notify: false,
+    browser: config.browserSync.browser,
+    https: config.browserSync.https,
+    notify: config.browserSync.notify,
+    port: config.browserSync.port,
     logPrefix: 'PSK',
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
-        fn: function (snippet) {
+        fn: function(snippet) {
           return snippet;
         }
       }
     },
-    // Run as an https by uncommenting 'https: true'
-    // Note: this uses an unsigned certificate which on first access
-    //       will present a certificate warning in the browser.
-    // https: true,
-    server: 'dist',
-    middleware: [ historyApiFallback() ]
+    server: {
+      baseDir: 'dist',
+      middleware: [historyApiFallback()]
+    },
+    ui: {
+      port: config.browserSync.ui.port
+    }
   });
 });
 
