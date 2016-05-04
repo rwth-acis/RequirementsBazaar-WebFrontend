@@ -357,5 +357,10 @@
   "mailDefault": {
     "description": "...",
     "message": "E-mail empfangen"
+  },
+
+  "srchReq": {
+    "description": "...",
+    "message": "Suchen eine Anforderung"
   }
 }

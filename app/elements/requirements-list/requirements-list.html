@@ -205,7 +205,7 @@
         </paper-dialog>
 
 
-        <template is="dom-repeat" items="{{requirements}}">
+        <template is="dom-repeat" items="{{requirements}}" filter="{{searchFilter(filterValue)}}">
             <div class="layout vertical center">
                 <template is="dom-if" if="{{!item.realized}}">
                     <paper-material class="req" id="[[item.id]]">
@@ -330,9 +330,6 @@
                     feedback: String,
                     header: Object,
                     elem: Object,
-                    showContributers: {
-                        type: Boolean
-                    },
                     isFollower: {
                         type: Boolean,
                         value: false
@@ -346,7 +343,11 @@
                         value: false
                     },
                     commentlbl: String,
-                    i18n: Object
+                    i18n: Object,
+                    filterValue: {
+                        type: String,
+                        value: ''
+                    }
                 },
 
                 ready: function () {
@@ -687,6 +688,16 @@
                         element.querySelector('.contributers').style.display = "flex";
                     }
                     this.showContributers = ! this.showContributers;
+                },
+
+                searchFilter: function (val) {
+                    return function (item) {
+                        if (!val) {
+                            return true;
+                        }
+                        //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
+                        return (item.title && ~item.title.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
+                    };
                 },
 
                 userVoted: function(vote){

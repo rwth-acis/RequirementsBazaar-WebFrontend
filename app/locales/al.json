@@ -357,5 +357,10 @@
   "mailDefault": {
     "description": "...",
     "message": "Merr Emaile"
+  },
+
+  "srchReq": {
+    "description": "...",
+    "message": "Kërko Kërkesë"
   }
 }

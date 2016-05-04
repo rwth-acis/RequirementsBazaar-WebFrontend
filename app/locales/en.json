@@ -357,5 +357,10 @@
   "mailDefault": {
     "description": "...",
     "message": "Get mails"
+  },
+
+  "srchReq": {
+    "description": "...",
+    "message": "Search Requirement"
   }
 }

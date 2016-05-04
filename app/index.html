@@ -450,6 +450,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <!--<div class="leader">-->
                                         <!--<req-user user-id="{{component.leaderId}}" full-view></req-user>-->
                                     <!--</div>-->
+                                    <i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>
+                                    <paper-input id="searchReq" label$="[[srchReq]]" value="{{reqFilterVal}}">
+                                        <iron-icon icon="search" prefix class="big"></iron-icon>
+                                    </paper-input>
                                 </div>
 
                                 <div class="editFormComp middle middle-container center layout">
@@ -463,7 +467,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </paper-toolbar>
 
                             <div style="padding-top:20px;">
-                                <requirements-list id="requirementsList" header="{{header}}"></requirements-list>
+                                <requirements-list id="requirementsList" header="{{header}}" filter-value="[[reqFilterVal]]"></requirements-list>
                             </div>
 
                             <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"
