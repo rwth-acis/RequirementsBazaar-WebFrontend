@@ -107,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 0 16px;
     }
 
-    paper-toolbar.tall .component-name {
+    .component-name {
         font-size: 40px;
         font-weight: 400;
         /* Required for main area's paper-scroll-header-panel custom condensing transformation */
@@ -129,6 +129,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     #mainToolbar:not(.tall) .middle {
         font-size: 18px;
         padding-bottom: 0;
+    }
+
+    #componentToolbar {
+        margin-top: 0px;
+        margin-bottom: 5px;
+        width: calc(97.33% - 32px);
+        margin: auto 5px;
     }
 
     #mainToolbar .bottom {
@@ -219,6 +226,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             background: white;
         }
 
+        .component-name{
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: x-large;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            width: calc(97.33% - 32px);
+            overflow: hidden;
+        }
+
+        .timing{
+            position: absolute;
+            margin-bottom: 10px;
+            display: block;
+            float:left;
+        }
+
+        #searchReq {
+            margin-top: 22px;
+            margin-bottom: 0px;
+            width:100%;
+        }
+
+        .hidden-mobile {
+            display: none;
+        }
+
         #createRequirement, #createProject, #createComponent {
             margin-right: -55px;
             margin-left: 20px;
@@ -230,11 +264,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         paper-textarea, paper-input {
             margin-bottom: 35px;
-        }
-
-        .timing > paper-icon-item{
-            font-size: 12px;
-            display:inline-block;
         }
     }
 

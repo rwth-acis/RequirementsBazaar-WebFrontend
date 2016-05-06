@@ -108,7 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span class="flex"></span>
 
 
-            <paper-menu-button>
+            <paper-menu-button class="hidden-mobile">
                 <paper-icon-button icon="language" class="dropdown-trigger" alt="menu"></paper-icon-button>
                 <paper-menu id="componentInfoMenu" class="dropdown-content">
                     <paper-item on-tap="english">EN</paper-item>
@@ -117,8 +117,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </paper-menu>
             </paper-menu-button>
             <template is="dom-if" if="{{isAuthorized}}">
-                <req-user user-id="[[currentUser.id]]" mini on-tap="openUserDialog"></req-user>
-                <paper-dialog id="userSettings" class="user" entry-animation="fade-in-animation"
+                <req-user user-id="[[currentUser.id]]" mini on-tap="openUserDialog" class="hidden-mobile"></req-user>
+                <paper-dialog id="userSettings" class="user hidden-mobile" entry-animation="fade-in-animation"
                               exit-animation="fade-out-animation">
                     <req-user user-id="[[currentUser.id]]" full-view></req-user>
 
@@ -410,61 +410,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                         <paper-scroll-header-panel id="mainScroller" main no-reveal>
 
-                            <paper-toolbar id="componentToolbar" class="tall">
+                            <!--<paper-toolbar id="componentToolbar" class="tall">-->
 
-                                <template is="dom-if" if="{{isAuthorized}}">
-                                    <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
-                                        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                        <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                            <paper-item on-tap="setDefault"><i18n-msg msgid="setAsDefault"></i18n-msg></paper-item>
-                                            <!--<paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>-->
-                                            <paper-item on-tap="editComponent"><i18n-msg msgid="editComponent"></i18n-msg></paper-item>
-                                            <paper-item on-tap="createModal2"><i18n-msg msgid="deleteComponent"></i18n-msg></paper-item>
-                                        </paper-menu>
-                                    </paper-menu-button>
-                                </template>
+                                <paper-material id="componentToolbar">
 
-                                <div class="cmpTitle">
-                                    <div class="breadCrumb">
-                                        <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}" base-url="{{baseUrl}}"></bread-crumb>
+                                    <template is="dom-if" if="{{isAuthorized}}">
+                                        <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
+                                            <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                            <paper-menu id="componentInfoMenu" class="dropdown-content">
+                                                <paper-item on-tap="setDefault"><i18n-msg msgid="setAsDefault"></i18n-msg></paper-item>
+                                                <!--<paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>-->
+                                                <paper-item on-tap="editComponent"><i18n-msg msgid="editComponent"></i18n-msg></paper-item>
+                                                <paper-item on-tap="createModal2"><i18n-msg msgid="deleteComponent"></i18n-msg></paper-item>
+                                            </paper-menu>
+                                        </paper-menu-button>
+                                    </template>
+
+                                    <div class="cmpTitle">
+                                        <div class="breadCrumb">
+                                            <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}" base-url="{{baseUrl}}"></bread-crumb>
+                                        </div>
+                                        <div class="component-name"><span>{{component.name}}</span></div>
                                     </div>
-                                    <div class="component-name"><span>{{component.name}}</span></div>
-                                </div>
 
-                                <div class="cmpDesc middle"><span>{{component.description}}</span></div>
+                                    <div class="cmpDesc middle"><span>{{component.description}}</span></div>
 
-                                <div class="bottom-container bottom">
-                                    <div class="timing">
-                                        <i18n-msg msgid="created"></i18n-msg>
-                                        <time is="relative-time" datetime$="[[component.creation_time]]"></time>
-                                        <i18n-msg msgid="by"></i18n-msg>
-                                        <req-user user-id="{{component.leaderId}}" normal-view></req-user>
+                                    <div class="bottom-container bottom">
+                                        <div class="timing">
+                                            <i18n-msg msgid="created"></i18n-msg>
+                                            <time is="relative-time" datetime$="[[component.creation_time]]"></time>
+                                            <i18n-msg msgid="by"></i18n-msg>
+                                            <req-user user-id="{{component.leaderId}}" normal-view></req-user>
+                                        </div>
+                                        <!--<div class="timing">-->
+                                            <!--<paper-icon-item>-->
+                                                <!--<paper-item-body two-line>-->
+                                                    <!--<div><i18n-msg msgid="created"></i18n-msg> <time is="relative-time" datetime$="[[component.creation_time]]"></time></div>-->
+                                                <!--</paper-item-body>-->
+                                            <!--</paper-icon-item>-->
+                                        <!--</div>-->
+                                        <!--<div class="leader">-->
+                                            <!--<req-user user-id="{{component.leaderId}}" full-view></req-user>-->
+                                        <!--</div>-->
+                                        <i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>
+                                        <paper-input id="searchReq" label$="[[srchReq]]" value="{{reqFilterVal}}">
+                                            <iron-icon icon="search" prefix class="big"></iron-icon>
+                                        </paper-input>
                                     </div>
-                                    <!--<div class="timing">-->
-                                        <!--<paper-icon-item>-->
-                                            <!--<paper-item-body two-line>-->
-                                                <!--<div><i18n-msg msgid="created"></i18n-msg> <time is="relative-time" datetime$="[[component.creation_time]]"></time></div>-->
-                                            <!--</paper-item-body>-->
-                                        <!--</paper-icon-item>-->
-                                    <!--</div>-->
-                                    <!--<div class="leader">-->
-                                        <!--<req-user user-id="{{component.leaderId}}" full-view></req-user>-->
-                                    <!--</div>-->
-                                    <i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>
-                                    <paper-input id="searchReq" label$="[[srchReq]]" value="{{reqFilterVal}}">
-                                        <iron-icon icon="search" prefix class="big"></iron-icon>
-                                    </paper-input>
-                                </div>
 
-                                <div class="editFormComp middle middle-container center layout">
+                                    <div class="editFormComp middle middle-container center layout">
 
-                                    <paper-input class="editTitle" label="[[formTitle]]" value="{{component.name}}"></paper-input>
-                                    <paper-textarea class="editDesc" label="[[formDesc]]" value="{{component.description}}"></paper-textarea>
-                                    <paper-button raised on-tap="cancEditComp"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
-                                    <paper-button raised on-tap="saveEditComp"> <i18n-msg msgid="save"></i18n-msg> </paper-button>
+                                        <paper-input class="editTitle" label="[[formTitle]]" value="{{component.name}}"></paper-input>
+                                        <paper-textarea class="editDesc" label="[[formDesc]]" value="{{component.description}}"></paper-textarea>
+                                        <paper-button raised on-tap="cancEditComp"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
+                                        <paper-button raised on-tap="saveEditComp"> <i18n-msg msgid="save"></i18n-msg> </paper-button>
 
-                                </div>
-                            </paper-toolbar>
+                                    </div>
+                                </paper-material>
+                            <!--</paper-toolbar>-->
 
                             <div style="padding-top:20px;">
                                 <requirements-list id="requirementsList" header="{{header}}" filter-value="[[reqFilterVal]]"></requirements-list>
