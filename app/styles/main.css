@@ -76,7 +76,6 @@ paper-icon-button {
 }
 
 .timing {
-    display: block;
     flex: 1;
     font-size: medium;
     margin-top: 10px;

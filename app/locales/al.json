@@ -362,5 +362,15 @@
   "srchReq": {
     "description": "...",
     "message": "Kërko Kërkesë"
+  },
+
+  "developers": {
+    "description": "...",
+    "message": "Zhvilluesit"
+  },
+
+  "followers": {
+    "description": "...",
+    "message": "Ndjekësit"
   }
 }

@@ -205,10 +205,10 @@
         </paper-dialog>
 
 
-        <template is="dom-repeat" items="{{requirements}}" filter="{{searchFilter(filterValue)}}">
+        <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
             <div class="layout vertical center">
-                <template is="dom-if" if="{{!item.realized}}">
-                    <paper-material class="req" id="[[item.id]]">
+                <template is="dom-if" if="{{!req.realized}}">
+                    <paper-material class="req" id="[[req.id]]">
                         <div class="reqbody">
 
                             <div class="req-icons layout horizontal center">
@@ -216,14 +216,14 @@
                                     <paper-icon-button icon="star-border" disabled></paper-icon-button>
                                 </template>
                                 <template is="dom-if" if="{{isAuthorized}}">
-                                    <template is="dom-if" if="{{userVoted(item.userVoted)}}">
+                                    <template is="dom-if" if="{{userVoted(req.userVoted)}}">
                                         <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
                                     </template>
-                                    <template is="dom-if" if="{{!userVoted(item.userVoted)}}">
+                                    <template is="dom-if" if="{{!userVoted(req.userVoted)}}">
                                         <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
                                     </template>
                                 </template>
-                                <div>[[item.upVotes]]</div>
+                                <div>[[req.upVotes]]</div>
                                 <template is="dom-if" if="{{isAuthorized}}">
                                     <paper-menu-button horizontal-align="right" vertical-align="top">
                                         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
@@ -249,34 +249,50 @@
                                 </template>
                             </div>
                             <paper-toolbar class="title" on-tap="toggleCollapsible">
-                                <div class="title">[[item.title]]</div>
+                                <div class="title">[[req.title]]</div>
                                 <div class="bottom fit">
-                                    <time is="relative-time" datetime$="[[item.creation_time]]"></time>
+                                    <time is="relative-time" datetime$="[[req.creation_time]]"></time>
                                     <i18n-msg msgid="by"></i18n-msg>
-                                    <req-user user-id="[[item.creatorId]]" normal-view></req-user>
+                                    <req-user user-id="[[req.creatorId]]" normal-view></req-user>
                                 </div>
                             </paper-toolbar>
 
                         </div>
 
                         <div class="contributers">
-                            <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[item.creatorId]]" full-view></req-user></div>
-                            <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[item.leadDeveloperId]]" full-view></req-user></div>
+                            <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
+                            <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[req.leadDeveloperId]]" full-view></req-user></div>
+                            <div><i18n-msg msgid="developers"></i18n-msg>:
+                                <template is="dom-repeat" items="{{req.developers}}" as="dev">
+                                    <div  style="display:inline-block">
+                                        <req-user user-id$="[[dev.id]]" mini></req-user>
+                                        <paper-tooltip>{{dev.userName}}</paper-tooltip>
+                                    </div>
+                                </template>
+                            </div>
+                            <div><i18n-msg msgid="followers"></i18n-msg>:
+                                <template is="dom-repeat" items="{{req.followers}}" as="foll">
+                                    <div  style="display:inline-block">
+                                        <req-user user-id$="[[foll.id]]" mini></req-user>
+                                        <paper-tooltip>{{foll.userName}}</paper-tooltip>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
 
                         <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
-                        <div class="description">[[item.description]]</div>
+                        <div class="description">[[req.description]]</div>
 
                         <div class="comments">
 
                             <iron-collapse>
                                 <h3><i18n-msg msgid="comments"></i18n-msg></h3>
-                                <comments-list requirement-id="[[item.id]]" data-a="[[item.id]]"></comments-list>
+                                <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]"></comments-list>
                                 <template is="dom-if" if="{{isAuthorized}}">
-                                    <div class="container flex-horizontal" id="[[item.id]]">
+                                    <div class="container flex-horizontal" id="[[req.id]]">
                                         <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                                        <paper-input id="[[item.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild"></paper-input>
-                                        <paper-fab id="[[item.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+                                        <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild"></paper-input>
+                                        <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
                                     </div>
                                 </template>
                             </iron-collapse>
@@ -285,10 +301,10 @@
 
                         <div class="editForm">
 
-                            <paper-input class="editTitle" class="title" value="{{item.title}}"></paper-input>
-                            <paper-textarea value="{{item.description}}"></paper-textarea>
-                            <paper-button raised on-tap="saveEditReq" data-args="[[item.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
-                            <paper-button raised on-tap="cancelRequirement" data-args="[[item.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+                            <paper-input class="editTitle" class="title" value="{{req.title}}"></paper-input>
+                            <paper-textarea value="{{req.description}}"></paper-textarea>
+                            <paper-button raised on-tap="saveEditReq" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
+                            <paper-button raised on-tap="cancelRequirement" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
 
                         </div>
 
@@ -685,7 +701,12 @@
                         element.querySelector('.contributers').style.display = "none";
                     } else {
                         e.currentTarget.innerText = i18n.getMsg('hideContributers');
-                        element.querySelector('.contributers').style.display = "flex";
+                        if (app.isMobile){
+                            element.querySelector('.contributers').style.display = "block";
+                        } else {
+                            element.querySelector('.contributers').style.display = "flex";
+                        }
+
                     }
                     this.showContributers = ! this.showContributers;
                 },

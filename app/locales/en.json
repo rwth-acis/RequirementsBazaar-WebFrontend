@@ -362,5 +362,15 @@
   "srchReq": {
     "description": "...",
     "message": "Search Requirement"
+  },
+
+  "developers": {
+    "description": "...",
+    "message": "Developers"
+  },
+
+  "followers": {
+    "description": "...",
+    "message": "Followers"
   }
 }

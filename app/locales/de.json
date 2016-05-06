@@ -362,5 +362,15 @@
   "srchReq": {
     "description": "...",
     "message": "Suchen eine Anforderung"
+  },
+
+  "developers": {
+    "description": "...",
+    "message": "Entwiklern"
+  },
+
+  "followers": {
+    "description": "...",
+    "message": "Anhänger"
   }
 }

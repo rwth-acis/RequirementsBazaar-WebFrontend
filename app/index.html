@@ -415,7 +415,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <paper-material id="componentToolbar">
 
                                     <template is="dom-if" if="{{isAuthorized}}">
-                                        <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;top:2px; right:8px;">
+                                        <paper-menu-button horizontal-align="right" id="menuCompButton" vertical-align="top" style="position:absolute;top:2px; right:8px;">
                                             <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                             <paper-menu id="componentInfoMenu" class="dropdown-content">
                                                 <paper-item on-tap="setDefault"><i18n-msg msgid="setAsDefault"></i18n-msg></paper-item>
