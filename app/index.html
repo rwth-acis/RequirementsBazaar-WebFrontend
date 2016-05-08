@@ -121,7 +121,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                               exit-animation="fade-out-animation">
                     <req-user user-id="[[currentUser.id]]" full-view></req-user>
 
-                    <paper-button><i18n-msg msgid="settings" on-tap="openSettingsDialog"></i18n-msg></paper-button>
+                    <paper-button on-tap="openSettingsDialog" raised><i18n-msg msgid="settings"></i18n-msg></paper-button>
 
                 </paper-dialog>
 
@@ -136,7 +136,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-toolbar>
 
         <paper-dialog modal id="settingsDialog">
-            <h2><i18n-msg msgid="settings" on-tap="openSettingsDialog"></h2>
+            <h2><i18n-msg msgid="settings"></i18n-msg></h2>
             <div>
                 <i18n-msg msgid="mailDefaultLeader"></i18n-msg>:
                 <paper-toggle-button checked="[[currentUser.emailLeadItems]]" on-tap="changeUserSettingsLead"></paper-toggle-button>
@@ -232,16 +232,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                             <h2><i18n-msg msgid="projects"></i18n-msg></h2>
 
+                            <p><i18n-msg msgid="pr-desc"></i18n-msg></p>
+
                             <template is="dom-if" if="{{isAuthorized}}">
 
-                                <div horizontal-align="right" vertical-align="top" style="position:absolute;right:20px;text-align:center;">
+                                <div horizontal-align="right" vertical-align="top" style="position:absolute;right:20px;text-align:center;margin-top: -20px;">
                                     <div id="toggleText"><i18n-msg msgid="all"></i18n-msg> <i18n-msg msgid="projects"></i18n-msg></div>
                                     <paper-toggle-button on-tap="toggleProjects"></paper-toggle-button>
                                 </div>
 
                             </template>
-
-                            <p><i18n-msg msgid="pr-desc"></i18n-msg></p>
 
                             <i18n-msg class="i18nLabel" msgid="searchLabel" msg="{{srchlbl}}"></i18n-msg>
 
