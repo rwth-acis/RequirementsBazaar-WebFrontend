@@ -262,22 +262,26 @@
                         <div class="contributers">
                             <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
                             <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[req.leadDeveloperId]]" full-view></req-user></div>
-                            <div><i18n-msg msgid="developers"></i18n-msg>:
-                                <template is="dom-repeat" items="{{req.developers}}" as="dev">
-                                    <div  style="display:inline-block">
-                                        <req-user user-id$="[[dev.id]]" mini></req-user>
-                                        <paper-tooltip>{{dev.userName}}</paper-tooltip>
-                                    </div>
-                                </template>
-                            </div>
-                            <div><i18n-msg msgid="followers"></i18n-msg>:
-                                <template is="dom-repeat" items="{{req.followers}}" as="foll">
-                                    <div  style="display:inline-block">
-                                        <req-user user-id$="[[foll.id]]" mini></req-user>
-                                        <paper-tooltip>{{foll.userName}}</paper-tooltip>
-                                    </div>
-                                </template>
-                            </div>
+                            <template is="dom-if" if="{{!isEmpty(req.developers)}}">
+                                <div><i18n-msg msgid="developers"></i18n-msg>:
+                                    <template is="dom-repeat" items="{{req.developers}}" as="dev">
+                                        <div  style="display:inline-block">
+                                            <req-user user-id$="[[dev.id]]" mini></req-user>
+                                            <paper-tooltip>{{dev.userName}}</paper-tooltip>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{!isEmpty(req.followers)}}">
+                                <div><i18n-msg msgid="followers"></i18n-msg>:
+                                    <template is="dom-repeat" items="{{req.followers}}" as="foll">
+                                        <div  style="display:inline-block">
+                                            <req-user user-id$="[[foll.id]]" mini></req-user>
+                                            <paper-tooltip>{{foll.userName}}</paper-tooltip>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
                         </div>
 
                         <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
@@ -723,6 +727,13 @@
 
                 userVoted: function(vote){
                     if (vote == "NO_VOTE"){
+                        return false;
+                    }
+                    return true;
+                },
+
+                isEmpty: function(arr){
+                    if (arr.length > 0){
                         return false;
                     }
                     return true;
