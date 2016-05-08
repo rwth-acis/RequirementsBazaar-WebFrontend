@@ -354,9 +354,14 @@
     "message": "You are not developing this requirement anymore!"
   },
 
-  "mailDefault": {
+  "mailDefaultLeader": {
     "description": "...",
-    "message": "Get mails"
+    "message": "Get mails from requirements you lead"
+  },
+
+  "mailDefaultFollow": {
+    "description": "...",
+    "message": "Get mails from requirements you follow"
   },
 
   "srchReq": {

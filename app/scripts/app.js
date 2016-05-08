@@ -225,6 +225,11 @@
         document.getElementById('userSettings').toggle();
     };
 
+    app.openSettingsDialog = function(e){
+        document.getElementById('userSettings').close();
+        document.getElementById('settingsDialog').open();
+    };
+
     app.onCreateRequirementClosed = function(e) {
         if (e.detail.confirmed) {
             var request = document.querySelector('#postRequirementRequest');
@@ -600,13 +605,27 @@
         }
     };
 
-    app.changeUserSettings = function(){
+    app.changeUserSettingsLead = function(){
         var request = document.getElementById('usrSettings');
+        request.url = "https://requirements-bazaar.org/betabazaar/users/" + this.currentUser.id;
 
         request.body = JSON.stringify({
-            "id": parseInt(this.currentUser.Id),
-            "mailDefault": ! this.currentUser.mailDefault
+            "id": parseInt(this.currentUser.id),
+            "emailLeadItems": ! this.currentUser.emailLeadItems
         });
+
+        request.generateRequest();
+    };
+
+    app.changeUserSettingsFollow = function(){
+        var request = document.getElementById('usrSettings');
+        request.url = "https://requirements-bazaar.org/betabazaar/users/" + this.currentUser.id;
+
+        request.body = JSON.stringify({
+            "id": parseInt(this.currentUser.id),
+            "emailFollowItems": ! this.currentUser.emailFollowItems
+        });
+
         request.generateRequest();
     };
 

@@ -354,9 +354,14 @@
     "message": "Sie entwickeln diese Anforderung nicht länger!"
   },
 
-  "mailDefault": {
+  "mailDefaultLeader": {
     "description": "...",
-    "message": "E-mail empfangen"
+    "message": "Get mails from requirements you lead"
+  },
+
+  "mailDefaultFollow": {
+    "description": "...",
+    "message": "Get mails from requirements you follow"
   },
 
   "srchReq": {

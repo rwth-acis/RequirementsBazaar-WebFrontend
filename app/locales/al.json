@@ -354,9 +354,14 @@
     "message": "Ti nuk je më zhvillues!"
   },
 
-  "mailDefault": {
+  "mailDefaultLeader": {
     "description": "...",
-    "message": "Merr Emaile"
+    "message": "Get mails from requirements you lead"
+  },
+
+  "mailDefaultFollow": {
+    "description": "...",
+    "message": "Get mails from requirements you follow"
   },
 
   "srchReq": {
