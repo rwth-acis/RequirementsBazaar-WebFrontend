@@ -21,6 +21,7 @@
         // set app.baseURL to '/your-pathname/' if running from folder in production
         app.baseUrl = '/beta/';
     }
+
     /**
      * Whether the user is logged in to the OIDC server.
      *
@@ -56,6 +57,7 @@
     window.addEventListener('WebComponentsReady', function() {
         // imports are loaded and elements have been registered
         this.i18n = document.querySelector('i18n-msg');
+        app.loaded = true;
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
@@ -186,7 +188,8 @@
 
     app.scrollToReq = function (componentId, requirementId) {
         this.loadComponentInfo(componentId);
-        setTimeout(function(){
+
+        if (this.loaded) {
             var el = document.getElementById(requirementId);
             if (el === null) {
                 app.$.superToast.text = i18n.getMsg('noRequirement');
@@ -197,7 +200,20 @@
             var scroller = document.getElementById("mainScroller");
             scroller.scroll(el.offsetTop - 70, true);
             document.getElementById('requirementsList').toggleCollapsible(null, el);
-        }, 1000);
+        } else {
+            setTimeout(function(){
+                var el = document.getElementById(requirementId);
+                if (el === null) {
+                    app.$.superToast.text = i18n.getMsg('noRequirement');
+                    app.$.superToast.show();
+                    page.redirect('/projects/' + app.params.projectId + "/components/" + componentId);
+                    return 0;
+                }
+                var scroller = document.getElementById("mainScroller");
+                scroller.scroll(el.offsetTop - 70, true);
+                document.getElementById('requirementsList').toggleCollapsible(null, el);
+            }, 1000);
+        }
         window.scrollTo(0, 75);
     };
 

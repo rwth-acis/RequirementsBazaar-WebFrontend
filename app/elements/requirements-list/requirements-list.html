@@ -208,7 +208,7 @@
         <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
             <div class="layout vertical center">
                 <template is="dom-if" if="{{!req.realized}}">
-                    <paper-material class="req" id="[[req.id]]">
+                    <paper-material class="req" id="[[req.id]]" on-tap="onRequirementTap">
                         <div class="reqbody">
 
                             <div class="req-icons layout horizontal center">
@@ -248,7 +248,7 @@
                                     </paper-menu-button>
                                 </template>
                             </div>
-                            <paper-toolbar class="title" on-tap="toggleCollapsible">
+                            <paper-toolbar class="title" >
                                 <div class="title">[[req.title]]</div>
                                 <div class="bottom fit">
                                     <time is="relative-time" datetime$="[[req.creation_time]]"></time>
@@ -737,6 +737,10 @@
                         return false;
                     }
                     return true;
+                },
+
+                onRequirementTap: function(e){
+                    page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.currentTarget.id);
                 }
             });
 
