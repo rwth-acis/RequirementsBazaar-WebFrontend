@@ -76,10 +76,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
 
-        page('*', function() {
-            app.$.superToast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
-            app.$.superToast.show();
-            page.redirect(app.baseUrl);
+        page('*', function(data) {
+//            app.$.superToast.text = 'Can\'t find: ' + window.location.href  + '. Please try to reload!';
+//            app.$.superToast.show();
+//            console.log(data);
+            page(data.path.substring(1));
         });
 
         // add #! before urls
