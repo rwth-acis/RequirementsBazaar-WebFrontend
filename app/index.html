@@ -68,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-ajax
             id="getUsr"
             handle-as="json"
-            url="https://requirements-bazaar.org/betabazaar/users/current"
+            url="{{baseHref}}/users/current"
             content-type="application/json"
             method="GET"
             params="{{header}}"
@@ -252,7 +252,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 </paper-icon-button>
                             </paper-input>
                         </paper-material>
-                        <projects-list filter-value="{{projectFilterVal}}" id="projectsList"></projects-list>
+                        <projects-list filter-value="{{projectFilterVal}}" id="projectsList" base-href="{{baseHref}}"></projects-list>
                     </paper-scroll-header-panel>
 
                     <paper-dialog id="createProject" class="create" entry-animation="fade-in-animation"
@@ -274,7 +274,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax
                             id="postProjectRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/betabazaar/projects"
+                            url="{{baseHref}}/projects"
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -332,7 +332,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                             <div class="editHeader">
 
-                                <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}" base-url="{{baseUrl}}"></bread-crumb>
+                                <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
                                 <h2>{{project.name}}</h2>
 
                                 <div>{{project.description}}</div>
@@ -377,7 +377,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax
                             id="postComponentRequest"
                             handle-as="json"
-                            url="https://requirements-bazaar.org/betabazaar/components"
+                            url="{{baseHref}}/components"
                             content-type="application/json"
                             method="POST"
                             params="{{header}}"
@@ -440,7 +440,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                     <div class="cmpTitle">
                                         <div class="breadCrumb">
-                                            <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}" base-url="{{baseUrl}}"></bread-crumb>
+                                            <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
                                         </div>
                                         <div class="component-name"><span>{{component.name}}</span></div>
                                     </div>
@@ -482,7 +482,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <!--</paper-toolbar>-->
 
                             <div style="padding-top:20px;">
-                                <requirements-list id="requirementsList" header="{{header}}" filter-value="[[reqFilterVal]]"></requirements-list>
+                                <requirements-list id="requirementsList" header="{{header}}" filter-value="[[reqFilterVal]]" base-href="{{baseHref}}"></requirements-list>
                             </div>
 
                             <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"
@@ -512,7 +512,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <iron-ajax
                                     id="postRequirementRequest"
                                     handle-as="json"
-                                    url="https://requirements-bazaar.org/betabazaar/requirements"
+                                    url="{{baseHref}}/requirements"
                                     content-type="application/json"
                                     method="POST"
                                     params="{{header}}"

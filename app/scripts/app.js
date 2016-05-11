@@ -15,6 +15,10 @@
     // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
     var app = document.querySelector('#app');
 
+    // url for requests for beta or live environment
+    
+    app.baseHref = "https://requirements-bazaar.org/betabazaar";
+    
     app.baseUrl = '/';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
@@ -139,7 +143,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getProjectURL = function(projectId) {
-        return 'https://requirements-bazaar.org/betabazaar/projects/' + projectId;
+        return this.baseHref + '/projects/' + projectId;
     };
 
     /**
@@ -149,7 +153,7 @@
      * @returns {string} the URL of the resource to query.
      */
     app.getComponentURL = function(componentId) {
-        return 'https://requirements-bazaar.org/betabazaar/components/' + componentId;
+        return this.baseHref + '/components/' + componentId;
     };
 
     /**
@@ -212,7 +216,7 @@
                 var scroller = document.getElementById("mainScroller");
                 scroller.scroll(el.offsetTop - 70, true);
                 document.getElementById('requirementsList').toggleCollapsible(null, el);
-            }, 1000);
+            }, 1300);
         }
         window.scrollTo(0, 75);
     };
@@ -479,7 +483,7 @@
         var title = document.querySelector('.editForm > .editTitle').value;
         var desc = document.querySelector('.editForm > .editDesc').value;
         var el = document.getElementById('postUpdateProject');
-        el.url = "https://requirements-bazaar.org/betabazaar/projects/" + this.params.projectId;
+        el.url = this.baseHref + "/projects/" + this.params.projectId;
         if (title == '' || desc == '' || title == null || desc == null ){
             this.$.superToast.text = "You can't have empty fields!";
             this.$.superToast.open();
@@ -525,7 +529,7 @@
         if (e.detail.confirmed) {
             var request = document.getElementById('postUpdateProject');
 
-            request.url = "https://requirements-bazaar.org/betabazaar/projects/" + this.params.projectId;
+            request.url = this.baseHref + "/projects/" + this.params.projectId;
             request.method = "DELETE";
             request.generateRequest();
         }
@@ -533,7 +537,7 @@
 
     app.setDefault = function(e){
         var req = this.$.postUpdateProject;
-        req.url = "https://requirements-bazaar.org/betabazaar/projects/" + this.params.projectId;
+        req.url = this.baseHref + "/projects/" + this.params.projectId;
         req.method = "PUT";
         req.body = JSON.stringify({
             "id": parseInt(this.params.projectId),
@@ -560,7 +564,7 @@
         var title = document.querySelector('.editFormComp > .editTitle').value;
         var desc = document.querySelector('.editFormComp > .editDesc').value;
         var el = document.getElementById('componentRequestPUT');
-        el.url = "https://requirements-bazaar.org/betabazaar/components/" + this.params.componentId;
+        el.url = this.baseHref + "/components/" + this.params.componentId;
         if (title == '' || desc == '' || title == null || desc == null ){
             this.$.superToast.text = i18n.getMsg('noEmptyFields');
             this.$.superToast.open();
@@ -590,7 +594,7 @@
         if (e.detail.confirmed) {
             var request = document.getElementById('componentRequest');
 
-            request.url = "https://requirements-bazaar.org/betabazaar/components/" + this.params.componentId;
+            request.url = this.baseHref + "/components/" + this.params.componentId;
             request.method = "DELETE";
             request.generateRequest();
         }
@@ -623,7 +627,7 @@
 
     app.changeUserSettingsLead = function(){
         var request = document.getElementById('usrSettings');
-        request.url = "https://requirements-bazaar.org/betabazaar/users/" + this.currentUser.id;
+        request.url = this.baseHref + "/users/" + this.currentUser.id;
 
         request.body = JSON.stringify({
             "id": parseInt(this.currentUser.id),
@@ -635,7 +639,7 @@
 
     app.changeUserSettingsFollow = function(){
         var request = document.getElementById('usrSettings');
-        request.url = "https://requirements-bazaar.org/betabazaar/users/" + this.currentUser.id;
+        request.url = this.baseHref + "/users/" + this.currentUser.id;
 
         request.body = JSON.stringify({
             "id": parseInt(this.currentUser.id),

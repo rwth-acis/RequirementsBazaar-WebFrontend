@@ -121,7 +121,7 @@
         <iron-ajax
                 id="postCommentRequest"
                 handle-as="json"
-                url="https://requirements-bazaar.org/betabazaar/comments"
+                url="{{baseHref}}/comments"
                 content-type="application/json"
                 method="POST"
                 params="{{header}}"
@@ -208,8 +208,8 @@
         <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
             <div class="layout vertical center">
                 <template is="dom-if" if="{{!req.realized}}">
-                    <paper-material class="req" id="[[req.id]]" on-tap="onRequirementTap">
-                        <div class="reqbody">
+                    <paper-material class="req" id="[[req.id]]">
+                        <div class="reqbody" on-tap="onRequirementTap">
 
                             <div class="req-icons layout horizontal center">
                                 <template is="dom-if" if="{{!isAuthorized}}">
@@ -332,9 +332,10 @@
                     componentId: {
                         type: Number
                     },
+                    baseHref: String,
                     resourceURL: {
                         type: String,
-                        computed: 'computeResourceURL(componentId)'
+                        computed: 'computeResourceURL(baseHref, componentId)'
                     },
                     requirements: {
                         type: Array,
@@ -374,8 +375,8 @@
                     this.i18n = this.$.i18n;
                 },
 
-                computeResourceURL: function (componentId) {
-                    return 'https://requirements-bazaar.org/betabazaar/components/' + componentId + '/requirements/';
+                computeResourceURL: function (baseHref, componentId) {
+                    return baseHref + '/components/' + componentId + '/requirements/';
                 },
 
                 toggleCollapsible: function(e, data) {
@@ -404,7 +405,7 @@
                     var req = this.$.starReq;
                     var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
                     req.method = "POST";
-                    req.url = "https://requirements-bazaar.org/betabazaar/requirements/" + reqId + "/vote";
+                    req.url = this.baseHref + "/requirements/" + reqId + "/vote";
                     req.body = JSON.stringify({
                         "requirementId": reqId,
                         "direction": "up"
@@ -416,7 +417,7 @@
                     var req = this.$.starReq;
                     var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
                     req.method = "DELETE";
-                    req.url = "https://requirements-bazaar.org/betabazaar/requirements/" + reqId + "/vote";
+                    req.url = this.baseHref + "/requirements/" + reqId + "/vote";
                     req.generateRequest();
                 },
 
@@ -471,7 +472,7 @@
                             element = el;
                     }
 
-                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id;
+                    request.url = this.baseHref + "/requirements/" + element.id;
                     var today = new Date();
                     var month = today.toDateString().substring(4, 7);
                     var date = today.getDate();
@@ -520,7 +521,7 @@
                     var id = e.currentTarget.parentNode.parentNode.id;
                     var request = this.$.postUpdateRequirement;
                     var components = [{id: parseInt(app.params.componentId)}];
-                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + id;
+                    request.url = this.baseHref + "/requirements/" + id;
 
                     if (title != '' && description != ''){
                         request.body = JSON.stringify({
@@ -572,7 +573,7 @@
                                 element = el;
                         }
 
-                        request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id;
+                        request.url = this.baseHref + "/requirements/" + element.id;
 
                         request.generateRequest();
 
@@ -606,7 +607,7 @@
                             element = el;
                     }
 
-                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id + "/followers";
+                    request.url = this.baseHref + "/requirements/" + element.id + "/followers";
                     request.generateRequest();
                 },
 
@@ -630,7 +631,7 @@
                             element = el;
                     }
 
-                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id + "/followers";
+                    request.url = this.baseHref + "/requirements/" + element.id + "/followers";
                     request.generateRequest();
                 },
 
@@ -654,7 +655,7 @@
                             element = el;
                     }
 
-                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id + "/developers";
+                    request.url = this.baseHref + "/requirements/" + element.id + "/developers";
                     request.generateRequest();
                 },
 
@@ -678,7 +679,7 @@
                             element = el;
                     }
 
-                    request.url = "https://requirements-bazaar.org/betabazaar/requirements/" + element.id + "/developers";
+                    request.url = this.baseHref + "/requirements/" + element.id + "/developers";
                     request.generateRequest();
                 },
 
@@ -733,6 +734,10 @@
                 },
 
                 isEmpty: function(arr){
+                    if (arr === undefined){
+                        return false;
+                    } else
+
                     if (arr.length > 0){
                         return false;
                     }
@@ -740,7 +745,7 @@
                 },
 
                 onRequirementTap: function(e){
-                    page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.currentTarget.id);
+                    page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.currentTarget.parentNode.id);
                 }
             });
 

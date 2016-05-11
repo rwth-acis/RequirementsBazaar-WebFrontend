@@ -10,12 +10,12 @@
 
         <iron-ajax
                 id="projectLoader"
-                url="https://requirements-bazaar.org/betabazaar/projects/[[projectId]]"
+                url="{{baseHref}}/projects/[[projectId]]"
                 last-response="{{project}}"></iron-ajax>
 
         <iron-ajax
                 id="componentLoader"
-                url="https://requirements-bazaar.org/betabazaar/components/[[componentId]]"
+                url="{{baseHref}}/components/[[componentId]]"
                 last-response="{{component}}"></iron-ajax>
 
 
@@ -24,7 +24,7 @@
             <span> > <a href$="{{baseUrl}}projects/[[project.id]]">[[project.name]]</a></span>
         </template>
         <template is="dom-if" if$="[[component]]">
-            <span> > <a href$="{{app.baseUrl}}projects/[[project.id]]/components/[[component.id]]">[[component.name]]</a></span>
+            <span> > <a href$="{{baseUrl}}projects/[[project.id]]/components/[[component.id]]">[[component.name]]</a></span>
         </template>
 
     </template>
@@ -51,6 +51,9 @@
                         observer: '_getComponent'
                     },
                     baseUrl: {
+                        type: String
+                    },
+                    baseHref: {
                         type: String
                     }
                 },

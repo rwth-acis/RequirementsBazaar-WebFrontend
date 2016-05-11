@@ -21,7 +21,7 @@
 
         <iron-ajax
                 id="projectsLoader"
-                url="https://requirements-bazaar.org/betabazaar/projects/"
+                url="{{baseHref}}/projects/"
                 last-response="{{projects}}"
                 params='{"page":"0", "per_page":"150"}'
                 auto></iron-ajax>
@@ -64,7 +64,8 @@
                     specific: {
                         type: Boolean,
                         value: false
-                    }
+                    },
+                    baseHref: String
                 },
 
                 onProjectTap: function (e) {
