@@ -377,5 +377,10 @@
   "followers": {
     "description": "...",
     "message": "Followers"
+  },
+
+  "exploreProjects": {
+    "description": "...",
+    "message": "Explore Public Projects"
   }
 }

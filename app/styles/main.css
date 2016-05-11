@@ -101,6 +101,18 @@ paper-icon-button {
     background-image: url("../images/landing-background.png");
 }
 
+#landing-top-motivation paper-button {
+    color: white;
+    width: 100%;
+}
+
+#landing-top-motivation paper-button {
+    background-color: #FF8324;
+    margin: 50px 0 0 45px;
+    max-width: 300px;
+    width: 100%;
+}
+
 #landing-top-image {
     width: 100%;
 }
