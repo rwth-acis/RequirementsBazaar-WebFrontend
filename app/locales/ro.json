@@ -1,0 +1,416 @@
+{
+  "settings": {
+    "description": "Settings label",
+    "message": "Setari"
+  },
+
+  "lp-title": {
+    "description": "Let us realize better projects",
+    "message": "Creati proiecte mai bune folosind unealta noastra"
+  },
+
+  "lp-desc": {
+    "description": "...",
+    "message": "Requirements Bazaar permite utilizatorilor sa ofere feedback si permite dezvoltatorilor software sa prelucreze cerintele cu adevarat importante"
+  },
+
+  "lp-steps": {
+    "description": "...",
+    "message": "<h1>Scurt ghid de utilizare: Feedback in 3 pasi</h1> <p>1. Creati un proiect in  bazarul cu cerinte</p> <p>2. Indreptati utilizatorii catre proiectul creat</p> <p>3. Raspundeti cerintelor din comunitatea dumneavoastra</p> <p>Vizualizati videoul pentru mai multe informatii!</p>"
+  },
+
+  "lp-mot": {
+    "description": "...",
+    "message": "Ascultati cerintele utilizatorilor"
+  },
+
+  "project": {
+    "description": "...",
+    "message": "Proiect"
+  },
+
+  "projects": {
+    "description": "...",
+    "message": "Proiecte"
+  },
+
+  "new": {
+    "description": "...",
+    "message": "Creaza nou"
+  },
+
+  "all": {
+    "description": "...",
+    "message": "Toate"
+  },
+
+  "createProject": {
+    "description": "...",
+    "message": "Creaza un Proiect"
+  },
+
+  "pr-desc": {
+    "description": "...",
+    "message": "Aceasta este sectiunea proiecte"
+  },
+
+  "searchLabel": {
+    "description": "...",
+    "message": "Cautati un proiect folosind numele sau descrierea"
+  },
+
+  "formTitle": {
+    "description": "...",
+    "message": "Titlu"
+  },
+
+  "formDesc": {
+    "description": "...",
+    "message": "Descriere"
+  },
+
+  "cancel": {
+    "description": "...",
+    "message": "Anulare"
+  },
+
+  "save": {
+    "description": "...",
+    "message": "Salvare"
+  },
+
+  "delete": {
+    "description": "...",
+    "message": "STERGETI"
+  },
+
+  "deleteProjectTitle": {
+    "description": "...",
+    "message": "Stergeti Proiect"
+  },
+
+  "deleteProjectDesc": {
+    "description": "...",
+    "message": "Aceasta actiune are efecte permanente! Sunteti sigur ca vreti sa stergeti acest proiect?"
+  },
+
+  "editProject": {
+    "description": "...",
+    "message": "Editare Proiect"
+  },
+
+  "createComponent": {
+    "description": "...",
+    "message": "Creaza Componenta"
+  },
+
+  "components": {
+    "description": "...",
+    "message": "Componente"
+  },
+
+  "setAsDefault": {
+    "description": "...",
+    "message": "Seteaza ca Default"
+  },
+
+  "deleteComponent": {
+    "description": "...",
+    "message": "Stergeti Componenta"
+  },
+
+  "editComponent": {
+    "description": "...",
+    "message": "Editati Componenta"
+  },
+
+  "created": {
+    "description": "...",
+    "message": "Creat"
+  },
+
+  "updated": {
+    "description": "...",
+    "message": "Actualizat"
+  },
+
+  "createRequirement": {
+    "description": "...",
+    "message": "Creati Cerinta"
+  },
+
+  "deleteCompDesc": {
+    "description": "...",
+    "message": "Aceasta actiune are efecte permanente! Sunteti sigur ca vreti sa stergeti acest component?"
+  },
+
+  "noRequirement": {
+    "description": "...",
+    "message": "Cerinta nu exista! Redirectat la pagina de Componente."
+  },
+
+  "fieldsNotEmptyReq": {
+    "description": "...",
+    "message": "Cerinta nu a fost postata! Campurile nu pot ramane necompletate!"
+  },
+
+  "reqCreatedSucc": {
+    "description": "...",
+    "message": "Cerinta a fost creata!"
+  },
+
+  "errorCreReq": {
+    "description": "...",
+    "message": "O eroare a aparut la crearea cerintei!"
+  },
+
+  "fieldsNotEmptyPrj": {
+    "description": "...",
+    "message": "Proiectul nu a fost postat! Campurile nu pot ramane necompletate!"
+  },
+
+  "prjCreatedSucc": {
+    "description": "...",
+    "message": "Proiectul a fost creat cu success!"
+  },
+
+  "errorCrePrj": {
+    "description": "...",
+    "message": "O eroare a aparut la crearea proiectului!"
+  },
+
+  "fieldsNotEmptyCmp": {
+    "description": "...",
+    "message": "Componenta nu a fost postata! Campurile nu pot ramane necompletate!"
+  },
+
+  "cmpCreatedSucc": {
+    "description": "...",
+    "message": "Componenta a fost creata"
+  },
+
+  "errorCreCmp": {
+    "description": "...",
+    "message": "O eroare a aparut la crearea componentei!"
+  },
+
+  "prjEditSucc": {
+    "description": "...",
+    "message": "Proiectul a fost editat!"
+  },
+
+  "cmpDelSucc": {
+    "description": "...",
+    "message": "Componenta a fost stearsa!"
+  },
+
+  "cmpEditSucc": {
+    "description": "...",
+    "message": "Componenta a fost editata!"
+  },
+
+  "noEmptyFields": {
+    "description": "...",
+    "message": "Campurile nu pot ramane necompletate!"
+  },
+
+  "allProjects": {
+    "description": "...",
+    "message": "Toate Proiectele"
+  },
+
+  "myProjects": {
+    "description": "...",
+    "message": "Proiectele mele"
+  },
+
+  "welcome": {
+    "description": "...",
+    "message": "Bine ati venit!"
+  },
+
+  "delCommTitle": {
+    "description": "...",
+    "message": "Stergeti Comentariul"
+  },
+
+  "delCommDesc": {
+    "description": "...",
+    "message": "Aceasta actiune are efecte permanente! Sunteti sigur ca vreti sa stergeti acest comentariu?"
+  },
+
+  "noComments": {
+    "description": "...",
+    "message": "Nici un comentariu..."
+  },
+
+  "by": {
+    "description": "...",
+    "message": " Creat de "
+  },
+
+  "deleteRequirement": {
+    "description": "...",
+    "message": "Stergeti Cerinta"
+  },
+
+  "deleteRequirementDesc": {
+    "description": "...",
+    "message": "Aceasta actiune are efecte permanente! Sunteti sigur ca vreti sa stergeti aceasta cerinta?"
+  },
+
+  "showContributers": {
+    "description": "...",
+    "message": "Vizualizati Contributorii"
+  },
+
+  "markAsDone": {
+    "description": "...",
+    "message": "Marcati ca efectuat"
+  },
+
+  "followRequirement": {
+    "description": "...",
+    "message": "Abonati-va la Cerinta"
+  },
+
+  "unfollowRequirement": {
+    "description": "...",
+    "message": "Dezabonati-va la Cerinta"
+  },
+
+  "developRequirement": {
+    "description": "...",
+    "message": "Dezvoltati Cerinta"
+  },
+
+  "undevelopRequirement": {
+    "description": "...",
+    "message": "Nu Dezvoltati Cerinta"
+  },
+
+  "editRequirement": {
+    "description": "...",
+    "message": "Actualizati Cerinta"
+  },
+
+  "creator": {
+    "description": "...",
+    "message": "Creator"
+  },
+
+  "leadDeveloper": {
+    "description": "...",
+    "message": "Developer Principal"
+  },
+
+  "comments": {
+    "description": "...",
+    "message": "Commentarii"
+  },
+
+  "addComment": {
+    "description": "...",
+    "message": "Adaugati un comentariu..."
+  },
+
+  "commentNoEmpty": {
+    "description": "...",
+    "message": "Campul de comentariu nu poate ramane gol!"
+  },
+
+  "reqEditSucc": {
+    "description": "...",
+    "message": "Cerinta a fost editata!"
+  },
+
+  "reqDelSucc": {
+    "description": "...",
+    "message": "Cerinta a fost stearsa!"
+  },
+
+  "hideContributers": {
+    "description": "...",
+    "message": "Ascundeti Contributorii"
+  },
+
+  "fdbFollowReq": {
+    "description": "...",
+    "message": "De acum urmariti aceasta cerinta!"
+  },
+
+  "fdbUnfollowReq": {
+    "description": "...",
+    "message": "Ati incetat sa urmariti aceasta cerinta!"
+  },
+
+  "fdbDevelopReq": {
+    "description": "...",
+    "message": "Sunteti dezvoltator pentru aceasta cerinta!"
+  },
+
+  "fdbUndevelopReq": {
+    "description": "...",
+    "message": "Nu mai dezvoltati aceasta cerinta!"
+  },
+
+  "mailDefaultLeader": {
+    "description": "...",
+    "message": "Primiti emailuri pentru cerintele unde sunteti dezvoltator principal!"
+  },
+
+  "mailDefaultFollow": {
+    "description": "...",
+    "message": "Primiti emailuri pentru cerintele pe care le urmariti"
+  },
+
+  "srchReq": {
+    "description": "...",
+    "message": "Cautare Cerinta"
+  },
+
+  "developers": {
+    "description": "...",
+    "message": "Dezvoltatori"
+  },
+
+  "followers": {
+    "description": "...",
+    "message": "Abonati"
+  },
+
+  "exploreProjects": {
+    "description": "...",
+    "message": "Explorati Proiectele Publice"
+  },
+
+  "lp-mot1": {
+    "description": "...",
+    "message": "Discutati ideile"
+  },
+
+  "lp-mot2": {
+    "description": "...",
+    "message": "Organizati si mariti lista cu cerinte"
+  },
+
+  "getStarted": {
+    "description": "...",
+    "message": "Porniti"
+  },
+
+  "takeAlook": {
+    "description": "...",
+    "message": "Explorati exemplele noastre de proiecte si creati un proiect nou!"
+  },
+
+  "contact": {
+    "description": "...",
+    "message": "Contact"
+  },
+
+  "defaultComp": {
+    "description": "...",
+    "message": "Component default"
+  }
+}
