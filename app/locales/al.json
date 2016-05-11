@@ -407,5 +407,10 @@
   "contact": {
     "description": "...",
     "message": "Kontakt"
+  },
+
+  "defaultComp": {
+    "description": "...",
+    "message": "komponenti kryesor"
   }
 }

@@ -17,6 +17,14 @@ paper-input.large {
     width: 100%;
 }
 
+.line {
+    background: #c6c6c6 no-repeat scroll center;
+    /*margin-top: 15px;*/
+    /*margin-bottom: 10px;*/
+    width: 95%;
+    height: 1px;
+}
+
 a {
     text-decoration: none !important;
     color: inherit;
