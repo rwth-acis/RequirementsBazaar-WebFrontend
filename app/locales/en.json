@@ -16,12 +16,12 @@
 
   "lp-steps": {
     "description": "...",
-    "message": "<h1>How it works! Feedback in 3 steps</h1> <p>1. Create a project on requirements bazaar</p> <p>2. Direct users to your project</p> <p>3. Respond to user requirements</p> <p>To learn more watch the video</p>"
+    "message": "<h1>How it works! Feedback in 3 steps</h1> <p>1. Create a project on requirements bazaar</p> <p>2. Direct users to your project</p> <p>3. Respond to requirements from your community</p> <p>To learn more watch the video!</p>"
   },
 
   "lp-mot": {
     "description": "...",
-    "message": "Listen to your users and react to their needs"
+    "message": "Listen to your users"
   },
 
   "project": {
@@ -382,5 +382,30 @@
   "exploreProjects": {
     "description": "...",
     "message": "Explore Public Projects"
+  },
+
+  "lp-mot1": {
+    "description": "...",
+    "message": "Discuss their ideas"
+  },
+
+  "lp-mot2": {
+    "description": "...",
+    "message": "Organize and expand your features"
+  },
+
+  "getStarted": {
+    "description": "...",
+    "message": "Get Started"
+  },
+
+  "takeAlook": {
+    "description": "...",
+    "message": "Take a look at a few example project and if we have convinced you create your own!"
+  },
+
+  "contact": {
+    "description": "...",
+    "message": "Contact"
   }
 }

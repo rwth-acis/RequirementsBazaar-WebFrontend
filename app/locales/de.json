@@ -16,12 +16,12 @@
 
   "lp-steps": {
     "description": "...",
-    "message": "<h1>So funktioniert es! Feedback in drei Schritten</h1> <p>1. Erstelle ein neues Projekt auf Requirements Bazaar</p> <p>2. Lade Benutzer zu deinem Projekt ein</p> <p>3. Reagiere auf das Feedback</p> <p>Schau dir das Video an um mehr zu erfahren</p>"
+    "message": "<h1>So funktioniert es! Feedback in drei Schritten</h1> <p>1. Erstelle ein neues Projekt auf Requirements Bazaar</p> <p>2. Lade Benutzer zu deinem Projekt ein</p> <p>3. Reagiere auf das Feedback</p> <p>Schau dir das Video an um mehr zu erfahren!</p>"
   },
 
   "lp-mot": {
     "description": "...",
-    "message": "Höre auf deine Benutzer und reagiere auf ihr Feedback"
+    "message": "Höre auf deine Benutzer"
   },
 
   "project": {
@@ -377,5 +377,35 @@
   "followers": {
     "description": "...",
     "message": "Anhänger"
+  },
+
+  "exploreProjects": {
+    "description": "...",
+    "message": "Explore Public Projects"
+  },
+
+  "lp-mot1": {
+    "description": "...",
+    "message": "Discuss their ideas"
+  },
+
+  "lp-mot2": {
+    "description": "...",
+    "message": "Organize and expand your features"
+  },
+
+  "getStarted": {
+    "description": "...",
+    "message": "Get Started"
+  },
+
+  "takeAlook": {
+    "description": "...",
+    "message": "Take a look at a few example project and if we have convinced you create your own!"
+  },
+
+  "contact": {
+    "description": "...",
+    "message": "Contact"
   }
 }

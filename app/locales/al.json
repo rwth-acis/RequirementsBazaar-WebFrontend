@@ -1,7 +1,7 @@
 {
   "settings": {
     "description": "Settings label",
-    "message": "Settings"
+    "message": "Konfigurim"
   },
 
   "lp-title": {
@@ -16,12 +16,12 @@
 
   "lp-steps": {
     "description": "...",
-    "message": "<h1>Si funksionon?! Feedback në 3 etapa</h1> <p>1. Krijo një projekt në requirements bazaar</p> <p>2. Drejtoji përdoruesit në projektin tuaj</p> <p>3. Përgjigjju kërkesave</p> <p>Për më tepër shikoni videon</p>"
+    "message": "<h1>Si funksionon?! Feedback në 3 etapa</h1> <p>1. Krijo një projekt në requirements bazaar</p> <p>2. Drejtoji përdoruesit në projektin tuaj</p> <p>3. Përgjigjju kërkesave</p> <p>Për më tepër shikoni videon!</p>"
   },
 
   "lp-mot": {
     "description": "...",
-    "message": "Dëgjoni përdoruesit tuaj dhe përgjigjuni nevojave të tyre"
+    "message": "Dëgjoni përdoruesit tuaj"
   },
 
   "project": {
@@ -377,5 +377,35 @@
   "followers": {
     "description": "...",
     "message": "Ndjekësit"
+  },
+
+  "exploreProjects": {
+    "description": "...",
+    "message": "Eksploro Projektet Publike"
+  },
+
+  "lp-mot1": {
+    "description": "...",
+    "message": "Diskutoni idetë tuaja"
+  },
+
+  "lp-mot2": {
+    "description": "...",
+    "message": "Organizoni dhe zgjeroni elementët tuaj"
+  },
+
+  "getStarted": {
+    "description": "...",
+    "message": "Fillo"
+  },
+
+  "takeAlook": {
+    "description": "...",
+    "message": "Shikoni disa nga projektet dhe nëse ju bindim, krijoni projektin tuaj!"
+  },
+
+  "contact": {
+    "description": "...",
+    "message": "Kontakt"
   }
 }
