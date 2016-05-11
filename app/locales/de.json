@@ -11,12 +11,12 @@
 
   "lp-desc": {
     "description": "...",
-    "message": "Requirements Bazaar lässt seine Benutzer nützliches Feedback geben, damit du dich auf die wichtigen Funktionen konzentrieren kannst"
+    "message": "Requirements Bazaar lässt seine Benutzer nützliches Feedback geben, um sich auf die wichtigen Funktionen konzentrieren zu können"
   },
 
   "lp-steps": {
     "description": "...",
-    "message": "<h1>So funktioniert es! Feedback in drei Schritten</h1> <p>1. Erstelle ein neues Projekt auf Requirements Bazaar</p> <p>2. Lade Benutzer zu deinem Projekt ein</p> <p>3. Reagiere auf das Feedback</p> <p>Schau dir das Video an um mehr zu erfahren!</p>"
+    "message": "<h1>So funktioniert es! Feedback in drei Schritten</h1> <p>1. Erstelle ein Projekt auf Requirements Bazaar</p> <p>2. Lade Benutzer zu deinem Projekt ein</p> <p>3. Reagiere auf das Feedback</p> <p>Schau dir das Video an um mehr zu erfahren!</p>"
   },
 
   "lp-mot": {
@@ -51,12 +51,12 @@
 
   "pr-desc": {
     "description": "...",
-    "message": "Das ist die Projekt Beschreibung"
+    "message": "Hier findet sich die Übersicht aller im Requirements Bazaar vorhandenen Projekte."
   },
 
   "searchLabel": {
     "description": "...",
-    "message": "Suchen Sie ein Projekt"
+    "message": "Projektbeschreibungen durchsuchen"
   },
 
   "formTitle": {
@@ -141,17 +141,17 @@
 
   "deleteCompDesc": {
     "description": "...",
-    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie dieses Komponente löschen möchten?"
+    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie diese Komponente löschen möchten?"
   },
 
   "noRequirement": {
     "description": "...",
-    "message": "Diese Anforderung existiert nicht. Sie wurden zur Komponenten Seite umgeleitet."
+    "message": "Diese Anforderung existiert nicht. Sie wurden zur Komponentenübersicht umgeleitet."
   },
 
   "fieldsNotEmptyReq": {
     "description": "...",
-    "message": "Anforderung wurde nicht erstellt! Die Eingabe-Felder müssen gefüllt sein!"
+    "message": "Anforderung wurde nicht erstellt! Die Eingabefelder müssen ausfüllt sein."
   },
 
   "reqCreatedSucc": {
@@ -161,12 +161,12 @@
 
   "errorCreReq": {
     "description": "...",
-    "message": "Es traten Fehler auf beim Anlegen der neuen Anforderung!"
+    "message": "Beim Anlegen der neuen Anforderung sind leider Fehler aufgetreten. Bitte erneut versuchen."
   },
 
   "fieldsNotEmptyPrj": {
     "description": "...",
-    "message": "Projekt wurde nicht erstellt! Die Eingabe-Felder müssen gefüllt sein!"
+    "message": "Projekt wurde nicht erstellt! Die Eingabefelder müssen ausgefüllt sein!"
   },
 
   "prjCreatedSucc": {
@@ -176,12 +176,12 @@
 
   "errorCrePrj": {
     "description": "...",
-    "message": "Es traten Fehler auf beim Anlegen des neuen Projekts!"
+    "message": "Beim Anlegen des neuen Projekts traten Fehler auf! Bitte erneut versuchen."
   },
 
   "fieldsNotEmptyCmp": {
     "description": "...",
-    "message": "Komponents wurde nicht erstellt! Die Eingabe-Felder müssen gefüllt sein!"
+    "message": "Die Komponente konnte leider nicht erstellt werden! Die Eingabefelder müssen ausgefüllt sein!"
   },
 
   "cmpCreatedSucc": {
@@ -191,7 +191,7 @@
 
   "errorCreCmp": {
     "description": "...",
-    "message": "Es traten Fehler auf beim Anlegen der neuen Komponente!"
+    "message": "Beim Anlegen der neuen Komponente traten leider Fehler auf! Bitte erneut versuchen."
   },
 
   "prjEditSucc": {
@@ -211,7 +211,7 @@
 
   "noEmptyFields": {
     "description": "...",
-    "message": "Eingabe-Felder müssen gefüllt sein!"
+    "message": "Eingabefelder müssen ausgefüllt sein!"
   },
 
   "allProjects": {
@@ -236,12 +236,12 @@
 
   "delCommDesc": {
     "description": "...",
-    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie dieses Kommentar löschen möchten?"
+    "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie diesen Kommentar löschen möchten?"
   },
 
   "noComments": {
     "description": "...",
-    "message": "Noch keine Kommentare..."
+    "message": "Es sind noch keine Kommentare erstellt worden..."
   },
 
   "by": {
@@ -311,12 +311,12 @@
 
   "addComment": {
     "description": "...",
-    "message": "Für ein Kommentar hinzu ..."
+    "message": "Einen Kommentar erstellen..."
   },
 
   "commentNoEmpty": {
     "description": "...",
-    "message": "Kommentar muss gefüllt sein!"
+    "message": "Das Kommentarfeld muss ausgefüllt sein!"
   },
 
   "reqEditSucc": {
@@ -331,7 +331,7 @@
 
   "hideContributers": {
     "description": "...",
-    "message": "Blende Beteiligt aus"
+    "message": "Mitwirkende ausblenden"
   },
 
   "fdbFollowReq": {
@@ -341,7 +341,7 @@
 
   "fdbUnfollowReq": {
     "description": "...",
-    "message": "Sie folgend dieser Anforderung nicht länger!"
+    "message": "Sie folgen dieser Anforderung nicht mehr."
   },
 
   "fdbDevelopReq": {
@@ -351,66 +351,66 @@
 
   "fdbUndevelopReq": {
     "description": "...",
-    "message": "Sie entwickeln diese Anforderung nicht länger!"
+    "message": "Sie entwickeln diese Anforderung nicht mehr."
   },
 
   "mailDefaultLeader": {
     "description": "...",
-    "message": "Get mails from requirements you lead"
+    "message": "E-Mails für Anforderungen die Sie leiten"
   },
 
   "mailDefaultFollow": {
     "description": "...",
-    "message": "Get mails from requirements you follow"
+    "message": "E-Mails für Anforderungen denen Sie folgen"
   },
 
   "srchReq": {
     "description": "...",
-    "message": "Suchen eine Anforderung"
+    "message": "Anforderungen durchsuchen"
   },
 
   "developers": {
     "description": "...",
-    "message": "Entwiklern"
+    "message": "Entwickler"
   },
 
   "followers": {
     "description": "...",
-    "message": "Anhänger"
+    "message": "Follower"
   },
 
   "exploreProjects": {
     "description": "...",
-    "message": "Explore Public Projects"
+    "message": "Öffentliche Projekte Anschauen"
   },
 
   "lp-mot1": {
     "description": "...",
-    "message": "Discuss their ideas"
+    "message": "Ihre Ideen diskutieren"
   },
 
   "lp-mot2": {
     "description": "...",
-    "message": "Organize and expand your features"
+    "message": "Features organisieren und erweitern"
   },
 
   "getStarted": {
     "description": "...",
-    "message": "Get Started"
+    "message": "Loslegen"
   },
 
   "takeAlook": {
     "description": "...",
-    "message": "Take a look at a few example project and if we have convinced you create your own!"
+    "message": "Einen Blick auf Beispielprojekte werfen und gleich ein eigenes erstellen!"
   },
 
   "contact": {
     "description": "...",
-    "message": "Contact"
+    "message": "Kontakt"
   },
 
   "defaultComp": {
     "description": "...",
-    "message": "default component"
+    "message": "Hauptkomponente"
   }
 }
