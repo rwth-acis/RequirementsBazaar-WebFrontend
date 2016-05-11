@@ -113,6 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-item on-tap="english">EN</paper-item>
                     <paper-item on-tap="deutsch">DE</paper-item>
                     <paper-item on-tap="albanian">AL</paper-item>
+                    <paper-item on-tap="romanian">RO</paper-item>
                 </paper-menu>
             </paper-menu-button>
             <template is="dom-if" if="{{isAuthorized}}">
@@ -449,7 +450,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <div class="cmpDesc middle"><span>{{component.description}}</span></div>
 
                                     <div class="bottom-container bottom">
-                                        <div class="timing">
+                                        <div class="timing helper">
                                             <i18n-msg msgid="created"></i18n-msg>
                                             <time is="relative-time" datetime$="[[component.creation_time]]"></time>
                                             <i18n-msg msgid="by"></i18n-msg>

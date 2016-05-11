@@ -19,7 +19,7 @@ paper-input.large {
 
 .line {
     background: #c6c6c6 no-repeat scroll center;
-    /*margin-top: 15px;*/
+    margin-top: -20px;
     /*margin-bottom: 10px;*/
     width: 95%;
     height: 1px;
@@ -87,6 +87,14 @@ paper-icon-button {
     flex: 1;
     font-size: medium;
     margin-top: 10px;
+}
+
+.title {
+    font-weight: 700;
+}
+
+.helper {
+    color: #838383;
 }
 
 .leader {

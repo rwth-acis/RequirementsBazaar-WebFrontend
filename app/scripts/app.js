@@ -75,6 +75,9 @@
             case "al":
                 I18nMsg.lang = 'al';
                 break;
+            case "ro":
+                I18nMsg.lang = 'ro';
+                break;
             default:
                 I18nMsg.lang = 'en';
         }
@@ -94,6 +97,11 @@
 
     app.albanian = function(){
         I18nMsg.lang = 'al';
+        Platform.performMicrotaskCheckpoint();
+    };
+
+    app.romanian = function(){
+        I18nMsg.lang = 'ro';
         Platform.performMicrotaskCheckpoint();
     };
 

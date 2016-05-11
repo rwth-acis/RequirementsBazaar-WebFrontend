@@ -250,7 +250,7 @@
                             </div>
                             <paper-toolbar class="title" >
                                 <div class="title">[[req.title]]</div>
-                                <div class="bottom fit">
+                                <div class="bottom fit helper">
                                     <time is="relative-time" datetime$="[[req.creation_time]]"></time>
                                     <i18n-msg msgid="by"></i18n-msg>
                                     <req-user user-id="[[req.creatorId]]" normal-view></req-user>
@@ -258,6 +258,8 @@
                             </paper-toolbar>
 
                         </div>
+
+                        <div class="line"></div>
 
                         <div class="contributers">
                             <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
@@ -290,7 +292,7 @@
                         <div class="comments">
 
                             <iron-collapse>
-                                <h3><i18n-msg msgid="comments"></i18n-msg></h3>
+                                <h4><i18n-msg msgid="comments"></i18n-msg></h4>
                                 <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]"></comments-list>
                                 <template is="dom-if" if="{{isAuthorized}}">
                                     <div class="container flex-horizontal" id="[[req.id]]">
