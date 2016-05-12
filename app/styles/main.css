@@ -95,6 +95,10 @@ paper-icon-button {
 
 .helper {
     color: #838383;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .leader {

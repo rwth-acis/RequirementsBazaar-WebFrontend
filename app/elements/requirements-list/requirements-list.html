@@ -284,10 +284,11 @@
                                     </template>
                                 </div>
                             </template>
+                            <div class="line"></div>
                         </div>
 
                         <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
-                        <div class="description">[[req.description]]</div>
+                        <div class="description helper">[[req.description]]</div>
 
                         <div class="comments">
 
@@ -391,6 +392,16 @@
                         contentNode.toggle();
                     } else {
                         var contentNode = data.parentNode.querySelector('iron-collapse');
+                        if (contentNode.parentNode.parentNode.elevation === 1){
+                            contentNode.parentNode.parentNode.elevation = 5;
+                        } else {
+                            contentNode.parentNode.parentNode.elevation = 1;
+                        }
+                        if (contentNode.parentNode.parentNode.querySelector(".description").classList.contains("helper")){
+                            contentNode.parentNode.parentNode.querySelector(".description").classList.remove("helper");
+                        } else {
+                            contentNode.parentNode.parentNode.querySelector(".description").classList.add("helper");
+                        }
                         if (!contentNode.opened) {
                             // since we are about to open it, trigger loading the comments
                             data.parentNode.querySelector('comments-list').load();
