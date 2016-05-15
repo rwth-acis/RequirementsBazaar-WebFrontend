@@ -51,6 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         page('/projects/:projectId/components/:componentId', function(data) {
             app.loadComponentInfo(data.params.componentId);
+            app.closeCollapses();
             app.route = 'component-info';
             app.params = data.params;
         });
