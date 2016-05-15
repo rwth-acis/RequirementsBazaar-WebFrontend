@@ -631,6 +631,9 @@
         this.access_token = e.detail.access_token;
         this.header = {access_token: this.access_token };
         document.getElementById('getUsr').generateRequest();
+        if (app.route === "home"){
+            page("/projects");
+        }
         window.setTimeout(sayHi,500);
     };
 
