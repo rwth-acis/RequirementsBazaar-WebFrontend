@@ -25,6 +25,10 @@ paper-input.large {
     height: 1px;
 }
 
+#languageMenu {
+    display: none;
+}
+
 a {
     text-decoration: none !important;
     color: inherit;

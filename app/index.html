@@ -107,25 +107,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span class="flex"></span>
 
 
-            <paper-menu-button class="hidden-mobile">
-                <paper-icon-button icon="language" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                <paper-menu id="componentInfoMenu" class="dropdown-content">
-                    <paper-item on-tap="english">EN</paper-item>
-                    <paper-item on-tap="deutsch">DE</paper-item>
-                    <paper-item on-tap="albanian">AL</paper-item>
-                    <paper-item on-tap="romanian">RO</paper-item>
-                </paper-menu>
-            </paper-menu-button>
+            <paper-icon-button icon="language" on-tap="openLanguageMenu"></paper-icon-button>
+
             <template is="dom-if" if="{{isAuthorized}}">
                 <req-user user-id="[[currentUser.id]]" mini on-tap="openUserDialog" class="hidden-mobile"></req-user>
-                <paper-dialog id="userSettings" class="user hidden-mobile" entry-animation="fade-in-animation"
-                              exit-animation="fade-out-animation">
-                    <req-user user-id="[[currentUser.id]]" full-view></req-user>
-
-                    <paper-button on-tap="openSettingsDialog" raised><i18n-msg msgid="settings"></i18n-msg></paper-button>
-
-                </paper-dialog>
-
             </template>
             <template is="dom-if" if="{{!landingPage(route)}}">
                 <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
@@ -135,6 +120,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                   server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
 
         </paper-toolbar>
+
+        <paper-menu-button class="hidden-mobile" id="languageMenu">
+            <paper-menu id="componentInfoMenu" class="dropdown-content">
+                <paper-item on-tap="english">EN</paper-item>
+                <paper-item on-tap="deutsch">DE</paper-item>
+                <paper-item on-tap="albanian">AL</paper-item>
+                <paper-item on-tap="romanian">RO</paper-item>
+            </paper-menu>
+        </paper-menu-button>
+
+        <paper-dialog id="userSettings" class="user hidden-mobile" entry-animation="fade-in-animation"
+                      exit-animation="fade-out-animation" no-cancel-on-outside-click
+                      no-cancel-on-esc-key>
+            <req-user user-id="[[currentUser.id]]" full-view></req-user>
+
+            <paper-button on-tap="openSettingsDialog" raised><i18n-msg msgid="settings"></i18n-msg></paper-button>
+
+        </paper-dialog>
 
         <paper-dialog modal id="settingsDialog">
             <h2><i18n-msg msgid="settings"></i18n-msg></h2>

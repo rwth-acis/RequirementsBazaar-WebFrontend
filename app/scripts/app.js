@@ -229,6 +229,17 @@
         window.scrollTo(0, 75);
     };
 
+    app.openLanguageMenu = function (e){
+        var langMenu = document.getElementById("languageMenu");
+        langMenu.style.display = "block";
+
+        langMenu.open();
+        var rect = e.currentTarget.getBoundingClientRect();
+        langMenu.style.position = "absolute";
+        langMenu.style.top = "-50px";
+        langMenu.style.left = rect.right - 50 + 'px';
+    };
+
     app.showCreateRequirement = function() {
         var createDialog = document.getElementById('createRequirement');
         createDialog.open();
