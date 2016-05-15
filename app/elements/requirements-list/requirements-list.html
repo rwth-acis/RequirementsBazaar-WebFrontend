@@ -209,7 +209,7 @@
             <div class="layout vertical center">
                 <template is="dom-if" if="{{!req.realized}}">
                     <paper-material class="req" id="[[req.id]]">
-                        <div class="reqbody" on-tap="onRequirementTap">
+                        <div class="reqbody">
 
                             <div class="req-icons layout horizontal center">
                                 <template is="dom-if" if="{{!isAuthorized}}">
@@ -248,7 +248,7 @@
                                     </paper-menu-button>
                                 </template>
                             </div>
-                            <paper-toolbar class="title" >
+                            <paper-toolbar class="title" on-tap="onRequirementTap">
                                 <div class="title">[[req.title]]</div>
                                 <div class="bottom fit helper">
                                     <time is="relative-time" datetime$="[[req.creation_time]]"></time>
@@ -760,7 +760,7 @@
                 },
 
                 onRequirementTap: function(e){
-                    page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.currentTarget.parentNode.id);
+                    page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.currentTarget.parentNode.parentNode.id);
                 }
             });
 
