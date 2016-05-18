@@ -106,8 +106,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </div>
             <span class="flex"></span>
 
-
-            <paper-icon-button icon="language" on-tap="openLanguageMenu"></paper-icon-button>
+            <paper-icon-button class="hidden-mobile" icon="language" on-tap="openLanguageMenu"></paper-icon-button>
 
             <template is="dom-if" if="{{isAuthorized}}">
                 <req-user user-id="[[currentUser.id]]" mini on-tap="openUserDialog" class="hidden-mobile"></req-user>

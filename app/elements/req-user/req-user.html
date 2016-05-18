@@ -42,6 +42,12 @@
                 color: #5e5e5e;
             }
 
+            @media (max-width: 600px) {
+                .hidden-mobile {
+                    display: none;
+                }
+            }
+
         </style>
 
         <iron-ajax
@@ -53,7 +59,7 @@
 
             <span id="user">{{user.userName}}</span>
 
-            <paper-tooltip for="user" class="custom" animation-delay="0" position="right">
+            <paper-tooltip for="user" class="custom hidden-mobile" animation-delay="0" position="right">
                 <img src="{{user.profileImage}}" class="profileImage">
                 <paper-item-body two-line>
                 <div class="name">
