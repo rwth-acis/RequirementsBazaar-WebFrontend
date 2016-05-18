@@ -44,36 +44,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         page('/projects/:projectId', function(data) {
-            app.loadProjectInfo(data.params.projectId);
             app.route = 'project-info';
             app.params = data.params;
+            app.loadProjectInfo(data.params.projectId);
         });
 
         page('/projects/:projectId/components/:componentId', function(data) {
-            app.loadComponentInfo(data.params.componentId);
-            app.closeCollapses();
             app.route = 'component-info';
             app.params = data.params;
+            app.loadComponentInfo(data.params.componentId);
+            app.closeCollapses();
         });
 
         page('/projects/:projectId/components/:componentId/create', function(data) {
-            app.loadComponentInfo(data.params.componentId);
             app.route = 'component-info';
             app.params = data.params;
             // open create new requirement dialog
+            app.loadComponentInfo(data.params.componentId);
             app.showCreateRequirement();
         });
 
         page('/projects/:projectId/components/:componentId/edit', function(data) {
-            app.loadComponentInfo(data.params.componentId);
             app.route = 'component-info';
             app.params = data.params;
+            app.loadComponentInfo(data.params.componentId);
         });
 
         page('/projects/:projectId/components/:componentId/requirements/:requirementId', function(data) {
-            app.scrollToReq(data.params.componentId, data.params.requirementId);
             app.route = 'component-info';
             app.params = data.params;
+            app.scrollToReq(data.params.componentId, data.params.requirementId);
         });
 
 

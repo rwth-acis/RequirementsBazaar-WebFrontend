@@ -61,7 +61,7 @@
     window.addEventListener('WebComponentsReady', function() {
         // imports are loaded and elements have been registered
         this.i18n = document.querySelector('i18n-msg');
-        app.loaded = true;
+        this.loaded = true;
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
@@ -235,6 +235,7 @@
                 document.getElementById('requirementsList').toggleCollapsible(null, el);
             }, 1300);
         }
+        
         window.scrollTo(0, 75);
     };
 
