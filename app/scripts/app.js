@@ -61,7 +61,7 @@
     window.addEventListener('WebComponentsReady', function() {
         // imports are loaded and elements have been registered
         this.i18n = document.querySelector('i18n-msg');
-        this.loaded = true;
+        app.loaded = true;
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
@@ -210,8 +210,9 @@
     app.scrollToReq = function (componentId, requirementId) {
         this.loadComponentInfo(componentId);
 
-        if (this.loaded) {
-            var el = document.getElementById(requirementId);
+        var el;
+
+        if ( (this.loaded) && (el = document.getElementById(requirementId))) {
             if (el === null) {
                 app.$.superToast.text = i18n.getMsg('noRequirement');
                 app.$.superToast.show();
@@ -223,7 +224,7 @@
             document.getElementById('requirementsList').toggleCollapsible(null, el);
         } else {
             setTimeout(function(){
-                var el = document.getElementById(requirementId);
+                el = document.getElementById(requirementId);
                 if (el === null) {
                     app.$.superToast.text = i18n.getMsg('noRequirement');
                     app.$.superToast.show();
