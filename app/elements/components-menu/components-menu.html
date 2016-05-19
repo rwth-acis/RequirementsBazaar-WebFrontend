@@ -23,7 +23,8 @@
         <iron-ajax
                 id="componentsLoader"
                 last-response="{{components}}"
-                params='{"page":"0", "per_page":"150"}'></iron-ajax>
+                params='{"page":"0", "per_page":"150"}'
+                loading="{{loading}}"></iron-ajax>
 
         <paper-menu>
 
@@ -60,6 +61,10 @@
                     },
                     components: {
                         type: Array,
+                        notify: true
+                    },
+                    loading: {
+                        type: Boolean,
                         notify: true
                     }
                 },
