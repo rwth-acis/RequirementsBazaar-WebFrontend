@@ -447,7 +447,6 @@
         }
 
         if (document.querySelectorAll('#drawer')[1].style.display != 'block'){
-            document.querySelectorAll('activity-tracker')[1].refresh();
             document.querySelectorAll('#drawer')[1].style.display = 'block';
             document.querySelectorAll('#drawer')[1].style.zIndex = 1;
             if (!this.isMobile) {
@@ -465,7 +464,6 @@
         }
 
         if (document.querySelectorAll('#drawer')[2].style.display != 'block'){
-            document.querySelectorAll('activity-tracker')[2].refresh();
             document.querySelectorAll('#drawer')[2].style.display = 'block';
             document.querySelectorAll('#drawer')[2].style.zIndex = 1;
             if (!this.isMobile) {
