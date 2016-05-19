@@ -423,6 +423,7 @@
         var fabs = document.getElementsByClassName('fabAdd');
         //opens right drawer
         if (document.querySelector('#drawer').style.display != 'block'){
+            document.querySelector('activity-tracker').refresh();
             document.querySelector('#drawer').style.display = 'block';
             document.querySelector('#drawer').style.zIndex = 1;
             if (!this.isMobile){
@@ -446,6 +447,7 @@
         }
 
         if (document.querySelectorAll('#drawer')[1].style.display != 'block'){
+            document.querySelectorAll('activity-tracker')[1].refresh();
             document.querySelectorAll('#drawer')[1].style.display = 'block';
             document.querySelectorAll('#drawer')[1].style.zIndex = 1;
             if (!this.isMobile) {
@@ -463,6 +465,7 @@
         }
 
         if (document.querySelectorAll('#drawer')[2].style.display != 'block'){
+            document.querySelectorAll('activity-tracker')[2].refresh();
             document.querySelectorAll('#drawer')[2].style.display = 'block';
             document.querySelectorAll('#drawer')[2].style.zIndex = 1;
             if (!this.isMobile) {
