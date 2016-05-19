@@ -143,6 +143,10 @@
     app.scrollPageToTop = function() {
         document.getElementById('mainContainer').scrollTop = 0;
     };
+    
+    app.scrollProjToTop = function() {
+        document.getElementById("scrollProjects").scroll(0);
+    };
 
     /**
      * Returns the URL from where to get information about a specific project.
