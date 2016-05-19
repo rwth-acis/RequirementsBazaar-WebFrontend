@@ -24,7 +24,8 @@
                 url="{{baseHref}}/projects/"
                 last-response="{{projects}}"
                 params='{"page":"0", "per_page":"150"}'
-                auto></iron-ajax>
+                auto
+                loading="{{loading}}"></iron-ajax>
 
         <div class="layout vertical center">
             <template is="dom-if" if="{{!specific}}">
@@ -65,7 +66,11 @@
                         type: Boolean,
                         value: false
                     },
-                    baseHref: String
+                    baseHref: String,
+                    loading:{
+                        type: Boolean,
+                        notify: true
+                    }
                 },
 
                 onProjectTap: function (e) {

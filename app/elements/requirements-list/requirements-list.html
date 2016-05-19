@@ -116,7 +116,8 @@
                 id="requirementsLoader"
                 url="{{resourceURL}}"
                 last-response="{{requirements}}"
-                params="{{header}}"></iron-ajax>
+                params="{{header}}"
+                loading="{{loading}}"></iron-ajax>
 
         <iron-ajax
                 id="postCommentRequest"
@@ -371,6 +372,10 @@
                     filterValue: {
                         type: String,
                         value: ''
+                    },
+                    loading: {
+                        type: Boolean,
+                        notify: true
                     }
                 },
 

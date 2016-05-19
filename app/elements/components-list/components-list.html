@@ -23,7 +23,8 @@
                 id="componentsLoader"
                 url="{{resourceURL}}"
                 last-response="{{components}}"
-                params='{"page":"0", "per_page":"150"}'></iron-ajax>
+                params='{"page":"0", "per_page":"150"}'
+                loading="{{loading}}"></iron-ajax>
 
         <div class="layout vertical center">
             <template is="dom-repeat" items="{{components}}">
@@ -51,6 +52,10 @@
                     },
                     components: {
                         type: Array,
+                        notify: true
+                    },
+                    loading: {
+                        type: Boolean,
                         notify: true
                     }
                 },

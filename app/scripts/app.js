@@ -38,6 +38,7 @@
     app.compResponse = null;
     app.isMobile = false; //initiate as false
     app.i18n = null;
+    app.loading = false;
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.

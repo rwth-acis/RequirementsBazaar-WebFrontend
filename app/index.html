@@ -120,6 +120,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         </paper-toolbar>
 
+
+        <paper-progress indeterminate disabled="{{!loading}}" ></paper-progress>
+
         <paper-menu-button class="hidden-mobile" id="languageMenu">
             <paper-menu id="componentInfoMenu" class="dropdown-content">
                 <paper-item on-tap="english">EN</paper-item>
@@ -256,7 +259,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 </paper-icon-button>
                             </paper-input>
                         </paper-material>
-                        <projects-list filter-value="{{projectFilterVal}}" id="projectsList" base-href="{{baseHref}}"></projects-list>
+                        <projects-list filter-value="{{projectFilterVal}}" id="projectsList" base-href="{{baseHref}}" loading="{{loading}}"></projects-list>
                     </paper-scroll-header-panel>
 
                     <paper-dialog id="createProject" class="create" entry-animation="fade-in-animation"
@@ -361,7 +364,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 on-response="handleResponseEditProj"
                                 on-error="errorHandler"></iron-ajax>
 
-                        <components-list id="componentsList"></components-list>
+                        <components-list id="componentsList" loading="{{loading}}"></components-list>
                     </paper-scroll-header-panel>
 
                     <paper-dialog id="createComponent" class="create" entry-animation="fade-in-animation"
@@ -486,7 +489,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <!--</paper-toolbar>-->
 
                             <div style="padding-top:20px;">
-                                <requirements-list id="requirementsList" header="{{header}}" filter-value="[[reqFilterVal]]" base-href="{{baseHref}}"></requirements-list>
+                                <requirements-list
+                                        id="requirementsList"
+                                        header="{{header}}"
+                                        filter-value="[[reqFilterVal]]"
+                                        base-href="{{baseHref}}"
+                                        loading="{{loading}}"></requirements-list>
                             </div>
 
                             <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"
