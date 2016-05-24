@@ -1,0 +1,52 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A stylesheet used to stylize an icon element.
+
+@stylesheet xp-icon-styles
+@description A stylesheet used to stylize an icon element
+@keywords expandjs, web app, custom elements, web-components
+@group stylesheets
+
+@homepage http://expandjs.com/elements/xp-icon-styles
+@repository https://github.com/ExpandJS/xp-icon-behavior
+
+@dependency polymer Polymer/polymer#^1.2.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="xp-icon-styles">
+
+    <template strip-whitespace>
+
+        <style>
+            :host {
+                display: inline-block;
+                height: 24px;
+                width: 24px;
+            }
+
+            :host([empty]) {
+                display: none !important;
+            }
+
+            :host ::content * {
+                border-radius: inherit;
+                box-sizing: border-box;
+                display: block;
+                fill: currentcolor;
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+
+    </template>
+
+</dom-module>

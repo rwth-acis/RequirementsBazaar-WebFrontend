@@ -1,0 +1,109 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A behavior used to add breadcrumb capabilities on a custom element.
+
+@behavior xp-breadcrumb-behavior
+@description A behavior used to add breadcrumb capabilities on a custom element
+@keywords expandjs, web app, custom elements, web-components
+@group behaviors
+
+@homepage http://expandjs.com/elements/xp-breadcrumb-behavior
+@repository https://github.com/ExpandJS/xp-breadcrumb-behavior
+
+@behavior xp-master-behavior /bower_components/xp-master-behavior/xp-master-behavior.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency xp-master-behavior ExpandJS/xp-master-behavior#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-master-behavior/xp-master-behavior.html">
+
+<script>
+    Polymer.XPBreadcrumbBehaviorImp = {
+
+        // OBSERVERS
+        observers: [
+            '_stepsObserver(steps.*)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The breadcrumb's current step.
+             *
+             * @attribute current
+             * @type Element
+             * @notifies
+             * @readonly
+             */
+            current: {
+                notify: true,
+                readOnly: true
+            },
+
+            /**
+             * The breadcrumb's steps.
+             *
+             * @attribute steps
+             * @type Array
+             * @notifies
+             * @readonly
+             */
+            steps: {
+                notify: true,
+                readOnly: true,
+                value: function () { return []; }
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        _stepsObserver: function () {
+
+            // Vars
+            var self = this,
+                pre  = self.current,
+                post = XP.findElement(Polymer.dom(self), '.breadcrumb-step:last-of-type');
+
+            // Propagating
+            if (pre) { pre.active = false; }
+            if (post) { post.active = true; }
+
+            // Setting
+            self._setCurrent(post);
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        created: function () {
+
+            // Classifying
+            this.classList.add('breadcrumb');
+        },
+
+        // LISTENER
+        ready: function () {
+
+            // Mapping
+            this.slavesMap.steps = '.breadcrumb-step';
+        }
+    };
+
+    Polymer.XPBreadcrumbBehavior = [
+        Polymer.XPMasterBehavior,
+        Polymer.XPBreadcrumbBehaviorImp
+    ];
+</script>

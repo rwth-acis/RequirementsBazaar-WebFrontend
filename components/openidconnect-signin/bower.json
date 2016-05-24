@@ -1,0 +1,40 @@
+{
+  "name": "openidconnect-signin",
+  "version": "1.0.0",
+  "description": "Web components to authenticate with OpenID Connect providers",
+  "homepage": "https://rwth-acis.github.io/openidconnect-signin",
+  "main": "openidconnect-signin.html",
+  "authors": [
+    "István Koren <https://istvank.eu>",
+    "Addy Osmani",
+    "Randy Merrill"
+  ],
+  "license": "Apache-2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "../"
+  ],
+  "keywords": [
+    "web-component",
+    "polymer",
+    "sign-in",
+    "openid-connect",
+    "authentication"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "font-roboto": "PolymerElements/font-roboto#^1.0.0",
+    "iron-icon": "PolymerElements/iron-icon#^1.0.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "paper-ripple": "PolymerElements/paper-ripple#^1.0.0",
+    "paper-material": "PolymerElements/paper-material#^1.0.0",
+    "layers-icons": "learning-layers/layers-icons#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.2"
+  }
+}

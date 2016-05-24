@@ -1,0 +1,38 @@
+{
+  "name": "xp-breadcrumb-behavior",
+  "license": "BSD-3-Clause",
+  "version": "0.10.0",
+  "main": "xp-breadcrumb-behavior.html",
+  "description": "A behavior used to add breadcrumb capabilities on a custom element",
+  "homepage": "http://expandjs.com/elements/xp-breadcrumb-behavior",
+  "authors": [
+    "Giuliano Rullo <g.rullo@expandjs.com>",
+    "Maurizio Stefàno <m.stefano@expandjs.com>",
+    "Robert Manolea <r.manolea@expandjs.com>"
+  ],
+  "keywords": [
+    "expandjs",
+    "web app",
+    "custom elements",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "expandjs": "ExpandJS/expandjs#0.10.0",
+    "xp-master-behavior": "ExpandJS/xp-master-behavior#0.10.0",
+    "xp-slave-behavior": "ExpandJS/xp-slave-behavior#0.10.0",
+    "polymer": "Polymer/polymer#^1.2.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0"
+  },
+  "_release": "0.10.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.10.0",
+    "commit": "91a24ebf125a935fd0de71374405800c18e134e4"
+  },
+  "_source": "git://github.com/ExpandJS/xp-breadcrumb-behavior.git",
+  "_target": "0.10.0",
+  "_originalSource": "ExpandJS/xp-breadcrumb-behavior"
+}

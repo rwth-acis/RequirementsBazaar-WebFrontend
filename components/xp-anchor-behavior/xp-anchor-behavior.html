@@ -1,0 +1,151 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A behavior used to add anchor capabilities on a custom element.
+
+@behavior xp-anchor-behavior
+@description A behavior used to add anchor capabilities on a custom element
+@keywords expandjs, web app, custom elements, web-components
+@group behaviors
+
+@homepage http://expandjs.com/elements/xp-anchor-behavior
+@repository https://github.com/ExpandJS/xp-anchor-behavior
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+
+<script>
+    Polymer.XPAnchorBehavior = {
+
+        /**
+         * Fired when the anchor is clicked.
+         *
+         * @event xp-redirect
+         * @param {Element} firer
+         * @param {string} href
+         * @bubbles
+         * @cancelable
+         */
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            '_anchorObserver(anchor, download, href, rel, target)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The element's anchor.
+             *
+             * @attribute anchor
+             * @type Element
+             * @notifies
+             * @readonly
+             */
+            anchor: {
+                notify: true,
+                readOnly: true
+            },
+
+            /**
+             * The anchor's download property's value.
+             *
+             * @attribute download
+             * @type string
+             */
+            download: {
+                reflectToAttribute: true,
+                type: String,
+                value: null
+            },
+
+            /**
+             * The anchor's href property's value.
+             *
+             * @attribute href
+             * @type string
+             */
+            href: {
+                reflectToAttribute: true,
+                type: String,
+                value: null
+            },
+
+            /**
+             * The anchor's rel property's value.
+             *
+             * @attribute rel
+             * @type string
+             */
+            rel: {
+                reflectToAttribute: true,
+                type: String,
+                value: null
+            },
+
+            /**
+             * The anchor's target property's value.
+             *
+             * @attribute target
+             * @type Element | string
+             * @notifies
+             */
+            target: {
+                notify: true,
+                value: null
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        _anchorObserver: function () {
+
+            // Vars
+            var self = this;
+
+            // Setting
+            XP.setAttribute(self.anchor, 'download', self.href && self.download);
+            XP.setAttribute(self.anchor, 'href', self.href);
+            XP.setAttribute(self.anchor, 'rel', self.href && self.rel);
+            XP.setAttribute(self.anchor, 'target', self.href && self.target);
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        ready: function () {
+
+            // Setting
+            this._setAnchor(this.anchor || Polymer.dom(this.root).querySelector('.anchor'));
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        _anchorHandler: function (event) {
+
+            // Vars
+            var self = this;
+
+            // Checking
+            if (event.button || self.anchor !== event.currentTarget || !self.anchor.href) { return; }
+
+            // Firing
+            if (self.fire('xp-redirect', {firer: self, anchor: self.anchor, href: self.anchor.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
+        }
+    };
+</script>

@@ -1,0 +1,116 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A custom element used to display a [Material Design icon](https://www.google.com/design/icons/) on a 24px square.
+
+It can be used either by importing an icon set from [mat-icons](http://expandjs.com/elements/mat-icons)...
+
+```html
+<link rel="import" href="bower_components/mat-icons/social-icons.html">
+
+<mat-icon name="social:cake"></mat-icon>
+```
+
+...or by setting `src`, linking to a custom icon...
+
+```html
+<mat-icon src="http://example.com/path/icon.png"></mat-icon>
+```
+
+...or passing it directly in base64.
+
+```html
+<mat-icon src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDov..."></mat-icon>
+```
+
+---
+
+## Styling
+
+The icon's color can be changed accordingly to the
+[Material Design palette](http://www.google.com/design/spec/style/color.html#color-color-palette).
+
+```html
+<mat-icon name="toggle:star" color="yellow"></mat-icon>
+```
+
+@element mat-icon
+@description A custom element used to display a Material Design icon
+@keywords material design, material icon, expandjs, web app, custom elements, web-components
+@group contents
+@hot
+
+@homepage http://expandjs.com/elements/mat-icon
+@repository https://github.com/ExpandJS/mat-icon
+@demo http://expandjs.com/demo/mat-icon
+
+@behavior xp-icon-behavior /bower_components/xp-icon-behavior/xp-icon-behavior.html
+@behavior mat-ink-behavior /bower_components/mat-ink/mat-ink-behavior.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency mat-ink ExpandJS/mat-ink#0.10.0
+@dependency xp-icon-behavior ExpandJS/xp-icon-behavior#0.10.0
+
+@devDependency mat-demo ExpandJS/mat-demo#0.10.0
+@devDependency mat-icons ExpandJS/mat-icons#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../mat-ink/mat-ink-behavior.html">
+<link rel="import" href="../mat-ink/mat-ink-styles.html">
+<link rel="import" href="../xp-icon-behavior/xp-icon-behavior.html">
+<link rel="import" href="../xp-icon-behavior/xp-icon-styles.html">
+
+<dom-module id="mat-icon">
+
+    <template strip-whitespace>
+
+        <style include="mat-ink-styles"></style>
+        <style include="xp-icon-styles"></style>
+
+        <content></content>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'mat-icon',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPIconBehavior,
+                Polymer.MatInkBehavior
+            ],
+
+            /*********************************************************************/
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The icon's opacity.
+                 *
+                 * @attribute opacity
+                 * @type string
+                 * @default "icon"
+                 */
+                opacity: {
+                    reflectToAttribute: true,
+                    type: String,
+                    value: 'icon'
+                }
+            }
+        });
+    </script>
+
+</dom-module>

@@ -1,0 +1,595 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script src="scripts/openidconnect.js"></script>
+
+<script>
+  (function() {
+
+    /**
+     * Enum of attributes to be passed through to the login API call.
+     * @readonly
+     * @enum {string}
+     */
+    var ProxyLoginAttributes = {
+      'appPackageName': 'apppackagename',
+      'clientId': 'clientid',
+      'cookiePolicy': 'cookiepolicy',
+      'requestVisibleActions': 'requestvisibleactions'
+    };
+
+    /**
+     * AuthEngine does all interactions with gapi.auth2
+     *
+     * It is tightly coupled with <openidconnect-signin-aware> element
+     * The elements configure AuthEngine.
+     * AuthEngine propagates all authentication events to all openidconnect-signin-aware elements
+     *
+     * API used: https://developers.google.com/identity/sign-in/web/reference
+     *
+     */
+    var AuthEngine = {
+
+        /**
+         * oauth2 argument, set by openidconnect-signin-aware
+         */
+        _server: null,
+
+        get server() {
+            return this._server;
+        },
+
+        set server(val) {
+            if (this._server && val && val != this._server) {
+                throw new Error('server cannot change. Values do not match. New: ' + val + ' Old:' + this._server);
+            }
+            if (val) {
+                this._server = val;
+                //this.initAuth2();
+            }
+        },
+
+        /**
+         * oauth2 argument, set by openidconnect-signin-aware
+         */
+        _clientId: null,
+
+        get clientId() {
+            return this._clientId;
+        },
+
+        set clientId(val) {
+            if (this._clientId && val && val != this._clientId) {
+                throw new Error('clientId cannot change. Values do not match. New: ' + val + ' Old:' + this._clientId);
+            }
+            if (val) {
+                this._clientId = val;
+                //this.initAuth2();
+            }
+        },
+
+        /**
+         * oauth2 argument, set by openidconnect-signin-aware
+         */
+        _cookiePolicy: 'single_host_origin',
+
+        get cookiePolicy() {
+            return this._cookiePolicy;
+        },
+
+        set cookiePolicy(val) {
+            if (val) {
+                this._cookiePolicy = val;
+            }
+        },
+
+        /**
+         * oauth2 argument, set by openidconnect-signin-aware
+         */
+        _requestVisibleActions: '',
+
+        get requestVisibleactions() {
+            return this._requestVisibleActions;
+        },
+
+        set requestVisibleactions(val) {
+            if (this._requestVisibleActions && val && val != this._requestVisibleActions) {
+                throw new Error('requestVisibleactions cannot change. Values do not match. New: ' + val + ' Old: ' + this._requestVisibleActions);
+            }
+            if (val)
+                this._requestVisibleActions = val;
+        },
+
+        /** Is offline access currently enabled in the openidconnect-signin-aware element? */
+        _offline: false,
+
+        get offline() {
+            return this._offline;
+        },
+
+        set offline(val) {
+            this._offline = val;
+            this.updateAdditionalAuth();
+        },
+
+        /** Should we force a re-prompt for offline access? */
+        _offlineAlwaysPrompt: false,
+
+        get offlineAlwaysPrompt() {
+            return this._offlineAlwaysPrompt;
+        },
+
+        set offlineAlwaysPrompt(val) {
+            this._offlineAlwaysPrompt = val;
+            this.updateAdditionalAuth();
+        },
+
+        /** Have we already gotten offline access from Google during this session? */
+        offlineGranted: false,
+
+        /** <google-js-api> */
+        _apiLoader: null,
+
+        /** an array of wanted scopes. oauth2 argument */
+        _requestedScopeArray: [],
+
+        /** _requestedScopeArray as string */
+        get requestedScopes() {
+            return this._requestedScopeArray.join(' ');
+        },
+
+        /** Is user signed in? */
+        _signedIn: false,
+
+        /** Currently granted scopes */
+        _grantedScopeArray: [],
+
+        /** True if additional authorization is required */
+        _needAdditionalAuth: true,
+
+        /**
+         * array of <openidconnect-signin-aware>
+         * state changes are broadcast to them
+         */
+        signinAwares: [],
+
+        init: function() {
+
+        },
+
+        setOfflineCode: function(code) {
+            for (var i=0; i<this.signinAwares.length; i++) {
+                this.signinAwares[i]._updateOfflineCode(code);
+            }
+        },
+
+        /** convert scope string to scope array */
+        strToScopeArray: function(str) {
+            if (!str) {
+                return [];
+            }
+            // remove extra spaces, then split
+            var scopes = str.replace(/\ +/g, ' ').trim().split(' ');
+            for (var i=0; i<scopes.length; i++) {
+                scopes[i] = scopes[i].toLowerCase();
+            }
+            // return with duplicates filtered out
+            return scopes.filter( function(value, index, self) {
+                return self.indexOf(value) === index;
+            });
+        },
+
+        /** true if scopes have been granted */
+        hasGrantedScopes: function(scopeStr) {
+            var scopes = this.strToScopeArray(scopeStr);
+            for (var i=0; i< scopes.length; i++) {
+                if (this._grantedScopeArray.indexOf(scopes[i]) === -1)
+                    return false;
+            }
+            return true;
+        },
+
+        /** request additional scopes */
+        requestScopes: function(newScopeStr) {
+            var newScopes = this.strToScopeArray(newScopeStr);
+            var scopesUpdated = false;
+            for (var i=0; i<newScopes.length; i++) {
+                if (this._requestedScopeArray.indexOf(newScopes[i]) === -1) {
+                    this._requestedScopeArray.push(newScopes[i]);
+                    scopesUpdated = true;
+                }
+            }
+            if (scopesUpdated) {
+                this.updateAdditionalAuth();
+            }
+        },
+
+        /** update status of _needAdditionalAuth */
+        updateAdditionalAuth: function() {
+            var needMoreAuth = false;
+            if ((this.offlineAlwaysPrompt || this.offline ) && !this.offlineGranted) {
+                needMoreAuth = true;
+            } else {
+                for (var i=0; i<this._requestedScopeArray.length; i++) {
+                    if (this._grantedScopeArray.indexOf(this._requestedScopeArray[i]) === -1) {
+                        needMoreAuth = true;
+                        break;
+                    }
+                }
+            }
+            if (this._needAdditionalAuth != needMoreAuth) {
+                this._needAdditionalAuth = needMoreAuth;
+                // broadcast new value
+                for (var i=0; i<this.signinAwares.length; i++) {
+                    this.signinAwares[i]._setNeedAdditionalAuth(needMoreAuth);
+                }
+            }
+        },
+
+        /**
+         * attached <openidconnect-signin-aware>
+         * @param {<openidconnect-signin-aware>} aware element to add
+         */
+        attachSigninAware: function(aware) {
+            if (this.signinAwares.indexOf(aware) == -1) {
+                this.signinAwares.push(aware);
+                // Initialize aware properties
+                aware._setNeedAdditionalAuth(this._needAdditionalAuth);
+                aware._setSignedIn(this._signedIn);
+            } else {
+                console.warn('signinAware attached more than once', aware);
+            }
+        },
+
+        detachSigninAware: function(aware) {
+            var index = this.signinAwares.indexOf(aware);
+            if (index != -1) {
+                this.signinAwares.splice(index, 1);
+            } else {
+                console.warn('Trying to detach unattached signin-aware');
+            }
+        },
+
+        /** returns scopes not granted */
+        getMissingScopes: function() {
+            return this._requestedScopeArray.filter( function(scope) {
+                return this._grantedScopeArray.indexOf(scope) === -1;
+            }.bind(this)).join(' ');
+        },
+
+        assertAuthInitialized: function() {
+            if (!this.clientId) {
+                throw new Error("AuthEngine not initialized. clientId has not been configured.");
+            }
+        },
+
+        /** pops up sign-in dialog */
+        signIn: function() {
+
+            var params = {
+                'scope': this.getMissingScopes()
+            };
+
+            // Proxy specific attributes through to the signIn options.
+            Object.keys(ProxyLoginAttributes).forEach(function(key) {
+                if (this[key] && this[key] !== '') {
+                    params[ProxyLoginAttributes[key]] = this[key];
+                }
+            }, this);
+
+            // start the sign-in flow
+
+            // set client_id and redirect_uri
+            var clientInfo = {
+                client_id: this.clientId,
+                redirect_uri: window.location
+            };
+            OIDC.setClientInfo(clientInfo);
+            var providerInfo = OIDC.discover(this.server);
+
+            // set Identity Provider configuration
+            OIDC.setProviderInfo(providerInfo);
+            // store configuration for reuse in the callback page
+            OIDC.storeInfo(providerInfo, clientInfo);
+
+            var popupWidth = Math.min(650, window.screen.width-20);
+            var popupHeight = Math.min(600, window.screen.height-30);
+            var url = OIDC.login({scope : 'openid profile email',
+                        response_type : 'token'
+                    }
+            );
+            //var url = this.server + "/authorize?response_type=token&client_id=" + this.clientId + "&redirect_uri=" + window.location + "&scope=" + this.scopes + "&state=";
+            //url = "http://localhost:8080/openidconnect-signin/#openidconnect-signin";
+
+            var popup = window.open(url, "openidconnect-signin", "width=" + popupWidth + ",height=" + popupHeight + ",toolbar=no,location=yes,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no");
+            popup.focus();
+            popup.onload = function() {
+                //do your stuff here
+                //console.log(this.location.href);
+            };
+
+            function onStorageEvent(storageEvent){
+                if (storageEvent.key === "openidconnect-signin-performed") {
+                    popup.close();
+                }
+            }
+            window.addEventListener('storage', onStorageEvent.bind(this), false);
+        },
+
+        /** signs user out */
+        signOut: function() {
+            localStorage.removeItem("openidconnect-signin-code");
+            localStorage.removeItem("openidconnect-signin-idtoken");
+            localStorage.removeItem("openidconnect-signin-token");
+        }
+    };
+
+      AuthEngine.init();
+
+/**
+`openidconnect-signin-aware` is used to enable authentication in custom elements by
+interacting with a openidconnect-signin element that needs to be present somewhere
+on the page.
+
+The `scopes` attribute allows you to specify which scope permissions are required.
+
+The `openidconnect-signin-aware-success` event is triggered when a user successfully
+authenticates. If either `offline` or `offlineAlwaysPrompt` is set to true, successful
+authentication will also trigger the `openidconnect-signin-offline-success`event.
+The `openidconnect-signin-aware-signed-out` event is triggered when a user explicitly
+signs out via the openidconnect-signin element.
+
+You can bind to `isAuthorized` property to monitor authorization state.
+
+Example:
+
+    <openidconnect-signin-aware scopes="openid profile"></openidconnect-signin-aware>
+
+Example with offline:
+
+    <template id="awareness" is="dom-bind">
+      <openidconnect-signin-aware
+          scopes="openid profile"
+          offline
+          on-openidconnect-signin-aware-success="handleSignin"
+          on-openidconnect-signin-offline-success="handleOffline"></openidconnect-signin-aware>
+    <\/template>
+    <script>
+      var aware = document.querySelector('#awareness');
+      aware.handleSignin = function(response) {
+        //var user = gapi.auth2.getAuthInstance().currentUser.get();
+        //console.log('User name: ' + user.getBasicProfile().getName());
+      };
+      aware.handleOffline = function(response) {
+        console.log('Offline code received: ' + response.detail.code);
+        // Here you would POST response.detail.code to your webserver, which can
+        // exchange the authorization code for an access token. More info at:
+        // https://developers.google.com/identity/protocols/OAuth2WebServer
+      };
+    <\/script>
+*/
+    Polymer({
+
+      is: 'openidconnect-signin-aware',
+
+      /**
+       * Fired when this scope has been authorized
+       * @param {Object} result Authorization result.
+       * @event openidconnect-signin-aware-success
+       */
+      /**
+       * Fired when an offline authorization is successful.
+       * @param {Object} detail
+       * @param {string} detail.code The one-time authorization code from the OpenID Connect provider.
+       *     Your application can exchange this for an `access_token` and `refresh_token`
+       * @event openidconnect-signin-offline-success
+       */
+      /**
+       * Fired when this scope is not authorized
+       * @event openidconnect-signin-aware-signed-out
+       */
+      properties: {
+
+        /**
+        * The OpenID Connect server URL.
+        */
+        server: {
+            type: String,
+            observer: '_serverChanged'
+        },
+
+        /**
+         * an OpenID Connect clientId reference
+         */
+        clientId: {
+          type: String,
+          observer: '_clientIdChanged'
+        },
+
+        /**
+         * The cookie policy defines what URIs have access to the session cookie
+         * remembering the user's sign-in state.
+         * See the relevant [docs](https://developers.google.com/+/web/signin/reference#determining_a_value_for_cookie_policy) for more information.
+         * @default 'single_host_origin'
+         */
+        cookiePolicy: {
+          type: String,
+          observer: '_cookiePolicyChanged'
+        },
+
+       /**
+         * Allows for offline `access_token` retrieval during the signin process.
+         * See also `offlineAlwaysPrompt`. You only need to set one of the two; if both
+         * are set, the behavior of `offlineAlwaysPrompt` will override `offline`.
+         */
+        offline: {
+          type: Boolean,
+          value: false,
+          observer: '_offlineChanged'
+        },
+
+        /**
+          * Works the same as `offline` with the addition that it will always
+          * force a re-prompt to the user, guaranteeing that you will get a
+          * refresh_token even if the user has already granted offline access to
+          * this application. You only need to set one of `offline` or
+          * `offlineAlwaysPrompt`, not both.
+          */
+        offlineAlwaysPrompt: {
+          type: Boolean,
+          value: false,
+          observer: '_offlineAlwaysPromptChanged'
+        },
+
+       /**
+         * The scopes to provide access to (e.g profile)
+         * and should be space-delimited.
+         */
+        scopes: {
+          type: String,
+          value: 'profile',
+          observer: '_scopesChanged'
+        },
+
+        /**
+         * True if user is signed in
+         */
+        signedIn: {
+          type: Boolean,
+          notify: true,
+          readOnly: true
+        },
+
+        /**
+         * True if authorizations for *this* element have been granted
+         */
+        isAuthorized: {
+          type: Boolean,
+          notify: true,
+          readOnly: true,
+          value: false
+        },
+
+        /**
+         * True if additional authorizations for *any* element are required
+         */
+        needAdditionalAuth: {
+          type: Boolean,
+          notify: true,
+          readOnly: true
+        }
+      },
+
+      attached: function() {
+        AuthEngine.attachSigninAware(this);
+
+          if ((window.location.href.indexOf("access_token") > 0) || (window.location.href.indexOf("error=access_denied") > 0)) {
+              // Restore configuration information
+              OIDC.restoreInfo();
+
+              // Get ID Token: Returns ID Token if valid, else error.
+              var id_token = OIDC.getValidIdToken();
+
+              // Get code
+              var code = OIDC.getCode();
+
+              // Get Access Token
+              var token = OIDC.getAccessToken();
+
+              localStorage.setItem('openidconnect-signin-idtoken', id_token);
+              localStorage.setItem('openidconnect-signin-code', code);
+              localStorage.setItem('openidconnect-signin-token', token);
+
+              // notify main window with this meta-storage element
+              localStorage.setItem('openidconnect-signin-performed', true);
+          }
+
+          function onStorageEvent(storageEvent){
+              if (storageEvent.key === "openidconnect-signin-performed") {
+                  this._setSignedIn(true); //TODO
+                  this._setNeedAdditionalAuth(false); //TODO
+
+                  // Signal all buttons to update their state based on the user.
+                  var authInfo = {
+                      'access_token': localStorage['openidconnect-signin-token'],
+                      'id_token': localStorage['openidconnect-signin-idtoken'] }
+                  this.fire('openidconnect-signin-aware-success', authInfo);
+                  this._setIsAuthorized(true);
+
+                  storageEvent.target.removeEventListener('storage', onStorageEvent);
+                  localStorage.removeItem("openidconnect-signin-performed");
+              }
+          }
+
+          window.addEventListener('storage', onStorageEvent.bind(this), false);
+      },
+
+      detached: function() {
+        AuthEngine.detachSigninAware(this);
+      },
+
+      /** pops up the authorization dialog */
+      signIn: function() {
+        AuthEngine.signIn();
+      },
+
+      /** signs user out */
+      signOut: function() {
+          AuthEngine.signOut();
+          for (var i=0; i<AuthEngine.signinAwares.length; i++) {
+              AuthEngine.signinAwares[i]._setIsAuthorized(false);
+          }
+
+          this._setSignedIn(false);
+          this.fire('openidconnect-signin-aware-signed-out', []);
+      },
+
+      _serverChanged: function(newServer, oldServer) {
+          AuthEngine.server = newServer;
+      },
+
+      _clientIdChanged: function(newId, oldId) {
+        AuthEngine.clientId = newId;
+      },
+
+      _cookiePolicyChanged: function(newPolicy, oldPolicy) {
+        AuthEngine.cookiePolicy = newPolicy;
+      },
+
+      _requestVisibleActionsChanged: function(newVal, oldVal) {
+        AuthEngine.requestVisibleActions = newVal;
+      },
+
+      _offlineChanged: function(newVal, oldVal) {
+        AuthEngine.offline = newVal;
+      },
+
+      _offlineAlwaysPromptChanged: function(newVal, oldVal) {
+        AuthEngine.offlineAlwaysPrompt = newVal;
+      },
+
+      _scopesChanged: function(newVal, oldVal) {
+        AuthEngine.requestScopes(newVal);
+        this._updateScopeStatus();
+      },
+
+      _updateScopeStatus: function(user) {
+        var newAuthorized = this.signedIn && AuthEngine.hasGrantedScopes(this.scopes);
+        if (newAuthorized !== this.isAuthorized) {
+          this._setIsAuthorized(newAuthorized);
+          if (newAuthorized) {
+            this.fire('openidconnect-signin-aware-success', user);
+          }
+          else {
+            this.fire('openidconnect-signin-aware-signed-out', user);
+          }
+        }
+      },
+
+      _updateOfflineCode: function(code) {
+        if (code) {
+          this.fire('openidconnect-signin-offline-success', {code: code});
+        }
+      }
+    });
+  })();
+</script>

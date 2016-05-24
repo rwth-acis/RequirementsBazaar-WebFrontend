@@ -1,0 +1,29 @@
+{
+  "name": "mat-typography",
+  "license": "BSD-3-Clause",
+  "version": "0.10.0",
+  "main": "mat-typography.html",
+  "description": "A custom style used to provide css variables for Material Design typography",
+  "homepage": "http://expandjs.com/elements/mat-typography",
+  "authors": [
+    "Giuliano Rullo <g.rullo@expandjs.com>",
+    "Maurizio Stefàno <m.stefano@expandjs.com>",
+    "Robert Manolea <r.manolea@expandjs.com>"
+  ],
+  "keywords": [
+    "material design",
+    "material typography",
+    "font roboto",
+    "expandjs",
+    "web app",
+    "custom elements",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0",
+    "font-roboto": "PolymerElements/font-roboto#^1.0.0"
+  }
+}

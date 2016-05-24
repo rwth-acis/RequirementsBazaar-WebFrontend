@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Delightful icon transition component using icon-transition.">
+    <title>z-toggleicon demo</title>
+    <link rel="import" href="z-toggleicon.html">
+</head>
+
+<body>
+    <p>
+        <z-toggleicon id="menuCtrl" from="menu" to="left-arrow" toggle>
+        </z-toggleicon>
+    </p>
+    <button>Toggle</button>
+    <script type="text/javascript">
+    var button = document.querySelector('button');
+    button.addEventListener('click', function() {
+        var menuCtrl = document.querySelector('#menuCtrl');
+        menuCtrl.toggle = !menuCtrl.toggle;
+    });
+    </script>
+</body>
+
+</html>
+<html>

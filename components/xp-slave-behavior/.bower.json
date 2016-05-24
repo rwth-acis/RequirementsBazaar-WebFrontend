@@ -1,0 +1,35 @@
+{
+  "name": "xp-slave-behavior",
+  "license": "BSD-3-Clause",
+  "version": "0.10.0",
+  "main": "xp-slave-behavior.html",
+  "description": "A behavior used to add slave capabilities on a custom element",
+  "homepage": "http://expandjs.com/elements/xp-slave-behavior",
+  "authors": [
+    "Giuliano Rullo <g.rullo@expandjs.com>",
+    "Maurizio Stefàno <m.stefano@expandjs.com>",
+    "Robert Manolea <r.manolea@expandjs.com>"
+  ],
+  "keywords": [
+    "expandjs",
+    "web app",
+    "custom elements",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "expandjs": "ExpandJS/expandjs#0.10.0",
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "_release": "0.10.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.10.0",
+    "commit": "0a37262b6810421160ef632ceb5bfa0319924e26"
+  },
+  "_source": "git://github.com/ExpandJS/xp-slave-behavior.git",
+  "_target": "0.10.0",
+  "_originalSource": "ExpandJS/xp-slave-behavior"
+}

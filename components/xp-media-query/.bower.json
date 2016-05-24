@@ -1,0 +1,36 @@
+{
+  "name": "xp-media-query",
+  "license": "BSD-3-Clause",
+  "version": "0.10.0",
+  "main": "xp-media-query.html",
+  "description": "A custom element used to bind data to a CSS media query",
+  "homepage": "http://expandjs.com/elements/xp-media-query",
+  "authors": [
+    "Giuliano Rullo <g.rullo@expandjs.com>",
+    "Maurizio Stefàno <m.stefano@expandjs.com>",
+    "Robert Manolea <r.manolea@expandjs.com>"
+  ],
+  "keywords": [
+    "expandjs",
+    "web app",
+    "custom elements",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "expandjs": "ExpandJS/expandjs#0.10.0",
+    "xp-selector": "ExpandJS/xp-selector#0.10.0",
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "_release": "0.10.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.10.0",
+    "commit": "6f8cbdea75b25108770ebefe4fe22ef43dd4f105"
+  },
+  "_source": "git://github.com/ExpandJS/xp-media-query.git",
+  "_target": "0.10.0",
+  "_originalSource": "ExpandJS/xp-media-query"
+}

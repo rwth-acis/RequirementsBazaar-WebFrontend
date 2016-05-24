@@ -1,0 +1,81 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A custom element used to display content as [Material Design ink](http://www.google.com/design/spec/style/color.html#color-ui-color-application).
+
+With the `opacity` attribute, you can choose from predefined transparency rules:
+- **divider**
+- **hint**
+- **icon**
+- **secondary**
+
+```html
+<mat-ink opacity="secondary">Secondary text</mat-ink>
+```
+
+---
+
+## Styling
+
+The ink's `color` can be changed accordingly to the
+[Material Design palette](http://www.google.com/design/spec/style/color.html#color-color-palette).
+
+```html
+<mat-ink color="green" opacity="secondary">Secondary text</mat-ink>
+```
+
+@element mat-ink
+@description A custom element used to display content as Material Design ink
+@keywords material design, expandjs, web app, custom elements, web-components
+@group containers
+
+@homepage http://expandjs.com/elements/mat-ink
+@repository https://github.com/ExpandJS/mat-ink
+
+@behavior mat-ink-behavior /bower_components/mat-ink/mat-ink-behavior.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="mat-ink-behavior.html">
+<link rel="import" href="mat-ink-styles.html">
+
+<dom-module id="mat-ink">
+
+    <template strip-whitespace>
+
+        <style include="mat-ink-styles"></style>
+
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <content></content>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'mat-ink',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.MatInkBehavior
+            ]
+        });
+    </script>
+
+</dom-module>

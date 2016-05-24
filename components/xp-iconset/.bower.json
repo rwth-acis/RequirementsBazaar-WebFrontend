@@ -1,0 +1,35 @@
+{
+  "name": "xp-iconset",
+  "license": "BSD-3-Clause",
+  "version": "0.10.0",
+  "main": "xp-iconset.html",
+  "description": "A custom element used to define a set of icons",
+  "homepage": "http://expandjs.com/elements/xp-iconset",
+  "authors": [
+    "Giuliano Rullo <g.rullo@expandjs.com>",
+    "Maurizio Stefàno <m.stefano@expandjs.com>",
+    "Robert Manolea <r.manolea@expandjs.com>"
+  ],
+  "keywords": [
+    "expandjs",
+    "web app",
+    "custom elements",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "expandjs": "ExpandJS/expandjs#0.10.0",
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "_release": "0.10.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.10.0",
+    "commit": "b75f0b96d67101002ba55b6bffcab40ed039de32"
+  },
+  "_source": "git://github.com/ExpandJS/xp-iconset.git",
+  "_target": "0.10.0",
+  "_originalSource": "ExpandJS/xp-iconset"
+}

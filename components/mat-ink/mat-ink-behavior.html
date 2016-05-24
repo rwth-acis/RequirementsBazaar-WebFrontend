@@ -1,0 +1,190 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A behavior used to implement [Material Design ink](http://www.google.com/design/spec/style/color.html#color-ui-color-application) properties on a custom element.
+
+@behavior mat-ink-behavior
+@description A behavior used to implement Material Design ink properties on a custom element
+@keywords material design, expandjs, web app, custom elements, web-components
+@group behaviors
+
+@homepage http://expandjs.com/elements/mat-ink-behavior
+@repository https://github.com/ExpandJS/mat-ink
+
+@behavior xp-slave-behavior /bower_components/xp-slave-behavior/xp-slave-behavior.html
+@behavior mat-palette /bower_components/mat-palette/mat-palette.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency mat-palette ExpandJS/mat-palette#0.10.0
+@dependency xp-slave-behavior ExpandJS/xp-slave-behavior#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../mat-palette/mat-palette.html">
+<link rel="import" href="../xp-slave-behavior/xp-slave-behavior.html">
+
+<script>
+    Polymer.MatInkBehaviorImp = {
+
+        // OBSERVERS
+        observers: [
+            '_currentColorObserver(currentColor, disabled)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The ink's color.
+             *
+             * @attribute color
+             * @type string
+             */
+            color: {
+                observer: '_colorObserver',
+                type: String
+            },
+
+            /**
+             * The ink's current color.
+             *
+             * @attribute current-color
+             * @type string
+             * @readonly
+             */
+            currentColor: {
+                readOnly: true,
+                reflectToAttribute: true,
+                type: String
+            },
+
+            /**
+             * If set to true, the element is disabled.
+             *
+             * @attribute disabled
+             * @type boolean
+             * @default false
+             */
+            disabled: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The ink's foreground.
+             *
+             * @attribute foreground
+             * @type "dark" | "light"
+             * @default "dark"
+             * @readonly
+             */
+            foreground: {
+                computed: '_computeForeground(paper.foreground)',
+                reflectToAttribute: true,
+                type: String,
+                value: "dark"
+            },
+
+            /**
+             * If set to true, the element is hidden.
+             *
+             * @attribute hidden
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            hidden: {
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The master paper.
+             *
+             * @attribute paper
+             * @type Element
+             * @readonly
+             */
+            paper: {
+                readOnly: true
+            },
+
+            /**
+             * The ink's opacity.
+             *
+             * @attribute opacity
+             * @type string
+             */
+            opacity: {
+                reflectToAttribute: true,
+                type: String
+            }
+        },
+
+        /**
+         * The opacity list.
+         *
+         * @property opacityList
+         * @type Array
+         * @default ["divider", "hint", "icon", "secondary"]
+         * @readonly
+         */
+        opacityList: ['divider', 'hint', 'icon', 'secondary'],
+
+        /*********************************************************************/
+
+        // COMPUTER
+        _computeForeground: function () {
+            return !!this.paper && this.paper.foreground;
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        _colorObserver: function () {
+
+            // Setting
+            this._setCurrentColor(this.color || null);
+        },
+
+        // OBSERVER
+        _currentColorObserver: function () {
+
+            // Styling
+            this.style.color = this._computeRGB(this.currentColor, this.disabled) || '';
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        created: function () {
+
+            // Classifying
+            this.classList.add('ink');
+        },
+
+        // LISTENER
+        ready: function () {
+
+            // Mapping
+            this.mastersMap.paper = '.paper';
+        }
+    };
+
+    Polymer.MatInkBehavior = [
+        Polymer.XPSlaveBehavior,
+        Polymer.MatPalette,
+        Polymer.MatInkBehaviorImp
+    ];
+</script>

@@ -1,0 +1,155 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A custom element used to bind data to a CSS media query.
+
+It can be used in conjunction with
+[xp-media-queries](http://expandjs.com/elements/xp-media-queries).
+
+@element xp-media-query
+@description A custom element used to bind data to a CSS media query
+@keywords expandjs, web app, custom elements, web-components
+@group functionality
+
+@homepage http://expandjs.com/elements/xp-media-query
+@repository https://github.com/ExpandJS/xp-media-query
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+
+<script>
+    Polymer({
+
+        // ELEMENT
+        is: 'xp-media-query',
+
+        /*********************************************************************/
+
+        /**
+         * Fired when the query's match state changes.
+         *
+         * @event xp-media-change
+         * @param {Element} firer
+         * @param {boolean} matched
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The media query's data.
+             *
+             * @attribute data
+             * @type *
+             * @notifies
+             */
+            data: {
+                notify: true
+            },
+
+            /**
+             * The media query's matcher.
+             *
+             * @attribute matcher
+             * @type Object
+             * @notifies
+             * @readonly
+             */
+            matcher: {
+                notify: true,
+                readOnly: true
+            },
+
+            /**
+             * If set to true, the current media query is matched.
+             *
+             * @attribute matched
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            matched: {
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The CSS media query to evaluate.
+             *
+             * @attribute query
+             * @type string
+             */
+            query: {
+                observer: '_queryChanged',
+                type: String
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        _queryChanged: function() {
+
+            // Vars
+            var self    = this,
+                matcher = self.matcher;
+
+            // Setting
+            self._setMatcher(window.matchMedia(self.query));
+
+            // Listening
+            if (matcher) { matcher.removeListener(self._handleQuery); }
+            if (self.matcher) { self.matcher.addListener(self._handleQuery); }
+
+            // Handling
+            self._handleQuery(self.matcher);
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        created: function () {
+
+            // Vars
+            var self = this;
+
+            // Classifying
+            self.classList.add('media-query');
+
+            // Binding
+            self._handleQuery = self._handleQuery.bind(self);
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        _handleQuery: function (event) {
+
+            // Vars
+            var self = this;
+
+            // Setting
+            self._setMatched(event.matches);
+
+            // Firing
+            XP.delay(self.fire.bind(self, 'xp-media-change', {firer: self, matched: self.matched}));
+        }
+    });
+</script>

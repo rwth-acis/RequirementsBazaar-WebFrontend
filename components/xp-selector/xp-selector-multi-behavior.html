@@ -1,0 +1,73 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A behavior used to add multi selection capabilities on a custom element.
+
+@behavior xp-selector-multi-behavior
+@description A behavior used to add multi selection capabilities on a custom element
+@keywords expandjs, web app, custom elements, web-components
+@group behaviors
+@hot
+
+@homepage http://expandjs.com/elements/xp-selector-multi-behavior
+@repository https://github.com/ExpandJS/xp-selector
+
+@behavior xp-selector-behavior /bower_components/xp-selector/xp-selector-behavior.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency xp-selector ExpandJS/xp-selector#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-selector/xp-selector-behavior.html">
+
+<script>
+    Polymer.XPSelectorMultiBehaviorImp = {
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, multi selection is allowed.
+             *
+             * @attribute multi
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            multi: {
+                observer: '_multiObserver',
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        _multiObserver: function () {
+
+            // Vars
+            var self = this;
+
+            // Setting
+            self._setSelection(self.multi ? XP.toArray(self.selection, true) : (!XP.isArray(self.selection) ? self.selection : null));
+            self.selected = self.multi ? XP.toArray(self.selected, true) : (!XP.isArray(self.selected) ? self.selected : null);
+        }
+    };
+
+    Polymer.XPSelectorMultiBehavior = [
+        Polymer.XPSelectorBehavior,
+        Polymer.XPSelectorMultiBehaviorImp
+    ];
+</script>

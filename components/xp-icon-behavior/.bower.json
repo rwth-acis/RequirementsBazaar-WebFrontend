@@ -1,0 +1,36 @@
+{
+  "name": "xp-icon-behavior",
+  "license": "BSD-3-Clause",
+  "version": "0.10.0",
+  "main": "xp-icon-behavior.html",
+  "description": "A behavior used to add icon capabilities on a custom element",
+  "homepage": "http://expandjs.com/elements/xp-icon-behavior",
+  "authors": [
+    "Giuliano Rullo <g.rullo@expandjs.com>",
+    "Maurizio Stefàno <m.stefano@expandjs.com>",
+    "Robert Manolea <r.manolea@expandjs.com>"
+  ],
+  "keywords": [
+    "expandjs",
+    "web app",
+    "custom elements",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "expandjs": "ExpandJS/expandjs#0.10.0",
+    "xp-iconset": "ExpandJS/xp-iconset#0.10.0",
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "_release": "0.10.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.10.0",
+    "commit": "536f51aedb44e2735b9f4064251b9ae88d875824"
+  },
+  "_source": "git://github.com/ExpandJS/xp-icon-behavior.git",
+  "_target": "0.10.0",
+  "_originalSource": "ExpandJS/xp-icon-behavior"
+}

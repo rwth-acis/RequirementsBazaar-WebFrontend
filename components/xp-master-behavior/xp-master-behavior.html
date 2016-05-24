@@ -1,0 +1,116 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A behavior used to add master capabilities on a custom element.
+
+@element xp-master-behavior
+@description A behavior used to add master capabilities on a custom element
+@keywords expandjs, web app, custom elements, web-components
+@group behaviors
+@hot
+
+@homepage http://expandjs.com/elements/xp-master-behavior
+@repository https://github.com/ExpandJS/xp-master-behavior
+
+@behavior xp-array-behavior /bower_components/xp-array-behavior/xp-array-behavior.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency xp-array-behavior ExpandJS/xp-array-behavior#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-array-behavior/xp-array-behavior.html">
+
+<script>
+    Polymer.XPMasterBehaviorImp = {
+
+        /**
+         * Couples a slave.
+         *
+         * @method _coupleSlave
+         * @param {string} key
+         * @param {Element} slave
+         * @returns {Element}
+         * @private
+         */
+        _coupleSlave: function (key, slave) {
+            var self = this;
+            if (!self[key]) { self[XP.setter(key, true)]([]); }
+            return self.append(key, slave);
+        },
+
+        /**
+         * Decouples a slave.
+         *
+         * @method _decoupleSlave
+         * @param {string} key
+         * @param {Element} slave
+         * @returns {Element}
+         * @private
+         */
+        _decoupleSlave: function (key, slave) {
+            var self = this, index = XP.indexOf(self[key] || [], slave);
+            return index >= 0 ? self.pullAt(key, index) : null;
+        },
+
+        /*********************************************************************/
+
+        // LISTENERS
+        listeners: {
+            'xp-slave': '_slaveHandler'
+        },
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * A map used to bind slaves arrays to their respective css selector.
+             *
+             * @attribute slaves-map
+             * @type Object
+             * @notifies
+             * @readonly
+             */
+            slavesMap: {
+                notify: true,
+                readOnly: true,
+                type: Object,
+                value: function () { return {}; }
+            }
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        _slaveHandler: function (event) {
+
+            // Vars
+            var self       = this,
+                couple     = event.detail.couple,
+                isAttached = event.detail.isAttached,
+                selector   = event.detail.selector,
+                slave      = event.detail.firer,
+                matches    = couple && selector && slave && self !== slave && XP.matches(self, selector),
+                property   = matches && XP.findKey(self.slavesMap, function (value) { return XP.matches(slave, value); });
+
+            // Stopping
+            if (property) { event.stopPropagation(); } else { return; }
+
+            // Coupling
+            if (self[isAttached ? '_coupleSlave' : '_decoupleSlave'](property, slave)) { couple(self); }
+        }
+    };
+
+    Polymer.XPMasterBehavior = [
+        Polymer.XPArrayBehavior,
+        Polymer.XPMasterBehaviorImp
+    ];
+</script>

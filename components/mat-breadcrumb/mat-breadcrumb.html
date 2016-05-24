@@ -1,0 +1,171 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A custom element used to display a Material Design breadcrumb.
+
+It must be used in conjunction with
+[mat-breadcrumb-step](http://expandjs.com/elements/mat-breadcrumb-step).
+
+```html
+<mat-breadcrumb>
+    <mat-breadcrumb-step label="My files" href="/files"></mat-breadcrumb-step>
+    <mat-breadcrumb-step label="Music" href="/files/music"></mat-breadcrumb-step>
+</mat-breadcrumb>
+```
+
+Using the breadcrumb in an [app bar](http://www.google.com/design/spec/layout/structure.html#structure-app-bar)
+will cause it to [change style](http://www.google.com/design/spec/layout/structure.html#structure-side-nav)
+on a mobile device.
+
+```html
+<mat-header>
+    <mat-breadcrumb>...</mat-breadcrumb>
+</mat-header>
+```
+
+@element mat-breadcrumb
+@description A custom element used to display a Material Design breadcrumb
+@keywords material design, material breadcrumb, expandjs, web app, custom elements, web-components
+@group navigation
+
+@homepage http://expandjs.com/elements/mat-breadcrumb
+@repository https://github.com/ExpandJS/mat-breadcrumb
+@demo http://expandjs.com/demo/mat-breadcrumb
+
+@behavior xp-breadcrumb-behavior /bower_components/xp-breadcrumb-behavior/xp-breadcrumb-behavior.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency xp-media-query ExpandJS/xp-media-query#0.10.0
+@dependency xp-breadcrumb-behavior ExpandJS/xp-breadcrumb-behavior#0.10.0
+
+@devDependency mat-demo ExpandJS/mat-demo#0.10.0
+@devDependency mat-header-panel ExpandJS/mat-header-panel#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-breadcrumb-behavior/xp-breadcrumb-behavior.html">
+<link rel="import" href="../xp-breadcrumb-behavior/xp-breadcrumb-styles.html">
+<link rel="import" href="../xp-media-query/xp-media-query.html">
+<link rel="import" href="mat-breadcrumb-step.html">
+
+<dom-module id="mat-breadcrumb">
+
+    <template strip-whitespace>
+
+        <style include="xp-breadcrumb-styles"></style>
+
+        <xp-media-query query="(max-width: 960px)" matched="{{mobile}}"></xp-media-query>
+
+        <div class="wrapper"><content></content></div>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'mat-breadcrumb',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPBreadcrumbBehavior
+            ],
+
+            /*********************************************************************/
+
+            // OBSERVERS
+            observers: [
+                '_currentChanged(current, header, mobile, shift, steps.*)'
+            ],
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The header containing the breadcrumb.
+                 *
+                 * @attribute header
+                 * @type Element
+                 * @notifies
+                 * @readonly
+                 */
+                header: {
+                    notify: true,
+                    readOnly: true
+                },
+
+                /**
+                 * If set to true, the breadcrumb `mobile` style will be applied.
+                 *
+                 * @attribute mobile
+                 * @type boolean
+                 * @default false
+                 * @notifies
+                 */
+                mobile: {
+                    notify: true,
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * If set to true, the steps will be shifted to the left, instead of hidden, in `mobile` view.
+                 *
+                 * @attribute shift
+                 * @type boolean
+                 * @default false
+                 */
+                shift: {
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: false
+                }
+            },
+
+            /*********************************************************************/
+
+            // OBSERVER
+            _currentChanged: function () {
+
+                // Vars
+                var self = this;
+
+                // Checking
+                if (!self.header) { return; }
+
+                // Setting
+                self.steps.forEach(function (step) { step.mobile = self.mobile; });
+
+                // Toggling
+                self.steps.forEach(function (step) { step.style.display = self.mobile && !self.shift && step !== self.current  ? 'none' : ''; });
+
+                // Shifting
+                self.style.marginLeft = self.mobile ? -self.current.offsetLeft + 'px' : '';
+            },
+
+            /*********************************************************************/
+
+            // LISTENER
+            attached: function () {
+
+                // Setting
+                this._setHeader(XP.findParentElement(this, '.header'));
+            },
+
+            // LISTENER
+            detached: function () {
+
+                // Setting
+                this._setHeader(null);
+            }
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,225 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A behavior used to add icon capabilities on a custom element.
+
+@behavior xp-icon-behavior
+@description A behavior used to add icon capabilities on a custom element
+@keywords expandjs, web app, custom elements, web-components
+@group behaviors
+
+@homepage http://expandjs.com/elements/xp-icon-behavior
+@repository https://github.com/ExpandJS/xp-icon-behavior
+
+@behavior xp-iconset-finder /bower_components/xp-iconset/xp-iconset-finder.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency xp-iconset ExpandJS/xp-iconset#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-iconset/xp-iconset-finder.html">
+
+<script>
+    Polymer.XPIconBehaviorImp = {
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            '_iconObserver(iconName, iconSet)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the element is hidden.
+             *
+             * @attribute empty
+             * @type boolean
+             * @default true
+             * @notifies
+             * @readonly
+             */
+            empty: {
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: true
+            },
+
+            /**
+             * The rendered icon's element.
+             *
+             * @attribute icon-element
+             * @type Element
+             * @readonly
+             */
+            iconElement: {
+                notify: true,
+                readOnly: true
+            },
+
+            /**
+             * The rendered icon's name.
+             *
+             * @attribute icon-name
+             * @type string
+             * @notifies
+             * @readonly
+             */
+            iconName: {
+                notify: true,
+                readOnly: true,
+                type: String
+            },
+
+            /**
+             * The rendered icon's set.
+             *
+             * @attribute icon-set
+             * @type Element
+             * @notifies
+             * @readonly
+             */
+            iconSet: {
+                notify: true,
+                readOnly: true
+            },
+
+            /**
+             * The icon's name.
+             *
+             * @attribute name
+             * @type string
+             * @default ""
+             */
+            name: {
+                observer: '_nameObserver',
+                reflectToAttribute: true,
+                type: String,
+                value: ''
+            },
+
+            /**
+             * If set to true, the icon is rendered as `div` background instead of `svg`.
+             *
+             * @attribute raster
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            raster: {
+                computed: '_computeRaster(src)',
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The icon's src.
+             *
+             * @attribute src
+             * @type string
+             */
+            src: {
+                observer: '_iconObserver',
+                reflectToAttribute: true,
+                type: String
+            }
+        },
+
+        /*********************************************************************/
+
+        // COMPUTER
+        _computeRaster: function (src) {
+            return !!src;
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        _iconObserver: function () {
+
+            // Vars
+            var self      = this,
+                iconChild = self.src || !self.iconName || !self.iconSet ? null : self.iconSet.findIcon(self.iconName),
+                iconNew   = self.src ? document.createElement('div') : iconChild && document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+                iconTag   = self.src ? 'div' : iconChild && 'svg',
+                iconOld   = Polymer.dom(self).children[0];
+
+            // Appending
+            if (iconChild) { iconNew.appendChild(iconChild); }
+
+            // Setting
+            self._setEmpty(!iconNew);
+            self._setIconElement(iconNew);
+
+            // CASE: svg
+            if (iconTag === 'svg') {
+
+                // Setting
+                iconNew.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                iconNew.setAttribute('height', '24');
+                iconNew.setAttribute('width', '24');
+                iconNew.setAttribute('viewBox', '0 0 24 24');
+            }
+
+            // CASE: raster
+            else if (iconTag) {
+
+                // Styling
+                iconNew.style.background = 'url(' + self.src + ') 100% no-repeat';
+                iconNew.style.backgroundSize = '100% 100%';
+            }
+
+            // Replacing
+            if (iconOld) { Polymer.dom(self).removeChild(iconOld); }
+            if (iconNew) { Polymer.dom(self).appendChild(iconNew); }
+        },
+
+        // OBSERVER
+        _nameObserver: function () {
+
+            // Vars
+            var self     = this,
+                parts    = XP.split(self.name, ':'),
+                iconName = parts[1],
+                iconSet  = parts[0] && self.findIconset(parts[0]);
+
+            // Setting
+            self._setIconName(iconName || undefined);
+            self._setIconSet(iconSet || undefined);
+
+            // Listening
+            self[iconSet ? 'unlisten' : 'listen'](window, 'xp-iconset', '_nameObserver');
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        created: function () {
+
+            // Classifying
+            this.classList.add('icon');
+        }
+    };
+
+    Polymer.XPIconBehavior = [
+        Polymer.XPIconsetFinder,
+        Polymer.XPIconBehaviorImp
+    ];
+</script>

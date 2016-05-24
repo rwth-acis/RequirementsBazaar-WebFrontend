@@ -1,0 +1,120 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A custom element used to switch between multiple media queries.
+
+It must be used in conjunction with
+[xp-media-query](http://expandjs.com/elements/xp-media-query).
+
+@element xp-media-queries
+@description A custom element used to switch between multiple media queries
+@keywords expandjs, web app, custom elements, web-components
+@group functionality
+
+@homepage http://expandjs.com/elements/xp-media-queries
+@repository https://github.com/ExpandJS/xp-media-queries
+
+@behavior xp-selector-behavior /bower_components/xp-selector/xp-selector-behavior.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency xp-selector ExpandJS/xp-selector#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-selector/xp-selector-behavior.html">
+<link rel="import" href="xp-media-query.html">
+
+<dom-module id="xp-media-queries">
+
+    <template strip-whitespace>
+
+        <style>
+            :host {
+                display: none !important;
+            }
+        </style>
+
+        <content></content>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'xp-media-queries',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPSelectorBehavior
+            ],
+
+            /*********************************************************************/
+
+            // LISTENERS
+            listeners: {
+                'xp-media-change': '_handleChange'
+            },
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The selector used to recognize items.
+                 *
+                 * @attribute item-selector
+                 * @type string
+                 * @default ".media-query"
+                 */
+                itemSelector: {
+                    type: String,
+                    value: '.media-query'
+                },
+
+                /**
+                 * The attribute set on selection.
+                 *
+                 * @attribute selected-attribute
+                 * @type string
+                 * @default "matched"
+                 */
+                selectedAttribute: {
+                    type: String,
+                    value: 'matched'
+                },
+
+                /**
+                 * If set to true, the unselection is allowed even if not multi.
+                 *
+                 * @attribute switchable
+                 * @type boolean
+                 * @default true
+                 * @notifies
+                 */
+                switchable: {
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: true
+                }
+            },
+
+            /*********************************************************************/
+
+            // HANDLER
+            _handleChange: function (event) {
+
+                // Selecting
+                this[event.detail.matched ? 'select' : 'unselect'](event.detail.firer);
+            }
+        });
+    </script>
+
+</dom-module>

@@ -1,0 +1,41 @@
+{
+  "name": "activity-tracker",
+  "authors": [
+    "Kristjan Liiva",
+    "István Koren"
+  ],
+  "description": "An element showing a list of activities, who created it and when.",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "seed"
+  ],
+  "main": "activity-tracker.html",
+  "license": "https://github.com/rwth-acis/activity-tracker/blob/master/LICENSE",
+  "homepage": "https://github.com/rwth-acis/activity-tracker/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.1.0",
+    "paper-material": "PolymerElements/paper-material#~1.0.1",
+    "time-elements": "~0.4.0",
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*",
+    "paper-button": "PolymerElements/paper-button#^1.0.0"
+  },
+  "_release": "66dfe9a6c3",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "66dfe9a6c37a673ee697c2da7ba9e49af5ac70e8"
+  },
+  "_source": "git://github.com/rwth-acis/activity-tracker.git",
+  "_target": "*",
+  "_originalSource": "rwth-acis/activity-tracker"
+}

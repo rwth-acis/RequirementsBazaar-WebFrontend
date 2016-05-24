@@ -1,0 +1,86 @@
+<link rel="import" href="../mat-demo/mat-demo.html">
+<link rel="import" href="../mat-header-panel/mat-header.html">
+<link rel="import" href="mat-breadcrumb.html">
+
+<dom-module id="mat-breadcrumb-demo">
+
+    <template>
+
+        <style>
+            :host {
+                display: block;
+            }
+
+            :host .breadcrumb.extended {
+                padding-bottom: 16px;
+            }
+        </style>
+
+        <mat-demo name="mat-breadcrumb" type="element" url="http://expandjs.com/elements/mat-breadcrumb">
+
+            <mat-demo-panel label="Default">
+                <script type="text/html">
+                    <mat-breadcrumb>
+                        <mat-breadcrumb-step label="My files"></mat-breadcrumb-step>
+                        <mat-breadcrumb-step label="Photos"></mat-breadcrumb-step>
+                        <mat-breadcrumb-step label="Beach"></mat-breadcrumb-step>
+                    </mat-breadcrumb>
+                </script>
+                <mat-breadcrumb>
+                    <mat-breadcrumb-step label="My files"></mat-breadcrumb-step>
+                    <mat-breadcrumb-step label="Photos"></mat-breadcrumb-step>
+                    <mat-breadcrumb-step label="Beach"></mat-breadcrumb-step>
+                </mat-breadcrumb>
+            </mat-demo-panel>
+
+            <mat-demo-panel label="App bar" padding-disabled>
+                <script type="text/html">
+                    <mat-header>
+                        <mat-breadcrumb>
+                            <mat-breadcrumb-step label="My files"></mat-breadcrumb-step>
+                            <mat-breadcrumb-step label="Photos"></mat-breadcrumb-step>
+                            <mat-breadcrumb-step label="Beach"></mat-breadcrumb-step>
+                        </mat-breadcrumb>
+                    </mat-header>
+                </script>
+                <mat-header>
+                    <mat-breadcrumb>
+                        <mat-breadcrumb-step label="My files"></mat-breadcrumb-step>
+                        <mat-breadcrumb-step label="Photos"></mat-breadcrumb-step>
+                        <mat-breadcrumb-step label="Beach"></mat-breadcrumb-step>
+                    </mat-breadcrumb>
+                </mat-header>
+            </mat-demo-panel>
+
+            <mat-demo-panel label="App bar with shift" padding-disabled>
+                <script type="text/html">
+                    <mat-header inset>
+                        <mat-breadcrumb class="extended" shift>
+                            <mat-breadcrumb-step label="My files"></mat-breadcrumb-step>
+                            <mat-breadcrumb-step label="Photos"></mat-breadcrumb-step>
+                            <mat-breadcrumb-step label="Beach"></mat-breadcrumb-step>
+                        </mat-breadcrumb>
+                    </mat-header>
+                </script>
+                <mat-header inset>
+                    <mat-breadcrumb class="extended" shift>
+                        <mat-breadcrumb-step label="My files"></mat-breadcrumb-step>
+                        <mat-breadcrumb-step label="Photos"></mat-breadcrumb-step>
+                        <mat-breadcrumb-step label="Beach"></mat-breadcrumb-step>
+                    </mat-breadcrumb>
+                </mat-header>
+            </mat-demo-panel>
+
+        </mat-demo>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'mat-breadcrumb-demo'
+        });
+    </script>
+
+</dom-module>

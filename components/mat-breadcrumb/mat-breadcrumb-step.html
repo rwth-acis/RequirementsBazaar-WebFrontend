@@ -1,0 +1,138 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+An element used to display a Material Design breadcrumb step.
+
+It must be used in conjunction with [mat-breadcrumb](http://expandjs.com/elements/mat-breadcrumb).
+
+```html
+<mat-breadcrumb>
+    <mat-breadcrumb-step label="My files" href="/files"></mat-breadcrumb-step>
+    <mat-breadcrumb-step label="Music" href="/files/music"></mat-breadcrumb-step>
+</mat-breadcrumb>
+```
+
+@element mat-breadcrumb-step
+@description A custom element used to display a Material Design breadcrumb step
+@keywords material design, material breadcrumb, expandjs, web app, custom elements, web-components
+@group navigation
+
+@homepage http://expandjs.com/elements/mat-breadcrumb
+@repository https://github.com/ExpandJS/mat-breadcrumb
+@demo http://expandjs.com/demo/mat-breadcrumb
+
+@behavior xp-anchor-behavior /bower_components/xp-anchor-behavior/xp-anchor-behavior.html
+@behavior xp-breadcrumb-step-behavior /bower_components/xp-breadcrumb-behavior/xp-breadcrumb-step-behavior.html
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency iron-flex-layout PolymerElements/iron-flex-layout#^1.0.0
+@dependency mat-ink ExpandJS/mat-ink#0.10.0
+@dependency mat-icon ExpandJS/mat-icon#0.10.0
+@dependency mat-icons ExpandJS/mat-icons#0.10.0
+@dependency xp-anchor-behavior ExpandJS/xp-anchor-behavior#0.10.0
+@dependency xp-breadcrumb-behavior ExpandJS/xp-breadcrumb-behavior#0.10.0
+
+@devDependency mat-demo ExpandJS/mat-demo#0.10.0
+@devDependency mat-header-panel ExpandJS/mat-header-panel#0.10.0
+-->
+
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../mat-icon/mat-icon.html">
+<link rel="import" href="../mat-icons/mat-icons.html">
+<link rel="import" href="../mat-ink/mat-ink.html">
+<link rel="import" href="../xp-anchor-behavior/xp-anchor-behavior.html">
+<link rel="import" href="../xp-anchor-behavior/xp-anchor-styles.html">
+<link rel="import" href="../xp-breadcrumb-behavior/xp-breadcrumb-step-behavior.html">
+<link rel="import" href="../xp-breadcrumb-behavior/xp-breadcrumb-step-styles.html">
+
+<dom-module id="mat-breadcrumb-step">
+
+    <template strip-whitespace>
+
+        <style include="xp-anchor-styles"></style>
+        <style include="xp-breadcrumb-step-styles"></style>
+
+        <style>
+            :host .label {
+                overflow: hidden;
+                text-overflow: ellipsis !important; /* override */
+                white-space: nowrap !important; /* override */
+            }
+
+            :host .icon {
+                height: 0.706em;
+                margin: 0 0.4em;
+                min-height: 24px;
+                min-width: 24px;
+                width: 0.706em;
+            }
+
+            :host(:last-of-type) .icon {
+                display: none !important;
+            }
+        </style>
+
+        <a class="anchor" tabindex="-1" on-click="_anchorHandler">
+            <mat-ink class="label" opacity="[[_computeLabelOpacity(active, mobile)]]">[[label]]</mat-ink>
+        </a>
+
+        <mat-icon class="icon" name="mat:chevron-right" opacity="[[_computeIconOpacity(mobile)]]"></mat-icon>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'mat-breadcrumb-step',
+
+            //BEHAVIORS
+            behaviors: [
+                Polymer.XPAnchorBehavior,
+                Polymer.XPBreadcrumbStepBehavior
+            ],
+
+            /*********************************************************************/
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * If set to true, the breadcrumb `mobile` style will be applied.
+                 *
+                 * @attribute mobile
+                 * @type boolean
+                 * @default false
+                 * @notifies
+                 */
+                mobile: {
+                    notify: true,
+                    type: Boolean,
+                    value: false
+                }
+            },
+
+            /*********************************************************************/
+
+            // COMPUTER
+            _computeIconOpacity: function (mobile) {
+                return mobile ? 'hint' : 'icon';
+            },
+
+            // COMPUTER
+            _computeLabelOpacity: function (active, mobile) {
+                return !active && mobile ? 'hint' : null;
+            }
+        });
+    </script>
+</dom-module>

@@ -131,8 +131,8 @@ gulp.task('copy', function () {
   }).pipe(gulp.dest('dist'));
 
   var bower = gulp.src([
-    'bower_components/**/*'
-  ]).pipe(gulp.dest('dist/bower_components'));
+    'components/**/*'
+  ]).pipe(gulp.dest('dist/components'));
 
   var locales = gulp.src([
     'app/locales/*'
@@ -147,10 +147,10 @@ gulp.task('copy', function () {
                            'app/elements/**/*.js'])
     .pipe(gulp.dest('dist/elements'));
 
-  var swBootstrap = gulp.src(['bower_components/platinum-sw/bootstrap/*.js'])
+  var swBootstrap = gulp.src(['components/platinum-sw/bootstrap/*.js'])
     .pipe(gulp.dest('dist/elements/bootstrap'));
 
-  var swToolbox = gulp.src(['bower_components/sw-toolbox/*.js'])
+  var swToolbox = gulp.src(['components/sw-toolbox/*.js'])
     .pipe(gulp.dest('dist/sw-toolbox'));
 
   var vulcanized = gulp.src(['app/elements/elements.html'])
@@ -216,7 +216,7 @@ gulp.task('cache-config', function (callback) {
     if (error) {
       callback(error);
     } else {
-      files.push('index.html', './', 'bower_components/webcomponentsjs/webcomponents-lite.min.js');
+      files.push('index.html', './', 'components/webcomponentsjs/webcomponents-lite.min.js');
       config.precache = files;
 
       var md5 = crypto.createHash('md5');
@@ -256,7 +256,7 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
       baseDir: ['.tmp', 'app'],
       middleware: [ historyApiFallback() ],
       routes: {
-        '/bower_components': 'bower_components'
+        '/components': 'components'
       }
     }
   });

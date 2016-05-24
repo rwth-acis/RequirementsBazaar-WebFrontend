@@ -18,12 +18,13 @@
     // url for requests for beta or live environment
     
     app.baseHref = "https://requirements-bazaar.org/betabazaar";
+    app.activityHref = "https://requirements-bazaar.org/betaactivities";
     
     app.baseUrl = '/';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        app.baseUrl = '/beta/';
+        app.baseUrl = '/';
     }
 
     /**
@@ -447,6 +448,7 @@
         }
 
         if (document.querySelectorAll('#drawer')[1].style.display != 'block'){
+            document.querySelectorAll('activity-tracker')[1].refresh();
             document.querySelectorAll('#drawer')[1].style.display = 'block';
             document.querySelectorAll('#drawer')[1].style.zIndex = 1;
             if (!this.isMobile) {
@@ -464,6 +466,7 @@
         }
 
         if (document.querySelectorAll('#drawer')[2].style.display != 'block'){
+            document.querySelectorAll('activity-tracker')[2].refresh();
             document.querySelectorAll('#drawer')[2].style.display = 'block';
             document.querySelectorAll('#drawer')[2].style.zIndex = 1;
             if (!this.isMobile) {

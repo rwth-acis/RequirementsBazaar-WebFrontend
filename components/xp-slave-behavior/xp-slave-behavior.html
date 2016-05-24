@@ -1,0 +1,109 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A behavior used to add slave capabilities on a custom element.
+
+@element xp-slave-behavior
+@description A behavior used to add slave capabilities on a custom element
+@keywords expandjs, web app, custom elements, web-components
+@group behaviors
+@hot
+
+@homepage http://expandjs.com/elements/xp-slave-behavior
+@repository https://github.com/ExpandJS/xp-slave-behavior
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+
+<script>
+    Polymer.XPSlaveBehavior = {
+
+        /**
+         * Fired when attached or detached.
+         *
+         * @event xp-slave
+         * @param {Element} firer
+         * @param {Function} coupler
+         * @param {string} selector
+         * @param {boolean} isAttached
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        /**
+         * Couples a master.
+         *
+         * @method _coupleMaster
+         * @param {string} key
+         * @param {Element} master
+         * @returns {Element}
+         * @private
+         */
+        _coupleMaster: function (key, master) {
+            var self = this;
+            if (!self[key]) { self[XP.setter(key, true)](master); }
+            return (self[key] === master && master) || null;
+        },
+
+        /**
+         * Decouples a master.
+         *
+         * @method _decoupleMaster
+         * @param {string} key
+         * @param {Element} master
+         * @returns {Element}
+         * @private
+         */
+        _decoupleMaster: function (key, master) {
+            var self = this;
+            if (self[key] === master) { self[XP.setter(key, true)](null); }
+            return (!self[key] && master) || null;
+        },
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * A map used to bind masters to their respective css selector.
+             *
+             * @attribute masters-map
+             * @type Object
+             * @notifies
+             * @readonly
+             */
+            mastersMap: {
+                notify: true,
+                readOnly: true,
+                type: Object,
+                value: function () { return {}; }
+            }
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        attached: function () {
+            var self = this, fire = function (selector, key) { self.fire('xp-slave', {firer: self, couple: self._coupleMaster.bind(self, key), selector: selector, isAttached: true}); };
+            self.async(function () { XP.forOwn(self.mastersMap, fire); });
+        },
+
+        // LISTENER
+        detached: function () {
+            var self = this, fire = function (selector, key) { if (self[key]) { self[key].fire('xp-slave', {firer: self, couple: self._decoupleMaster.bind(self, key), selector: selector, isAttached: false}); } };
+            self.async(function () { XP.forOwn(self.mastersMap, fire); });
+        }
+    };
+</script>

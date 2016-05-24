@@ -1,0 +1,74 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+A stylesheet used to stylize content as [Material Design ink](http://www.google.com/design/spec/style/color.html#color-ui-color-application).
+
+@stylesheet mat-ink-styles
+@description A stylesheet used to stylize content as Material Design ink
+@keywords material design, expandjs, web app, custom elements, web-components
+@group stylesheets
+
+@homepage http://expandjs.com/elements/mat-ink-styles
+@repository https://github.com/ExpandJS/mat-ink
+
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency mat-typography ExpandJS/mat-typography#0.10.0
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../mat-typography/mat-typography.html">
+
+<dom-module id="mat-ink-styles">
+
+    <template strip-whitespace>
+
+        <style>
+
+            /* ANCHORS */
+
+            :host a { text-decoration: none; }
+            :host a[href]:hover { text-decoration: underline; }
+
+            /* DARK FOREGROUND */
+
+            :host([foreground="dark"]) { color: hsla(0, 0%, 0%, 0.87); }
+            :host([foreground="dark"][opacity="divider"]) { color: hsla(0, 0%, 0%, 0.12); }
+            :host([foreground="dark"][opacity="hint"]) { color: hsla(0, 0%, 0%, 0.38); }
+            :host([foreground="dark"][opacity="icon"]) { color: hsla(0, 0%, 0%, 0.54); }
+            :host([foreground="dark"][opacity="secondary"]) { color: hsla(0, 0%, 0%, 0.54); }
+            :host([foreground="dark"][disabled]) { color: hsla(0, 0%, 0%, 0.38) !important; }
+
+            /* LIGHT FOREGROUND */
+
+            :host([foreground="light"]) { color: hsla(0, 0%, 100%, 1); }
+            :host([foreground="light"][opacity="divider"]) { color: hsla(0, 0%, 100%, 0.12); }
+            :host([foreground="light"][opacity="hint"]) { color: hsla(0, 0%, 100%, 0.30); }
+            :host([foreground="light"][opacity="icon"]) { color: hsla(0, 0%, 100%, 1); }
+            :host([foreground="light"][opacity="secondary"]) { color: hsla(0, 0%, 100%, 0.70); }
+            :host([foreground="light"][disabled]) { color: hsla(0, 0%, 100%, 0.30) !important; }
+
+            /* DISABLED */
+
+            :host([disabled]) {
+                -webkit-filter: grayscale(100%);
+                filter: grayscale(100%);
+                pointer-events: none !important;
+                text-shadow: none !important;
+            }
+
+            /* HIDDEN */
+
+            :host([hidden]) {
+                display: none !important;
+            }
+        </style>
+
+    </template>
+
+</dom-module>
