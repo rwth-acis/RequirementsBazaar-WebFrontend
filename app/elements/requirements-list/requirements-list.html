@@ -220,7 +220,7 @@
                                     <template is="dom-if" if="{{userVoted(req.userVoted)}}">
                                         <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
                                     </template>
-                                    <template is="dom-if" if="{{!userVoted(req.userVoted)}}">
+                                    <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
                                         <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
                                     </template>
                                 </template>
@@ -289,7 +289,7 @@
                         </div>
 
                         <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
-                        <div class="description helper">[[req.description]]</div>
+                        <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
 
                         <div class="comments">
 
@@ -752,10 +752,11 @@
                 },
 
                 userVoted: function(vote){
-                    if (vote == "NO_VOTE"){
+                    if (vote === "NO_VOTE"){
                         return false;
+                    } else {
+                        return true;
                     }
-                    return true;
                 },
 
                 isEmpty: function(arr){
@@ -783,7 +784,29 @@
                             e.currentTarget.value += "\n";
                         }
                     }
-                }
+                },
+
+                validateUrl: function(requirementDesc) {
+                    var str = requirementDesc;
+                    var expression = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/gi;
+                    var regex = new RegExp(expression);
+
+                    if(!str.match(regex)) {
+                        return str;
+                    } else {
+                        var txt = str;
+                        for (var i = 0; i < str.match(regex).length; i++){
+                            var replacement;
+                            if (str.match(regex)[i].startsWith("http")){
+                                replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+                            } else {
+                                replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+                            }
+                            txt = txt.replace(str.match(regex)[i], replacement);
+                        }
+                        return txt;
+                    }
+            }
             });
 
         })();

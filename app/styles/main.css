@@ -38,6 +38,16 @@ a {
     display: none;
 }
 
+.highlight {
+    color: green;
+    text-decoration: none;
+}
+
+.highlight:hover {
+    font-weight: 600;
+    color: #0baa68;
+}
+
 .section-name {
     margin-top: -5px;
     font-weight: 500;
