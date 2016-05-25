@@ -219,9 +219,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer0">
                         <paper-scroll-header-panel drawer fixed>
-
+                            <template is="dom-if" if="{{! activities}}">
+                                <paper-spinner active></paper-spinner>
+                            </template>
                             <!-- Drawer Content -->
-                            <activity-tracker url="{{activityHref}}"></activity-tracker>
+                            <activity-tracker url="{{activityHref}}" activities="{{activities}}"></activity-tracker>
                         </paper-scroll-header-panel>
                     </paper-drawer-panel>
 

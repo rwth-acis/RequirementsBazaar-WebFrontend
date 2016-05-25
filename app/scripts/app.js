@@ -690,6 +690,15 @@
 
         request.generateRequest();
     };
+    
+    app.activitiesLoaded = function (){
+        if (this.activities === null){
+            return false;
+        } else {
+            return true;
+        }
+
+    };
 
     function sayHi() {
         if (app.currentUser != null) {
