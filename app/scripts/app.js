@@ -67,43 +67,66 @@
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
-        switch (navigator.language.substring(0,2)) {
-            case "en":
-                I18nMsg.lang = 'en';
-                break;
-            case "de":
-                I18nMsg.lang = 'de';
-                break;
-            case "al":
-                I18nMsg.lang = 'al';
-                break;
-            case "ro":
-                I18nMsg.lang = 'ro';
-                break;
-            default:
-                I18nMsg.lang = 'en';
+        var lang;
+        if (document.cookie){
+            var cookies = document.cookie.split(';');
+            for(var i = 0; i <cookies.length; i++) {
+                var c = cookies[i];
+                while (c.charAt(0)==' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf("lang=") == 0) {
+                    lang = c.substring("lang=".length, c.length);
+                }
+            }
         }
+        console.log(lang);
+        if (lang === null){
+            switch (navigator.language.substring(0,2)) {
+                case "en":
+                    I18nMsg.lang = 'en';
+                    break;
+                case "de":
+                    I18nMsg.lang = 'de';
+                    break;
+                case "al":
+                    I18nMsg.lang = 'al';
+                    break;
+                case "ro":
+                    I18nMsg.lang = 'ro';
+                    break;
+                default:
+                    I18nMsg.lang = 'en';
+            }
+        } else {
+            I18nMsg.lang = lang;
+        }
+
         I18nMsg.url = 'locales'; // optionally use custom folder for locales.
         Platform.performMicrotaskCheckpoint();
     });
 
     app.english = function(){
         I18nMsg.lang = 'en';
+        document.cookie = "lang= en";
         Platform.performMicrotaskCheckpoint();
     };
 
     app.deutsch = function(){
         I18nMsg.lang = 'de';
+        document.cookie = "lang= de";
         Platform.performMicrotaskCheckpoint();
     };
 
     app.albanian = function(){
         I18nMsg.lang = 'al';
+        document.cookie = "lang= al";
         Platform.performMicrotaskCheckpoint();
     };
 
     app.romanian = function(){
         I18nMsg.lang = 'ro';
+        document.cookie = "lang= ro";
         Platform.performMicrotaskCheckpoint();
     };
 

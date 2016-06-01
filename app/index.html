@@ -508,11 +508,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <h2><i18n-msg msgid="createRequirement"></i18n-msg></h2>
                                 <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle"></paper-input>
                                 <paper-textarea label="[[formDesc]]" id="newRequirementDesc"></paper-textarea>
+                                <file-upload multi="true" accept="image/*" progress-hidden="true"><iron-icon icon="file-upload"></iron-icon></file-upload>
 
                                 <div class="buttons">
-                                    <div>
-                                        <file-upload multi="true" accept="image/*" target="images/" success-text="Uploaded Successfully!"><iron-icon icon="file-upload"></iron-icon></file-upload>
-                                    </div>
                                     <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
                                     <paper-button dialog-confirm autofocus><i18n-msg msgid="save"></i18n-msg></paper-button>
                                 </div>
