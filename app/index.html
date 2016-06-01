@@ -121,7 +121,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-toolbar>
 
 
-        <paper-progress indeterminate disabled="{{!loading}}" ></paper-progress>
+        <template is="dom-if" if="{{loading}}">
+            <paper-progress indeterminate disabled="{{!loading}}" ></paper-progress>
+        </template>
 
         <paper-menu-button class="hidden-mobile" id="languageMenu">
             <paper-menu id="componentInfoMenu" class="dropdown-content">
@@ -508,6 +510,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <paper-textarea label="[[formDesc]]" id="newRequirementDesc"></paper-textarea>
 
                                 <div class="buttons">
+                                    <div>
+                                        <file-upload multi="true" accept="image/*" target="images/" success-text="Uploaded Successfully!"><iron-icon icon="file-upload"></iron-icon></file-upload>
+                                    </div>
                                     <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
                                     <paper-button dialog-confirm autofocus><i18n-msg msgid="save"></i18n-msg></paper-button>
                                 </div>
