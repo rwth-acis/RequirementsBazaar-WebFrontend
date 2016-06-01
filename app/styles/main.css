@@ -44,7 +44,7 @@ a {
 }
 
 .highlight:hover {
-    font-weight: 600;
+    text-decoration: underline !important;
     color: #0baa68;
 }
 
