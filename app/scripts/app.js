@@ -67,8 +67,8 @@
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
-        var lang;
-        if (document.cookie){
+        var lang = null;
+        if (document.cookie != ''){
             var cookies = document.cookie.split(';');
             for(var i = 0; i <cookies.length; i++) {
                 var c = cookies[i];
@@ -81,7 +81,7 @@
             }
         }
         console.log(lang);
-        if (lang === null){
+        if (lang === null || lang ===''){
             switch (navigator.language.substring(0,2)) {
                 case "en":
                     I18nMsg.lang = 'en';
