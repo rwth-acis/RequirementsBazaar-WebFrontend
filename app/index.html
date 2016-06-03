@@ -20,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- Place favicon.ico in the `app/` directory -->
 
     <!-- Chrome for Android theme color -->
-    <meta name="theme-color" content="#2E3AA1">
+    <meta name="theme-color" content="#33cc33">
 
     <!-- build:js components/webcomponentsjs/webcomponents-lite.min.js -->
     <script src="components/webcomponentsjs/webcomponents-lite.js"></script>
@@ -30,7 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <link rel="manifest" href="manifest.json">
 
     <!-- Tile color for Win8 -->
-    <meta name="msapplication-TileColor" content="#3372DF">
+    <meta name="msapplication-TileColor" content="#33cc33">
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -306,7 +306,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer1">
                         <paper-scroll-header-panel drawer fixed>
-
+                            <template is="dom-if" if="{{! activities}}">
+                                <paper-spinner active></paper-spinner>
+                            </template>
                             <!-- Drawer Content -->
                             <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>
@@ -412,7 +414,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer">
                         <paper-scroll-header-panel drawer fixed>
-
+                            <template is="dom-if" if="{{! activities}}">
+                                <paper-spinner active></paper-spinner>
+                            </template>
                             <!-- Drawer Content -->
                             <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>
@@ -508,7 +512,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <h2><i18n-msg msgid="createRequirement"></i18n-msg></h2>
                                 <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle"></paper-input>
                                 <paper-textarea label="[[formDesc]]" id="newRequirementDesc"></paper-textarea>
-                                <file-upload multi="true" accept="image/*" progress-hidden="true"><iron-icon icon="file-upload"></iron-icon></file-upload>
+                                <!--<file-upload multi="true" accept="image/*" progress-hidden="true"><iron-icon icon="file-upload"></iron-icon></file-upload>-->
 
                                 <div class="buttons">
                                     <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>

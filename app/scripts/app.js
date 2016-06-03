@@ -17,8 +17,8 @@
 
     // url for requests for beta or live environment
     
-    app.baseHref = "https://requirements-bazaar.org/betabazaar";
-    app.activityHref = "https://requirements-bazaar.org/betaactivities";
+    app.baseHref = "https://requirements-bazaar.org/bazaar";
+    app.activityHref = "https://requirements-bazaar.org/activities";
     
     app.baseUrl = '/';
     if (window.location.port === '') {  // if production

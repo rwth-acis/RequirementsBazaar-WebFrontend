@@ -116,8 +116,9 @@
                 id="requirementsLoader"
                 url="{{resourceURL}}"
                 last-response="{{requirements}}"
-                params='{"per_page":"50"}'
+                params="{{parameters}}"
                 loading="{{loading}}"></iron-ajax>
+        <!--params='{"per_page":"50"}'-->
 
         <iron-ajax
                 id="postCommentRequest"
@@ -353,7 +354,16 @@
                     body: Object,
                     postResponse: Object,
                     feedback: String,
-                    header: Object,
+                    header: {
+                        type:Object,
+                        notify: true
+                    },
+                    parameters:{
+                        type:Object,
+                        notify: true,
+                        computed: '_computeHeader(header, isAuthorized)',
+                        value: {per_page: 60}
+                    },
                     elem: Object,
                     isFollower: {
                         type: Boolean,
@@ -386,6 +396,14 @@
 
                 ready: function () {
                     this.i18n = this.$.i18n;
+                },
+
+                _computeHeader: function(header, isAuthorized){
+                    if (isAuthorized){
+                        header.per_page = 60;
+                        return header;
+                    }
+
                 },
 
                 computeResourceURL: function (baseHref, componentId) {
