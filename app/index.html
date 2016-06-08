@@ -510,8 +510,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                           no-cancel-on-esc-key
                                           on-iron-overlay-closed="onCreateRequirementClosed">
                                 <h2><i18n-msg msgid="createRequirement"></i18n-msg></h2>
-                                <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle"></paper-input>
-                                <paper-textarea label="[[formDesc]]" id="newRequirementDesc"></paper-textarea>
+                                <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle" on-keydown="checkEnter"></paper-input>
+                                <paper-textarea label="[[formDesc]]" id="newRequirementDesc" on-keydown="checkEnter"></paper-textarea>
                                 <!--<file-upload multi="true" accept="image/*" progress-hidden="true"><iron-icon icon="file-upload"></iron-icon></file-upload>-->
 
                                 <div class="buttons">

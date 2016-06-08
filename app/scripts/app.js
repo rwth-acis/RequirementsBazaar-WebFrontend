@@ -17,14 +17,14 @@
 
     // url for requests for beta or live environment
     
-    app.baseHref = "https://requirements-bazaar.org/bazaar";
-    app.activityHref = "https://requirements-bazaar.org/activities";
+    app.baseHref = "https://requirements-bazaar.org/betabazaar";
+    app.activityHref = "https://requirements-bazaar.org/betaactivities";
     
     app.baseUrl = '/';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        app.baseUrl = '/';
+        //app.baseUrl = '/';
     }
 
     /**
@@ -333,6 +333,27 @@
         page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId);
 
         e.preventDefault();
+    };
+
+    app.checkEnter = function (e){
+        if (e.keyCode === 13) {
+            var request = document.querySelector('#postRequirementRequest');
+            var components = [{id: parseInt(app.params.componentId)}];
+            if (this.$.newRequirementTitle.value == '' || this.$.newRequirementDesc.value == '' || this.$.newRequirementTitle.value == null || this.$.newRequirementDesc.value == null ){
+                this.$.superToast.text = i18n.getMsg('fieldsNotEmptyReq');
+                this.$.superToast.open();
+            } else {
+                request.body = JSON.stringify({
+                    "title": this.$.newRequirementTitle.value,
+                    "description": this.$.newRequirementDesc.value,
+                    "projectId": parseInt(app.params.projectId),
+                    "components": components});
+                request.generateRequest();
+                this.$.newRequirementTitle.value = '';
+                this.$.newRequirementDesc.value = '';
+                this.$.createRequirement.close();
+            }
+        }
     };
 
     app.handleResponseRequirement = function(data){
