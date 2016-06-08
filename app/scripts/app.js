@@ -356,6 +356,12 @@
         }
     };
 
+    app.expandDialog = function(e){
+        e.currentTarget.parentNode.classList.toggle("create");
+        e.currentTarget.parentNode.classList.toggle("expand");
+        e.currentTarget.parentNode.refit();
+    };
+
     app.handleResponseRequirement = function(data){
         if (data != null) {
             document.querySelector("#requirementsList").load();
@@ -466,9 +472,9 @@
 
     app.toggNotDrawer = function(e){
         var fabs = document.getElementsByClassName('fabAdd');
+        document.querySelector('activity-tracker').refresh();
         //opens right drawer
         if (document.querySelector('#drawer').style.display != 'block'){
-            document.querySelector('activity-tracker').refresh();
             document.querySelector('#drawer').style.display = 'block';
             document.querySelector('#drawer').style.zIndex = 1;
             if (!this.isMobile){
@@ -492,7 +498,7 @@
         }
 
         if (document.querySelectorAll('#drawer')[1].style.display != 'block'){
-            document.querySelectorAll('activity-tracker')[1].refresh();
+            // document.querySelectorAll('activity-tracker')[1].refresh();
             document.querySelectorAll('#drawer')[1].style.display = 'block';
             document.querySelectorAll('#drawer')[1].style.zIndex = 1;
             if (!this.isMobile) {
@@ -510,7 +516,7 @@
         }
 
         if (document.querySelectorAll('#drawer')[2].style.display != 'block'){
-            document.querySelectorAll('activity-tracker')[2].refresh();
+            // document.querySelectorAll('activity-tracker')[2].refresh();
             document.querySelectorAll('#drawer')[2].style.display = 'block';
             document.querySelectorAll('#drawer')[2].style.zIndex = 1;
             if (!this.isMobile) {

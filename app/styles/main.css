@@ -66,6 +66,12 @@ paper-icon-button {
     display: block;
 }
 
+.expand-button{
+    position: absolute;
+    right: 0px;
+    top: 15px;
+}
+
 .cmpTitle {
     display: block;
     margin-top:10px;
