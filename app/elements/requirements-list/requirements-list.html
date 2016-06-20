@@ -106,6 +106,20 @@
             .hide {
                 display: none;
             }
+
+            paper-tabs {
+                width: calc(98.66% - 16px);
+                margin: 5px auto;
+                padding: 0;
+                /*max-width: 800px;*/
+                --paper-tabs-selection-bar-color: var(--default-primary-color);
+                background-color: var(--list-hover-background-color);
+            }
+
+            paper-tab.iron-selected{
+                background-color: #bbbbbb;
+                color: green;
+            }
         </style>
 
         <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
@@ -206,10 +220,14 @@
             </div>
         </paper-dialog>
 
+        <paper-tabs selected="{{selected}}" align-bottom fit-container>
+            <paper-tab>ACTIVE</paper-tab>
+            <paper-tab>REALIZED</paper-tab>
+        </paper-tabs>
 
         <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
             <div class="layout vertical center">
-                <template is="dom-if" if="{{!req.realized}}">
+                <template is="dom-if" if="{{isRealized(req.realized)}}">
                     <paper-material class="req" id="[[req.id]]">
                         <div class="reqbody">
 
@@ -333,9 +351,17 @@
 
             Polymer({
                 is: 'requirements-list',
+                listeners:{
+                    'iron-select': 'selectedTab'
+                },
                 properties: {
                     componentId: {
                         type: Number
+                    },
+                    selected: {
+                        type: Number,
+                        notify: true,
+                        value: 0
                     },
                     baseHref: String,
                     resourceURL: {
@@ -440,6 +466,21 @@
                     }
                 },
 
+                isRealized: function(real){
+                    var bool;
+                    if (real === undefined){
+                        bool = false;
+                    } else {
+                        bool = true;
+                    }
+
+                    if (this.selected === 0){
+                        return !bool;
+                    } else {
+                        return bool;
+                    }
+                },
+
                 load: function() {
                     this.$.requirementsLoader.generateRequest();
                 },
@@ -501,6 +542,10 @@
                 errorHandler: function (e, detail){
                     this.$.toast.text = detail.error.message;
                     this.$.toast.open();
+                },
+
+                selectedTab: function() {
+                    this.load();
                 },
 
                 doneRequirement: function(e){
