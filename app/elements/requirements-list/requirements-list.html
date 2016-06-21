@@ -454,6 +454,9 @@
 
             Polymer({
                 is: 'requirements-list',
+                listeners: {
+                    'change': 'addToSelectedReq'
+                },
                 properties: {
                     componentId: {
                         type: Number
@@ -471,6 +474,10 @@
                     requirements: {
                         type: Array,
                         notify: true
+                    },
+                    selectedRequirements: {
+                        type: Array,
+                        value: []
                     },
                     newComment: {
                         type: String
@@ -599,6 +606,18 @@
                     var chb = e.currentTarget.querySelector("paper-checkbox");
                     if (!chb.checked){
                         chb.style.display = "none";
+                    }
+                },
+
+                addToSelectedReq: function(e){
+                    var id = e.target.parentNode.parentNode.parentNode.id;
+                    if (e.target.checked){
+                        this.push('selectedRequirements', id);
+                    } else {
+                        var index = this.selectedRequirements.indexOf(id);
+                        if (index > -1) {
+                            this.splice('selectedRequirements', index, 1);
+                        }
                     }
                 },
 
