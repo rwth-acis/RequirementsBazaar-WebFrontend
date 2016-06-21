@@ -124,6 +124,16 @@
             paper-checkbox{
                 display: none;
             }
+
+            .tools {
+                position: fixed;
+                bottom: 50px;
+                left: 10px;
+                z-index: 10;
+                display: none;
+                width: auto;
+                padding: 10px;
+            }
         </style>
 
         <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
@@ -223,6 +233,12 @@
                 <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
             </div>
         </paper-dialog>
+
+        <paper-material elevation="5" class="tools">
+            <span>{{selectedRequirements.length}} Requirements selected.</span>
+            <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
+            <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
+        </paper-material>
 
         <paper-tabs selected="{{selected}}" align-bottom fit-container>
             <paper-tab>ACTIVE</paper-tab>
@@ -477,7 +493,8 @@
                     },
                     selectedRequirements: {
                         type: Array,
-                        value: []
+                        value: [],
+                        notify: true
                     },
                     newComment: {
                         type: String
@@ -526,6 +543,10 @@
                         notify: true
                     }
                 },
+
+                observers: [
+                    'manageSelReq(selectedRequirements.splices)'
+                ],
 
                 ready: function () {
                     this.i18n = this.$.i18n;
@@ -609,6 +630,12 @@
                     }
                 },
 
+                manageSelReq: function(selReq){
+                    if(this.selectedRequirements.length !== 0){
+                        document.querySelector(".tools").style.display = "block";
+                    }
+                },
+
                 addToSelectedReq: function(e){
                     var id = e.target.parentNode.parentNode.parentNode.id;
                     if (e.target.checked){
@@ -617,6 +644,16 @@
                         var index = this.selectedRequirements.indexOf(id);
                         if (index > -1) {
                             this.splice('selectedRequirements', index, 1);
+                        }
+                    }
+                },
+
+                downloadRequirements: function(e){
+                    for (var i=0; i < this.selectedRequirements.length; i++){
+                        for (var j=0; j < this.requirements.length; j++){
+                            if (parseInt(this.selectedRequirements[i]) === this.requirements[j].id){
+                                console.log(this.requirements[j]);
+                            }
                         }
                     }
                 },
@@ -693,6 +730,15 @@
                     });
 
                     request.generateRequest();
+                },
+
+                closeTools: function(e){
+                    e.currentTarget.parentNode.style.display = "none";
+                    for (var i=0; i < this.selectedRequirements.length; i++){
+                        document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").checked = false;
+                        document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").style.display = "none";
+                    }
+                    this.selectedRequirements = [];
                 },
 
                 undoRequirement: function(e){
