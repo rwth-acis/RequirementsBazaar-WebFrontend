@@ -120,6 +120,10 @@
                 background-color: #bbbbbb;
                 color: green;
             }
+
+            paper-checkbox{
+                display: none;
+            }
         </style>
 
         <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
@@ -229,10 +233,11 @@
             <div class="layout vertical center">
                 <template is="dom-if" if="{{!selected}}">
                     <template is="dom-if" if="{{!req.realized}}">
-                        <paper-material class="req" id="[[req.id]]">
+                        <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
                             <div class="reqbody">
 
                                 <div class="req-icons layout horizontal center">
+                                    <paper-checkbox></paper-checkbox>
                                     <template is="dom-if" if="{{!isAuthorized}}">
                                         <paper-icon-button icon="star-border" disabled></paper-icon-button>
                                     </template>
@@ -269,6 +274,7 @@
                                         </paper-menu-button>
                                     </template>
                                 </div>
+
                                 <paper-toolbar class="title" on-tap="onRequirementTap">
                                     <div class="title">[[req.title]]</div>
                                     <div class="bottom fit helper">
@@ -582,6 +588,18 @@
                     req.method = "DELETE";
                     req.url = this.baseHref + "/requirements/" + reqId + "/vote";
                     req.generateRequest();
+                },
+
+                showOnHover: function(e){
+                    var chb = e.currentTarget.querySelector("paper-checkbox");
+                    chb.style.display = "block";
+                },
+
+                hideOnOut: function (e) {
+                    var chb = e.currentTarget.querySelector("paper-checkbox");
+                    if (!chb.checked){
+                        chb.style.display = "none";
+                    }
                 },
 
                 addComment: function(e){
