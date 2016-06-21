@@ -12,7 +12,8 @@
     "openidconnect-signin": "rwth-acis/openidconnect-signin",
     "activity-tracker": "rwth-acis/activity-tracker",
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2",
-    "file-upload": "^1.7.5"
+    "file-upload": "^1.7.5",
+    "emoji-selector": "https://github.com/notwaldorf/emoji-selector.git#^1.1.1"
   },
   "devDependencies": {
     "web-component-tester": "*",

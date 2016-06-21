@@ -24,6 +24,11 @@
     "message": "Dëgjoni përdoruesit tuaj"
   },
 
+  "markAsUnDone": {
+    "description": "...",
+    "message": "Ri-Hape"
+  },
+
   "project": {
     "description": "...",
     "message": "Projekt"

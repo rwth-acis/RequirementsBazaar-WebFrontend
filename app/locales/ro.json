@@ -29,6 +29,11 @@
     "message": "Proiect"
   },
 
+  "markAsUnDone": {
+    "description": "...",
+    "message": "Re-Open"
+  },
+
   "projects": {
     "description": "...",
     "message": "Proiecte"
