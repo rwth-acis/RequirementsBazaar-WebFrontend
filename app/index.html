@@ -469,6 +469,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <i18n-msg msgid="by"></i18n-msg>
                                             <req-user user-id="{{component.leaderId}}" normal-view></req-user>
                                         </div>
+
                                         <!--<div class="timing">-->
                                             <!--<paper-icon-item>-->
                                                 <!--<paper-item-body two-line>-->
@@ -479,11 +480,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         <!--<div class="leader">-->
                                             <!--<req-user user-id="{{component.leaderId}}" full-view></req-user>-->
                                         <!--</div>-->
-                                        <i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>
-                                        <paper-input id="searchReq" label$="[[srchReq]]" value="{{reqFilterVal}}">
-                                            <iron-icon icon="search" prefix class="big"></iron-icon>
-                                        </paper-input>
+
                                     </div>
+
+                                    <paper-menu-button class="filterGroup">
+                                        <paper-button class="dropdown-trigger">
+                                            <span>Filter</span>
+                                            <iron-icon icon="arrow-drop-down"></iron-icon>
+                                        </paper-button>
+                                        <paper-menu class="dropdown-content" selected="{{selectedFilter}}">
+                                            <paper-item>Active Requirements</paper-item>
+                                            <paper-item>Realized Requirements</paper-item>
+                                        </paper-menu>
+                                    </paper-menu-button>
+
+                                    <i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>
+                                    <paper-input id="searchReq" label$="[[srchReq]]" value="{{reqFilterVal}}">
+                                        <iron-icon icon="search" prefix class="big"></iron-icon>
+                                    </paper-input>
 
                                     <div class="editFormComp middle middle-container center layout">
 
@@ -496,12 +510,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 </paper-material>
                             <!--</paper-toolbar>-->
 
-                            <div style="padding-top:2px;">
+                            <div style="padding-top:10px; z-index: 1;">
                                 <requirements-list
                                         id="requirementsList"
                                         header="{{header}}"
                                         filter-value="[[reqFilterVal]]"
                                         base-href="{{baseHref}}"
+                                        selected="{{selectedFilter}}"
                                         loading="{{loading}}"></requirements-list>
                             </div>
 
@@ -513,7 +528,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <paper-button class="expand-button" on-tap="expandDialog"><iron-icon icon="fullscreen"></iron-icon></paper-button>
                                 <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle" on-keydown="checkEnter"></paper-input>
                                 <paper-textarea label="[[formDesc]]" id="newRequirementDesc" on-keydown="checkEnter"></paper-textarea>
-                                <!--<file-upload multi="true" accept="image/*" progress-hidden="true"><iron-icon icon="file-upload"></iron-icon></file-upload>-->
+                                <vaadin-upload
+                                        target="https://requirements-bazaar.org/betafileservice/files/"
+                                        method="POST"
+                                        timeout="300000">
+                                </vaadin-upload>
+
+                                <form is="iron-form" id="fileForm" method="POST" enctype="multipart/form-data" action="https://requirements-bazaar.org/betafileservice/files/">
+                                    <paper-input type="file" name="filecontent" value=""></paper-input>
+                                    <paper-input type="text" name="identifier" label="Identifier"></paper-input>
+                                    <paper-input type="text" name="description" label="Description"></paper-input>
+                                </form>
 
                                 <div class="buttons">
                                     <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>

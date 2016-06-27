@@ -17,8 +17,8 @@
 
     // url for requests for beta or live environment
     
-    app.baseHref = "https://requirements-bazaar.org/bazaar";
-    app.activityHref = "https://requirements-bazaar.org/activities";
+    app.baseHref = "https://requirements-bazaar.org/betabazaar";
+    app.activityHref = "https://requirements-bazaar.org/betaactivities";
     
     app.baseUrl = '/';
     if (window.location.port === '') {  // if production
@@ -40,6 +40,7 @@
     app.isMobile = false; //initiate as false
     app.i18n = null;
     app.loading = false;
+    app.selectedFilter = 0;
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -317,6 +318,7 @@
                 this.$.superToast.text = i18n.getMsg('fieldsNotEmptyReq');
                 this.$.superToast.open();
             } else {
+                document.getElementById('fileForm').submit();
                 request.body = JSON.stringify({
                     "title": this.$.newRequirementTitle.value,
                     "description": this.$.newRequirementDesc.value,

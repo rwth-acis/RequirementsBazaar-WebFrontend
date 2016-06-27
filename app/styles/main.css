@@ -72,6 +72,19 @@ paper-icon-button {
     top: 15px;
 }
 
+.filterGroup {
+    display: inline-flex;
+    font-size: 16px !important;
+}
+
+#searchReq {
+    display: inline-flex;
+    max-width: 200px;
+    margin-left: auto;
+    position: absolute;
+    right: 20px;
+}
+
 .cmpTitle {
     display: block;
     margin-top:10px;
