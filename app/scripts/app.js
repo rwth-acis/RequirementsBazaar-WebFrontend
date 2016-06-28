@@ -237,9 +237,17 @@
         }
     };
 
-    app.scrollToReq = function (componentId, requirementId) {
-        this.loadComponentInfo(componentId);
+    app.compChanged = function(compId){
+        if(this.component){
+            if(this.component.id === parseInt(compId)){
+                return false;
+            }
+        }
+        return true;
+    };
 
+    app.scrollToReq = function (componentId, requirementId) {
+        // this.loadComponentInfo(componentId);
         var el;
 
         if ( (this.loaded) && (el = document.getElementById(requirementId))) {
