@@ -243,6 +243,7 @@
                 return false;
             }
         }
+        document.querySelector("requirements-list").closeTools();
         return true;
     };
 

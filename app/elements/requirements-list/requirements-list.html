@@ -220,7 +220,7 @@
             </div>
         </paper-dialog>
 
-        <paper-material elevation="5" class="tools">
+        <paper-material elevation="5" id="tools" class="tools">
             <span>{{selectedRequirements.length}} Requirements selected.</span>
             <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
             <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
@@ -640,7 +640,7 @@
                         }
                     }
 
-                    console.log(selReq);
+//                    console.log(selReq);
 
                     //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
                     var arrData = typeof selReq != 'object' ? JSON.parse(selReq) : selReq;
@@ -776,8 +776,8 @@
                     request.generateRequest();
                 },
 
-                closeTools: function(e){
-                    e.currentTarget.parentNode.style.display = "none";
+                closeTools: function(){
+                    document.getElementById("tools").style.display = "none";
                     for (var i=0; i < this.selectedRequirements.length; i++){
                         document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").checked = false;
                         document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").style.display = "none";
