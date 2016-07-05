@@ -182,11 +182,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 350px;
         margin-bottom: 0px;
         background-color: white;
-        max-height: none !important;
+        max-height: calc(100% - 100px) !important;
+        overflow: scroll;
     }
 
     paper-dialog.expand {
         width: 70%;
+        overflow: scroll;
     }
 
     paper-dialog.user {
