@@ -247,6 +247,10 @@
         return true;
     };
 
+    app.toggleFilters = function(e){
+        document.getElementById("collapseFilters").toggle();
+    };
+
     app.scrollToReq = function (componentId, requirementId) {
         // this.loadComponentInfo(componentId);
         var el;
@@ -650,6 +654,7 @@
         document.querySelector('.cmpTitle').style.display = 'none';
         document.querySelector('.cmpDesc').style.display = 'none';
         document.querySelector('.bottom-container').style.display = 'none';
+        document.querySelector('.filtering').style.display = 'none';
         document.querySelector('.editFormComp').style.display = 'block';
     };
 
@@ -657,6 +662,7 @@
         document.querySelector('.cmpTitle').style.display = 'block';
         document.querySelector('.cmpDesc').style.display = 'block';
         document.querySelector('.bottom-container').style.display = 'flex';
+        document.querySelector('.filtering').style.display = 'block';
         document.querySelector('.editFormComp').style.display = 'none';
     };
 

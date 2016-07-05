@@ -138,6 +138,11 @@ paper-icon-button {
     z-index: 10;
 }
 
+.filterButton{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .paper-tooltip-0 #tooltip.paper-tooltip {
     display: flex;
 }
