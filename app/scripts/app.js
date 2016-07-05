@@ -230,7 +230,7 @@
 
     app.closeCollapses = function(){
         var elems = document.querySelectorAll("iron-collapse");
-        for (var i=0; i< elems.length; i++){
+        for (var i=1; i< elems.length; i++){
             elems[i].hide();
             elems[i].parentNode.parentNode.elevation = 1;
             elems[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
