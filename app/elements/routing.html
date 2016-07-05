@@ -42,11 +42,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         page('/projects', function() {
             app.route = 'projects';
             app.scrollProjToTop();
+            app.component = {};
         });
 
         page('/projects/:projectId', function(data) {
             app.route = 'project-info';
             app.params = data.params;
+            app.component = {};
             app.loadProjectInfo(data.params.projectId);
         });
 
