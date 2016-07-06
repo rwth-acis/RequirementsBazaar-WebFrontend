@@ -325,18 +325,29 @@
 
     app.onCreateRequirementClosed = function(e) {
         if (e.detail.confirmed) {
+            var attachments = [];
             var request = document.querySelector('#postRequirementRequest');
             var components = [{id: parseInt(app.params.componentId)}];
             if (this.$.newRequirementTitle.value == '' || this.$.newRequirementDesc.value == '' || this.$.newRequirementTitle.value == null || this.$.newRequirementDesc.value == null ){
                 this.$.superToast.text = i18n.getMsg('fieldsNotEmptyReq');
                 this.$.superToast.open();
             } else {
-                document.getElementById('fileForm').submit();
+                if (this.files != []){
+                    for (var i = 0; i < this.files.length; i++){
+                        var obj = {
+                            name: this.files[i].name,
+                            url: this.files[i].xhr.response
+                        }
+                        attachments.push(obj);
+                    }
+                }
                 request.body = JSON.stringify({
                     "title": this.$.newRequirementTitle.value,
                     "description": this.$.newRequirementDesc.value,
                     "projectId": parseInt(app.params.projectId),
-                    "components": components});
+                    "components": components,
+                    "attachments": attachments
+                });
                 request.generateRequest();
                 this.$.newRequirementTitle.value = null;
                 this.$.newRequirementDesc.value = null;
@@ -344,7 +355,9 @@
         } else if (e.detail.canceled) {
             this.$.newRequirementTitle.value = null;
             this.$.newRequirementDesc.value = null;
+            this.files = [];
         }
+        this.files = [];
         page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId);
 
         e.preventDefault();
