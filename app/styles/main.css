@@ -139,6 +139,7 @@ paper-icon-button {
 }
 
 .filterButton{
+    font-size: medium;
     margin-top: 10px;
     margin-bottom: 10px;
 }
