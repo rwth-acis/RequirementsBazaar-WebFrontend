@@ -1,0 +1,35 @@
+<link rel="import" href="../../components/polymer/polymer.html">
+
+<dom-module id="file-gallery">
+    <template>
+        <style is="custom-style">
+
+        </style>
+
+        <div>
+            <!--<template is="dom-repeat" items="{{attachments}}">-->
+                <!--<img src="[[item.url]]" alt="File missing">-->
+            <!--</template>-->
+        </div>
+
+    </template>
+
+    <script>
+        (function () {
+//            'use strict';
+
+            Polymer({
+                is: 'file-gallery',
+                properties: {
+                    attachments: {
+                        type: Array,
+                        notify: true
+                    }
+                }
+
+            });
+        })
+        ();
+    </script>
+
+</dom-module>
