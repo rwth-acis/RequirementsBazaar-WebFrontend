@@ -106,6 +106,11 @@
         I18nMsg.url = 'locales'; // optionally use custom folder for locales.
         Platform.performMicrotaskCheckpoint();
     });
+    
+    document.addEventListener("file-reject", function(data){
+        app.$.superToast.text = "" + data.detail.file.name + ". " + data.detail.error;
+        app.$.superToast.open();
+    });
 
     app.english = function(){
         I18nMsg.lang = 'en';
@@ -777,7 +782,6 @@
         } else {
             return true;
         }
-
     };
 
     function sayHi() {

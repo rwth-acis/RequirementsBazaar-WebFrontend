@@ -551,7 +551,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         target="https://requirements-bazaar.org/betafileservice/files/"
                                         method="POST"
                                         timeout="300000"
-                                        files="{{files}}">
+                                        files="{{files}}"
+                                        max-file-size="10000000"
+                                        accept="image/*">
                                 </vaadin-upload>
 
                                 <div class="buttons">
