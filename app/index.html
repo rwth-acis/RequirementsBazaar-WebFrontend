@@ -467,7 +467,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <i18n-msg msgid="created"></i18n-msg>
                                             <time is="relative-time" datetime$="[[component.creation_time]]"></time>
                                             <i18n-msg msgid="by"></i18n-msg>
-                                            <req-user user="{{component.leader}}" normal-view></req-user>
+                                            <req-user user="{{component.leader}}" normal-view no-popover></req-user>
                                         </div>
 
                                         <!--<div class="timing">-->
@@ -487,31 +487,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         </paper-button>
                                     </div>
 
-                                    <!--<paper-menu-button class="filterGroup">-->
-                                        <!--<paper-button class="dropdown-trigger">-->
-                                            <!--<span>Filter</span>-->
-                                            <!--<iron-icon icon="arrow-drop-down"></iron-icon>-->
-                                        <!--</paper-button>-->
-                                        <!--<paper-menu class="dropdown-content" selected="{{selectedFilter}}">-->
-                                            <!--<paper-item>Active Requirements</paper-item>-->
-                                            <!--<paper-item>Realized Requirements</paper-item>-->
-                                        <!--</paper-menu>-->
-                                    <!--</paper-menu-button>-->
-
-
-
                                     <div class="filtering">
 
                                         <iron-collapse id="collapseFilters">
                                             <div>
-                                                <paper-menu class="dropdown-content" selected="{{selectedFilter}}">
-                                                    <paper-item>Active Requirements</paper-item>
-                                                    <paper-item>Realized Requirements</paper-item>
-                                                </paper-menu>
-                                                <i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>
-                                                <paper-input label$="[[srchReq]]" value="{{reqFilterVal}}">
-                                                    <iron-icon icon="search" prefix class="big"></iron-icon>
-                                                </paper-input>
+                                                <div style="display: flex; flex-wrap: wrap;">
+                                                    <paper-menu class="dropdown-content" selected="{{selectedFilter}}" style="flex-grow: 1; margin:20px;">
+                                                        <paper-item>Active Requirements</paper-item>
+                                                        <paper-item>Realized Requirements</paper-item>
+                                                    </paper-menu>
+                                                    <div style="flex-grow: 1; margin:20px;">
+                                                        <div>Community Belonging:</div>
+                                                        <paper-slider pin value="20" style="width:100%;"></paper-slider>
+                                                        <div>User Rating: <span id="ratingsLabel" class="caption"></span></div>
+                                                        <paper-slider id="ratings" pin value="5" style="width:100%;"></paper-slider>
+                                                        <div>User Behaviour: <span id="gradeLabel" class="caption"></span></div>
+                                                        <paper-slider id="grade" pin value="65" style="width:100%;"></paper-slider>
+                                                    </div>
+                                                    <div style="flex-grow: 1; margin:20px;">
+                                                        <paper-radio-group selected="list">
+                                                            <paper-radio-button name="list">List View</paper-radio-button>
+                                                            <br>
+                                                            <paper-radio-button name="quarantine">Quarantine View</paper-radio-button>
+                                                        </paper-radio-group>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>
+                                                    <paper-input label$="[[srchReq]]" value="{{reqFilterVal}}">
+                                                        <iron-icon icon="search" prefix class="big"></iron-icon>
+                                                    </paper-input>
+                                                </div>
                                             </div>
                                         </iron-collapse>
                                     </div>

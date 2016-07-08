@@ -56,16 +56,19 @@
 
             <span id="user">{{user.userName}}</span>
 
-            <paper-tooltip for="user" class="custom hidden-mobile" animation-delay="0" position="top">
-                <img src="{{user.profileImage}}" class="profileImage">
-                <paper-item-body two-line>
-                <div class="name">
-                    <span>{{user.firstName}}</span>
-                    <span>{{user.lastName}}</span>
-                </div>
-                <div class="username">{{user.userName}}</div>
-                </paper-item-body>
-            </paper-tooltip>
+            <template is="dom-if" if="{{!noPopover}}">
+                <paper-tooltip for="user" class="custom hidden-mobile" animation-delay="0" position="top">
+                    <img src="{{user.profileImage}}" class="profileImage">
+                    <paper-item-body two-line>
+                        <div class="name">
+                            <span>{{user.firstName}}</span>
+                            <span>{{user.lastName}}</span>
+                        </div>
+                        <div class="username">{{user.userName}}</div>
+                    </paper-item-body>
+                </paper-tooltip>
+            </template>
+
 
         </template>
 
@@ -106,6 +109,10 @@
                     user:{
                         type: Object,
                         notify: true
+                    },
+                    noPopover:{
+                        type: Boolean,
+                        value: false
                     },
                     usersUrl: {
                         type: String,
