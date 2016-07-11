@@ -506,9 +506,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                     </div>
                                                     <div style="flex-grow: 1; margin:20px;">
                                                         <paper-radio-group selected="list">
-                                                            <paper-radio-button name="list">List View</paper-radio-button>
+                                                            <paper-radio-button name="list" on-tap="showListView">List View</paper-radio-button>
                                                             <br>
-                                                            <paper-radio-button name="quarantine">Quarantine View</paper-radio-button>
+                                                            <paper-radio-button name="quarantine" on-tap="showQuarantineView">Quarantine View</paper-radio-button>
                                                         </paper-radio-group>
                                                     </div>
                                                 </div>
@@ -539,6 +539,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <!--</paper-toolbar>-->
 
                             <div style="padding-top:10px; z-index: 1;">
+                                <template is="dom-if" if="{{!list}}">
+                                    <requirements-grid
+                                            base-url="https://requirements-bazaar.org/betabazaar/"
+                                            page="0" per-page="10" component-id="{{component.id}}">
+                                    </requirements-grid>
+                                </template>
+
                                 <requirements-list
                                         id="requirementsList"
                                         header="{{header}}"

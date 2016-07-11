@@ -41,6 +41,7 @@
     app.i18n = null;
     app.loading = false;
     app.selectedFilter = 0;
+    app.list = true;
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -240,6 +241,16 @@
             elems[i].parentNode.parentNode.elevation = 1;
             elems[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
         }
+    };
+
+    app.showQuarantineView = function(){
+        this.list = false;
+        document.querySelector("requirements-list").style.display = "none";
+    };
+
+    app.showListView = function(){
+        this.list = true;
+        document.querySelector("requirements-list").style.display = "block";
     };
 
     app.compChanged = function(compId){
