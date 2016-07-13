@@ -14,8 +14,8 @@
             <iron-image style="width:50px; height:50px;" sizing="cover" src="https://www.ricoh.com/r_dc/caplio/r7/img/sample_04.jpg" on-tap="toggle"></iron-image>
         </div>
 
-        <iron-collapse id="collapse">
-            <img id="expandedImg"></img>
+        <iron-collapse id="collapseImg">
+            <img id="expandedImg">
         </iron-collapse>
 
     </template>
@@ -34,11 +34,11 @@
                 },
 
                 toggle: function(e){
-                    if (!this.$.collapse.opened){
-                        this.$.collapse.show();
+                    if (!this.$.collapseImg.opened){
+                        this.$.collapseImg.show();
                     } else {
                         if (this.$.expandedImg.src === e.currentTarget.src){
-                            this.$.collapse.toggle();
+                            this.$.collapseImg.toggle();
                         }
                     }
 

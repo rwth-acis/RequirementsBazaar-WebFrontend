@@ -238,11 +238,18 @@
     app.closeCollapses = function(){
         var elems = document.querySelectorAll("iron-collapse");
         for (var i=1; i< elems.length; i++){
-            elems[i].hide();
-            elems[i].parentNode.parentNode.elevation = 1;
-            console.log(elems[i].parentNode.parentNode.querySelector(".description"));
-            elems[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
+            if (elems[i].opened){
+                elems[i].hide();
+                if (elems[i].id === "reqExpand"){
+                    elems[i].parentNode.parentNode.elevation = 1;
+                    elems[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
+                }
+            }
         }
+    };
+
+    app.closeRequirement = function(){
+        
     };
 
     app.showQuarantineView = function(){
