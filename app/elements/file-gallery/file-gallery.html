@@ -3,14 +3,20 @@
 <dom-module id="file-gallery">
     <template>
         <style is="custom-style">
-
+            #expandedImg {
+                width: 100%;
+            }
         </style>
 
         <div>
-            <!--<template is="dom-repeat" items="{{attachments}}">-->
-                <!--<img src="[[item.url]]" alt="File missing">-->
-            <!--</template>-->
+            <iron-image style="width:50px; height:50px;" sizing="cover" src="http://lorempixel.com/600/400" on-tap="toggle"></iron-image>
+            <iron-image style="width:50px; height:50px;" sizing="cover" src="http://imgsv.imaging.nikon.com/lineup/lens/zoom/normalzoom/af-s_dx_18-140mmf_35-56g_ed_vr/img/sample/sample1_l.jpg" on-tap="toggle"></iron-image>
+            <iron-image style="width:50px; height:50px;" sizing="cover" src="https://www.ricoh.com/r_dc/caplio/r7/img/sample_04.jpg" on-tap="toggle"></iron-image>
         </div>
+
+        <iron-collapse id="collapse">
+            <img id="expandedImg"></img>
+        </iron-collapse>
 
     </template>
 
@@ -25,6 +31,18 @@
                         type: Array,
                         notify: true
                     }
+                },
+
+                toggle: function(e){
+                    if (!this.$.collapse.opened){
+                        this.$.collapse.show();
+                    } else {
+                        if (this.$.expandedImg.src === e.currentTarget.src){
+                            this.$.collapse.toggle();
+                        }
+                    }
+
+                    this.$.expandedImg.src = e.currentTarget.src;
                 }
 
             });

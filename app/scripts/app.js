@@ -107,7 +107,8 @@
         I18nMsg.url = 'locales'; // optionally use custom folder for locales.
         Platform.performMicrotaskCheckpoint();
     });
-    
+
+
     document.addEventListener("file-reject", function(data){
         app.$.superToast.text = "" + data.detail.file.name + ". " + data.detail.error;
         app.$.superToast.open();
@@ -239,6 +240,7 @@
         for (var i=1; i< elems.length; i++){
             elems[i].hide();
             elems[i].parentNode.parentNode.elevation = 1;
+            console.log(elems[i].parentNode.parentNode.querySelector(".description"));
             elems[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
         }
     };
@@ -268,7 +270,6 @@
     };
 
     app.scrollToReq = function (componentId, requirementId) {
-        // this.loadComponentInfo(componentId);
         var el;
 
         if ( (this.loaded) && (el = document.getElementById(requirementId))) {
@@ -282,6 +283,7 @@
             scroller.scroll(el.offsetTop - 70, true);
             document.getElementById('requirementsList').toggleCollapsible(null, el);
         } else {
+            //this.loadComponentInfo(componentId);
             setTimeout(function(){
                 el = document.getElementById(requirementId);
                 if (el === null) {
