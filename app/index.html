@@ -109,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-icon-button class="hidden-mobile" icon="language" on-tap="openLanguageMenu"></paper-icon-button>
 
             <template is="dom-if" if="{{isAuthorized}}">
-                <req-user user-id="[[currentUser.id]]" mini on-tap="openUserDialog" class="hidden-mobile"></req-user>
+                <req-user user="[[currentUser]]" mini on-tap="openUserDialog" class="hidden-mobile"></req-user>
             </template>
             <template is="dom-if" if="{{!landingPage(route)}}">
                 <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
@@ -137,7 +137,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <paper-dialog id="userSettings" class="user hidden-mobile" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation" no-cancel-on-outside-click
                       no-cancel-on-esc-key>
-            <req-user user-id="[[currentUser.id]]" full-view></req-user>
+            <req-user user="[[currentUser]]" full-view></req-user>
 
             <paper-button on-tap="openSettingsDialog" raised><i18n-msg msgid="settings"></i18n-msg></paper-button>
 
