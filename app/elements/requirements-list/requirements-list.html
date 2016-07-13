@@ -13,7 +13,7 @@
             }
 
             .time {
-                display: block;
+                display: inline-flex;
                 font-style: italic;
                 float: right;
                 padding-right: 5px;
@@ -243,11 +243,13 @@
                     <template is="dom-if" if="{{!selected}}">
                         <template is="dom-if" if="{{!req.realized}}">
                             <div class="grid-item">
-                                <paper-card heading="{{req.title}}" on-tap="bringToTop" elevation="2">
+                                <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+                                    <!--<paper-checkbox></paper-checkbox>-->
+                                    <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
                                     <time is="relative-time" class="time"
                                           datetime$="[[req.creation_time]]">
                                     </time>
-                                    <div style="position:relative; padding: 16px;"><file-gallery></file-gallery></div>
+                                    <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}"></file-gallery></div>
                                     <div class="card-content" class="truncate">{{req.description}}</div>
                                     <div class="card-actions">
                                         <paper-button noink>
@@ -373,7 +375,7 @@
                                 <div class="comments">
 
                                     <iron-collapse id="reqExpand">
-                                        <file-gallery></file-gallery>
+                                        <file-gallery attachments="{{req.attachments}}"></file-gallery>
                                         <h4><i18n-msg msgid="comments"></i18n-msg></h4>
                                         <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]"></comments-list>
                                         <template is="dom-if" if="{{isAuthorized}}">
@@ -617,22 +619,6 @@
 
                 computeResourceURL: function (baseHref, componentId) {
                     return baseHref + '/components/' + componentId + '/requirements/';
-                },
-
-                bringToTop: function(e){
-                    this.sendToBack();
-                    e.currentTarget.elevation = 5;
-                    e.currentTarget.style.zIndex = 1;
-                },
-
-                sendToBack: function(){
-                    var elems = Polymer.dom(this.root).querySelectorAll("paper-card");
-                    for (var i=0; i< elems.length; i++){
-                        if (elems[i].elevation === 5){
-                            elems[i].elevation = 1;
-                            elems[i].style.zIndex = 0;
-                        }
-                    }
                 },
 
                 toggleCollapsible: function(e, data) {
