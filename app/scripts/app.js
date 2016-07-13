@@ -283,7 +283,7 @@
             scroller.scroll(el.offsetTop - 70, true);
             document.getElementById('requirementsList').toggleCollapsible(null, el);
         } else {
-            //this.loadComponentInfo(componentId);
+            this.loadComponentInfo(componentId);
             setTimeout(function(){
                 el = document.getElementById(requirementId);
                 if (el === null) {
