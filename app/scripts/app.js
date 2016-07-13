@@ -390,6 +390,9 @@
 
     app.checkEnter = function (e){
         if (e.keyCode === 13) {
+            if (e.ctrlKey){
+                return 0;
+            }
             var request = document.querySelector('#postRequirementRequest');
             var components = [{id: parseInt(app.params.componentId)}];
             if (this.$.newRequirementTitle.value == '' || this.$.newRequirementDesc.value == '' || this.$.newRequirementTitle.value == null || this.$.newRequirementDesc.value == null ){

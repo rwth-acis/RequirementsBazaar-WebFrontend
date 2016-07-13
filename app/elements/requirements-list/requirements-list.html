@@ -12,10 +12,6 @@
                 min-width: 300px;
             }
 
-            paper-button {
-                margin: 10px;
-            }
-
             .time {
                 display: block;
                 font-style: italic;
@@ -244,21 +240,43 @@
         <template is="dom-if" if="{{!list}}">
             <masonry-layout id="grids" column-width="100">
                 <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
-                    <div class="grid-item">
-                        <paper-card heading="{{req.title}}">
-                            <time is="relative-time" class="time"
-                                  datetime$="[[req.creation_time]]">
-                            </time>
-                            <div class="card-content" class="truncate">{{req.description}}</div>
-                            <div class="card-actions">
-                                <paper-button noink>
-                                    <iron-icon icon="star"></iron-icon>
-                                    {{req.upVotes}}
-                                </paper-button>
+                    <template is="dom-if" if="{{!selected}}">
+                        <template is="dom-if" if="{{!req.realized}}">
+                            <div class="grid-item">
+                                <paper-card heading="{{req.title}}" on-tap="bringToTop">
+                                    <time is="relative-time" class="time"
+                                          datetime$="[[req.creation_time]]">
+                                    </time>
+                                    <div style="position:relative; padding: 16px;"><file-gallery></file-gallery></div>
+                                    <div class="card-content" class="truncate">{{req.description}}</div>
+                                    <div class="card-actions">
+                                        <paper-button noink>
+                                            <iron-icon icon="star"></iron-icon>
+                                            {{req.upVotes}}
+                                        </paper-button>
+                                    </div>
+                                </paper-card>
                             </div>
-                        </paper-card>
-                    </div>
-                    <!--</a>-->
+                        </template>
+                    </template>
+                    <template is="dom-if" if="{{selected}}">
+                        <template is="dom-if" if="{{req.realized}}">
+                            <div class="grid-item">
+                                <paper-card heading="{{req.title}}">
+                                    <time is="relative-time" class="time"
+                                          datetime$="[[req.creation_time]]">
+                                    </time>
+                                    <div class="card-content" class="truncate">{{req.description}}</div>
+                                    <div class="card-actions">
+                                        <paper-button noink>
+                                            <iron-icon icon="star"></iron-icon>
+                                            {{req.upVotes}}
+                                        </paper-button>
+                                    </div>
+                                </paper-card>
+                            </div>
+                        </template>
+                    </template>
                 </template>
             </masonry-layout>
         </template>
@@ -599,6 +617,22 @@
 
                 computeResourceURL: function (baseHref, componentId) {
                     return baseHref + '/components/' + componentId + '/requirements/';
+                },
+
+                bringToTop: function(e){
+                    this.sendToBack();
+                    e.currentTarget.elevation = 5;
+                    e.currentTarget.style.zIndex = 1;
+                },
+
+                sendToBack: function(){
+                    var elems = Polymer.dom(this.root).querySelectorAll("paper-card");
+                    for (var i=0; i< elems.length; i++){
+                        if (elems[i].elevation === 5){
+                            elems[i].elevation = 1;
+                            elems[i].style.zIndex = 0;
+                        }
+                    }
                 },
 
                 toggleCollapsible: function(e, data) {
