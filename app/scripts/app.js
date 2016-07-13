@@ -254,12 +254,12 @@
 
     app.showQuarantineView = function(){
         this.list = false;
-        document.querySelector("requirements-list").style.display = "none";
+        //document.querySelector("requirements-list").style.display = "none";
     };
 
     app.showListView = function(){
         this.list = true;
-        document.querySelector("requirements-list").style.display = "block";
+        // document.querySelector("requirements-list").style.display = "block";
     };
 
     app.compChanged = function(compId){

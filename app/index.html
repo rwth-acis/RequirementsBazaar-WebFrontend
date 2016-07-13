@@ -539,12 +539,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <!--</paper-toolbar>-->
 
                             <div style="padding-top:10px; z-index: 1;">
-                                <template is="dom-if" if="{{!list}}">
-                                    <requirements-grid
-                                            base-url="https://requirements-bazaar.org/betabazaar/"
-                                            page="0" per-page="10" component-id="{{component.id}}">
-                                    </requirements-grid>
-                                </template>
+                                <!--<template is="dom-if" if="{{!list}}">-->
+                                    <!--<requirements-grid-->
+                                            <!--base-url="https://requirements-bazaar.org/betabazaar/"-->
+                                            <!--page="0" per-page="10" component-id="{{component.id}}">-->
+                                    <!--</requirements-grid>-->
+                                <!--</template>-->
 
                                 <requirements-list
                                         id="requirementsList"
@@ -552,7 +552,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         filter-value="[[reqFilterVal]]"
                                         base-href="{{baseHref}}"
                                         selected="{{selectedFilter}}"
-                                        loading="{{loading}}"></requirements-list>
+                                        loading="{{loading}}"
+                                        list="{{list}}"></requirements-list>
                             </div>
 
                             <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"
