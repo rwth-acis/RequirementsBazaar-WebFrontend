@@ -288,7 +288,7 @@
                 <div class="layout vertical center">
                     <template is="dom-if" if$="{{!activeOption}}" restamp>
                         <template is="dom-if" if="{{!req.realized}}">
-                            <paper-material class="req" id="[[req.id]]">
+                            <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
                                 <div class="reqbody">
 
                                     <div class="req-icons layout horizontal center">
