@@ -10,7 +10,7 @@
 
         <div>
             <template is="dom-repeat" items="{{attachments}}">
-                <iron-image style="width:50px; height:50px;" sizing="cover" src="[[item.fileUrl]]" on-tap="toggle"></iron-image>
+                <img style="width:50px; height:50px;" src="[[item.fileUrl]]" on-tap="toggle">
             </template>
         </div>
 
@@ -35,14 +35,15 @@
 
                 toggle: function(e){
                     if (!this.$.collapseImg.opened){
+                        this.$.expandedImg.src = e.currentTarget.src;
                         this.$.collapseImg.show();
                     } else {
                         if (this.$.expandedImg.src === e.currentTarget.src){
                             this.$.collapseImg.toggle();
+                        } else {
+                            this.$.expandedImg.src = e.currentTarget.src;
                         }
                     }
-
-                    this.$.expandedImg.src = e.currentTarget.src;
                 }
 
             });
