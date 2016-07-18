@@ -492,10 +492,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         <iron-collapse id="collapseFilters">
                                             <div>
                                                 <div style="display: flex; flex-wrap: wrap;">
-                                                    <paper-menu class="dropdown-content" selected="{{selectedFilter}}" style="flex-grow: 1; margin:20px;">
-                                                        <paper-item>Active Requirements</paper-item>
-                                                        <paper-item>Realized Requirements</paper-item>
-                                                    </paper-menu>
+                                                    <div style="flex-grow: 1; margin:20px;">
+                                                        <paper-radio-group selected="{{selectedFilter}}" style="flex-grow: 1; margin:20px;">
+                                                            <paper-radio-button name="active">Active Requirements</paper-radio-button>
+                                                            <br>
+                                                            <paper-radio-button name="realized">Realized Requirements</paper-radio-button>
+                                                        </paper-radio-group>
+                                                    </div>
+
                                                     <div style="flex-grow: 1; margin:20px;">
                                                         <div>Community Belonging:</div>
                                                         <paper-slider pin value="20" style="width:100%;"></paper-slider>

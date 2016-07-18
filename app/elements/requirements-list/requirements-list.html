@@ -240,7 +240,7 @@
         <template is="dom-if" if="{{!list}}">
             <masonry-layout id="grids" column-width="100">
                 <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
-                    <template is="dom-if" if="{{!selected}}">
+                    <template is="dom-if" if="{{!activeOption}}">
                         <template is="dom-if" if="{{!req.realized}}">
                             <div class="grid-item">
                                 <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
@@ -261,7 +261,7 @@
                             </div>
                         </template>
                     </template>
-                    <template is="dom-if" if="{{selected}}">
+                    <template is="dom-if" if="{{activeOption}}">
                         <template is="dom-if" if="{{req.realized}}">
                             <div class="grid-item">
                                 <paper-card heading="{{req.title}}">
@@ -286,7 +286,7 @@
         <template is="dom-if" if="{{list}}">
             <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
                 <div class="layout vertical center">
-                    <template is="dom-if" if="{{!selected}}">
+                    <template is="dom-if" if$="{{!activeOption}}">
                         <template is="dom-if" if="{{!req.realized}}">
                             <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
                                 <div class="reqbody">
@@ -404,7 +404,7 @@
                         </template>
                     </template>
 
-                    <template is="dom-if" if="{{selected}}">
+                    <template is="dom-if" if$="{{activeOption}}">
                         <template is="dom-if" if="{{req.realized}}">
                             <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
                                 <div class="reqbody">
@@ -520,9 +520,9 @@
                         type: Number
                     },
                     selected: {
-                        type: Number,
+                        type: String,
                         notify: true,
-                        value: 0
+                        value: "active"
                     },
                     baseHref: String,
                     resourceURL: {
@@ -588,15 +588,29 @@
                         type: Boolean,
                         notify: true,
                         observer: "_hasEnoughItems"
+                    },
+                    activeOption: {
+                        type: Boolean,
+                        notify: true,
+                        value: false
                     }
                 },
 
                 observers: [
-                    'manageSelReq(selectedRequirements.splices)'
+                    'manageSelReq(selectedRequirements.splices)',
+                    'computeRealized(selected)'
                 ],
 
                 ready: function () {
                     this.i18n = this.$.i18n;
+                },
+
+                computeRealized: function(selected){
+                    if(selected === "active"){
+                        this.activeOption = false;
+                    } else {
+                        this.activeOption = true;
+                    }
                 },
 
                 _hasEnoughItems: function () {

@@ -40,7 +40,7 @@
     app.isMobile = false; //initiate as false
     app.i18n = null;
     app.loading = false;
-    app.selectedFilter = 0;
+    app.selectedFilter = "active";
     app.list = true;
 
     app.displayInstalledToast = function() {
