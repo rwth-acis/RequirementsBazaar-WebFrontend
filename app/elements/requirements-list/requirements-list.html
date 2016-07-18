@@ -237,13 +237,13 @@
             <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
         </paper-material>
 
-        <template is="dom-if" if="{{!list}}">
+        <template is="dom-if" if="{{!list}}" restamp>
             <masonry-layout id="grids" column-width="100">
                 <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
                     <template is="dom-if" if="{{!activeOption}}">
                         <template is="dom-if" if="{{!req.realized}}">
                             <div class="grid-item">
-                                <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+                                <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
                                     <!--<paper-checkbox></paper-checkbox>-->
                                     <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
                                     <time is="relative-time" class="time"
@@ -283,12 +283,12 @@
             </masonry-layout>
         </template>
 
-        <template is="dom-if" if="{{list}}">
+        <template is="dom-if" if="{{list}}" restamp>
             <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
                 <div class="layout vertical center">
-                    <template is="dom-if" if$="{{!activeOption}}">
+                    <template is="dom-if" if$="{{!activeOption}}" restamp>
                         <template is="dom-if" if="{{!req.realized}}">
-                            <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+                            <paper-material class="req" id="[[req.id]]">
                                 <div class="reqbody">
 
                                     <div class="req-icons layout horizontal center">
@@ -404,7 +404,7 @@
                         </template>
                     </template>
 
-                    <template is="dom-if" if$="{{activeOption}}">
+                    <template is="dom-if" if="{{activeOption}}" restamp>
                         <template is="dom-if" if="{{req.realized}}">
                             <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
                                 <div class="reqbody">

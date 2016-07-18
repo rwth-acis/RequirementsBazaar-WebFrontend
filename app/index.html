@@ -493,7 +493,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <div>
                                                 <div style="display: flex; flex-wrap: wrap;">
                                                     <div style="flex-grow: 1; margin:20px;">
-                                                        <paper-radio-group selected="{{selectedFilter}}" style="flex-grow: 1; margin:20px;">
+                                                        <paper-radio-group selected="{{selectedFilter}}">
                                                             <paper-radio-button name="active">Active Requirements</paper-radio-button>
                                                             <br>
                                                             <paper-radio-button name="realized">Realized Requirements</paper-radio-button>
@@ -501,12 +501,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                     </div>
 
                                                     <div style="flex-grow: 1; margin:20px;">
-                                                        <div>Community Belonging:</div>
-                                                        <paper-slider pin value="20" style="width:100%;"></paper-slider>
                                                         <div>User Rating: <span id="ratingsLabel" class="caption"></span></div>
-                                                        <paper-slider id="ratings" pin value="5" style="width:100%;"></paper-slider>
+                                                        <paper-slider id="ratings" pin value="5" style="width:100%;" disabled></paper-slider>
                                                         <div>User Behaviour: <span id="gradeLabel" class="caption"></span></div>
-                                                        <paper-slider id="grade" pin value="65" style="width:100%;"></paper-slider>
+                                                        <paper-slider id="grade" pin value="65" style="width:100%;" disabled></paper-slider>
                                                     </div>
                                                     <div style="flex-grow: 1; margin:20px;">
                                                         <paper-radio-group selected="list">

@@ -56,6 +56,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             if (app.compChanged(data.params.componentId)){
                 app.route = 'component-info';
                 app.params = data.params;
+                app.selectedFilter = "active";
                 app.loadComponentInfo(data.params.componentId);
                 app.closeCollapses();
             }
