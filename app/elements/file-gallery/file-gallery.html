@@ -14,9 +14,19 @@
             </template>
         </div>
 
-        <iron-collapse id="collapseImg">
-            <img id="expandedImg" on-tap="toggle">
-        </iron-collapse>
+        <template is="dom-if" if="{{!grid}}">
+            <iron-collapse id="collapseImg">
+                <img id="expandedImg" on-tap="toggle">
+            </iron-collapse>
+        </template>
+
+        <template is="dom-if" if="{{grid}}">
+            <paper-dialog id="imgPopup">
+                <paper-dialog-scrollable>
+                    <img id="popupImg">
+                </paper-dialog-scrollable>
+            </paper-dialog>
+        </template>
 
     </template>
 
@@ -30,18 +40,28 @@
                     attachments: {
                         type: Array,
                         notify: true
+                    },
+                    grid: {
+                        type: Boolean,
+                        value: false,
+                        notify: true
                     }
                 },
 
                 toggle: function(e){
-                    if (!this.$.collapseImg.opened){
-                        this.$.expandedImg.src = e.currentTarget.src;
-                        this.$.collapseImg.show();
+                    if (this.grid){
+                        document.getElementById("popupImg").src = e.currentTarget.src;
+                        document.getElementById("imgPopup").open();
                     } else {
-                        if (this.$.expandedImg.src === e.currentTarget.src){
-                            this.$.collapseImg.toggle();
+                        if (!document.getElementById("collapseImg").opened){
+                            document.getElementById("expandedImg").src = e.currentTarget.src;
+                            document.getElementById("collapseImg").show();
                         } else {
-                            this.$.expandedImg.src = e.currentTarget.src;
+                            if (document.getElementById("expandedImg").src === e.currentTarget.src){
+                                document.getElementById("collapseImg").toggle();
+                            } else {
+                                document.getElementById("expandedImg").src = e.currentTarget.src;
+                            }
                         }
                     }
                 }
