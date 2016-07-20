@@ -71,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             url="{{baseHref}}/users/current"
             content-type="application/json"
             method="GET"
-            params="{{header}}"
+            headers="{{header}}"
             last-response="{{currentUser}}"></iron-ajax>
 
     <iron-ajax
@@ -79,7 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             handle-as="json"
             content-type="application/json"
             method="PUT"
-            params="{{header}}"></iron-ajax>
+            headers="{{header}}"></iron-ajax>
 
     <paper-toast id="superToast"></paper-toast>
     <i18n-msg class="i18nlabel"></i18n-msg>
@@ -288,7 +288,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             url="{{baseHref}}/projects"
                             content-type="application/json"
                             method="POST"
-                            params="{{header}}"
+                            headers="{{header}}"
                             on-response="handleResponseProject"
                             on-error="errorHandler"></iron-ajax>
 
@@ -366,7 +366,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 id="postUpdateProject"
                                 handle-as="json"
                                 content-type="application/json"
-                                params="{{header}}"
+                                headers="{{header}}"
                                 on-response="handleResponseEditProj"
                                 on-error="errorHandler"></iron-ajax>
 
@@ -393,7 +393,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             url="{{baseHref}}/components"
                             content-type="application/json"
                             method="POST"
-                            params="{{header}}"
+                            headers="{{header}}"
                             on-response="handleResponseComponent"
                             on-error="errorHandler"></iron-ajax>
 
@@ -591,21 +591,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     url="{{baseHref}}/requirements"
                                     content-type="application/json"
                                     method="POST"
-                                    params="{{header}}"
+                                    headers="{{header}}"
                                     on-response="handleResponseRequirement"
                                     on-error="errorHandler"></iron-ajax>
 
                             <iron-ajax  id="componentRequest"
                                         handle-as="json"
                                         content-type="application/json"
-                                        params="{{header}}"
+                                        headers="{{header}}"
                                         on-response="compResponse"
                                         on-error="errorHandler"></iron-ajax>
 
                             <iron-ajax  id="componentRequestPUT"
                                         handle-as="json"
                                         content-type="application/json"
-                                        params="{{header}}"
+                                        headers="{{header}}"
                                         on-response="compResponsePUT"
                                         on-error="errorHandler"></iron-ajax>
 

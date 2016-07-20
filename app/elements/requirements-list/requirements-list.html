@@ -151,7 +151,7 @@
                 url="{{baseHref}}/comments"
                 content-type="application/json"
                 method="POST"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseComment"
                 last-response="{{postResponse}}"
                 on-error="errorHandler">
@@ -163,7 +163,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="PUT"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseEditReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -173,7 +173,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="DELETE"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseDeleteReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -182,7 +182,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="POST"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseFollowReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -191,7 +191,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="DELETE"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseUnfollowReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -200,7 +200,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="POST"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseDevelopReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -209,7 +209,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="DELETE"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseUndevelopReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -217,7 +217,7 @@
                 id="starReq"
                 handle-as="json"
                 content-type="application/json"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="load"
                 on-error="errorHandler"></iron-ajax>
 
@@ -555,7 +555,6 @@
                     parameters:{
                         type:Object,
                         notify: true,
-                        computed: '_computeHeader(header, isAuthorized)',
                         value: {per_page: 60}
                     },
                     elem: Object,
@@ -623,14 +622,6 @@
                     } else {
                         this.style.paddingLeft = "0px";
                     }
-                },
-
-                _computeHeader: function(header, isAuthorized){
-                    if (isAuthorized){
-                        header.per_page = 60;
-                        return header;
-                    }
-
                 },
 
                 computeResourceURL: function (baseHref, componentId) {

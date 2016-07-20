@@ -134,7 +134,7 @@
                     if (e.detail.confirmed) {
                         var request = this.$.postDeleteComment;
                         request.url = app.baseHref + "/comments/" + this.elem.id;
-                        request.params = app.header;
+                        request.headers = app.header;
                         request.generateRequest();
                         this.elem.parentNode.style.display = 'none';
                     }

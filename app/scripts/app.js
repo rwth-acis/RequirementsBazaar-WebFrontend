@@ -757,7 +757,7 @@
 
     app.handleSigninSuccess = function(e){
         this.access_token = e.detail.access_token;
-        this.header = {access_token: this.access_token };
+        this.header = {authorization: "Bearer " + this.access_token };
         document.getElementById('getUsr').generateRequest();
         if (app.route === "home"){
             page("/projects");
