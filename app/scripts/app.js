@@ -24,7 +24,7 @@
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        app.baseUrl = '/beta/';
+        // app.baseUrl = '/';
     }
 
     /**
@@ -360,9 +360,11 @@
                 if (this.files != []){
                     for (var i = 0; i < this.files.length; i++){
                         var obj = {
-                            name: this.files[i].name,
-                            url: this.files[i].xhr.response
-                        }
+                            title: this.files[i].name,
+                            fileUrl: this.files[i].xhr.response,
+                            mimeType: "image/*",
+                            identifier: this.files[i].xhr.response.slice(-20)
+                        };
                         attachments.push(obj);
                     }
                 }
