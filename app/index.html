@@ -20,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- Place favicon.ico in the `app/` directory -->
 
     <!-- Chrome for Android theme color -->
-    <meta name="theme-color" content="#2E3AA1">
+    <meta name="theme-color" content="#33cc33">
 
     <!-- build:js components/webcomponentsjs/webcomponents-lite.min.js -->
     <script src="components/webcomponentsjs/webcomponents-lite.js"></script>
@@ -30,7 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <link rel="manifest" href="manifest.json">
 
     <!-- Tile color for Win8 -->
-    <meta name="msapplication-TileColor" content="#3372DF">
+    <meta name="msapplication-TileColor" content="#33cc33">
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -71,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             url="{{baseHref}}/users/current"
             content-type="application/json"
             method="GET"
-            params="{{header}}"
+            headers="{{header}}"
             last-response="{{currentUser}}"></iron-ajax>
 
     <iron-ajax
@@ -79,7 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             handle-as="json"
             content-type="application/json"
             method="PUT"
-            params="{{header}}"></iron-ajax>
+            headers="{{header}}"></iron-ajax>
 
     <paper-toast id="superToast"></paper-toast>
     <i18n-msg class="i18nlabel"></i18n-msg>
@@ -109,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-icon-button class="hidden-mobile" icon="language" on-tap="openLanguageMenu"></paper-icon-button>
 
             <template is="dom-if" if="{{isAuthorized}}">
-                <req-user user-id="[[currentUser.id]]" mini on-tap="openUserDialog" class="hidden-mobile"></req-user>
+                <req-user user="[[currentUser]]" mini on-tap="openUserDialog" class="hidden-mobile"></req-user>
             </template>
             <template is="dom-if" if="{{!landingPage(route)}}">
                 <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
@@ -121,7 +121,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-toolbar>
 
 
-        <paper-progress indeterminate disabled="{{!loading}}" ></paper-progress>
+        <template is="dom-if" if="{{loading}}">
+            <paper-progress indeterminate disabled="{{!loading}}" ></paper-progress>
+        </template>
 
         <paper-menu-button class="hidden-mobile" id="languageMenu">
             <paper-menu id="componentInfoMenu" class="dropdown-content">
@@ -135,7 +137,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <paper-dialog id="userSettings" class="user hidden-mobile" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation" no-cancel-on-outside-click
                       no-cancel-on-esc-key>
-            <req-user user-id="[[currentUser.id]]" full-view></req-user>
+            <req-user user="[[currentUser]]" full-view></req-user>
 
             <paper-button on-tap="openSettingsDialog" raised><i18n-msg msgid="settings"></i18n-msg></paper-button>
 
@@ -286,7 +288,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             url="{{baseHref}}/projects"
                             content-type="application/json"
                             method="POST"
-                            params="{{header}}"
+                            headers="{{header}}"
                             on-response="handleResponseProject"
                             on-error="errorHandler"></iron-ajax>
 
@@ -304,7 +306,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer1">
                         <paper-scroll-header-panel drawer fixed>
-
+                            <template is="dom-if" if="{{! activities}}">
+                                <paper-spinner active></paper-spinner>
+                            </template>
                             <!-- Drawer Content -->
                             <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>
@@ -341,7 +345,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                             <div class="editHeader">
 
-                                <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
+                                <bread-crumb project-id="{{params.projectId}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
                                 <h2>{{project.name}}</h2>
 
                                 <div>{{project.description}}</div>
@@ -362,7 +366,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 id="postUpdateProject"
                                 handle-as="json"
                                 content-type="application/json"
-                                params="{{header}}"
+                                headers="{{header}}"
                                 on-response="handleResponseEditProj"
                                 on-error="errorHandler"></iron-ajax>
 
@@ -389,7 +393,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             url="{{baseHref}}/components"
                             content-type="application/json"
                             method="POST"
-                            params="{{header}}"
+                            headers="{{header}}"
                             on-response="handleResponseComponent"
                             on-error="errorHandler"></iron-ajax>
 
@@ -410,7 +414,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer">
                         <paper-scroll-header-panel drawer fixed>
-
+                            <template is="dom-if" if="{{! activities}}">
+                                <paper-spinner active></paper-spinner>
+                            </template>
                             <!-- Drawer Content -->
                             <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>
@@ -449,7 +455,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                     <div class="cmpTitle">
                                         <div class="breadCrumb">
-                                            <bread-crumb project-id="{{params.projectId}}" component-id="{{params.componentId}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
+                                            <bread-crumb project-id="{{params.projectId}}" component="{{component}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
                                         </div>
                                         <div class="component-name"><span>{{component.name}}</span></div>
                                     </div>
@@ -461,8 +467,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <i18n-msg msgid="created"></i18n-msg>
                                             <time is="relative-time" datetime$="[[component.creation_time]]"></time>
                                             <i18n-msg msgid="by"></i18n-msg>
-                                            <req-user user-id="{{component.leaderId}}" normal-view></req-user>
+                                            <req-user user="{{component.leader}}" normal-view no-popover></req-user>
                                         </div>
+
                                         <!--<div class="timing">-->
                                             <!--<paper-icon-item>-->
                                                 <!--<paper-item-body two-line>-->
@@ -473,11 +480,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         <!--<div class="leader">-->
                                             <!--<req-user user-id="{{component.leaderId}}" full-view></req-user>-->
                                         <!--</div>-->
-                                        <i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>
-                                        <paper-input id="searchReq" label$="[[srchReq]]" value="{{reqFilterVal}}">
-                                            <iron-icon icon="search" prefix class="big"></iron-icon>
-                                        </paper-input>
+
+                                        <paper-button on-tap="toggleFilters" class="filterButton" toggles>
+                                            <iron-icon icon="filter-list"></iron-icon>
+                                            <span>Filters</span>
+                                        </paper-button>
                                     </div>
+
+                                    <div class="filtering">
+
+                                        <iron-collapse id="collapseFilters">
+                                            <div>
+                                                <div style="display: flex; flex-wrap: wrap;">
+                                                    <div style="flex-grow: 1; margin:20px;">
+                                                        <paper-radio-group selected="{{selectedFilter}}">
+                                                            <paper-radio-button name="active">Active Requirements</paper-radio-button>
+                                                            <br>
+                                                            <paper-radio-button name="realized">Realized Requirements</paper-radio-button>
+                                                        </paper-radio-group>
+                                                    </div>
+
+                                                    <div style="flex-grow: 1; margin:20px;">
+                                                        <div>User Rating: <span id="ratingsLabel" class="caption"></span></div>
+                                                        <paper-slider id="ratings" pin value="5" style="width:100%;" disabled></paper-slider>
+                                                        <div>User Behaviour: <span id="gradeLabel" class="caption"></span></div>
+                                                        <paper-slider id="grade" pin value="65" style="width:100%;" disabled></paper-slider>
+                                                    </div>
+                                                    <div style="flex-grow: 1; margin:20px;">
+                                                        <paper-radio-group selected="list">
+                                                            <paper-radio-button name="list" on-tap="showListView">List View</paper-radio-button>
+                                                            <br>
+                                                            <paper-radio-button name="quarantine" on-tap="showQuarantineView">Grid View</paper-radio-button>
+                                                        </paper-radio-group>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>
+                                                    <paper-input label$="[[srchReq]]" value="{{reqFilterVal}}">
+                                                        <iron-icon icon="search" prefix class="big"></iron-icon>
+                                                    </paper-input>
+                                                </div>
+                                            </div>
+                                        </iron-collapse>
+                                    </div>
+
+                                    <!--<i18n-msg msgid="srchReq" class="i18nLabel" msg="{{srchReq}}"></i18n-msg>-->
+                                    <!--<paper-input id="searchReq" label$="[[srchReq]]" value="{{reqFilterVal}}">-->
+                                        <!--<iron-icon icon="search" prefix class="big"></iron-icon>-->
+                                    <!--</paper-input>-->
 
                                     <div class="editFormComp middle middle-container center layout">
 
@@ -490,13 +540,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 </paper-material>
                             <!--</paper-toolbar>-->
 
-                            <div style="padding-top:20px;">
+                            <div style="padding-top:10px; z-index: 1;">
+
                                 <requirements-list
                                         id="requirementsList"
                                         header="{{header}}"
                                         filter-value="[[reqFilterVal]]"
                                         base-href="{{baseHref}}"
-                                        loading="{{loading}}"></requirements-list>
+                                        selected="{{selectedFilter}}"
+                                        loading="{{loading}}"
+                                        list="{{list}}"></requirements-list>
                             </div>
 
                             <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"
@@ -504,8 +557,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                           no-cancel-on-esc-key
                                           on-iron-overlay-closed="onCreateRequirementClosed">
                                 <h2><i18n-msg msgid="createRequirement"></i18n-msg></h2>
-                                <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle"></paper-input>
-                                <paper-textarea label="[[formDesc]]" id="newRequirementDesc"></paper-textarea>
+                                <paper-button class="expand-button" on-tap="expandDialog"><iron-icon icon="fullscreen"></iron-icon></paper-button>
+                                <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle" on-keydown="checkEnter"></paper-input>
+                                <paper-textarea label="[[formDesc]]" id="newRequirementDesc" on-keydown="checkEnter" max-rows="4"></paper-textarea>
+                                <vaadin-upload
+                                        target="https://requirements-bazaar.org/betafileservice/files/"
+                                        method="POST"
+                                        timeout="300000"
+                                        files="{{files}}"
+                                        max-file-size="10000000"
+                                        accept="image/*">
+                                </vaadin-upload>
 
                                 <div class="buttons">
                                     <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
@@ -529,21 +591,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     url="{{baseHref}}/requirements"
                                     content-type="application/json"
                                     method="POST"
-                                    params="{{header}}"
+                                    headers="{{header}}"
                                     on-response="handleResponseRequirement"
                                     on-error="errorHandler"></iron-ajax>
 
                             <iron-ajax  id="componentRequest"
                                         handle-as="json"
                                         content-type="application/json"
-                                        params="{{header}}"
+                                        headers="{{header}}"
                                         on-response="compResponse"
                                         on-error="errorHandler"></iron-ajax>
 
                             <iron-ajax  id="componentRequestPUT"
                                         handle-as="json"
                                         content-type="application/json"
-                                        params="{{header}}"
+                                        headers="{{header}}"
                                         on-response="compResponsePUT"
                                         on-error="errorHandler"></iron-ajax>
 

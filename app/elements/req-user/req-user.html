@@ -27,13 +27,11 @@
 
             .name {
                 font-size: 18px;
-                font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
                 font-weight: 400;
             }
 
             .username {
                 font-size: 12px;
-                font-style: italic;
                 padding-top: 5px;
             }
 
@@ -51,7 +49,7 @@
         </style>
 
         <iron-ajax
-                auto
+                id="usrReq"
                 url="{{usersUrl}}"
                 last-response="{{user}}"></iron-ajax>
 
@@ -59,16 +57,19 @@
 
             <span id="user">{{user.userName}}</span>
 
-            <paper-tooltip for="user" class="custom hidden-mobile" animation-delay="0" position="top">
-                <img src="{{user.profileImage}}" class="profileImage">
-                <paper-item-body two-line>
-                <div class="name">
-                    <span>{{user.firstName}}</span>
-                    <span>{{user.lastName}}</span>
-                </div>
-                <div class="username">{{user.userName}}</div>
-                </paper-item-body>
-            </paper-tooltip>
+            <template is="dom-if" if="{{!noPopover}}">
+                <paper-tooltip for="user" class="custom hidden-mobile" animation-delay="0" position="top">
+                    <img src="{{user.profileImage}}" class="profileImage">
+                    <paper-item-body two-line>
+                        <div class="name">
+                            <span>{{user.firstName}}</span>
+                            <span>{{user.lastName}}</span>
+                        </div>
+                        <div class="username">{{user.userName}}</div>
+                    </paper-item-body>
+                </paper-tooltip>
+            </template>
+
 
         </template>
 
@@ -110,6 +111,10 @@
                         type: Object,
                         notify: true
                     },
+                    noPopover:{
+                        type: Boolean,
+                        value: false
+                    },
                     usersUrl: {
                         type: String,
                         computed: 'computeUsersUrl(userId)'
@@ -130,6 +135,9 @@
 
                 computeUsersUrl: function(userId){
                     return app.baseHref + "/users/" + userId;
+                },
+                load: function (){
+                    this.$.usrReq.generateRequest();
                 }
 
             });

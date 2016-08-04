@@ -68,9 +68,9 @@
             <div class="comment layout horizontal">
                 <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
                 <div class="layout vertical flex">
-                    <div>[[item.message]]</div>
+                    <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
                     <div class="info helper">
-                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user-id="[[item.creatorId]]" normal-view></req-user>
+                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
                     </div>
                 </div>
                 <template is="dom-if" if="{{isCreator(item.creatorId)}}">
@@ -133,8 +133,8 @@
                 deleteComment: function(e) {
                     if (e.detail.confirmed) {
                         var request = this.$.postDeleteComment;
-                        request.url = app.baseHref + "/requirements/" + this.elem.id;
-                        request.params = app.header;
+                        request.url = app.baseHref + "/comments/" + this.elem.id;
+                        request.headers = app.header;
                         request.generateRequest();
                         this.elem.parentNode.style.display = 'none';
                     }
@@ -147,6 +147,28 @@
                         }
                     }
                     return false;
+                },
+
+                validateUrl: function(requirementDesc) {
+                    var str = requirementDesc;
+                    var expression = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/gi;
+                    var regex = new RegExp(expression);
+
+                    if(!str.match(regex)) {
+                        return str;
+                    } else {
+                        var txt = str;
+                        for (var i = 0; i < str.match(regex).length; i++){
+                            var replacement;
+                            if (str.match(regex)[i].startsWith("http")){
+                                replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+                            } else {
+                                replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+                            }
+                            txt = txt.replace(str.match(regex)[i], replacement);
+                        }
+                        return txt;
+                    }
                 }
             });
         })();

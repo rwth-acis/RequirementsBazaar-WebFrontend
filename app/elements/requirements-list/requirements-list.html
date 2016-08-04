@@ -7,6 +7,18 @@
                 display: block;
             }
 
+            paper-card {
+                max-width: 300px;
+                min-width: 300px;
+            }
+
+            .time {
+                display: inline-flex;
+                font-style: italic;
+                float: right;
+                padding-right: 5px;
+            }
+
             paper-material {
                 border-radius: 2px;
                 /*height: 100%;*/
@@ -106,6 +118,20 @@
             .hide {
                 display: none;
             }
+
+            paper-checkbox{
+                display: none;
+            }
+
+            .tools {
+                position: fixed;
+                bottom: 50px;
+                left: 10px;
+                z-index: 10;
+                display: none;
+                width: auto;
+                padding: 10px;
+            }
         </style>
 
         <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
@@ -116,7 +142,7 @@
                 id="requirementsLoader"
                 url="{{resourceURL}}"
                 last-response="{{requirements}}"
-                params='{"per_page":"50"}'
+                params="{{parameters}}"
                 loading="{{loading}}"></iron-ajax>
 
         <iron-ajax
@@ -125,7 +151,7 @@
                 url="{{baseHref}}/comments"
                 content-type="application/json"
                 method="POST"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseComment"
                 last-response="{{postResponse}}"
                 on-error="errorHandler">
@@ -137,7 +163,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="PUT"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseEditReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -147,7 +173,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="DELETE"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseDeleteReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -156,7 +182,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="POST"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseFollowReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -165,7 +191,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="DELETE"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseUnfollowReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -174,7 +200,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="POST"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseDevelopReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -183,7 +209,7 @@
                 handle-as="json"
                 content-type="application/json"
                 method="DELETE"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="handleResponseUndevelopReq"
                 on-error="errorHandler"></iron-ajax>
 
@@ -191,7 +217,7 @@
                 id="starReq"
                 handle-as="json"
                 content-type="application/json"
-                params="{{header}}"
+                headers="{{header}}"
                 on-response="load"
                 on-error="errorHandler"></iron-ajax>
 
@@ -205,120 +231,276 @@
             </div>
         </paper-dialog>
 
+        <paper-material elevation="5" id="tools" class="tools">
+            <span>{{selectedRequirements.length}} Requirements selected.</span>
+            <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
+            <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
+        </paper-material>
 
-        <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
-            <div class="layout vertical center">
-                <template is="dom-if" if="{{!req.realized}}">
-                    <paper-material class="req" id="[[req.id]]">
-                        <div class="reqbody">
-
-                            <div class="req-icons layout horizontal center">
-                                <template is="dom-if" if="{{!isAuthorized}}">
-                                    <paper-icon-button icon="star-border" disabled></paper-icon-button>
-                                </template>
-                                <template is="dom-if" if="{{isAuthorized}}">
-                                    <template is="dom-if" if="{{userVoted(req.userVoted)}}">
-                                        <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
-                                    </template>
-                                    <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
-                                        <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
-                                    </template>
-                                </template>
-                                <div>[[req.upVotes]]</div>
-                                <template is="dom-if" if="{{isAuthorized}}">
-                                    <paper-menu-button horizontal-align="right" vertical-align="top">
-                                        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                        <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                            <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
-                                            <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
-                                            <template is="dom-if" if="{{!isFollower}}">
-                                                <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
-                                            </template>
-                                            <template is="dom-if" if="{{isFollower}}">
-                                                <paper-item on-tap="unfollowReq"><i18n-msg msgid="unfollowRequirement"></i18n-msg></paper-item>
-                                            </template>
-                                            <template is="dom-if" if="{{!isDeveloper}}">
-                                                <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
-                                            </template>
-                                            <template is="dom-if" if="{{isDeveloper}}">
-                                                <paper-item on-tap="undevelopReq"><i18n-msg msgid="undevelopRequirement"></i18n-msg></paper-item>
-                                            </template>
-                                            <paper-item on-tap="editRequirement"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
-                                            <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
-                                        </paper-menu>
-                                    </paper-menu-button>
-                                </template>
-                            </div>
-                            <paper-toolbar class="title" on-tap="onRequirementTap">
-                                <div class="title">[[req.title]]</div>
-                                <div class="bottom fit helper">
-                                    <time is="relative-time" datetime$="[[req.creation_time]]"></time>
-                                    <i18n-msg msgid="by"></i18n-msg>
-                                    <req-user user-id="[[req.creatorId]]" normal-view></req-user>
-                                </div>
-                            </paper-toolbar>
-
-                        </div>
-
-                        <div class="line"></div>
-
-                        <div class="contributers">
-                            <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
-                            <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[req.leadDeveloperId]]" full-view></req-user></div>
-                            <template is="dom-if" if="{{!isEmpty(req.developers)}}">
-                                <div><i18n-msg msgid="developers"></i18n-msg>:
-                                    <template is="dom-repeat" items="{{req.developers}}" as="dev">
-                                        <div  style="display:inline-block">
-                                            <req-user user-id$="[[dev.id]]" mini></req-user>
-                                            <paper-tooltip>{{dev.userName}}</paper-tooltip>
-                                        </div>
-                                    </template>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{!isEmpty(req.followers)}}">
-                                <div><i18n-msg msgid="followers"></i18n-msg>:
-                                    <template is="dom-repeat" items="{{req.followers}}" as="foll">
-                                        <div  style="display:inline-block">
-                                            <req-user user-id$="[[foll.id]]" mini></req-user>
-                                            <paper-tooltip>{{foll.userName}}</paper-tooltip>
-                                        </div>
-                                    </template>
-                                </div>
-                            </template>
-                            <div class="line"></div>
-                        </div>
-
-                        <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
-                        <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
-
-                        <div class="comments">
-
-                            <iron-collapse>
-                                <h4><i18n-msg msgid="comments"></i18n-msg></h4>
-                                <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]"></comments-list>
-                                <template is="dom-if" if="{{isAuthorized}}">
-                                    <div class="container flex-horizontal" id="[[req.id]]">
-                                        <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                                        <paper-textarea id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter"></paper-textarea>
-                                        <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+        <template is="dom-if" if="{{!list}}" restamp>
+            <masonry-layout id="grids" column-width="100">
+                <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
+                    <template is="dom-if" if="{{!activeOption}}">
+                        <template is="dom-if" if="{{!req.realized}}">
+                            <div class="grid-item">
+                                <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
+                                    <!--<paper-checkbox></paper-checkbox>-->
+                                    <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
+                                    <time is="relative-time" class="time"
+                                          datetime$="[[req.creation_time]]">
+                                    </time>
+                                    <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
+                                    <div class="card-content" class="truncate">{{req.description}}</div>
+                                    <div class="card-actions">
+                                        <paper-button noink>
+                                            <iron-icon icon="star"></iron-icon>
+                                            {{req.upVotes}}
+                                        </paper-button>
                                     </div>
-                                </template>
-                            </iron-collapse>
-
-                        </div>
-
-                        <div class="editForm">
-
-                            <paper-input class="editTitle" class="title" value="{{req.title}}"></paper-input>
-                            <paper-textarea value="{{req.description}}"></paper-textarea>
-                            <paper-button raised on-tap="saveEditReq" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
-                            <paper-button raised on-tap="cancelRequirement" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
-
-                        </div>
-
-                    </paper-material>
+                                </paper-card>
+                            </div>
+                        </template>
+                    </template>
+                    <template is="dom-if" if="{{activeOption}}">
+                        <template is="dom-if" if="{{req.realized}}">
+                            <div class="grid-item">
+                                <paper-card heading="{{req.title}}">
+                                    <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
+                                    <time is="relative-time" class="time"
+                                          datetime$="[[req.creation_time]]">
+                                    </time>
+                                    <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
+                                    <div class="card-content" class="truncate">{{req.description}}</div>
+                                    <div class="card-actions">
+                                        <paper-button noink>
+                                            <iron-icon icon="star"></iron-icon>
+                                            {{req.upVotes}}
+                                        </paper-button>
+                                    </div>
+                                </paper-card>
+                            </div>
+                        </template>
+                    </template>
                 </template>
-            </div>
+            </masonry-layout>
+        </template>
+
+        <template is="dom-if" if="{{list}}" restamp>
+            <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
+                <div class="layout vertical center">
+                    <template is="dom-if" if$="{{!activeOption}}" restamp>
+                        <template is="dom-if" if="{{!req.realized}}">
+                            <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+                                <div class="reqbody">
+
+                                    <div class="req-icons layout horizontal center">
+                                        <paper-checkbox></paper-checkbox>
+                                        <template is="dom-if" if="{{!isAuthorized}}">
+                                            <paper-icon-button icon="star-border" disabled></paper-icon-button>
+                                        </template>
+                                        <template is="dom-if" if="{{isAuthorized}}">
+                                            <template is="dom-if" if="{{userVoted(req.userVoted)}}">
+                                                <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
+                                            </template>
+                                            <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
+                                                <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
+                                            </template>
+                                        </template>
+                                        <div>[[req.upVotes]]</div>
+                                        <template is="dom-if" if="{{isAuthorized}}">
+                                            <paper-menu-button horizontal-align="right" vertical-align="top">
+                                                <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                                <paper-menu id="componentInfoMenu" class="dropdown-content">
+                                                    <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
+                                                    <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
+                                                    <template is="dom-if" if="{{!isFollower}}">
+                                                        <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
+                                                    </template>
+                                                    <template is="dom-if" if="{{isFollower}}">
+                                                        <paper-item on-tap="unfollowReq"><i18n-msg msgid="unfollowRequirement"></i18n-msg></paper-item>
+                                                    </template>
+                                                    <template is="dom-if" if="{{!isDeveloper}}">
+                                                        <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
+                                                    </template>
+                                                    <template is="dom-if" if="{{isDeveloper}}">
+                                                        <paper-item on-tap="undevelopReq"><i18n-msg msgid="undevelopRequirement"></i18n-msg></paper-item>
+                                                    </template>
+                                                    <paper-item on-tap="editRequirement"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
+                                                    <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
+                                                </paper-menu>
+                                            </paper-menu-button>
+                                        </template>
+                                    </div>
+
+                                    <paper-toolbar class="title" on-tap="onRequirementTap">
+                                        <div class="title">[[req.title]]</div>
+                                        <div class="bottom fit helper">
+                                            <time is="relative-time" datetime$="[[req.creation_time]]"></time>
+                                            <i18n-msg msgid="by"></i18n-msg>
+                                            <req-user user="[[req.creator]]" normal-view></req-user>
+                                        </div>
+                                    </paper-toolbar>
+
+                                </div>
+
+                                <div class="line"></div>
+
+                                <div class="contributers">
+                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
+                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[req.leadDeveloperId]]" full-view></req-user></div>
+                                    <template is="dom-if" if="{{!isEmpty(req.developers)}}">
+                                        <div><i18n-msg msgid="developers"></i18n-msg>:
+                                            <template is="dom-repeat" items="{{req.developers}}" as="dev">
+                                                <div  style="display:inline-block">
+                                                    <req-user user-id$="[[dev.id]]" mini></req-user>
+                                                    <paper-tooltip>{{dev.userName}}</paper-tooltip>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template is="dom-if" if="{{!isEmpty(req.followers)}}">
+                                        <div><i18n-msg msgid="followers"></i18n-msg>:
+                                            <template is="dom-repeat" items="{{req.followers}}" as="foll">
+                                                <div  style="display:inline-block">
+                                                    <req-user user-id$="[[foll.id]]" mini></req-user>
+                                                    <paper-tooltip>{{foll.userName}}</paper-tooltip>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <div class="line"></div>
+                                </div>
+
+                                <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
+                                <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
+
+                                <div class="comments">
+
+                                    <iron-collapse id="reqExpand">
+                                        <file-gallery attachments="{{req.attachments}}"></file-gallery>
+                                        <h4><i18n-msg msgid="comments"></i18n-msg></h4>
+                                        <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]"></comments-list>
+                                        <template is="dom-if" if="{{isAuthorized}}">
+                                            <div class="container flex-horizontal" id="[[req.id]]">
+                                                <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+                                                <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                                                    <!--<emoji-selector suffix></emoji-selector>-->
+                                                </paper-input>
+                                                <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+                                            </div>
+                                        </template>
+                                    </iron-collapse>
+
+                                </div>
+
+                                <div class="editForm">
+
+                                    <paper-input class="editTitle" class="title" value="{{req.title}}"></paper-input>
+                                    <paper-textarea value="{{req.description}}"></paper-textarea>
+                                    <paper-button raised on-tap="saveEditReq" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
+                                    <paper-button raised on-tap="cancelRequirement" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+
+                                </div>
+
+                            </paper-material>
+                        </template>
+                    </template>
+
+                    <template is="dom-if" if="{{activeOption}}" restamp>
+                        <template is="dom-if" if="{{req.realized}}">
+                            <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+                                <div class="reqbody">
+
+                                    <div class="req-icons layout horizontal center">
+                                        <paper-checkbox></paper-checkbox>
+                                        <template is="dom-if" if="{{!isAuthorized}}">
+                                            <paper-icon-button icon="star-border" disabled></paper-icon-button>
+                                        </template>
+                                        <template is="dom-if" if="{{isAuthorized}}">
+                                            <template is="dom-if" if="{{userVoted(req.userVoted)}}">
+                                                <paper-icon-button class="colored" icon="star"></paper-icon-button>
+                                            </template>
+                                            <template is="dom-if" if="{{!userVoted(req.userVoted)}}">
+                                                <paper-icon-button icon="star-border" disabled></paper-icon-button>
+                                            </template>
+                                        </template>
+                                        <div>[[req.upVotes]]</div>
+                                        <template is="dom-if" if="{{isAuthorized}}">
+                                            <paper-menu-button horizontal-align="right" vertical-align="top">
+                                                <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                                                <paper-menu id="componentInfoMenu" class="dropdown-content">
+                                                    <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
+                                                    <paper-item on-tap="undoRequirement"><i18n-msg msgid="markAsUnDone"></i18n-msg></paper-item>
+                                                    <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
+                                                </paper-menu>
+                                            </paper-menu-button>
+                                        </template>
+                                    </div>
+                                    <paper-toolbar class="title" on-tap="onRequirementTap">
+                                        <div class="title">[[req.title]]</div>
+                                        <div class="bottom fit helper">
+                                            <time is="relative-time" datetime$="[[req.creation_time]]"></time>
+                                            <i18n-msg msgid="by"></i18n-msg>
+                                            <req-user user="[[req.creator]]" normal-view></req-user>
+                                        </div>
+                                    </paper-toolbar>
+
+                                </div>
+
+                                <div class="line"></div>
+
+                                <div class="contributers">
+                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
+                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[req.leadDeveloperId]]" full-view></req-user></div>
+                                    <template is="dom-if" if="{{!isEmpty(req.developers)}}">
+                                        <div><i18n-msg msgid="developers"></i18n-msg>:
+                                            <template is="dom-repeat" items="{{req.developers}}" as="dev">
+                                                <div  style="display:inline-block">
+                                                    <req-user user-id$="[[dev.id]]" mini></req-user>
+                                                    <paper-tooltip>{{dev.userName}}</paper-tooltip>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template is="dom-if" if="{{!isEmpty(req.followers)}}">
+                                        <div><i18n-msg msgid="followers"></i18n-msg>:
+                                            <template is="dom-repeat" items="{{req.followers}}" as="foll">
+                                                <div  style="display:inline-block">
+                                                    <req-user user-id$="[[foll.id]]" mini></req-user>
+                                                    <paper-tooltip>{{foll.userName}}</paper-tooltip>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <div class="line"></div>
+                                </div>
+
+                                <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
+                                <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
+
+                                <div class="comments">
+
+                                    <iron-collapse>
+                                        <h4><i18n-msg msgid="comments"></i18n-msg></h4>
+                                        <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]"></comments-list>
+                                        <template is="dom-if" if="{{isAuthorized}}">
+                                            <div class="container flex-horizontal" id="[[req.id]]">
+                                                <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+                                                <paper-textarea id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                                                    <emoji-selector suffix></emoji-selector>
+                                                </paper-textarea>
+                                                <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+                                            </div>
+                                        </template>
+                                    </iron-collapse>
+
+                                </div>
+
+                            </paper-material>
+                        </template>
+                    </template>
+                </div>
+            </template>
         </template>
 
         <paper-toast id="toast" text="[[feedback]]"></paper-toast>
@@ -332,9 +514,17 @@
 
             Polymer({
                 is: 'requirements-list',
+                listeners: {
+                    'change': 'addToSelectedReq'
+                },
                 properties: {
                     componentId: {
                         type: Number
+                    },
+                    selected: {
+                        type: String,
+                        notify: true,
+                        value: "active"
                     },
                     baseHref: String,
                     resourceURL: {
@@ -345,6 +535,11 @@
                         type: Array,
                         notify: true
                     },
+                    selectedRequirements: {
+                        type: Array,
+                        value: [],
+                        notify: true
+                    },
                     newComment: {
                         type: String
                     },
@@ -353,7 +548,15 @@
                     body: Object,
                     postResponse: Object,
                     feedback: String,
-                    header: Object,
+                    header: {
+                        type:Object,
+                        notify: true
+                    },
+                    parameters:{
+                        type:Object,
+                        notify: true,
+                        value: {per_page: 60}
+                    },
                     elem: Object,
                     isFollower: {
                         type: Boolean,
@@ -381,11 +584,44 @@
                         type: Array,
                         value: [],
                         notify: true
+                    },
+                    list: {
+                        type: Boolean,
+                        notify: true,
+                        observer: "_hasEnoughItems"
+                    },
+                    activeOption: {
+                        type: Boolean,
+                        notify: true,
+                        value: false
                     }
                 },
 
+                observers: [
+                    'manageSelReq(selectedRequirements.splices)',
+                    'computeRealized(selected)'
+                ],
+
                 ready: function () {
                     this.i18n = this.$.i18n;
+                },
+
+                computeRealized: function(selected){
+                    if(selected === "active"){
+                        this.activeOption = false;
+                    } else {
+                        this.activeOption = true;
+                    }
+                },
+
+                _hasEnoughItems: function () {
+                    if (!this.list){
+                        var n = Math.floor(this.offsetWidth / 300);
+                        var free = this.offsetWidth - n * (300 + 20);
+                        this.style.paddingLeft = "" + free / 2 + "px";
+                    } else {
+                        this.style.paddingLeft = "0px";
+                    }
                 },
 
                 computeResourceURL: function (baseHref, componentId) {
@@ -444,6 +680,108 @@
                     req.method = "DELETE";
                     req.url = this.baseHref + "/requirements/" + reqId + "/vote";
                     req.generateRequest();
+                },
+
+                showOnHover: function(e){
+                    var chb = e.currentTarget.querySelector("paper-checkbox");
+                    chb.style.display = "block";
+                },
+
+                hideOnOut: function (e) {
+                    var chb = e.currentTarget.querySelector("paper-checkbox");
+                    if (!chb.checked){
+                        chb.style.display = "none";
+                    }
+                },
+
+                manageSelReq: function(selReq){
+                    if(this.selectedRequirements.length !== 0){
+                        document.querySelector(".tools").style.display = "block";
+                    }
+                },
+
+                addToSelectedReq: function(e){
+                    var id = e.target.parentNode.parentNode.parentNode.id;
+                    if (e.target.checked){
+                        this.push('selectedRequirements', id);
+                    } else {
+                        var index = this.selectedRequirements.indexOf(id);
+                        if (index > -1) {
+                            this.splice('selectedRequirements', index, 1);
+                        }
+                    }
+                },
+
+                downloadRequirements: function(e){
+                    var selReq = [];
+                    for (var i=0; i < this.selectedRequirements.length; i++){
+                        for (var j=0; j < this.requirements.length; j++){
+                            if (parseInt(this.selectedRequirements[i]) === this.requirements[j].id){
+                                selReq.push(this.requirements[j]);
+                            }
+                        }
+                    }
+
+//                    console.log(selReq);
+
+                    //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+                    var arrData = typeof selReq != 'object' ? JSON.parse(selReq) : selReq;
+
+                    var CSV = '';
+                    //Set Report title in first row or line
+
+                    CSV += "Requirements of " + arrData[0].components[0].name + '\r\n\n';
+
+                    var row = "TITLE, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, COMPONENT";
+
+                    //append Label row with line break
+                    CSV += row + '\r\n';
+
+                    //1st loop is to extract each row
+                    for (var i = 0; i < arrData.length; i++) {
+                        var row = "";
+
+                        row += '"' + arrData[i].title + '",';
+                        row += '"' + arrData[i].description + '",';
+                        row += '"' + arrData[i].creation_time + '",';
+                        row += '"' + arrData[i].creator.userName + '",';
+                        row += '"' + arrData[i].developers.length + '",';
+                        row += '"' + arrData[i].followers.length + '",';
+                        row += '"' + arrData[i].components[0].name + '",';
+
+                        row.slice(0, row.length - 1);
+
+                        //add a line break after each row
+                        CSV += row + '\r\n';
+                    }
+
+                    if (CSV == '') {
+                        alert("Invalid data");
+                        return;
+                    }
+
+                    //Generate a file name
+                    var fileName = arrData[0].components[0].name + "_";
+                    //this will remove the blank-spaces from the title and replace it with an underscore
+                    fileName += "Requirements".replace(/ /g,"_");
+
+                    //Initialize file format you want csv or xls
+                    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
+
+                    console.log(uri);
+
+                    //this trick will generate a temp <a /> tag
+                    var link = document.createElement("a");
+                    link.href = uri;
+
+                    //set the visibility hidden so it will not effect on your web-layout
+                    link.style = "visibility:hidden";
+                    link.download = fileName + ".csv";
+
+                    //this part will append the anchor tag and remove it after automatic click
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 },
 
                 addComment: function(e){
@@ -517,6 +855,36 @@
                         "realized": dateString
                     });
 
+                    request.generateRequest();
+                },
+
+                closeTools: function(){
+                    document.getElementById("tools").style.display = "none";
+                    for (var i=0; i < this.selectedRequirements.length; i++){
+                        document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").checked = false;
+                        document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").style.display = "none";
+                    }
+                    this.selectedRequirements = [];
+                },
+
+                undoRequirement: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    var request = this.$.postUpdateRequirement;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+
+                    request.url = this.baseHref + "/requirements/" + element.id;
+                    request.body = JSON.stringify({
+                        "id": parseInt(element.id),
+                        "realized": null
+                    });
+                    console.log(request.url, request.body);
                     request.generateRequest();
                 },
 
@@ -806,7 +1174,7 @@
                         }
                         return txt;
                     }
-            }
+                }
             });
 
         })();

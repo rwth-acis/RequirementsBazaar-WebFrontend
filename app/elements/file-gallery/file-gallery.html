@@ -1,0 +1,74 @@
+<link rel="import" href="../../components/polymer/polymer.html">
+
+<dom-module id="file-gallery">
+    <template>
+        <style is="custom-style">
+            #expandedImg {
+                width: 100%;
+            }
+        </style>
+
+        <div>
+            <template is="dom-repeat" items="{{attachments}}">
+                <img style="width:50px; height:50px;" src="[[item.fileUrl]]" on-tap="toggle">
+            </template>
+        </div>
+
+        <template is="dom-if" if="{{!grid}}">
+            <iron-collapse id="collapseImg">
+                <img id="expandedImg" on-tap="toggle">
+            </iron-collapse>
+        </template>
+
+        <template is="dom-if" if="{{grid}}">
+            <paper-dialog id="imgPopup">
+                <paper-dialog-scrollable>
+                    <img id="popupImg">
+                </paper-dialog-scrollable>
+            </paper-dialog>
+        </template>
+
+    </template>
+
+    <script>
+        (function () {
+//            'use strict';
+
+            Polymer({
+                is: 'file-gallery',
+                properties: {
+                    attachments: {
+                        type: Array,
+                        notify: true
+                    },
+                    grid: {
+                        type: Boolean,
+                        value: false,
+                        notify: true
+                    }
+                },
+
+                toggle: function(e){
+                    if (this.grid){
+                        document.getElementById("popupImg").src = e.currentTarget.src;
+                        document.getElementById("imgPopup").open();
+                    } else {
+                        if (!document.getElementById("collapseImg").opened){
+                            document.getElementById("expandedImg").src = e.currentTarget.src;
+                            document.getElementById("collapseImg").show();
+                        } else {
+                            if (document.getElementById("expandedImg").src === e.currentTarget.src){
+                                document.getElementById("collapseImg").toggle();
+                            } else {
+                                document.getElementById("expandedImg").src = e.currentTarget.src;
+                            }
+                        }
+                    }
+                }
+
+            });
+        })
+        ();
+    </script>
+
+</dom-module>

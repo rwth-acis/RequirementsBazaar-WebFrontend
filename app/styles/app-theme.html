@@ -180,10 +180,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         bottom: 0px;
         right: 80px;
         width: 350px;
-        /*height: 350px;*/
         margin-bottom: 0px;
-        /*overflow: grow;*/
         background-color: white;
+        max-height: none !important;
+    }
+
+    paper-dialog.expand {
+        width: 70%;
+        overflow: scroll;
     }
 
     paper-dialog.user {
@@ -224,6 +228,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         paper-toolbar.tall .app-name {
             font-size: 24px;
             font-weight: 400;
+        }
+
+        .filterButton{
+            padding-top: 40px;
+            font-size: medium;
         }
 
         #drawer .paper-toolbar {
@@ -268,9 +277,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         #searchReq {
-            margin-top: 22px;
+            display: block;
+            position: absolute;
+            margin-top: 0px;
+            padding: 40px;
+            padding-top: 0px;
             margin-bottom: 0px;
             width:100%;
+        }
+
+        .filtering {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: -20px;
+            font-size: 16px;
         }
 
         .hidden-mobile {

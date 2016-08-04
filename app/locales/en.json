@@ -269,6 +269,11 @@
     "message": "Mark as done"
   },
 
+  "markAsUnDone": {
+    "description": "...",
+    "message": "Re-Open"
+  },
+
   "followRequirement": {
     "description": "...",
     "message": "Follow Requirement"

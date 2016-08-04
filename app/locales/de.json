@@ -24,6 +24,11 @@
     "message": "Höre auf deine Benutzer"
   },
 
+  "markAsUnDone": {
+    "description": "...",
+    "message": "Re-Aktivisieren"
+  },
+
   "project": {
     "description": "...",
     "message": "Projekt"

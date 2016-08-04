@@ -44,7 +44,7 @@ a {
 }
 
 .highlight:hover {
-    font-weight: 600;
+    text-decoration: underline !important;
     color: #0baa68;
 }
 
@@ -64,6 +64,25 @@ paper-icon-button {
 
 .editHeader {
     display: block;
+}
+
+.expand-button{
+    position: absolute;
+    right: 0px;
+    top: 15px;
+}
+
+.filterGroup {
+    display: inline-flex;
+    font-size: 16px !important;
+}
+
+#searchReq {
+    display: inline-flex;
+    max-width: 200px;
+    margin-left: auto;
+    position: absolute;
+    right: 20px;
 }
 
 .cmpTitle {
@@ -117,6 +136,12 @@ paper-icon-button {
 
 #componentInfoMenu{
     z-index: 10;
+}
+
+.filterButton{
+    font-size: medium;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .paper-tooltip-0 #tooltip.paper-tooltip {
