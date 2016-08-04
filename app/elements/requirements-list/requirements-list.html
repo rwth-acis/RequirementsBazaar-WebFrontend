@@ -617,8 +617,8 @@
 
                 _hasEnoughItems: function () {
                     if (!this.list){
-                        var n = Math.floor(this.offsetWidth / 300);
-                        var free = this.offsetWidth - n * (300 + 20);
+                        var n = Math.floor((window.innerWidth - 300) / 300);
+                        var free = (window.innerWidth - 300) - n * (300 + 20);
                         this.style.paddingLeft = "" + free / 2 + "px";
                     } else {
                         this.style.paddingLeft = "0px";

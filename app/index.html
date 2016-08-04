@@ -507,10 +507,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                         <!--<paper-slider id="grade" pin value="65" style="width:100%;" disabled></paper-slider>-->
                                                     <!--</div>-->
                                                     <div style="flex-grow: 1; margin:20px;">
-                                                        <paper-radio-group selected="list">
+                                                        <paper-radio-group selected="{{view}}">
                                                             <paper-radio-button name="list" on-tap="showListView">List View</paper-radio-button>
                                                             <br>
-                                                            <paper-radio-button name="quarantine" on-tap="showQuarantineView">Grid View</paper-radio-button>
+                                                            <paper-radio-button name="grid" on-tap="showQuarantineView">Grid View</paper-radio-button>
                                                         </paper-radio-group>
                                                     </div>
                                                 </div>

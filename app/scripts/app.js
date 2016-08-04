@@ -20,7 +20,7 @@
     app.baseHref = "https://requirements-bazaar.org/betabazaar";
     app.activityHref = "https://requirements-bazaar.org/betaactivities";
     
-    app.baseUrl = '';
+    app.baseUrl = '/';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
@@ -42,6 +42,7 @@
     app.loading = false;
     app.selectedFilter = "active";
     app.list = true;
+    app.view = "list";
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -70,6 +71,7 @@
 
     document.addEventListener('HTMLImportsLoaded', function() {
         var lang = null;
+        var view = null;
         if (document.cookie != ''){
             var cookies = document.cookie.split(';');
             for(var i = 0; i <cookies.length; i++) {
@@ -77,8 +79,16 @@
                 while (c.charAt(0)==' ') {
                     c = c.substring(1);
                 }
+                console.log(c);
                 if (c.indexOf("lang=") == 0) {
                     lang = c.substring("lang=".length, c.length);
+                }
+                if (c.indexOf("view=") == 0) {
+                    view = c.substring("view=".length, c.length);
+                    app.view = view;
+                    if (view === "grid"){
+                        app.list = false;
+                    }
                 }
             }
         }
@@ -254,11 +264,13 @@
 
     app.showQuarantineView = function(){
         this.list = false;
+        document.cookie = "view= grid";
         //document.querySelector("requirements-list").style.display = "none";
     };
 
     app.showListView = function(){
         this.list = true;
+        document.cookie = "view= list";
         // document.querySelector("requirements-list").style.display = "block";
     };
 
