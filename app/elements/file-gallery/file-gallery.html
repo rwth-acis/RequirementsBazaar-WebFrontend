@@ -6,11 +6,16 @@
             #expandedImg {
                 width: 100%;
             }
+
+            .imgView {
+                width: 100%;
+                margin: 0 auto;
+            }
         </style>
 
         <div>
             <template is="dom-repeat" items="{{attachments}}">
-                <img style="width:50px; height:50px;" src="[[item.fileUrl]]" on-tap="toggle">
+                <img style="width:50px; height:50px;" src="[[item.fileUrl]]" on-tap="toggle" att="[[item.title]]">
             </template>
         </div>
 
@@ -21,10 +26,11 @@
         </template>
 
         <template is="dom-if" if="{{grid}}">
-            <paper-dialog id="imgPopup">
-                <paper-dialog-scrollable>
-                    <img id="popupImg">
-                </paper-dialog-scrollable>
+            <paper-dialog id="imgPopup" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+                <h2 id="imgTitle"></h2>
+                <div>
+                    <img id="popupImg"class="imgView">
+                </div>
             </paper-dialog>
         </template>
 
@@ -51,6 +57,7 @@
                 toggle: function(e){
                     if (this.grid){
                         document.getElementById("popupImg").src = e.currentTarget.src;
+                        document.getElementById("imgTitle").innerHTML = e.currentTarget.att;
                         document.getElementById("imgPopup").open();
                     } else {
                         if (!document.getElementById("collapseImg").opened){
