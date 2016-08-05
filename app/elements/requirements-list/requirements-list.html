@@ -270,13 +270,22 @@
                                     <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
                                     <div class="card-content" class="truncate">{{req.description}}</div>
                                     <div class="card-actions">
-                                        <paper-button noink on-tap="openCommentsDialog" atr="[[req.id]]">
+                                        <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
                                             <iron-icon icon="editor:mode-comment"></iron-icon>
                                         </paper-button>
-                                        <paper-button noink>
-                                            <iron-icon icon="star"></iron-icon>
-                                            {{req.upVotes}}
-                                        </paper-button>
+
+                                        <template is="dom-if" if="{{!isAuthorized}}">
+                                            <paper-button noink> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
+                                        </template>
+                                        <template is="dom-if" if="{{isAuthorized}}">
+                                            <template is="dom-if" if="{{userVoted(req.userVoted)}}">
+                                                <paper-button noink on-tap="starDelRequest"> <iron-icon class="colored" icon="star"></iron-icon> {{req.upVotes}}</paper-button>
+                                            </template>
+                                            <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
+                                                <paper-button noink on-tap="starRequest"> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
+                                            </template>
+                                        </template>
+
                                     </div>
                                 </paper-card>
                             </div>
@@ -685,7 +694,12 @@
 
                 starRequest: function(e){
                     var req = this.$.starReq;
-                    var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    var reqId;
+                    if (this.list) {
+                        reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    } else {
+                        reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
+                    }
                     req.method = "POST";
                     req.url = this.baseHref + "/requirements/" + reqId + "/vote";
                     req.body = JSON.stringify({
@@ -697,7 +711,12 @@
 
                 starDelRequest: function(e){
                     var req = this.$.starReq;
-                    var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    var reqId;
+                    if (this.list) {
+                        reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    } else {
+                        reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
+                    }
                     req.method = "DELETE";
                     req.url = this.baseHref + "/requirements/" + reqId + "/vote";
                     req.generateRequest();
