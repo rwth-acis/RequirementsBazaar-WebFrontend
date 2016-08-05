@@ -232,6 +232,23 @@
             </div>
         </paper-dialog>
 
+        <paper-dialog id="commentsDialog" with-backdrop on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
+            style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
+            <h2><i18n-msg msgid="comments"></i18n-msg></h2>
+            <p style="max-height: 80%;">
+                <comments-list></comments-list>
+                <template is="dom-if" if="{{isAuthorized}}">
+                    <div class="container flex-horizontal">
+                        <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+                        <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                        </paper-input>
+                        <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
+                    </div>
+                </template>
+            </p>
+
+        </paper-dialog>
+
         <paper-material elevation="5" id="tools" class="tools">
             <span>{{selectedRequirements.length}} Requirements selected.</span>
             <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
@@ -253,6 +270,9 @@
                                     <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
                                     <div class="card-content" class="truncate">{{req.description}}</div>
                                     <div class="card-actions">
+                                        <paper-button noink on-tap="openCommentsDialog" atr="[[req.id]]">
+                                            <iron-icon icon="editor:mode-comment"></iron-icon>
+                                        </paper-button>
                                         <paper-button noink>
                                             <iron-icon icon="star"></iron-icon>
                                             {{req.upVotes}}
@@ -785,6 +805,22 @@
                     document.body.removeChild(link);
                 },
 
+                postGridComment: function(e){
+                    var reqId = e.currentTarget.parentNode.parentNode.querySelector("comments-list").requirementId;
+                    var request = this.$.postCommentRequest;
+                    if (this.newComment != null && this.newComment != ''){
+                        request.body = JSON.stringify({
+                            "requirementId": reqId,
+                            "message": this.newComment
+                        });
+                        request.generateRequest();
+                    } else {
+                        this.feedback = this.i18n.getMsg('');
+                        this.$.toast.open();
+                    }
+                    this.newComment = '';
+                },
+
                 addComment: function(e){
                     var currentReqId = e.currentTarget.parentNode.id;
                     var currentInpId = currentReqId + 'input';
@@ -804,14 +840,28 @@
                 },
 
                 handleResponseComment: function(data){
-                    var str = ''+ this.postResponse.requirementId + 'input';
-                    var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
-                    el.load();
+                    if (this.list){
+                        var str = ''+ this.postResponse.requirementId + 'input';
+                        var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
+                        el.load();
+                    } else {
+                        document.querySelector("comments-list").load();
+                        document.querySelector("comments-list").parentNode.querySelector("paper-input").value = null;
+                    }
+
+                },
+
+                showSendButton: function(e){
+                    var fab = e.currentTarget.parentNode.querySelector("#fab");
+                    if (this.newComment){
+                        fab.style.display = 'block';
+                    } else {
+                        fab.style.display = 'none';
+                    }
                 },
 
                 showButton: function(e){
                     var fabId = e.currentTarget.parentNode.id + 'fab';
-                    console.log(fabId);
                     if (this.newComment){
                         document.getElementById(fabId).style.display = 'block';
                     } else {
@@ -951,6 +1001,16 @@
                 createModal: function(e){
                     this.$.modal.open();
                     this.elem = e.currentTarget;
+                },
+
+                openCommentsDialog: function(e){
+                    this.$.commentsDialog.querySelector("comments-list").requirementId = e.currentTarget.atr;
+                    this.$.commentsDialog.querySelector("comments-list").load();
+                    this.$.commentsDialog.open();
+                },
+
+                deleteLeftoverComment: function(e){
+                    this.$.commentsDialog.querySelector("comments-list").comments = [];
                 },
 
 
@@ -1147,7 +1207,11 @@
                     this.buttons.push(e);
                     if (e.keyCode === 13) {
                         if (! this.buttons[this.buttons.length-1].ctrlKey){
-                            this.addComment(e);
+                            if (this.list){
+                                this.addComment(e);
+                            } else {
+                                this.postGridComment(e);
+                            }
                             e.preventDefault();
                         } else {
                             e.currentTarget.value += "\n";

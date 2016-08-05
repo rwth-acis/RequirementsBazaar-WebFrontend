@@ -298,6 +298,14 @@ paper-icon-button {
     #landing-top-image{
         margin-top: 50px;
     }
+
+    #commentsDialog{
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        margin: 0 0 0 0;
+    }
+
     #landing-top-motivation {
         display: flex;
         justify-content: space-around;

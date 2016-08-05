@@ -97,16 +97,29 @@
                     },
                     comments: {
                         type: Array,
-                        notify: true
+                        notify: true,
+                        observer: "_commentsLoaded"
                     },
                     hideNoComments: {
                         type: Boolean,
                         computed: 'computeHide(comments)'
                     },
                     elem: Object,
+                    loaded: {
+                        type: Boolean,
+                        value: false
+                    }
                 },
 
                 ready: function () {
+                },
+
+                _commentsLoaded: function() {
+                    if(this.comments === []){
+                        this.loaded = false;
+                    } else {
+                        this.loaded = true;
+                    }
                 },
 
                 computeResourceURL: function(requirementId) {
