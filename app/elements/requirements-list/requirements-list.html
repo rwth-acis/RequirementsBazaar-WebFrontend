@@ -517,7 +517,6 @@
                                             <div class="container flex-horizontal" id="[[req.id]]">
                                                 <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
                                                 <paper-textarea id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
-                                                    <emoji-selector suffix></emoji-selector>
                                                 </paper-textarea>
                                                 <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
                                             </div>
@@ -1223,9 +1222,8 @@
                 },
 
                 checkForEnter: function (e) {
-                    this.buttons.push(e);
                     if (e.keyCode === 13) {
-                        if (! this.buttons[this.buttons.length-1].ctrlKey){
+                        if (!e.ctrlKey){
                             if (this.list){
                                 this.addComment(e);
                             } else {
@@ -1233,7 +1231,7 @@
                             }
                             e.preventDefault();
                         } else {
-                            e.currentTarget.value += "\n";
+                            e.currentTarget.value += "<br/>";
                         }
                     }
                 },
