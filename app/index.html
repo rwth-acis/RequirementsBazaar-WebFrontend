@@ -559,7 +559,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <h2><i18n-msg msgid="createRequirement"></i18n-msg></h2>
                                 <paper-button class="expand-button" on-tap="expandDialog"><iron-icon icon="fullscreen"></iron-icon></paper-button>
                                 <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle" on-keydown="checkEnter"></paper-input>
-                                <paper-textarea label="[[formDesc]]" id="newRequirementDesc" on-keydown="checkEnter" max-rows="4"></paper-textarea>
+                                <paper-textarea label="[[formDesc]]" id="newRequirementDesc" max-rows="4" on-keydown="checkEnter"></paper-textarea>
+                                <div class="helper-highlight">Ctrl + Enter for new line</div>
                                 <vaadin-upload
                                         target="https://requirements-bazaar.org/betafileservice/files/"
                                         method="POST"

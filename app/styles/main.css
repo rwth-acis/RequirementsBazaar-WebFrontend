@@ -130,6 +130,16 @@ paper-icon-button {
     color: #838383;
 }
 
+.helper-highlight{
+    color: #669900;
+    font-size: small;
+    margin-top: -5px;
+}
+
+.description {
+    white-space: pre-wrap;
+}
+
 .leader {
     float:right;
 }

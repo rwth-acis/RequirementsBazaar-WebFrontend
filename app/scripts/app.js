@@ -386,7 +386,6 @@
                     "components": components,
                     "attachments": attachments
                 });
-                console.log(attachments);
                 request.generateRequest();
                 this.$.newRequirementTitle.value = null;
                 this.$.newRequirementDesc.value = null;
@@ -405,6 +404,9 @@
     app.checkEnter = function (e){
         if (e.keyCode === 13) {
             if (e.ctrlKey){
+                if (this.$.newRequirementDesc.focused){
+                    this.$.newRequirementDesc.value += "\n";
+                }
                 return 0;
             }
             var request = document.querySelector('#postRequirementRequest');
@@ -419,6 +421,7 @@
                     "projectId": parseInt(app.params.projectId),
                     "components": components});
                 request.generateRequest();
+                e.preventDefault();
                 this.$.newRequirementTitle.value = '';
                 this.$.newRequirementDesc.value = '';
                 this.$.createRequirement.close();
