@@ -16,15 +16,14 @@
     var app = document.querySelector('#app');
 
     // url for requests for beta or live environment
-    
     app.baseHref = "https://requirements-bazaar.org/betabazaar";
     app.activityHref = "https://requirements-bazaar.org/betaactivities";
     
-    app.baseUrl = '/';
+    app.baseUrl = '';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        // app.baseUrl = '/';
+        // app.baseUrl = '/beta/';
     }
 
     /**
@@ -375,7 +374,7 @@
                             title: this.files[i].name,
                             fileUrl: this.files[i].xhr.response,
                             mimeType: "image/*",
-                            identifier: this.files[i].xhr.response.slice(-20)
+                            identifier: this.files[i].xhr.response.match(/\d+/g)[0]
                         };
                         attachments.push(obj);
                     }
@@ -387,6 +386,7 @@
                     "components": components,
                     "attachments": attachments
                 });
+                console.log(attachments);
                 request.generateRequest();
                 this.$.newRequirementTitle.value = null;
                 this.$.newRequirementDesc.value = null;
