@@ -181,7 +181,19 @@
                             this.$.toast.open();
                         }
                         e.currentTarget.value = '';
+                        e.currentTarget.style.display = "none";
                     }
+                },
+
+                handleResponseComment: function(){
+                    if (this.postResponse){
+                        this.load();
+                    }
+                },
+
+                errorHandler: function (e, detail){
+                    document.getElementById("superToast").text = detail.error.message;
+                    document.getElementById("superToast").open();
                 },
 
                 computeHide: function(comments) {
