@@ -49,7 +49,18 @@
             content-type="application/json"
             method="DELETE"
             on-response="handleResponseDeleteComm">
+        </iron-ajax>
 
+        <iron-ajax
+                id="postCommentRequest"
+                handle-as="json"
+                content-type="application/json"
+                method="POST"
+                url="{{baseHref}}/comments"
+                headers="{{header}}"
+                on-response="handleResponseComment"
+                last-response="{{postResponse}}"
+                on-error="errorHandler">
         </iron-ajax>
 
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteComment" entry-animation="fade-in-animation"
@@ -65,18 +76,40 @@
         <div class="noComments" hidden="[[hideNoComments]]"><i18n-msg msgid="noComments"></i18n-msg></div>
 
         <template is="dom-repeat" items="{{comments}}">
-            <div class="comment layout horizontal">
-                <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
-                <div class="layout vertical flex">
-                    <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
-                    <div class="info helper">
-                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
+            <template is="dom-if" if="{{!isReply(item)}}">
+                <div class="comment layout horizontal">
+                    <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
+                    <div class="layout vertical flex">
+                        <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
+                        <div class="info helper">
+                            <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
+                        </div>
+                        <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="checkForEnter"></paper-input>
                     </div>
+                    <template is="dom-if" if="{{isCreator(item.creatorId)}}">
+                        <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
+                    </template>
+                    <template is="dom-if" if="{{isAuthorized()}}">
+                        <paper-icon-button icon="reply" on-tap="showReplyInput"></paper-icon-button>
+                    </template>
                 </div>
-                <template is="dom-if" if="{{isCreator(item.creatorId)}}">
-                    <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
-                </template>
-            </div>
+            </template>
+
+            <template is="dom-if" if="{{isReply(item)}}">
+                <div class="comment layout horizontal" style="margin-left: 50px;">
+                    <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
+                    <div class="layout vertical flex">
+                        <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
+                        <div class="info helper">
+                            <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
+                        </div>
+                        <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="checkForEnter"></paper-input>
+                    </div>
+                    <template is="dom-if" if="{{isCreator(item.creatorId)}}">
+                        <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
+                    </template>
+                </div>
+            </template>
         </template>
 
     </template>
@@ -100,6 +133,7 @@
                         notify: true,
                         observer: "_commentsLoaded"
                     },
+                    baseHref: String,
                     hideNoComments: {
                         type: Boolean,
                         computed: 'computeHide(comments)'
@@ -108,6 +142,10 @@
                     loaded: {
                         type: Boolean,
                         value: false
+                    },
+                    header: {
+                        type:Object,
+                        notify: true
                     }
                 },
 
@@ -124,6 +162,26 @@
 
                 computeResourceURL: function(requirementId) {
                     return app.baseHref + '/requirements/' + requirementId + '/comments/';
+                },
+
+                checkForEnter: function(e){
+                    if (e.keyCode === 13) {
+                        var text = e.currentTarget.value;
+                        var replyTo = e.currentTarget.attr;
+                        var request = this.$.postCommentRequest;
+                        if (text != null && text != ''){
+                            request.body = JSON.stringify({
+                                "requirementId": this.requirementId,
+                                "message": text,
+                                "belongsToComment": parseInt(replyTo)
+                            });
+                            request.generateRequest();
+                        } else {
+                            this.feedback = this.i18n.getMsg('');
+                            this.$.toast.open();
+                        }
+                        e.currentTarget.value = '';
+                    }
                 },
 
                 computeHide: function(comments) {
@@ -153,6 +211,12 @@
                     }
                 },
 
+                isAuthorized: function(){
+                    if(app.isAuthorized)
+                        return true;
+                    else return false;
+                },
+
                 isCreator: function(usrId){
                     if(app.isAuthorized){
                         if (usrId == app.currentUser.id){
@@ -160,6 +224,21 @@
                         }
                     }
                     return false;
+                },
+
+                isReply: function(item){
+                    if (item.belongsToComment){
+                        return true;
+                    }
+                    return false;
+                },
+
+                showReplyInput: function(e){
+                    if (e.currentTarget.parentNode.querySelector("paper-input").style.display === "none"){
+                        e.currentTarget.parentNode.querySelector("paper-input").style.display= "block";
+                    } else {
+                        e.currentTarget.parentNode.querySelector("paper-input").style.display= "none";
+                    }
                 },
 
                 validateUrl: function(requirementDesc) {
