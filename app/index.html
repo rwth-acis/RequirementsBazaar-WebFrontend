@@ -411,6 +411,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax id="componentInfoLoader"
                                last-response="{{component}}"></iron-ajax>
 
+                    <iron-ajax
+                            id="followComp"
+                            handle-as="json"
+                            content-type="application/json"
+                            method="POST"
+                            headers="{{header}}"
+                            on-response="handleResponseFollowReq"
+                            on-error="errorHandler"></iron-ajax>
+
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer">
                         <paper-scroll-header-panel drawer fixed>
@@ -447,6 +456,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <paper-menu id="componentInfoMenu" class="dropdown-content">
                                                 <paper-item on-tap="setDefault"><i18n-msg msgid="setAsDefault"></i18n-msg></paper-item>
                                                 <!--<paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>-->
+                                                <paper-item on-tap="followComponent"><i18n-msg msgid="followComponent"></i18n-msg></paper-item>
                                                 <paper-item on-tap="editComponent"><i18n-msg msgid="editComponent"></i18n-msg></paper-item>
                                                 <paper-item on-tap="createModal2"><i18n-msg msgid="deleteComponent"></i18n-msg></paper-item>
                                             </paper-menu>

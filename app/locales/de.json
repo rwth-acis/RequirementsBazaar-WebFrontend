@@ -417,5 +417,15 @@
   "defaultComp": {
     "description": "...",
     "message": "Hauptkomponente"
+  },
+
+  "followComponent": {
+    "description": "...",
+    "message": "Komponenten Folgen"
+  },
+
+  "fdbFollowComp": {
+    "description": "...",
+    "message": "Du folgest jetzt diesen Komponent"
   }
 }

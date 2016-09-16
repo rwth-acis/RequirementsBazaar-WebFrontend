@@ -417,5 +417,15 @@
   "defaultComp": {
     "description": "...",
     "message": "komponenti kryesor"
+  },
+
+  "followComponent": {
+    "description": "...",
+    "message": "Ndiq Komponentin"
+  },
+
+  "fdbFollowComp": {
+    "description": "...",
+    "message": "Ti je ndjekes i komponentit"
   }
 }

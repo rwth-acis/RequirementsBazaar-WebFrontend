@@ -815,6 +815,19 @@
 
         request.generateRequest();
     };
+
+    //TODO fix it to work with the beta
+    app.followComponent = function(){
+        var request = this.$.followComp;
+
+        request.url = this.baseHref + "/components/" + this.component.id + "/follow";
+        request.generateRequest();
+    };
+    
+    app.handleResponseFollowReq = function(data){
+        var tst = document.getElementById('superToast');
+        tst.text = this.i18n.getMsg('fdbFollowComp');
+    };
     
     app.activitiesLoaded = function (){
         if (this.activities === null){

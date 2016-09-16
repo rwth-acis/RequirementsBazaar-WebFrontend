@@ -417,5 +417,15 @@
   "defaultComp": {
     "description": "...",
     "message": "Component default"
+  },
+
+  "followComponent": {
+    "description": "...",
+    "message": "Follow Component"
+  },
+
+  "fdbFollowComp": {
+    "description": "...",
+    "message": "You are now a follower of this component"
   }
 }
