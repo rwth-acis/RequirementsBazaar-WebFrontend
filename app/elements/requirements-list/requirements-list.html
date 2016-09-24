@@ -750,6 +750,9 @@
                         if (index > -1) {
                             this.splice('selectedRequirements', index, 1);
                         }
+                        if (this.selectedRequirements.length === 0){
+                            document.querySelector(".tools").style.display = "none";
+                        }
                     }
                 },
 
