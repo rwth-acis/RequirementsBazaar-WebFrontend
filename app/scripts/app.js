@@ -302,18 +302,33 @@
             document.getElementById('requirementsList').toggleCollapsible(null, el);
         } else {
             this.loadComponentInfo(componentId);
+
+            app.selectedFilter = "active";
             setTimeout(function(){
                 el = document.getElementById(requirementId);
-                if (el === null) {
-                    app.$.superToast.text = i18n.getMsg('noRequirement');
-                    app.$.superToast.show();
-                    page.redirect('/projects/' + app.params.projectId + "/components/" + componentId);
-                    return 0;
+                if (el != null){
+                    var scroller = document.getElementById("mainScroller");
+                    scroller.scroll(el.offsetTop - 70, true);
+                    document.getElementById('requirementsList').toggleCollapsible(null, el);
                 }
-                var scroller = document.getElementById("mainScroller");
-                scroller.scroll(el.offsetTop - 70, true);
-                document.getElementById('requirementsList').toggleCollapsible(null, el);
-            }, 1300);
+
+                if (el == null){
+                    app.selectedFilter = "realized";
+                    setTimeout(function(){
+                        el = document.getElementById(requirementId);
+                        if (el == null) {
+                            app.$.superToast.text = i18n.getMsg('noRequirement');
+                            app.$.superToast.show();
+                            page.redirect('/projects/' + app.params.projectId + "/components/" + componentId);
+                            return 0;
+                        }
+                        var scroller = document.getElementById("mainScroller");
+                        scroller.scroll(el.offsetTop - 70, true);
+                        document.getElementById('requirementsList').toggleCollapsible(null, el);
+                    }, 1300);
+                }
+
+            }, 2000);
         }
         
         window.scrollTo(0, 75);
