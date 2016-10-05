@@ -560,6 +560,15 @@
 
     app.toggNotDrawer = function(e){
         var fabs = document.getElementsByClassName('fabAdd');
+        if (app.route == "projects"){
+            document.querySelectorAll("#scrollThreshold")[0].scrollTarget = document.querySelector("#letsscroll1").scroller;
+        }
+        if (app.route == "project-info"){
+            document.querySelectorAll("#scrollThreshold")[1].scrollTarget = document.querySelector("#letsscroll2").scroller;
+        }
+        if (app.route == "component-info"){
+            document.querySelectorAll("#scrollThreshold")[2].scrollTarget = document.querySelector("#letsscroll3").scroller;
+        }
         document.querySelector('activity-tracker').refresh();
         //opens right drawer
         if (document.querySelector('#drawer').style.display != 'block'){
