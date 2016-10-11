@@ -1,7 +1,7 @@
 RequirementsBazaar-WebFrontend
 ==============================
 
-This project is a web interface to the requirements bazaar service. The project aims to offer user and developers a platform on which to cooperate. To read more about the idea behind requirements bazaar read the service page. This Web interface is built as a single page application using AngularJS 1.3 and Polymer 1.0.
+This project is a web interface to the requirements bazaar service. The project aims to offer user and developers a platform on which to cooperate. To read more about the idea behind requirements bazaar read the service page. This Web interface is built as a single page application using web components library, Polymer 1.0.
 
 
 Develop
@@ -12,9 +12,9 @@ Make sure node.js and git are installed
 ```
 node --version && npm --version && git --version
 ```
-Install bower and grunt
+Install bower and gulp
 ```
-npm install --global bower grunt-cli
+npm install --global bower gulp
 ```
 Navigate to project folder and install dependencies and bower components with
 ```
@@ -22,22 +22,14 @@ npm install
 bower install
 ```
 
-Start in browser
+Start locally in browser
 ```
-grunt serve
+gulp serve
 ```
 
 Usage / Deployment
 ----------
-If you are not interested in developing the project, then you can just build the project, then follow the steps in develop section until ```grunt serve```. Now open the bazaarServiceConfig.js file in app/scripts/config and fill in the bazaar service location and the oauth endpoint. After changing this run ```grunt build```. This creates a dist folder where you can find the minimized project, that can be deployed on any web server.
-
-How to build using Docker
--------------------------
-Docker is providing the simplest way to run the Requirement Bazaar Web-Frontend. Just follow the following steps if Docker is already installed on your system:
-
- 1. `git clone this repo` 
- 2. `docker build -t rwthacis/reqbaz-webfrontend .` 
- 3. ``docker run -i -t --rm -v `pwd`:/build rwthacis/reqbaz-webfrontend``
+If you are not interested in developing the project, then you can just build the project, then follow the steps in develop section until ```gulp serve```. In order to build the project and vulcanise ready for deployment you can just run ```gulp serve:dist```. This will create a dist folder where it will minimize all components and styling data in compact files ready to upload.
 
 
 License
