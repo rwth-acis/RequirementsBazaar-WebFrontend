@@ -42,6 +42,8 @@
     app.selectedFilter = "active";
     app.list = true;
     app.view = "list";
+    app.isFollowerComp = false;
+    app.isFollowerProj = false;
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -840,17 +842,60 @@
         request.generateRequest();
     };
 
-    //TODO fix it to work with the beta
     app.followComponent = function(){
         var request = this.$.followComp;
 
-        request.url = this.baseHref + "/components/" + this.component.id + "/follow";
+        request.url = this.baseHref + "/components/" + this.component.id + "/followers";
         request.generateRequest();
     };
     
-    app.handleResponseFollowReq = function(data){
+    app.handleResponseFollowComp = function(){
         var tst = document.getElementById('superToast');
-        tst.text = this.i18n.getMsg('fdbFollowComp');
+        tst.text = "You are now a follower";
+        this.isFollowerComp = true;
+        tst.open();
+    };
+
+    app.unfollowComponent = function(){
+        var request = this.$.unfollowComp;
+
+        request.url = this.baseHref + "/components/" + this.params.componentId + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseUnFollowComp = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are removed from followers of this component";
+        this.isFollowerComp = false;
+        tst.open();
+    };    
+    
+    app.followProject = function(){
+        var request = this.$.followProj;
+
+        request.url = this.baseHref + "/projects/" + this.project.id + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseFollowProj = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are now a follower";
+        this.isFollowerProj = true;
+        tst.open();
+    };
+
+    app.unfollowProject = function(){
+        var request = this.$.unfollowProj;
+
+        request.url = this.baseHref + "/projects/" + this.params.projectId + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseUnFollowProj = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are removed from followers of this project";
+        this.isFollowerProj = false;
+        tst.open();
     };
     
     app.activitiesLoaded = function (){
