@@ -44,6 +44,9 @@
     app.view = "list";
     app.isFollowerComp = false;
     app.isFollowerProj = false;
+    app.code = null;
+    app.clientId = "9322a2a3c9243f383987";
+    app.clientSecret = "eab3ca43ce7e91d843ff0c29862985872b474606";
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -68,6 +71,14 @@
         // imports are loaded and elements have been registered
         this.i18n = document.querySelector('i18n-msg');
         app.loaded = true;
+    });
+
+    window.addEventListener('storage', function(e) {
+        if (e.key === "code"){
+            app.code = e.newValue;
+            app.$.settingsDialog.close();
+            app.getGithubAccessToken();
+        }
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
@@ -904,6 +915,27 @@
         } else {
             return true;
         }
+    };
+
+    app.loginGit = function() {
+        window.open ("https://github.com/login/oauth/authorize?client_id=" + this.clientId, "Github Login", "width=700,height=700");
+    };
+
+    app.getGithubAccessToken = function(){
+        var request = document.getElementById("loginGithub");
+        request.url = "https://github.com/login/oauth/access_token";
+        request.params = {
+            "client_id": this.clientId,
+            "client_secret": this.clientSecret,
+            "code": this.code
+        };
+        request.generateRequest();
+    };
+
+    app.handleSignInGithub = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "Your account is now connected to Github";
+        tst.open();
     };
 
     function sayHi() {

@@ -10,11 +10,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <script src="../components/page/page.js"></script>
 <script>
+
     window.addEventListener('WebComponentsReady', function() {
 
         // We use Page.js for routing. This is a Micro
         // client-side router inspired by the Express router
         // More info: https://visionmedia.github.io/page.js/
+
+        if (decodeURIComponent((new RegExp('[?|&]' + "code" + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null){
+            localStorage.setItem("code", decodeURIComponent((new RegExp('[?|&]' + "code" + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null);
+            window.close();
+        }
+//        if(app.code !== null){
+//            app.getGithubAccessToken();
+//        }
 
         if (window.location.port === '') {  // if production
             page.base(app.baseUrl.replace(/\/$/, ''));
