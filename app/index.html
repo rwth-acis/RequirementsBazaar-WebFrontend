@@ -91,6 +91,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             on-response="handleSignInGithub"
             on-error="errorHandler"></iron-ajax>
 
+    <iron-ajax
+            id="getGithubRepos"
+            handle-as="json"
+            url="https://api.github.com/user/repos"
+            params='{"access_token": "e5ccdd283de36c2b3da5cb5fbcbb94792407870c"}'
+            content-type="application/json"
+            method="GET"
+            last-response="{{repositories}}"
+            on-error="errorHandler"></iron-ajax>
+
     <paper-toast id="superToast"></paper-toast>
     <i18n-msg class="i18nlabel"></i18n-msg>
 
@@ -618,7 +628,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         base-href="{{baseHref}}"
                                         selected="{{selectedFilter}}"
                                         loading="{{loading}}"
-                                        list="{{list}}"></requirements-list>
+                                        list="{{list}}"
+                                        repositories="{{repositories}}"></requirements-list>
                             </div>
 
                             <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"

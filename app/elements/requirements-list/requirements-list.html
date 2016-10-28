@@ -220,6 +220,15 @@
                 last-response="{{postResponse}}"
                 on-error="errorHandler"></iron-ajax>
 
+        <iron-ajax
+                id="postIssueGit"
+                handle-as="json"
+                content-type="application/json"
+                params='{"access_token": "e5ccdd283de36c2b3da5cb5fbcbb94792407870c"}'
+                method="POST"
+                on-response="handleResponseGithubIssue"
+                on-error="errorHandler"></iron-ajax>
+
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
             <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
@@ -244,7 +253,26 @@
                     </div>
                 </template>
             </p>
+        </paper-dialog>
 
+        <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
+            <h2>Your Github Repositories</h2>
+                <paper-dialog-scrollable>
+                    <iron-selector id="selRepo" selected="0">
+                        <template is="dom-repeat" items="[[repositories]]">
+                            <paper-item>
+                                <paper-item-body two-line>
+                                    <div>{{item.name}}</div>
+                                    <div secondary>{{item.description}}</div>
+                                </paper-item-body>
+                            </paper-item>
+                        </template>
+                    </iron-selector>
+                </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm autofocus>POST</paper-button>
+            </div>
         </paper-dialog>
 
         <paper-material elevation="5" id="tools" class="tools">
@@ -351,6 +379,7 @@
                                                     <template is="dom-if" if="{{!isDeveloper}}">
                                                         <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
                                                     </template>
+                                                    <paper-item on-tap="becomeLeadDeveloper">Become Lead Developer</paper-item>
                                                     <template is="dom-if" if="{{isDeveloper}}">
                                                         <paper-item on-tap="undevelopReq"><i18n-msg msgid="undevelopRequirement"></i18n-msg></paper-item>
                                                     </template>
@@ -845,8 +874,42 @@
                     this.newComment = '';
                 },
 
-                showGithubRepos: function(){
-                    window.open("https://github.com/showcases/github-browser-extensions", "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=500,height=700");
+                showGithubRepos: function(e){
+                    this.$.reposContainer.open();
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+                    this.selReq = element.id;
+                },
+
+                onRepoDialogClosed: function (e) {
+                    if(e.detail.confirmed){
+                        var title = "";
+                        var desc = "";
+                        for (var i=0; i < this.requirements.length; i++){
+                            if (this.requirements[i].id == this.selReq){
+                                title = this.requirements[i].title;
+                                desc = this.requirements[i].description;
+                            }
+                            break;
+                        }
+                        var req = this.$.postIssueGit;
+                        req.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
+                        req.body = JSON.stringify({
+                            "title": title,
+                            "body": desc
+                        });
+                        req.generateRequest();
+                    } else {
+                        this.$.selRepo.selected = "0";
+                        this.selReq = null;
+                    }
                 },
 
                 addComment: function(e){
@@ -902,6 +965,11 @@
                     this.$.toast.open();
                 },
 
+                handleResponseGithubIssue: function(){
+                    this.$.toast.text = "Issue posted to Github";
+                    this.$.toast.open();
+                },
+
                 doneRequirement: function(e){
                     var el = e.currentTarget;
                     var tag = "PAPER-MATERIAL";
@@ -934,6 +1002,25 @@
                         "realized": dateString
                     });
 
+                    request.generateRequest();
+                },
+
+                becomeLeadDeveloper: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    var request = this.$.postUpdateRequirement;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+                    request.url = this.baseHref + "/requirements/" + element.id;
+                    request.body = JSON.stringify({
+                        "id": parseInt(element.id),
+                        "leadDeveloperId": app.currentUser.id
+                    });
                     request.generateRequest();
                 },
 

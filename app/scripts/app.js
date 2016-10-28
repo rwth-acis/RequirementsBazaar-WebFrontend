@@ -669,10 +669,6 @@
         return rt === 'home';
     };
 
-    app.handleSigninSuccess = function(e){
-        console.log(e);
-    };
-
     app.editProject = function(e){
         document.querySelector('.editHeader').style.display = 'none';
         document.querySelector('.editForm').style.display = 'block';
@@ -817,6 +813,7 @@
             page("/projects");
         }
         window.setTimeout(sayHi,500);
+        this.$.getGithubRepos.generateRequest();
     };
 
     app.toggleProjects = function () {
