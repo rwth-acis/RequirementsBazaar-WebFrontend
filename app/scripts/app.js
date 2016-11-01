@@ -42,8 +42,8 @@
     app.selectedFilter = "active";
     app.list = true;
     app.view = "list";
-    app.isFollowerComp = false;
     app.isFollowerProj = false;
+    app.followsComp = false;
     app.code = null;
     app.clientId = "9322a2a3c9243f383987";
     app.clientSecret = "eab3ca43ce7e91d843ff0c29862985872b474606";
@@ -255,6 +255,10 @@
         // load requirements-list
         this.$.requirementsList.componentId = componentId;
         this.$.requirementsList.load();
+    };
+
+    app.handleNewComp = function(){
+        this.isFollowerComp();
     };
 
     app.closeCollapses = function(){
@@ -860,8 +864,24 @@
     app.handleResponseFollowComp = function(){
         var tst = document.getElementById('superToast');
         tst.text = "You are now a follower";
-        this.isFollowerComp = true;
+        this.followsComp = true;
         tst.open();
+    };
+
+    app.isFollowerComp = function(){
+        if (this.component.followers.length == 0){
+            this.followsComp = false;
+            return;
+        }
+
+        for (var i=0; i < this.component.followers.length; i++){
+            if (this.component.followers[i].id == this.currentUser.id){
+                this.followsComp = true;
+                return;
+            }
+        }
+
+        this.followsComp = false;
     };
 
     app.unfollowComponent = function(){
@@ -874,7 +894,7 @@
     app.handleResponseUnFollowComp = function(){
         var tst = document.getElementById('superToast');
         tst.text = "You are removed from followers of this component";
-        this.isFollowerComp = false;
+        this.followsComp = false;
         tst.open();
     };    
     

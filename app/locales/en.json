@@ -457,5 +457,10 @@
   "unfdbFollowProj": {
     "description": "...",
     "message": "You are not a follower of this project"
+  },
+
+  "becomeLeadDeveloper": {
+    "description": "...",
+    "message": "Become Lead Developer"
   }
 }
