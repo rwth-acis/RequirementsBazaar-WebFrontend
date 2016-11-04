@@ -224,9 +224,18 @@
                 id="postIssueGit"
                 handle-as="json"
                 content-type="application/json"
-                params='{"access_token": ""}'
+                params='{"access_token": "7d0f1a4f058c2029e319d63730aeb57ed28ca13a"}'
                 method="POST"
                 on-response="handleResponseGithubIssue"
+                on-error="errorHandler"></iron-ajax>
+
+        <iron-ajax
+                id="getSearchGit"
+                handle-as="json"
+                content-type="application/json"
+                method="GET"
+                last-response="{{searchRepositories}}"
+                on-response="showRepoSearchResults"
                 on-error="errorHandler"></iron-ajax>
 
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
@@ -258,8 +267,11 @@
         <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
             <h2>Your Github Repositories</h2>
                 <paper-dialog-scrollable>
+                    <paper-input id="searchGithubRepo" label="Search a Github Repository" on-keydown="searchGithubRepo">
+                        <iron-icon icon="search" prefix></iron-icon>
+                    </paper-input>
                     <iron-selector id="selRepo" selected="0">
-                        <template is="dom-repeat" items="[[repositories]]">
+                        <template is="dom-repeat" items$="{{repositories}}" id="repoElements">
                             <paper-item>
                                 <paper-item-body two-line>
                                     <div>{{item.name}}</div>
@@ -368,7 +380,7 @@
                                                 <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                                 <paper-menu id="componentInfoMenu" class="dropdown-content">
                                                     <paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>
-                                                    <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
+                                                    <paper-item on-tap="toggleContributers" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
                                                     <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
                                                     <template is="dom-if" if="{{!isFollower}}">
                                                         <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
@@ -404,13 +416,13 @@
                                 <div class="line"></div>
 
                                 <div class="contributers">
-                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
-                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[req.leadDeveloperId]]" full-view></req-user></div>
+                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
+                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
                                     <template is="dom-if" if="{{!isEmpty(req.developers)}}">
                                         <div><i18n-msg msgid="developers"></i18n-msg>:
                                             <template is="dom-repeat" items="{{req.developers}}" as="dev">
                                                 <div  style="display:inline-block">
-                                                    <req-user user-id$="[[dev.id]]" mini></req-user>
+                                                    <req-user user="[[dev]]" mini></req-user>
                                                     <paper-tooltip>{{dev.userName}}</paper-tooltip>
                                                 </div>
                                             </template>
@@ -420,7 +432,7 @@
                                         <div><i18n-msg msgid="followers"></i18n-msg>:
                                             <template is="dom-repeat" items="{{req.followers}}" as="foll">
                                                 <div  style="display:inline-block">
-                                                    <req-user user-id$="[[foll.id]]" mini></req-user>
+                                                    <req-user user="[[foll]]" mini></req-user>
                                                     <paper-tooltip>{{foll.userName}}</paper-tooltip>
                                                 </div>
                                             </template>
@@ -655,6 +667,11 @@
                         type: Boolean,
                         notify: true,
                         value: false
+                    },
+                    repositories: {
+                        type: Object,
+                        notify: true,
+                        reflectToAttribute: true
                     }
                 },
 
@@ -769,6 +786,10 @@
                     if(this.selectedRequirements.length !== 0){
                         document.querySelector(".tools").style.display = "block";
                     }
+                },
+
+                showRepoSearchResults: function(){
+                    this.repositories = this.searchRepositories.items;
                 },
 
                 addToSelectedReq: function(e){
@@ -1270,7 +1291,7 @@
                         if (el.tagName === tag)
                             element = el;
                     }
-                    if (this.showContributers){
+                    if (element.querySelector('.contributers').style.display != "none"){
                         e.currentTarget.innerText = i18n.getMsg('showContributers');
                         element.querySelector('.contributers').style.display = "none";
                     } else {
@@ -1329,6 +1350,17 @@
                             e.preventDefault();
                         } else {
                             e.currentTarget.value += "<br/>";
+                        }
+                    }
+                },
+
+                searchGithubRepo: function (e) {
+                    if (e.keyCode === 13) {
+                        if (!e.ctrlKey){
+                            var req = this.$.getSearchGit;
+                            req.url = "https://api.github.com/search/repositories?q=" + encodeURIComponent(this.$.searchGithubRepo.value);
+                            req.generateRequest();
+                            e.preventDefault();
                         }
                     }
                 },

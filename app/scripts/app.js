@@ -263,6 +263,7 @@
 
     app.closeCollapses = function(){
         var elems = document.querySelectorAll("iron-collapse");
+        var requirements = document.querySelectorAll(".req");
         for (var i=1; i< elems.length; i++){
             if (elems[i].opened){
                 elems[i].hide();
@@ -270,6 +271,15 @@
                     elems[i].parentNode.parentNode.elevation = 1;
                     elems[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
                 }
+            }
+        }
+
+        for (var i=0; i< requirements.length; i++){
+            var element = requirements[i];
+            if (element.querySelector('.contributers').style.display != "none") {
+                element.querySelector("#contr").innerText = i18n.getMsg('showContributers');
+                document.querySelector("requirements-list").showContributers = false;
+                element.querySelector('.contributers').style.display = "none";
             }
         }
     };
