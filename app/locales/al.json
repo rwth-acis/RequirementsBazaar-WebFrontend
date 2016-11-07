@@ -24,11 +24,6 @@
     "message": "Dëgjoni përdoruesit tuaj"
   },
 
-  "markAsUnDone": {
-    "description": "...",
-    "message": "Ri-Hape"
-  },
-
   "project": {
     "description": "...",
     "message": "Projekt"
@@ -274,6 +269,11 @@
     "message": "Markoje të bërë"
   },
 
+  "markAsUnDone": {
+    "description": "...",
+    "message": "Ri-Hape"
+  },
+
   "followRequirement": {
     "description": "...",
     "message": "Ndiqe Kërkesë"
@@ -424,8 +424,68 @@
     "message": "Ndiq Komponentin"
   },
 
+  "unfollowComponent": {
+    "description": "...",
+    "message": "Mos e ndiq Komponentin"
+  },
+
   "fdbFollowComp": {
     "description": "...",
     "message": "Ti je ndjekes i komponentit"
+  },
+
+  "unfdbFollowComp": {
+    "description": "...",
+    "message": "You are not a follower of this component"
+  },
+
+  "followProject": {
+    "description": "...",
+    "message": "Ndiq Projektin"
+  },
+
+  "unfollowProject": {
+    "description": "...",
+    "message": "Mos e ndiq Projektin"
+  },
+
+  "fdbFollowProj": {
+    "description": "...",
+    "message": "Jeni ndjekes i projektit"
+  },
+
+  "unfdbFollowProj": {
+    "description": "...",
+    "message": "Nuk jeni me ndjekes i ketij projekti"
+  },
+
+  "becomeLeadDeveloper": {
+    "description": "...",
+    "message": "Behu Lider"
+  },
+
+  "new-projects": {
+    "description": "...",
+    "message": "Projekte te reja"
+  },
+
+  "active-req": {
+    "description": "...",
+    "message": "Active Requirements"
+  },
+
+  "realized-req": {
+    "description": "...",
+    "message": "Realized Requirements"
+  },
+
+  "list-view": {
+    "description": "...",
+    "message": "List View"
+  },
+
+  "grid-view": {
+    "description": "...",
+    "message": "Grid View"
   }
 }

@@ -220,23 +220,23 @@
                 last-response="{{postResponse}}"
                 on-error="errorHandler"></iron-ajax>
 
-        <iron-ajax
-                id="postIssueGit"
-                handle-as="json"
-                content-type="application/json"
-                params='{"access_token": "7d0f1a4f058c2029e319d63730aeb57ed28ca13a"}'
-                method="POST"
-                on-response="handleResponseGithubIssue"
-                on-error="errorHandler"></iron-ajax>
+        <!--<iron-ajax-->
+                <!--id="postIssueGit"-->
+                <!--handle-as="json"-->
+                <!--content-type="application/json"-->
+                <!--params='{"access_token": ""}'-->
+                <!--method="POST"-->
+                <!--on-response="handleResponseGithubIssue"-->
+                <!--on-error="errorHandler"></iron-ajax>-->
 
-        <iron-ajax
-                id="getSearchGit"
-                handle-as="json"
-                content-type="application/json"
-                method="GET"
-                last-response="{{searchRepositories}}"
-                on-response="showRepoSearchResults"
-                on-error="errorHandler"></iron-ajax>
+        <!--<iron-ajax-->
+                <!--id="getSearchGit"-->
+                <!--handle-as="json"-->
+                <!--content-type="application/json"-->
+                <!--method="GET"-->
+                <!--last-response="{{searchRepositories}}"-->
+                <!--on-response="showRepoSearchResults"-->
+                <!--on-error="errorHandler"></iron-ajax>-->
 
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
@@ -379,7 +379,7 @@
                                             <paper-menu-button horizontal-align="right" vertical-align="top">
                                                 <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                                 <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                                    <paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>
+                                                    <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
                                                     <paper-item on-tap="toggleContributers" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
                                                     <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
                                                     <template is="dom-if" if="{{!isFollower}}">

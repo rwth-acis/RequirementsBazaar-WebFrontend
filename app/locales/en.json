@@ -462,5 +462,30 @@
   "becomeLeadDeveloper": {
     "description": "...",
     "message": "Become Lead Developer"
+  },
+
+  "new-projects": {
+    "description": "...",
+    "message": "New Projects"
+  },
+
+  "active-req": {
+    "description": "...",
+    "message": "Active Requirements"
+  },
+
+  "realized-req": {
+    "description": "...",
+    "message": "Realized Requirements"
+  },
+
+  "list-view": {
+    "description": "...",
+    "message": "List View"
+  },
+
+  "grid-view": {
+    "description": "...",
+    "message": "Grid View"
   }
 }

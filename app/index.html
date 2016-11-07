@@ -285,7 +285,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                               on-tap="onCreateProjectTap"
                                               horizontal-align="right"
                                               vertical-align="top"
-                                              style="position:absolute;right:10px;"> <i18n-msg msgid="new"></i18n-msg> <i18n-msg msgid="project"></i18n-msg></paper-button>
+                                              style="position:absolute;right:10px;"> <i18n-msg msgid="new-projects"></i18n-msg></i18n-msg></paper-button>
                             </template>
 
                             <h2><i18n-msg msgid="projects"></i18n-msg></h2>
@@ -573,9 +573,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                 <div style="display: flex; flex-wrap: wrap;">
                                                     <div style="flex-grow: 1; margin:20px;">
                                                         <paper-radio-group selected="{{selectedFilter}}">
-                                                            <paper-radio-button name="active">Active Requirements</paper-radio-button>
+                                                            <paper-radio-button name="active"><i18n-msg msgid="active-req"></i18n-msg></paper-radio-button>
                                                             <br>
-                                                            <paper-radio-button name="realized">Realized Requirements</paper-radio-button>
+                                                            <paper-radio-button name="realized"><i18n-msg msgid="realized-req"></i18n-msg></paper-radio-button>
                                                         </paper-radio-group>
                                                     </div>
 
@@ -587,9 +587,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                     <!--</div>-->
                                                     <div style="flex-grow: 1; margin:20px;">
                                                         <paper-radio-group selected="{{view}}">
-                                                            <paper-radio-button name="list" on-tap="showListView">List View</paper-radio-button>
+                                                            <paper-radio-button name="list" on-tap="showListView"><i18n-msg msgid="list-view"></i18n-msg></paper-radio-button>
                                                             <br>
-                                                            <paper-radio-button name="grid" on-tap="showQuarantineView">Grid View</paper-radio-button>
+                                                            <paper-radio-button name="grid" on-tap="showQuarantineView"><i18n-msg msgid="grid-view"></i18n-msg></paper-radio-button>
                                                         </paper-radio-group>
                                                     </div>
                                                 </div>
@@ -641,14 +641,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle" on-keydown="checkEnter"></paper-input>
                                 <paper-textarea label="[[formDesc]]" id="newRequirementDesc" max-rows="4" on-keydown="checkEnter"></paper-textarea>
                                 <div class="helper-highlight">Ctrl + Enter for new line</div>
-                                <vaadin-upload
-                                        target="https://requirements-bazaar.org/betafileservice/files/"
-                                        method="POST"
-                                        timeout="300000"
-                                        files="{{files}}"
-                                        max-file-size="10000000"
-                                        accept="image/*">
-                                </vaadin-upload>
+                                <!--<vaadin-upload-->
+                                        <!--target="https://requirements-bazaar.org/betafileservice/files/"-->
+                                        <!--method="POST"-->
+                                        <!--timeout="300000"-->
+                                        <!--files="{{files}}"-->
+                                        <!--max-file-size="10000000"-->
+                                        <!--accept="image/*">-->
+                                <!--</vaadin-upload>-->
 
                                 <div class="buttons">
                                     <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>

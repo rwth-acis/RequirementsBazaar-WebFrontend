@@ -77,7 +77,7 @@
 
         <template is="dom-repeat" items="{{comments}}">
             <template is="dom-if" if="{{!isReply(item)}}">
-                <div class="comment layout horizontal">
+                <div class="comment layout horizontal" attr="{{item.Id}}">
                     <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
                     <div class="layout vertical flex">
                         <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
@@ -96,14 +96,14 @@
             </template>
 
             <template is="dom-if" if="{{isReply(item)}}">
-                <div class="comment layout horizontal" style="margin-left: 50px;">
+                <div class="comment layout horizontal replies" style="margin-left: 40px;" attr="{{item.belongsToComment}}">
                     <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
                     <div class="layout vertical flex">
                         <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
                         <div class="info helper">
                             <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
                         </div>
-                        <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="checkForEnter"></paper-input>
+                        <!--<paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="checkForEnter"></paper-input>-->
                     </div>
                     <template is="dom-if" if="{{isCreator(item.creatorId)}}">
                         <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
@@ -247,6 +247,7 @@
 
                 showReplyInput: function(e){
                     if (e.currentTarget.parentNode.querySelector("paper-input").style.display === "none"){
+                        console.log(e.currentTarget.parentNode);
                         e.currentTarget.parentNode.querySelector("paper-input").style.display= "block";
                     } else {
                         e.currentTarget.parentNode.querySelector("paper-input").style.display= "none";

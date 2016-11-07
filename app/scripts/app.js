@@ -45,8 +45,7 @@
     app.isFollowerProj = false;
     app.followsComp = false;
     app.code = null;
-    app.clientId = "9322a2a3c9243f383987";
-    app.clientSecret = "eab3ca43ce7e91d843ff0c29862985872b474606";
+
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -264,6 +263,7 @@
     app.closeCollapses = function(){
         var elems = document.querySelectorAll("iron-collapse");
         var requirements = document.querySelectorAll(".req");
+        console.log(requirements);
         for (var i=1; i< elems.length; i++){
             if (elems[i].opened){
                 elems[i].hide();
