@@ -471,21 +471,21 @@
 
   "active-req": {
     "description": "...",
-    "message": "Active Requirements"
+    "message": "Kerkesa aktive"
   },
 
   "realized-req": {
     "description": "...",
-    "message": "Realized Requirements"
+    "message": "Kerkesa te realizuara"
   },
 
   "list-view": {
     "description": "...",
-    "message": "List View"
+    "message": "List"
   },
 
   "grid-view": {
     "description": "...",
-    "message": "Grid View"
+    "message": "Grid"
   }
 }
