@@ -424,8 +424,68 @@
     "message": "Follow Component"
   },
 
+  "unfollowComponent": {
+    "description": "...",
+    "message": "Un-follow Component"
+  },
+
   "fdbFollowComp": {
     "description": "...",
     "message": "You are now a follower of this component"
+  },
+
+  "unfdbFollowComp": {
+    "description": "...",
+    "message": "You are not a follower of this component"
+  },
+
+  "followProject": {
+    "description": "...",
+    "message": "Follow Project"
+  },
+
+  "unfollowProject": {
+    "description": "...",
+    "message": "Un-follow Project"
+  },
+
+  "fdbFollowProj": {
+    "description": "...",
+    "message": "You are now a follower of this project"
+  },
+
+  "unfdbFollowProj": {
+    "description": "...",
+    "message": "You are not a follower of this project"
+  },
+
+  "becomeLeadDeveloper": {
+    "description": "...",
+    "message": "Become Lead Developer"
+  },
+
+  "new-projects": {
+    "description": "...",
+    "message": "New Projects"
+  },
+
+  "active-req": {
+    "description": "...",
+    "message": "Active Requirements"
+  },
+
+  "realized-req": {
+    "description": "...",
+    "message": "Realized Requirements"
+  },
+
+  "list-view": {
+    "description": "...",
+    "message": "List View"
+  },
+
+  "grid-view": {
+    "description": "...",
+    "message": "Grid View"
   }
 }

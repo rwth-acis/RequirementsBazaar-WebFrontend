@@ -24,11 +24,6 @@
     "message": "Höre auf deine Benutzer"
   },
 
-  "markAsUnDone": {
-    "description": "...",
-    "message": "Re-Aktivisieren"
-  },
-
   "project": {
     "description": "...",
     "message": "Projekt"
@@ -274,6 +269,11 @@
     "message": "Markiere als erledigt"
   },
 
+  "markAsUnDone": {
+    "description": "...",
+    "message": "Reaktivieren"
+  },
+
   "followRequirement": {
     "description": "...",
     "message": "Anforderung folgen"
@@ -421,11 +421,71 @@
 
   "followComponent": {
     "description": "...",
-    "message": "Komponenten Folgen"
+    "message": "Komponenten folgen"
+  },
+
+  "unfollowComponent": {
+    "description": "...",
+    "message": "Komponente nicht mehr folgen"
   },
 
   "fdbFollowComp": {
     "description": "...",
-    "message": "Du folgest jetzt diesen Komponent"
+    "message": "Du folgst jetzt dieser Komponente"
+  },
+
+  "unfdbFollowComp": {
+    "description": "...",
+    "message": "Du folgst dieser Komponente nicht"
+  },
+
+  "followProject": {
+    "description": "...",
+    "message": "Projekt folgen"
+  },
+
+  "unfollowProject": {
+    "description": "...",
+    "message": "Projekt nicht folgen"
+  },
+
+  "fdbFollowProj": {
+    "description": "...",
+    "message": "Du folgst diesem Projekt jetzt"
+  },
+
+  "unfdbFollowProj": {
+    "description": "...",
+    "message": "Du folgst diesem Projekt nicht"
+  },
+
+  "becomeLeadDeveloper": {
+    "description": "...",
+    "message": "Hauptentwickler werden"
+  },
+
+  "new-projects": {
+    "description": "...",
+    "message": "Projekt erstellen"
+  },
+
+  "active-req": {
+    "description": "...",
+    "message": "Aktive Anforderungen"
+  },
+
+  "realized-req": {
+    "description": "...",
+    "message": "Realisierte Anforderungen"
+  },
+
+  "list-view": {
+    "description": "...",
+    "message": "Listenansicht"
+  },
+
+  "grid-view": {
+    "description": "...",
+    "message": "Gitteransicht"
   }
 }

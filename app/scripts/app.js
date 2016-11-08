@@ -16,14 +16,14 @@
     var app = document.querySelector('#app');
 
     // url for requests for beta or live environment
-    app.baseHref = "https://requirements-bazaar.org/betabazaar";
-    app.activityHref = "https://requirements-bazaar.org/betaactivities";
+    app.baseHref = "https://requirements-bazaar.org/bazaar";
+    app.activityHref = "https://requirements-bazaar.org/activities";
     
     app.baseUrl = '';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        // app.baseUrl = '/beta/';
+        app.baseUrl = '/';
     }
 
     /**
@@ -42,6 +42,10 @@
     app.selectedFilter = "active";
     app.list = true;
     app.view = "list";
+    app.isFollowerProj = false;
+    app.followsComp = false;
+    app.code = null;
+
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -66,6 +70,14 @@
         // imports are loaded and elements have been registered
         this.i18n = document.querySelector('i18n-msg');
         app.loaded = true;
+    });
+
+    window.addEventListener('storage', function(e) {
+        if (e.key === "code"){
+            app.code = e.newValue;
+            app.$.settingsDialog.close();
+            // app.getGithubAccessToken();
+        }
     });
 
     document.addEventListener('HTMLImportsLoaded', function() {
@@ -244,8 +256,13 @@
         this.$.requirementsList.load();
     };
 
+    app.handleNewComp = function(){
+        this.isFollowerComp();
+    };
+
     app.closeCollapses = function(){
         var elems = document.querySelectorAll("iron-collapse");
+        var requirements = document.querySelectorAll(".req");
         for (var i=1; i< elems.length; i++){
             if (elems[i].opened){
                 elems[i].hide();
@@ -253,6 +270,15 @@
                     elems[i].parentNode.parentNode.elevation = 1;
                     elems[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
                 }
+            }
+        }
+
+        for (var i=0; i< requirements.length; i++){
+            var element = requirements[i];
+            if (element.querySelector('.contributers').style.display != "none") {
+                element.querySelector("#contr").innerText = i18n.getMsg('showContributers');
+                document.querySelector("requirements-list").showContributers = false;
+                element.querySelector('.contributers').style.display = "none";
             }
         }
     };
@@ -656,10 +682,6 @@
         return rt === 'home';
     };
 
-    app.handleSigninSuccess = function(e){
-        console.log(e);
-    };
-
     app.editProject = function(e){
         document.querySelector('.editHeader').style.display = 'none';
         document.querySelector('.editForm').style.display = 'block';
@@ -804,6 +826,7 @@
             page("/projects");
         }
         window.setTimeout(sayHi,500);
+        // this.$.getGithubRepos.generateRequest();
     };
 
     app.toggleProjects = function () {
@@ -840,17 +863,76 @@
         request.generateRequest();
     };
 
-    //TODO fix it to work with the beta
     app.followComponent = function(){
         var request = this.$.followComp;
 
-        request.url = this.baseHref + "/components/" + this.component.id + "/follow";
+        request.url = this.baseHref + "/components/" + this.component.id + "/followers";
         request.generateRequest();
     };
     
-    app.handleResponseFollowReq = function(data){
+    app.handleResponseFollowComp = function(){
         var tst = document.getElementById('superToast');
-        tst.text = this.i18n.getMsg('fdbFollowComp');
+        tst.text = "You are now a follower";
+        this.followsComp = true;
+        tst.open();
+    };
+
+    app.isFollowerComp = function(){
+        if (this.component.followers.length == 0){
+            this.followsComp = false;
+            return;
+        }
+
+        for (var i=0; i < this.component.followers.length; i++){
+            if (this.component.followers[i].id == this.currentUser.id){
+                this.followsComp = true;
+                return;
+            }
+        }
+
+        this.followsComp = false;
+    };
+
+    app.unfollowComponent = function(){
+        var request = this.$.unfollowComp;
+
+        request.url = this.baseHref + "/components/" + this.params.componentId + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseUnFollowComp = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are removed from followers of this component";
+        this.followsComp = false;
+        tst.open();
+    };    
+    
+    app.followProject = function(){
+        var request = this.$.followProj;
+
+        request.url = this.baseHref + "/projects/" + this.project.id + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseFollowProj = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are now a follower";
+        this.isFollowerProj = true;
+        tst.open();
+    };
+
+    app.unfollowProject = function(){
+        var request = this.$.unfollowProj;
+
+        request.url = this.baseHref + "/projects/" + this.params.projectId + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseUnFollowProj = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are removed from followers of this project";
+        this.isFollowerProj = false;
+        tst.open();
     };
     
     app.activitiesLoaded = function (){
@@ -860,6 +942,27 @@
             return true;
         }
     };
+
+    // app.loginGit = function() {
+    //     window.open ("https://github.com/login/oauth/authorize?client_id=" + this.clientId, "Github Login", "width=700,height=700");
+    // };
+
+    // app.getGithubAccessToken = function(){
+    //     var request = document.getElementById("loginGithub");
+    //     request.url = "https://github.com/login/oauth/access_token";
+    //     request.params = {
+    //         "client_id": this.clientId,
+    //         "client_secret": this.clientSecret,
+    //         "code": this.code
+    //     };
+    //     request.generateRequest();
+    // };
+    //
+    // app.handleSignInGithub = function(){
+    //     var tst = document.getElementById('superToast');
+    //     tst.text = "Your account is now connected to Github";
+    //     tst.open();
+    // };
 
     function sayHi() {
         if (app.currentUser != null) {

@@ -220,6 +220,24 @@
                 last-response="{{postResponse}}"
                 on-error="errorHandler"></iron-ajax>
 
+        <!--<iron-ajax-->
+                <!--id="postIssueGit"-->
+                <!--handle-as="json"-->
+                <!--content-type="application/json"-->
+                <!--params='{"access_token": ""}'-->
+                <!--method="POST"-->
+                <!--on-response="handleResponseGithubIssue"-->
+                <!--on-error="errorHandler"></iron-ajax>-->
+
+        <!--<iron-ajax-->
+                <!--id="getSearchGit"-->
+                <!--handle-as="json"-->
+                <!--content-type="application/json"-->
+                <!--method="GET"-->
+                <!--last-response="{{searchRepositories}}"-->
+                <!--on-response="showRepoSearchResults"-->
+                <!--on-error="errorHandler"></iron-ajax>-->
+
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
             <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
@@ -244,7 +262,29 @@
                     </div>
                 </template>
             </p>
+        </paper-dialog>
 
+        <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
+            <h2>Your Github Repositories</h2>
+                <paper-dialog-scrollable>
+                    <paper-input id="searchGithubRepo" label="Search a Github Repository" on-keydown="searchGithubRepo">
+                        <iron-icon icon="search" prefix></iron-icon>
+                    </paper-input>
+                    <iron-selector id="selRepo" selected="0">
+                        <template is="dom-repeat" items$="{{repositories}}" id="repoElements">
+                            <paper-item>
+                                <paper-item-body two-line>
+                                    <div>{{item.name}}</div>
+                                    <div secondary>{{item.description}}</div>
+                                </paper-item-body>
+                            </paper-item>
+                        </template>
+                    </iron-selector>
+                </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm autofocus>POST</paper-button>
+            </div>
         </paper-dialog>
 
         <paper-material elevation="5" id="tools" class="tools">
@@ -339,7 +379,8 @@
                                             <paper-menu-button horizontal-align="right" vertical-align="top">
                                                 <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                                 <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                                    <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
+                                                    <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
+                                                    <paper-item on-tap="toggleContributers" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
                                                     <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
                                                     <template is="dom-if" if="{{!isFollower}}">
                                                         <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
@@ -350,6 +391,7 @@
                                                     <template is="dom-if" if="{{!isDeveloper}}">
                                                         <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
                                                     </template>
+                                                    <paper-item on-tap="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
                                                     <template is="dom-if" if="{{isDeveloper}}">
                                                         <paper-item on-tap="undevelopReq"><i18n-msg msgid="undevelopRequirement"></i18n-msg></paper-item>
                                                     </template>
@@ -374,13 +416,13 @@
                                 <div class="line"></div>
 
                                 <div class="contributers">
-                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
-                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[req.leadDeveloperId]]" full-view></req-user></div>
+                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
+                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
                                     <template is="dom-if" if="{{!isEmpty(req.developers)}}">
                                         <div><i18n-msg msgid="developers"></i18n-msg>:
                                             <template is="dom-repeat" items="{{req.developers}}" as="dev">
                                                 <div  style="display:inline-block">
-                                                    <req-user user-id$="[[dev.id]]" mini></req-user>
+                                                    <req-user user="[[dev]]" mini></req-user>
                                                     <paper-tooltip>{{dev.userName}}</paper-tooltip>
                                                 </div>
                                             </template>
@@ -390,7 +432,7 @@
                                         <div><i18n-msg msgid="followers"></i18n-msg>:
                                             <template is="dom-repeat" items="{{req.followers}}" as="foll">
                                                 <div  style="display:inline-block">
-                                                    <req-user user-id$="[[foll.id]]" mini></req-user>
+                                                    <req-user user="[[foll]]" mini></req-user>
                                                     <paper-tooltip>{{foll.userName}}</paper-tooltip>
                                                 </div>
                                             </template>
@@ -625,6 +667,11 @@
                         type: Boolean,
                         notify: true,
                         value: false
+                    },
+                    repositories: {
+                        type: Object,
+                        notify: true,
+                        reflectToAttribute: true
                     }
                 },
 
@@ -741,6 +788,10 @@
                     }
                 },
 
+                showRepoSearchResults: function(){
+                    this.repositories = this.searchRepositories.items;
+                },
+
                 addToSelectedReq: function(e){
                     var id = e.target.parentNode.parentNode.parentNode.id;
                     if (e.target.checked){
@@ -844,6 +895,44 @@
                     this.newComment = '';
                 },
 
+                showGithubRepos: function(e){
+                    this.$.reposContainer.open();
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+                    this.selReq = element.id;
+                },
+
+                onRepoDialogClosed: function (e) {
+                    if(e.detail.confirmed){
+                        var title = "";
+                        var desc = "";
+                        for (var i=0; i < this.requirements.length; i++){
+                            if (this.requirements[i].id == this.selReq){
+                                title = this.requirements[i].title;
+                                desc = this.requirements[i].description;
+                            }
+                            break;
+                        }
+                        var req = this.$.postIssueGit;
+                        req.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
+                        req.body = JSON.stringify({
+                            "title": title,
+                            "body": desc
+                        });
+                        req.generateRequest();
+                    } else {
+                        this.$.selRepo.selected = "0";
+                        this.selReq = null;
+                    }
+                },
+
                 addComment: function(e){
                     var currentReqId = e.currentTarget.parentNode.id;
                     var currentInpId = currentReqId + 'input';
@@ -897,6 +986,11 @@
                     this.$.toast.open();
                 },
 
+                handleResponseGithubIssue: function(){
+                    this.$.toast.text = "Issue posted to Github";
+                    this.$.toast.open();
+                },
+
                 doneRequirement: function(e){
                     var el = e.currentTarget;
                     var tag = "PAPER-MATERIAL";
@@ -929,6 +1023,25 @@
                         "realized": dateString
                     });
 
+                    request.generateRequest();
+                },
+
+                becomeLeadDeveloper: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    var request = this.$.postUpdateRequirement;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+                    request.url = this.baseHref + "/requirements/" + element.id;
+                    request.body = JSON.stringify({
+                        "id": parseInt(element.id),
+                        "leadDeveloperId": app.currentUser.id
+                    });
                     request.generateRequest();
                 },
 
@@ -1178,7 +1291,7 @@
                         if (el.tagName === tag)
                             element = el;
                     }
-                    if (this.showContributers){
+                    if (element.querySelector('.contributers').style.display != "none"){
                         e.currentTarget.innerText = i18n.getMsg('showContributers');
                         element.querySelector('.contributers').style.display = "none";
                     } else {
@@ -1237,6 +1350,17 @@
                             e.preventDefault();
                         } else {
                             e.currentTarget.value += "<br/>";
+                        }
+                    }
+                },
+
+                searchGithubRepo: function (e) {
+                    if (e.keyCode === 13) {
+                        if (!e.ctrlKey){
+                            var req = this.$.getSearchGit;
+                            req.url = "https://api.github.com/search/repositories?q=" + encodeURIComponent(this.$.searchGithubRepo.value);
+                            req.generateRequest();
+                            e.preventDefault();
                         }
                     }
                 },
