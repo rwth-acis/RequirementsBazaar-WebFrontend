@@ -81,25 +81,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             method="PUT"
             headers="{{header}}"></iron-ajax>
 
-    <iron-ajax
-            id="loginGithub"
-            handle-as="json"
-            content-type="application/json"
-            headers={'content-type':'application/json'}
-            method="GET"
-            last-response="{{githubToken}}"
-            on-response="handleSignInGithub"
-            on-error="errorHandler"></iron-ajax>
+    <!--<iron-ajax-->
+            <!--id="loginGithub"-->
+            <!--handle-as="json"-->
+            <!--content-type="application/json"-->
+            <!--headers={'content-type':'application/json'}-->
+            <!--method="GET"-->
+            <!--last-response="{{githubToken}}"-->
+            <!--on-response="handleSignInGithub"-->
+            <!--on-error="errorHandler"></iron-ajax>-->
 
-    <iron-ajax
-            id="getGithubRepos"
-            handle-as="json"
-            url="https://api.github.com/user/repos"
-            params='{"access_token": "7d0f1a4f058c2029e319d63730aeb57ed28ca13a"}'
-            content-type="application/json"
-            method="GET"
-            last-response="{{repositories}}"
-            on-error="errorHandler"></iron-ajax>
+    <!--<iron-ajax-->
+            <!--id="getGithubRepos"-->
+            <!--handle-as="json"-->
+            <!--url="https://api.github.com/user/repos"-->
+            <!--params='{"access_token": "7d0f1a4f058c2029e319d63730aeb57ed28ca13a"}'-->
+            <!--content-type="application/json"-->
+            <!--method="GET"-->
+            <!--last-response="{{repositories}}"-->
+            <!--on-error="errorHandler"></iron-ajax>-->
 
     <paper-toast id="superToast"></paper-toast>
     <i18n-msg class="i18nlabel"></i18n-msg>
@@ -173,15 +173,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <i18n-msg msgid="mailDefaultFollow"></i18n-msg>:
                 <paper-toggle-button checked="[[currentUser.emailFollowItems]]" on-tap="changeUserSettingsFollow"></paper-toggle-button>
             </div>
-            <div>
-                Connect Github Account:
-                <template is="dom-if" if="{{!code}}">
-                    <paper-button on-tap="loginGit">Connect Github</paper-button>
-                </template>
-                <template is="dom-if" if="{{code}}">
-                    <div>Logged in</div>
-                </template>
-            </div>
+            <!--<div>-->
+                <!--Connect Github Account:-->
+                <!--<template is="dom-if" if="{{!code}}">-->
+                    <!--<paper-button on-tap="loginGit">Connect Github</paper-button>-->
+                <!--</template>-->
+                <!--<template is="dom-if" if="{{code}}">-->
+                    <!--<div>Logged in</div>-->
+                <!--</template>-->
+            <!--</div>-->
             <div class="buttons">
                 <paper-button dialog-dismiss>Close</paper-button>
             </div>

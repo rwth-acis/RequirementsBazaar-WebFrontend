@@ -16,14 +16,14 @@
     var app = document.querySelector('#app');
 
     // url for requests for beta or live environment
-    app.baseHref = "https://requirements-bazaar.org/betabazaar";
-    app.activityHref = "https://requirements-bazaar.org/betaactivities";
+    app.baseHref = "https://requirements-bazaar.org/bazaar";
+    app.activityHref = "https://requirements-bazaar.org/activities";
     
     app.baseUrl = '';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        // app.baseUrl = '/beta/';
+        app.baseUrl = '/';
     }
 
     /**
@@ -76,7 +76,7 @@
         if (e.key === "code"){
             app.code = e.newValue;
             app.$.settingsDialog.close();
-            app.getGithubAccessToken();
+            // app.getGithubAccessToken();
         }
     });
 
@@ -263,7 +263,6 @@
     app.closeCollapses = function(){
         var elems = document.querySelectorAll("iron-collapse");
         var requirements = document.querySelectorAll(".req");
-        console.log(requirements);
         for (var i=1; i< elems.length; i++){
             if (elems[i].opened){
                 elems[i].hide();
@@ -827,7 +826,7 @@
             page("/projects");
         }
         window.setTimeout(sayHi,500);
-        this.$.getGithubRepos.generateRequest();
+        // this.$.getGithubRepos.generateRequest();
     };
 
     app.toggleProjects = function () {
@@ -944,26 +943,26 @@
         }
     };
 
-    app.loginGit = function() {
-        window.open ("https://github.com/login/oauth/authorize?client_id=" + this.clientId, "Github Login", "width=700,height=700");
-    };
+    // app.loginGit = function() {
+    //     window.open ("https://github.com/login/oauth/authorize?client_id=" + this.clientId, "Github Login", "width=700,height=700");
+    // };
 
-    app.getGithubAccessToken = function(){
-        var request = document.getElementById("loginGithub");
-        request.url = "https://github.com/login/oauth/access_token";
-        request.params = {
-            "client_id": this.clientId,
-            "client_secret": this.clientSecret,
-            "code": this.code
-        };
-        request.generateRequest();
-    };
-
-    app.handleSignInGithub = function(){
-        var tst = document.getElementById('superToast');
-        tst.text = "Your account is now connected to Github";
-        tst.open();
-    };
+    // app.getGithubAccessToken = function(){
+    //     var request = document.getElementById("loginGithub");
+    //     request.url = "https://github.com/login/oauth/access_token";
+    //     request.params = {
+    //         "client_id": this.clientId,
+    //         "client_secret": this.clientSecret,
+    //         "code": this.code
+    //     };
+    //     request.generateRequest();
+    // };
+    //
+    // app.handleSignInGithub = function(){
+    //     var tst = document.getElementById('superToast');
+    //     tst.text = "Your account is now connected to Github";
+    //     tst.open();
+    // };
 
     function sayHi() {
         if (app.currentUser != null) {
