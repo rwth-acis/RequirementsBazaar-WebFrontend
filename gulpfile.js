@@ -23,7 +23,6 @@ var glob = require('glob');
 var historyApiFallback = require('connect-history-api-fallback');
 var packageJson = require('./package.json');
 var crypto = require('crypto');
-var polybuild = require('polybuild');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -47,14 +46,6 @@ var styleTask = function (stylesPath, srcs) {
     .pipe($.cssmin())
     .pipe(gulp.dest('dist/' + stylesPath))
     .pipe($.size({title: stylesPath}));
-};
-
-var jshintTask = function (src) {
-  return gulp.src(src)
-    .pipe($.jshint.extract()) // Extract JS from .html files
-    .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
 };
 
 var imageOptimizeTask = function (src, dest) {
@@ -99,20 +90,6 @@ gulp.task('styles', function () {
 
 gulp.task('elements', function () {
   return styleTask('elements', ['**/*.css']);
-});
-
-// Lint JavaScript
-gulp.task('jshint', function () {
-  return jshintTask([
-      'app/scripts/**/*.js',
-      'app/elements/**/*.js',
-      'app/elements/**/*.html',
-      'gulpfile.js'
-    ])
-    .pipe($.jshint.extract()) // Extract JS from .html files
-    .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
 });
 
 // Optimize images
@@ -178,24 +155,15 @@ gulp.task('html', function () {
 // Polybuild will take care of inlining HTML imports,
 // scripts and CSS for you.
 gulp.task('vulcanize', function () {
-  return gulp.src('dist/index.html')
-    .pipe(polybuild({maximumCrush: true}))
-    .pipe(gulp.dest('dist/'));
-});
-
-// If you require more granular configuration of Vulcanize
-// than polybuild provides, follow instructions from readme at:
-// https://github.com/PolymerElements/polymer-starter-kit/#if-you-require-more-granular-configuration-of-vulcanize-than-polybuild-provides-you-an-option-by
-
-// Rename Polybuild's index.build.html to index.html
-gulp.task('rename-index', function () {
-  return gulp.src('dist/index.build.html')
-    .pipe($.rename('index.html'))
-    .pipe(gulp.dest('dist/'));
-});
-
-gulp.task('remove-old-build-index', function () {
-  return del('dist/index.build.html');
+  var DEST_DIR = 'dist/elements';
+  return gulp.src('dist/elements/elements.vulcanized.html')
+    .pipe($.vulcanize({
+      stripComments: true,
+      inlineCss: true,
+      inlineScripts: true
+    }))
+    .pipe(gulp.dest(DEST_DIR))
+    .pipe($.size({title: 'vulcanize'}));
 });
 
 // Generate config data for the <sw-precache-cache> element.
@@ -261,10 +229,9 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
     }
   });
 
-  gulp.watch(['app/**/*.html'], reload);
+  gulp.watch(['app/**/*.html'], ['js', reload]);
   gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
   gulp.watch(['app/elements/**/*.css'], ['elements', reload]);
-  gulp.watch(['app/{scripts,elements}/**/{*.js,*.html}'], ['jshint']);
   gulp.watch(['app/images/**/*'], reload);
 });
 
@@ -300,8 +267,8 @@ gulp.task('default', ['clean'], function (cb) {
   runSequence(
     ['copy', 'styles'],
     'elements',
-    ['jshint', 'images', 'fonts', 'html'],
-    'vulcanize','rename-index', 'remove-old-build-index', // 'cache-config',
+    ['images', 'fonts', 'html'],
+    'vulcanize', //,'rename-index', 'remove-old-build-index', // 'cache-config',
     cb);
 });
 
