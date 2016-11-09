@@ -236,30 +236,53 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
 });
 
 // Build and serve the output from the dist build
+// gulp.task('serve:dist', ['default'], function () {
+//   browserSync({
+//     browser: config.browserSync.browser,
+//     https: config.browserSync.https,
+//     notify: config.browserSync.notify,
+//     port: config.browserSync.port,
+//     logPrefix: 'PSK',
+//     snippetOptions: {
+//       rule: {
+//         match: '<span id="browser-sync-binding"></span>',
+//         fn: function(snippet) {
+//           return snippet;
+//         }
+//       }
+//     },
+//     server: {
+//       baseDir: 'dist',
+//       middleware: [historyApiFallback()]
+//     },
+//     ui: {
+//       port: config.browserSync.ui.port
+//     }
+//   });
+// });
+
 gulp.task('serve:dist', ['default'], function () {
   browserSync({
-    browser: config.browserSync.browser,
-    https: config.browserSync.https,
-    notify: config.browserSync.notify,
-    port: config.browserSync.port,
+    port: 5001,
+    notify: false,
     logPrefix: 'PSK',
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
-        fn: function(snippet) {
+        fn: function (snippet) {
           return snippet;
         }
       }
     },
-    server: {
-      baseDir: 'dist',
-      middleware: [historyApiFallback()]
-    },
-    ui: {
-      port: config.browserSync.ui.port
-    }
+    // Run as an https by uncommenting 'https: true'
+    // Note: this uses an unsigned certificate which on first access
+    //       will present a certificate warning in the browser.
+    // https: true,
+    server: 'dist',
+    middleware: [ historyApiFallback() ]
   });
 });
+
 
 // Build production files, the default task
 gulp.task('default', ['clean'], function (cb) {

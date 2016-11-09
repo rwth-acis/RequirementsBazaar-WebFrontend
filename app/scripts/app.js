@@ -16,14 +16,14 @@
     var app = document.querySelector('#app');
 
     // url for requests for beta or live environment
-    app.baseHref = "https://requirements-bazaar.org/bazaar";
-    app.activityHref = "https://requirements-bazaar.org/activities";
+    app.baseHref = "https://requirements-bazaar.org/betabazaar";
+    app.activityHref = "https://requirements-bazaar.org/betaactivities";
     
-    app.baseUrl = '';
+    app.baseUrl = '/beta/';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        app.baseUrl = '/';
+        app.baseUrl = '/beta/';
     }
 
     /**
