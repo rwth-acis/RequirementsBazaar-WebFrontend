@@ -9,7 +9,7 @@
     "neon-elements": "PolymerElements/neon-elements#^1.0.0",
     "page": "visionmedia/page.js#~1.6.3",
     "time-elements": "~0.4.0",
-    "openidconnect-signin": "rwth-acis/openidconnect-signin",
+    "openidconnect-signin": "rwth-acis/openidconnect-signin#^1.0.1",
     "activity-tracker": "rwth-acis/activity-tracker",
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2",
     "emoji-selector": "https://github.com/notwaldorf/emoji-selector.git#^1.1.1",
