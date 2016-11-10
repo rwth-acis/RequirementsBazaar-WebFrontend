@@ -16,7 +16,6 @@
     var app = document.querySelector('#app');
 
     // url for requests for beta or live environment
-    
     app.baseHref = "https://requirements-bazaar.org/betabazaar";
     app.activityHref = "https://requirements-bazaar.org/betaactivities";
     
@@ -24,7 +23,7 @@
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        // app.baseUrl = '/';
+        app.baseUrl = '/beta/';
     }
 
     /**
@@ -42,6 +41,11 @@
     app.loading = false;
     app.selectedFilter = "active";
     app.list = true;
+    app.view = "list";
+    app.isFollowerProj = false;
+    app.followsComp = false;
+    app.code = null;
+
 
     app.displayInstalledToast = function() {
         // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -68,8 +72,17 @@
         app.loaded = true;
     });
 
+    window.addEventListener('storage', function(e) {
+        if (e.key === "code"){
+            app.code = e.newValue;
+            app.$.settingsDialog.close();
+            // app.getGithubAccessToken();
+        }
+    });
+
     document.addEventListener('HTMLImportsLoaded', function() {
         var lang = null;
+        var view = null;
         if (document.cookie != ''){
             var cookies = document.cookie.split(';');
             for(var i = 0; i <cookies.length; i++) {
@@ -77,8 +90,16 @@
                 while (c.charAt(0)==' ') {
                     c = c.substring(1);
                 }
+                console.log(c);
                 if (c.indexOf("lang=") == 0) {
                     lang = c.substring("lang=".length, c.length);
+                }
+                if (c.indexOf("view=") == 0) {
+                    view = c.substring("view=".length, c.length);
+                    app.view = view;
+                    if (view === "grid"){
+                        app.list = false;
+                    }
                 }
             }
         }
@@ -235,8 +256,13 @@
         this.$.requirementsList.load();
     };
 
+    app.handleNewComp = function(){
+        this.isFollowerComp();
+    };
+
     app.closeCollapses = function(){
         var elems = document.querySelectorAll("iron-collapse");
+        var requirements = document.querySelectorAll(".req");
         for (var i=1; i< elems.length; i++){
             if (elems[i].opened){
                 elems[i].hide();
@@ -244,6 +270,15 @@
                     elems[i].parentNode.parentNode.elevation = 1;
                     elems[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
                 }
+            }
+        }
+
+        for (var i=0; i< requirements.length; i++){
+            var element = requirements[i];
+            if (element.querySelector('.contributers').style.display != "none") {
+                element.querySelector("#contr").innerText = i18n.getMsg('showContributers');
+                document.querySelector("requirements-list").showContributers = false;
+                element.querySelector('.contributers').style.display = "none";
             }
         }
     };
@@ -254,11 +289,13 @@
 
     app.showQuarantineView = function(){
         this.list = false;
+        document.cookie = "view= grid";
         //document.querySelector("requirements-list").style.display = "none";
     };
 
     app.showListView = function(){
         this.list = true;
+        document.cookie = "view= list";
         // document.querySelector("requirements-list").style.display = "block";
     };
 
@@ -291,18 +328,33 @@
             document.getElementById('requirementsList').toggleCollapsible(null, el);
         } else {
             this.loadComponentInfo(componentId);
+
+            app.selectedFilter = "active";
             setTimeout(function(){
                 el = document.getElementById(requirementId);
-                if (el === null) {
-                    app.$.superToast.text = i18n.getMsg('noRequirement');
-                    app.$.superToast.show();
-                    page.redirect('/projects/' + app.params.projectId + "/components/" + componentId);
-                    return 0;
+                if (el != null){
+                    var scroller = document.getElementById("mainScroller");
+                    scroller.scroll(el.offsetTop - 70, true);
+                    document.getElementById('requirementsList').toggleCollapsible(null, el);
                 }
-                var scroller = document.getElementById("mainScroller");
-                scroller.scroll(el.offsetTop - 70, true);
-                document.getElementById('requirementsList').toggleCollapsible(null, el);
-            }, 1300);
+
+                if (el == null){
+                    app.selectedFilter = "realized";
+                    setTimeout(function(){
+                        el = document.getElementById(requirementId);
+                        if (el == null) {
+                            app.$.superToast.text = i18n.getMsg('noRequirement');
+                            app.$.superToast.show();
+                            page.redirect('/projects/' + app.params.projectId + "/components/" + componentId);
+                            return 0;
+                        }
+                        var scroller = document.getElementById("mainScroller");
+                        scroller.scroll(el.offsetTop - 70, true);
+                        document.getElementById('requirementsList').toggleCollapsible(null, el);
+                    }, 1300);
+                }
+
+            }, 2000);
         }
         
         window.scrollTo(0, 75);
@@ -363,7 +415,7 @@
                             title: this.files[i].name,
                             fileUrl: this.files[i].xhr.response,
                             mimeType: "image/*",
-                            identifier: this.files[i].xhr.response.slice(-20)
+                            identifier: this.files[i].xhr.response.match(/\d+/g)[0]
                         };
                         attachments.push(obj);
                     }
@@ -393,6 +445,9 @@
     app.checkEnter = function (e){
         if (e.keyCode === 13) {
             if (e.ctrlKey){
+                if (this.$.newRequirementDesc.focused){
+                    this.$.newRequirementDesc.value += "\n";
+                }
                 return 0;
             }
             var request = document.querySelector('#postRequirementRequest');
@@ -407,6 +462,7 @@
                     "projectId": parseInt(app.params.projectId),
                     "components": components});
                 request.generateRequest();
+                e.preventDefault();
                 this.$.newRequirementTitle.value = '';
                 this.$.newRequirementDesc.value = '';
                 this.$.createRequirement.close();
@@ -530,6 +586,15 @@
 
     app.toggNotDrawer = function(e){
         var fabs = document.getElementsByClassName('fabAdd');
+        if (app.route == "projects"){
+            document.querySelectorAll("#scrollThreshold")[0].scrollTarget = document.querySelector("#letsscroll1").scroller;
+        }
+        if (app.route == "project-info"){
+            document.querySelectorAll("#scrollThreshold")[1].scrollTarget = document.querySelector("#letsscroll2").scroller;
+        }
+        if (app.route == "component-info"){
+            document.querySelectorAll("#scrollThreshold")[2].scrollTarget = document.querySelector("#letsscroll3").scroller;
+        }
         document.querySelector('activity-tracker').refresh();
         //opens right drawer
         if (document.querySelector('#drawer').style.display != 'block'){
@@ -615,10 +680,6 @@
 
     app.landingPage = function(rt){
         return rt === 'home';
-    };
-
-    app.handleSigninSuccess = function(e){
-        console.log(e);
     };
 
     app.editProject = function(e){
@@ -765,6 +826,7 @@
             page("/projects");
         }
         window.setTimeout(sayHi,500);
+        // this.$.getGithubRepos.generateRequest();
     };
 
     app.toggleProjects = function () {
@@ -800,6 +862,78 @@
 
         request.generateRequest();
     };
+
+    app.followComponent = function(){
+        var request = this.$.followComp;
+
+        request.url = this.baseHref + "/components/" + this.component.id + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseFollowComp = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are now a follower";
+        this.followsComp = true;
+        tst.open();
+    };
+
+    app.isFollowerComp = function(){
+        if (this.component.followers.length == 0){
+            this.followsComp = false;
+            return;
+        }
+
+        for (var i=0; i < this.component.followers.length; i++){
+            if (this.component.followers[i].id == this.currentUser.id){
+                this.followsComp = true;
+                return;
+            }
+        }
+
+        this.followsComp = false;
+    };
+
+    app.unfollowComponent = function(){
+        var request = this.$.unfollowComp;
+
+        request.url = this.baseHref + "/components/" + this.params.componentId + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseUnFollowComp = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are removed from followers of this component";
+        this.followsComp = false;
+        tst.open();
+    };    
+    
+    app.followProject = function(){
+        var request = this.$.followProj;
+
+        request.url = this.baseHref + "/projects/" + this.project.id + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseFollowProj = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are now a follower";
+        this.isFollowerProj = true;
+        tst.open();
+    };
+
+    app.unfollowProject = function(){
+        var request = this.$.unfollowProj;
+
+        request.url = this.baseHref + "/projects/" + this.params.projectId + "/followers";
+        request.generateRequest();
+    };
+    
+    app.handleResponseUnFollowProj = function(){
+        var tst = document.getElementById('superToast');
+        tst.text = "You are removed from followers of this project";
+        this.isFollowerProj = false;
+        tst.open();
+    };
     
     app.activitiesLoaded = function (){
         if (this.activities === null){
@@ -808,6 +942,27 @@
             return true;
         }
     };
+
+    // app.loginGit = function() {
+    //     window.open ("https://github.com/login/oauth/authorize?client_id=" + this.clientId, "Github Login", "width=700,height=700");
+    // };
+
+    // app.getGithubAccessToken = function(){
+    //     var request = document.getElementById("loginGithub");
+    //     request.url = "https://github.com/login/oauth/access_token";
+    //     request.params = {
+    //         "client_id": this.clientId,
+    //         "client_secret": this.clientSecret,
+    //         "code": this.code
+    //     };
+    //     request.generateRequest();
+    // };
+    //
+    // app.handleSignInGithub = function(){
+    //     var tst = document.getElementById('superToast');
+    //     tst.text = "Your account is now connected to Github";
+    //     tst.open();
+    // };
 
     function sayHi() {
         if (app.currentUser != null) {

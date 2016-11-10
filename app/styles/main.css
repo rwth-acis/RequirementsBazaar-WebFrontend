@@ -130,6 +130,16 @@ paper-icon-button {
     color: #838383;
 }
 
+.helper-highlight{
+    color: #669900;
+    font-size: small;
+    margin-top: -5px;
+}
+
+.description {
+    white-space: pre-wrap;
+}
+
 .leader {
     float:right;
 }
@@ -298,6 +308,14 @@ paper-icon-button {
     #landing-top-image{
         margin-top: 50px;
     }
+
+    #commentsDialog{
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        margin: 0 0 0 0;
+    }
+
     #landing-top-motivation {
         display: flex;
         justify-content: space-around;

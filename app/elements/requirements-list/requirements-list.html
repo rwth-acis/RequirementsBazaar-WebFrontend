@@ -47,7 +47,7 @@
                 background: none;
                 color: #000000;
                 height: 75px;
-                margin-right: 85px;
+                margin-right: 125px;
                 right:15px;
             }
 
@@ -142,21 +142,9 @@
                 id="requirementsLoader"
                 url="{{resourceURL}}"
                 last-response="{{requirements}}"
+                headers="{{header}}"
                 params="{{parameters}}"
                 loading="{{loading}}"></iron-ajax>
-
-        <iron-ajax
-                id="postCommentRequest"
-                handle-as="json"
-                url="{{baseHref}}/comments"
-                content-type="application/json"
-                method="POST"
-                headers="{{header}}"
-                on-response="handleResponseComment"
-                last-response="{{postResponse}}"
-                on-error="errorHandler">
-
-        </iron-ajax>
 
         <iron-ajax
                 id="postUpdateRequirement"
@@ -221,6 +209,35 @@
                 on-response="load"
                 on-error="errorHandler"></iron-ajax>
 
+        <iron-ajax
+                id="postCommentRequest"
+                handle-as="json"
+                url="{{baseHref}}/comments"
+                content-type="application/json"
+                method="POST"
+                headers="{{header}}"
+                on-response="handleResponseComment"
+                last-response="{{postResponse}}"
+                on-error="errorHandler"></iron-ajax>
+
+        <!--<iron-ajax-->
+                <!--id="postIssueGit"-->
+                <!--handle-as="json"-->
+                <!--content-type="application/json"-->
+                <!--params='{"access_token": ""}'-->
+                <!--method="POST"-->
+                <!--on-response="handleResponseGithubIssue"-->
+                <!--on-error="errorHandler"></iron-ajax>-->
+
+        <!--<iron-ajax-->
+                <!--id="getSearchGit"-->
+                <!--handle-as="json"-->
+                <!--content-type="application/json"-->
+                <!--method="GET"-->
+                <!--last-response="{{searchRepositories}}"-->
+                <!--on-response="showRepoSearchResults"-->
+                <!--on-error="errorHandler"></iron-ajax>-->
+
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
             <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
@@ -228,6 +245,45 @@
             <div class="buttons">
                 <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
                 <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
+            </div>
+        </paper-dialog>
+
+        <paper-dialog id="commentsDialog" with-backdrop on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
+            style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
+            <h2><i18n-msg msgid="comments"></i18n-msg></h2>
+            <p style="max-height: 80%;">
+                <comments-list header="{{header}}" base-href="{{baseHref}}"></comments-list>
+                <template is="dom-if" if="{{isAuthorized}}">
+                    <div class="container flex-horizontal">
+                        <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+                        <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                        </paper-input>
+                        <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
+                    </div>
+                </template>
+            </p>
+        </paper-dialog>
+
+        <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
+            <h2>Your Github Repositories</h2>
+                <paper-dialog-scrollable>
+                    <paper-input id="searchGithubRepo" label="Search a Github Repository" on-keydown="searchGithubRepo">
+                        <iron-icon icon="search" prefix></iron-icon>
+                    </paper-input>
+                    <iron-selector id="selRepo" selected="0">
+                        <template is="dom-repeat" items$="{{repositories}}" id="repoElements">
+                            <paper-item>
+                                <paper-item-body two-line>
+                                    <div>{{item.name}}</div>
+                                    <div secondary>{{item.description}}</div>
+                                </paper-item-body>
+                            </paper-item>
+                        </template>
+                    </iron-selector>
+                </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm autofocus>POST</paper-button>
             </div>
         </paper-dialog>
 
@@ -252,10 +308,22 @@
                                     <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
                                     <div class="card-content" class="truncate">{{req.description}}</div>
                                     <div class="card-actions">
-                                        <paper-button noink>
-                                            <iron-icon icon="star"></iron-icon>
-                                            {{req.upVotes}}
+                                        <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
+                                            <iron-icon icon="editor:mode-comment"></iron-icon>
                                         </paper-button>
+
+                                        <template is="dom-if" if="{{!isAuthorized}}">
+                                            <paper-button noink> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
+                                        </template>
+                                        <template is="dom-if" if="{{isAuthorized}}">
+                                            <template is="dom-if" if="{{userVoted(req.userVoted)}}">
+                                                <paper-button noink on-tap="starDelRequest"> <iron-icon class="colored" icon="star"></iron-icon> {{req.upVotes}}</paper-button>
+                                            </template>
+                                            <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
+                                                <paper-button noink on-tap="starRequest"> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
+                                            </template>
+                                        </template>
+
                                     </div>
                                 </paper-card>
                             </div>
@@ -311,7 +379,8 @@
                                             <paper-menu-button horizontal-align="right" vertical-align="top">
                                                 <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                                 <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                                    <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
+                                                    <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
+                                                    <paper-item on-tap="toggleContributers" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
                                                     <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
                                                     <template is="dom-if" if="{{!isFollower}}">
                                                         <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
@@ -322,6 +391,7 @@
                                                     <template is="dom-if" if="{{!isDeveloper}}">
                                                         <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
                                                     </template>
+                                                    <paper-item on-tap="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
                                                     <template is="dom-if" if="{{isDeveloper}}">
                                                         <paper-item on-tap="undevelopReq"><i18n-msg msgid="undevelopRequirement"></i18n-msg></paper-item>
                                                     </template>
@@ -334,7 +404,7 @@
 
                                     <paper-toolbar class="title" on-tap="onRequirementTap">
                                         <div class="title">[[req.title]]</div>
-                                        <div class="bottom fit helper">
+                                        <div class="bottom fit helper" style="margin-top:20px;">
                                             <time is="relative-time" datetime$="[[req.creation_time]]"></time>
                                             <i18n-msg msgid="by"></i18n-msg>
                                             <req-user user="[[req.creator]]" normal-view></req-user>
@@ -346,13 +416,13 @@
                                 <div class="line"></div>
 
                                 <div class="contributers">
-                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
-                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[req.leadDeveloperId]]" full-view></req-user></div>
+                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
+                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
                                     <template is="dom-if" if="{{!isEmpty(req.developers)}}">
                                         <div><i18n-msg msgid="developers"></i18n-msg>:
                                             <template is="dom-repeat" items="{{req.developers}}" as="dev">
                                                 <div  style="display:inline-block">
-                                                    <req-user user-id$="[[dev.id]]" mini></req-user>
+                                                    <req-user user="[[dev]]" mini></req-user>
                                                     <paper-tooltip>{{dev.userName}}</paper-tooltip>
                                                 </div>
                                             </template>
@@ -362,7 +432,7 @@
                                         <div><i18n-msg msgid="followers"></i18n-msg>:
                                             <template is="dom-repeat" items="{{req.followers}}" as="foll">
                                                 <div  style="display:inline-block">
-                                                    <req-user user-id$="[[foll.id]]" mini></req-user>
+                                                    <req-user user="[[foll]]" mini></req-user>
                                                     <paper-tooltip>{{foll.userName}}</paper-tooltip>
                                                 </div>
                                             </template>
@@ -379,7 +449,7 @@
                                     <iron-collapse id="reqExpand">
                                         <file-gallery attachments="{{req.attachments}}"></file-gallery>
                                         <h4><i18n-msg msgid="comments"></i18n-msg></h4>
-                                        <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]"></comments-list>
+                                        <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}"></comments-list>
                                         <template is="dom-if" if="{{isAuthorized}}">
                                             <div class="container flex-horizontal" id="[[req.id]]">
                                                 <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
@@ -487,7 +557,6 @@
                                             <div class="container flex-horizontal" id="[[req.id]]">
                                                 <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
                                                 <paper-textarea id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
-                                                    <emoji-selector suffix></emoji-selector>
                                                 </paper-textarea>
                                                 <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
                                             </div>
@@ -506,7 +575,7 @@
         <paper-toast id="toast" text="[[feedback]]"></paper-toast>
     </template>
 
-    <script src="../../bower_components/time-elements/time-elements.js"></script>
+    <script src="../../components/time-elements/time-elements.js"></script>
 
     <script>
         (function () {
@@ -526,7 +595,11 @@
                         notify: true,
                         value: "active"
                     },
-                    baseHref: String,
+                    baseHref: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
                     resourceURL: {
                         type: String,
                         computed: 'computeResourceURL(baseHref, componentId)'
@@ -594,6 +667,11 @@
                         type: Boolean,
                         notify: true,
                         value: false
+                    },
+                    repositories: {
+                        type: Object,
+                        notify: true,
+                        reflectToAttribute: true
                     }
                 },
 
@@ -616,8 +694,8 @@
 
                 _hasEnoughItems: function () {
                     if (!this.list){
-                        var n = Math.floor(this.offsetWidth / 300);
-                        var free = this.offsetWidth - n * (300 + 20);
+                        var n = Math.floor((window.innerWidth - 300) / 300);
+                        var free = (window.innerWidth - 300) - n * (300 + 20);
                         this.style.paddingLeft = "" + free / 2 + "px";
                     } else {
                         this.style.paddingLeft = "0px";
@@ -664,7 +742,12 @@
 
                 starRequest: function(e){
                     var req = this.$.starReq;
-                    var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    var reqId;
+                    if (this.list) {
+                        reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    } else {
+                        reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
+                    }
                     req.method = "POST";
                     req.url = this.baseHref + "/requirements/" + reqId + "/vote";
                     req.body = JSON.stringify({
@@ -676,7 +759,12 @@
 
                 starDelRequest: function(e){
                     var req = this.$.starReq;
-                    var reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    var reqId;
+                    if (this.list) {
+                        reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+                    } else {
+                        reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
+                    }
                     req.method = "DELETE";
                     req.url = this.baseHref + "/requirements/" + reqId + "/vote";
                     req.generateRequest();
@@ -700,6 +788,10 @@
                     }
                 },
 
+                showRepoSearchResults: function(){
+                    this.repositories = this.searchRepositories.items;
+                },
+
                 addToSelectedReq: function(e){
                     var id = e.target.parentNode.parentNode.parentNode.id;
                     if (e.target.checked){
@@ -708,6 +800,9 @@
                         var index = this.selectedRequirements.indexOf(id);
                         if (index > -1) {
                             this.splice('selectedRequirements', index, 1);
+                        }
+                        if (this.selectedRequirements.length === 0){
+                            document.querySelector(".tools").style.display = "none";
                         }
                     }
                 },
@@ -784,6 +879,60 @@
                     document.body.removeChild(link);
                 },
 
+                postGridComment: function(e){
+                    var reqId = e.currentTarget.parentNode.parentNode.querySelector("comments-list").requirementId;
+                    var request = this.$.postCommentRequest;
+                    if (this.newComment != null && this.newComment != ''){
+                        request.body = JSON.stringify({
+                            "requirementId": reqId,
+                            "message": this.newComment
+                        });
+                        request.generateRequest();
+                    } else {
+                        this.feedback = this.i18n.getMsg('');
+                        this.$.toast.open();
+                    }
+                    this.newComment = '';
+                },
+
+                showGithubRepos: function(e){
+                    this.$.reposContainer.open();
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+                    this.selReq = element.id;
+                },
+
+                onRepoDialogClosed: function (e) {
+                    if(e.detail.confirmed){
+                        var title = "";
+                        var desc = "";
+                        for (var i=0; i < this.requirements.length; i++){
+                            if (this.requirements[i].id == this.selReq){
+                                title = this.requirements[i].title;
+                                desc = this.requirements[i].description;
+                            }
+                            break;
+                        }
+                        var req = this.$.postIssueGit;
+                        req.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
+                        req.body = JSON.stringify({
+                            "title": title,
+                            "body": desc
+                        });
+                        req.generateRequest();
+                    } else {
+                        this.$.selRepo.selected = "0";
+                        this.selReq = null;
+                    }
+                },
+
                 addComment: function(e){
                     var currentReqId = e.currentTarget.parentNode.id;
                     var currentInpId = currentReqId + 'input';
@@ -803,14 +952,28 @@
                 },
 
                 handleResponseComment: function(data){
-                    var str = ''+ this.postResponse.requirementId + 'input';
-                    var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
-                    el.load();
+                    if (this.list){
+                        var str = ''+ this.postResponse.requirementId + 'input';
+                        var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
+                        el.load();
+                    } else {
+                        document.querySelector("comments-list").load();
+                        document.querySelector("comments-list").parentNode.querySelector("paper-input").value = null;
+                    }
+
+                },
+
+                showSendButton: function(e){
+                    var fab = e.currentTarget.parentNode.querySelector("#fab");
+                    if (this.newComment){
+                        fab.style.display = 'block';
+                    } else {
+                        fab.style.display = 'none';
+                    }
                 },
 
                 showButton: function(e){
                     var fabId = e.currentTarget.parentNode.id + 'fab';
-                    console.log(fabId);
                     if (this.newComment){
                         document.getElementById(fabId).style.display = 'block';
                     } else {
@@ -820,6 +983,11 @@
 
                 errorHandler: function (e, detail){
                     this.$.toast.text = detail.error.message;
+                    this.$.toast.open();
+                },
+
+                handleResponseGithubIssue: function(){
+                    this.$.toast.text = "Issue posted to Github";
                     this.$.toast.open();
                 },
 
@@ -855,6 +1023,25 @@
                         "realized": dateString
                     });
 
+                    request.generateRequest();
+                },
+
+                becomeLeadDeveloper: function(e){
+                    var el = e.currentTarget;
+                    var tag = "PAPER-MATERIAL";
+                    var element;
+                    var request = this.$.postUpdateRequirement;
+
+                    while (el.parentNode) {
+                        el = el.parentNode;
+                        if (el.tagName === tag)
+                            element = el;
+                    }
+                    request.url = this.baseHref + "/requirements/" + element.id;
+                    request.body = JSON.stringify({
+                        "id": parseInt(element.id),
+                        "leadDeveloperId": app.currentUser.id
+                    });
                     request.generateRequest();
                 },
 
@@ -950,6 +1137,16 @@
                 createModal: function(e){
                     this.$.modal.open();
                     this.elem = e.currentTarget;
+                },
+
+                openCommentsDialog: function(e){
+                    this.$.commentsDialog.querySelector("comments-list").requirementId = e.currentTarget.atr;
+                    this.$.commentsDialog.querySelector("comments-list").load();
+                    this.$.commentsDialog.open();
+                },
+
+                deleteLeftoverComment: function(e){
+                    this.$.commentsDialog.querySelector("comments-list").comments = [];
                 },
 
 
@@ -1094,7 +1291,19 @@
                         if (el.tagName === tag)
                             element = el;
                     }
-                    if (this.showContributers){
+
+                    if (element.querySelector('.contributers').style.display === ""){
+                        e.currentTarget.innerText = i18n.getMsg('hideContributers');
+                        if (app.isMobile){
+                            element.querySelector('.contributers').style.display = "block";
+                        } else {
+                            element.querySelector('.contributers').style.display = "flex";
+                        }
+                        this.showContributers = ! this.showContributers;
+                        return;
+                    }
+
+                    if (element.querySelector('.contributers').style.display !== "none"){
                         e.currentTarget.innerText = i18n.getMsg('showContributers');
                         element.querySelector('.contributers').style.display = "none";
                     } else {
@@ -1143,13 +1352,27 @@
                 },
 
                 checkForEnter: function (e) {
-                    this.buttons.push(e);
                     if (e.keyCode === 13) {
-                        if (! this.buttons[this.buttons.length-1].ctrlKey){
-                            this.addComment(e);
+                        if (!e.ctrlKey){
+                            if (this.list){
+                                this.addComment(e);
+                            } else {
+                                this.postGridComment(e);
+                            }
                             e.preventDefault();
                         } else {
-                            e.currentTarget.value += "\n";
+                            e.currentTarget.value += "<br/>";
+                        }
+                    }
+                },
+
+                searchGithubRepo: function (e) {
+                    if (e.keyCode === 13) {
+                        if (!e.ctrlKey){
+                            var req = this.$.getSearchGit;
+                            req.url = "https://api.github.com/search/repositories?q=" + encodeURIComponent(this.$.searchGithubRepo.value);
+                            req.generateRequest();
+                            e.preventDefault();
                         }
                     }
                 },
@@ -1174,6 +1397,10 @@
                         }
                         return txt;
                     }
+                },
+
+                dragRequirement: function(){
+                    console.log("drag start!");
                 }
             });
 
