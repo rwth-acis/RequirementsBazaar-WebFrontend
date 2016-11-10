@@ -305,7 +305,7 @@
                                     <time is="relative-time" class="time"
                                           datetime$="[[req.creation_time]]">
                                     </time>
-                                    <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
+                                    <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
                                     <div class="card-content" class="truncate">{{req.description}}</div>
                                     <div class="card-actions">
                                         <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
@@ -337,7 +337,7 @@
                                     <time is="relative-time" class="time"
                                           datetime$="[[req.creation_time]]">
                                     </time>
-                                    <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
+                                    <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
                                     <div class="card-content" class="truncate">{{req.description}}</div>
                                     <div class="card-actions">
                                         <paper-button noink>
@@ -447,7 +447,7 @@
                                 <div class="comments">
 
                                     <iron-collapse id="reqExpand">
-                                        <file-gallery attachments="{{req.attachments}}"></file-gallery>
+                                        <!--<file-gallery attachments="{{req.attachments}}"></file-gallery>-->
                                         <h4><i18n-msg msgid="comments"></i18n-msg></h4>
                                         <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}"></comments-list>
                                         <template is="dom-if" if="{{isAuthorized}}">
