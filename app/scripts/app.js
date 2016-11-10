@@ -276,7 +276,9 @@
         for (var i=0; i< requirements.length; i++){
             var element = requirements[i];
             if (element.querySelector('.contributers').style.display != "none") {
-                element.querySelector("#contr").innerText = i18n.getMsg('showContributers');
+                if (element.querySelector("#contr")){
+                    element.querySelector("#contr").innerText = i18n.getMsg('showContributers');
+                }
                 document.querySelector("requirements-list").showContributers = false;
                 element.querySelector('.contributers').style.display = "none";
             }
@@ -878,18 +880,19 @@
     };
 
     app.isFollowerComp = function(){
-        if (this.component.followers.length == 0){
-            this.followsComp = false;
-            return;
-        }
-
-        for (var i=0; i < this.component.followers.length; i++){
-            if (this.component.followers[i].id == this.currentUser.id){
-                this.followsComp = true;
+        if (this.currentUser){
+            if (this.component.followers.length == 0){
+                this.followsComp = false;
                 return;
             }
-        }
 
+            for (var i=0; i < this.component.followers.length; i++){
+                if (this.component.followers[i].id == this.currentUser.id){
+                    this.followsComp = true;
+                    return;
+                }
+            }
+        }
         this.followsComp = false;
     };
 
