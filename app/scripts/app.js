@@ -16,10 +16,10 @@
     var app = document.querySelector('#app');
 
     // url for requests for beta or live environment
-    app.baseHref = "https://requirements-bazaar.org/betabazaar";
-    app.activityHref = "https://requirements-bazaar.org/betaactivities";
+    app.baseHref = "https://requirements-bazaar.org/bazaar";
+    app.activityHref = "https://requirements-bazaar.org/activities";
     
-    app.baseUrl = '';
+    app.baseUrl = '/';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
@@ -409,24 +409,24 @@
                 this.$.superToast.text = i18n.getMsg('fieldsNotEmptyReq');
                 this.$.superToast.open();
             } else {
-                if (this.files != []){
-                    for (var i = 0; i < this.files.length; i++){
-                        var obj = {
-                            title: this.files[i].name,
-                            fileUrl: this.files[i].xhr.response,
-                            mimeType: "image/*",
-                            identifier: this.files[i].xhr.response.match(/\d+/g)[0]
-                        };
-                        attachments.push(obj);
-                    }
-                }
+                // if (this.files != []){
+                //     for (var i = 0; i < this.files.length; i++){
+                //         var obj = {
+                //             title: this.files[i].name,
+                //             fileUrl: this.files[i].xhr.response,
+                //             mimeType: "image/*",
+                //             identifier: this.files[i].xhr.response.match(/\d+/g)[0]
+                //         };
+                //         attachments.push(obj);
+                //     }
+                // }
                 request.body = JSON.stringify({
                     "title": this.$.newRequirementTitle.value,
                     "description": this.$.newRequirementDesc.value,
                     "projectId": parseInt(app.params.projectId),
-                    "components": components,
-                    "attachments": attachments
+                    "components": components
                 });
+                // "attachments": attachments
                 request.generateRequest();
                 this.$.newRequirementTitle.value = null;
                 this.$.newRequirementDesc.value = null;
