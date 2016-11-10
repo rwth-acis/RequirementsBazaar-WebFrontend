@@ -1291,7 +1291,19 @@
                         if (el.tagName === tag)
                             element = el;
                     }
-                    if (element.querySelector('.contributers').style.display != "none"){
+
+                    if (element.querySelector('.contributers').style.display === ""){
+                        e.currentTarget.innerText = i18n.getMsg('hideContributers');
+                        if (app.isMobile){
+                            element.querySelector('.contributers').style.display = "block";
+                        } else {
+                            element.querySelector('.contributers').style.display = "flex";
+                        }
+                        this.showContributers = ! this.showContributers;
+                        return;
+                    }
+
+                    if (element.querySelector('.contributers').style.display !== "none"){
                         e.currentTarget.innerText = i18n.getMsg('showContributers');
                         element.querySelector('.contributers').style.display = "none";
                     } else {
