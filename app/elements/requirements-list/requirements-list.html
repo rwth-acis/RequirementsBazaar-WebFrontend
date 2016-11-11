@@ -256,7 +256,7 @@
                 <template is="dom-if" if="{{isAuthorized}}">
                     <div class="container flex-horizontal">
                         <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                        <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                        <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
                         </paper-input>
                         <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
                     </div>
@@ -893,6 +893,7 @@
                         this.$.toast.open();
                     }
                     this.newComment = '';
+                    e.currentTarget.parentNode.parentNode.querySelector(".comments-input").value = null;
                 },
 
                 showGithubRepos: function(e){
