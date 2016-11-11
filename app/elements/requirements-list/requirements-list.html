@@ -945,7 +945,7 @@
                         });
                         request.generateRequest();
                     } else {
-                        this.feedback = this.i18n.getMsg('');
+                        this.$.toast.text = this.i18n.getMsg('');
                         this.$.toast.open();
                     }
                     this.newComment = '';
@@ -1121,7 +1121,7 @@
                         e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
                         e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
                     } else {
-                        this.feedback = this.i18n.getMsg('fieldsNotEmptyReq');
+                        this.$.toast.text = this.i18n.getMsg('fieldsNotEmptyReq');
                         this.$.toast.open();
                     }
 
