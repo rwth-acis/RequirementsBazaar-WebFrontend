@@ -32,6 +32,11 @@
      * @type {boolean}
      */
     app.isAuthorized = false;
+    /**
+     * Stores the OAuth2 access token needed for authorized requests.
+     *
+     * @type {string}
+     */
     app.access_token = null;
     app.hresponse = null;
     app.currentUser = null;
@@ -313,6 +318,13 @@
         document.getElementById("collapseFilters").toggle();
     };
 
+    /**
+     * Scrolls to a specified requirement.
+     *
+     * @param componentId
+     * @param requirementId
+     * @returns {number}
+     */
     app.scrollToReq = function (componentId, requirementId) {
         var el;
 
@@ -360,6 +372,11 @@
         window.scrollTo(0, 75);
     };
 
+    /**
+     * Event handler for when the 'globe' icon is tapped.
+     *
+     * @param e is a tap event.
+     */
     app.openLanguageMenu = function (e){
         var langMenu = document.getElementById("languageMenu");
         langMenu.style.display = "block";
