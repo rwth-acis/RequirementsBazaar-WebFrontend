@@ -39,13 +39,30 @@
      */
     app.access_token = null;
     app.hresponse = null;
+    /**
+     * Stores the JSON of the API call to <tt>/users/current</tt> that is retrieved via an iron-ajax.
+     *
+     * @type {string} a JSON object containing the currently logged in user, or null, if not logged in.
+     */
     app.currentUser = null;
     app.compResponse = null;
     app.isMobile = false; //initiate as false
     app.i18n = null;
     app.loading = false;
     app.selectedFilter = "active";
+    /**
+     * Stores whether the requirements view shows a list or a grid.
+     * It is used as a property to the <requirements-list>.
+     *
+     * @type {boolean} true if the requirements view shows a list, false if it shows a grid.
+     */
     app.list = true;
+    /**
+     * Stores whether the requirements view shows a list or a grid.
+     * It is used to tell the radio group whether 'list' or 'grid' is selected.
+     *
+     * @type {string} 'list' for list, 'grid' for grid.
+     */
     app.view = "list";
     app.isFollowerProj = false;
     app.followsComp = false;
