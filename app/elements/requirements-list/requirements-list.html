@@ -248,7 +248,7 @@
             </div>
         </paper-dialog>
 
-        <paper-dialog id="commentsDialog" with-backdrop on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
+        <paper-dialog id="commentsDialog" on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
             style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
             <h2><i18n-msg msgid="comments"></i18n-msg></h2>
             <p style="max-height: 80%;">
@@ -256,7 +256,7 @@
                 <template is="dom-if" if="{{isAuthorized}}">
                     <div class="container flex-horizontal">
                         <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                        <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                        <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
                         </paper-input>
                         <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
                     </div>
@@ -305,7 +305,7 @@
                                     <time is="relative-time" class="time"
                                           datetime$="[[req.creation_time]]">
                                     </time>
-                                    <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
+                                    <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
                                     <div class="card-content" class="truncate">{{req.description}}</div>
                                     <div class="card-actions">
                                         <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
@@ -337,7 +337,7 @@
                                     <time is="relative-time" class="time"
                                           datetime$="[[req.creation_time]]">
                                     </time>
-                                    <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
+                                    <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
                                     <div class="card-content" class="truncate">{{req.description}}</div>
                                     <div class="card-actions">
                                         <paper-button noink>
@@ -447,7 +447,7 @@
                                 <div class="comments">
 
                                     <iron-collapse id="reqExpand">
-                                        <file-gallery attachments="{{req.attachments}}"></file-gallery>
+                                        <!--<file-gallery attachments="{{req.attachments}}"></file-gallery>-->
                                         <h4><i18n-msg msgid="comments"></i18n-msg></h4>
                                         <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}"></comments-list>
                                         <template is="dom-if" if="{{isAuthorized}}">
@@ -508,7 +508,7 @@
                                     </div>
                                     <paper-toolbar class="title" on-tap="onRequirementTap">
                                         <div class="title">[[req.title]]</div>
-                                        <div class="bottom fit helper">
+                                        <div class="bottom fit helper" style="margin-top:20px;">
                                             <time is="relative-time" datetime$="[[req.creation_time]]"></time>
                                             <i18n-msg msgid="by"></i18n-msg>
                                             <req-user user="[[req.creator]]" normal-view></req-user>
@@ -893,6 +893,7 @@
                         this.$.toast.open();
                     }
                     this.newComment = '';
+                    e.currentTarget.parentNode.parentNode.querySelector(".comments-input").value = null;
                 },
 
                 showGithubRepos: function(e){
@@ -944,7 +945,7 @@
                         });
                         request.generateRequest();
                     } else {
-                        this.feedback = this.i18n.getMsg('');
+                        this.$.toast.text = this.i18n.getMsg('commentNoEmpty');
                         this.$.toast.open();
                     }
                     this.newComment = '';
@@ -1120,7 +1121,7 @@
                         e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
                         e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
                     } else {
-                        this.feedback = this.i18n.getMsg('fieldsNotEmptyReq');
+                        this.$.toast.text = this.i18n.getMsg('fieldsNotEmptyReq');
                         this.$.toast.open();
                     }
 
