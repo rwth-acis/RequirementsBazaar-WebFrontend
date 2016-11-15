@@ -238,6 +238,8 @@
                 <!--on-response="showRepoSearchResults"-->
                 <!--on-error="errorHandler"></iron-ajax>-->
 
+        <!-- DIALOG FOR DELETE REQUIREMENT CONFIRMATION -->
+
         <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
                       exit-animation="fade-out-animation">
             <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
@@ -247,6 +249,8 @@
                 <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
             </div>
         </paper-dialog>
+
+        <!-- DIALOG SHOWING COMMENTS IN GRID VIEW -->
 
         <paper-dialog id="commentsDialog" on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
             style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
@@ -263,6 +267,8 @@
                 </template>
             </p>
         </paper-dialog>
+
+        <!-- DIALOG FOR GITHUB EXPORT FUNCTIONALITY -->
 
         <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
             <h2>Your Github Repositories</h2>
@@ -287,11 +293,15 @@
             </div>
         </paper-dialog>
 
+        <!-- FLOATING TOOLBAR FOR SELECTED REQUIREMENTS -->
+
         <paper-material elevation="5" id="tools" class="tools">
             <span>{{selectedRequirements.length}} Requirements selected.</span>
             <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
             <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
         </paper-material>
+
+        <!-- GRID VIEW -->
 
         <template is="dom-if" if="{{!list}}" restamp>
             <masonry-layout id="grids" column-width="100">
@@ -352,6 +362,8 @@
                 </template>
             </masonry-layout>
         </template>
+
+        <!-- LIST VIEW -->
 
         <template is="dom-if" if="{{list}}" restamp>
             <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
@@ -572,7 +584,10 @@
             </template>
         </template>
 
+        <!-- TOAST FOR APP NOTIFICATIONS (FEEDBACK) -->
+
         <paper-toast id="toast" text="[[feedback]]"></paper-toast>
+
     </template>
 
     <script src="../../components/time-elements/time-elements.js"></script>
