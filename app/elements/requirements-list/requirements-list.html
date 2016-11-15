@@ -376,17 +376,10 @@
 
                   <div class="req-icons layout horizontal center">
                     <paper-checkbox></paper-checkbox>
-                    <template is="dom-if" if="{{!isAuthorized}}">
-                      <paper-icon-button icon="star-border" disabled></paper-icon-button>
-                    </template>
-                    <template is="dom-if" if="{{isAuthorized}}">
-                      <template is="dom-if" if="{{userVoted(req.userVoted)}}">
-                        <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
-                      </template>
-                      <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
-                        <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
-                      </template>
-                    </template>
+                    <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, isAuthorized)]]"
+                                       class$="[[_calculateStarClass(req.userVoted, isAuthorized)]]"
+                                       on-tap="_handleStarTap"
+                                       disabled="[[!isAuthorized]]"></paper-icon-button>
                     <div>[[req.upVotes]]</div>
                     <template is="dom-if" if="{{isAuthorized}}">
                       <paper-menu-button horizontal-align="right" vertical-align="top">
@@ -633,7 +626,13 @@
           newComment: {
             type: String
           },
-          isAuthorized: Boolean,
+          /**
+           * Defines whether the user is logged in or not.
+           */
+          isAuthorized: {
+            type: Boolean,
+            notify: true
+          },
           postUrl: String,
           body: Object,
           postResponse: Object,
@@ -1419,6 +1418,65 @@
 
         dragRequirement: function(){
           console.log("drag start!");
+        },
+
+        /**
+         * Calculates the specific star icon to show for the voting feature of the requirements.
+         *
+         * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
+         * @param isAuthorized whether the user is currently logged in or not.
+         * @returns {string} the icon, either a filled star or just the outlines of a star.
+         * @private
+         */
+        _calculateStarIcon: function(vote, isAuthorized) {
+          if (isAuthorized && (vote === 'UP_VOTE')) {
+            return 'star';
+          }
+          return 'star-border';
+        },
+
+        /**
+         * Calculates the CSS class for the star icon of the voting feature of the requirements.
+         *
+         * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
+         * @param isAuthorized whether the user is currently logged in or not.
+         * @returns {string} the CSS class for the star icon.
+         * @private
+         */
+        _calculateStarClass: function(vote, isAuthorized) {
+          if (isAuthorized && (vote === 'UP_VOTE')) {
+            return 'colored';
+          }
+        },
+
+        /**
+         * Handles tapping the star icon.
+         *
+         * @param e
+         * @private
+         */
+        _handleStarTap: function(e) {
+          // first, get the dom-repeat's template instance that generated the item
+          var model = e.model;
+          var vote = model.req.userVoted;
+          var requirementId = model.req.id;
+
+          var request = this.$.starReq;
+          request.url = this.baseHref + "/requirements/" + requirementId + "/vote";
+
+          // now construct the method and body based on the action
+          if (vote === 'NO_VOTE') {
+            request.method = 'POST';
+            request.body = JSON.stringify({
+              "requirementId": requirementId,
+              "direction": "up"
+            });
+          } else {
+            request.method = 'DELETE';
+          }
+
+          // fire the event to the server
+          request.generateRequest();
         }
       });
 
