@@ -203,7 +203,39 @@ gulp.task('clean', function (cb) {
 });
 
 // Watch files for changes & reload
-gulp.task('serve', ['styles', 'elements', 'images'], function () {
+// gulp.task('serve', ['styles', 'elements', 'images'], function () {
+//   browserSync({
+//     port: 5000,
+//     notify: false,
+//     logPrefix: 'PSK',
+//     snippetOptions: {
+//       rule: {
+//         match: '<span id="browser-sync-binding"></span>',
+//         fn: function (snippet) {
+//           return snippet;
+//         }
+//       }
+//     },
+//     // Run as an https by uncommenting 'https: true'
+//     // Note: this uses an unsigned certificate which on first access
+//     //       will present a certificate warning in the browser.
+//     // https: true,
+//     server: {
+//       baseDir: ['.tmp', 'app'],
+//       middleware: [ historyApiFallback() ],
+//       routes: {
+//         '/components': 'components'
+//       }
+//     }
+//   });
+//
+//   gulp.watch(['app/**/*.html'], ['js', reload]);
+//   gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
+//   gulp.watch(['app/elements/**/*.css'], ['elements', reload]);
+//   gulp.watch(['app/images/**/*'], reload);
+// });
+
+gulp.task('serve', ['styles'], function() {
   browserSync({
     port: 5000,
     notify: false,
@@ -211,7 +243,7 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
-        fn: function (snippet) {
+        fn: function(snippet) {
           return snippet;
         }
       }
@@ -222,44 +254,19 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
     // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
-      middleware: [ historyApiFallback() ],
+      middleware: [historyApiFallback()],
       routes: {
         '/components': 'components'
       }
     }
   });
 
-  gulp.watch(['app/**/*.html'], ['js', reload]);
+  gulp.watch(['app/**/*.html', '!app/components/**/*.html'], reload);
   gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
-  gulp.watch(['app/elements/**/*.css'], ['elements', reload]);
+  gulp.watch(['app/scripts/**/*.js'], reload);
   gulp.watch(['app/images/**/*'], reload);
 });
 
-// Build and serve the output from the dist build
-// gulp.task('serve:dist', ['default'], function () {
-//   browserSync({
-//     browser: config.browserSync.browser,
-//     https: config.browserSync.https,
-//     notify: config.browserSync.notify,
-//     port: config.browserSync.port,
-//     logPrefix: 'PSK',
-//     snippetOptions: {
-//       rule: {
-//         match: '<span id="browser-sync-binding"></span>',
-//         fn: function(snippet) {
-//           return snippet;
-//         }
-//       }
-//     },
-//     server: {
-//       baseDir: 'dist',
-//       middleware: [historyApiFallback()]
-//     },
-//     ui: {
-//       port: config.browserSync.ui.port
-//     }
-//   });
-// });
 
 gulp.task('serve:dist', ['default'], function () {
   browserSync({
