@@ -45,7 +45,6 @@
      * @type {string} a JSON object containing the currently logged in user, or null, if not logged in.
      */
     app.currentUser = null;
-    app.compResponse = null;
     app.isMobile = false; //initiate as false
     app.i18n = null;
     app.loading = false;
