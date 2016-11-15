@@ -48,6 +48,12 @@
     app.isMobile = false; //initiate as false
     app.i18n = null;
     app.loading = false;
+    /**
+     * Defines whether the requirements list shows active or realized requirements.
+     * It is used as a property to the <requirements-list>.
+     *
+     * @type {string} 'active' or 'realized'.
+     */
     app.selectedFilter = "active";
     /**
      * Stores whether the requirements view shows a list or a grid.
