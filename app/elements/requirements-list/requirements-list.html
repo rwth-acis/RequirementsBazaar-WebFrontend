@@ -1471,8 +1471,16 @@
               "requirementId": requirementId,
               "direction": "up"
             });
+
+            // give user immediate feedback
+            Polymer.dom(e).localTarget.toggleClass('colored');
+            e.target.setAttribute('icon', 'star');
           } else {
             request.method = 'DELETE';
+
+            // give user immediate feedback
+            Polymer.dom(e).localTarget.toggleClass('colored');
+            e.target.setAttribute('icon', 'star-border');
           }
 
           // fire the event to the server
