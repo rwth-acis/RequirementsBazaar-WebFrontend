@@ -1,39 +1,39 @@
 <link rel="import" href="../../components/polymer/polymer.html">
 
 <dom-module id="requirements-list">
-    <template>
-        <style>
-            :host {
-                display: block;
-            }
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
 
-            paper-card {
-                max-width: 300px;
-                min-width: 300px;
-            }
+      paper-card {
+        max-width: 300px;
+        min-width: 300px;
+      }
 
-            .time {
-                display: inline-flex;
-                font-style: italic;
-                float: right;
-                padding-right: 5px;
-            }
+      .time {
+        display: inline-flex;
+        font-style: italic;
+        float: right;
+        padding-right: 5px;
+      }
 
-            paper-material {
-                border-radius: 2px;
-                /*height: 100%;*/
-                width: calc(98.66% - 16px);
-                margin: 5px auto;
-                padding: 0;
-                max-width: 800px;
-                background: white;
-                cursor: pointer;
-                display: block;
-            }
+      paper-material {
+        border-radius: 2px;
+        /*height: 100%;*/
+        width: calc(98.66% - 16px);
+        margin: 5px auto;
+        padding: 0;
+        max-width: 800px;
+        background: white;
+        cursor: pointer;
+        display: block;
+      }
 
-            .colored {
-                color: var(--paper-orange-500);
-            }
+      .colored {
+        color: var(--paper-orange-500);
+      }
 
             /*
             deactivated as a) on mobile it was always gray when clicked b) on desktop we can't make e.g. the comments
@@ -43,182 +43,182 @@
             }
             */
 
-            paper-toolbar {
-                background: none;
-                color: #000000;
-                height: 75px;
-                margin-right: 125px;
-                right:15px;
-            }
+      paper-toolbar {
+        background: none;
+        color: #000000;
+        height: 75px;
+        margin-right: 125px;
+        right:15px;
+      }
 
-            paper-toolbar .title {
-                margin-left: 0px;
-                margin-bottom: 10px;
-            }
+      paper-toolbar .title {
+        margin-left: 0px;
+        margin-bottom: 10px;
+      }
 
-            paper-toolbar .bottom {
-                font-size: small;
-                font-weight: normal;
-                padding: 16px;
-            }
+      paper-toolbar .bottom {
+        font-size: small;
+        font-weight: normal;
+        padding: 16px;
+      }
 
-            paper-toolbar {
-                --paper-toolbar: {
-                    font-weight: bold;
-                    font-size: large;
-                };
-            }
+      paper-toolbar {
+        --paper-toolbar: {
+          font-weight: bold;
+          font-size: large;
+        };
+      }
 
-            paper-material > div {
-                margin: 0 16px 10px 16px;
-            }
+      paper-material > div {
+        margin: 0 16px 10px 16px;
+      }
 
-            h3 {
-                margin-bottom: 10px;
-            }
+      h3 {
+        margin-bottom: 10px;
+      }
 
-            paper-fab {
-                --paper-fab-background: var(--default-primary-color);
-                display: none;
-            }
+      paper-fab {
+        --paper-fab-background: var(--default-primary-color);
+        display: none;
+      }
 
-            .flex-horizontal {
-                @apply(--layout-horizontal);
-            }
+      .flex-horizontal {
+        @apply(--layout-horizontal);
+      }
 
-            .flexchild {
-                @apply(--layout-flex);
-            }
+      .flexchild {
+        @apply(--layout-flex);
+      }
 
-            .flex-end-align {
-                margin-top: auto;
-                margin-bottom: auto;
-            }
+      .flex-end-align {
+        margin-top: auto;
+        margin-bottom: auto;
+      }
 
-            .req-icons {
-                position: relative;
-                float:right;
-            }
+      .req-icons {
+        position: relative;
+        float:right;
+      }
 
-            .editForm {
-                display: none;
-            }
+      .editForm {
+        display: none;
+      }
 
-            paper-button {
-                /*display: none;*/
-                float: right;
-                margin: 20px;
-            }
+      paper-button {
+        /*display: none;*/
+        float: right;
+        margin: 20px;
+      }
 
-            .contributers {
-                display:none;
-                padding:10px;
-            }
+      .contributers {
+        display:none;
+        padding:10px;
+      }
 
-            .hide {
-                display: none;
-            }
+      .hide {
+        display: none;
+      }
 
-            paper-checkbox{
-                display: none;
-            }
+      paper-checkbox{
+        display: none;
+      }
 
-            .tools {
-                position: fixed;
-                bottom: 50px;
-                left: 10px;
-                z-index: 10;
-                display: none;
-                width: auto;
-                padding: 10px;
-            }
-        </style>
+      .tools {
+        position: fixed;
+        bottom: 50px;
+        left: 10px;
+        z-index: 10;
+        display: none;
+        width: auto;
+        padding: 10px;
+      }
+    </style>
 
-        <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
+    <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
 
-        <i18n-msg class="hide" id="i18n"></i18n-msg>
+    <i18n-msg class="hide" id="i18n"></i18n-msg>
 
-        <iron-ajax
-                id="requirementsLoader"
-                url="{{resourceURL}}"
-                last-response="{{requirements}}"
-                headers="{{header}}"
-                params="{{parameters}}"
-                loading="{{loading}}"></iron-ajax>
+    <iron-ajax
+      id="requirementsLoader"
+      url="{{resourceURL}}"
+      last-response="{{requirements}}"
+      headers="{{header}}"
+      params="{{parameters}}"
+      loading="{{loading}}"></iron-ajax>
 
-        <iron-ajax
-                id="postUpdateRequirement"
-                handle-as="json"
-                content-type="application/json"
-                method="PUT"
-                headers="{{header}}"
-                on-response="handleResponseEditReq"
-                on-error="errorHandler"></iron-ajax>
+    <iron-ajax
+      id="postUpdateRequirement"
+      handle-as="json"
+      content-type="application/json"
+      method="PUT"
+      headers="{{header}}"
+      on-response="handleResponseEditReq"
+      on-error="errorHandler"></iron-ajax>
 
 
-        <iron-ajax
-                id="postDeleteRequirement"
-                handle-as="json"
-                content-type="application/json"
-                method="DELETE"
-                headers="{{header}}"
-                on-response="handleResponseDeleteReq"
-                on-error="errorHandler"></iron-ajax>
+    <iron-ajax
+      id="postDeleteRequirement"
+      handle-as="json"
+      content-type="application/json"
+      method="DELETE"
+      headers="{{header}}"
+      on-response="handleResponseDeleteReq"
+      on-error="errorHandler"></iron-ajax>
 
-        <iron-ajax
-                id="followReq"
-                handle-as="json"
-                content-type="application/json"
-                method="POST"
-                headers="{{header}}"
-                on-response="handleResponseFollowReq"
-                on-error="errorHandler"></iron-ajax>
+    <iron-ajax
+      id="followReq"
+      handle-as="json"
+      content-type="application/json"
+      method="POST"
+      headers="{{header}}"
+      on-response="handleResponseFollowReq"
+      on-error="errorHandler"></iron-ajax>
 
-        <iron-ajax
-                id="unfollowReq"
-                handle-as="json"
-                content-type="application/json"
-                method="DELETE"
-                headers="{{header}}"
-                on-response="handleResponseUnfollowReq"
-                on-error="errorHandler"></iron-ajax>
+    <iron-ajax
+      id="unfollowReq"
+      handle-as="json"
+      content-type="application/json"
+      method="DELETE"
+      headers="{{header}}"
+      on-response="handleResponseUnfollowReq"
+      on-error="errorHandler"></iron-ajax>
 
-        <iron-ajax
-                id="developReq"
-                handle-as="json"
-                content-type="application/json"
-                method="POST"
-                headers="{{header}}"
-                on-response="handleResponseDevelopReq"
-                on-error="errorHandler"></iron-ajax>
+    <iron-ajax
+      id="developReq"
+      handle-as="json"
+      content-type="application/json"
+      method="POST"
+      headers="{{header}}"
+      on-response="handleResponseDevelopReq"
+      on-error="errorHandler"></iron-ajax>
 
-        <iron-ajax
-                id="undevelopReq"
-                handle-as="json"
-                content-type="application/json"
-                method="DELETE"
-                headers="{{header}}"
-                on-response="handleResponseUndevelopReq"
-                on-error="errorHandler"></iron-ajax>
+    <iron-ajax
+      id="undevelopReq"
+      handle-as="json"
+      content-type="application/json"
+      method="DELETE"
+      headers="{{header}}"
+      on-response="handleResponseUndevelopReq"
+      on-error="errorHandler"></iron-ajax>
 
-        <iron-ajax
-                id="starReq"
-                handle-as="json"
-                content-type="application/json"
-                headers="{{header}}"
-                on-response="load"
-                on-error="errorHandler"></iron-ajax>
+    <iron-ajax
+      id="starReq"
+      handle-as="json"
+      content-type="application/json"
+      headers="{{header}}"
+      on-response="load"
+      on-error="errorHandler"></iron-ajax>
 
-        <iron-ajax
-                id="postCommentRequest"
-                handle-as="json"
-                url="{{baseHref}}/comments"
-                content-type="application/json"
-                method="POST"
-                headers="{{header}}"
-                on-response="handleResponseComment"
-                last-response="{{postResponse}}"
-                on-error="errorHandler"></iron-ajax>
+    <iron-ajax
+      id="postCommentRequest"
+      handle-as="json"
+      url="{{baseHref}}/comments"
+      content-type="application/json"
+      method="POST"
+      headers="{{header}}"
+      on-response="handleResponseComment"
+      last-response="{{postResponse}}"
+      on-error="errorHandler"></iron-ajax>
 
         <!--<iron-ajax-->
                 <!--id="postIssueGit"-->
@@ -238,257 +238,258 @@
                 <!--on-response="showRepoSearchResults"-->
                 <!--on-error="errorHandler"></iron-ajax>-->
 
-        <!-- DIALOG FOR DELETE REQUIREMENT CONFIRMATION -->
+    <!-- DIALOG FOR DELETE REQUIREMENT CONFIRMATION -->
 
-        <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
-                      exit-animation="fade-out-animation">
-            <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
-            <p><i18n-msg msgid="deleteRequirementDesc"></i18n-msg></p>
-            <div class="buttons">
-                <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
-                <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
-            </div>
-        </paper-dialog>
+    <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation">
+      <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
+      <p><i18n-msg msgid="deleteRequirementDesc"></i18n-msg></p>
+      <div class="buttons">
+        <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+        <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
+      </div>
+    </paper-dialog>
 
-        <!-- DIALOG SHOWING COMMENTS IN GRID VIEW -->
+    <!-- DIALOG SHOWING COMMENTS IN GRID VIEW -->
 
-        <paper-dialog id="commentsDialog" on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
-            style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
-            <h2><i18n-msg msgid="comments"></i18n-msg></h2>
-            <p style="max-height: 80%;">
-                <comments-list header="{{header}}" base-href="{{baseHref}}"></comments-list>
-                <template is="dom-if" if="{{isAuthorized}}">
-                    <div class="container flex-horizontal">
-                        <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                        <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
-                        </paper-input>
-                        <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
-                    </div>
-                </template>
-            </p>
-        </paper-dialog>
-
-        <!-- DIALOG FOR GITHUB EXPORT FUNCTIONALITY -->
-
-        <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
-            <h2>Your Github Repositories</h2>
-                <paper-dialog-scrollable>
-                    <paper-input id="searchGithubRepo" label="Search a Github Repository" on-keydown="searchGithubRepo">
-                        <iron-icon icon="search" prefix></iron-icon>
-                    </paper-input>
-                    <iron-selector id="selRepo" selected="0">
-                        <template is="dom-repeat" items$="{{repositories}}" id="repoElements">
-                            <paper-item>
-                                <paper-item-body two-line>
-                                    <div>{{item.name}}</div>
-                                    <div secondary>{{item.description}}</div>
-                                </paper-item-body>
-                            </paper-item>
-                        </template>
-                    </iron-selector>
-                </paper-dialog-scrollable>
-            <div class="buttons">
-                <paper-button dialog-dismiss>Cancel</paper-button>
-                <paper-button dialog-confirm autofocus>POST</paper-button>
-            </div>
-        </paper-dialog>
-
-        <!-- FLOATING TOOLBAR FOR SELECTED REQUIREMENTS -->
-
-        <paper-material elevation="5" id="tools" class="tools">
-            <span>{{selectedRequirements.length}} Requirements selected.</span>
-            <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
-            <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
-        </paper-material>
-
-        <!-- GRID VIEW -->
-
-        <template is="dom-if" if="{{!list}}" restamp>
-            <masonry-layout id="grids" column-width="100">
-                <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
-                    <template is="dom-if" if="{{!activeOption}}">
-                        <template is="dom-if" if="{{!req.realized}}">
-                            <div class="grid-item">
-                                <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
-                                    <!--<paper-checkbox></paper-checkbox>-->
-                                    <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
-                                    <time is="relative-time" class="time"
-                                          datetime$="[[req.creation_time]]">
-                                    </time>
-                                    <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
-                                    <div class="card-content" class="truncate">{{req.description}}</div>
-                                    <div class="card-actions">
-                                        <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
-                                            <iron-icon icon="editor:mode-comment"></iron-icon>
-                                        </paper-button>
-
-                                        <template is="dom-if" if="{{!isAuthorized}}">
-                                            <paper-button noink> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
-                                        </template>
-                                        <template is="dom-if" if="{{isAuthorized}}">
-                                            <template is="dom-if" if="{{userVoted(req.userVoted)}}">
-                                                <paper-button noink on-tap="starDelRequest"> <iron-icon class="colored" icon="star"></iron-icon> {{req.upVotes}}</paper-button>
-                                            </template>
-                                            <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
-                                                <paper-button noink on-tap="starRequest"> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
-                                            </template>
-                                        </template>
-
-                                    </div>
-                                </paper-card>
-                            </div>
-                        </template>
-                    </template>
-                    <template is="dom-if" if="{{activeOption}}">
-                        <template is="dom-if" if="{{req.realized}}">
-                            <div class="grid-item">
-                                <paper-card heading="{{req.title}}">
-                                    <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
-                                    <time is="relative-time" class="time"
-                                          datetime$="[[req.creation_time]]">
-                                    </time>
-                                    <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
-                                    <div class="card-content" class="truncate">{{req.description}}</div>
-                                    <div class="card-actions">
-                                        <paper-button noink>
-                                            <iron-icon icon="star"></iron-icon>
-                                            {{req.upVotes}}
-                                        </paper-button>
-                                    </div>
-                                </paper-card>
-                            </div>
-                        </template>
-                    </template>
-                </template>
-            </masonry-layout>
+    <paper-dialog id="commentsDialog" on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
+                  style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
+      <h2><i18n-msg msgid="comments"></i18n-msg></h2>
+      <p style="max-height: 80%;">
+        <comments-list header="{{header}}" base-href="{{baseHref}}"></comments-list>
+        <template is="dom-if" if="{{isAuthorized}}">
+          <div class="container flex-horizontal">
+            <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+            <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
+            </paper-input>
+            <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
+          </div>
         </template>
+      </p>
+    </paper-dialog>
 
-        <!-- LIST VIEW -->
+    <!-- DIALOG FOR GITHUB EXPORT FUNCTIONALITY -->
 
-        <template is="dom-if" if="{{list}}" restamp>
-            <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
-                <div class="layout vertical center">
-                    <template is="dom-if" if$="{{!activeOption}}" restamp>
-                        <template is="dom-if" if="{{!req.realized}}">
-                            <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
-                                <div class="reqbody">
+    <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
+      <h2>Your Github Repositories</h2>
+      <paper-dialog-scrollable>
+        <paper-input id="searchGithubRepo" label="Search a Github Repository" on-keydown="searchGithubRepo">
+          <iron-icon icon="search" prefix></iron-icon>
+        </paper-input>
+        <iron-selector id="selRepo" selected="0">
+          <template is="dom-repeat" items$="{{repositories}}" id="repoElements">
+            <paper-item>
+              <paper-item-body two-line>
+                <div>{{item.name}}</div>
+                <div secondary>{{item.description}}</div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+        </iron-selector>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>POST</paper-button>
+      </div>
+    </paper-dialog>
 
-                                    <div class="req-icons layout horizontal center">
-                                        <paper-checkbox></paper-checkbox>
-                                        <template is="dom-if" if="{{!isAuthorized}}">
-                                            <paper-icon-button icon="star-border" disabled></paper-icon-button>
-                                        </template>
-                                        <template is="dom-if" if="{{isAuthorized}}">
-                                            <template is="dom-if" if="{{userVoted(req.userVoted)}}">
-                                                <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
-                                            </template>
-                                            <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
-                                                <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
-                                            </template>
-                                        </template>
-                                        <div>[[req.upVotes]]</div>
-                                        <template is="dom-if" if="{{isAuthorized}}">
-                                            <paper-menu-button horizontal-align="right" vertical-align="top">
-                                                <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                                <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                                    <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
-                                                    <paper-item on-tap="toggleContributers" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
-                                                    <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
-                                                    <template is="dom-if" if="{{!isFollower}}">
-                                                        <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
-                                                    </template>
-                                                    <template is="dom-if" if="{{isFollower}}">
-                                                        <paper-item on-tap="unfollowReq"><i18n-msg msgid="unfollowRequirement"></i18n-msg></paper-item>
-                                                    </template>
-                                                    <template is="dom-if" if="{{!isDeveloper}}">
-                                                        <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
-                                                    </template>
-                                                    <paper-item on-tap="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
-                                                    <template is="dom-if" if="{{isDeveloper}}">
-                                                        <paper-item on-tap="undevelopReq"><i18n-msg msgid="undevelopRequirement"></i18n-msg></paper-item>
-                                                    </template>
-                                                    <paper-item on-tap="editRequirement"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
-                                                    <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
-                                                </paper-menu>
-                                            </paper-menu-button>
-                                        </template>
-                                    </div>
+    <!-- FLOATING TOOLBAR FOR SELECTED REQUIREMENTS -->
 
-                                    <paper-toolbar class="title" on-tap="onRequirementTap">
-                                        <div class="title">[[req.title]]</div>
-                                        <div class="bottom fit helper" style="margin-top:20px;">
-                                            <time is="relative-time" datetime$="[[req.creation_time]]"></time>
-                                            <i18n-msg msgid="by"></i18n-msg>
-                                            <req-user user="[[req.creator]]" normal-view></req-user>
-                                        </div>
-                                    </paper-toolbar>
+    <paper-material elevation="5" id="tools" class="tools">
+      <span>{{selectedRequirements.length}} Requirements selected.</span>
+      <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
+      <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
+    </paper-material>
 
-                                </div>
+    <!-- GRID VIEW -->
 
-                                <div class="line"></div>
+    <template is="dom-if" if="{{!list}}" restamp>
+      <masonry-layout id="grids" column-width="100">
+        <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
+          <template is="dom-if" if="{{!activeOption}}">
+            <template is="dom-if" if="{{!req.realized}}">
+              <div class="grid-item">
+                <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
+                  <!--<paper-checkbox></paper-checkbox>-->
+                  <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
+                  <time is="relative-time" class="time"
+                        datetime$="[[req.creation_time]]">
+                  </time>
+                  <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
+                  <div class="card-content" class="truncate">{{req.description}}</div>
+                  <div class="card-actions">
+                    <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
+                      <iron-icon icon="editor:mode-comment"></iron-icon>
+                    </paper-button>
 
-                                <div class="contributers">
-                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
-                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
-                                    <template is="dom-if" if="{{!isEmpty(req.developers)}}">
-                                        <div><i18n-msg msgid="developers"></i18n-msg>:
-                                            <template is="dom-repeat" items="{{req.developers}}" as="dev">
-                                                <div  style="display:inline-block">
-                                                    <req-user user="[[dev]]" mini></req-user>
-                                                    <paper-tooltip>{{dev.userName}}</paper-tooltip>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </template>
-                                    <template is="dom-if" if="{{!isEmpty(req.followers)}}">
-                                        <div><i18n-msg msgid="followers"></i18n-msg>:
-                                            <template is="dom-repeat" items="{{req.followers}}" as="foll">
-                                                <div  style="display:inline-block">
-                                                    <req-user user="[[foll]]" mini></req-user>
-                                                    <paper-tooltip>{{foll.userName}}</paper-tooltip>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </template>
-                                    <div class="line"></div>
-                                </div>
-
-                                <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
-                                <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
-
-                                <div class="comments">
-
-                                    <iron-collapse id="reqExpand">
-                                        <!--<file-gallery attachments="{{req.attachments}}"></file-gallery>-->
-                                        <h4><i18n-msg msgid="comments"></i18n-msg></h4>
-                                        <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}"></comments-list>
-                                        <template is="dom-if" if="{{isAuthorized}}">
-                                            <div class="container flex-horizontal" id="[[req.id]]">
-                                                <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                                                <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
-                                                    <!--<emoji-selector suffix></emoji-selector>-->
-                                                </paper-input>
-                                                <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
-                                            </div>
-                                        </template>
-                                    </iron-collapse>
-
-                                </div>
-
-                                <div class="editForm">
-
-                                    <paper-input class="editTitle" class="title" value="{{req.title}}"></paper-input>
-                                    <paper-textarea value="{{req.description}}"></paper-textarea>
-                                    <paper-button raised on-tap="saveEditReq" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
-                                    <paper-button raised on-tap="cancelRequirement" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
-
-                                </div>
-
-                            </paper-material>
-                        </template>
+                    <template is="dom-if" if="{{!isAuthorized}}">
+                      <paper-button noink> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
+                    </template>
+                    <template is="dom-if" if="{{isAuthorized}}">
+                      <template is="dom-if" if="{{userVoted(req.userVoted)}}">
+                        <paper-button noink on-tap="starDelRequest"> <iron-icon class="colored" icon="star"></iron-icon> {{req.upVotes}}</paper-button>
+                      </template>
+                      <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
+                        <paper-button noink on-tap="starRequest"> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
+                      </template>
                     </template>
 
-                    <template is="dom-if" if="{{activeOption}}" restamp>
+                  </div>
+                </paper-card>
+              </div>
+            </template>
+          </template>
+          <template is="dom-if" if="{{activeOption}}">
+            <template is="dom-if" if="{{req.realized}}">
+              <div class="grid-item">
+                <paper-card heading="{{req.title}}">
+                  <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
+                  <time is="relative-time" class="time"
+                        datetime$="[[req.creation_time]]">
+                  </time>
+                  <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
+                  <div class="card-content" class="truncate">{{req.description}}</div>
+                  <div class="card-actions">
+                    <paper-button noink>
+                      <iron-icon icon="star"></iron-icon>
+                      {{req.upVotes}}
+                    </paper-button>
+                  </div>
+                </paper-card>
+              </div>
+            </template>
+          </template>
+        </template>
+      </masonry-layout>
+    </template>
+
+    <!-- LIST VIEW -->
+
+    <template is="dom-if" if="{{list}}" restamp>
+      <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
+        <div class="layout vertical center">
+
+          <template is="dom-if" if$="{{!activeOption}}" restamp>
+            <template is="dom-if" if="{{!req.realized}}">
+              <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+                <div class="reqbody">
+
+                  <div class="req-icons layout horizontal center">
+                    <paper-checkbox></paper-checkbox>
+                    <template is="dom-if" if="{{!isAuthorized}}">
+                      <paper-icon-button icon="star-border" disabled></paper-icon-button>
+                    </template>
+                    <template is="dom-if" if="{{isAuthorized}}">
+                      <template is="dom-if" if="{{userVoted(req.userVoted)}}">
+                        <paper-icon-button class="colored" icon="star" on-tap="starDelRequest"></paper-icon-button>
+                      </template>
+                      <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
+                        <paper-icon-button icon="star-border" on-tap="starRequest"></paper-icon-button>
+                      </template>
+                    </template>
+                    <div>[[req.upVotes]]</div>
+                    <template is="dom-if" if="{{isAuthorized}}">
+                      <paper-menu-button horizontal-align="right" vertical-align="top">
+                        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                        <paper-menu id="componentInfoMenu" class="dropdown-content">
+                          <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
+                          <paper-item on-tap="toggleContributers" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
+                          <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
+                          <template is="dom-if" if="{{!isFollower}}">
+                            <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
+                          </template>
+                          <template is="dom-if" if="{{isFollower}}">
+                            <paper-item on-tap="unfollowReq"><i18n-msg msgid="unfollowRequirement"></i18n-msg></paper-item>
+                          </template>
+                          <template is="dom-if" if="{{!isDeveloper}}">
+                            <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
+                          </template>
+                          <paper-item on-tap="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
+                          <template is="dom-if" if="{{isDeveloper}}">
+                            <paper-item on-tap="undevelopReq"><i18n-msg msgid="undevelopRequirement"></i18n-msg></paper-item>
+                          </template>
+                          <paper-item on-tap="editRequirement"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
+                          <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
+                        </paper-menu>
+                      </paper-menu-button>
+                    </template>
+                  </div>
+
+                  <paper-toolbar class="title" on-tap="onRequirementTap">
+                    <div class="title">[[req.title]]</div>
+                    <div class="bottom fit helper" style="margin-top:20px;">
+                      <time is="relative-time" datetime$="[[req.creation_time]]"></time>
+                      <i18n-msg msgid="by"></i18n-msg>
+                      <req-user user="[[req.creator]]" normal-view></req-user>
+                    </div>
+                  </paper-toolbar>
+
+                </div>
+
+                <div class="line"></div>
+
+                <div class="contributers">
+                  <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
+                  <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
+                  <template is="dom-if" if="{{!isEmpty(req.developers)}}">
+                    <div><i18n-msg msgid="developers"></i18n-msg>:
+                      <template is="dom-repeat" items="{{req.developers}}" as="dev">
+                        <div  style="display:inline-block">
+                          <req-user user="[[dev]]" mini></req-user>
+                          <paper-tooltip>{{dev.userName}}</paper-tooltip>
+                        </div>
+                      </template>
+                    </div>
+                  </template>
+                  <template is="dom-if" if="{{!isEmpty(req.followers)}}">
+                    <div><i18n-msg msgid="followers"></i18n-msg>:
+                      <template is="dom-repeat" items="{{req.followers}}" as="foll">
+                        <div  style="display:inline-block">
+                          <req-user user="[[foll]]" mini></req-user>
+                          <paper-tooltip>{{foll.userName}}</paper-tooltip>
+                        </div>
+                      </template>
+                    </div>
+                  </template>
+                  <div class="line"></div>
+                </div>
+
+                <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
+                <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
+
+                <div class="comments">
+
+                  <iron-collapse id="reqExpand">
+                    <!--<file-gallery attachments="{{req.attachments}}"></file-gallery>-->
+                    <h4><i18n-msg msgid="comments"></i18n-msg></h4>
+                    <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}"></comments-list>
+                    <template is="dom-if" if="{{isAuthorized}}">
+                      <div class="container flex-horizontal" id="[[req.id]]">
+                        <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+                        <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                          <!--<emoji-selector suffix></emoji-selector>-->
+                        </paper-input>
+                        <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+                      </div>
+                    </template>
+                  </iron-collapse>
+
+                </div>
+
+                <div class="editForm">
+
+                  <paper-input class="editTitle" class="title" value="{{req.title}}"></paper-input>
+                  <paper-textarea value="{{req.description}}"></paper-textarea>
+                  <paper-button raised on-tap="saveEditReq" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
+                  <paper-button raised on-tap="cancelRequirement" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+
+                </div>
+
+              </paper-material>
+            </template>
+          </template>
+
+          <template is="dom-if" if="{{activeOption}}" restamp>
                         <template is="dom-if" if="{{req.realized}}">
                             <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
                                 <div class="reqbody">
@@ -580,847 +581,848 @@
                             </paper-material>
                         </template>
                     </template>
-                </div>
-            </template>
-        </template>
 
-        <!-- TOAST FOR APP NOTIFICATIONS (FEEDBACK) -->
-
-        <paper-toast id="toast" text="[[feedback]]"></paper-toast>
-
+        </div>
+      </template>
     </template>
 
-    <script src="../../components/time-elements/time-elements.js"></script>
-
-    <script>
-        (function () {
-//            'use strict';
-
-            Polymer({
-                is: 'requirements-list',
-                listeners: {
-                    'change': 'addToSelectedReq'
-                },
-                properties: {
-                    componentId: {
-                        type: Number
-                    },
-                    selected: {
-                        type: String,
-                        notify: true,
-                        value: "active"
-                    },
-                    baseHref: {
-                        type: String,
-                        notify: true,
-                        reflectToAttribute: true
-                    },
-                    resourceURL: {
-                        type: String,
-                        computed: 'computeResourceURL(baseHref, componentId)'
-                    },
-                    requirements: {
-                        type: Array,
-                        notify: true
-                    },
-                    selectedRequirements: {
-                        type: Array,
-                        value: [],
-                        notify: true
-                    },
-                    newComment: {
-                        type: String
-                    },
-                    isAuthorized: Boolean,
-                    postUrl: String,
-                    body: Object,
-                    postResponse: Object,
-                    feedback: String,
-                    header: {
-                        type:Object,
-                        notify: true
-                    },
-                    parameters:{
-                        type:Object,
-                        notify: true,
-                        value: {per_page: 60}
-                    },
-                    elem: Object,
-                    isFollower: {
-                        type: Boolean,
-                        value: false
-                    },
-                    isDeveloper: {
-                        type: Boolean,
-                        value: false
-                    },
-                    showContributers: {
-                        type: Boolean,
-                        value: false
-                    },
-                    commentlbl: String,
-                    i18n: Object,
-                    filterValue: {
-                        type: String,
-                        value: ''
-                    },
-                    loading: {
-                        type: Boolean,
-                        notify: true
-                    },
-                    buttons:{
-                        type: Array,
-                        value: [],
-                        notify: true
-                    },
-                    list: {
-                        type: Boolean,
-                        notify: true,
-                        observer: "_hasEnoughItems"
-                    },
-                    activeOption: {
-                        type: Boolean,
-                        notify: true,
-                        value: false
-                    },
-                    repositories: {
-                        type: Object,
-                        notify: true,
-                        reflectToAttribute: true
-                    }
-                },
-
-                observers: [
-                    'manageSelReq(selectedRequirements.splices)',
-                    'computeRealized(selected)'
-                ],
-
-                ready: function () {
-                    this.i18n = this.$.i18n;
-                },
-
-                computeRealized: function(selected){
-                    if(selected === "active"){
-                        this.activeOption = false;
-                    } else {
-                        this.activeOption = true;
-                    }
-                },
-
-                _hasEnoughItems: function () {
-                    if (!this.list){
-                        var n = Math.floor((window.innerWidth - 300) / 300);
-                        var free = (window.innerWidth - 300) - n * (300 + 20);
-                        this.style.paddingLeft = "" + free / 2 + "px";
-                    } else {
-                        this.style.paddingLeft = "0px";
-                    }
-                },
-
-                computeResourceURL: function (baseHref, componentId) {
-                    return baseHref + '/components/' + componentId + '/requirements/';
-                },
-
-                toggleCollapsible: function(e, data) {
-                    if (e != null) {
-                        var contentNode = Polymer.dom(e.currentTarget).parentNode.parentNode.querySelector('iron-collapse');
-                        if (!contentNode.opened) {
-                            // since we are about to open it, trigger loading the comments
-                            Polymer.dom(e.currentTarget).parentNode.parentNode.querySelector('comments-list').load();
-                        }
-                        contentNode.toggle();
-                    } else {
-                        var contentNode = data.parentNode.querySelector('iron-collapse');
-                        if (contentNode.parentNode.parentNode.elevation === 1){
-                            contentNode.parentNode.parentNode.elevation = 5;
-                        } else {
-                            contentNode.parentNode.parentNode.elevation = 1;
-                        }
-                        if (contentNode.parentNode.parentNode.querySelector(".description").classList.contains("helper")){
-                            contentNode.parentNode.parentNode.querySelector(".description").classList.remove("helper");
-                        } else {
-                            contentNode.parentNode.parentNode.querySelector(".description").classList.add("helper");
-                        }
-                        if (!contentNode.opened) {
-                            // since we are about to open it, trigger loading the comments
-                            data.parentNode.querySelector('comments-list').load();
-                        } else {
-                            page.redirect('/projects/' + app.params.projectId + "/components/" + app.params.componentId);
-                        }
-                        contentNode.toggle();
-                    }
-                },
-
-                load: function() {
-                    this.$.requirementsLoader.generateRequest();
-                },
-
-                starRequest: function(e){
-                    var req = this.$.starReq;
-                    var reqId;
-                    if (this.list) {
-                        reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
-                    } else {
-                        reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
-                    }
-                    req.method = "POST";
-                    req.url = this.baseHref + "/requirements/" + reqId + "/vote";
-                    req.body = JSON.stringify({
-                        "requirementId": reqId,
-                        "direction": "up"
-                    });
-                    req.generateRequest();
-                },
-
-                starDelRequest: function(e){
-                    var req = this.$.starReq;
-                    var reqId;
-                    if (this.list) {
-                        reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
-                    } else {
-                        reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
-                    }
-                    req.method = "DELETE";
-                    req.url = this.baseHref + "/requirements/" + reqId + "/vote";
-                    req.generateRequest();
-                },
-
-                showOnHover: function(e){
-                    var chb = e.currentTarget.querySelector("paper-checkbox");
-                    chb.style.display = "block";
-                },
-
-                hideOnOut: function (e) {
-                    var chb = e.currentTarget.querySelector("paper-checkbox");
-                    if (!chb.checked){
-                        chb.style.display = "none";
-                    }
-                },
-
-                manageSelReq: function(selReq){
-                    if(this.selectedRequirements.length !== 0){
-                        document.querySelector(".tools").style.display = "block";
-                    }
-                },
-
-                showRepoSearchResults: function(){
-                    this.repositories = this.searchRepositories.items;
-                },
-
-                addToSelectedReq: function(e){
-                    var id = e.target.parentNode.parentNode.parentNode.id;
-                    if (e.target.checked){
-                        this.push('selectedRequirements', id);
-                    } else {
-                        var index = this.selectedRequirements.indexOf(id);
-                        if (index > -1) {
-                            this.splice('selectedRequirements', index, 1);
-                        }
-                        if (this.selectedRequirements.length === 0){
-                            document.querySelector(".tools").style.display = "none";
-                        }
-                    }
-                },
-
-                downloadRequirements: function(e){
-                    var selReq = [];
-                    for (var i=0; i < this.selectedRequirements.length; i++){
-                        for (var j=0; j < this.requirements.length; j++){
-                            if (parseInt(this.selectedRequirements[i]) === this.requirements[j].id){
-                                selReq.push(this.requirements[j]);
-                            }
-                        }
-                    }
-
-//                    console.log(selReq);
-
-                    //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
-                    var arrData = typeof selReq != 'object' ? JSON.parse(selReq) : selReq;
-
-                    var CSV = '';
-                    //Set Report title in first row or line
-
-                    CSV += "Requirements of " + arrData[0].components[0].name + '\r\n\n';
-
-                    var row = "TITLE, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, COMPONENT";
-
-                    //append Label row with line break
-                    CSV += row + '\r\n';
-
-                    //1st loop is to extract each row
-                    for (var i = 0; i < arrData.length; i++) {
-                        var row = "";
-
-                        row += '"' + arrData[i].title + '",';
-                        row += '"' + arrData[i].description + '",';
-                        row += '"' + arrData[i].creation_time + '",';
-                        row += '"' + arrData[i].creator.userName + '",';
-                        row += '"' + arrData[i].developers.length + '",';
-                        row += '"' + arrData[i].followers.length + '",';
-                        row += '"' + arrData[i].components[0].name + '",';
-
-                        row.slice(0, row.length - 1);
-
-                        //add a line break after each row
-                        CSV += row + '\r\n';
-                    }
-
-                    if (CSV == '') {
-                        alert("Invalid data");
-                        return;
-                    }
-
-                    //Generate a file name
-                    var fileName = arrData[0].components[0].name + "_";
-                    //this will remove the blank-spaces from the title and replace it with an underscore
-                    fileName += "Requirements".replace(/ /g,"_");
-
-                    //Initialize file format you want csv or xls
-                    var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
-
-                    console.log(uri);
-
-                    //this trick will generate a temp <a /> tag
-                    var link = document.createElement("a");
-                    link.href = uri;
-
-                    //set the visibility hidden so it will not effect on your web-layout
-                    link.style = "visibility:hidden";
-                    link.download = fileName + ".csv";
-
-                    //this part will append the anchor tag and remove it after automatic click
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                },
-
-                postGridComment: function(e){
-                    var reqId = e.currentTarget.parentNode.parentNode.querySelector("comments-list").requirementId;
-                    var request = this.$.postCommentRequest;
-                    if (this.newComment != null && this.newComment != ''){
-                        request.body = JSON.stringify({
-                            "requirementId": reqId,
-                            "message": this.newComment
-                        });
-                        request.generateRequest();
-                    } else {
-                        this.feedback = this.i18n.getMsg('');
-                        this.$.toast.open();
-                    }
-                    this.newComment = '';
-                    e.currentTarget.parentNode.parentNode.querySelector(".comments-input").value = null;
-                },
-
-                showGithubRepos: function(e){
-                    this.$.reposContainer.open();
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
-                    }
-                    this.selReq = element.id;
-                },
-
-                onRepoDialogClosed: function (e) {
-                    if(e.detail.confirmed){
-                        var title = "";
-                        var desc = "";
-                        for (var i=0; i < this.requirements.length; i++){
-                            if (this.requirements[i].id == this.selReq){
-                                title = this.requirements[i].title;
-                                desc = this.requirements[i].description;
-                            }
-                            break;
-                        }
-                        var req = this.$.postIssueGit;
-                        req.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
-                        req.body = JSON.stringify({
-                            "title": title,
-                            "body": desc
-                        });
-                        req.generateRequest();
-                    } else {
-                        this.$.selRepo.selected = "0";
-                        this.selReq = null;
-                    }
-                },
-
-                addComment: function(e){
-                    var currentReqId = e.currentTarget.parentNode.id;
-                    var currentInpId = currentReqId + 'input';
-                    var request = this.$.postCommentRequest;
-                    if (this.newComment != null && this.newComment != ''){
-                        request.body = JSON.stringify({
-                            "requirementId": parseInt(currentReqId),
-                            "message": this.newComment
-                        });
-                        request.generateRequest();
-                    } else {
-                        this.$.toast.text = this.i18n.getMsg('commentNoEmpty');
-                        this.$.toast.open();
-                    }
-                    this.newComment = '';
-                    document.getElementById(currentInpId).value = null;
-                },
-
-                handleResponseComment: function(data){
-                    if (this.list){
-                        var str = ''+ this.postResponse.requirementId + 'input';
-                        var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
-                        el.load();
-                    } else {
-                        document.querySelector("comments-list").load();
-                        document.querySelector("comments-list").parentNode.querySelector("paper-input").value = null;
-                    }
-
-                },
-
-                showSendButton: function(e){
-                    var fab = e.currentTarget.parentNode.querySelector("#fab");
-                    if (this.newComment){
-                        fab.style.display = 'block';
-                    } else {
-                        fab.style.display = 'none';
-                    }
-                },
-
-                showButton: function(e){
-                    var fabId = e.currentTarget.parentNode.id + 'fab';
-                    if (this.newComment){
-                        document.getElementById(fabId).style.display = 'block';
-                    } else {
-                        document.getElementById(fabId).style.display = 'none';
-                    }
-                },
-
-                errorHandler: function (e, detail){
-                    this.$.toast.text = detail.error.message;
-                    this.$.toast.open();
-                },
-
-                handleResponseGithubIssue: function(){
-                    this.$.toast.text = "Issue posted to Github";
-                    this.$.toast.open();
-                },
-
-                doneRequirement: function(e){
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-                    var request = this.$.postUpdateRequirement;
-
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
-                    }
-
-                    request.url = this.baseHref + "/requirements/" + element.id;
-                    var today = new Date();
-                    var month = today.toDateString().substring(4, 7);
-                    var date = today.getDate();
-                    var year = today.getUTCFullYear();
-                    var hours = today.getHours();
-                    var minutes = today.getMinutes();
-                    var seconds = today.getSeconds();
-                    var ampm = hours >= 12 ? 'PM' : 'AM';
-                    hours = hours % 12;
-                    hours = hours ? hours : 12; // the hour '0' should be '12'
-                    minutes = minutes < 10 ? '0'+minutes : minutes;
-                    seconds = seconds < 10 ? '0'+seconds : seconds;
-                    var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-                    var dateString = month + ' ' + date + ', ' + year + ' ' + strTime;
-                    request.body = JSON.stringify({
-                        "id": parseInt(element.id),
-                        "realized": dateString
-                    });
-
-                    request.generateRequest();
-                },
-
-                becomeLeadDeveloper: function(e){
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-                    var request = this.$.postUpdateRequirement;
-
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
-                    }
-                    request.url = this.baseHref + "/requirements/" + element.id;
-                    request.body = JSON.stringify({
-                        "id": parseInt(element.id),
-                        "leadDeveloperId": app.currentUser.id
-                    });
-                    request.generateRequest();
-                },
-
-                closeTools: function(){
-                    document.getElementById("tools").style.display = "none";
-                    for (var i=0; i < this.selectedRequirements.length; i++){
-                        document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").checked = false;
-                        document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").style.display = "none";
-                    }
-                    this.selectedRequirements = [];
-                },
-
-                undoRequirement: function(e){
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-                    var request = this.$.postUpdateRequirement;
-
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
-                    }
-
-                    request.url = this.baseHref + "/requirements/" + element.id;
-                    request.body = JSON.stringify({
-                        "id": parseInt(element.id),
-                        "realized": null
-                    });
-                    console.log(request.url, request.body);
-                    request.generateRequest();
-                },
-
-                editRequirement: function(e) {
-                    //get top node
-                    var parentEl = this.findUpTag(e.currentTarget.parentNode.parentNode.parentNode, 'PAPER-MATERIAL');
-
-                    //hide card elements
-                    parentEl.querySelector('.reqbody').style.display = 'none';
-                    parentEl.querySelector('.comments').style.display = 'none';
-                    parentEl.querySelector('.description').style.display = 'none';
-                    //show form elements
-                    parentEl.querySelector('.editForm').style.display = 'block';
-                },
-
-                cancelRequirement: function(e){
-                    e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
-
-                    e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
-                    e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
-                    e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
-                },
-
-                saveEditReq: function(e){
-                    var title = e.currentTarget.parentNode.querySelector('PAPER-INPUT').value;
-                    var description = e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').value;
-                    var id = e.currentTarget.parentNode.parentNode.id;
-                    var request = this.$.postUpdateRequirement;
-                    var components = [{id: parseInt(app.params.componentId)}];
-                    request.url = this.baseHref + "/requirements/" + id;
-
-                    if (title != '' && description != ''){
-                        request.body = JSON.stringify({
-                            "id": parseInt(id),
-                            "title": title,
-                            "description": description,
-                            "projectId": parseInt(app.params.projectId),
-                            "components": components
-                        });
-                        request.generateRequest();
-
-                        //revert the look
-                        e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
-
-                        e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
-                        e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
-                        e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
-                    } else {
-                        this.$.toast.text = this.i18n.getMsg('fieldsNotEmptyReq');
-                        this.$.toast.open();
-                    }
-
-                },
-
-                handleResponseEditReq: function(data) {
-                    if (data != null){
-                        this.feedback = this.i18n.getMsg('reqEditSucc');
-                        this.load();
-                    }
-                    this.$.toast.open();
-                },
-
-                createModal: function(e){
-                    this.$.modal.open();
-                    this.elem = e.currentTarget;
-                },
-
-                openCommentsDialog: function(e){
-                    this.$.commentsDialog.querySelector("comments-list").requirementId = e.currentTarget.atr;
-                    this.$.commentsDialog.querySelector("comments-list").load();
-                    this.$.commentsDialog.open();
-                },
-
-                deleteLeftoverComment: function(e){
-                    this.$.commentsDialog.querySelector("comments-list").comments = [];
-                },
-
-
-                deleteRequirement: function(e) {
-                    if (e.detail.confirmed) {
-                        var el = this.elem;
-                        var tag = "PAPER-MATERIAL";
-                        var element;
-                        var request = this.$.postDeleteRequirement;
-
-                        while (el.parentNode) {
-                            el = el.parentNode;
-                            if (el.tagName === tag)
-                                element = el;
-                        }
-
-                        request.url = this.baseHref + "/requirements/" + element.id;
-
-                        request.generateRequest();
-
-                        element.parentNode.removeChild(element);
-
-                        this.feedback = this.i18n.getMsg('reqDelSucc');
-
-                        this.$.toast.open();
-                    }
-
-                },
-
-                findUpTag: function(el, tag) {
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            return el;
-                    }
-                    return null;
-                },
-
-                followReq: function(e){
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-                    var request = this.$.followReq;
-
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
-                    }
-
-                    request.url = this.baseHref + "/requirements/" + element.id + "/followers";
-                    request.generateRequest();
-                },
-
-                handleResponseFollowReq: function(data){
-                    if (data != null){
-                        this.feedback = this.i18n.getMsg('fdbFollowReq');
-                        this.isFollower = true;
-                    }
-                    this.$.toast.open();
-                },
-
-                unfollowReq: function(e){
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-                    var request = this.$.unfollowReq;
-
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
-                    }
-
-                    request.url = this.baseHref + "/requirements/" + element.id + "/followers";
-                    request.generateRequest();
-                },
-
-                handleResponseUnfollowReq: function(data){
-                    if (data != null){
-                        this.feedback = this.i18n.getMsg('fdbUnfollowReq');
-                        this.isFollower = false;
-                    }
-                    this.$.toast.open();
-                },
-
-                developReq: function(e){
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-                    var request = this.$.developReq;
-
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
-                    }
-
-                    request.url = this.baseHref + "/requirements/" + element.id + "/developers";
-                    request.generateRequest();
-                },
-
-                handleResponseDevelopReq: function(data){
-                    if (data != null){
-                        this.feedback = this.i18n.getMsg('fdbDevelopReq');
-                        this.isDeveloper = true;
-                    }
-                    this.$.toast.open();
-                },
-
-                undevelopReq: function(e){
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-                    var request = this.$.undevelopReq;
-
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
-                    }
-
-                    request.url = this.baseHref + "/requirements/" + element.id + "/developers";
-                    request.generateRequest();
-                },
-
-                handleResponseUndevelopReq: function(data){
-                    if (data != null){
-                        this.feedback = this.i18n.getMsg('fdbUndevelopReq');
-                        this.isDeveloper = false;
-                    }
-                    this.$.toast.open();
-                },
-
-                toggleContributers: function(e){
-                    var el = e.currentTarget;
-                    var tag = "PAPER-MATERIAL";
-                    var element;
-
-                    while (el.parentNode) {
-                        el = el.parentNode;
-                        if (el.tagName === tag)
-                            element = el;
-                    }
-
-                    if (element.querySelector('.contributers').style.display === ""){
-                        e.currentTarget.innerText = i18n.getMsg('hideContributers');
-                        if (app.isMobile){
-                            element.querySelector('.contributers').style.display = "block";
-                        } else {
-                            element.querySelector('.contributers').style.display = "flex";
-                        }
-                        this.showContributers = ! this.showContributers;
-                        return;
-                    }
-
-                    if (element.querySelector('.contributers').style.display !== "none"){
-                        e.currentTarget.innerText = i18n.getMsg('showContributers');
-                        element.querySelector('.contributers').style.display = "none";
-                    } else {
-                        e.currentTarget.innerText = i18n.getMsg('hideContributers');
-                        if (app.isMobile){
-                            element.querySelector('.contributers').style.display = "block";
-                        } else {
-                            element.querySelector('.contributers').style.display = "flex";
-                        }
-
-                    }
-                    this.showContributers = ! this.showContributers;
-                },
-
-                searchFilter: function (val) {
-                    return function (item) {
-                        if (!val) {
-                            return true;
-                        }
-                        //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
-                        return (item.title && ~item.title.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
-                    };
-                },
-
-                userVoted: function(vote){
-                    if (vote === "NO_VOTE"){
-                        return false;
-                    } else {
-                        return true;
-                    }
-                },
-
-                isEmpty: function(arr){
-                    if (arr === undefined){
-                        return false;
-                    } else
-
-                    if (arr.length > 0){
-                        return false;
-                    }
-                    return true;
-                },
-
-                onRequirementTap: function(e){
-                    page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.currentTarget.parentNode.parentNode.id);
-                },
-
-                checkForEnter: function (e) {
-                    if (e.keyCode === 13) {
-                        if (!e.ctrlKey){
-                            if (this.list){
-                                this.addComment(e);
-                            } else {
-                                this.postGridComment(e);
-                            }
-                            e.preventDefault();
-                        } else {
-                            e.currentTarget.value += "<br/>";
-                        }
-                    }
-                },
-
-                searchGithubRepo: function (e) {
-                    if (e.keyCode === 13) {
-                        if (!e.ctrlKey){
-                            var req = this.$.getSearchGit;
-                            req.url = "https://api.github.com/search/repositories?q=" + encodeURIComponent(this.$.searchGithubRepo.value);
-                            req.generateRequest();
-                            e.preventDefault();
-                        }
-                    }
-                },
-
-                validateUrl: function(requirementDesc) {
-                    var str = requirementDesc;
-                    var expression = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/gi;
-                    var regex = new RegExp(expression);
-
-                    if(!str.match(regex)) {
-                        return str;
-                    } else {
-                        var txt = str;
-                        for (var i = 0; i < str.match(regex).length; i++){
-                            var replacement;
-                            if (str.match(regex)[i].startsWith("http")){
-                                replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
-                            } else {
-                                replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
-                            }
-                            txt = txt.replace(str.match(regex)[i], replacement);
-                        }
-                        return txt;
-                    }
-                },
-
-                dragRequirement: function(){
-                    console.log("drag start!");
-                }
+    <!-- TOAST FOR APP NOTIFICATIONS (FEEDBACK) -->
+
+    <paper-toast id="toast" text="[[feedback]]"></paper-toast>
+
+  </template>
+
+  <script src="../../components/time-elements/time-elements.js"></script>
+
+  <script>
+    (function () {
+      //'use strict';
+
+      Polymer({
+        is: 'requirements-list',
+        listeners: {
+          'change': 'addToSelectedReq'
+        },
+        properties: {
+          componentId: {
+            type: Number
+          },
+          selected: {
+            type: String,
+            notify: true,
+            value: "active"
+          },
+          baseHref: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          },
+          resourceURL: {
+            type: String,
+            computed: 'computeResourceURL(baseHref, componentId)'
+          },
+          requirements: {
+            type: Array,
+            notify: true
+          },
+          selectedRequirements: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          newComment: {
+            type: String
+          },
+          isAuthorized: Boolean,
+          postUrl: String,
+          body: Object,
+          postResponse: Object,
+          feedback: String,
+          header: {
+            type:Object,
+            notify: true
+          },
+          parameters:{
+            type:Object,
+            notify: true,
+            value: {per_page: 60}
+          },
+          elem: Object,
+          isFollower: {
+            type: Boolean,
+            value: false
+          },
+          isDeveloper: {
+            type: Boolean,
+            value: false
+          },
+          showContributers: {
+            type: Boolean,
+            value: false
+          },
+          commentlbl: String,
+          i18n: Object,
+          filterValue: {
+            type: String,
+            value: ''
+          },
+          loading: {
+            type: Boolean,
+            notify: true
+          },
+          buttons:{
+            type: Array,
+            value: [],
+            notify: true
+          },
+          list: {
+            type: Boolean,
+            notify: true,
+            observer: "_hasEnoughItems"
+          },
+          activeOption: {
+            type: Boolean,
+            notify: true,
+            value: false
+          },
+          repositories: {
+            type: Object,
+            notify: true,
+            reflectToAttribute: true
+          }
+        },
+
+        observers: [
+          'manageSelReq(selectedRequirements.splices)',
+          'computeRealized(selected)'
+        ],
+
+        ready: function () {
+          this.i18n = this.$.i18n;
+        },
+
+        computeRealized: function(selected){
+          if(selected === "active"){
+            this.activeOption = false;
+          } else {
+            this.activeOption = true;
+          }
+        },
+
+        _hasEnoughItems: function () {
+          if (!this.list){
+            var n = Math.floor((window.innerWidth - 300) / 300);
+            var free = (window.innerWidth - 300) - n * (300 + 20);
+            this.style.paddingLeft = "" + free / 2 + "px";
+          } else {
+            this.style.paddingLeft = "0px";
+          }
+        },
+
+        computeResourceURL: function (baseHref, componentId) {
+          return baseHref + '/components/' + componentId + '/requirements/';
+        },
+
+        toggleCollapsible: function(e, data) {
+          if (e != null) {
+            var contentNode = Polymer.dom(e.currentTarget).parentNode.parentNode.querySelector('iron-collapse');
+            if (!contentNode.opened) {
+              // since we are about to open it, trigger loading the comments
+              Polymer.dom(e.currentTarget).parentNode.parentNode.querySelector('comments-list').load();
+            }
+            contentNode.toggle();
+          } else {
+            var contentNode = data.parentNode.querySelector('iron-collapse');
+            if (contentNode.parentNode.parentNode.elevation === 1){
+              contentNode.parentNode.parentNode.elevation = 5;
+            } else {
+              contentNode.parentNode.parentNode.elevation = 1;
+            }
+            if (contentNode.parentNode.parentNode.querySelector(".description").classList.contains("helper")){
+              contentNode.parentNode.parentNode.querySelector(".description").classList.remove("helper");
+            } else {
+              contentNode.parentNode.parentNode.querySelector(".description").classList.add("helper");
+            }
+            if (!contentNode.opened) {
+              // since we are about to open it, trigger loading the comments
+              data.parentNode.querySelector('comments-list').load();
+            } else {
+              page.redirect('/projects/' + app.params.projectId + "/components/" + app.params.componentId);
+            }
+            contentNode.toggle();
+          }
+        },
+
+        load: function() {
+          this.$.requirementsLoader.generateRequest();
+        },
+
+        starRequest: function(e){
+          var req = this.$.starReq;
+          var reqId;
+          if (this.list) {
+            reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+          } else {
+            reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
+          }
+          req.method = "POST";
+          req.url = this.baseHref + "/requirements/" + reqId + "/vote";
+          req.body = JSON.stringify({
+            "requirementId": reqId,
+            "direction": "up"
+          });
+          req.generateRequest();
+        },
+
+        starDelRequest: function(e){
+          var req = this.$.starReq;
+          var reqId;
+          if (this.list) {
+            reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
+          } else {
+            reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
+          }
+          req.method = "DELETE";
+          req.url = this.baseHref + "/requirements/" + reqId + "/vote";
+          req.generateRequest();
+        },
+
+        showOnHover: function(e){
+          var chb = e.currentTarget.querySelector("paper-checkbox");
+          chb.style.display = "block";
+        },
+
+        hideOnOut: function (e) {
+          var chb = e.currentTarget.querySelector("paper-checkbox");
+          if (!chb.checked){
+            chb.style.display = "none";
+          }
+        },
+
+        manageSelReq: function(selReq){
+          if(this.selectedRequirements.length !== 0){
+            document.querySelector(".tools").style.display = "block";
+          }
+        },
+
+        showRepoSearchResults: function(){
+          this.repositories = this.searchRepositories.items;
+        },
+
+        addToSelectedReq: function(e){
+          var id = e.target.parentNode.parentNode.parentNode.id;
+          if (e.target.checked){
+            this.push('selectedRequirements', id);
+          } else {
+            var index = this.selectedRequirements.indexOf(id);
+            if (index > -1) {
+              this.splice('selectedRequirements', index, 1);
+            }
+            if (this.selectedRequirements.length === 0){
+              document.querySelector(".tools").style.display = "none";
+            }
+          }
+        },
+
+        downloadRequirements: function(e){
+          var selReq = [];
+          for (var i=0; i < this.selectedRequirements.length; i++){
+            for (var j=0; j < this.requirements.length; j++){
+              if (parseInt(this.selectedRequirements[i]) === this.requirements[j].id){
+                selReq.push(this.requirements[j]);
+              }
+            }
+          }
+
+          // console.log(selReq);
+
+          //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+          var arrData = typeof selReq != 'object' ? JSON.parse(selReq) : selReq;
+
+          var CSV = '';
+          //Set Report title in first row or line
+
+          CSV += "Requirements of " + arrData[0].components[0].name + '\r\n\n';
+
+          var row = "TITLE, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, COMPONENT";
+
+          //append Label row with line break
+          CSV += row + '\r\n';
+
+          //1st loop is to extract each row
+          for (var i = 0; i < arrData.length; i++) {
+            var row = "";
+
+            row += '"' + arrData[i].title + '",';
+            row += '"' + arrData[i].description + '",';
+            row += '"' + arrData[i].creation_time + '",';
+            row += '"' + arrData[i].creator.userName + '",';
+            row += '"' + arrData[i].developers.length + '",';
+            row += '"' + arrData[i].followers.length + '",';
+            row += '"' + arrData[i].components[0].name + '",';
+
+            row.slice(0, row.length - 1);
+
+            //add a line break after each row
+            CSV += row + '\r\n';
+          }
+
+          if (CSV == '') {
+            alert("Invalid data");
+            return;
+          }
+
+          //Generate a file name
+          var fileName = arrData[0].components[0].name + "_";
+          //this will remove the blank-spaces from the title and replace it with an underscore
+          fileName += "Requirements".replace(/ /g,"_");
+
+          //Initialize file format you want csv or xls
+          var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
+
+          console.log(uri);
+
+          //this trick will generate a temp <a /> tag
+          var link = document.createElement("a");
+          link.href = uri;
+
+          //set the visibility hidden so it will not effect on your web-layout
+          link.style = "visibility:hidden";
+          link.download = fileName + ".csv";
+
+          //this part will append the anchor tag and remove it after automatic click
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        },
+
+        postGridComment: function(e){
+          var reqId = e.currentTarget.parentNode.parentNode.querySelector("comments-list").requirementId;
+          var request = this.$.postCommentRequest;
+          if (this.newComment != null && this.newComment != ''){
+            request.body = JSON.stringify({
+              "requirementId": reqId,
+              "message": this.newComment
             });
+            request.generateRequest();
+          } else {
+            this.feedback = this.i18n.getMsg('');
+            this.$.toast.open();
+          }
+          this.newComment = '';
+          e.currentTarget.parentNode.parentNode.querySelector(".comments-input").value = null;
+        },
 
-        })();
-    </script>
+        showGithubRepos: function(e){
+          this.$.reposContainer.open();
+          var el = e.currentTarget;
+          var tag = "PAPER-MATERIAL";
+          var element;
+
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              element = el;
+          }
+          this.selReq = element.id;
+        },
+
+        onRepoDialogClosed: function (e) {
+          if(e.detail.confirmed){
+            var title = "";
+            var desc = "";
+            for (var i=0; i < this.requirements.length; i++){
+              if (this.requirements[i].id == this.selReq){
+                title = this.requirements[i].title;
+                desc = this.requirements[i].description;
+              }
+              break;
+            }
+            var req = this.$.postIssueGit;
+            req.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
+            req.body = JSON.stringify({
+              "title": title,
+              "body": desc
+            });
+            req.generateRequest();
+          } else {
+            this.$.selRepo.selected = "0";
+            this.selReq = null;
+          }
+        },
+
+        addComment: function(e){
+          var currentReqId = e.currentTarget.parentNode.id;
+          var currentInpId = currentReqId + 'input';
+          var request = this.$.postCommentRequest;
+          if (this.newComment != null && this.newComment != ''){
+            request.body = JSON.stringify({
+              "requirementId": parseInt(currentReqId),
+              "message": this.newComment
+            });
+            request.generateRequest();
+          } else {
+            this.$.toast.text = this.i18n.getMsg('commentNoEmpty');
+            this.$.toast.open();
+          }
+          this.newComment = '';
+          document.getElementById(currentInpId).value = null;
+        },
+
+        handleResponseComment: function(data){
+          if (this.list){
+            var str = ''+ this.postResponse.requirementId + 'input';
+            var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
+            el.load();
+          } else {
+            document.querySelector("comments-list").load();
+            document.querySelector("comments-list").parentNode.querySelector("paper-input").value = null;
+          }
+
+        },
+
+        showSendButton: function(e){
+          var fab = e.currentTarget.parentNode.querySelector("#fab");
+          if (this.newComment){
+            fab.style.display = 'block';
+          } else {
+            fab.style.display = 'none';
+          }
+        },
+
+        showButton: function(e){
+          var fabId = e.currentTarget.parentNode.id + 'fab';
+          if (this.newComment){
+            document.getElementById(fabId).style.display = 'block';
+          } else {
+            document.getElementById(fabId).style.display = 'none';
+          }
+        },
+
+        errorHandler: function (e, detail){
+          this.$.toast.text = detail.error.message;
+          this.$.toast.open();
+        },
+
+        handleResponseGithubIssue: function(){
+          this.$.toast.text = "Issue posted to Github";
+          this.$.toast.open();
+        },
+
+        doneRequirement: function(e){
+          var el = e.currentTarget;
+          var tag = "PAPER-MATERIAL";
+          var element;
+          var request = this.$.postUpdateRequirement;
+
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              element = el;
+          }
+
+          request.url = this.baseHref + "/requirements/" + element.id;
+          var today = new Date();
+          var month = today.toDateString().substring(4, 7);
+          var date = today.getDate();
+          var year = today.getUTCFullYear();
+          var hours = today.getHours();
+          var minutes = today.getMinutes();
+          var seconds = today.getSeconds();
+          var ampm = hours >= 12 ? 'PM' : 'AM';
+          hours = hours % 12;
+          hours = hours ? hours : 12; // the hour '0' should be '12'
+          minutes = minutes < 10 ? '0'+minutes : minutes;
+          seconds = seconds < 10 ? '0'+seconds : seconds;
+          var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+          var dateString = month + ' ' + date + ', ' + year + ' ' + strTime;
+          request.body = JSON.stringify({
+            "id": parseInt(element.id),
+            "realized": dateString
+          });
+
+          request.generateRequest();
+        },
+
+        becomeLeadDeveloper: function(e){
+          var el = e.currentTarget;
+          var tag = "PAPER-MATERIAL";
+          var element;
+          var request = this.$.postUpdateRequirement;
+
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              element = el;
+          }
+          request.url = this.baseHref + "/requirements/" + element.id;
+          request.body = JSON.stringify({
+            "id": parseInt(element.id),
+            "leadDeveloperId": app.currentUser.id
+          });
+          request.generateRequest();
+        },
+
+        closeTools: function(){
+          document.getElementById("tools").style.display = "none";
+          for (var i=0; i < this.selectedRequirements.length; i++){
+            document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").checked = false;
+            document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").style.display = "none";
+          }
+          this.selectedRequirements = [];
+        },
+
+        undoRequirement: function(e){
+          var el = e.currentTarget;
+          var tag = "PAPER-MATERIAL";
+          var element;
+          var request = this.$.postUpdateRequirement;
+
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              element = el;
+          }
+
+          request.url = this.baseHref + "/requirements/" + element.id;
+          request.body = JSON.stringify({
+            "id": parseInt(element.id),
+            "realized": null
+          });
+          console.log(request.url, request.body);
+          request.generateRequest();
+        },
+
+        editRequirement: function(e) {
+          //get top node
+          var parentEl = this.findUpTag(e.currentTarget.parentNode.parentNode.parentNode, 'PAPER-MATERIAL');
+
+          //hide card elements
+          parentEl.querySelector('.reqbody').style.display = 'none';
+          parentEl.querySelector('.comments').style.display = 'none';
+          parentEl.querySelector('.description').style.display = 'none';
+          //show form elements
+          parentEl.querySelector('.editForm').style.display = 'block';
+        },
+
+        cancelRequirement: function(e){
+          e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
+
+          e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
+          e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
+          e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
+        },
+
+        saveEditReq: function(e){
+          var title = e.currentTarget.parentNode.querySelector('PAPER-INPUT').value;
+          var description = e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').value;
+          var id = e.currentTarget.parentNode.parentNode.id;
+          var request = this.$.postUpdateRequirement;
+          var components = [{id: parseInt(app.params.componentId)}];
+          request.url = this.baseHref + "/requirements/" + id;
+
+          if (title != '' && description != ''){
+            request.body = JSON.stringify({
+              "id": parseInt(id),
+              "title": title,
+              "description": description,
+              "projectId": parseInt(app.params.projectId),
+              "components": components
+            });
+            request.generateRequest();
+
+            //revert the look
+            e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
+
+            e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
+            e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
+            e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
+          } else {
+            this.$.toast.text = this.i18n.getMsg('fieldsNotEmptyReq');
+            this.$.toast.open();
+          }
+
+        },
+
+        handleResponseEditReq: function(data) {
+          if (data != null){
+            this.feedback = this.i18n.getMsg('reqEditSucc');
+            this.load();
+          }
+          this.$.toast.open();
+        },
+
+        createModal: function(e){
+          this.$.modal.open();
+          this.elem = e.currentTarget;
+        },
+
+        openCommentsDialog: function(e){
+          this.$.commentsDialog.querySelector("comments-list").requirementId = e.currentTarget.atr;
+          this.$.commentsDialog.querySelector("comments-list").load();
+          this.$.commentsDialog.open();
+        },
+
+        deleteLeftoverComment: function(e){
+          this.$.commentsDialog.querySelector("comments-list").comments = [];
+        },
+
+
+        deleteRequirement: function(e) {
+          if (e.detail.confirmed) {
+            var el = this.elem;
+            var tag = "PAPER-MATERIAL";
+            var element;
+            var request = this.$.postDeleteRequirement;
+
+            while (el.parentNode) {
+              el = el.parentNode;
+              if (el.tagName === tag)
+                element = el;
+            }
+
+            request.url = this.baseHref + "/requirements/" + element.id;
+
+            request.generateRequest();
+
+            element.parentNode.removeChild(element);
+
+            this.feedback = this.i18n.getMsg('reqDelSucc');
+
+            this.$.toast.open();
+          }
+
+        },
+
+        findUpTag: function(el, tag) {
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              return el;
+          }
+          return null;
+        },
+
+        followReq: function(e){
+          var el = e.currentTarget;
+          var tag = "PAPER-MATERIAL";
+          var element;
+          var request = this.$.followReq;
+
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              element = el;
+          }
+
+          request.url = this.baseHref + "/requirements/" + element.id + "/followers";
+          request.generateRequest();
+        },
+
+        handleResponseFollowReq: function(data){
+          if (data != null){
+            this.feedback = this.i18n.getMsg('fdbFollowReq');
+            this.isFollower = true;
+          }
+          this.$.toast.open();
+        },
+
+        unfollowReq: function(e){
+          var el = e.currentTarget;
+          var tag = "PAPER-MATERIAL";
+          var element;
+          var request = this.$.unfollowReq;
+
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              element = el;
+          }
+
+          request.url = this.baseHref + "/requirements/" + element.id + "/followers";
+          request.generateRequest();
+        },
+
+        handleResponseUnfollowReq: function(data){
+          if (data != null){
+            this.feedback = this.i18n.getMsg('fdbUnfollowReq');
+            this.isFollower = false;
+          }
+          this.$.toast.open();
+        },
+
+        developReq: function(e){
+          var el = e.currentTarget;
+          var tag = "PAPER-MATERIAL";
+          var element;
+          var request = this.$.developReq;
+
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              element = el;
+          }
+
+          request.url = this.baseHref + "/requirements/" + element.id + "/developers";
+          request.generateRequest();
+        },
+
+        handleResponseDevelopReq: function(data){
+          if (data != null){
+            this.feedback = this.i18n.getMsg('fdbDevelopReq');
+            this.isDeveloper = true;
+          }
+          this.$.toast.open();
+        },
+
+        undevelopReq: function(e){
+          var el = e.currentTarget;
+          var tag = "PAPER-MATERIAL";
+          var element;
+          var request = this.$.undevelopReq;
+
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              element = el;
+          }
+
+          request.url = this.baseHref + "/requirements/" + element.id + "/developers";
+          request.generateRequest();
+        },
+
+        handleResponseUndevelopReq: function(data){
+          if (data != null){
+            this.feedback = this.i18n.getMsg('fdbUndevelopReq');
+            this.isDeveloper = false;
+          }
+          this.$.toast.open();
+        },
+
+        toggleContributers: function(e){
+          var el = e.currentTarget;
+          var tag = "PAPER-MATERIAL";
+          var element;
+
+          while (el.parentNode) {
+            el = el.parentNode;
+            if (el.tagName === tag)
+              element = el;
+          }
+
+          if (element.querySelector('.contributers').style.display === ""){
+            e.currentTarget.innerText = i18n.getMsg('hideContributers');
+            if (app.isMobile){
+              element.querySelector('.contributers').style.display = "block";
+            } else {
+              element.querySelector('.contributers').style.display = "flex";
+            }
+            this.showContributers = ! this.showContributers;
+            return;
+          }
+
+          if (element.querySelector('.contributers').style.display !== "none"){
+            e.currentTarget.innerText = i18n.getMsg('showContributers');
+            element.querySelector('.contributers').style.display = "none";
+          } else {
+            e.currentTarget.innerText = i18n.getMsg('hideContributers');
+            if (app.isMobile){
+              element.querySelector('.contributers').style.display = "block";
+            } else {
+              element.querySelector('.contributers').style.display = "flex";
+            }
+
+          }
+          this.showContributers = ! this.showContributers;
+        },
+
+        searchFilter: function (val) {
+          return function (item) {
+            if (!val) {
+              return true;
+            }
+            //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
+            return (item.title && ~item.title.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
+          };
+        },
+
+        userVoted: function(vote){
+          if (vote === "NO_VOTE"){
+            return false;
+          } else {
+            return true;
+          }
+        },
+
+        isEmpty: function(arr){
+          if (arr === undefined){
+            return false;
+          } else
+
+          if (arr.length > 0){
+            return false;
+          }
+          return true;
+        },
+
+        onRequirementTap: function(e){
+          page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.currentTarget.parentNode.parentNode.id);
+        },
+
+        checkForEnter: function (e) {
+          if (e.keyCode === 13) {
+            if (!e.ctrlKey){
+              if (this.list){
+                this.addComment(e);
+              } else {
+                this.postGridComment(e);
+              }
+              e.preventDefault();
+            } else {
+              e.currentTarget.value += "<br/>";
+            }
+          }
+        },
+
+        searchGithubRepo: function (e) {
+          if (e.keyCode === 13) {
+            if (!e.ctrlKey){
+              var req = this.$.getSearchGit;
+              req.url = "https://api.github.com/search/repositories?q=" + encodeURIComponent(this.$.searchGithubRepo.value);
+              req.generateRequest();
+              e.preventDefault();
+            }
+          }
+        },
+
+        validateUrl: function(requirementDesc) {
+          var str = requirementDesc;
+          var expression = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/gi;
+          var regex = new RegExp(expression);
+
+          if(!str.match(regex)) {
+            return str;
+          } else {
+            var txt = str;
+            for (var i = 0; i < str.match(regex).length; i++){
+              var replacement;
+              if (str.match(regex)[i].startsWith("http")){
+                replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+              } else {
+                replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+              }
+              txt = txt.replace(str.match(regex)[i], replacement);
+            }
+            return txt;
+          }
+        },
+
+        dragRequirement: function(){
+          console.log("drag start!");
+        }
+      });
+
+    })();
+  </script>
 
 </dom-module>
