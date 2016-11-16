@@ -187,9 +187,16 @@
       id="followRequest"
       handle-as="json"
       content-type="application/json"
-      method="POST"
       headers="{{header}}"
       on-response="_handleFollowResponse"
+      on-error="errorHandler"></iron-ajax>
+
+    <iron-ajax
+      id="userInResourceRequest"
+      handle-as="json"
+      content-type="application/json"
+      headers="{{header}}"
+      on-response="_handleUserInResourceResponse"
       on-error="errorHandler"></iron-ajax>
 
     <iron-ajax
@@ -397,15 +404,9 @@
                         <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
                         <paper-item value="toggleContributors" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
                         <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
-                        <paper-item value="followRequirement"><i18n-msg msgid$="[[_calculateFollowMessage(req.followers, currentUser)]]"></i18n-msg></paper-item>
-
-                        <template is="dom-if" if="{{!isDeveloper}}">
-                          <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
-                        </template>
+                        <paper-item value="followRequirement"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
+                        <paper-item value="developRequirement"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
                         <paper-item on-tap="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
-                        <template is="dom-if" if="{{isDeveloper}}">
-                          <paper-item on-tap="undevelopReq"><i18n-msg msgid="undevelopRequirement"></i18n-msg></paper-item>
-                        </template>
                         <paper-item on-tap="editRequirement"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
                         <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
                       </paper-menu>
@@ -1515,8 +1516,8 @@
             return false;
           } else {
             // check if the user's id is in the users array
-            for (var index = 0; index < followers.length; ++index) {
-              if (followers[index].id === user.id) {
+            for (var index = 0; index < usersArray.length; ++index) {
+              if (usersArray[index].id === user.id) {
                 return true;
               }
             }
@@ -1526,29 +1527,30 @@
         },
 
         /**
-         * Calculates the i18n key that is shown for following or unfollowing requirements,
-         * depending on whether the user is already following the requirement or not.
+         * Calculates the i18n key based on whether the provided user is in the provided array of user objects.
          *
-         * @param followers an array of user objects.
+         * @param userArray an array of user objects.
          * @param user the currently logged in user's object. This is to be notified by the data
          *   binding system of Polymer about changes, and recalculate the value.
-         * @returns {*}
+         * @param falseMessage the i18n key to return when the user is not in the array.
+         * @param trueMessage the i18n key to return when the user is in the array.
+         * @returns {string} the i18n key.
          * @private
          */
-        _calculateFollowMessage: function(followers, user) {
-          var isFollower = this._isUserInArray(followers, user);
+        _calculateMessageBasedOnUserInArray: function(userArray, user, falseMessage, trueMessage) {
+          var isUserInArray= this._isUserInArray(userArray, user);
 
-          if (this.isAuthorized && isFollower) {
-            return 'unfollowRequirement';
+          if (this.isAuthorized && isUserInArray) {
+            return trueMessage;
           } else {
-            return 'followRequirement';
+            return falseMessage;
           }
         },
 
         /**
-         * Handles tapping the 'follow requirement' menu item, and fires a request to the server.
+         * Handles toggling the following of requirements by firing the state to the server.
          *
-         * @param e
+         * @param requirement the requirement to (un)follow.
          * @returns {boolean}
          * @private
          */
@@ -1599,6 +1601,57 @@
         },
 
         /**
+         * Handles toggling the existence of a user within an HTTP resource.
+         * TODO: currently only for resource 'developers'
+         *
+         * @param e
+         * @returns {boolean}
+         * @private
+         */
+        _toggleUserInResource: function(requirementId, userArray, resource) {
+          var isUserInArray = this._isUserInArray(userArray, this.currentUser);
+
+          var request = this.$.userInResourceRequest;
+          request.url = this.baseHref + "/requirements/" + requirementId + "/" + resource;
+
+          if (!isUserInArray) {
+            // POST user to resource
+            request.method = 'POST';
+          } else {
+            // DELETE user from resource
+            request.method = 'DELETE';
+          }
+
+          request.generateRequest();
+        },
+
+        /**
+         * Handles the iron-ajax response for posting/deleting users to/from a resoure,
+         * shows toast message.
+         *
+         * @param data
+         * @private
+         */
+        _handleUserInResourceResponse: function(e) {
+          var method = e.target.method;
+
+          if (method === 'DELETE') {
+            this.feedback = this.i18n.getMsg('fdbUndevelopReq');
+          } else if (method === 'POST') {
+            this.feedback = this.i18n.getMsg('fdbDevelopReq');
+          } else {
+            //TODO: add i18n
+            this.feedback = 'error';
+          }
+
+          this.$.toast.open();
+
+          // now refresh the data behind by reloading all requirements
+          // TODO: eliminate this heavy operation by only refreshing the respective requirement
+          this.load();
+        },
+
+        /**
          * Event handler for requirement's paper-menu.
          *
          * @param e
@@ -1615,6 +1668,8 @@
             this._toggleFollowRequirement(requirement);
           } else if (selectedValue === "toggleContributors") {
             this._toggleContributors(requirement);
+          } else if (selectedValue === 'developRequirement') {
+            this._toggleUserInResource(requirement.id, requirement.developers, 'developers');
           }
         },
 
