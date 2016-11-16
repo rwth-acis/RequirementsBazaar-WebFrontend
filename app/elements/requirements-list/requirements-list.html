@@ -184,6 +184,15 @@
       on-error="errorHandler"></iron-ajax>
 
     <iron-ajax
+      id="followRequest"
+      handle-as="json"
+      content-type="application/json"
+      method="POST"
+      headers="{{header}}"
+      on-response="_handleFollowResponse"
+      on-error="errorHandler"></iron-ajax>
+
+    <iron-ajax
       id="developReq"
       handle-as="json"
       content-type="application/json"
@@ -388,12 +397,17 @@
                         <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
                         <paper-item on-tap="toggleContributers" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
                         <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
+                        <paper-item on-tap="_handleFollowRequirementTap"><i18n-msg msgid$="[[_calculateFollowMessage(req.followers, isAuthorized)]]"></i18n-msg></paper-item>
+
+                        <!--
                         <template is="dom-if" if="{{!isFollower}}">
                           <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
                         </template>
                         <template is="dom-if" if="{{isFollower}}">
                           <paper-item on-tap="unfollowReq"><i18n-msg msgid="unfollowRequirement"></i18n-msg></paper-item>
                         </template>
+                        -->
+
                         <template is="dom-if" if="{{!isDeveloper}}">
                           <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
                         </template>
@@ -1485,6 +1499,106 @@
 
           // fire the event to the server
           request.generateRequest();
+        },
+
+        /**
+         * Checks whether the currently logged in user is in the followers list.
+         * Compares the user's id.
+         *
+         * @param followers an array of user objects.
+         * @returns {boolean} whether the user is in the followers list.
+         * @private
+         */
+        _isRequirementFollower: function(followers) {
+          var user = app.currentUser;
+          if (user === null) {
+            return false;
+          } else {
+            // check if the user's Las2peerId is in the followers list
+            for (var index = 0; index < followers.length; ++index) {
+              if (followers[index].id === user.id) {
+                return true;
+              }
+            }
+
+            return false;
+          }
+        },
+
+        /**
+         * Calculates the i18n key that is shown for following or unfollowing requirements,
+         * depending on whether the user is already following the requirement or not.
+         *
+         * @param followers an array of user objects.
+         * @param isAuthorized whether the user is authorized. This is to be notified by the data
+         *   binding system of Polymer about changes, and recalculate the value.
+         * @returns {*}
+         * @private
+         */
+        _calculateFollowMessage: function(followers, isAuthorized) {
+          var isFollower = this._isRequirementFollower(followers);
+
+          if (isFollower) {
+            return 'unfollowRequirement';
+          } else {
+            return 'followRequirement';
+          }
+        },
+
+        /**
+         * Handles tapping the 'follow requirement' menu item, and fires a request to the server.
+         *
+         * @param e
+         * @returns {boolean}
+         * @private
+         */
+        _handleFollowRequirementTap: function(e) {
+          // deactivate the selection
+          // https://github.com/PolymerElements/paper-menu/issues/83#issuecomment-183483924
+          e.target.multi = true;
+          e.target.multi = false;
+
+          // first, get the dom-repeat's template instance that generated the item
+          var model = e.model;
+          var requirementId = model.req.id;
+
+          var followers = model.req.followers;
+          var isFollower = this._isRequirementFollower(followers);
+
+          var request = this.$.followRequest;
+          request.url = this.baseHref + "/requirements/" + requirementId + "/followers";
+
+          if (!isFollower) {
+            // follow requirement
+            request.method = 'POST';
+          } else {
+            // unfollow requirement
+            request.method = 'DELETE';
+          }
+
+          request.generateRequest();
+        },
+
+        /**
+         * Handles the iron-ajax response for following/unfollowing requirements,
+         * shows toast message.
+         *
+         * @param data
+         * @private
+         */
+        _handleFollowResponse: function(e) {
+          var status = e.detail.status;
+
+          if (status === 200) {
+            this.feedback = this.i18n.getMsg('fdbUnfollowReq');
+          } else if (status === 201) {
+            this.feedback = this.i18n.getMsg('fdbFollowReq');
+          } else {
+            //TODO: add i18n
+            this.feedback = 'error';
+          }
+
+          this.$.toast.open();
         }
       });
 
