@@ -391,22 +391,13 @@
                                        disabled="[[!isAuthorized]]"></paper-icon-button>
                     <div>[[req.upVotes]]</div>
 
-                    <paper-menu-button horizontal-align="right" vertical-align="top" hidden$="[[!isAuthorized]]">
+                    <paper-menu-button horizontal-align="right" vertical-align="top" hidden$="[[!isAuthorized]]" on-iron-select="_handleRequirementMenuSelect">
                       <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                       <paper-menu id="componentInfoMenu" class="dropdown-content">
                         <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
-                        <paper-item on-tap="toggleContributers" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
+                        <paper-item value="toggleContributors" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
                         <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
-                        <paper-item on-tap="_handleFollowRequirementTap"><i18n-msg msgid$="[[_calculateFollowMessage(req.followers, isAuthorized)]]"></i18n-msg></paper-item>
-
-                        <!--
-                        <template is="dom-if" if="{{!isFollower}}">
-                          <paper-item on-tap="followReq"><i18n-msg msgid="followRequirement"></i18n-msg></paper-item>
-                        </template>
-                        <template is="dom-if" if="{{isFollower}}">
-                          <paper-item on-tap="unfollowReq"><i18n-msg msgid="unfollowRequirement"></i18n-msg></paper-item>
-                        </template>
-                        -->
+                        <paper-item value="followRequirement"><i18n-msg msgid$="[[_calculateFollowMessage(req.followers, currentUser)]]"></i18n-msg></paper-item>
 
                         <template is="dom-if" if="{{!isDeveloper}}">
                           <paper-item on-tap="developReq"><i18n-msg msgid="developRequirement"></i18n-msg></paper-item>
@@ -435,7 +426,7 @@
 
                 <div class="line"></div>
 
-                <div class="contributers">
+                <div class="contributers" id$="contributors{{req.id}}">
                   <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
                   <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
                   <template is="dom-if" if="{{!isEmpty(req.developers)}}">
@@ -702,6 +693,16 @@
             type: Object,
             notify: true,
             reflectToAttribute: true
+          },
+          currentUser: {
+            type: String,
+            value: null,
+            notify: true
+          },
+          _contributorsVisible: {
+            type: Object,
+            value: [],
+            notify: true
           }
         },
 
@@ -1502,19 +1503,18 @@
         },
 
         /**
-         * Checks whether the currently logged in user is in the followers list.
-         * Compares the user's id.
+         * Checks whether a user is in the users array. Compares the user's id.
          *
-         * @param followers an array of user objects.
-         * @returns {boolean} whether the user is in the followers list.
+         * @param usersArray an array of user objects.
+         * @param user a user object.
+         * @returns {boolean} whether the user is in the array or not.
          * @private
          */
-        _isRequirementFollower: function(followers) {
-          var user = app.currentUser;
+        _isUserInArray: function(usersArray, user) {
           if (user === null) {
             return false;
           } else {
-            // check if the user's Las2peerId is in the followers list
+            // check if the user's id is in the users array
             for (var index = 0; index < followers.length; ++index) {
               if (followers[index].id === user.id) {
                 return true;
@@ -1530,15 +1530,15 @@
          * depending on whether the user is already following the requirement or not.
          *
          * @param followers an array of user objects.
-         * @param isAuthorized whether the user is authorized. This is to be notified by the data
+         * @param user the currently logged in user's object. This is to be notified by the data
          *   binding system of Polymer about changes, and recalculate the value.
          * @returns {*}
          * @private
          */
-        _calculateFollowMessage: function(followers, isAuthorized) {
-          var isFollower = this._isRequirementFollower(followers);
+        _calculateFollowMessage: function(followers, user) {
+          var isFollower = this._isUserInArray(followers, user);
 
-          if (isFollower) {
+          if (this.isAuthorized && isFollower) {
             return 'unfollowRequirement';
           } else {
             return 'followRequirement';
@@ -1552,18 +1552,11 @@
          * @returns {boolean}
          * @private
          */
-        _handleFollowRequirementTap: function(e) {
-          // deactivate the selection
-          // https://github.com/PolymerElements/paper-menu/issues/83#issuecomment-183483924
-          e.target.multi = true;
-          e.target.multi = false;
+        _toggleFollowRequirement: function(requirement) {
+          var requirementId = requirement.id;
 
-          // first, get the dom-repeat's template instance that generated the item
-          var model = e.model;
-          var requirementId = model.req.id;
-
-          var followers = model.req.followers;
-          var isFollower = this._isRequirementFollower(followers);
+          var followers = requirement.followers;
+          var isFollower = this._isUserInArray(followers, app.currentUser);
 
           var request = this.$.followRequest;
           request.url = this.baseHref + "/requirements/" + requirementId + "/followers";
@@ -1599,6 +1592,59 @@
           }
 
           this.$.toast.open();
+
+          // now refresh the data behind by reloading all requirements
+          // TODO: eliminate this heavy operation by only refreshing the respective requirement
+          this.load();
+        },
+
+        /**
+         * Event handler for requirement's paper-menu.
+         *
+         * @param e
+         * @private
+         */
+        _handleRequirementMenuSelect: function(e) {
+          // unselect the selected menu item
+          e.target.selected = null;
+          // get value of the paper-item
+          var selectedValue = e.detail.item.getAttribute("value");
+          var requirement = e.model.req;
+
+          if (selectedValue === "followRequirement") {
+            this._toggleFollowRequirement(requirement);
+          } else if (selectedValue === "toggleContributors") {
+            this._toggleContributors(requirement);
+          }
+        },
+
+        /**
+         * Toggles the state of contributors' bar.
+         *
+         * @param requirement a requirement object.
+         * @private
+         */
+        _toggleContributors: function(requirement) {
+          //TODO: this is horribly ugly, just refactored from even uglier code. :(
+          //TODO: change the label of the paper-menu after toggling.
+          if ((this._contributorsVisible[requirement.id] === undefined) || (this._contributorsVisible[requirement.id] === false)) {
+            this._contributorsVisible[requirement.id] = true;
+          } else {
+            this._contributorsVisible[requirement.id] = false;
+          }
+
+          var contributorsDiv = this.querySelector('#contributors' + requirement.id);
+
+          if (this._contributorsVisible[requirement.id] === false) {
+            contributorsDiv.style.display = "none";
+          } else {
+            if (app.isMobile) {
+              contributorsDiv.style.display = "block";
+            } else {
+              contributorsDiv.style.display = "flex";
+            }
+          }
+
         }
       });
 
