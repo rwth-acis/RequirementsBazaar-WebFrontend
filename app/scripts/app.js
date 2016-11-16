@@ -16,8 +16,8 @@
     var app = document.querySelector('#app');
 
     // url for requests for beta or live environment
-    app.baseHref = "https://requirements-bazaar.org/betabazaar";
-    app.activityHref = "https://requirements-bazaar.org/betaactivities";
+    app.baseHref = "https://requirements-bazaar.org/bazaar";
+    app.activityHref = "https://requirements-bazaar.org/activities";
     
     app.baseUrl = '/';
     if (window.location.port === '') {  // if production
@@ -525,7 +525,7 @@
             this.$.superToast.text = i18n.getMsg('errorCreReq');
         }
         this.$.superToast.open();
-    }
+    };
 
     app.onCreateProjectClosed = function(e) {
         if (e.detail.confirmed) {
@@ -596,6 +596,11 @@
     //clear form on x click
     app.clearInput = function(e){
         app.$.searchInput.value = '';
+    };
+
+    // clears the requirements when the component is changed
+    app.clearRequirements = function(){
+        document.querySelector("requirements-list").requirements = [];
     };
 
     app.toggCompDrawer = function(e){
