@@ -381,11 +381,11 @@
 
     <!-- LIST VIEW -->
 
-    <template is="dom-if" if="{{list}}" restamp>
-      <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
+    <template is="dom-if" if="{{list}}">
+      <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}" initial-count="4">
         <div class="layout vertical center">
 
-          <template is="dom-if" if$="{{!activeOption}}" restamp>
+          <template is="dom-if" if$="{{!activeOption}}">
             <template is="dom-if" if="{{!req.realized}}">
               <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
                 <div class="reqbody">
@@ -453,7 +453,6 @@
                   <div class="line"></div>
                 </div>
 
-                <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
                 <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
 
                 <div class="comments">
@@ -557,7 +556,6 @@
                                     <div class="line"></div>
                                 </div>
 
-                                <!--<div on-tap="toggleCollapsible" class="description">[[item.description]]</div>-->
                                 <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
 
                                 <div class="comments">
@@ -1381,7 +1379,7 @@
         },
 
         onRequirementTap: function(e){
-          page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.currentTarget.parentNode.parentNode.id);
+          page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.model.req.id);
         },
 
         checkForEnter: function (e) {
@@ -1538,9 +1536,7 @@
          * @private
          */
         _calculateMessageBasedOnUserInArray: function(userArray, user, falseMessage, trueMessage) {
-          var isUserInArray= this._isUserInArray(userArray, user);
-
-          if (this.isAuthorized && isUserInArray) {
+          if (this.isAuthorized && this._isUserInArray(userArray, user)) {
             return trueMessage;
           } else {
             return falseMessage;
