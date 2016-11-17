@@ -1,4 +1,5 @@
 <link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="requirements-list">
   <template>
@@ -132,6 +133,11 @@
         width: auto;
         padding: 10px;
       }
+
+      .contributors {
+        /*@apply(--layout-vertical);*/
+        display: none;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
@@ -153,6 +159,15 @@
       method="PUT"
       headers="{{header}}"
       on-response="handleResponseEditReq"
+      on-error="errorHandler"></iron-ajax>
+
+    <iron-ajax
+      id="updateRequirementRequest"
+      handle-as="json"
+      content-type="application/json"
+      method="PUT"
+      headers="{{header}}"
+      on-response="_handleUpdateRequirementResponse"
       on-error="errorHandler"></iron-ajax>
 
 
@@ -402,10 +417,10 @@
                       <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                       <paper-menu class="dropdown-content">
                         <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
-                        <paper-item value="toggleContributors" id="contr"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
-                        <paper-item on-tap="doneRequirement"><i18n-msg msgid="markAsDone"></i18n-msg></paper-item>
-                        <paper-item value="followRequirement"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
-                        <paper-item value="developRequirement"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
+                        <paper-item value="toggleContributors" id="contr"><i18n-msg msgid="showContributors"></i18n-msg></paper-item>
+                        <paper-item value="realize"><i18n-msg msgid="[[_calculateRealizeMessage(req.realized)]]"></i18n-msg></paper-item>
+                        <paper-item value="follow"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
+                        <paper-item value="develop"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
                         <paper-item on-tap="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
                         <paper-item on-tap="editRequirement"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
                         <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
@@ -427,30 +442,28 @@
 
                 <div class="line"></div>
 
-                <div class="contributers" id$="contributors{{req.id}}">
+                <div class="contributors" id$="contributors{{req.id}}">
                   <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
                   <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
-                  <template is="dom-if" if="{{!isEmpty(req.developers)}}">
-                    <div><i18n-msg msgid="developers"></i18n-msg>:
-                      <template is="dom-repeat" items="{{req.developers}}" as="dev">
-                        <div  style="display:inline-block">
-                          <req-user user="[[dev]]" mini></req-user>
-                          <paper-tooltip>{{dev.userName}}</paper-tooltip>
-                        </div>
-                      </template>
-                    </div>
-                  </template>
-                  <template is="dom-if" if="{{!isEmpty(req.followers)}}">
-                    <div><i18n-msg msgid="followers"></i18n-msg>:
-                      <template is="dom-repeat" items="{{req.followers}}" as="foll">
-                        <div  style="display:inline-block">
-                          <req-user user="[[foll]]" mini></req-user>
-                          <paper-tooltip>{{foll.userName}}</paper-tooltip>
-                        </div>
-                      </template>
-                    </div>
-                  </template>
-                  <div class="line"></div>
+                  <div><i18n-msg msgid="developers"></i18n-msg>:
+                    <template is="dom-repeat" items="{{req.developers}}" as="developer">
+                      <div style="display:inline-block">
+                        <req-user user="[[developer]]" mini></req-user>
+                        <paper-tooltip>{{developer.userName}}</paper-tooltip>
+                      </div>
+                    </template>
+                  </div>
+                  <div><i18n-msg msgid="followers"></i18n-msg>:
+                    <template is="dom-repeat" items="{{req.followers}}" as="foll">
+                      <div style="display:inline-block">
+                        <req-user user="[[foll]]" mini></req-user>
+                        <paper-tooltip>{{foll.userName}}</paper-tooltip>
+                      </div>
+                    </template>
+                  </div>
+
+                  <div class="line" style="margin-top: 10px;"></div>
+
                 </div>
 
                 <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
@@ -1660,13 +1673,76 @@
           var selectedValue = e.detail.item.getAttribute("value");
           var requirement = e.model.req;
 
-          if (selectedValue === "followRequirement") {
+          if (selectedValue === "follow") {
             this._toggleFollowRequirement(requirement);
           } else if (selectedValue === "toggleContributors") {
             this._toggleContributors(requirement);
-          } else if (selectedValue === 'developRequirement') {
+          } else if (selectedValue === 'develop') {
             this._toggleUserInResource(requirement.id, requirement.developers, 'developers');
+          } else if (selectedValue === 'realize') {
+            this._toggleRealized(requirement);
           }
+        },
+
+        /**
+         * Toggles the 'realized' property of a requirement on the server. If the requirement was not realized yet,
+         * the current timestamp is sent to the server. Otherwise, the realized property is reset.
+         *
+         * @param requirement {object} the requirements object.
+         */
+        _toggleRealized: function(requirement) {
+          var request = this.$.updateRequirementRequest;
+          request.url = this.baseHref + "/requirements/" + requirement.id;
+
+          if (requirement.hasOwnProperty('realized')) {
+            // unrealize it
+            request.body = JSON.stringify({
+              "id": parseInt(requirement.id),
+              "realized": null
+            });
+          } else {
+            // realize it
+            var today = new Date();
+            var month = today.toDateString().substring(4, 7);
+            var date = today.getDate();
+            var year = today.getUTCFullYear();
+            var hours = today.getHours();
+            var minutes = today.getMinutes();
+            var seconds = today.getSeconds();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0'+minutes : minutes;
+            seconds = seconds < 10 ? '0'+seconds : seconds;
+            var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+            var dateString = month + ' ' + date + ', ' + year + ' ' + strTime;
+
+            request.body = JSON.stringify({
+              "id": parseInt(requirement.id),
+              "realized": dateString
+            });
+
+            // now refresh the data behind by reloading all requirements
+            // TODO: eliminate this heavy operation by only refreshing the respective requirement
+            this.load();
+          }
+
+          // fire
+          request.generateRequest();
+        },
+
+        /**
+         * Handles the iron-ajax response for updating requirements, shows toast message.
+         *
+         * @param e
+         * @private
+         */
+        handleUpdateRequirementResponse: function(e) {
+          if (e != null){
+            this.feedback = this.i18n.getMsg('reqEditSucc');
+          }
+
+          this.$.toast.open();
         },
 
         /**
@@ -1689,13 +1765,25 @@
           if (this._contributorsVisible[requirement.id] === false) {
             contributorsDiv.style.display = "none";
           } else {
-            if (app.isMobile) {
-              contributorsDiv.style.display = "block";
-            } else {
-              contributorsDiv.style.display = "flex";
-            }
+            contributorsDiv.style.display = "block";
           }
 
+        },
+
+        /**
+         * Calculates the i18n key for the realized menu button, depending on whether the requirement is realized or
+         * not.
+         *
+         * @param realized
+         * @returns {*}
+         * @private
+         */
+        _calculateRealizeMessage: function(realized) {
+          if (realized) {
+            return 'markAsUnDone';
+          } else {
+            return 'markAsDone';
+          }
         }
       });
 

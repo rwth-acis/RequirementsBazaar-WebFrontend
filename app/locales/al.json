@@ -259,7 +259,7 @@
     "message": "Ky aksion nuk mund te zhbëhet! Jeni të sigurt që doni ta fshini përfundimisht këtë kërkesë?"
   },
 
-  "showContributers": {
+  "showContributors": {
     "description": "...",
     "message": "Shfaq Kontribuesit"
   },
@@ -334,7 +334,7 @@
     "message": "Kërkesa u fshi me sukses!"
   },
 
-  "hideContributers": {
+  "hideContributors": {
     "description": "...",
     "message": "Fshih Kontribuesit"
   },
