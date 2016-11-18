@@ -181,6 +181,15 @@
       on-error="errorHandler"></iron-ajax>
 
     <iron-ajax
+      id="deleteRequirementRequest"
+      handle-as="json"
+      content-type="application/json"
+      method="DELETE"
+      headers="{{header}}"
+      on-response="_handleDeleteRequirementResponse"
+      on-error="errorHandler"></iron-ajax>
+
+    <iron-ajax
       id="followReq"
       handle-as="json"
       content-type="application/json"
@@ -271,7 +280,7 @@
 
     <!-- DIALOG FOR DELETE REQUIREMENT CONFIRMATION -->
 
-    <paper-dialog id="modal" modal on-iron-overlay-closed="deleteRequirement" entry-animation="fade-in-animation"
+    <paper-dialog id="modal" modal on-iron-overlay-closed="_handleDeleteRequirement" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation">
       <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
       <p><i18n-msg msgid="deleteRequirementDesc"></i18n-msg></p>
@@ -423,7 +432,7 @@
                         <paper-item value="develop"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
                         <paper-item on-tap="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
                         <paper-item on-tap="editRequirement"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
-                        <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
+                        <paper-item value="delete"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
                       </paper-menu>
                     </paper-menu-button>
 
@@ -658,12 +667,19 @@
             type:Object,
             notify: true
           },
-          parameters:{
+          parameters: {
             type:Object,
             notify: true,
             value: {per_page: 60}
           },
+          /**
+           * The requirement's element to be deleted.
+           */
           elem: Object,
+          /**
+           * Stores the requirement object that is going to be deleted, while modal dialog is shown.
+           */
+          requirementToDelete: Number,
           isFollower: {
             type: Boolean,
             value: false
@@ -1681,6 +1697,9 @@
             this._toggleUserInResource(requirement.id, requirement.developers, 'developers');
           } else if (selectedValue === 'realize') {
             this._toggleRealized(requirement);
+          } else if (selectedValue === 'delete') {
+            this.requirementToDelete = requirement;
+            this.$.modal.open();
           }
         },
 
@@ -1784,7 +1803,41 @@
           } else {
             return 'markAsDone';
           }
+        },
+
+        /**
+         * Handles the delete modal dialog closed event.
+         *
+         * @param e
+         * @private
+         */
+        _handleDeleteRequirement: function(e) {
+          if (e.detail.confirmed) {
+            var requirement = this.requirementToDelete;
+            var request = this.$.deleteRequirementRequest;
+            request.url = this.baseHref + "/requirements/" + requirement.id;
+
+            request.generateRequest();
+          }
+        },
+
+        /**
+         * Handles the result of the DELETE requirement request.
+         *
+         * @param e
+         * @private
+         */
+        _handleDeleteRequirementResponse: function(e) {
+          //TODO: check result
+
+          this.feedback = this.i18n.getMsg('reqDelSucc');
+          this.$.toast.open();
+
+          // now refresh the data behind by reloading all requirements
+          // TODO: eliminate this heavy operation by only refreshing the respective requirement
+          this.load();
         }
+
       });
 
     })();
