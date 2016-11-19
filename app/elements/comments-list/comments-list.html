@@ -37,12 +37,19 @@
             .reply {
                 margin-left: 40px;
             }
+
+            paper-progress {
+                --paper-progress-active-color: #FF5252;
+                width: 100%;
+                z-index: 1;
+            }
         </style>
 
         <iron-ajax
                 id="commentsLoader"
                 url="{{resourceURL}}"
                 last-response="{{comments}}"
+                loading="{{loading}}"
                 params='{"page":"0", "per_page":"150"}'>
         </iron-ajax>
 
@@ -77,7 +84,9 @@
             </div>
         </paper-dialog>
 
-        <div class="noComments" hidden="[[hideNoComments]]"><i18n-msg msgid="noComments"></i18n-msg></div>
+        <paper-progress indeterminate hidden$="{{!loading}}"></paper-progress>
+
+        <div class="noComments" hidden$="[[!noComments]]"><i18n-msg msgid="noComments"></i18n-msg></div>
 
         <template is="dom-repeat" items="{{comments}}">
 
@@ -90,9 +99,7 @@
                     </div>
                     <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="checkForEnter"></paper-input>
                 </div>
-                <template is="dom-if" if="{{isCreator(item.creatorId)}}">
-                    <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
-                </template>
+                <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close" hidden$="[[!isCreator(item.creatorId)]]"></paper-icon-button>
                 <paper-icon-button icon="reply" on-tap="showReplyInput" hidden$="[[!isAuthorized]]"></paper-icon-button>
             </div>
 
@@ -116,32 +123,20 @@
                     },
                     comments: {
                         type: Array,
-                        notify: true,
-                        observer: "_commentsLoaded"
+                        notify: true
                     },
+                    loading: {
+                        type: Boolean,
+                        observer: 'computeNoComments'
+                    },
+                    noComments: Boolean,
                     baseHref: String,
-                    hideNoComments: {
-                        type: Boolean,
-                        computed: 'computeHide(comments)'
-                    },
                     elem: Object,
-                    loaded: {
-                        type: Boolean,
-                        value: false
-                    },
                     header: {
                         type:Object,
                         notify: true
                     },
                     isAuthorized: Boolean
-                },
-
-                _commentsLoaded: function(){
-                    if (this.comments === []){
-                        this.loaded = false;
-                    } else {
-                        this.loaded = true;
-                    }
                 },
 
                 _computeCommentClasses: function(comment){
@@ -183,13 +178,19 @@
                     }
                 },
 
+                computeNoComments: function(){
+                    if (this.comments !== undefined) {
+                        if ((this.comments.length === 0) && (!this.loading)) {
+                            this.noComments = true;
+                            return;
+                        }
+                    }
+                    this.noComments = false;
+                },
+
                 errorHandler: function (e, detail){
                     document.getElementById("superToast").text = detail.error.message;
                     document.getElementById("superToast").open();
-                },
-
-                computeHide: function(comments) {
-                    return comments.length !== 0;
                 },
 
                 getProfileStyle: function(profileImage) {
@@ -215,15 +216,9 @@
                     }
                 },
 
-                isAuthorized: function(){
-                    if(app.isAuthorized)
-                        return true;
-                    else return false;
-                },
-
                 isCreator: function(usrId){
-                    if(app.isAuthorized){
-                        if (usrId == app.currentUser.id){
+                    if (this.isAuthorized){
+                        if (usrId === app.currentUser.id){
                             return true;
                         }
                     }
