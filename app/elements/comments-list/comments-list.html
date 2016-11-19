@@ -93,9 +93,7 @@
                 <template is="dom-if" if="{{isCreator(item.creatorId)}}">
                     <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
                 </template>
-                <template is="dom-if" if="{{isAuthorized()}}">
-                    <paper-icon-button icon="reply" on-tap="showReplyInput"></paper-icon-button>
-                </template>
+                <paper-icon-button icon="reply" on-tap="showReplyInput" hidden$="[[!isAuthorized]]"></paper-icon-button>
             </div>
 
         </template>
@@ -135,10 +133,7 @@
                         type:Object,
                         notify: true
                     },
-                    commentClasses: {
-                        type: String,
-                        value: "comment layout horizontal"
-                    }
+                    isAuthorized: Boolean
                 },
 
                 _commentsLoaded: function(){
@@ -150,10 +145,11 @@
                 },
 
                 _computeCommentClasses: function(comment){
+                    var commentClasses = "comment layout horizontal";
                     if (this.isReply(comment)){
-                        this.commentClasses += " reply";
+                        commentClasses += " reply";
                     }
-                    return this.commentClasses;
+                    return commentClasses;
                 },
 
                 computeResourceURL: function(requirementId){

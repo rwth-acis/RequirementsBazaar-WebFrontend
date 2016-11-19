@@ -256,7 +256,7 @@
                   style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
       <h2><i18n-msg msgid="comments"></i18n-msg></h2>
       <p style="max-height: 80%;">
-        <comments-list header="{{header}}" base-href="{{baseHref}}"></comments-list>
+        <comments-list header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
         <template is="dom-if" if="{{isAuthorized}}">
           <div class="container flex-horizontal">
             <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
@@ -462,7 +462,7 @@
                   <iron-collapse id="reqExpand">
                     <!--<file-gallery attachments="{{req.attachments}}"></file-gallery>-->
                     <h4><i18n-msg msgid="comments"></i18n-msg></h4>
-                    <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}"></comments-list>
+                    <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
                     <template is="dom-if" if="{{isAuthorized}}">
                       <div class="container flex-horizontal" id="[[req.id]]">
                         <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
@@ -565,7 +565,7 @@
 
                                     <iron-collapse>
                                         <h4><i18n-msg msgid="comments"></i18n-msg></h4>
-                                        <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]"></comments-list>
+                                        <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" is-authorized="{{isAuthorized}}"></comments-list>
                                         <template is="dom-if" if="{{isAuthorized}}">
                                             <div class="container flex-horizontal" id="[[req.id]]">
                                                 <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
