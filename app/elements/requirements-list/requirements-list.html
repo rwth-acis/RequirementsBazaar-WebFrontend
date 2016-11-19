@@ -430,7 +430,7 @@
                         <paper-item value="realize"><i18n-msg msgid="[[_calculateRealizeMessage(req.realized)]]"></i18n-msg></paper-item>
                         <paper-item value="follow"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
                         <paper-item value="develop"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
-                        <paper-item on-tap="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
+                        <paper-item value="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
                         <paper-item on-tap="editRequirement"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
                         <paper-item value="delete"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
                       </paper-menu>
@@ -1700,6 +1700,8 @@
           } else if (selectedValue === 'delete') {
             this.requirementToDelete = requirement;
             this.$.modal.open();
+          } else if (selectedValue === 'becomeLeadDeveloper') {
+            this._toggleLeadDeveloper(requirement);
           }
         },
 
@@ -1740,10 +1742,6 @@
               "id": parseInt(requirement.id),
               "realized": dateString
             });
-
-            // now refresh the data behind by reloading all requirements
-            // TODO: eliminate this heavy operation by only refreshing the respective requirement
-            this.load();
           }
 
           // fire
@@ -1756,12 +1754,16 @@
          * @param e
          * @private
          */
-        handleUpdateRequirementResponse: function(e) {
+        _handleUpdateRequirementResponse: function(e) {
           if (e != null){
             this.feedback = this.i18n.getMsg('reqEditSucc');
           }
 
           this.$.toast.open();
+
+          // now refresh the data behind by reloading all requirements
+          // TODO: eliminate this heavy operation by only refreshing the respective requirement
+          this.load();
         },
 
         /**
@@ -1815,7 +1817,7 @@
           if (e.detail.confirmed) {
             var requirement = this.requirementToDelete;
             var request = this.$.deleteRequirementRequest;
-            request.url = this.baseHref + "/requirements/" + requirement.id;
+            request.url = this.baseHref + '/requirements/' + requirement.id;
 
             request.generateRequest();
           }
@@ -1836,6 +1838,25 @@
           // now refresh the data behind by reloading all requirements
           // TODO: eliminate this heavy operation by only refreshing the respective requirement
           this.load();
+        },
+
+        /**
+         * Updates the lead developer for a specified requirement on the server. If the user is already lead developer,
+         * then the user 1 (anonymous) is becoming lead developer, otherwise the user takes this role.
+         *
+         * @param requirement a requirement object.
+         * @private
+         */
+        _toggleLeadDeveloper: function(requirement) {
+          var request = this.$.updateRequirementRequest;
+          request.url = this.baseHref + '/requirements/' + requirement.id;
+          request.body = JSON.stringify({
+            'id': parseInt(requirement.id),
+            'leadDeveloperId': (app.currentUser.id !== requirement.leadDeveloperId) ? app.currentUser.id : 1
+          });
+
+          // fire
+          request.generateRequest();
         }
 
       });
