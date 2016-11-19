@@ -33,6 +33,10 @@
             .comment {
                 margin-top: 5px;
             }
+
+            .reply {
+                margin-left: 40px;
+            }
         </style>
 
         <iron-ajax
@@ -76,40 +80,24 @@
         <div class="noComments" hidden="[[hideNoComments]]"><i18n-msg msgid="noComments"></i18n-msg></div>
 
         <template is="dom-repeat" items="{{comments}}">
-            <template is="dom-if" if="{{!isReply(item)}}">
-                <div class="comment layout horizontal" attr="{{item.Id}}">
-                    <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
-                    <div class="layout vertical flex">
-                        <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
-                        <div class="info helper">
-                            <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
-                        </div>
-                        <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="checkForEnter"></paper-input>
-                    </div>
-                    <template is="dom-if" if="{{isCreator(item.creatorId)}}">
-                        <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
-                    </template>
-                    <template is="dom-if" if="{{isAuthorized()}}">
-                        <paper-icon-button icon="reply" on-tap="showReplyInput"></paper-icon-button>
-                    </template>
-                </div>
-            </template>
 
-            <template is="dom-if" if="{{isReply(item)}}">
-                <div class="comment layout horizontal replies" style="margin-left: 40px;" attr="Re-{{item.belongsToComment}}">
-                    <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
-                    <div class="layout vertical flex">
-                        <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
-                        <div class="info helper">
-                            <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
-                        </div>
-                        <!--<paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="checkForEnter"></paper-input>-->
+            <div class$="[[_computeCommentClasses(item)]]" attr="{{item.Id}}">
+                <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
+                <div class="layout vertical flex">
+                    <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
+                    <div class="info helper">
+                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
                     </div>
-                    <template is="dom-if" if="{{isCreator(item.creatorId)}}">
-                        <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
-                    </template>
+                    <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="checkForEnter"></paper-input>
                 </div>
-            </template>
+                <template is="dom-if" if="{{isCreator(item.creatorId)}}">
+                    <paper-icon-button id="[[item.Id]]" on-tap="createModal" icon="close"></paper-icon-button>
+                </template>
+                <template is="dom-if" if="{{isAuthorized()}}">
+                    <paper-icon-button icon="reply" on-tap="showReplyInput"></paper-icon-button>
+                </template>
+            </div>
+
         </template>
 
     </template>
@@ -146,21 +134,29 @@
                     header: {
                         type:Object,
                         notify: true
+                    },
+                    commentClasses: {
+                        type: String,
+                        value: "comment layout horizontal"
                     }
                 },
 
-                ready: function () {
-                },
-
-                _commentsLoaded: function() {
-                    if(this.comments === []){
+                _commentsLoaded: function(){
+                    if (this.comments === []){
                         this.loaded = false;
                     } else {
                         this.loaded = true;
                     }
                 },
 
-                computeResourceURL: function(requirementId) {
+                _computeCommentClasses: function(comment){
+                    if (this.isReply(comment)){
+                        this.commentClasses += " reply";
+                    }
+                    return this.commentClasses;
+                },
+
+                computeResourceURL: function(requirementId){
                     return app.baseHref + '/requirements/' + requirementId + '/comments/';
                 },
 
