@@ -407,7 +407,7 @@
           <template is="dom-if" if$="{{!activeOption}}">
             <template is="dom-if" if="{{!req.realized}}">
               <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
-                <div class="reqbody">
+                <div class="reqbody" id$="requirementBody{{req.id}}">
 
                   <div class="req-icons layout horizontal center">
                     <paper-checkbox></paper-checkbox>
@@ -426,7 +426,7 @@
                         <paper-item value="follow"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
                         <paper-item value="develop"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
                         <paper-item value="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
-                        <paper-item on-tap="editRequirement"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
+                        <paper-item value="edit"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
                         <paper-item value="delete"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
                       </paper-menu>
                     </paper-menu-button>
@@ -470,9 +470,9 @@
 
                 </div>
 
-                <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
+                <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}" id$="description{{req.id}}"></div>
 
-                <div class="comments">
+                <div class="comments" id$="comments{{req.id}}">
 
                   <iron-collapse id="reqExpand">
                     <!--<file-gallery attachments="{{req.attachments}}"></file-gallery>-->
@@ -491,12 +491,12 @@
 
                 </div>
 
-                <div class="editForm">
+                <div class="editForm" id$="edit{{req.id}}">
 
-                  <paper-input class="editTitle" class="title" value="{{req.title}}"></paper-input>
+                  <paper-input class="editTitle title" value="{{req.title}}"></paper-input>
                   <paper-textarea value="{{req.description}}"></paper-textarea>
-                  <paper-button raised on-tap="saveEditReq" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
-                  <paper-button raised on-tap="cancelRequirement" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+                  <paper-button raised on-tap="_handleSaveEditTap" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
+                  <paper-button raised on-tap="_handleCancelEditTap" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
 
                 </div>
 
@@ -1130,57 +1130,6 @@
           request.generateRequest();
         },
 
-        editRequirement: function(e) {
-          //get top node
-          var parentEl = this.findUpTag(e.currentTarget.parentNode.parentNode.parentNode, 'PAPER-MATERIAL');
-
-          //hide card elements
-          parentEl.querySelector('.reqbody').style.display = 'none';
-          parentEl.querySelector('.comments').style.display = 'none';
-          parentEl.querySelector('.description').style.display = 'none';
-          //show form elements
-          parentEl.querySelector('.editForm').style.display = 'block';
-        },
-
-        cancelRequirement: function(e){
-          e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
-
-          e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
-          e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
-          e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
-        },
-
-        saveEditReq: function(e){
-          var title = e.currentTarget.parentNode.querySelector('PAPER-INPUT').value;
-          var description = e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').value;
-          var id = e.currentTarget.parentNode.parentNode.id;
-          var request = this.$.postUpdateRequirement;
-          var components = [{id: parseInt(app.params.componentId)}];
-          request.url = this.baseHref + "/requirements/" + id;
-
-          if (title != '' && description != ''){
-            request.body = JSON.stringify({
-              "id": parseInt(id),
-              "title": title,
-              "description": description,
-              "projectId": parseInt(app.params.projectId),
-              "components": components
-            });
-            request.generateRequest();
-
-            //revert the look
-            e.currentTarget.parentNode.parentNode.querySelector('.editForm').style.display = 'none';
-
-            e.currentTarget.parentNode.parentNode.querySelector('.reqbody').style.display = 'block';
-            e.currentTarget.parentNode.parentNode.querySelector('.comments').style.display = 'block';
-            e.currentTarget.parentNode.parentNode.querySelector('.description').style.display = 'block';
-          } else {
-            this.$.toast.text = this.i18n.getMsg('fieldsNotEmptyReq');
-            this.$.toast.open();
-          }
-
-        },
-
         handleResponseEditReq: function(data) {
           if (data != null){
             this.feedback = this.i18n.getMsg('reqEditSucc');
@@ -1697,6 +1646,8 @@
             this.$.modal.open();
           } else if (selectedValue === 'becomeLeadDeveloper') {
             this._toggleLeadDeveloper(requirement);
+          } else if (selectedValue === 'edit') {
+            this._editRequirement(requirement.id);
           }
         },
 
@@ -1852,6 +1803,80 @@
 
           // fire
           request.generateRequest();
+        },
+
+        /**
+         * Shows the editing form of the specified requirement.
+         *
+         * @param requirementId
+         * @private
+         */
+        _editRequirement: function(requirementId) {
+          //hide card elements
+          this.querySelector('#requirementBody' + requirementId).style.display = 'none';
+          this.querySelector('#comments' + requirementId).style.display = 'none';
+          this.querySelector('#description' + requirementId).style.display = 'none';
+          //show form elements
+          this.querySelector('#edit' + requirementId).style.display = 'block';
+        },
+
+        /**
+         * Saves the edited requirement on the server.
+         *
+         * @param e
+         * @private
+         */
+        _handleSaveEditTap: function(e) {
+          // refactoring: formerly known as saveEditReq
+
+          var model = e.model;
+
+          //TODO: use proper ids!
+          var title = e.currentTarget.parentNode.querySelector('PAPER-INPUT').value;
+          var description = e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').value;
+
+          var request = this.$.postUpdateRequirement;
+          //TODO: check if this is not harmful code when requirement belongs to multiple components
+          var components = [{id: parseInt(app.params.componentId)}];
+          request.url = this.baseHref + "/requirements/" + model.req.id;
+
+          if (title != '' && description != '') {
+            request.body = JSON.stringify({
+              "id": model.req.id,
+              "title": title,
+              "description": description,
+              "projectId": parseInt(app.params.projectId),
+              "components": components
+            });
+            request.generateRequest();
+
+            // revert the look
+            this._handleCancelEditTap(e);
+
+          } else {
+            this.$.toast.text = this.i18n.getMsg('fieldsNotEmptyReq');
+            this.$.toast.open();
+          }
+        },
+
+        /**
+         * Cancels editing a requirement by hiding the form.
+         *
+         * @param e
+         * @private
+         */
+        _handleCancelEditTap: function(e) {
+          // refactoring: formerly known as cancelRequirement
+          var requirementId = e.model.req.id;
+
+          // show form elements
+          this.querySelector('#edit' + requirementId).style.display = 'none';
+
+          // show card elements
+          this.querySelector('#requirementBody' + requirementId).style.display = 'block';
+          this.querySelector('#comments' + requirementId).style.display = 'block';
+          this.querySelector('#description' + requirementId).style.display = 'block';
+
         }
 
       });
