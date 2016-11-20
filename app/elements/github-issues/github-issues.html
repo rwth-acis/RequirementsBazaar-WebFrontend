@@ -8,9 +8,10 @@
 
         <iron-ajax
             id="getGithubRepos"
+            auto
             handle-as="json"
             url="https://api.github.com/user/repos"
-            params='{"access_token": ""}'
+            params="{{paramsObject}}"
             content-type="application/json"
             method="GET"
             last-response="{{repositories}}"
@@ -20,7 +21,7 @@
             id="postIssueGit"
             handle-as="json"
             content-type="application/json"
-            params='{"access_token": ""}'
+            params="{{paramsObject}}"
             method="POST"
             on-response="handleResponseGithubIssue"
             on-error="errorHandler"></iron-ajax>
@@ -68,7 +69,58 @@
                 is: 'github-issues',
                 properties: {
                     repositories: Object,
-                    access_token: String
+                    access_token: {
+                        type: String,
+                        value: "a6a52d74665701f2eb37d8f60614303e074d8d07"
+                    },
+                    paramsObject: {
+                        type: Object,
+                        computed: '_computeParamsObject(access_token)'
+                    },
+                    selectedRequirementId: Number
+                },
+
+                _computeParamsObject: function(acc_token) {
+                    return {access_token: acc_token};
+                },
+
+                showGithubRepos: function() {
+                    this.$.reposContainer.open();
+                },
+
+                onRepoDialogClosed: function (e) {
+                    if(e.detail.confirmed){
+                        var title = "";
+                        var desc = "";
+                        for (var i=0; i < this.requirements.length; i++) {
+                            if (this.requirements[i].id == this.selReq){
+                                title = this.requirements[i].title;
+                                desc = this.requirements[i].description;
+                            }
+                            break;
+                        }
+                        var req = this.$.postIssueGit;
+                        req.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
+                        req.body = JSON.stringify({
+                            "title": title,
+                            "body": desc
+                        });
+                        req.generateRequest();
+                    } else {
+                        this.$.selRepo.selected = "0";
+                        this.selReq = null;
+                    }
+                },
+
+                searchGithubRepo: function (e) {
+                    if (e.keyCode === 13) {
+                        if (!e.ctrlKey){
+                            var req = this.$.getSearchGit;
+                            req.url = "https://api.github.com/search/repositories?q=" + encodeURIComponent(this.$.searchGithubRepo.value);
+                            req.generateRequest();
+                            e.preventDefault();
+                        }
+                    }
                 }
 
             });
