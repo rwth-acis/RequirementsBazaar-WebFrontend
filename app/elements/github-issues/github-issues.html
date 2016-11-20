@@ -3,7 +3,9 @@
 <dom-module id="github-issues">
     <template>
         <style is="custom-style">
-
+            #reposContainer {
+                max-width: 80%;
+            }
         </style>
 
         <iron-ajax
@@ -37,7 +39,7 @@
 
 
         <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
-            <h2>Your Github Repositories</h2>
+            <h2>Github Repositories</h2>
             <paper-dialog-scrollable>
                 <paper-input id="searchGithubRepo" label="Search a Github Repository" on-keydown="searchGithubRepo">
                     <iron-icon icon="search" prefix></iron-icon>
@@ -59,6 +61,9 @@
             </div>
         </paper-dialog>
 
+        <!-- TOAST FOR APP NOTIFICATIONS (FEEDBACK) -->
+
+        <paper-toast id="toast"></paper-toast>
 
     </template>
 
@@ -68,7 +73,8 @@
             Polymer({
                 is: 'github-issues',
                 properties: {
-                    repositories: Object,
+                    repositories: Array,
+                    searchRepositories: Array,
                     access_token: {
                         type: String,
                         value: "a6a52d74665701f2eb37d8f60614303e074d8d07"
@@ -77,7 +83,7 @@
                         type: Object,
                         computed: '_computeParamsObject(access_token)'
                     },
-                    selectedRequirementId: Number
+                    selectedRequirement: Object
                 },
 
                 _computeParamsObject: function(acc_token) {
@@ -89,26 +95,18 @@
                 },
 
                 onRepoDialogClosed: function (e) {
-                    if(e.detail.confirmed){
-                        var title = "";
-                        var desc = "";
-                        for (var i=0; i < this.requirements.length; i++) {
-                            if (this.requirements[i].id == this.selReq){
-                                title = this.requirements[i].title;
-                                desc = this.requirements[i].description;
-                            }
-                            break;
-                        }
+                    if (e.detail.confirmed) {
                         var req = this.$.postIssueGit;
                         req.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
                         req.body = JSON.stringify({
-                            "title": title,
-                            "body": desc
+                            "title": this.selectedRequirement.title,
+                            "body": this.selectedRequirement.description + "\n" + "More on: https://requirements-bazaar.org" + app.baseUrl + "#!/" + "projects/" + app.params.projectId + "/components/" + app.params.componentId + "/requirements/" + this.selectedRequirement.id
                         });
+                        console.log(req.body);
                         req.generateRequest();
                     } else {
                         this.$.selRepo.selected = "0";
-                        this.selReq = null;
+                        this.selectedRequirement = null;
                     }
                 },
 
@@ -121,6 +119,20 @@
                             e.preventDefault();
                         }
                     }
+                },
+
+                showRepoSearchResults: function(){
+                    this.repositories = this.searchRepositories.items;
+                },
+
+                errorHandler: function (e, detail){
+                    this.$.toast.text = detail.error.message;
+                    this.$.toast.open();
+                },
+
+                handleResponseGithubIssue: function(){
+                    this.$.toast.text = "Issue posted to Github";
+                    this.$.toast.open();
                 }
 
             });

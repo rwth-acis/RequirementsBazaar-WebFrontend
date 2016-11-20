@@ -917,7 +917,8 @@
         showGithubRepos: function(e){
           var githubIssuesElement = this.$$("github-issues");
           githubIssuesElement.showGithubRepos();
-//          this.$.reposContainer.open();
+
+//          search for the paper-material element whose id is the id of the requirement
           var el = e.currentTarget;
           var tag = "PAPER-MATERIAL";
           var element;
@@ -927,8 +928,15 @@
             if (el.tagName === tag)
               element = el;
           }
-//          this.selReq = element.id;
-          githubIssuesElement.selectedRequirementId = element.id;
+
+//          check for the selected requirements that post to github issue was posted
+          for (var i=0; i < this.requirements.length; i++) {
+            if (this.requirements[i].id == element.id) {
+              githubIssuesElement.selectedRequirement = this.requirements[i];
+              break;
+            }
+          }
+
         },
 
         onRepoDialogClosed: function (e) {
