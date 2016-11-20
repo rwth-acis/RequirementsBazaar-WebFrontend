@@ -135,8 +135,12 @@
       }
 
       .contributors {
-        /*@apply(--layout-vertical);*/
         display: none;
+      }
+
+      #grids .starIcon {
+        float: right;
+        margin: 20px;
       }
     </style>
 
@@ -361,19 +365,10 @@
                     <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
                       <iron-icon icon="editor:mode-comment"></iron-icon>
                     </paper-button>
-
-                    <template is="dom-if" if="{{!isAuthorized}}">
-                      <paper-button noink> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
-                    </template>
-                    <template is="dom-if" if="{{isAuthorized}}">
-                      <template is="dom-if" if="{{userVoted(req.userVoted)}}">
-                        <paper-button noink on-tap="starDelRequest"> <iron-icon class="colored" icon="star"></iron-icon> {{req.upVotes}}</paper-button>
-                      </template>
-                      <template is="dom-if" if="{{! userVoted(req.userVoted)}}">
-                        <paper-button noink on-tap="starRequest"> <iron-icon icon="star-border"></iron-icon> {{req.upVotes}}</paper-button>
-                      </template>
-                    </template>
-
+                    <span class="starIcon"><paper-icon-button icon="[[_calculateStarIcon(req.userVoted, isAuthorized)]]"
+                                             class$="[[_calculateStarClass(req.userVoted, isAuthorized)]]"
+                                             on-tap="_handleStarTap"
+                                             disabled="[[!isAuthorized]]"></paper-icon-button>[[req.upVotes]]</span>
                   </div>
                 </paper-card>
               </div>
