@@ -302,7 +302,7 @@
 
         for (var i=0; i< requirements.length; i++){
             var element = requirements[i];
-            if (element.querySelector('.contributers').style.display != "none") {
+            if (element.querySelector('.contributors').style.display != "none") {
                 if (element.querySelector("#contr")){
                     element.querySelector("#contr").innerText = i18n.getMsg('showContributers');
                 }
