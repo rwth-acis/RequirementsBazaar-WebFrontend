@@ -794,36 +794,6 @@
           this.$.requirementsLoader.generateRequest();
         },
 
-        starRequest: function(e){
-          var req = this.$.starReq;
-          var reqId;
-          if (this.list) {
-            reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
-          } else {
-            reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
-          }
-          req.method = "POST";
-          req.url = this.baseHref + "/requirements/" + reqId + "/vote";
-          req.body = JSON.stringify({
-            "requirementId": reqId,
-            "direction": "up"
-          });
-          req.generateRequest();
-        },
-
-        starDelRequest: function(e){
-          var req = this.$.starReq;
-          var reqId;
-          if (this.list) {
-            reqId = parseInt(e.currentTarget.parentNode.parentNode.parentNode.id);
-          } else {
-            reqId = parseInt(e.currentTarget.parentNode.parentNode.id);
-          }
-          req.method = "DELETE";
-          req.url = this.baseHref + "/requirements/" + reqId + "/vote";
-          req.generateRequest();
-        },
-
         showOnHover: function(e){
           var chb = e.currentTarget.querySelector("paper-checkbox");
           chb.style.display = "block";
