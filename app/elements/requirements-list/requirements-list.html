@@ -399,10 +399,10 @@
                     <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
                     <paper-item value="toggleContributors" id="contr"><i18n-msg msgid="showContributors"></i18n-msg></paper-item>
                     <paper-item value="realize"><i18n-msg msgid="[[_calculateRealizeMessage(req.realized)]]"></i18n-msg></paper-item>
-                    <paper-item value="follow"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
-                    <paper-item value="develop"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
-                    <paper-item value="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
-                    <paper-item value="edit"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
+                    <paper-item value="follow" hidden$="[[req.realized]]"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
+                    <paper-item value="develop" hidden$="[[req.realized]]"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
+                    <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
+                    <paper-item value="edit" hidden$="[[req.realized]]"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
                     <paper-item value="delete"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
                   </paper-menu>
                 </paper-menu-button>
