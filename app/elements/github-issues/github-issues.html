@@ -3,10 +3,13 @@
 <dom-module id="github-issues">
     <template>
         <style is="custom-style">
+            /*MAX-WIDTH HELPS TO KEEP THE DIALOG INSIDE THE WINDOW NO MATTER HOW LONG THE REPOS NAMES ARE*/
             #reposContainer {
                 max-width: 80%;
             }
         </style>
+
+        <!--AJAX REQUEST TO LOAD ALL THE REPOSITORIES OF THE LOGGED-IN USER-->
 
         <iron-ajax
             id="getGithubRepos"
@@ -19,6 +22,8 @@
             last-response="{{repositories}}"
             on-error="errorHandler"></iron-ajax>
 
+        <!--AJAX REQUEST TO POST REQUIREMENTS DATA TO GITHUB ISSUES OF A REPOSITORY-->
+
         <iron-ajax
             id="postIssueGit"
             handle-as="json"
@@ -28,22 +33,30 @@
             on-response="handleResponseGithubIssue"
             on-error="errorHandler"></iron-ajax>
 
+        <!--AJAX REQUEST TO SEARCH FOR A GITHUB REPOSITORY-->
+
         <iron-ajax
             id="getSearchGit"
             handle-as="json"
             content-type="application/json"
             method="GET"
-            last-response="{{searchRepositories}}"
+            last-response="{{searchedRepositories}}"
             on-response="showRepoSearchResults"
             on-error="errorHandler"></iron-ajax>
 
 
+        <!--DIALOG THAT HOLDS ALL THE REPOSITORY NAMES RELATED TO THE AUTHORIZED USER-->
+
         <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
             <h2>Github Repositories</h2>
             <paper-dialog-scrollable>
+
+                <!--PAPER INPUT TO SEND A SEARCH REQUEST TO GITHUB FOR A REPOSITORY-->
                 <paper-input id="searchGithubRepo" label="Search a Github Repository" on-keydown="searchGithubRepo">
                     <iron-icon icon="search" prefix></iron-icon>
                 </paper-input>
+
+                <!--LIST OF ALL THE REPOSITORIES NAMES AND DESCRIPTION-->
                 <iron-selector id="selRepo" selected="0">
                     <template is="dom-repeat" items$="{{repositories}}" id="repoElements">
                         <paper-item>
@@ -54,11 +67,15 @@
                         </paper-item>
                     </template>
                 </iron-selector>
+
             </paper-dialog-scrollable>
+
+            <!--ACTION BUTTONS TO CANCEL OR POST TO GITHUB-->
             <div class="buttons">
                 <paper-button dialog-dismiss>Cancel</paper-button>
                 <paper-button dialog-confirm autofocus>POST</paper-button>
             </div>
+
         </paper-dialog>
 
         <!-- TOAST FOR APP NOTIFICATIONS (FEEDBACK) -->
@@ -73,43 +90,69 @@
             Polymer({
                 is: 'github-issues',
                 properties: {
+                    //ARRAY OF INITAL REPOSITORIES FROM GET REQUEST
                     repositories: Array,
-                    searchRepositories: Array,
+
+                    //ARRAY OF REPOSITORIES FROM SEARCH REQUEST
+                    searchedRepositories: Array,
+
+                    //ACCESS TOKEN INPUT FROM THE BACKEND
                     access_token: {
                         type: String,
-                        value: "a6a52d74665701f2eb37d8f60614303e074d8d07"
+                        value: ""
                     },
+
+                    //OBJECT WITH THE ACCESS-TOKEN FOR THE AJAX REQUEST
                     paramsObject: {
                         type: Object,
                         computed: '_computeParamsObject(access_token)'
                     },
+
+                    //SELECTED REQUIREMENTS FOR GETTING THE TITLE AND DESCRIPTION TO POST AS ISSUE
                     selectedRequirement: Object
                 },
 
+                /**
+                 * Computes the authorization object and passes it as parameter to the requests
+                 * @param acc_token
+                 * @returns {{access_token: *}}
+                 * @private
+                 */
                 _computeParamsObject: function(acc_token) {
                     return {access_token: acc_token};
                 },
 
+                /**
+                 * Open paper-dialog of github repositories
+                 */
                 showGithubRepos: function() {
                     this.$.reposContainer.open();
                 },
 
+                /**
+                 * Computes the request object and posts the request to github
+                 * with the selectedRequirement data. Adds at the end of description the link to the requirement in requirements-bazaar
+                 * @param e
+                 */
                 onRepoDialogClosed: function (e) {
                     if (e.detail.confirmed) {
-                        var req = this.$.postIssueGit;
-                        req.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
-                        req.body = JSON.stringify({
+                        var request = this.$.postIssueGit;
+                        request.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
+                        request.body = JSON.stringify({
                             "title": this.selectedRequirement.title,
-                            "body": this.selectedRequirement.description + "\n" + "More on: https://requirements-bazaar.org" + app.baseUrl + "#!/" + "projects/" + app.params.projectId + "/components/" + app.params.componentId + "/requirements/" + this.selectedRequirement.id
+                            "body": this.selectedRequirement.description + "\n\n" + "More on: https://requirements-bazaar.org" + app.baseUrl + "#!/" + "projects/" + app.params.projectId + "/components/" + app.params.componentId + "/requirements/" + this.selectedRequirement.id
                         });
-                        console.log(req.body);
-                        req.generateRequest();
+                        request.generateRequest();
                     } else {
                         this.$.selRepo.selected = "0";
                         this.selectedRequirement = null;
                     }
                 },
 
+                /**
+                 * When enter is pressed in the input searches the text in the input for a repository in Github
+                 * @param e
+                 */
                 searchGithubRepo: function (e) {
                     if (e.keyCode === 13) {
                         if (!e.ctrlKey){
@@ -121,15 +164,27 @@
                     }
                 },
 
+                /**
+                 * Displays the repositories returned by the search request to the paper-dialog
+                 * the easisst way was to replace the current repositories with the searchedRepositories
+                 */
                 showRepoSearchResults: function(){
-                    this.repositories = this.searchRepositories.items;
+                    this.repositories = this.searchedRepositories.items;
                 },
 
+                /**
+                 * Shows the error message to the user if the request wasn't successful
+                 * @param e
+                 * @param detail
+                 */
                 errorHandler: function (e, detail){
                     this.$.toast.text = detail.error.message;
                     this.$.toast.open();
                 },
 
+                /**
+                 * Shows the success notification message to the user when the issue was posted correctly
+                 */
                 handleResponseGithubIssue: function(){
                     this.$.toast.text = "Issue posted to Github";
                     this.$.toast.open();
