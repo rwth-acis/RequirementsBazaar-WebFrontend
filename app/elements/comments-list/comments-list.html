@@ -326,6 +326,7 @@
                 showReplyInput: function(e){
                     if (e.currentTarget.parentNode.querySelector("paper-input").style.display === "none"){
                         e.currentTarget.parentNode.querySelector("paper-input").style.display= "block";
+                        e.currentTarget.parentNode.querySelector("paper-input").$.input.focus();
                     } else {
                         e.currentTarget.parentNode.querySelector("paper-input").style.display= "none";
                     }
