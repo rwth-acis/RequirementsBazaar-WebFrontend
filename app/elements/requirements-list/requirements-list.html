@@ -621,7 +621,10 @@
           componentId: {
             type: Number
           },
-          selected: {
+          /**
+           * Whether to show 'active' or 'realized' requirements.
+           */
+          requirementsStateFilter: {
             type: String,
             notify: true,
             value: "active"
@@ -707,6 +710,10 @@
             notify: true,
             observer: "_hasEnoughItems"
           },
+          /**
+           * Decides whether still unrealized requirements are shown or only realized ones. If false, show unrealized
+           * requirements, if true, show realized ones.
+           */
           activeOption: {
             type: Boolean,
             notify: true,
@@ -731,15 +738,21 @@
 
         observers: [
           'manageSelReq(selectedRequirements.splices)',
-          'computeRealized(selected)'
+          'computeRealized(requirementsStateFilter)'
         ],
 
         ready: function () {
           this.i18n = this.$.i18n;
         },
 
-        computeRealized: function(selected){
-          if(selected === "active"){
+        /**
+         * Computes the activeOption property that defines whether to show active or realized requirements.
+         *
+         * @property requirementsStateFilter {string} 'active' or 'realized.
+         */
+        computeRealized: function(requirementsStateFilter) {
+          if (requirementsStateFilter === "active") {
+            //TODO: it doesn't make sense to use the "active" string for activeOption false!
             this.activeOption = false;
           } else {
             this.activeOption = true;
