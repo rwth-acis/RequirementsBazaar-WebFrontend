@@ -259,7 +259,7 @@
     "message": "Diese Aktion kann nicht rückgängig gemacht werden! Sind Sie sicher, dass Sie diese Anforderung löschen möchten?"
   },
 
-  "showContributers": {
+  "showContributors": {
     "description": "...",
     "message": "Zeige alle Beteiligten"
   },
@@ -334,7 +334,7 @@
     "message": "Anforderung erfolgreich gelöscht!"
   },
 
-  "hideContributers": {
+  "hideContributors": {
     "description": "...",
     "message": "Mitwirkende ausblenden"
   },

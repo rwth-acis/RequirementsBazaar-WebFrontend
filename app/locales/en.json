@@ -259,9 +259,9 @@
     "message": "This action can't be undone! Are you sure that you want to permanently delete this requirement?"
   },
 
-  "showContributers": {
+  "showContributors": {
     "description": "...",
-    "message": "Show Contributers"
+    "message": "Show Contributors"
   },
 
   "markAsDone": {
@@ -334,9 +334,9 @@
     "message": "Requirement deleted successfully!"
   },
 
-  "hideContributers": {
+  "hideContributors": {
     "description": "...",
-    "message": "Hide Contributers"
+    "message": "Hide Contributors"
   },
 
   "fdbFollowReq": {
