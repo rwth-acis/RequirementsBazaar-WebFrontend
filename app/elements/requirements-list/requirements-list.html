@@ -149,11 +149,11 @@
     <i18n-msg class="hide" id="i18n"></i18n-msg>
 
     <iron-ajax
-      id="requirementsLoader"
-      url="{{resourceURL}}"
+      id="requirementsRequest"
+      url="[[_resourceURL]]"
       last-response="{{requirements}}"
       headers="{{header}}"
-      params="{{parameters}}"
+      params="[[_requirementsRequestParameters]]"
       loading="{{loading}}"></iron-ajax>
 
     <iron-ajax
@@ -350,50 +350,28 @@
     <template is="dom-if" if="{{!list}}" restamp>
       <masonry-layout id="grids" column-width="100">
         <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
-          <template is="dom-if" if="{{!activeOption}}">
-            <template is="dom-if" if="{{!req.realized}}">
-              <div class="grid-item">
-                <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
-                  <!--<paper-checkbox></paper-checkbox>-->
-                  <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
-                  <time is="relative-time" class="time"
-                        datetime$="[[req.creation_time]]">
-                  </time>
-                  <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
-                  <div class="card-content" class="truncate">{{req.description}}</div>
-                  <div class="card-actions">
-                    <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
-                      <iron-icon icon="editor:mode-comment"></iron-icon>
-                    </paper-button>
-                    <span class="starIcon"><paper-icon-button icon="[[_calculateStarIcon(req.userVoted, isAuthorized)]]"
-                                             class$="[[_calculateStarClass(req.userVoted, isAuthorized)]]"
-                                             on-tap="_handleStarTap"
-                                             disabled="[[!isAuthorized]]"></paper-icon-button>[[req.upVotes]]</span>
-                  </div>
-                </paper-card>
-              </div>
-            </template>
-          </template>
-          <template is="dom-if" if="{{activeOption}}">
-            <template is="dom-if" if="{{req.realized}}">
-              <div class="grid-item">
-                <paper-card heading="{{req.title}}">
-                  <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
-                  <time is="relative-time" class="time"
-                        datetime$="[[req.creation_time]]">
-                  </time>
-                  <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
-                  <div class="card-content" class="truncate">{{req.description}}</div>
-                  <div class="card-actions">
-                    <paper-button noink>
-                      <iron-icon icon="star"></iron-icon>
-                      {{req.upVotes}}
-                    </paper-button>
-                  </div>
-                </paper-card>
-              </div>
-            </template>
-          </template>
+
+            <div class="grid-item">
+              <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
+                <!--<paper-checkbox></paper-checkbox>-->
+                <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
+                <time is="relative-time" class="time"
+                      datetime$="[[req.creation_time]]">
+                </time>
+                <!--<div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>-->
+                <div class="card-content" class="truncate">{{req.description}}</div>
+                <div class="card-actions">
+                  <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
+                    <iron-icon icon="editor:mode-comment"></iron-icon>
+                  </paper-button>
+                  <span class="starIcon"><paper-icon-button icon="[[_calculateStarIcon(req.userVoted, isAuthorized)]]"
+                                           class$="[[_calculateStarClass(req.userVoted, isAuthorized)]]"
+                                           on-tap="_handleStarTap"
+                                           disabled="[[!isAuthorized]]"></paper-icon-button>[[req.upVotes]]</span>
+                </div>
+              </paper-card>
+            </div>
+
         </template>
       </masonry-layout>
     </template>
@@ -404,197 +382,101 @@
       <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}" initial-count="4">
         <div class="layout vertical center">
 
-          <template is="dom-if" if$="{{!activeOption}}">
-            <template is="dom-if" if="{{!req.realized}}">
-              <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
-                <div class="reqbody" id$="requirementBody{{req.id}}">
+          <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+            <div class="reqbody" id$="requirementBody{{req.id}}">
 
-                  <div class="req-icons layout horizontal center">
-                    <paper-checkbox></paper-checkbox>
-                    <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, isAuthorized)]]"
-                                       class$="[[_calculateStarClass(req.userVoted, isAuthorized)]]"
-                                       on-tap="_handleStarTap"
-                                       disabled="[[!isAuthorized]]"></paper-icon-button>
-                    <div>[[req.upVotes]]</div>
+              <div class="req-icons layout horizontal center">
+                <paper-checkbox></paper-checkbox>
+                <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, isAuthorized)]]"
+                                   class$="[[_calculateStarClass(req.userVoted, isAuthorized)]]"
+                                   on-tap="_handleStarTap"
+                                   disabled="[[!isAuthorized]]"></paper-icon-button>
+                <div>[[req.upVotes]]</div>
 
-                    <paper-menu-button horizontal-align="right" vertical-align="top" hidden$="[[!isAuthorized]]" on-iron-select="_handleRequirementMenuSelect">
-                      <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                      <paper-menu class="dropdown-content">
-                        <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
-                        <paper-item value="toggleContributors" id="contr"><i18n-msg msgid="showContributors"></i18n-msg></paper-item>
-                        <paper-item value="realize"><i18n-msg msgid="[[_calculateRealizeMessage(req.realized)]]"></i18n-msg></paper-item>
-                        <paper-item value="follow"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
-                        <paper-item value="develop"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
-                        <paper-item value="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
-                        <paper-item value="edit"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
-                        <paper-item value="delete"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
-                      </paper-menu>
-                    </paper-menu-button>
+                <paper-menu-button horizontal-align="right" vertical-align="top" hidden$="[[!isAuthorized]]" on-iron-select="_handleRequirementMenuSelect">
+                  <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+                  <paper-menu class="dropdown-content">
+                    <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
+                    <paper-item value="toggleContributors" id="contr"><i18n-msg msgid="showContributors"></i18n-msg></paper-item>
+                    <paper-item value="realize"><i18n-msg msgid="[[_calculateRealizeMessage(req.realized)]]"></i18n-msg></paper-item>
+                    <paper-item value="follow"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
+                    <paper-item value="develop"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
+                    <paper-item value="becomeLeadDeveloper"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
+                    <paper-item value="edit"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
+                    <paper-item value="delete"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
+                  </paper-menu>
+                </paper-menu-button>
 
+              </div>
+
+              <paper-toolbar class="title" on-tap="onRequirementTap">
+                <div class="title">[[req.title]]</div>
+                <div class="bottom fit helper" style="margin-top:20px;">
+                  <time is="relative-time" datetime$="[[req.creation_time]]"></time>
+                  <i18n-msg msgid="by"></i18n-msg>
+                  <req-user user="[[req.creator]]" normal-view></req-user>
+                </div>
+              </paper-toolbar>
+
+            </div>
+
+            <div class="line"></div>
+
+            <div class="contributors" id$="contributors{{req.id}}">
+              <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
+              <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
+              <div><i18n-msg msgid="developers"></i18n-msg>:
+                <template is="dom-repeat" items="{{req.developers}}" as="developer">
+                  <div style="display:inline-block">
+                    <req-user user="[[developer]]" mini></req-user>
+                    <paper-tooltip>{{developer.userName}}</paper-tooltip>
                   </div>
-
-                  <paper-toolbar class="title" on-tap="onRequirementTap">
-                    <div class="title">[[req.title]]</div>
-                    <div class="bottom fit helper" style="margin-top:20px;">
-                      <time is="relative-time" datetime$="[[req.creation_time]]"></time>
-                      <i18n-msg msgid="by"></i18n-msg>
-                      <req-user user="[[req.creator]]" normal-view></req-user>
-                    </div>
-                  </paper-toolbar>
-
-                </div>
-
-                <div class="line"></div>
-
-                <div class="contributors" id$="contributors{{req.id}}">
-                  <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
-                  <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
-                  <div><i18n-msg msgid="developers"></i18n-msg>:
-                    <template is="dom-repeat" items="{{req.developers}}" as="developer">
-                      <div style="display:inline-block">
-                        <req-user user="[[developer]]" mini></req-user>
-                        <paper-tooltip>{{developer.userName}}</paper-tooltip>
-                      </div>
-                    </template>
+                </template>
+              </div>
+              <div><i18n-msg msgid="followers"></i18n-msg>:
+                <template is="dom-repeat" items="{{req.followers}}" as="foll">
+                  <div style="display:inline-block">
+                    <req-user user="[[foll]]" mini></req-user>
+                    <paper-tooltip>{{foll.userName}}</paper-tooltip>
                   </div>
-                  <div><i18n-msg msgid="followers"></i18n-msg>:
-                    <template is="dom-repeat" items="{{req.followers}}" as="foll">
-                      <div style="display:inline-block">
-                        <req-user user="[[foll]]" mini></req-user>
-                        <paper-tooltip>{{foll.userName}}</paper-tooltip>
-                      </div>
-                    </template>
+                </template>
+              </div>
+
+              <div class="line" style="margin-top: 10px;"></div>
+
+            </div>
+
+            <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}" id$="description{{req.id}}"></div>
+
+            <div class="comments" id$="comments{{req.id}}">
+
+              <iron-collapse id="reqExpand">
+                <!--<file-gallery attachments="{{req.attachments}}"></file-gallery>-->
+                <h4><i18n-msg msgid="comments"></i18n-msg></h4>
+                <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
+                <template is="dom-if" if="{{isAuthorized}}">
+                  <div class="container flex-horizontal" id="[[req.id]]">
+                    <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+                    <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                      <!--<emoji-selector suffix></emoji-selector>-->
+                    </paper-input>
+                    <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
                   </div>
+                </template>
+              </iron-collapse>
 
-                  <div class="line" style="margin-top: 10px;"></div>
+            </div>
 
-                </div>
+            <div class="editForm" id$="edit{{req.id}}">
 
-                <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}" id$="description{{req.id}}"></div>
+              <paper-input class="editTitle title" value="{{req.title}}"></paper-input>
+              <paper-textarea value="{{req.description}}"></paper-textarea>
+              <paper-button raised on-tap="_handleSaveEditTap" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
+              <paper-button raised on-tap="_handleCancelEditTap" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
 
-                <div class="comments" id$="comments{{req.id}}">
+            </div>
 
-                  <iron-collapse id="reqExpand">
-                    <!--<file-gallery attachments="{{req.attachments}}"></file-gallery>-->
-                    <h4><i18n-msg msgid="comments"></i18n-msg></h4>
-                    <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
-                    <template is="dom-if" if="{{isAuthorized}}">
-                      <div class="container flex-horizontal" id="[[req.id]]">
-                        <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                        <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
-                          <!--<emoji-selector suffix></emoji-selector>-->
-                        </paper-input>
-                        <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
-                      </div>
-                    </template>
-                  </iron-collapse>
-
-                </div>
-
-                <div class="editForm" id$="edit{{req.id}}">
-
-                  <paper-input class="editTitle title" value="{{req.title}}"></paper-input>
-                  <paper-textarea value="{{req.description}}"></paper-textarea>
-                  <paper-button raised on-tap="_handleSaveEditTap" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
-                  <paper-button raised on-tap="_handleCancelEditTap" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
-
-                </div>
-
-              </paper-material>
-            </template>
-          </template>
-
-          <template is="dom-if" if="{{activeOption}}" restamp>
-                        <template is="dom-if" if="{{req.realized}}">
-                            <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
-                                <div class="reqbody">
-
-                                    <div class="req-icons layout horizontal center">
-                                        <paper-checkbox></paper-checkbox>
-                                        <template is="dom-if" if="{{!isAuthorized}}">
-                                            <paper-icon-button icon="star-border" disabled></paper-icon-button>
-                                        </template>
-                                        <template is="dom-if" if="{{isAuthorized}}">
-                                            <template is="dom-if" if="{{userVoted(req.userVoted)}}">
-                                                <paper-icon-button class="colored" icon="star"></paper-icon-button>
-                                            </template>
-                                            <template is="dom-if" if="{{!userVoted(req.userVoted)}}">
-                                                <paper-icon-button icon="star-border" disabled></paper-icon-button>
-                                            </template>
-                                        </template>
-                                        <div>[[req.upVotes]]</div>
-                                        <template is="dom-if" if="{{isAuthorized}}">
-                                            <paper-menu-button horizontal-align="right" vertical-align="top">
-                                                <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                                                <paper-menu id="componentInfoMenu" class="dropdown-content">
-                                                    <paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>
-                                                    <paper-item on-tap="undoRequirement"><i18n-msg msgid="markAsUnDone"></i18n-msg></paper-item>
-                                                    <paper-item on-tap="createModal"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
-                                                </paper-menu>
-                                            </paper-menu-button>
-                                        </template>
-                                    </div>
-                                    <paper-toolbar class="title" on-tap="onRequirementTap">
-                                        <div class="title">[[req.title]]</div>
-                                        <div class="bottom fit helper" style="margin-top:20px;">
-                                            <time is="relative-time" datetime$="[[req.creation_time]]"></time>
-                                            <i18n-msg msgid="by"></i18n-msg>
-                                            <req-user user="[[req.creator]]" normal-view></req-user>
-                                        </div>
-                                    </paper-toolbar>
-
-                                </div>
-
-                                <div class="line"></div>
-
-                                <div class="contributers">
-                                    <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user-id="[[req.creatorId]]" full-view></req-user></div>
-                                    <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user-id="[[req.leadDeveloperId]]" full-view></req-user></div>
-                                    <template is="dom-if" if="{{!isEmpty(req.developers)}}">
-                                        <div><i18n-msg msgid="developers"></i18n-msg>:
-                                            <template is="dom-repeat" items="{{req.developers}}" as="dev">
-                                                <div  style="display:inline-block">
-                                                    <req-user user-id$="[[dev.id]]" mini></req-user>
-                                                    <paper-tooltip>{{dev.userName}}</paper-tooltip>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </template>
-                                    <template is="dom-if" if="{{!isEmpty(req.followers)}}">
-                                        <div><i18n-msg msgid="followers"></i18n-msg>:
-                                            <template is="dom-repeat" items="{{req.followers}}" as="foll">
-                                                <div  style="display:inline-block">
-                                                    <req-user user-id$="[[foll.id]]" mini></req-user>
-                                                    <paper-tooltip>{{foll.userName}}</paper-tooltip>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </template>
-                                    <div class="line"></div>
-                                </div>
-
-                                <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}"></div>
-
-                                <div class="comments">
-
-                                    <iron-collapse>
-                                        <h4><i18n-msg msgid="comments"></i18n-msg></h4>
-                                        <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" is-authorized="{{isAuthorized}}"></comments-list>
-                                        <template is="dom-if" if="{{isAuthorized}}">
-                                            <div class="container flex-horizontal" id="[[req.id]]">
-                                                <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                                                <paper-textarea id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
-                                                </paper-textarea>
-                                                <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
-                                            </div>
-                                        </template>
-                                    </iron-collapse>
-
-                                </div>
-
-                            </paper-material>
-                        </template>
-                    </template>
+          </paper-material>
 
         </div>
       </template>
@@ -622,21 +504,21 @@
             type: Number
           },
           /**
-           * Whether to show 'active' or 'realized' requirements.
+           * Whether to show 'open' or 'realized' requirements.
            */
           requirementsStateFilter: {
             type: String,
             notify: true,
-            value: "active"
+            value: 'open'
           },
           baseHref: {
             type: String,
             notify: true,
             reflectToAttribute: true
           },
-          resourceURL: {
+          _resourceURL: {
             type: String,
-            computed: 'computeResourceURL(baseHref, componentId)'
+            computed: '_computeResourceURL(baseHref, componentId)'
           },
           requirements: {
             type: Array,
@@ -665,10 +547,13 @@
             type:Object,
             notify: true
           },
-          parameters: {
+          /**
+           * The parameters for the request to the requirements resource.
+           */
+          _requirementsRequestParameters: {
             type:Object,
             notify: true,
-            value: {per_page: 60}
+            computed: '_computeRequirementsRequestParameters(requirementsStateFilter)'
           },
           /**
            * The requirement's element to be deleted.
@@ -710,15 +595,6 @@
             notify: true,
             observer: "_hasEnoughItems"
           },
-          /**
-           * Decides whether still unrealized requirements are shown or only realized ones. If false, show unrealized
-           * requirements, if true, show realized ones.
-           */
-          activeOption: {
-            type: Boolean,
-            notify: true,
-            value: false
-          },
           repositories: {
             type: Object,
             notify: true,
@@ -738,25 +614,11 @@
 
         observers: [
           'manageSelReq(selectedRequirements.splices)',
-          'computeRealized(requirementsStateFilter)'
+          '_requirementsRequestParametersUpdated(_requirementsRequestParameters)'
         ],
 
         ready: function () {
           this.i18n = this.$.i18n;
-        },
-
-        /**
-         * Computes the activeOption property that defines whether to show active or realized requirements.
-         *
-         * @property requirementsStateFilter {string} 'active' or 'realized.
-         */
-        computeRealized: function(requirementsStateFilter) {
-          if (requirementsStateFilter === "active") {
-            //TODO: it doesn't make sense to use the "active" string for activeOption false!
-            this.activeOption = false;
-          } else {
-            this.activeOption = true;
-          }
         },
 
         _hasEnoughItems: function () {
@@ -769,8 +631,41 @@
           }
         },
 
-        computeResourceURL: function (baseHref, componentId) {
-          return baseHref + '/components/' + componentId + '/requirements/';
+        /**
+         * Computes the resource URL for the requirements request.
+         */
+        _computeResourceURL: function (baseHref, componentId) {
+          return baseHref + '/components/' + componentId + '/requirements';
+        },
+
+        /**
+         * Computes the parameter array for the request to the requirements resource.
+         *
+         * @param requirementsStateFilter {string} the requirement's state, either 'open', 'realized' or 'all'.
+         */
+        _computeRequirementsRequestParameters: function(requirementsStateFilter) {
+          var parameters = new Object();
+          parameters.per_page = 60;
+          // better check this type as it's a public property of the element
+          if (requirementsStateFilter === 'open') {
+            parameters.state = 'open';
+          } else if (requirementsStateFilter === 'realized') {
+            parameters.state = 'realized';
+          } else if (requirementsStateFilter === 'all') {
+            parameters.state = 'all';
+          }
+
+          return parameters;
+        },
+
+        /**
+         * Called when some of the requirements request parameters change, e.g. the state is set from 'open' to
+         * 'realized'. In that case, we need to refresh the requirements list.
+         *
+         * @param _requirementsRequestParameters {array} the requirements request parameter.
+         */
+        _requirementsRequestParametersUpdated: function(_requirementsRequestParameters) {
+          this.load();
         },
 
         toggleCollapsible: function(e, data) {
@@ -804,7 +699,7 @@
         },
 
         load: function() {
-          this.$.requirementsLoader.generateRequest();
+          this.$.requirementsRequest.generateRequest();
         },
 
         showOnHover: function(e){

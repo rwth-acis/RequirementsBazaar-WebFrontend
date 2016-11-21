@@ -572,7 +572,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                 <div style="display: flex; flex-wrap: wrap;">
                                                     <div style="flex-grow: 1; margin:20px;">
                                                         <paper-radio-group selected="{{requirementsStateFilter}}">
-                                                            <paper-radio-button name="active"><i18n-msg msgid="active-req"></i18n-msg></paper-radio-button>
+                                                            <paper-radio-button name="open"><i18n-msg msgid="active-req"></i18n-msg></paper-radio-button>
                                                             <br>
                                                             <paper-radio-button name="realized"><i18n-msg msgid="realized-req"></i18n-msg></paper-radio-button>
                                                         </paper-radio-group>
@@ -625,7 +625,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         header="{{header}}"
                                         filter-value="[[reqFilterVal]]"
                                         base-href="{{baseHref}}"
-                                        selected="{{requirementsStateFilter}}"
+                                        requirements-state-filter="{{requirementsStateFilter}}"
                                         loading="{{loading}}"
                                         list="{{list}}"
                                         repositories="{{repositories}}"

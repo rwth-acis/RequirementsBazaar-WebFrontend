@@ -54,7 +54,7 @@
      *
      * @type {string} 'active' or 'realized'.
      */
-    app.requirementsStateFilter = "active";
+    app.requirementsStateFilter = "open";
     /**
      * Stores whether the requirements view shows a list or a grid.
      * It is used as a property to the <requirements-list>.
@@ -365,7 +365,7 @@
         } else {
             this.loadComponentInfo(componentId);
 
-            app.requirementsStateFilter = "active";
+            app.requirementsStateFilter = "open";
             setTimeout(function(){
                 el = document.getElementById(requirementId);
                 if (el != null){
