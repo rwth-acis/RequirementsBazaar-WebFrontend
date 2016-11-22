@@ -301,14 +301,12 @@
       <h2><i18n-msg msgid="comments"></i18n-msg></h2>
       <p style="max-height: 80%;">
         <comments-list header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
-        <template is="dom-if" if="{{isAuthorized}}">
-          <div class="container flex-horizontal">
-            <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-            <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
-            </paper-input>
-            <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
-          </div>
-        </template>
+        <div class="container flex-horizontal" hidden$="[[!isAuthorized]]">
+          <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+          <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
+          </paper-input>
+          <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
+        </div>
       </p>
     </paper-dialog>
 
@@ -454,15 +452,13 @@
                 <!--<file-gallery attachments="{{req.attachments}}"></file-gallery>-->
                 <h4><i18n-msg msgid="comments"></i18n-msg></h4>
                 <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
-                <template is="dom-if" if="{{isAuthorized}}">
-                  <div class="container flex-horizontal" id="[[req.id]]">
-                    <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                    <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
-                      <!--<emoji-selector suffix></emoji-selector>-->
-                    </paper-input>
-                    <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
-                  </div>
-                </template>
+                <div class="container flex-horizontal" id="[[req.id]]" hidden$="[[!isAuthorized]]">
+                  <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+                  <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                    <!--<emoji-selector suffix></emoji-selector>-->
+                  </paper-input>
+                  <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+                </div>
               </iron-collapse>
 
             </div>
