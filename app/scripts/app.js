@@ -18,12 +18,13 @@
     // url for requests for beta or live environment
     app.baseHref = "https://requirements-bazaar.org/betabazaar";
     app.activityHref = "https://requirements-bazaar.org/betaactivities";
-    
-    app.baseUrl = '/';
+    app.fileServiceHref = "https://requirements-bazaar.org/betafileservice/files/";
+
+    app.baseUrl = '/beta/';
     if (window.location.port === '') {  // if production
         // Uncomment app.baseURL below and
         // set app.baseURL to '/your-pathname/' if running from folder in production
-        app.baseUrl = '/';
+        app.baseUrl = '/beta/';
     }
 
     /**
@@ -454,9 +455,9 @@
                     for (var i = 0; i < this.files.length; i++){
                         var obj = {
                             title: this.files[i].name,
-                            fileUrl: this.files[i].xhr.response,
+                            fileUrl: this.fileServiceHref + this.files[i].xhr.response,
                             mimeType: "image/*",
-                            identifier: this.files[i].xhr.response.match(/\d+/g)[0]
+                            identifier: this.files[i].xhr.response
                         };
                         attachments.push(obj);
                     }
@@ -465,9 +466,9 @@
                     "title": this.$.newRequirementTitle.value,
                     "description": this.$.newRequirementDesc.value,
                     "projectId": parseInt(app.params.projectId),
-                    "components": components
+                    "components": components,
+                    "attachments": attachments
                 });
-                // "attachments": attachments
                 request.generateRequest();
                 this.$.newRequirementTitle.value = null;
                 this.$.newRequirementDesc.value = null;
