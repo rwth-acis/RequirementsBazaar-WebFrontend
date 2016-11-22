@@ -111,11 +111,6 @@
         margin: 20px;
       }
 
-      .contributers {
-        display:none;
-        padding:10px;
-      }
-
       .hide {
         display: none;
       }
@@ -564,10 +559,6 @@
             value: false
           },
           isDeveloper: {
-            type: Boolean,
-            value: false
-          },
-          showContributers: {
             type: Boolean,
             value: false
           },
@@ -1157,43 +1148,6 @@
             this.isDeveloper = false;
           }
           this.$.toast.open();
-        },
-
-        toggleContributers: function(e){
-          var el = e.currentTarget;
-          var tag = "PAPER-MATERIAL";
-          var element;
-
-          while (el.parentNode) {
-            el = el.parentNode;
-            if (el.tagName === tag)
-              element = el;
-          }
-
-          if (element.querySelector('.contributers').style.display === ""){
-            e.currentTarget.innerText = i18n.getMsg('hideContributers');
-            if (app.isMobile){
-              element.querySelector('.contributers').style.display = "block";
-            } else {
-              element.querySelector('.contributers').style.display = "flex";
-            }
-            this.showContributers = ! this.showContributers;
-            return;
-          }
-
-          if (element.querySelector('.contributers').style.display !== "none"){
-            e.currentTarget.innerText = i18n.getMsg('showContributers');
-            element.querySelector('.contributers').style.display = "none";
-          } else {
-            e.currentTarget.innerText = i18n.getMsg('hideContributers');
-            if (app.isMobile){
-              element.querySelector('.contributers').style.display = "block";
-            } else {
-              element.querySelector('.contributers').style.display = "flex";
-            }
-
-          }
-          this.showContributers = ! this.showContributers;
         },
 
         searchFilter: function (val) {
