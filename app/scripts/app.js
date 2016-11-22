@@ -450,17 +450,17 @@
                 this.$.superToast.text = i18n.getMsg('fieldsNotEmptyReq');
                 this.$.superToast.open();
             } else {
-                // if (this.files != []){
-                //     for (var i = 0; i < this.files.length; i++){
-                //         var obj = {
-                //             title: this.files[i].name,
-                //             fileUrl: this.files[i].xhr.response,
-                //             mimeType: "image/*",
-                //             identifier: this.files[i].xhr.response.match(/\d+/g)[0]
-                //         };
-                //         attachments.push(obj);
-                //     }
-                // }
+                if (this.files != []){
+                    for (var i = 0; i < this.files.length; i++){
+                        var obj = {
+                            title: this.files[i].name,
+                            fileUrl: this.files[i].xhr.response,
+                            mimeType: "image/*",
+                            identifier: this.files[i].xhr.response.match(/\d+/g)[0]
+                        };
+                        attachments.push(obj);
+                    }
+                }
                 request.body = JSON.stringify({
                     "title": this.$.newRequirementTitle.value,
                     "description": this.$.newRequirementDesc.value,
