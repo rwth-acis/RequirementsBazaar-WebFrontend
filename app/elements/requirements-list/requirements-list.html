@@ -445,7 +445,7 @@
 
               <iron-collapse id="reqExpand">
                 <file-gallery attachments="{{req.attachments}}"></file-gallery>
-                <h4><i18n-msg msgid="comments"></i18n-msg></h4>
+                <h4 style="margin:0px;padding:10px 0px 10px 0px;"><i18n-msg msgid="comments"></i18n-msg></h4>
                 <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
                 <div class="container flex-horizontal" id="[[req.id]]" hidden$="[[!isAuthorized]]">
                   <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
