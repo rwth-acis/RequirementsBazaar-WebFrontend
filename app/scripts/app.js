@@ -54,7 +54,7 @@
      *
      * @type {string} 'active' or 'realized'.
      */
-    app.selectedFilter = "active";
+    app.requirementsStateFilter = "open";
     /**
      * Stores whether the requirements view shows a list or a grid.
      * It is used as a property to the <requirements-list>.
@@ -365,7 +365,7 @@
         } else {
             this.loadComponentInfo(componentId);
 
-            app.selectedFilter = "active";
+            app.requirementsStateFilter = "open";
             setTimeout(function(){
                 el = document.getElementById(requirementId);
                 if (el != null){
@@ -375,7 +375,7 @@
                 }
 
                 if (el == null){
-                    app.selectedFilter = "realized";
+                    app.requirementsStateFilter = "realized";
                     setTimeout(function(){
                         el = document.getElementById(requirementId);
                         if (el == null) {
