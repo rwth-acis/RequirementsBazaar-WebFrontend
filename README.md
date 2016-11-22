@@ -1,7 +1,7 @@
 RequirementsBazaar-WebFrontend
 ==============================
 
-This project is a web interface to the requirements bazaar service. The project aims to offer user and developers a platform on which to cooperate. To read more about the idea behind requirements bazaar read the service page. This Web interface is built as a single page application using web components library, Polymer 1.0.
+This repository contains the Web interface of the Requirements Bazaar. The project aims to offer users and developers of any kind of applications, tools or services a platform on which they can collaborate and cooparate. This Web application is built as a single-page application using Web Components with the Polymer 1.0 library.
 
 
 Develop
