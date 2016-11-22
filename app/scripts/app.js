@@ -84,7 +84,10 @@
      */
     app.view = "list";
     /**
-     * If a user follows a component or a Project it becomes true. DEPRECATED
+     * If a user follows a component or a Project it becomes true.
+     * This is checked for a component page from the method isFollowerComp() everytime the user enters the components section
+     * When this is set to true the unfollow option is shown in index and vise-versa
+     * isFollowerProj is DEPRECATED and is global so:
      * TO-DO: REPLACE WITH A BETTER METHOD
      * @type {boolean}
      */
@@ -176,12 +179,17 @@
         Platform.performMicrotaskCheckpoint();
     });
 
-
+    /**
+     * Listens for file-reject event thrown by vaadin-upload element. Displays the error message to the user.
+     */
     document.addEventListener("file-reject", function(data){
         app.$.superToast.text = "" + data.detail.file.name + ". " + data.detail.error;
         app.$.superToast.open();
     });
 
+    /**
+     * Sets the language when the user press the item from the item-list of language in the index
+     */
     app.english = function(){
         I18nMsg.lang = 'en';
         document.cookie = "lang= en";
@@ -240,11 +248,7 @@
         }
     };
 
-    // Scroll page to top and expand header
-    app.scrollPageToTop = function() {
-        document.getElementById('mainContainer').scrollTop = 0;
-    };
-    
+    // scroll Project page to top
     app.scrollProjToTop = function() {
         document.getElementById("scrollProjects").scroll(0);
     };
@@ -303,49 +307,88 @@
         this.$.requirementsList.load();
     };
 
+    /**
+     * When components are loaded in the requirements view trigger the method isFollowerComp()
+     */
     app.handleNewComp = function(){
         this.isFollowerComp();
     };
 
+    /**
+     * Checks if the authorized user is in the list of followers of the current component and sets or followsComp property
+     */
+    app.isFollowerComp = function(){
+        if (this.currentUser) {
+            if (this.component.followers.length === 0) {
+                this.followsComp = false;
+                return;
+            }
+
+            for (var i=0; i < this.component.followers.length; i++) {
+                if (this.component.followers[i].id === this.currentUser.id) {
+                    this.followsComp = true;
+                    return;
+                }
+            }
+        }
+        this.followsComp = false;
+    };
+
+    /**
+     * Closes all the open requirements and hides contributers if they are shown
+     * Triggered from routing element if compChanged() method returns true
+     */
     app.closeCollapses = function(){
-        var elems = document.querySelectorAll("iron-collapse");
+        var collapses = document.querySelectorAll("iron-collapse");
         var requirements = document.querySelectorAll(".req");
-        for (var i=1; i< elems.length; i++){
-            if (elems[i].opened){
-                elems[i].hide();
-                if (elems[i].id === "reqExpand"){
-                    elems[i].parentNode.parentNode.elevation = 1;
-                    elems[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
+
+        //close all collapses and reverts the colors for all requirements
+        for (var i=1; i< collapses.length; i++){
+            if (collapses[i].opened){
+                collapses[i].hide();
+                if (collapses[i].id === "reqExpand"){
+                    collapses[i].parentNode.parentNode.elevation = 1;
+                    collapses[i].parentNode.parentNode.querySelector(".description").classList.add("helper");
                 }
             }
         }
 
+        //hides all contributers div-s if they are open
         for (var i=0; i< requirements.length; i++){
-            var element = requirements[i];
-            if (element.querySelector('.contributors').style.display != "none") {
-                if (element.querySelector("#contr")){
-                    element.querySelector("#contr").innerText = i18n.getMsg('showContributors');
+            var requirement = requirements[i];
+            if (requirement.querySelector('.contributors').style.display != "none") {
+                if (requirement.querySelector("#contr")){
+                    requirement.querySelector("#contr").innerText = i18n.getMsg('showContributors');
                 }
             }
         }
     };
 
-    app.closeRequirement = function(){
-        
-    };
-
-    app.showQuarantineView = function(){
+    /**
+     * Shows Grid view when the grid radio button is pressed
+     */
+    app.showGridView = function(){
         this.list = false;
         document.cookie = "view= grid";
         //document.querySelector("requirements-list").style.display = "none";
     };
 
+    /**
+     * Shows List view when the list radio button is pressed
+     */
     app.showListView = function(){
         this.list = true;
         document.cookie = "view= list";
         // document.querySelector("requirements-list").style.display = "block";
     };
 
+    /**
+     * Checks if the component is changed when in requirements view.
+     * Triggered by routing element with the aim to reduce the requests everytime the url changes from requirements url
+     * back to the same components url
+     * @param compId - current componentsId
+     * @returns {boolean} - true comp is changed, else false
+     */
     app.compChanged = function(compId){
         if(this.component){
             if(this.component.id === parseInt(compId)){
@@ -356,6 +399,10 @@
         return true;
     };
 
+    /**
+     * Toggles the filters collapse. Triggered by the press on the filter button
+     * @param e
+     */
     app.toggleFilters = function(e){
         document.getElementById("collapseFilters").toggle();
     };
@@ -370,6 +417,7 @@
     app.scrollToReq = function (componentId, requirementId) {
         var el;
 
+        //scrolls to the specific requirements when the page is already loaded
         if ( (this.loaded) && (el = document.getElementById(requirementId))) {
             if (el === null) {
                 app.$.superToast.text = i18n.getMsg('noRequirement');
@@ -381,6 +429,7 @@
             scroller.scroll(el.offsetTop - 70, true);
             document.getElementById('requirementsList').toggleCollapsible(null, el);
         } else {
+            //scrolls to the specific requirement when the page is loaded directly from the requirement url
             this.loadComponentInfo(componentId);
 
             app.requirementsStateFilter = "open";
@@ -392,6 +441,7 @@
                     document.getElementById('requirementsList').toggleCollapsible(null, el);
                 }
 
+                //timer is set to wait for page to load before check for the specific requirement
                 if (el == null){
                     app.requirementsStateFilter = "realized";
                     setTimeout(function(){
@@ -430,16 +480,20 @@
         langMenu.style.left = rect.right - 50 + 'px';
     };
 
-    app.showCreateRequirement = function() {
-        var createDialog = document.getElementById('createRequirement');
-        createDialog.open();
-    };
-
+    /**
+     * Shows create requirements dialog by directong to create url
+     * @param e
+     */
     app.onCreateRequirementTap = function(e) {
         page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/create');
         e.preventDefault();
     };
 
+    /**
+     * Show create project and component by showing the paper-dialog
+     * TO-DO: better redirect the user to a create url for both
+     * @param e
+     */
     app.onCreateProjectTap = function(e) {
         var createDialog = document.getElementById('createProject');
         createDialog.open();
@@ -450,26 +504,42 @@
         createDialog.open();
     };
 
+    /**
+     * Open user information dialog from the user icon click on the toolbar
+     * @param e
+     */
     app.openUserDialog = function(e){
         document.getElementById('userSettings').toggle();
     };
 
+    /**
+     * Opens the User Settings paper-dialog
+     * @param e
+     */
     app.openSettingsDialog = function(e){
         document.getElementById('userSettings').close();
         document.getElementById('settingsDialog').open();
     };
 
+    /**
+     * Triggered when create requirements paper-dialog is closed
+     * If confirmed the requirement is posted to the backend (iron-ajax POST request generated) with the bellow fields
+     * @param e
+     */
     app.onCreateRequirementClosed = function(e) {
         if (e.detail.confirmed) {
             var attachments = [];
             var request = document.querySelector('#postRequirementRequest');
             var components = [{id: parseInt(app.params.componentId)}];
-            if (this.$.newRequirementTitle.value == '' || this.$.newRequirementDesc.value == '' || this.$.newRequirementTitle.value == null || this.$.newRequirementDesc.value == null ){
+            //validate the requirements to be posted fields if they are empty
+            if (this.$.newRequirementTitle.value == '' || this.$.newRequirementDesc.value == '' || this.$.newRequirementTitle.value == null || this.$.newRequirementDesc.value == null ) {
                 this.$.superToast.text = i18n.getMsg('fieldsNotEmptyReq');
                 this.$.superToast.open();
             } else {
+                //check if a file was uploaded as well
+                // xhr.response holds the file identifier
                 if (this.files != []){
-                    for (var i = 0; i < this.files.length; i++){
+                    for (var i = 0; i < this.files.length; i++) {
                         var obj = {
                             title: this.files[i].name,
                             fileUrl: this.fileServiceHref + this.files[i].xhr.response,
@@ -487,20 +557,28 @@
                     "attachments": attachments
                 });
                 request.generateRequest();
+                //clean the fields
                 this.$.newRequirementTitle.value = null;
                 this.$.newRequirementDesc.value = null;
+                this.files = [];
             }
         } else if (e.detail.canceled) {
+            //if dialog closed, clean the fields
             this.$.newRequirementTitle.value = null;
             this.$.newRequirementDesc.value = null;
             this.files = [];
         }
-        this.files = [];
+        //move back to requirements view
         page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId);
 
         e.preventDefault();
     };
 
+    /**
+     * Checks if at the end of typing in a field paper-input the key Enter is Pressed.
+     * If that's the case post the requirement
+     * @param e
+     */
     app.checkEnter = function (e){
         if (e.keyCode === 13) {
             if (e.ctrlKey){
@@ -509,12 +587,24 @@
                 }
                 return 0;
             }
+            var attachments = [];
             var request = document.querySelector('#postRequirementRequest');
             var components = [{id: parseInt(app.params.componentId)}];
             if (this.$.newRequirementTitle.value == '' || this.$.newRequirementDesc.value == '' || this.$.newRequirementTitle.value == null || this.$.newRequirementDesc.value == null ){
                 this.$.superToast.text = i18n.getMsg('fieldsNotEmptyReq');
                 this.$.superToast.open();
             } else {
+                if (this.files != []) {
+                    for (var i = 0; i < this.files.length; i++){
+                        var obj = {
+                            title: this.files[i].name,
+                            fileUrl: this.fileServiceHref + this.files[i].xhr.response,
+                            mimeType: "image/*",
+                            identifier: this.files[i].xhr.response
+                        };
+                        attachments.push(obj);
+                    }
+                }
                 request.body = JSON.stringify({
                     "title": this.$.newRequirementTitle.value,
                     "description": this.$.newRequirementDesc.value,
@@ -524,18 +614,28 @@
                 e.preventDefault();
                 this.$.newRequirementTitle.value = '';
                 this.$.newRequirementDesc.value = '';
+                this.files = [];
                 this.$.createRequirement.close();
             }
         }
     };
 
+    /**
+     * Expands the createRequirement paper-dialog to full screen view
+     * Triggered by the small icon at the corner of the createRequirement dialog
+     * @param e
+     */
     app.expandDialog = function(e){
         e.currentTarget.parentNode.classList.toggle("create");
         e.currentTarget.parentNode.classList.toggle("expand");
         e.currentTarget.parentNode.refit();
     };
 
-    app.handleResponseRequirement = function(data){
+    /**
+     * Show success or error message when a requirement is posted
+     * @param data
+     */
+    app.handlePostResponseRequirement = function(data){
         if (data != null) {
             document.querySelector("#requirementsList").load();
             this.$.superToast.text = i18n.getMsg('reqCreatedSucc');
@@ -545,6 +645,11 @@
         this.$.superToast.open();
     };
 
+    /**
+     * Posts a project when project dialog is closed and confirmed
+     * See onCreateRequirementClosed method comment for more
+     * @param e
+     */
     app.onCreateProjectClosed = function(e) {
         if (e.detail.confirmed) {
             var request = document.querySelector('#postProjectRequest');
@@ -565,7 +670,11 @@
         e.preventDefault();
     };
 
-    app.handleResponseProject = function(data){
+    /**
+     * Handle response from Posting the project. Show the appropriate message to the user
+     * @param data
+     */
+    app.handlePostResponseProject = function(data){
         if (data != null){
             this.$.projectsList.load();
             this.$.projToast.text = i18n.getMsg('prjCreatedSucc');
@@ -575,6 +684,10 @@
         this.$.projToast.open();
     };
 
+    /**
+     * Same as with requirements and Projects
+     * @param e
+     */
     app.onCreateComponentClosed = function(e) {
         if (e.detail.confirmed) {
             var request = document.querySelector('#postComponentRequest');
@@ -595,7 +708,11 @@
         e.preventDefault();
     };
 
-    app.handleResponseComponent = function(data){
+    /**
+     * Same as with projects and requirements
+     * @param data
+     */
+    app.handlePostResponseComponent = function(data){
         if (data != null){
             this.$.componentsList.load();
             this.$.compToast.text = i18n.getMsg('cmpCreatedSucc');
@@ -605,22 +722,25 @@
         this.$.compToast.open();
     };
 
-    //app.onComponentMenuSelected = function(e) {
-    //    console.log(e.detail.item.innerText);
-    //    this.$.componentInfoMenu.select(this.$.componentInfoMenu.selectedItem);
-    //    e.preventDefault();
-    //};
 
-    //clear form on x click
-    app.clearInput = function(e){
-        app.$.searchInput.value = '';
+    /**
+     * clear form on x click
+     */
+    app.clearInput = function() {
+        this.$.searchInput.value = '';
     };
 
-    // clears the requirements when the component is changed
+    /**
+     * clears the already loaded requirements when the component is changed
+     */
     app.clearRequirements = function(){
         document.querySelector("requirements-list").requirements = [];
     };
 
+    /**
+     * Toggles the left toggle in the requirements view
+     * @param e
+     */
     app.toggCompDrawer = function(e){
         //closes left drawer
         if (!this.isMobile) {
@@ -647,7 +767,11 @@
         }
     };
 
-
+    /**
+     * Toggles the Activity Tracker drawer in projects, components and requirements view and checks for mobile
+     * With this method the toggle happens in all the views, for the AT element in projects, components and requirements view
+     * @param e
+     */
     app.toggNotDrawer = function(e){
         var fabs = document.getElementsByClassName('fabAdd');
         if (app.route == "projects"){
@@ -660,7 +784,8 @@
             document.querySelectorAll("#scrollThreshold")[2].scrollTarget = document.querySelector("#letsscroll3").scroller;
         }
         document.querySelector('activity-tracker').refresh();
-        //opens right drawer
+
+        //opens right drawer in the project view
         if (document.querySelector('#drawer').style.display != 'block'){
             document.querySelector('#drawer').style.display = 'block';
             document.querySelector('#drawer').style.zIndex = 1;
@@ -674,7 +799,7 @@
                 this.$.notDrawer.closeDrawer();
             }
         } else {
-            //closes right drawer
+            //closes right drawer in project view
             if (!this.isMobile){
                 document.querySelector('#drawer').style.display = 'none';
                 document.querySelector('#scrollProjects').style.marginRight = '0px';
@@ -684,6 +809,7 @@
             }
         }
 
+        //opens right drawer in the components view
         if (document.querySelectorAll('#drawer')[1].style.display != 'block'){
             // document.querySelectorAll('activity-tracker')[1].refresh();
             document.querySelectorAll('#drawer')[1].style.display = 'block';
@@ -695,13 +821,14 @@
                 this.$.notDrawer0.closeDrawer();
             }
         } else {
-            //closes right drawer
+            //closes right drawer in the components view
             if (!this.isMobile) {
                 document.querySelectorAll('#drawer')[1].style.display = 'none';
                 document.querySelector('#scrollComponents').style.marginRight = '0px';
             }
         }
 
+        //opens right drawer in the requirements view
         if (document.querySelectorAll('#drawer')[2].style.display != 'block'){
             // document.querySelectorAll('activity-tracker')[2].refresh();
             document.querySelectorAll('#drawer')[2].style.display = 'block';
@@ -713,13 +840,14 @@
                 this.$.notDrawer1.closeDrawer();
             }
         } else {
-            //closes right drawer
+            //closes right drawer in the requirements view
             if (!this.isMobile){
                 document.querySelectorAll('#drawer')[2].style.display = 'none';
                 document.querySelectorAll('#main')[3].style.right = '0px';
             }
         }
 
+        //open right drawer for every view in mobile mode
         if (this.isMobile){
             if (this.route === "component-info"){
                 this.$.notDrawer.disableSwipe = true;
@@ -738,20 +866,37 @@
         }
     };
 
-    app.componentPage = function(rt){
+    /**
+     * Returns true if we are in the components page
+     * @param rt - route string
+     * @returns {boolean}
+     */
+    app.isComponentPage = function(rt){
         return rt === 'component-info';
     };
 
-    app.landingPage = function(rt){
+    /**
+     * Check if we are in the landing page
+     * @param rt - route string
+     * @returns {boolean}
+     */
+    app.isLandingPage = function(rt){
         return rt === 'home';
     };
 
-    app.editProject = function(e){
+    /**
+     * Makes project editable by showing the forms for title and description
+     */
+    app.editProject = function() {
         document.querySelector('.editHeader').style.display = 'none';
         document.querySelector('.editForm').style.display = 'block';
     };
 
-    app.saveEditProj = function(e){
+    /**
+     * Triggered when the save button for saving the editing of project is pressed
+     * @param e
+     */
+    app.saveEditProject = function(e){
         var title = document.querySelector('.editForm > .editTitle').value;
         var desc = document.querySelector('.editForm > .editDesc').value;
         var el = document.getElementById('postUpdateProject');
@@ -772,31 +917,52 @@
         }
     };
 
+    /**
+     * Shows the error message on a toast when a request return an error response
+     * @param e
+     * @param detail
+     */
     app.errorHandler = function (e, detail){
         this.$.superToast.text = detail.error.message;
         this.$.superToast.open();
     };
 
-    app.cancEditProj = function(e){
+    /**
+     * Triggered when the Cancel button is pressed when editing a project
+     * @param e
+     */
+    app.cancEditProject = function(e){
         document.querySelector('.editHeader').style.display = 'block';
         document.querySelector('.editForm').style.display = 'none';
     };
 
-    app.handleResponseEditProj = function(data) {
+    /**
+     * Handles the Put request response and shows the appropriate message when iron-ajax is finished
+     * @param data
+     */
+    app.handleEditResponseProject = function(data) {
         if (data != null){
             this.$.superToast.text = i18n.getMsg('prjEditSucc');
         }
         this.$.superToast.open();
     };
 
-    app.createModal1 = function(e){
-        document.getElementById('modal1').open();
+    /**
+     * Opens the delete dialogs for deleting project and component
+     * @param e
+     */
+    app.createModalDeleteProject = function(e){
+        document.getElementById('deleteProject').open();
     };
 
-    app.createModal2 = function(e){
-        document.getElementById('modal2').open();
+    app.createModalDeleteComponent = function(e){
+        document.getElementById('deleteComponent').open();
     };
 
+    /**
+     * Makes DELETE iroj-ajax request to the backend when delete project dialog is confirmed
+     * @param e
+     */
     app.deleteProject = function(e){
         if (e.detail.confirmed) {
             var request = document.getElementById('postUpdateProject');
@@ -807,6 +973,10 @@
         }
     };
 
+    /**
+     * Make a specific component the default of the belonging project
+     * @param e
+     */
     app.setDefault = function(e){
         var req = this.$.postUpdateProject;
         req.url = this.baseHref + "/projects/" + this.params.projectId;
@@ -818,6 +988,10 @@
         req.generateRequest();
     };
 
+    /**
+     * Show forms when pressed the editing component button
+     * @param e
+     */
     app.editComponent = function(e){
         document.querySelector('.cmpTitle').style.display = 'none';
         document.querySelector('.cmpDesc').style.display = 'none';
@@ -826,6 +1000,10 @@
         document.querySelector('.editFormComp').style.display = 'block';
     };
 
+    /**
+     * removes forms when pressed the cancel editing component button
+     * @param e
+     */
     app.cancEditComp = function(e){
         document.querySelector('.cmpTitle').style.display = 'block';
         document.querySelector('.cmpDesc').style.display = 'block';
@@ -834,6 +1012,10 @@
         document.querySelector('.editFormComp').style.display = 'none';
     };
 
+    /**
+     * Generates a request to edit the component that was edited
+     * @param e
+     */
     app.saveEditComp = function(e){
         var title = document.querySelector('.editFormComp > .editTitle').value;
         var desc = document.querySelector('.editFormComp > .editDesc').value;
@@ -853,7 +1035,11 @@
         }
     };
 
-    app.compResponsePUT = function(data){
+    /**
+     * Handles the response of iron-ajax for PUT request to edit the component
+     * @param data
+     */
+    app.handlePutResponseComponent = function(data){
         if (data != null){
             document.querySelector('.cmpTitle').style.display = 'block';
             document.querySelector('.cmpDesc').style.display = 'block';
@@ -864,6 +1050,10 @@
         }
     };
 
+    /**
+     * Sends an iron-ajax request to delete a component
+     * @param e
+     */
     app.deleteComponent = function(e){
         if (e.detail.confirmed) {
             var request = document.getElementById('componentRequest');
@@ -874,6 +1064,10 @@
         }
     };
 
+    /**
+     * Components response for every iron-ajax request to the components backend
+     * @param data
+     */
     app.compResponse = function(data){
         if (data != null){
             page('/projects/' + this.params.projectId);
@@ -882,6 +1076,10 @@
         }
     };
 
+    /**
+     * Triggered when signin successfull and shown the message of sign-in and saves the access-token
+     * @param e
+     */
     app.handleSigninSuccess = function(e){
         this.access_token = e.detail.access_token;
         this.header = {authorization: "Bearer " + this.access_token };
@@ -893,6 +1091,10 @@
         // this.$.getGithubRepos.generateRequest();
     };
 
+    /**
+     * Toggles between my projects and all projects in the projects view
+     * Triggered by the toggle button when the user is logged in
+     */
     app.toggleProjects = function () {
         document.getElementById('projectsList').toggle();
         var txt = document.querySelector('#toggleText');
@@ -903,6 +1105,10 @@
         }
     };
 
+    /**
+     * Change the setting so that users can get emails for things where he is a leaded
+     * Sends a request to the backend every time the toggle is pressed
+     */
     app.changeUserSettingsLead = function(){
         var request = document.getElementById('usrSettings');
         request.url = this.baseHref + "/users/" + this.currentUser.id;
@@ -915,6 +1121,9 @@
         request.generateRequest();
     };
 
+    /**
+     * Here the same as above but for things that the user follows
+     */
     app.changeUserSettingsFollow = function(){
         var request = document.getElementById('usrSettings');
         request.url = this.baseHref + "/users/" + this.currentUser.id;
@@ -927,51 +1136,49 @@
         request.generateRequest();
     };
 
+    /**
+     * Generate backend request to follow a component
+     */
     app.followComponent = function(){
         var request = this.$.followComp;
 
         request.url = this.baseHref + "/components/" + this.component.id + "/followers";
         request.generateRequest();
     };
-    
-    app.handleResponseFollowComp = function(){
+
+    /**
+     * Handle the response from iron-ajax for following a component
+     */
+    app.handleResponseFollowComponent = function(){
         var tst = document.getElementById('superToast');
         tst.text = "You are now a follower";
         this.followsComp = true;
         tst.open();
     };
 
-    app.isFollowerComp = function(){
-        if (this.currentUser){
-            if (this.component.followers.length == 0){
-                this.followsComp = false;
-                return;
-            }
-
-            for (var i=0; i < this.component.followers.length; i++){
-                if (this.component.followers[i].id == this.currentUser.id){
-                    this.followsComp = true;
-                    return;
-                }
-            }
-        }
-        this.followsComp = false;
-    };
-
+    /**
+     * The same for unfollowing a component
+     */
     app.unfollowComponent = function(){
         var request = this.$.unfollowComp;
 
         request.url = this.baseHref + "/components/" + this.params.componentId + "/followers";
         request.generateRequest();
     };
-    
-    app.handleResponseUnFollowComp = function(){
+
+    /**
+     * Handle response when unfollwoing a component request
+     */
+    app.handleResponseUnFollowComponent = function(){
         var tst = document.getElementById('superToast');
         tst.text = "You are removed from followers of this component";
         this.followsComp = false;
         tst.open();
-    };    
-    
+    };
+
+    /**
+     * Same for the projects
+     */
     app.followProject = function(){
         var request = this.$.followProj;
 
@@ -979,7 +1186,7 @@
         request.generateRequest();
     };
     
-    app.handleResponseFollowProj = function(){
+    app.handleResponseFollowProject = function() {
         var tst = document.getElementById('superToast');
         tst.text = "You are now a follower";
         this.isFollowerProj = true;
@@ -993,42 +1200,29 @@
         request.generateRequest();
     };
     
-    app.handleResponseUnFollowProj = function(){
+    app.handleResponseUnFollowProject = function() {
         var tst = document.getElementById('superToast');
         tst.text = "You are removed from followers of this project";
         this.isFollowerProj = false;
         tst.open();
     };
-    
-    app.activitiesLoaded = function (){
-        if (this.activities === null){
+
+    /**
+     * Check if activities of activity tracker are loaded
+     * @returns {boolean}
+     */
+    app.activitiesLoaded = function() {
+        if (this.activities === null) {
             return false;
         } else {
             return true;
         }
     };
 
-    // app.loginGit = function() {
-    //     window.open ("https://github.com/login/oauth/authorize?client_id=" + this.clientId, "Github Login", "width=700,height=700");
-    // };
 
-    // app.getGithubAccessToken = function(){
-    //     var request = document.getElementById("loginGithub");
-    //     request.url = "https://github.com/login/oauth/access_token";
-    //     request.params = {
-    //         "client_id": this.clientId,
-    //         "client_secret": this.clientSecret,
-    //         "code": this.code
-    //     };
-    //     request.generateRequest();
-    // };
-    //
-    // app.handleSignInGithub = function(){
-    //     var tst = document.getElementById('superToast');
-    //     tst.text = "Your account is now connected to Github";
-    //     tst.open();
-    // };
-
+    /**
+     * Displays Hi message when user is logged in
+     */
     function sayHi() {
         if (app.currentUser != null) {
             var tst = document.getElementById('superToast');
