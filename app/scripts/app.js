@@ -304,10 +304,8 @@
             var element = requirements[i];
             if (element.querySelector('.contributors').style.display != "none") {
                 if (element.querySelector("#contr")){
-                    element.querySelector("#contr").innerText = i18n.getMsg('showContributers');
+                    element.querySelector("#contr").innerText = i18n.getMsg('showContributors');
                 }
-                document.querySelector("requirements-list").showContributers = false;
-                element.querySelector('.contributers').style.display = "none";
             }
         }
     };

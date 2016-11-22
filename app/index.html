@@ -519,7 +519,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                             <paper-menu id="componentInfoMenu" class="dropdown-content">
                                                 <paper-item on-tap="setDefault"><i18n-msg msgid="setAsDefault"></i18n-msg></paper-item>
-                                                <!--<paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>-->
                                                 <template is="dom-if" if="{{!followsComp}}">
                                                     <paper-item on-tap="followComponent"><i18n-msg msgid="followComponent"></i18n-msg></paper-item>
                                                 </template>
