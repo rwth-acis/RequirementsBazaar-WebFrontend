@@ -490,6 +490,15 @@
     };
 
     /**
+     * Shows the create requirement paper dialog.
+     * Triggered when url is changed to /create.
+     */
+    app.showCreateRequirementDialog = function() {
+        var createDialog = document.getElementById('createRequirement');
+        createDialog.open();
+    };
+
+    /**
      * Show create project and component by showing the paper-dialog
      * TO-DO: better redirect the user to a create url for both
      * @param e
