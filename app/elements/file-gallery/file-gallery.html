@@ -13,20 +13,23 @@
             }
         </style>
 
+        <!--SHOW IMAGE THUMBNAILS; AT THE MOMEMNT THE SAME URL AS IMAGES-->
         <div>
             <template is="dom-repeat" items="{{attachments}}">
                 <img style="width:50px; height:50px;" src="[[item.fileUrl]]" on-tap="toggle" att="[[item.title]]">
             </template>
         </div>
 
+        <!--SHOW IMAGES IN THE LIST VIEW-->
         <iron-collapse id="collapseImg" hidden$="[[grid]]">
             <img id="expandedImg" on-tap="toggle">
         </iron-collapse>
 
+        <!--SHOW IMAGES IN PAPER-DIALOG FOR GRID VIEW-->
         <paper-dialog id="imgPopupDialog" hidden$="[[!grid]]" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation">
             <h2 id="imgTitle"></h2>
             <div>
-                <img id="popupImg"class="imgView">
+                <img id="popupImg" class="imgView">
             </div>
         </paper-dialog>
 
@@ -34,15 +37,16 @@
 
     <script>
         (function () {
-//            'use strict';
 
             Polymer({
                 is: 'file-gallery',
                 properties: {
+                    /** Attachments array passed as parameter from requirements-list */
                     attachments: {
                         type: Array,
                         notify: true
                     },
+                    /** Prepares to show images into popups or dialogs */
                     grid: {
                         type: Boolean,
                         value: false,
@@ -50,16 +54,25 @@
                     }
                 },
 
+                /**
+                 * Toggles the collapse menu to show the full image or opens the dialog.
+                 * Triggered by clicking on an image icon.
+                 *
+                 * @param e - click event on image icon
+                 */
                 toggle: function(e){
                     if (this.grid){
+                        // Show dialog with image content if grid view.
                         this.$$("#popupImg").src = e.currentTarget.src;
                         this.$$("#imgTitle").innerHTML = e.currentTarget.att;
                         this.$$("#imgPopupDialog").open();
                     } else {
                         if (! this.$$("#collapseImg").opened){
+                            // Open the collapse and display the full image.
                             this.$$("#expandedImg").src = e.currentTarget.src;
                             this.$$("#collapseImg").show();
                         } else {
+                            // Toggle the collapse if the same image clicked like before or change to new image content
                             if (this.$$("#expandedImg").src === e.currentTarget.src){
                                 this.$$("#collapseImg").toggle();
                             } else {
