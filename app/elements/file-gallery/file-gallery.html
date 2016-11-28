@@ -19,20 +19,16 @@
             </template>
         </div>
 
-        <template is="dom-if" if="{{!grid}}">
-            <iron-collapse id="collapseImg">
-                <img id="expandedImg" on-tap="toggle">
-            </iron-collapse>
-        </template>
+        <iron-collapse id="collapseImg" hidden$="[[grid]]">
+            <img id="expandedImg" on-tap="toggle">
+        </iron-collapse>
 
-        <template is="dom-if" if="{{grid}}">
-            <paper-dialog id="imgPopup" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-                <h2 id="imgTitle"></h2>
-                <div>
-                    <img id="popupImg"class="imgView">
-                </div>
-            </paper-dialog>
-        </template>
+        <paper-dialog id="imgPopupDialog" hidden$="[[!grid]]" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+            <h2 id="imgTitle"></h2>
+            <div>
+                <img id="popupImg"class="imgView">
+            </div>
+        </paper-dialog>
 
     </template>
 
@@ -56,18 +52,18 @@
 
                 toggle: function(e){
                     if (this.grid){
-                        document.getElementById("popupImg").src = e.currentTarget.src;
-                        document.getElementById("imgTitle").innerHTML = e.currentTarget.att;
-                        document.getElementById("imgPopup").open();
+                        this.$$("#popupImg").src = e.currentTarget.src;
+                        this.$$("#imgTitle").innerHTML = e.currentTarget.att;
+                        this.$$("#imgPopupDialog").open();
                     } else {
-                        if (!document.getElementById("collapseImg").opened){
-                            document.getElementById("expandedImg").src = e.currentTarget.src;
-                            document.getElementById("collapseImg").show();
+                        if (! this.$$("#collapseImg").opened){
+                            this.$$("#expandedImg").src = e.currentTarget.src;
+                            this.$$("#collapseImg").show();
                         } else {
-                            if (document.getElementById("expandedImg").src === e.currentTarget.src){
-                                document.getElementById("collapseImg").toggle();
+                            if (this.$$("#expandedImg").src === e.currentTarget.src){
+                                this.$$("#collapseImg").toggle();
                             } else {
-                                document.getElementById("expandedImg").src = e.currentTarget.src;
+                                this.$$("#expandedImg").src = e.currentTarget.src;
                             }
                         }
                     }
