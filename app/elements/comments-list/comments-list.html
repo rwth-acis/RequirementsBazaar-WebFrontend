@@ -135,37 +135,37 @@
             Polymer({
                 is: 'comments-list',
                 properties: {
-                    //THE REQUIREMENT ID PROPERTY, INPUT FROM THE REQUIREMENT LIST
+                    /** Input from the requirement-list */
                     requirementId: {
                         type: Number
                     },
-                    //AJAX URL FOR LOADING COMMENTS
+                    /** iron-ajax url for loading the requirement */
                     resourceURL: {
                         type: String,
                         computed: '_computeResourceURL(requirementId)'
                     },
-                    //COMMENTS ARRAY CONTAINS ALL COMMENT OBJECTS
+                    /** contains all comment objects */
                     comments: {
                         type: Array,
                         notify: true
                     },
-                    //TRUE WHEN AJAX REQUEST IS LOADING
+                    /** True when the iron-ajax request is on load */
                     loading: {
                         type: Boolean,
                         observer: '_computeNoComments'
                     },
-                    //TRUE WHEN COMMENTS PROPERTY IS EMPTY AND LOADING IS FALSE
+                    /** True when loading is false and comments are empty */
                     noComments: Boolean,
-                    //SAVES THE HREF FOR BETA AND LIVE VERSION
+                    /** Saves the href for the beta or live version */
                     baseHref: String,
-                    //SAVES THE CURRENT COMMENT DOM ELEMENT
+                    /** Saves the current comment DOM element */
                     commentElement: Object,
-                    //HEADER OBJECT WITH THE ACCESS-TOKEN
+                    /** Header Object to be a property of iron-ajax */
                     header: {
                         type:Object,
                         notify: true
                     },
-                    //TRUE IF USER IS LOGGED IN
+                    /** True if user is logged-in */
                     isAuthorized: Boolean
                 },
 
@@ -246,6 +246,7 @@
 
                 /**
                  * In case of any error display the toast with the corresponding error message
+                 *
                  * @param e - event
                  * @param detail - details of the event object
                  */
@@ -256,6 +257,7 @@
 
                 /**
                  * Computes the style of the profile picture returning the css for div class= profilePicture
+                 *
                  * @param profileImage
                  * @returns {string}
                  */
@@ -264,14 +266,15 @@
                 },
 
                 /**
-                 * Generates request for loading comments
+                 * Generates request for loading comments.
                  */
                 load: function() {
                     this.$.commentsLoader.generateRequest();
                 },
 
                 /**
-                 * Creates modal window for deleting a comment
+                 * Creates modal window for deleting a comment.
+                 *
                  * @param e
                  */
                 createModal: function(e) {
@@ -280,7 +283,8 @@
                 },
 
                 /**
-                 * Performs Delete comment if the dialog modal is confirmed, sends a DELETE request and hides the deleted element from the dom
+                 * Performs Delete comment if the dialog modal is confirmed, sends a DELETE request and hides the deleted element from the dom.
+                 *
                  * @param e
                  */
                 deleteComment: function(e) {
@@ -294,8 +298,9 @@
                 },
 
                 /**
-                 * Checks if the usrId passed matches the logged-in user
-                 * @param usrId
+                 * Checks if the usrId passed matches the logged-in user.
+                 *
+                 * @param usrId {Number}
                  * @returns {boolean}
                  */
                 isCreator: function(usrId) {
@@ -309,6 +314,7 @@
 
                 /**
                  * Checks if a comment is a reply
+                 *
                  * @param item - the comment item passed from the comments list
                  * @returns {boolean}
                  */
@@ -320,7 +326,8 @@
                 },
 
                 /**
-                 * Shows and hides the reply paper-input if the reply button is pressed
+                 * Shows and hides the reply paper-input if the reply button is pressed.
+                 *
                  * @param e
                  */
                 showReplyInput: function(e){
@@ -357,9 +364,10 @@
                 },
 
                 /**
-                 * Checks inside the comment text if there is a url inside
+                 * Checks inside the comment text if there is a url inside.
                  * check: http://stackoverflow.com/questions/30970068/js-regex-url-validation
-                 * @param commentText
+                 *
+                 * @param commentText {String}
                  * @returns {*}
                  */
                 validateUrl: function(commentText) {

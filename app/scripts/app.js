@@ -47,18 +47,21 @@
     app.currentUser = null;
     /**
      * True if page is opened on mobile, else false. It is used to style page properly or to hide certain elements
-     * on mobile view
+     * on mobile view.
+     *
      * @type {boolean}
      */
-    app.isMobile = false; //initiate as false
+    app.isMobile = false; // initiate as false
     /**
-     * Save the i18-msg dom element and it is used to get messages in different languages
+     * Save the i18-msg dom element and it is used to get messages in different languages.
+     *
      * @type {null}
      */
     app.i18n = null;
     /**
-     * It is true only when iron-ajax is loading for getting projects components and requirements
-     * Used to show progress bar when xhr on flight
+     * It is true only when iron-ajax is loading for getting projects components and requirements.
+     * Used to show progress bar when xhr on flight.
+     *
      * @type {boolean}
      */
     app.loading = false;
@@ -85,10 +88,11 @@
     app.view = "list";
     /**
      * If a user follows a component or a Project it becomes true.
-     * This is checked for a component page from the method isFollowerComp() everytime the user enters the components section
-     * When this is set to true the unfollow option is shown in index and vise-versa
+     * This is checked for a component page from the method isFollowerCompent() everytime the user enters the components section.
+     * When this is set to true the unfollow option is shown in index and vise-versa.
      * isFollowerProj is DEPRECATED and is global so:
-     * TO-DO: REPLACE WITH A BETTER METHOD
+     * TODO: REPLACE isFollowerProj WITH A BETTER METHOD
+     *
      * @type {boolean}
      */
     app.isFollowerProj = false;
@@ -113,33 +117,35 @@
         }
     });
 
-    // See https://github.com/Polymer/polymer/issues/1381
+    /**
+     * See https://github.com/Polymer/polymer/issues/1381
+      */
     window.addEventListener('WebComponentsReady', function() {
-        // imports are loaded and elements have been registered
+        // Imports are loaded and elements have been registered.
         this.i18n = document.querySelector('i18n-msg');
-        //property used to check when the components are ready so it can scroll to requirement
+        // Property used to check when the components are ready so it can scroll to requirement.
         app.loaded = true;
     });
 
     /**
      * It is called when all the html imports are done. It checks for properties that are saved in the cookie,
      * such as language and view type: list or grid. If cookie doesn't have information saved on loads browser language
-     * and list view as default
+     * and list view as default.
      */
     document.addEventListener('HTMLImportsLoaded', function() {
         var lang = null;
         var view = null;
         if (document.cookie != '') {
-            //array with cookies values
+            // array with cookies values
             var cookies = document.cookie.split(';');
             for (var i = 0; i <cookies.length; i++) {
-                //current parameter
+                // current parameter.
                 var c = cookies[i];
-                //remove before space if it has
+                // remove before space if it has
                 while (c.charAt(0)==' ') {
                     c = c.substring(1);
                 }
-                //get the parameters from the cookie c
+                // get the parameters from the cookie c
                 if (c.indexOf("lang=") == 0) {
                     lang = c.substring("lang=".length, c.length);
                 }
@@ -153,7 +159,7 @@
             }
         }
 
-        //load browser language as default language
+        // load browser language as default language
         if (lang === null || lang ==='') {
             switch (navigator.language.substring(0,2)) {
                 case "en":
@@ -188,7 +194,7 @@
     });
 
     /**
-     * Sets the language when the user press the item from the item-list of language in the index
+     * Sets the language when the user press the item from the item-list of language in the index.
      */
     app.english = function(){
         I18nMsg.lang = 'en';
@@ -214,10 +220,12 @@
         Platform.performMicrotaskCheckpoint();
     };
 
-    // Main area's paper-scroll-header-panel custom condensing transformation of
-    // the appName in the middle-container and the bottom title in the bottom-container.
-    // The appName is moved to top and shrunk on condensing. The bottom sub title
-    // is shrunk to nothing on condensing.
+    /**
+     *  Main area's paper-scroll-header-panel custom condensing transformation of
+     * the appName in the middle-container and the bottom title in the bottom-container.
+     * The appName is moved to top and shrunk on condensing. The bottom sub title
+     * is shrunk to nothing on condensing.
+     */
     addEventListener('paper-header-transform', function(e) {
         var appName = document.querySelector('#componentToolbar .component-name');
         var middleContainer = document.querySelector('#componentToolbar .middle-container');
@@ -236,7 +244,6 @@
         Polymer.Base.transform('scale(' + scaleBottom + ') translateZ(0)', bottomContainer);
 
         // Scale middleContainer appName
-        //Polymer.Base.transform('scale(' + scaleMiddle + ') translateZ(0)', appName);
         Polymer.Base.transform('scale(' + scaleMiddle + ') translate3d(0,' + yRatio * 100 + '%,0)', appName);
     });
 
@@ -308,16 +315,16 @@
     };
 
     /**
-     * When components are loaded in the requirements view trigger the method isFollowerComp()
+     * When components are loaded in the requirements view trigger the method isFollowerComponent()
      */
-    app.handleNewComp = function(){
-        this.isFollowerComp();
+    app.handleNewComponent = function(){
+        this.isFollowerComponent();
     };
 
     /**
      * Checks if the authorized user is in the list of followers of the current component and sets or followsComp property
      */
-    app.isFollowerComp = function(){
+    app.isFollowerComponent = function(){
         if (this.currentUser) {
             if (this.component.followers.length === 0) {
                 this.followsComp = false;
@@ -335,14 +342,14 @@
     };
 
     /**
-     * Closes all the open requirements and hides contributers if they are shown
-     * Triggered from routing element if compChanged() method returns true
+     * Closes all the open requirements and hides contributers if they are shown.
+     * Triggered from routing element if componentChanged() method returns true.
      */
     app.closeCollapses = function(){
         var collapses = document.querySelectorAll("iron-collapse");
         var requirements = document.querySelectorAll(".req");
 
-        //close all collapses and reverts the colors for all requirements
+        // close all collapses and reverts the colors for all requirements
         for (var i=1; i< collapses.length; i++){
             if (collapses[i].opened){
                 collapses[i].hide();
@@ -353,7 +360,7 @@
             }
         }
 
-        //hides all contributers div-s if they are open
+        // hides all contributers div-s if they are open
         for (var i=0; i< requirements.length; i++){
             var requirement = requirements[i];
             if (requirement.querySelector('.contributors').style.display != "none") {
@@ -370,7 +377,6 @@
     app.showGridView = function(){
         this.list = false;
         document.cookie = "view= grid";
-        //document.querySelector("requirements-list").style.display = "none";
     };
 
     /**
@@ -379,17 +385,17 @@
     app.showListView = function(){
         this.list = true;
         document.cookie = "view= list";
-        // document.querySelector("requirements-list").style.display = "block";
     };
 
     /**
      * Checks if the component is changed when in requirements view.
      * Triggered by routing element with the aim to reduce the requests everytime the url changes from requirements url
-     * back to the same components url
-     * @param compId - current componentsId
+     * back to the same components url.
+     *
+     * @param compId {number} - current componentsId
      * @returns {boolean} - true comp is changed, else false
      */
-    app.compChanged = function(compId){
+    app.componentChanged = function(compId){
         if(this.component){
             if(this.component.id === parseInt(compId)){
                 return false;
@@ -401,7 +407,8 @@
 
     /**
      * Toggles the filters collapse. Triggered by the press on the filter button
-     * @param e
+     *
+     * @param e - event
      */
     app.toggleFilters = function(e){
         document.getElementById("collapseFilters").toggle();
@@ -414,10 +421,10 @@
      * @param requirementId
      * @returns {number}
      */
-    app.scrollToReq = function (componentId, requirementId) {
+    app.scrollToRequirement = function (componentId, requirementId) {
         var el;
 
-        //scrolls to the specific requirements when the page is already loaded
+        // scrolls to the specific requirements when the page is already loaded.
         if ( (this.loaded) && (el = document.getElementById(requirementId))) {
             if (el === null) {
                 app.$.superToast.text = i18n.getMsg('noRequirement');
@@ -429,7 +436,7 @@
             scroller.scroll(el.offsetTop - 70, true);
             document.getElementById('requirementsList').toggleCollapsible(null, el);
         } else {
-            //scrolls to the specific requirement when the page is loaded directly from the requirement url
+            // scrolls to the specific requirement when the page is loaded directly from the requirement url.
             this.loadComponentInfo(componentId);
 
             app.requirementsStateFilter = "open";
@@ -441,7 +448,7 @@
                     document.getElementById('requirementsList').toggleCollapsible(null, el);
                 }
 
-                //timer is set to wait for page to load before check for the specific requirement
+                // timer is set to wait for page to load before check for the specific requirement.
                 if (el == null){
                     app.requirementsStateFilter = "realized";
                     setTimeout(function(){
@@ -481,8 +488,9 @@
     };
 
     /**
-     * Shows create requirements dialog by directong to create url
-     * @param e
+     * Shows create requirements dialog by directong to create url.
+     *
+     * @param e - event
      */
     app.onCreateRequirementTap = function(e) {
         page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/create');
@@ -500,7 +508,8 @@
 
     /**
      * Show create project and component by showing the paper-dialog
-     * TO-DO: better redirect the user to a create url for both
+     * TO-DO: better redirect the user to a create url for both.
+     *
      * @param e
      */
     app.onCreateProjectTap = function(e) {
@@ -514,8 +523,9 @@
     };
 
     /**
-     * Open user information dialog from the user icon click on the toolbar
-     * @param e
+     * Open user information dialog from the user icon click on the toolbar.
+     *
+     * @param e - event
      */
     app.openUserDialog = function(e){
         document.getElementById('userSettings').toggle();
@@ -523,7 +533,8 @@
 
     /**
      * Opens the User Settings paper-dialog
-     * @param e
+     *
+     * @param e - event
      */
     app.openSettingsDialog = function(e){
         document.getElementById('userSettings').close();
@@ -531,21 +542,22 @@
     };
 
     /**
-     * Triggered when create requirements paper-dialog is closed
-     * If confirmed the requirement is posted to the backend (iron-ajax POST request generated) with the bellow fields
-     * @param e
+     * Triggered when create requirements paper-dialog is closed.
+     * If confirmed the requirement is posted to the backend (iron-ajax POST request generated) with the bellow fields.
+     *
+     * @param e - event
      */
     app.onCreateRequirementClosed = function(e) {
         if (e.detail.confirmed) {
             var attachments = [];
             var request = document.querySelector('#postRequirementRequest');
             var components = [{id: parseInt(app.params.componentId)}];
-            //validate the requirements to be posted fields if they are empty
+            // validate the requirements to be posted fields if they are empty
             if (this.$.newRequirementTitle.value == '' || this.$.newRequirementDesc.value == '' || this.$.newRequirementTitle.value == null || this.$.newRequirementDesc.value == null ) {
                 this.$.superToast.text = i18n.getMsg('fieldsNotEmptyReq');
                 this.$.superToast.open();
             } else {
-                //check if a file was uploaded as well
+                // check if a file was uploaded as well
                 // xhr.response holds the file identifier
                 if (this.files != []){
                     for (var i = 0; i < this.files.length; i++) {
@@ -566,18 +578,18 @@
                     "attachments": attachments
                 });
                 request.generateRequest();
-                //clean the fields
+                // clean the fields
                 this.$.newRequirementTitle.value = null;
                 this.$.newRequirementDesc.value = null;
                 this.files = [];
             }
         } else if (e.detail.canceled) {
-            //if dialog closed, clean the fields
+            // if dialog closed, clean the fields
             this.$.newRequirementTitle.value = null;
             this.$.newRequirementDesc.value = null;
             this.files = [];
         }
-        //move back to requirements view
+        // move back to requirements view
         page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId);
 
         e.preventDefault();
@@ -586,7 +598,8 @@
     /**
      * Checks if at the end of typing in a field paper-input the key Enter is Pressed.
      * If that's the case post the requirement
-     * @param e
+     *
+     * @param e - event
      */
     app.checkEnter = function (e){
         if (e.keyCode === 13) {
@@ -632,7 +645,8 @@
     /**
      * Expands the createRequirement paper-dialog to full screen view
      * Triggered by the small icon at the corner of the createRequirement dialog
-     * @param e
+     *
+     * @param e - event
      */
     app.expandDialog = function(e){
         e.currentTarget.parentNode.classList.toggle("create");
@@ -642,6 +656,7 @@
 
     /**
      * Show success or error message when a requirement is posted
+     *
      * @param data
      */
     app.handlePostResponseRequirement = function(data){
@@ -655,8 +670,9 @@
     };
 
     /**
-     * Posts a project when project dialog is closed and confirmed
-     * See onCreateRequirementClosed method comment for more
+     * Posts a project when project dialog is closed and confirmed.
+     * See onCreateRequirementClosed method comment for more.
+     *
      * @param e
      */
     app.onCreateProjectClosed = function(e) {
@@ -681,7 +697,8 @@
 
     /**
      * Handle response from Posting the project. Show the appropriate message to the user
-     * @param data
+     *
+     * @param data {Object} - response of request
      */
     app.handlePostResponseProject = function(data){
         if (data != null){
@@ -695,6 +712,7 @@
 
     /**
      * Same as with requirements and Projects
+     *
      * @param e
      */
     app.onCreateComponentClosed = function(e) {
@@ -719,6 +737,7 @@
 
     /**
      * Same as with projects and requirements
+     *
      * @param data
      */
     app.handlePostResponseComponent = function(data){
@@ -748,19 +767,18 @@
 
     /**
      * Toggles the left toggle in the requirements view
-     * @param e
+     *
+     * @param e - event
      */
     app.toggCompDrawer = function(e){
-        //closes left drawer
+        // closes left drawer
         if (!this.isMobile) {
             if (document.querySelectorAll('#drawer')[3].style.display != 'none'){
-                //app.$.reqDrawer.closeDrawer();
                 document.querySelectorAll('#drawer')[3].style.display = 'none';
                 document.querySelectorAll('#main')[3].style.left = '0px';
             } else {
                 //opens left drawer
                 document.querySelectorAll('#drawer')[3].style.display = 'block';
-                //app.$.reqDrawer.openDrawer();
                 document.querySelectorAll('#main')[3].style.left = '256px';
             }
         } else {
@@ -777,11 +795,10 @@
     };
 
     /**
-     * Toggles the Activity Tracker drawer in projects, components and requirements view and checks for mobile
-     * With this method the toggle happens in all the views, for the AT element in projects, components and requirements view
-     * @param e
+     * Toggles the Activity Tracker drawer in projects, components and requirements view and checks for mobile.
+     * With this method the toggle happens in all the views, for the AT element in projects, components and requirements view.
      */
-    app.toggNotDrawer = function(e){
+    app.toggNotDrawer = function() {
         var fabs = document.getElementsByClassName('fabAdd');
         if (app.route == "projects"){
             document.querySelectorAll("#scrollThreshold")[0].scrollTarget = document.querySelector("#letsscroll1").scroller;
@@ -794,7 +811,7 @@
         }
         document.querySelector('activity-tracker').refresh();
 
-        //opens right drawer in the project view
+        // opens right drawer in the project view
         if (document.querySelector('#drawer').style.display != 'block'){
             document.querySelector('#drawer').style.display = 'block';
             document.querySelector('#drawer').style.zIndex = 1;
@@ -808,7 +825,7 @@
                 this.$.notDrawer.closeDrawer();
             }
         } else {
-            //closes right drawer in project view
+            // closes right drawer in project view
             if (!this.isMobile){
                 document.querySelector('#drawer').style.display = 'none';
                 document.querySelector('#scrollProjects').style.marginRight = '0px';
@@ -818,7 +835,7 @@
             }
         }
 
-        //opens right drawer in the components view
+        // opens right drawer in the components view
         if (document.querySelectorAll('#drawer')[1].style.display != 'block'){
             // document.querySelectorAll('activity-tracker')[1].refresh();
             document.querySelectorAll('#drawer')[1].style.display = 'block';
@@ -830,14 +847,14 @@
                 this.$.notDrawer0.closeDrawer();
             }
         } else {
-            //closes right drawer in the components view
+            // closes right drawer in the components view
             if (!this.isMobile) {
                 document.querySelectorAll('#drawer')[1].style.display = 'none';
                 document.querySelector('#scrollComponents').style.marginRight = '0px';
             }
         }
 
-        //opens right drawer in the requirements view
+        // opens right drawer in the requirements view
         if (document.querySelectorAll('#drawer')[2].style.display != 'block'){
             // document.querySelectorAll('activity-tracker')[2].refresh();
             document.querySelectorAll('#drawer')[2].style.display = 'block';
@@ -849,14 +866,14 @@
                 this.$.notDrawer1.closeDrawer();
             }
         } else {
-            //closes right drawer in the requirements view
+            // closes right drawer in the requirements view
             if (!this.isMobile){
                 document.querySelectorAll('#drawer')[2].style.display = 'none';
                 document.querySelectorAll('#main')[3].style.right = '0px';
             }
         }
 
-        //open right drawer for every view in mobile mode
+        // open right drawer for every view in mobile mode
         if (this.isMobile){
             if (this.route === "component-info"){
                 this.$.notDrawer.disableSwipe = true;
@@ -877,10 +894,11 @@
 
     /**
      * Returns true if we are in the components page
+     *
      * @param rt - route string
      * @returns {boolean}
      */
-    app.isComponentPage = function(rt){
+    app._isComponentPage = function(rt){
         return rt === 'component-info';
     };
 
@@ -889,7 +907,7 @@
      * @param rt - route string
      * @returns {boolean}
      */
-    app.isLandingPage = function(rt){
+    app._isLandingPage = function(rt){
         return rt === 'home';
     };
 
@@ -927,9 +945,10 @@
     };
 
     /**
-     * Shows the error message on a toast when a request return an error response
-     * @param e
-     * @param detail
+     * Shows the error message on a toast when a request return an error response.
+     *
+     * @param e - event
+     * @param detail {object} - response detail object
      */
     app.errorHandler = function (e, detail){
         this.$.superToast.text = detail.error.message;
@@ -938,15 +957,17 @@
 
     /**
      * Triggered when the Cancel button is pressed when editing a project
+     *
      * @param e
      */
-    app.cancEditProject = function(e){
+    app.cancelEditProject = function(e){
         document.querySelector('.editHeader').style.display = 'block';
         document.querySelector('.editForm').style.display = 'none';
     };
 
     /**
-     * Handles the Put request response and shows the appropriate message when iron-ajax is finished
+     * Handles the Put request response and shows the appropriate message when iron-ajax is finished.
+     *
      * @param data
      */
     app.handleEditResponseProject = function(data) {
@@ -957,7 +978,8 @@
     };
 
     /**
-     * Opens the delete dialogs for deleting project and component
+     * Opens the delete dialogs for deleting project and component.
+     *
      * @param e
      */
     app.createModalDeleteProject = function(e){
@@ -969,7 +991,7 @@
     };
 
     /**
-     * Makes DELETE iroj-ajax request to the backend when delete project dialog is confirmed
+     * Makes DELETE iroj-ajax request to the backend when delete project dialog is confirmed.
      * @param e
      */
     app.deleteProject = function(e){
@@ -983,10 +1005,9 @@
     };
 
     /**
-     * Make a specific component the default of the belonging project
-     * @param e
+     * Make a specific component the default of the belonging project.
      */
-    app.setDefault = function(e){
+    app.setDefault = function() {
         var req = this.$.postUpdateProject;
         req.url = this.baseHref + "/projects/" + this.params.projectId;
         req.method = "PUT";
@@ -998,10 +1019,9 @@
     };
 
     /**
-     * Show forms when pressed the editing component button
-     * @param e
+     * Show forms when pressed the editing component button.
      */
-    app.editComponent = function(e){
+    app.editComponent = function() {
         document.querySelector('.cmpTitle').style.display = 'none';
         document.querySelector('.cmpDesc').style.display = 'none';
         document.querySelector('.bottom-container').style.display = 'none';
@@ -1010,10 +1030,9 @@
     };
 
     /**
-     * removes forms when pressed the cancel editing component button
-     * @param e
+     * Removes forms when pressed the cancel editing component button.
      */
-    app.cancEditComp = function(e){
+    app.cancelEditComp = function() {
         document.querySelector('.cmpTitle').style.display = 'block';
         document.querySelector('.cmpDesc').style.display = 'block';
         document.querySelector('.bottom-container').style.display = 'flex';
@@ -1022,10 +1041,9 @@
     };
 
     /**
-     * Generates a request to edit the component that was edited
-     * @param e
+     * Generates a request to edit the component that was edited.
      */
-    app.saveEditComp = function(e){
+    app.saveEditComp = function() {
         var title = document.querySelector('.editFormComp > .editTitle').value;
         var desc = document.querySelector('.editFormComp > .editDesc').value;
         var el = document.getElementById('componentRequestPUT');
@@ -1046,7 +1064,8 @@
 
     /**
      * Handles the response of iron-ajax for PUT request to edit the component
-     * @param data
+     *
+     * @param data {Object} - response data
      */
     app.handlePutResponseComponent = function(data){
         if (data != null){
@@ -1060,7 +1079,8 @@
     };
 
     /**
-     * Sends an iron-ajax request to delete a component
+     * Sends an iron-ajax request to delete a component.
+     *
      * @param e
      */
     app.deleteComponent = function(e){
@@ -1074,8 +1094,9 @@
     };
 
     /**
-     * Components response for every iron-ajax request to the components backend
-     * @param data
+     * Components response for every iron-ajax request to the components backend.
+     *
+     * @param data {Object} - Response data
      */
     app.compResponse = function(data){
         if (data != null){
@@ -1086,8 +1107,9 @@
     };
 
     /**
-     * Triggered when signin successfull and shown the message of sign-in and saves the access-token
-     * @param e
+     * Triggered when signin successful and shown the message of sign-in and saves the access-token.
+     *
+     * @param e - event
      */
     app.handleSigninSuccess = function(e){
         this.access_token = e.detail.access_token;
@@ -1097,12 +1119,11 @@
             page("/projects");
         }
         window.setTimeout(sayHi,500);
-        // this.$.getGithubRepos.generateRequest();
     };
 
     /**
-     * Toggles between my projects and all projects in the projects view
-     * Triggered by the toggle button when the user is logged in
+     * Toggles between my projects and all projects in the projects view.
+     * Triggered by the toggle button when the user is logged in.
      */
     app.toggleProjects = function () {
         document.getElementById('projectsList').toggle();
@@ -1115,8 +1136,8 @@
     };
 
     /**
-     * Change the setting so that users can get emails for things where he is a leaded
-     * Sends a request to the backend every time the toggle is pressed
+     * Change the setting so that users can get emails for things where he is a leaded.
+     * Sends a request to the backend every time the toggle is pressed.
      */
     app.changeUserSettingsLead = function(){
         var request = document.getElementById('usrSettings');
@@ -1131,7 +1152,7 @@
     };
 
     /**
-     * Here the same as above but for things that the user follows
+     * Here the same as above but for things that the user follows.
      */
     app.changeUserSettingsFollow = function(){
         var request = document.getElementById('usrSettings');
@@ -1146,7 +1167,7 @@
     };
 
     /**
-     * Generate backend request to follow a component
+     * Generate backend request to follow a component.
      */
     app.followComponent = function(){
         var request = this.$.followComp;
@@ -1156,7 +1177,7 @@
     };
 
     /**
-     * Handle the response from iron-ajax for following a component
+     * Handle the response from iron-ajax for following a component.
      */
     app.handleResponseFollowComponent = function(){
         var tst = document.getElementById('superToast');
@@ -1166,7 +1187,7 @@
     };
 
     /**
-     * The same for unfollowing a component
+     * The same for unfollowing a component.
      */
     app.unfollowComponent = function(){
         var request = this.$.unfollowComp;
@@ -1176,7 +1197,7 @@
     };
 
     /**
-     * Handle response when unfollwoing a component request
+     * Handle response when unfollowing a component request.
      */
     app.handleResponseUnFollowComponent = function(){
         var tst = document.getElementById('superToast');
@@ -1195,7 +1216,7 @@
         request.generateRequest();
     };
     
-    app.handleResponseFollowProject = function() {
+    app._handleResponseFollowProject = function() {
         var tst = document.getElementById('superToast');
         tst.text = "You are now a follower";
         this.isFollowerProj = true;
@@ -1217,7 +1238,8 @@
     };
 
     /**
-     * Check if activities of activity tracker are loaded
+     * Check if activities of activity tracker are loaded.
+     * 
      * @returns {boolean}
      */
     app.activitiesLoaded = function() {
@@ -1230,7 +1252,7 @@
 
 
     /**
-     * Displays Hi message when user is logged in
+     * Displays Hi message when user is logged in.
      */
     function sayHi() {
         if (app.currentUser != null) {

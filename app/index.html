@@ -89,7 +89,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar">
-            <template is="dom-if" if="{{isComponentPage(route)}}">
+            <template is="dom-if" if="{{_isComponentPage(route)}}">
                 <paper-icon-button id="paperToggle" icon="menu" on-tap="toggCompDrawer"></paper-icon-button>
             </template>
             <!--<template is="dom-if" if="{{!componentPage(route)}}">-->
@@ -111,7 +111,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <template is="dom-if" if="{{isAuthorized}}">
                 <req-user user="[[currentUser]]" mini on-tap="openUserDialog" class="hidden-mobile"></req-user>
             </template>
-            <template is="dom-if" if="{{!isLandingPage(route)}}">
+            <template is="dom-if" if="{{!_isLandingPage(route)}}">
                 <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
             </template>
 
@@ -388,7 +388,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                 <paper-input class="editTitle" label="[[formTitle]]" value="{{project.name}}"></paper-input>
                                 <paper-textarea class="editDesc" label="[[formDesc]]" value="{{project.description}}"></paper-textarea>
-                                <paper-button raised on-tap="cancEditProject"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
+                                <paper-button raised on-tap="cancelEditProject"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
                                 <paper-button raised on-tap="saveEditProject"> <i18n-msg msgid="save"></i18n-msg> </paper-button>
 
                             </div>
@@ -441,7 +441,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <section data-route="component-info" href="{{baseUrl}}component-info" style="height:100%;">
 
                     <iron-ajax id="componentInfoLoader"
-                               last-response="{{component}}" on-response="handleNewComp"></iron-ajax>
+                               last-response="{{component}}" on-response="handleNewComponent"></iron-ajax>
 
                     <iron-ajax
                             id="followComp"
@@ -587,7 +587,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                         <paper-input class="editTitle" label="[[formTitle]]" value="{{component.name}}"></paper-input>
                                         <paper-textarea class="editDesc" label="[[formDesc]]" value="{{component.description}}"></paper-textarea>
-                                        <paper-button raised on-tap="cancEditComp"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
+                                        <paper-button raised on-tap="cancelEditComp"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
                                         <paper-button raised on-tap="saveEditComp"> <i18n-msg msgid="save"></i18n-msg> </paper-button>
 
                                     </div>
