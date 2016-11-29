@@ -61,27 +61,29 @@
                  * @param e - click event on image icon
                  */
                 toggle: function(e){
-                    console.log(e);
                     var clickedImgUrl = e.srcElement.style.backgroundImage.slice(5, -2);
-                    if (this.grid){
-                        // Show dialog with image content if grid view.
-                        this.$$("#popupImg").src = clickedImgUrl;
+                    if (clickedImgUrl !== "../../images/loading.svg") {
+                        if (this.grid){
+                            // Show dialog with image content if grid view.
+                            this.$$("#popupImg").src = clickedImgUrl;
 //                        this.$$("#imgTitle").innerHTML = e.srcElement.att;
-                        this.$$("#imgPopupDialog").open();
-                    } else {
-                        if (! this.$$("#collapseImg").opened){
-                            // Open the collapse and display the full image.
-                            this.$$("#expandedImg").src = clickedImgUrl;
-                            this.$$("#collapseImg").show();
+                            this.$$("#imgPopupDialog").open();
                         } else {
-                            // Toggle the collapse if the same image clicked like before or change to new image content
-                            if ((this.$$("#expandedImg").src === clickedImgUrl) || (!clickedImgUrl)){
-                                this.$$("#collapseImg").toggle();
-                            } else {
+                            if (! this.$$("#collapseImg").opened){
+                                // Open the collapse and display the full image.
                                 this.$$("#expandedImg").src = clickedImgUrl;
+                                this.$$("#collapseImg").show();
+                            } else {
+                                // Toggle the collapse if the same image clicked like before or change to new image content
+                                if ((this.$$("#expandedImg").src === clickedImgUrl) || (!clickedImgUrl)){
+                                    this.$$("#collapseImg").toggle();
+                                } else {
+                                    this.$$("#expandedImg").src = clickedImgUrl;
+                                }
                             }
                         }
                     }
+
                 },
 
                 loadIcons: function() {
@@ -93,6 +95,7 @@
                         Polymer.dom(imgNode).setAttribute("class", "imgIcons");
                         Polymer.dom(imgNode).setAttribute("sizing", "cover");
                         Polymer.dom(imgNode).setAttribute("preload", "true");
+                        Polymer.dom(imgNode).setAttribute("placeholder", "../../images/loading.svg");
                         Polymer.dom(imgNode).setAttribute("src", this.attachments[i].fileUrl);
                         Polymer.dom(imgNode).setAttribute("att", this.attachments[i].title);
                         this.addEventListener("tap", this.toggle);
