@@ -70,13 +70,13 @@
                     // loads the target for different browser types
                     var target = e.target || e.srcElement;
                     // saves that clicked image url
-                    var clickedImgUrl = target.style.backgroundImage.slice(5, -2);
-                    if (clickedImgUrl !== "../../images/loading.svg") {
+                    var clickedImgUrl = target.style.backgroundImage.slice(5, -2) || target.src;
+                    if (clickedImgUrl !== "../../images/loading.svg" && clickedImgUrl) {
                         // work on click only if the images are clicked and not the load image
                         if (this.grid){
                             // Show dialog with image content if grid view.
-                            this.$.popupImg.src = clickedImgUrl;
-                            this.$.imgPopupDialog.open();
+                            this.$$('#popupImg').src = clickedImgUrl;
+                            this.$$('#imgPopupDialog').open();
                         } else {
                             if (!this.$.collapseImg.opened) {
                                 // Open the collapse and display the full image.
@@ -84,7 +84,7 @@
                                 this.$.collapseImg.show();
                             } else {
                                 // Toggle the collapse if the same image clicked like before or change to new image content
-                                if ((this.$.expandedImg.src === clickedImgUrl) || (!clickedImgUrl)){
+                                if (this.$.expandedImg.src === clickedImgUrl){
                                     this.$.collapseImg.toggle();
                                 } else {
                                     this.$.expandedImg.src = clickedImgUrl;
