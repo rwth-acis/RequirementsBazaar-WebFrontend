@@ -96,6 +96,11 @@ paper-icon-button {
     text-overflow: ellipsis;
 }
 
+.imgIcons {
+    width:50px;
+    height:50px;
+}
+
 .editFormComp{
     display: none;
 }
