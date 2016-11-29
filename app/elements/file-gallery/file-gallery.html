@@ -7,11 +7,6 @@
                 width: 100%;
             }
 
-            .imgView {
-                width: 100%;
-                margin: 0 auto;
-            }
-
         </style>
 
         <!--SHOW IMAGE THUMBNAILS; AT THE MOMENT THE SAME URL AS IMAGES; ADDED DYNAMICALLY-->
@@ -22,13 +17,27 @@
             <img id="expandedImg">
         </iron-collapse>
 
-        <!--SHOW IMAGES IN PAPER-DIALOG FOR GRID VIEW-->
-        <paper-dialog id="imgPopupDialog" hidden$="[[!grid]]" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-            <h2 id="imgTitle"></h2>
-            <div>
-                <img id="popupImg" class="imgView">
-            </div>
-        </paper-dialog>
+        <!--LOAD ALL IMAGES AT ONCE IN GRID VIEW AND SHOW THEM IN PAPER-DIALOG ON CLICK - DOM-IF USED DO MAKE THE LOAD ONLY ON GRID VIEW-->
+        <template is="dom-if" if="[[grid]]">
+            <template is="dom-repeat" items="{{attachments}}">
+                <iron-image
+                        class="imgIcons"
+                        src="[[item.fileUrl]]"
+                        att="[[item.title]]"
+                        sizing="cover"
+                        preload="true"
+                        placeholder="../../images/loading.svg"
+                        on-tap="toggle"></iron-image>
+            </template>
+
+            <!--SHOW CLICKED IMAGE IN DIALOG WINDOW-->
+            <paper-dialog id="imgPopupDialog" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+                <h2 id="imgTitle"></h2>
+                <div>
+                    <img id="popupImg" height="500">
+                </div>
+            </paper-dialog>
+        </template>
 
     </template>
 
@@ -42,9 +51,6 @@
                     attachments: {
                         type: Array,
                         notify: true
-                    },
-                    listeners: {
-                        'tap': 'toggle'
                     },
                     /** Prepares to show images into popups or dialogs. True for grid view, else false. */
                     grid: {
@@ -70,7 +76,6 @@
                         if (this.grid){
                             // Show dialog with image content if grid view.
                             this.$$("#popupImg").src = clickedImgUrl;
-//                        this.$$("#imgTitle").innerHTML = e.srcElement.att;
                             this.$$("#imgPopupDialog").open();
                         } else {
                             if (! this.$$("#collapseImg").opened){
