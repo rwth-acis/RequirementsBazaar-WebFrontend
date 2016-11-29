@@ -7,4 +7,4 @@ bower_components
 .idea/tasks.xml
 .idea/dictionaries
 components
-*.DS_Store
+.DS_Store
