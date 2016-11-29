@@ -61,7 +61,8 @@
                  * @param e - click event on image icon
                  */
                 toggle: function(e){
-                    var clickedImgUrl = e.srcElement.style.backgroundImage.slice(5, -2);
+                    var target = e.target || e.srcElement;
+                    var clickedImgUrl = target.style.backgroundImage.slice(5, -2);
                     if (clickedImgUrl !== "../../images/loading.svg") {
                         if (this.grid){
                             // Show dialog with image content if grid view.
