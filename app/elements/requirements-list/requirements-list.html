@@ -677,9 +677,11 @@
             }
             if (!contentNode.opened) {
               // since we are about to open it, trigger loading the comments
-              data.parentNode.querySelector('comments-list').load();
+              data.parentNode.querySelector("comments-list").load();
+              // and load the images
+              data.parentNode.querySelector("file-gallery").loadIcons();
             } else {
-              page.redirect('/projects/' + app.params.projectId + "/components/" + app.params.componentId);
+              page.redirect("/projects/" + app.params.projectId + "/components/" + app.params.componentId);
             }
             contentNode.toggle();
           }
