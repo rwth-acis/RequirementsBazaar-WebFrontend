@@ -61,9 +61,12 @@
                  * @param e - click event on image icon
                  */
                 toggle: function(e){
+                    // loads the target for different browser types
                     var target = e.target || e.srcElement;
+                    // saves that clicked image url
                     var clickedImgUrl = target.style.backgroundImage.slice(5, -2);
                     if (clickedImgUrl !== "../../images/loading.svg") {
+                        // work on click only if the images are clicked and not the load image
                         if (this.grid){
                             // Show dialog with image content if grid view.
                             this.$$("#popupImg").src = clickedImgUrl;
@@ -87,8 +90,14 @@
 
                 },
 
+                /**
+                 * Loads the icons and adds the image elements to the DOM.
+                 * Uses iron-image polymer element for showing also feedback.
+                 */
                 loadIcons: function() {
                     var iconsPlaceholder = Polymer.dom(this.$.icons);
+                    // Remove the old icons, in case a new image is added. Atm not applicable because requirements images
+                    // can't yet be edited.
                     this.removeIcons(iconsPlaceholder);
 
                     for (var i = 0; i < this.attachments.length; i++) {
