@@ -248,11 +248,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer0">
                         <paper-scroll-header-panel drawer fixed id="letsscroll1">
-                            <template is="dom-if" if="{{! activities}}">
-                                <paper-spinner active></paper-spinner>
-                            </template>
                             <!-- Drawer Content -->
-                            <activity-tracker url="{{activityHref}}" activities="{{activities}}"></activity-tracker>
+                            <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>
                     </paper-drawer-panel>
 
@@ -332,9 +329,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer1">
                         <paper-scroll-header-panel drawer fixed id="letsscroll2">
-                            <template is="dom-if" if="{{! activities}}">
-                                <paper-spinner active></paper-spinner>
-                            </template>
                             <!-- Drawer Content -->
                             <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>
@@ -464,9 +458,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer">
                         <paper-scroll-header-panel drawer fixed id="letsscroll3">
-                            <template is="dom-if" if="{{! activities}}">
-                                <paper-spinner active></paper-spinner>
-                            </template>
                             <!-- Drawer Content -->
                             <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>

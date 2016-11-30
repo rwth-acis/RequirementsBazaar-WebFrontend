@@ -348,9 +348,7 @@
               <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
                 <!--<paper-checkbox></paper-checkbox>-->
                 <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
-                <time is="relative-time" class="time"
-                      datetime$="[[req.creation_time]]">
-                </time>
+                <relative-time class="time" datetime$="[[req.creation_time]]"></relative-time>
                 <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
                 <div class="card-content" class="truncate">{{req.description}}</div>
                 <div class="card-actions">
@@ -405,7 +403,7 @@
               <paper-toolbar class="title" on-tap="onRequirementTap">
                 <div class="title">[[req.title]]</div>
                 <div class="bottom fit helper" style="margin-top:20px;">
-                  <time is="relative-time" datetime$="[[req.creation_time]]"></time>
+                  <relative-time datetime$="[[req.creation_time]]"></relative-time>
                   <i18n-msg msgid="by"></i18n-msg>
                   <req-user user="[[req.creator]]" normal-view></req-user>
                 </div>
