@@ -809,7 +809,6 @@
         if (app.route == "component-info"){
             document.querySelectorAll("#scrollThreshold")[2].scrollTarget = document.querySelector("#letsscroll3").scroller;
         }
-        document.querySelector('activity-tracker').refresh();
 
         // opens right drawer in the project view
         if (document.querySelector('#drawer').style.display != 'block'){
@@ -837,7 +836,6 @@
 
         // opens right drawer in the components view
         if (document.querySelectorAll('#drawer')[1].style.display != 'block'){
-            // document.querySelectorAll('activity-tracker')[1].refresh();
             document.querySelectorAll('#drawer')[1].style.display = 'block';
             document.querySelectorAll('#drawer')[1].style.zIndex = 1;
             if (!this.isMobile) {
@@ -856,7 +854,6 @@
 
         // opens right drawer in the requirements view
         if (document.querySelectorAll('#drawer')[2].style.display != 'block'){
-            // document.querySelectorAll('activity-tracker')[2].refresh();
             document.querySelectorAll('#drawer')[2].style.display = 'block';
             document.querySelectorAll('#drawer')[2].style.zIndex = 1;
             if (!this.isMobile) {
@@ -1236,20 +1233,6 @@
         this.isFollowerProj = false;
         tst.open();
     };
-
-    /**
-     * Check if activities of activity tracker are loaded.
-     * 
-     * @returns {boolean}
-     */
-    app.activitiesLoaded = function() {
-        if (this.activities === null) {
-            return false;
-        } else {
-            return true;
-        }
-    };
-
 
     /**
      * Displays Hi message when user is logged in.
