@@ -26,7 +26,7 @@
                         att="[[item.title]]"
                         sizing="cover"
                         preload="true"
-                        placeholder="../../images/loading.svg"
+                        placeholder="images/loading.svg"
                         on-tap="toggle"></iron-image>
             </template>
 
@@ -71,7 +71,7 @@
                     var target = e.target || e.srcElement;
                     // saves that clicked image url
                     var clickedImgUrl = target.style.backgroundImage.slice(5, -2) || target.src;
-                    if (clickedImgUrl !== "../../images/loading.svg" && clickedImgUrl) {
+                    if (clickedImgUrl !== "images/loading.svg" && clickedImgUrl) {
                         // work on click only if the images are clicked and not the load image
                         if (this.grid){
                             // Show dialog with image content if grid view.
@@ -110,7 +110,7 @@
                         Polymer.dom(imgNode).setAttribute("class", "imgIcons");
                         Polymer.dom(imgNode).setAttribute("sizing", "cover");
                         Polymer.dom(imgNode).setAttribute("preload", "true");
-                        Polymer.dom(imgNode).setAttribute("placeholder", "../../images/loading.svg");
+                        Polymer.dom(imgNode).setAttribute("placeholder", "images/loading.svg");
                         Polymer.dom(imgNode).setAttribute("src", this.attachments[i].fileUrl);
                         Polymer.dom(imgNode).setAttribute("att", this.attachments[i].title);
                         this.addEventListener("tap", this.toggle);
