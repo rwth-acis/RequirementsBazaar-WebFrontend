@@ -1,0 +1,148 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../components/iron-icons/iron-icons.html">
+<link rel="import" href="../components/paper-material/paper-material.html">
+<link rel="import" href="../components/paper-button/paper-button.html">
+<link rel="import" href="../components/paper-input/paper-input.html">
+<link rel="import" href="../components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../elements/components-list/components-list.html">
+<link rel="import" href="../elements/bread-crumb/bread-crumb.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="view-components-list">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 15px;
+      }
+    </style>
+
+    <openidconnect-signin-aware is-authorized="{{_authorized}}"></openidconnect-signin-aware>
+
+
+    <iron-ajax id="projectInfoLoader"
+               last-response="{{project}}"></iron-ajax>
+
+    <iron-ajax
+      id="postComponentRequest"
+      handle-as="json"
+      url="{{baseHref}}/components"
+      content-type="application/json"
+      method="POST"
+      headers="{{header}}"
+      on-response="handlePostResponseComponent"
+      on-error="errorHandler"></iron-ajax>
+
+    <iron-ajax
+      id="postUpdateProject"
+      handle-as="json"
+      content-type="application/json"
+      headers="{{header}}"
+      on-response="handleEditResponseProject"
+      on-error="errorHandler"></iron-ajax>
+
+    <paper-material elevation="1">
+
+      <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;" hidden$="[[_authorized]]">
+        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+        <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+          <template is="dom-if" if="{{!isFollowerProj}}">
+            <paper-item on-tap="followProject">[[localize('followProject')]]</paper-item>
+          </template>
+          <template is="dom-if" if="{{isFollowerProj}}">
+            <paper-item on-tap="unfollowProject">[[localize('unfollowProject')]]</paper-item>
+          </template>
+          <paper-item on-tap="editProject">[[localize('editProject')]]</paper-item>
+          <paper-item on-tap="createModalDeleteProject">[[localize('deleteProjectTitle')]]</paper-item>
+        </paper-menu>
+      </paper-menu-button>
+
+      <div class="editHeader">
+
+        <bread-crumb project-id="{{params.projectId}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
+        <h2>{{project.name}}</h2>
+
+        <div>{{project.description}}</div>
+
+      </div>
+
+      <div class="editForm">
+
+        <paper-input class="editTitle" label="[[formTitle]]" value="{{project.name}}"></paper-input>
+        <paper-textarea class="editDesc" label="[[formDesc]]" value="{{project.description}}"></paper-textarea>
+        <paper-button raised on-tap="cancelEditProject">[[localize('cancel')]]</paper-button>
+        <paper-button raised on-tap="saveEditProject">[[localize('save')]]</paper-button>
+
+      </div>
+    </paper-material>
+
+    <components-list id="componentsList" base-href="https://requirements-bazaar.org/betabazaar" project-id="[[projectId]]" loading="{{loading}}"></components-list>
+
+    <paper-fab class="fabAdd" on-tap="onCreateComponentTap" id="fab-btn2" icon="add" hidden$="[[_authorized]]"></paper-fab>
+    <paper-tooltip for="fab-btn2" position="left">[[localize('createComponent')]]</paper-tooltip>
+
+    <paper-dialog id="createComponent" class="create" entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation" no-cancel-on-outside-click
+                  no-cancel-on-esc-key
+                  on-iron-overlay-closed="onCreateComponentClosed">
+      <h2>[[localize('createComponent')]]</h2>
+      <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newComponentTitle"></paper-input>
+      <paper-textarea label="[[formDesc]]" id="newComponentDesc"></paper-textarea>
+
+      <div class="buttons">
+        <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
+        <paper-button dialog-confirm autofocus>[[localize('save')]]</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="deleteProject" modal on-iron-overlay-closed="deleteProject" entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation">
+      <h2>[[localize('deleteProjectTitle')]]?</h2>
+      <p>[[localize('deleteProjectDesc')]]</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
+        <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'view-components-list',
+
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
+
+      properties: {
+        language: {
+          type: String,
+          value: 'en'
+        },
+        _authorized: {
+          type: Boolean
+        },
+        projectId: {
+          type: Number
+        }
+      },
+
+      attached: function() {
+        // load localized messages
+        this.loadResources(this.resolveUrl('../locales/locales.json'));
+      },
+
+      handleCreateProject: function(e) {
+        var createDialog = this.$.createProjectDialog;
+        createDialog.open();
+      }
+    });
+  </script>
+</dom-module>

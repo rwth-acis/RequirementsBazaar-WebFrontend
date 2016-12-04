@@ -1,82 +1,82 @@
 <link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../../components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../components/paper-card/paper-card.html">
 
 <dom-module id="components-list">
-    <template>
-        <style>
-            :host {
-                display: block;
-            }
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
 
-            paper-card {
-                width: 100%;
-                max-width: 700px;
-                margin-bottom: 16px;
-                cursor: pointer;
-            }
+      paper-card {
+        width: 100%;
+        max-width: 700px;
+        margin-bottom: 16px;
+        cursor: pointer;
+      }
 
-            paper-card:hover {
-                background-color: var(--list-hover-background-color);
-            }
-        </style>
+      paper-card:hover {
+        background-color: var(--list-hover-background-color);
+      }
+    </style>
 
-        <iron-ajax
-                id="componentsLoader"
-                url="{{resourceURL}}"
-                last-response="{{components}}"
-                params='{"page":"0", "per_page":"150"}'
-                loading="{{loading}}"></iron-ajax>
+    <iron-ajax
+      id="componentsLoader"
+      url="[[resourceURL]]"
+      last-response="{{components}}"
+      params='{"page":"0", "per_page":"150"}'
+      loading="{{loading}}"
+      auto></iron-ajax>
 
-        <div class="layout vertical center">
-            <template is="dom-repeat" items="{{components}}">
-                <paper-card heading="[[item.name]]" on-tap="onComponentTap">
-                    <div class="card-content">[[item.description]]</div>
-                </paper-card>
-            </template>
-        </div>
+    <div class="layout vertical center">
+      <template is="dom-repeat" items="{{components}}">
+        <a href$="/projects/[[projectId]]/components/[[item.id]]">
+          <paper-card heading="[[item.name]]" on-tap="onComponentTap">
+            <div class="card-content">[[item.description]]</div>
+          </paper-card>
+        </a>
+      </template>
+    </div>
 
-    </template>
+  </template>
 
-    <script>
-        (function () {
-//            'use strict';
+  <script>
+    Polymer({
+      is: 'components-list',
 
-            Polymer({
-                is: 'components-list',
-                properties: {
-                    projectId: {
-                        type: Number
-                    },
-                    resourceURL: {
-                        type: String,
-                        computed: 'computeResourceURL(projectId)'
-                    },
-                    components: {
-                        type: Array,
-                        notify: true
-                    },
-                    loading: {
-                        type: Boolean,
-                        notify: true
-                    }
-                },
+      properties: {
+        projectId: {
+          type: Number
+        },
+        resourceURL: {
+          type: String,
+          computed: 'computeResourceURL(projectId)'
+        },
+        components: {
+          type: Array,
+          notify: true
+        },
+        loading: {
+          type: Boolean,
+          notify: true
+        },
+        baseHref: String
+      },
 
-                ready: function () {
-                },
+      computeResourceURL: function (projectId) {
+        return this.baseHref + '/projects/' + projectId + '/components/';
+      },
 
-                computeResourceURL: function (projectId) {
-                    return app.baseHref + '/projects/' + projectId + '/components/';
-                },
+      onComponentTap: function (e) {
+        var model = e.model;
+        page('/projects/'+ this.projectId +'/components/' + model.item.id);
+      },
 
-                onComponentTap: function (e) {
-                    var model = e.model;
-                    page('/projects/'+ this.projectId +'/components/' + model.item.id);
-                },
-
-                load: function() {
-                    this.$.componentsLoader.generateRequest();
-                }
-            });
-        })();
-    </script>
+      load: function() {
+        this.$.componentsLoader.generateRequest();
+      }
+    });
+  </script>
 
 </dom-module>

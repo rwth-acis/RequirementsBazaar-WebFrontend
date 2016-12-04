@@ -1,0 +1,70 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="view-projects">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <app-route
+      route="{{route}}"
+      pattern="/:projectId"
+      data="{{data}}"
+      tail="{{subroute}}"></app-route>
+
+    <iron-pages
+      selected="[[view]]"
+      attr-for-selected="name"
+      fallback-selection="404"
+      role="main"
+      content>
+      <view-projects-list name="projects-list" route="{{subroute}}"></view-projects-list>
+      <view-components name="components" project-id="{{data.projectId}}" route="{{subroute}}"></view-components>
+      <view-404 name="view404"></view-404>
+    </iron-pages>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'view-projects',
+
+      properties: {
+        route: {
+          type: Object,
+          notify: true
+        },
+        view: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_viewChanged'
+        },
+      },
+
+      observers: [
+        '_routeViewChanged(data.projectId)'
+      ],
+
+      _routeViewChanged: function(view) {
+        if (view) {
+          this.view = 'components';
+        } else {
+          this.view = 'projects-list';
+        }
+      },
+
+      _viewChanged: function(view) {
+        // Load view import on demand. Show 404 view if fails
+        var resolvedViewUrl = this.resolveUrl('view-' + view + '.html');
+        this.importHref(resolvedViewUrl, null, this._showView404, true);
+      },
+
+      _showView404: function() {
+        this.view = 'view404';
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,137 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../components/app-layout/app-header/app-header.html">
+<link rel="import" href="../components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../components/app-route/app-location.html">
+<link rel="import" href="../components/app-route/app-route.html">
+<link rel="import" href="../components/iron-pages/iron-pages.html">
+<link rel="import" href="../components/iron-selector/iron-selector.html">
+<link rel="import" href="../components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../components/app-double-drawer-layout/app-double-drawer-layout.html">
+<link rel="import" href="../components/activity-tracker/activity-tracker.html">
+<link rel="import" href="../components/iron-icons/social-icons.html">
+<link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
+
+<dom-module id="reqbaz-app">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #447500;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      app-drawer[align="right"] {
+        text-align: left;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      paper-icon-button[hidden] + div {
+        padding-left: 40px;
+      }
+    </style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+      route="{{route}}"
+      pattern="/:view"
+      data="{{routeData}}"
+      tail="{{subroute}}"></app-route>
+
+    <app-double-drawer-layout fullbleed id="doubleDrawerLayout">
+
+      <app-header fixed effects="waterfall">
+        <app-toolbar>
+          <paper-icon-button icon="menu" left-drawer-toggle hidden></paper-icon-button>
+          <div main-title>Requirements Bazaar</div>
+          <paper-icon-button icon="social:notifications" right-drawer-toggle></paper-icon-button>
+          <openidconnect-signin scopes="openid email profile" client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
+                                server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
+        </app-toolbar>
+      </app-header>
+
+      <app-drawer align="right">
+        <activity-tracker initial-limit="10"></activity-tracker>
+      </app-drawer>
+
+      <iron-pages
+        selected="[[view]]"
+        attr-for-selected="name"
+        fallback-selection="404"
+        role="main"
+        content>
+        <view-landing name="landing"></view-landing>
+        <view-projects name="projects" route="{{subroute}}"></view-projects>
+        <view-404 name="view404"></view-404>
+      </iron-pages>
+
+    </app-double-drawer-layout>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'reqbaz-app',
+
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
+
+      properties: {
+        view: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_viewChanged'
+        },
+        language: {
+          value: 'en'
+        },
+      },
+
+      attached: function() {
+        // load localized messages
+        this.loadResources(this.resolveUrl('../locales/locales.json'));
+      },
+
+      observers: [
+        '_routeViewChanged(routeData.view)'
+      ],
+
+      _routeViewChanged: function(view) {
+        this.view = view || 'landing';
+      },
+
+      _viewChanged: function(view) {
+        // Load view import on demand. Show 404 view if fails
+        var resolvedViewUrl = this.resolveUrl('view-' + view + '.html');
+        this.importHref(resolvedViewUrl, function(e) {
+          // e.target.import is the import document.
+          if (view === 'requirements') {
+            var viewElement = this.$.view2;
+            this.$.doubleDrawerLayout.leftDrawer = viewElement.getDrawer();
+          } else {
+            // reset layout
+            this.$.doubleDrawerLayout.leftDrawer = null;
+          }
+        }, this._showView404, true);
+      },
+
+      _showView404: function() {
+        this.view = 'view404';
+      }
+    });
+  </script>
+</dom-module>

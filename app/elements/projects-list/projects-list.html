@@ -1,124 +1,123 @@
 <link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../../components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../components/paper-card/paper-card.html">
 
 <dom-module id="projects-list">
-    <template>
-        <style>
-            :host {
-                display: block;
-            }
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
 
-            paper-card {
-                width: 100%;
-                max-width: 700px;
-                margin-bottom: 16px;
-                cursor: pointer;
-            }
+      paper-card {
+        width: 100%;
+        max-width: 700px;
+        margin-bottom: 16px;
+        cursor: pointer;
+      }
 
-            paper-card:hover {
-                background-color: var(--list-hover-background-color);
-            }
-        </style>
+      paper-card:hover {
+        background-color: var(--list-hover-background-color);
+      }
+    </style>
 
-        <iron-ajax
-                id="projectsLoader"
-                url="{{baseHref}}/projects/"
-                last-response="{{projects}}"
-                params='{"page":"0", "per_page":"150"}'
-                auto
-                loading="{{loading}}"></iron-ajax>
+    <iron-ajax
+      id="projectsLoader"
+      url="{{baseHref}}/projects/"
+      last-response="{{projects}}"
+      params='{"page":"0", "per_page":"150"}'
+      auto
+      loading="{{loading}}"></iron-ajax>
 
-        <div class="layout vertical center">
-            <template is="dom-if" if="{{!specific}}">
-                <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue)}}">
-                    <paper-card heading="[[item.name]]" on-tap="onProjectTap">
-                        <div class="card-content">[[item.description]]</div>
-                    </paper-card>
-                </template>
-            </template>
+    <div class="layout vertical center">
+      <template is="dom-if" if="{{!specific}}">
+        <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue)}}">
+          <a href$="/projects/[[item.id]]">
+            <paper-card heading="[[item.name]]">
+              <div class="card-content">[[item.description]]</div>
+            </paper-card>
+          </a>
+        </template>
+      </template>
 
-            <template is="dom-if" if="{{specific}}">
-                <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter2(filterValue)}}">
-                    <paper-card heading="[[item.name]]" on-tap="onProjectTap">
-                        <div class="card-content">[[item.description]]</div>
-                    </paper-card>
-                </template>
-            </template>
-        </div>
+      <template is="dom-if" if="{{specific}}">
+        <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter2(filterValue)}}">
+          <paper-card heading="[[item.name]]" on-tap="onProjectTap">
+            <div class="card-content">[[item.description]]</div>
+          </paper-card>
+        </template>
+      </template>
+    </div>
 
-    </template>
+  </template>
 
-    <script>
-        (function () {
-//            'use strict';
+  <script>
+    Polymer({
+      is: 'projects-list',
+      properties: {
+        projects: {
+          type: Array,
+          notify: true
+        },
+        filterValue: {
+          type: String,
+          value: ''
+        },
+        specific: {
+          type: Boolean,
+          value: false
+        },
+        loading:{
+          type: Boolean,
+          notify: true
+        },
+        baseHref: String
+      },
 
-            Polymer({
-                is: 'projects-list',
-                properties: {
-                    projects: {
-                        type: Array,
-                        notify: true
-                    },
-                    filterValue: {
-                        type: String,
-                        value: ''
-                    },
-                    specific: {
-                        type: Boolean,
-                        value: false
-                    },
-                    baseHref: String,
-                    loading:{
-                        type: Boolean,
-                        notify: true
-                    }
-                },
+      onProjectTap: function (e) {
+        var model = e.model;
+        //window.history.pushState({}, null, '/projects/' + model.item.id);
+        //location.href = 'projects/' + model.item.id;
+      },
 
-                onProjectTap: function (e) {
-                    var model = e.model;
-                    page('/projects/' + model.item.id);
-                },
+      // thanks goes to http://jcrowther.io/2015/06/09/polymer-dom-repeat-filtering-and-sorting/ for the great help
+      /**
+       * Returns true either if the filter expression is empty, or if the filter expression is included in
+       * either the project's name or description.
+       *
+       * @param val
+       * @returns {Function}
+       */
+      searchFilter: function (val) {
+        return function (item) {
+          if (!val) {
+            return true;
+          }
+          //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
+          return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
+        };
+      },
 
-                // thanks goes to http://jcrowther.io/2015/06/09/polymer-dom-repeat-filtering-and-sorting/ for the great help
-                /**
-                 * Returns true either if the filter expression is empty, or if the filter expression is included in
-                 * either the project's name or description.
-                 *
-                 * @param val
-                 * @returns {Function}
-                 */
-                searchFilter: function (val) {
-                    return function (item) {
-                        if (!val) {
-                            return true;
-                        }
-                        //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
-                        return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
-                    };
-                },
+      load: function() {
+        this.$.projectsLoader.generateRequest();
+      },
 
-                load: function() {
-                    this.$.projectsLoader.generateRequest();
-                },
+      //to toggle between all projects and my projects
+      toggle: function() {
+        this.specific = ! this.specific;
+      },
 
-                //to toggle between all projects and my projects
-                toggle: function() {
-                    this.specific = ! this.specific;
-                },
+      searchFilter2: function (val) {
+        return function (item) {
+          if (!val) {
+            return item.leaderId == app.currentUser.id;
+          }
+          //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
+          return (item.leaderId == app.currentUser.id && item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.leaderId == app.currentUser.id && item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
+        };
+      }
 
-                searchFilter2: function (val) {
-                    return function (item) {
-                        if (!val) {
-//                            console.log(app.currentUser);
-                            return item.leaderId == app.currentUser.id;
-                        }
-                        //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
-                        return (item.leaderId == app.currentUser.id && item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.leaderId == app.currentUser.id && item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
-                    };
-                }
-
-            });
-        })
-        ();
-    </script>
+    });
+  </script>
 
 </dom-module>

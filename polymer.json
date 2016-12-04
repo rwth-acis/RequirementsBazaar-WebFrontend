@@ -1,0 +1,19 @@
+{
+  "entrypoint": "app/index.html",
+  "shell": "app/src/reqbaz-app.html",
+  "fragments": [
+    "app/src/view-landing.html",
+    "app/src/view-projects.html",
+    "app/src/view-components.html",
+    "app/src/view-404.html"
+  ],
+  "sourceGlobs": [
+   "app/src/**/*",
+   "app/images/**/*",
+   "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}

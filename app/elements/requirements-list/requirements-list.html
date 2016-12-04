@@ -150,7 +150,8 @@
       last-response="{{requirements}}"
       headers="{{header}}"
       params="[[_requirementsRequestParameters]]"
-      loading="{{loading}}"></iron-ajax>
+      loading="{{loading}}"
+      auto></iron-ajax>
 
     <iron-ajax
       id="postUpdateRequirement"
@@ -278,66 +279,6 @@
                 <!--on-response="showRepoSearchResults"-->
                 <!--on-error="errorHandler"></iron-ajax>-->
 
-    <!-- DIALOG FOR DELETE REQUIREMENT CONFIRMATION -->
-
-    <paper-dialog id="modal" modal on-iron-overlay-closed="_handleDeleteRequirement" entry-animation="fade-in-animation"
-                  exit-animation="fade-out-animation">
-      <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
-      <p><i18n-msg msgid="deleteRequirementDesc"></i18n-msg></p>
-      <div class="buttons">
-        <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
-        <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
-      </div>
-    </paper-dialog>
-
-    <!-- DIALOG SHOWING COMMENTS IN GRID VIEW -->
-
-    <paper-dialog id="commentsDialog" on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
-                  style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
-      <h2><i18n-msg msgid="comments"></i18n-msg></h2>
-      <p style="max-height: 80%;">
-        <comments-list header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
-        <div class="container flex-horizontal" hidden$="[[!isAuthorized]]">
-          <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-          <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
-          </paper-input>
-          <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
-        </div>
-      </p>
-    </paper-dialog>
-
-    <!-- DIALOG FOR GITHUB EXPORT FUNCTIONALITY -->
-
-    <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
-      <h2>Your Github Repositories</h2>
-      <paper-dialog-scrollable>
-        <paper-input id="searchGithubRepo" label="Search a Github Repository" on-keydown="searchGithubRepo">
-          <iron-icon icon="search" prefix></iron-icon>
-        </paper-input>
-        <iron-selector id="selRepo" selected="0">
-          <template is="dom-repeat" items$="{{repositories}}" id="repoElements">
-            <paper-item>
-              <paper-item-body two-line>
-                <div>{{item.name}}</div>
-                <div secondary>{{item.description}}</div>
-              </paper-item-body>
-            </paper-item>
-          </template>
-        </iron-selector>
-      </paper-dialog-scrollable>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus>POST</paper-button>
-      </div>
-    </paper-dialog>
-
-    <!-- FLOATING TOOLBAR FOR SELECTED REQUIREMENTS -->
-
-    <paper-material elevation="5" id="tools" class="tools">
-      <span>{{selectedRequirements.length}} Requirements selected.</span>
-      <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
-      <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
-    </paper-material>
 
     <!-- GRID VIEW -->
 
@@ -472,9 +413,70 @@
       </template>
     </template>
 
-    <!-- TOAST FOR APP NOTIFICATIONS (FEEDBACK) -->
+    <!-- Toast for toast notifications: -->
 
     <paper-toast id="toast" text="[[feedback]]"></paper-toast>
+
+    <!-- Dialog for GitHub export functionality: -->
+
+    <paper-dialog id="reposContainer" on-iron-overlay-closed="onRepoDialogClosed">
+      <h2>Your Github Repositories</h2>
+      <paper-dialog-scrollable>
+        <paper-input id="searchGithubRepo" label="Search a Github Repository" on-keydown="searchGithubRepo">
+          <iron-icon icon="search" prefix></iron-icon>
+        </paper-input>
+        <iron-selector id="selRepo" selected="0">
+          <template is="dom-repeat" items$="{{repositories}}" id="repoElements">
+            <paper-item>
+              <paper-item-body two-line>
+                <div>{{item.name}}</div>
+                <div secondary>{{item.description}}</div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+        </iron-selector>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>POST</paper-button>
+      </div>
+    </paper-dialog>
+
+    <!-- Dialog for confirming the deletion of a requirement: -->
+
+    <paper-dialog id="modal" modal on-iron-overlay-closed="_handleDeleteRequirement" entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation">
+      <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
+      <p><i18n-msg msgid="deleteRequirementDesc"></i18n-msg></p>
+      <div class="buttons">
+        <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+        <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
+      </div>
+    </paper-dialog>
+
+    <!-- Dialog for showing comments in the grid view: -->
+
+    <paper-dialog id="commentsDialog" on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
+                  style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
+      <h2><i18n-msg msgid="comments"></i18n-msg></h2>
+      <p style="max-height: 80%;">
+        <comments-list header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
+      <div class="container flex-horizontal" hidden$="[[!isAuthorized]]">
+        <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
+        <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
+        </paper-input>
+        <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
+      </div>
+      </p>
+    </paper-dialog>
+
+    <!-- Floating toolbar for selected requirements: -->
+
+    <paper-material elevation="5" id="tools" class="tools">
+      <span>{{selectedRequirements.length}} Requirements selected.</span>
+      <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
+      <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
+    </paper-material>
 
   </template>
 
@@ -603,10 +605,6 @@
           '_requirementsRequestParametersUpdated(_requirementsRequestParameters)'
         ],
 
-        ready: function () {
-          this.i18n = this.$.i18n;
-        },
-
         _hasEnoughItems: function () {
           if (!this.list){
             var n = Math.floor((window.innerWidth - 300) / 300);
@@ -651,7 +649,7 @@
          * @param _requirementsRequestParameters {array} the requirements request parameter.
          */
         _requirementsRequestParametersUpdated: function(_requirementsRequestParameters) {
-          this.load();
+          //this.load();
         },
 
         toggleCollapsible: function(e, data) {
