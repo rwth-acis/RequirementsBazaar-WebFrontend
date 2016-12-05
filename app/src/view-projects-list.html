@@ -1,6 +1,5 @@
 <link rel="import" href="../components/polymer/polymer.html">
 <link rel="import" href="../components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../components/iron-icons/iron-icons.html">
 <link rel="import" href="../components/paper-material/paper-material.html">
 <link rel="import" href="../components/paper-button/paper-button.html">
 <link rel="import" href="../components/paper-input/paper-input.html">
@@ -10,7 +9,10 @@
 <link rel="import" href="../components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../components/paper-toast/paper-toast.html">
 <link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../components/iron-icon/iron-icon.html">
+<link rel="import" href="../components/iron-icons/iron-icons.html">
 <link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../components/neon-animation/animations/fade-out-animation.html">
@@ -61,7 +63,7 @@
 
       <!-- the button on top right to create a new project -->
       <paper-button raised
-                    on-tap="handleCreateProjectTap"
+                    on-tap="_handleCreateProjectTap"
                     horizontal-align="right"
                     vertical-align="top"
                     style="position:absolute;right:10px;"
@@ -83,26 +85,36 @@
       </paper-input>
     </paper-material>
 
-    <projects-list filter-value="{{projectFilterVal}}" id="projectsList" base-href="https://requirements-bazaar.org/betabazaar" loading="{{loading}}" style="margin-top: 20px;"></projects-list>
+    <projects-list filter-value="{{projectFilterVal}}"
+                   id="projectsList"
+                   base-href="https://requirements-bazaar.org/betabazaar"
+                   loading="{{loading}}"
+                   style="margin-top: 20px;"></projects-list>
 
+    <!-- Dialog for creating a new project: -->
 
-    <!-- dialog for creating a new project -->
     <paper-dialog id="createProjectDialog" class="create-dialog" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation" no-cancel-on-outside-click
                   no-cancel-on-esc-key
-                  on-iron-overlay-closed="onCreateProjectClosed">
+                  on-iron-overlay-closed="_handleCreateProjectClosed">
       <h2>[[localize('createProject')]]</h2>
-      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newProjectTitle"></paper-input>
-      <paper-textarea max-rows="5" label="[[localize('formDesc')]]" id="newProjectDesc"></paper-textarea>
+      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newProjectTitle"
+                   required auto-validate error-message="[[localize('inputRequired')]]"
+                   value="{{_newProjectTitle}}"></paper-input>
+      <paper-textarea max-rows="5" label="[[localize('formDesc')]]" id="newProjectDescription"
+                      required auto-validate error-message="[[localize('inputRequired')]]"
+                      value="{{_newProjectDescription}}"></paper-textarea>
 
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
-        <paper-button dialog-confirm autofocus>[[localize('save')]]</paper-button>
+        <paper-button id="createDialogSave" disabled="[[_createProjectDisabled]]" dialog-confirm autofocus>[[localize('save')]]</paper-button>
       </div>
     </paper-dialog>
 
-    <paper-fab on-tap="handleCreateProjectTap" id="fab" icon="add" hidden="[[_authorized]]"></paper-fab>
+    <paper-fab on-tap="_handleCreateProjectTap" id="fab" icon="add" hidden="[[_authorized]]"></paper-fab>
     <paper-tooltip for="fab" position="left">[[localize('createProject')]]</paper-tooltip>
+
+    <paper-toast id="superToast"></paper-toast>
 
   </template>
 
@@ -122,6 +134,18 @@
         _authorized: {
           type: Boolean,
           value: true
+        },
+        _newProjectTitle: {
+          type: String,
+          value: ''
+        },
+        _newProjectDescription: {
+          type: String,
+          value: ''
+        },
+        _createProjectDisabled: {
+          type: Boolean,
+          computed: '_computeCreateProjectDisabled(_newProjectTitle, _newProjectDescription)'
         }
       },
 
@@ -130,10 +154,44 @@
         this.loadResources(this.resolveUrl('../locales/locales.json'));
       },
 
-      handleCreateProjectTap: function(e) {
+      _handleCreateProjectTap: function(e) {
         var createDialog = this.$.createProjectDialog;
         createDialog.open();
+      },
+
+      _handleCreateProjectClosed: function(e) {
+        if (e.detail.confirmed) {
+          var request = this.$.postProjectRequest;
+          if (this.$.newProjectDescription.value == '' || this.$.newProjectTitle.value == '' || this.$.newProjectDescription.value == null || this.$.newProjectTitle.value == null){
+            this.$.superToast.text = this.localize('fieldsNotEmptyPrj');
+            this.$.superToast.open();
+          } else {
+            request.body = JSON.stringify({
+              'description': this.$.newProjectDescription.value,
+              'name': this.$.newProjectTitle.value,
+              'visibility': 'PUBLIC'
+            });
+            request.generateRequest();
+            this.$.newProjectTitle.value = null;
+            this.$.newProjectDescription.value = null;
+          }
+        } else {
+          // reset the validation error messages
+          this.$.newProjectTitle.required = false;
+          this.$.newProjectDescription.required = false;
+
+          this.$.newProjectTitle.value = null;
+          this.$.newProjectDescription.value = null;
+
+          this.$.newProjectTitle.required = true;
+          this.$.newProjectDescription.required = true;
+        }
+      },
+
+      _computeCreateProjectDisabled: function(newProjectTitle, newProjectDescription) {
+        return (newProjectTitle === '' || newProjectDescription === '' || newProjectTitle == null || newProjectDescription == null );
       }
+
     });
   </script>
 </dom-module>

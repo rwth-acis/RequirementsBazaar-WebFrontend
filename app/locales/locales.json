@@ -97,6 +97,7 @@
     "active-req": "Active Requirements",
     "realized-req": "Realized Requirements",
     "list-view": "List View",
-    "grid-view": "Grid View"
+    "grid-view": "Grid View",
+    "inputRequired": "Please fill out this field."
   }
 }
