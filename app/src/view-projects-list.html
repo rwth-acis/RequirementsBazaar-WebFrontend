@@ -4,7 +4,12 @@
 <link rel="import" href="../components/paper-material/paper-material.html">
 <link rel="import" href="../components/paper-button/paper-button.html">
 <link rel="import" href="../components/paper-input/paper-input.html">
+<link rel="import" href="../components/paper-input/paper-textarea.html">
 <link rel="import" href="../components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../components/paper-fab/paper-fab.html">
+<link rel="import" href="../components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../components/neon-animation/animations/fade-in-animation.html">
@@ -52,15 +57,15 @@
       on-response="handlePostResponseProject"
       on-error="errorHandler"></iron-ajax>
 
-    <paper-material elevation="1" style="height:180px;padding:10px;">
+    <paper-material elevation="1" style="height:180px;">
 
       <!-- the button on top right to create a new project -->
       <paper-button raised
-                    on-tap="handleCreateProject"
+                    on-tap="handleCreateProjectTap"
                     horizontal-align="right"
                     vertical-align="top"
                     style="position:absolute;right:10px;"
-                    hidden$="[[_authorized]]">[[localize('new-projects')]]</paper-button>
+                    hidden$="[[_authorized]]">[[localize('createProject')]]</paper-button>
 
       <h2>[[localize('projects')]]</h2>
       <p>[[localize('pr-desc')]]</p>
@@ -88,7 +93,7 @@
                   on-iron-overlay-closed="onCreateProjectClosed">
       <h2>[[localize('createProject')]]</h2>
       <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newProjectTitle"></paper-input>
-      <paper-textarea label="[[localize('formDesc')]]" id="newProjectDesc"></paper-textarea>
+      <paper-textarea max-rows="5" label="[[localize('formDesc')]]" id="newProjectDesc"></paper-textarea>
 
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
@@ -96,10 +101,8 @@
       </div>
     </paper-dialog>
 
-    <template is="dom-if" if="{{isAuthorized}}">
-      <paper-fab class="fabAdd" on-tap="onCreateProjectTap" id="fab-btn" icon="add"></paper-fab>
-      <paper-tooltip for="fab-btn" position="left">[[localize('createProject')]]</paper-tooltip>
-    </template>
+    <paper-fab on-tap="handleCreateProjectTap" id="fab" icon="add" hidden="[[_authorized]]"></paper-fab>
+    <paper-tooltip for="fab" position="left">[[localize('createProject')]]</paper-tooltip>
 
   </template>
 
@@ -117,7 +120,8 @@
           value: 'en'
         },
         _authorized: {
-          type: Boolean
+          type: Boolean,
+          value: true
         }
       },
 
@@ -126,7 +130,7 @@
         this.loadResources(this.resolveUrl('../locales/locales.json'));
       },
 
-      handleCreateProject: function(e) {
+      handleCreateProjectTap: function(e) {
         var createDialog = this.$.createProjectDialog;
         createDialog.open();
       }

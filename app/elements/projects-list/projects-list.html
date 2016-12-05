@@ -1,5 +1,6 @@
 <link rel="import" href="../../components/polymer/polymer.html">
 <link rel="import" href="../../components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../components/paper-card/paper-card.html">
 
 <dom-module id="projects-list">
@@ -9,10 +10,22 @@
         display: block;
       }
 
-      paper-card {
+      #projects-list {
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+
+      #projects-list > a {
         width: 100%;
         max-width: 700px;
         margin-bottom: 16px;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      paper-card {
+        width: 100%;
+        max-width: 700px;
         cursor: pointer;
       }
 
@@ -29,7 +42,7 @@
       auto
       loading="{{loading}}"></iron-ajax>
 
-    <div class="layout vertical center">
+    <div id="projects-list">
       <template is="dom-if" if="{{!specific}}">
         <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue)}}">
           <a href$="/projects/[[item.id]]">
