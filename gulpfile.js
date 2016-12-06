@@ -117,7 +117,7 @@ gulp.task('copy:beta', function () {
   ]).pipe(replace(/\/bazaar/g, '/betabazaar'))
       .pipe(replace(/\/activities/g, '/betaactivities'))
       .pipe(replace(/\/fileservice/g, '/betafileservice'))
-      .pipe(replace(/^\s*app.baseUrl\W.*/g, 'app.baseUrl = "/beta/"'))
+      .pipe(replace(/app.baseUrl\W.*/g, 'app.baseUrl = "/beta/"'))
       .pipe(gulp.dest('dist/scripts'));
 
   var locales = gulp.src([
@@ -166,7 +166,7 @@ gulp.task('copy:live', function () {
     ]).pipe(replace(/betabazaar/g, 'bazaar'))
       .pipe(replace(/betaactivities/g, 'activities'))
       .pipe(replace(/betafileservice/g, 'fileservice'))
-      .pipe(replace(/^\s*app.baseUrl\W.*/g, 'app.baseUrl = "/beta/"'))
+      .pipe(replace(/app.baseUrl\W.*/g, 'app.baseUrl = "/"'))
       .pipe(gulp.dest('dist/scripts'));
 
   var locales = gulp.src([
