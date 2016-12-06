@@ -99,6 +99,7 @@ Example:
         var words = allLines[line].split(' ');
         // Re-add the translated words.
         for (var i = 0; i < words.length; i++ ) {
+          // In case two or more emojis are posted without a space.
           if ((words[i].match(/:/g) || []).length > 2) {
             var insideWords = words[i].split(':');
             for (var index in insideWords) {
