@@ -162,30 +162,23 @@
       _handleCreateProjectClosed: function(e) {
         if (e.detail.confirmed) {
           var request = this.$.postProjectRequest;
-          if (this.$.newProjectDescription.value == '' || this.$.newProjectTitle.value == '' || this.$.newProjectDescription.value == null || this.$.newProjectTitle.value == null){
-            this.$.superToast.text = this.localize('fieldsNotEmptyPrj');
-            this.$.superToast.open();
-          } else {
-            request.body = JSON.stringify({
-              'description': this.$.newProjectDescription.value,
-              'name': this.$.newProjectTitle.value,
-              'visibility': 'PUBLIC'
-            });
-            request.generateRequest();
-            this.$.newProjectTitle.value = null;
-            this.$.newProjectDescription.value = null;
-          }
-        } else {
-          // reset the validation error messages
-          this.$.newProjectTitle.required = false;
-          this.$.newProjectDescription.required = false;
-
-          this.$.newProjectTitle.value = null;
-          this.$.newProjectDescription.value = null;
-
-          this.$.newProjectTitle.required = true;
-          this.$.newProjectDescription.required = true;
+          request.body = JSON.stringify({
+            "description": this.$.newProjectDescription.value,
+            "name": this.$.newProjectTitle.value,
+            "visibility": "PUBLIC"
+          });
+          request.generateRequest();
         }
+
+        // reset the form and validation error messages
+        this.$.newProjectTitle.required = false;
+        this.$.newProjectDescription.required = false;
+
+        this.$.newProjectTitle.value = null;
+        this.$.newProjectDescription.value = null;
+
+        this.$.newProjectTitle.required = true;
+        this.$.newProjectDescription.required = true;
       },
 
       _computeCreateProjectDisabled: function(newProjectTitle, newProjectDescription) {

@@ -11,6 +11,7 @@
 <link rel="import" href="../components/paper-menu/paper-menu.html">
 <link rel="import" href="../components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../components/paper-item/paper-item.html">
+<link rel="import" href="../components/paper-toast/paper-toast.html">
 <link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../components/iron-icons/iron-icons.html">
 <link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
@@ -105,12 +106,14 @@
                   no-cancel-on-esc-key
                   on-iron-overlay-closed="_handleCreateComponentClosed">
       <h2>[[localize('createComponent')]]</h2>
-      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newComponentTitle"></paper-input>
-      <paper-textarea label="[[localize('formDesc')]]" id="newComponentDesc"></paper-textarea>
+      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newComponentTitle"
+                   value="{{_newComponentTitle}}"></paper-input>
+      <paper-textarea label="[[localize('formDesc')]]" id="newComponentDescription"
+                      value="{{_newComponentDescription}}"></paper-textarea>
 
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
-        <paper-button dialog-confirm autofocus>[[localize('save')]]</paper-button>
+        <paper-button dialog-confirm autofocus disabled="[[_createComponentDisabled]]">[[localize('save')]]</paper-button>
       </div>
     </paper-dialog>
 
@@ -125,6 +128,8 @@
         <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
       </div>
     </paper-dialog>
+
+    <paper-toast id="superToast"></paper-toast>
 
   </template>
 
@@ -151,6 +156,18 @@
         _editMode: {
           type: Boolean,
           value: false
+        },
+        _newComponentTitle: {
+          type: String,
+          value: ''
+        },
+        _newComponentDescription: {
+          type: String,
+          value: ''
+        },
+        _createComponentDisabled: {
+          type: Boolean,
+          computed: '_computeCreateComponentDisabled(_newComponentTitle, _newComponentDescription)'
         },
         baseHref: {
           type: String,
@@ -220,26 +237,31 @@
       },
 
       _handleCreateComponentClosed: function(e) {
-
-
-        /*
          if (e.detail.confirmed) {
-         var request = document.querySelector('#postComponentRequest');
-         if (this.$.newComponentDesc.value == '' || this.$.newComponentTitle.value == '' || this.$.newComponentDesc.value == null || this.$.newComponentTitle.value == null ){
-         this.$.superToast.text = i18n.getMsg('fieldsNotEmptyCmp');
-         this.$.superToast.open();
-         } else {
-         request.body = JSON.stringify({
-         "description": this.$.newComponentDesc.value,
-         "name": this.$.newComponentTitle.value,
-         "projectId": parseInt(app.params.projectId)
-         });
-         request.generateRequest();
+           var request = this.$.postComponentRequest;
+           request.body = JSON.stringify({
+             "description": this._newComponentDescription,
+             "name": this._newComponentTitle,
+             "projectId": this.projectId
+           });
+           request.generateRequest();
+           this.$.newComponentTitle.value = null;
+           this.$.newComponentDesc.value = null;
+         }
+
+         // reset the form and validation error messages
+         this.$.newComponentTitle.required = false;
+         this.$.newComponentDescription.required = false;
+
          this.$.newComponentTitle.value = null;
-         this.$.newComponentDesc.value = null;
-         }
-         }
-         */
+         this.$.newComponentDescription.value = null;
+
+         this.$.newComponentTitle.required = true;
+         this.$.newComponentDescription.required = true;
+      },
+
+      _computeCreateComponentDisabled: function(newComponentTitle, newComponentDescription) {
+        return (newComponentTitle === '' || newComponentDescription === '' || newComponentTitle == null || newComponentDescription == null );
       }
 
     });
