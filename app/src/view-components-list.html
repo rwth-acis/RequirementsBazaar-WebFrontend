@@ -1,13 +1,18 @@
 <link rel="import" href="../components/polymer/polymer.html">
 <link rel="import" href="../components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../components/iron-icons/iron-icons.html">
 <link rel="import" href="../components/paper-material/paper-material.html">
 <link rel="import" href="../components/paper-button/paper-button.html">
 <link rel="import" href="../components/paper-input/paper-input.html">
 <link rel="import" href="../components/paper-input/paper-textarea.html">
 <link rel="import" href="../components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../components/paper-fab/paper-fab.html">
+<link rel="import" href="../components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../components/paper-menu/paper-menu.html">
+<link rel="import" href="../components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../components/paper-item/paper-item.html">
 <link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../components/iron-icons/iron-icons.html">
 <link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../components/neon-animation/animations/fade-out-animation.html">
@@ -29,7 +34,10 @@
 
 
     <iron-ajax id="projectInfoLoader"
-               last-response="{{project}}"></iron-ajax>
+               content-type="application/json"
+               url="[[baseHref]]/projects/[[projectId]]"
+               last-response="{{project}}"
+               auto></iron-ajax>
 
     <iron-ajax
       id="postComponentRequest"
@@ -51,7 +59,7 @@
 
     <paper-material elevation="1">
 
-      <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;" hidden$="[[_authorized]]">
+      <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;" hidden$="[[_authorized]]" on-iron-select="_handleComponentMenuSelect">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
         <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
           <template is="dom-if" if="{{!isFollowerProj}}">
@@ -60,44 +68,45 @@
           <template is="dom-if" if="{{isFollowerProj}}">
             <paper-item on-tap="unfollowProject">[[localize('unfollowProject')]]</paper-item>
           </template>
-          <paper-item on-tap="editProject">[[localize('editProject')]]</paper-item>
-          <paper-item on-tap="createModalDeleteProject">[[localize('deleteProjectTitle')]]</paper-item>
+          <paper-item value="edit">[[localize('editProject')]]</paper-item>
+          <paper-item value="delete">[[localize('deleteProjectTitle')]]</paper-item>
         </paper-menu>
       </paper-menu-button>
 
-      <div class="editHeader">
+      <div class="editHeader" hidden="[[_editMode]]">
 
         <bread-crumb project-id="{{params.projectId}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
-        <h2>{{project.name}}</h2>
+        <h2>[[project.name]]</h2>
 
-        <div>{{project.description}}</div>
+        <div>[[project.description]]</div>
 
       </div>
 
-      <div class="editForm">
+      <div class="editForm" hidden="[[!_editMode]]">
 
-        <paper-input class="editTitle" label="[[formTitle]]" value="{{project.name}}"></paper-input>
-        <paper-textarea class="editDesc" label="[[formDesc]]" value="{{project.description}}"></paper-textarea>
-        <paper-button raised on-tap="cancelEditProject">[[localize('cancel')]]</paper-button>
-        <paper-button raised on-tap="saveEditProject">[[localize('save')]]</paper-button>
+        <paper-input class="editTitle" label="[[localize('formTitle')]]" value="[[project.name]]"></paper-input>
+        <paper-textarea class="editDesc" label="[[localize('formDesc')]]" value="[[project.description]]"></paper-textarea>
+
+        <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
+        <paper-button raised on-tap="_handleSaveEditTap">[[localize('save')]]</paper-button>
 
       </div>
     </paper-material>
 
     <components-list id="componentsList" base-href="https://requirements-bazaar.org/betabazaar" project-id="[[projectId]]" loading="{{loading}}"></components-list>
 
-    <paper-fab on-tap="onCreateComponentTap" id="fab" icon="add" hidden$="[[_authorized]]"></paper-fab>
+    <paper-fab on-tap="_handleCreateComponentTap" id="fab" icon="add" hidden$="[[_authorized]]"></paper-fab>
     <paper-tooltip for="fab" position="left">[[localize('createComponent')]]</paper-tooltip>
 
     <!-- Dialog for creating a new component: -->
 
-    <paper-dialog id="createComponent" class="create" entry-animation="fade-in-animation"
+    <paper-dialog id="createComponentDialog" class="create-dialog" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation" no-cancel-on-outside-click
                   no-cancel-on-esc-key
-                  on-iron-overlay-closed="onCreateComponentClosed">
+                  on-iron-overlay-closed="_handleCreateComponentClosed">
       <h2>[[localize('createComponent')]]</h2>
-      <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newComponentTitle"></paper-input>
-      <paper-textarea label="[[formDesc]]" id="newComponentDesc"></paper-textarea>
+      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newComponentTitle"></paper-input>
+      <paper-textarea label="[[localize('formDesc')]]" id="newComponentDesc"></paper-textarea>
 
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
@@ -107,7 +116,7 @@
 
     <!-- Dialog for confirming deletion of a component: -->
 
-    <paper-dialog id="deleteProject" modal on-iron-overlay-closed="deleteProject" entry-animation="fade-in-animation"
+    <paper-dialog id="deleteDialog" modal on-iron-overlay-closed="deleteProject" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation">
       <h2>[[localize('deleteProjectTitle')]]?</h2>
       <p>[[localize('deleteProjectDesc')]]</p>
@@ -138,6 +147,14 @@
         },
         projectId: {
           type: Number
+        },
+        _editMode: {
+          type: Boolean,
+          value: false
+        },
+        baseHref: {
+          type: String,
+          value: 'https://requirements-bazaar.org/betabazaar'
         }
       },
 
@@ -146,10 +163,85 @@
         this.loadResources(this.resolveUrl('../locales/locales.json'));
       },
 
-      handleCreateProject: function(e) {
-        var createDialog = this.$.createProjectDialog;
+      _handleCreateComponentTap: function(e) {
+        var createDialog = this.$.createComponentDialog;
         createDialog.open();
+      },
+
+      _handleCancelEditTap: function(e) {
+        this._editMode = false;
+      },
+
+      _handleSaveEditTap: function(e) {
+
+
+
+        /*
+        var title = document.querySelector('.editForm > .editTitle').value;
+        var desc = document.querySelector('.editForm > .editDesc').value;
+        var el = document.getElementById('postUpdateProject');
+        el.url = this.baseHref + "/projects/" + this.params.projectId;
+        if (title == '' || desc == '' || title == null || desc == null ){
+          this.$.superToast.text = "You can't have empty fields!";
+          this.$.superToast.open();
+        } else {
+          el.body = JSON.stringify({
+            "id": parseInt(this.params.projectId),
+            "name": title,
+            "description": desc
+          });
+          el.method = "PUT";
+          el.generateRequest();
+          document.querySelector('.editHeader').style.display = 'block';
+          document.querySelector('.editForm').style.display = 'none';
+        }
+        */
+
+
+      },
+
+      /**
+       * Event handler for the component's paper-menu.
+       *
+       * @param e
+       * @private
+       */
+      _handleComponentMenuSelect: function(e) {
+        // unselect the selected menu item
+        e.target.selected = null;
+        // get value of the paper-item
+        var selectedValue = e.detail.item.getAttribute("value");
+
+        if (selectedValue === "edit") {
+          this._editMode = true;
+        } else if (selectedValue === "delete") {
+          this.deleteProject.open();
+        }
+      },
+
+      _handleCreateComponentClosed: function(e) {
+
+
+        /*
+         if (e.detail.confirmed) {
+         var request = document.querySelector('#postComponentRequest');
+         if (this.$.newComponentDesc.value == '' || this.$.newComponentTitle.value == '' || this.$.newComponentDesc.value == null || this.$.newComponentTitle.value == null ){
+         this.$.superToast.text = i18n.getMsg('fieldsNotEmptyCmp');
+         this.$.superToast.open();
+         } else {
+         request.body = JSON.stringify({
+         "description": this.$.newComponentDesc.value,
+         "name": this.$.newComponentTitle.value,
+         "projectId": parseInt(app.params.projectId)
+         });
+         request.generateRequest();
+         this.$.newComponentTitle.value = null;
+         this.$.newComponentDesc.value = null;
+         }
+         }
+         */
       }
+
     });
   </script>
 </dom-module>

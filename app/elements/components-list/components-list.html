@@ -1,5 +1,6 @@
 <link rel="import" href="../../components/polymer/polymer.html">
 <link rel="import" href="../../components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../components/paper-card/paper-card.html">
 
 <dom-module id="components-list">
@@ -9,10 +10,22 @@
         display: block;
       }
 
-      paper-card {
+      #componentsList {
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+
+      #componentsList > a {
         width: 100%;
         max-width: 700px;
         margin-bottom: 16px;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      paper-card {
+        width: 100%;
+        max-width: 700px;
         cursor: pointer;
       }
 
@@ -29,10 +42,10 @@
       loading="{{loading}}"
       auto></iron-ajax>
 
-    <div class="layout vertical center">
+    <div id="componentsList">
       <template is="dom-repeat" items="{{components}}">
         <a href$="/projects/[[projectId]]/components/[[item.id]]">
-          <paper-card heading="[[item.name]]" on-tap="onComponentTap">
+          <paper-card heading="[[item.name]]">
             <div class="card-content">[[item.description]]</div>
           </paper-card>
         </a>
@@ -51,7 +64,7 @@
         },
         resourceURL: {
           type: String,
-          computed: 'computeResourceURL(projectId)'
+          computed: '_computeResourceURL(projectId)'
         },
         components: {
           type: Array,
@@ -64,13 +77,8 @@
         baseHref: String
       },
 
-      computeResourceURL: function (projectId) {
+      _computeResourceURL: function (projectId) {
         return this.baseHref + '/projects/' + projectId + '/components/';
-      },
-
-      onComponentTap: function (e) {
-        var model = e.model;
-        page('/projects/'+ this.projectId +'/components/' + model.item.id);
       },
 
       load: function() {

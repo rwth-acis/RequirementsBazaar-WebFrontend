@@ -10,12 +10,12 @@
         display: block;
       }
 
-      #projects-list {
+      #projectsList {
         @apply(--layout-vertical);
         @apply(--layout-center);
       }
 
-      #projects-list > a {
+      #projectsList > a {
         width: 100%;
         max-width: 700px;
         margin-bottom: 16px;
@@ -42,7 +42,7 @@
       auto
       loading="{{loading}}"></iron-ajax>
 
-    <div id="projects-list">
+    <div id="projectsList">
       <template is="dom-if" if="{{!specific}}">
         <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue)}}">
           <a href$="/projects/[[item.id]]">
