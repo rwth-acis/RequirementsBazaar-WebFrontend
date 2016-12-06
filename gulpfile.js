@@ -24,8 +24,6 @@ var historyApiFallback = require('connect-history-api-fallback');
 var packageJson = require('./package.json');
 var crypto = require('crypto');
 var replace = require('gulp-replace');
-var MarkdownIt = require('markdown-it');
-var md = new MarkdownIt();
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -126,6 +124,10 @@ gulp.task('copy:beta', function () {
     'app/locales/*'
   ]).pipe(gulp.dest('dist/locales'));
 
+  var emojis = gulp.src([
+    'app/emojilib/*'
+  ]).pipe(gulp.dest('dist/emojilib'));
+
   var htmlStyles = gulp.src([
     'app/styles/*.html'
   ]).pipe(gulp.dest('dist/styles'));
@@ -174,6 +176,10 @@ gulp.task('copy:live', function () {
   var locales = gulp.src([
     'app/locales/*'
   ]).pipe(gulp.dest('dist/locales'));
+
+  var emojis = gulp.src([
+    'app/emojilib/*'
+  ]).pipe(gulp.dest('dist/emojilib'));
 
   var htmlStyles = gulp.src([
     'app/styles/*.html'
@@ -292,6 +298,7 @@ gulp.task('serve', ['styles'], function() {
   gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
   gulp.watch(['app/scripts/**/*.js'], reload);
   gulp.watch(['app/images/**/*'], reload);
+  gulp.watch(['app/emojilib/*'], reload);
 });
 
 
