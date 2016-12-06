@@ -450,12 +450,12 @@
     "category": "people"
   },
   "+1": {
-    "keywords": ["thumbsup", "yes", "awesome", "good", "agree", "accept", "cool", "hand", "like"],
+    "keywords": ["thumbsup", "yes", "awesome", "good", "agree", "accept", "cool", "hand", "like", "+1"],
     "char": "👍",
     "category": "people"
   },
   "-1": {
-    "keywords": ["thumbsdown", "no", "dislike", "hand"],
+    "keywords": ["thumbsdown", "no", "dislike", "hand", "-1"],
     "char": "👎",
     "category": "people"
   },
@@ -4502,66 +4502,6 @@
   "free": {
     "keywords": ["blue-square", "words"],
     "char": "🆓",
-    "category": "symbols"
-  },
-  "zero": {
-    "keywords": ["0", "numbers", "blue-square", "null"],
-    "char": "0️⃣",
-    "category": "symbols"
-  },
-  "one": {
-    "keywords": ["blue-square", "numbers", "1"],
-    "char": "1️⃣",
-    "category": "symbols"
-  },
-  "two": {
-    "keywords": ["numbers", "2", "prime", "blue-square"],
-    "char": "2️⃣",
-    "category": "symbols"
-  },
-  "three": {
-    "keywords": ["3", "numbers", "prime", "blue-square"],
-    "char": "3️⃣",
-    "category": "symbols"
-  },
-  "four": {
-    "keywords": ["4", "numbers", "blue-square"],
-    "char": "4️⃣",
-    "category": "symbols"
-  },
-  "five": {
-    "keywords": ["5", "numbers", "blue-square", "prime"],
-    "char": "5️⃣",
-    "category": "symbols"
-  },
-  "six": {
-    "keywords": ["6", "numbers", "blue-square"],
-    "char": "6️⃣",
-    "category": "symbols"
-  },
-  "seven": {
-    "keywords": ["7", "numbers", "blue-square", "prime"],
-    "char": "7️⃣",
-    "category": "symbols"
-  },
-  "eight": {
-    "keywords": ["8", "blue-square", "numbers"],
-    "char": "8️⃣",
-    "category": "symbols"
-  },
-  "nine": {
-    "keywords": ["blue-square", "numbers", "9"],
-    "char": "9️⃣",
-    "category": "symbols"
-  },
-  "keycap_ten": {
-    "keywords": ["numbers", "10", "blue-square"],
-    "char": "🔟",
-    "category": "symbols"
-  },
-  "keycap_star": {
-    "keywords": ["asterisk"],
-    "char": "*⃣",
     "category": "symbols"
   },
   "1234": {

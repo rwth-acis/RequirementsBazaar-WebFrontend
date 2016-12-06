@@ -116,7 +116,9 @@
                     <div class="info helper">
                         <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
                     </div>
-                    <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter"></paper-input>
+                    <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter">
+                        <emoji-selector suffix></emoji-selector>
+                    </paper-input>
                 </div>
                 <paper-icon-button on-tap="createModal" icon="close" hidden$="[[!isCreator(item.creatorId)]]"></paper-icon-button>
                 <paper-icon-button icon="reply" on-tap="showReplyInput" hidden$="[[!isAuthorized]]"></paper-icon-button>

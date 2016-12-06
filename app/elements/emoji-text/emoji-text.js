@@ -1,5 +1,5 @@
 var allEmojis;
-var SYMBOLS = '!"#$%&\'()*+,-./:;<=>?@[]^_`{|}~';
+var SYMBOLS = '!"#$%&\'()*,./:;<=>?@[]^_`{|}~';
 
 (function() {
   var request = new XMLHttpRequest();
