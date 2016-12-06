@@ -62,7 +62,7 @@
 
       <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;" hidden$="[[_authorized]]" on-iron-select="_handleComponentMenuSelect">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-        <paper-menu id="componentInfoMenu" class="dropdown-content" on-iron-select="onComponentMenuSelected">
+        <paper-menu id="componentInfoMenu" class="dropdown-content">
           <template is="dom-if" if="{{!isFollowerProj}}">
             <paper-item on-tap="followProject">[[localize('followProject')]]</paper-item>
           </template>
@@ -227,12 +227,12 @@
         // unselect the selected menu item
         e.target.selected = null;
         // get value of the paper-item
-        var selectedValue = e.detail.item.getAttribute("value");
+        var selectedValue = e.detail.item.getAttribute('value');
 
-        if (selectedValue === "edit") {
+        if (selectedValue === 'edit') {
           this._editMode = true;
-        } else if (selectedValue === "delete") {
-          this.deleteProject.open();
+        } else if (selectedValue === 'delete') {
+          this.$.deleteDialog.open();
         }
       },
 

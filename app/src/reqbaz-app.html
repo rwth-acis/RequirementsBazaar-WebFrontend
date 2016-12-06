@@ -14,6 +14,8 @@
 <link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
 
+<link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet">
+
 <dom-module id="reqbaz-app">
   <template>
     <style>
@@ -27,18 +29,29 @@
 
         --spacer-right-drawer: 256px;
         --list-hover-background-color: #d5d5d5;
+
+        --paper-button: {
+          color: #157741;
+        };
       }
 
       app-header {
         color: #fff;
         background-color: var(--app-primary-color);
       }
+
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
 
       app-drawer[align="right"] {
         text-align: left;
+      }
+
+      app-toolbar > [main-title] {
+        font-family: 'Ubuntu Condensed', sans-serif;
+        font-size: 25px;
+        font-weight: semi-bold;
       }
 
       [hidden] {

@@ -1,15 +1,27 @@
 <link rel="import" href="../components/polymer/polymer.html">
 <link rel="import" href="../components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../components/iron-icons/iron-icons.html">
 <link rel="import" href="../components/paper-material/paper-material.html">
 <link rel="import" href="../components/paper-button/paper-button.html">
 <link rel="import" href="../components/paper-input/paper-input.html">
+<link rel="import" href="../components/paper-input/paper-textarea.html">
+<link rel="import" href="../components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../components/paper-menu/paper-menu.html">
+<link rel="import" href="../components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../components/paper-item/paper-item.html">
 <link rel="import" href="../components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../components/paper-fab/paper-fab.html">
+<link rel="import" href="../components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../components/iron-icons/iron-icons.html">
 <link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../elements/requirements-list/requirements-list.html">
+<link rel="import" href="../elements/req-user/req-user.html">
+<link rel="import" href="../elements/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="view-requirements">
@@ -20,12 +32,37 @@
 
         padding: 15px;
       }
+
+      .componentName {
+        font-size: 40px;
+        font-weight: 400;
+      }
+
+      .cmpTitle {
+        display: block;
+        margin-top: 10px;
+        text-overflow: ellipsis;
+      }
+
+      .cmpDesc{
+        display: block;
+        text-overflow: ellipsis;
+      }
+
+      .filterButton {
+        font-size: medium;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{_authorized}}"></openidconnect-signin-aware>
 
     <iron-ajax id="componentInfoLoader"
-               last-response="{{component}}" on-response="handleNewComponent"></iron-ajax>
+               content-type="application/json"
+               url="[[baseHref]]/components/[[componentId]]"
+               last-response="{{component}}"
+               auto></iron-ajax>
 
     <iron-ajax
       id="followComp"
@@ -45,47 +82,75 @@
       on-response="handleResponseUnFollowComponent"
       on-error="errorHandler"></iron-ajax>
 
-    <paper-material id="componentToolbar" style="padding-top: 64px;">
-      <template is="dom-if" if="{{isAuthorized}}">
-        <paper-menu-button horizontal-align="right" id="menuCompButton" vertical-align="top" style="position:absolute;top:2px; right:8px;">
-          <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-          <paper-menu id="componentInfoMenu" class="dropdown-content">
-            <paper-item on-tap="setDefault">[[localize('setAsDefault')]]</paper-item>
-            <template is="dom-if" if="{{!followsComp}}">
-              <paper-item on-tap="followComponent">[[localize('followComponent')]]</paper-item>
-            </template>
-            <template is="dom-if" if="{{followsComp}}">
-              <paper-item on-tap="unfollowComponent">[[localize('unfollowComponent')]]</paper-item>
-            </template>
-            <paper-item on-tap="editComponent">[[localize('editComponent')]]</paper-item>
-            <paper-item on-tap="createModalDeleteComponent">[[localize('deleteComponent')]]</paper-item>
-          </paper-menu>
-        </paper-menu-button>
-      </template>
+    <iron-ajax id="postRequirementRequest"
+               handle-as="json"
+               url="{{baseHref}}/requirements"
+               content-type="application/json"
+               method="POST"
+               headers="{{header}}"
+               on-response="handlePostResponseRequirement"
+               on-error="errorHandler"></iron-ajax>
 
-      <div class="cmpTitle">
+    <iron-ajax id="componentRequest"
+               handle-as="json"
+               content-type="application/json"
+               headers="{{header}}"
+               on-response="compResponse"
+               on-error="errorHandler"></iron-ajax>
+
+    <iron-ajax  id="componentRequestPUT"
+                handle-as="json"
+                content-type="application/json"
+                headers="{{header}}"
+                on-response="handlePutResponseComponent"
+                on-error="errorHandler"></iron-ajax>
+
+    <paper-material id="componentToolbar" style="padding-top: 64px;">
+      <paper-menu-button horizontal-align="right"
+                         id="menuCompButton"
+                         vertical-align="top"
+                         style="position:absolute;top:2px; right:8px;"
+                         on-iron-select="_handleMenuSelect"
+                         hidden$="[[_authorized]]">
+        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+        <paper-menu id="componentInfoMenu" class="dropdown-content">
+          <paper-item on-tap="setDefault">[[localize('setAsDefault')]]</paper-item>
+          <template is="dom-if" if="{{!followsComp}}">
+            <paper-item on-tap="followComponent">[[localize('followComponent')]]</paper-item>
+          </template>
+          <template is="dom-if" if="{{followsComp}}">
+            <paper-item on-tap="unfollowComponent">[[localize('unfollowComponent')]]</paper-item>
+          </template>
+          <paper-item value="edit">[[localize('editComponent')]]</paper-item>
+          <paper-item value="delete">[[localize('deleteComponent')]]</paper-item>
+        </paper-menu>
+      </paper-menu-button>
+
+      <div class="cmpTitle" hidden="[[_editMode]]">
         <div class="breadCrumb">
           <bread-crumb project-id="{{params.projectId}}" component="{{component}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
         </div>
-        <div class="component-name"><span>{{component.name}}</span></div>
+        <div class="componentName"><span>{{component.name}}</span></div>
       </div>
 
-      <div class="cmpDesc middle"><span>{{component.description}}</span></div>
+      <div class="cmpDesc" hidden="[[_editMode]]">
+        <span>{{component.description}}</span>
+      </div>
 
-      <div class="bottom-container bottom">
+      <div class="bottom-container bottom" hidden="[[_editMode]]">
         <div class="timing helper">
-          [[localize('created')]] <time is="relative-time" datetime$="[[component.creation_time]]"></time>
+          [[localize('created')]] <relative-time datetime$="[[component.creation_time]]"></relative-time>
           [[localize('by')]]
           <req-user user="{{component.leader}}" normal-view no-popover></req-user>
         </div>
 
-        <paper-button on-tap="toggleFilters" class="filterButton" toggles>
+        <paper-button on-tap="_toggleOptions" class="filterButton" toggles>
           <iron-icon icon="filter-list"></iron-icon>
           <span>Filters</span>
         </paper-button>
       </div>
 
-      <div class="filtering">
+      <div class="filtering" hidden="[[_editMode]]">
 
         <iron-collapse id="collapseFilters">
           <div>
@@ -121,7 +186,7 @@
         </iron-collapse>
       </div>
 
-      <div class="editFormComp middle middle-container center layout">
+      <div class="editFormComp middle middle-container center layout" hidden="[[!_editMode]]">
 
         <paper-input class="editTitle" label="[[formTitle]]" value="{{component.name}}"></paper-input>
         <paper-textarea class="editDesc" label="[[formDesc]]" value="{{component.description}}"></paper-textarea>
@@ -148,14 +213,25 @@
         current-user="{{currentUser}}"></requirements-list>
     </div>
 
-    <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"
-                  exit-animation="fade-out-animation" no-cancel-on-outside-click
+    <!-- Dialog for creating a requirement: -->
+
+    <paper-dialog id="createRequirementDialog" class="create-dialog"
+                  entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation"
+                  no-cancel-on-outside-click
                   no-cancel-on-esc-key
-                  on-iron-overlay-closed="onCreateRequirementClosed">
+                  on-iron-overlay-closed="_handleCreateRequirementClosed">
       <h2>[[localize('createRequirement')]]</h2>
       <paper-button class="expand-button" on-tap="expandDialog"><iron-icon icon="fullscreen"></iron-icon></paper-button>
-      <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle" on-keydown="checkEnter"></paper-input>
-      <paper-textarea label="[[formDesc]]" id="newRequirementDesc" max-rows="4" on-keydown="checkEnter"></paper-textarea>
+      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]"
+                   id="newRequirementTitle"
+                   on-keydown="checkEnter"
+                   value="{{_newRequirementTitle}}"></paper-input>
+      <paper-textarea label="[[localize('formDesc')]]"
+                      id="newRequirementDescription"
+                      max-rows="4"
+                      on-keydown="checkEnter"
+                      value="{{_newRequirementDescription}}"></paper-textarea>
       <div class="helper-highlight">Ctrl + Enter for new line</div>
       <vaadin-upload
         target="https://requirements-bazaar.org/betafileservice/files/"
@@ -168,11 +244,13 @@
 
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
-        <paper-button dialog-confirm autofocus>[[localize('save')]]</paper-button>
+        <paper-button dialog-confirm autofocus disabled="[[_createRequirementDisabled]]">[[localize('save')]]</paper-button>
       </div>
     </paper-dialog>
 
-    <paper-dialog id="deleteComponent" modal on-iron-overlay-closed="deleteComponent" entry-animation="fade-in-animation"
+    <!-- Dialog for deleting the component: -->
+
+    <paper-dialog id="deleteDialog" modal on-iron-overlay-closed="deleteComponent" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation">
       <h2>[[localize('deleteComponent')]]?</h2>
       <p>[[localize('deleteCompDesc')]]</p>
@@ -182,34 +260,8 @@
       </div>
     </paper-dialog>
 
-    <iron-ajax
-      id="postRequirementRequest"
-      handle-as="json"
-      url="{{baseHref}}/requirements"
-      content-type="application/json"
-      method="POST"
-      headers="{{header}}"
-      on-response="handlePostResponseRequirement"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax  id="componentRequest"
-                handle-as="json"
-                content-type="application/json"
-                headers="{{header}}"
-                on-response="compResponse"
-                on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax  id="componentRequestPUT"
-                handle-as="json"
-                content-type="application/json"
-                headers="{{header}}"
-                on-response="handlePutResponseComponent"
-                on-error="errorHandler"></iron-ajax>
-
-    <template is="dom-if" if="{{isAuthorized}}">
-      <paper-fab class="fabAdd" on-tap="onCreateRequirementTap" id="fab-btn3" icon="add"></paper-fab>
-      <paper-tooltip for="fab-btn3" position="left">[[localize('createRequirement')]]</paper-tooltip>
-    </template>
+    <paper-fab on-tap="_handleCreateRequirementTap" id="fab" icon="add"></paper-fab>
+    <paper-tooltip for="fab" position="left">[[localize('createRequirement')]]</paper-tooltip>
 
   </template>
 
@@ -227,7 +279,12 @@
           value: 'en'
         },
         _authorized: {
-          type: Boolean
+          type: Boolean,
+          value: true
+        },
+        _editMode: {
+          type: Boolean,
+          value: false
         },
         projectId: {
           type: Number
@@ -235,13 +292,106 @@
         componentId: {
           type: Number
         },
-        baseHref: String
+        _newRequirementTitle: {
+          type: String,
+          value: ''
+        },
+        _newRequirementDescription: {
+          type: String,
+          value: ''
+        },
+        _createRequirementDisabled: {
+          type: Boolean,
+          computed: '_computeCreateRequirementDisabled(_newRequirementTitle, _newRequirementDescription)'
+        },
+        baseHref: {
+          type: String,
+          value: 'https://requirements-bazaar.org/betabazaar'
+        }
       },
 
       attached: function() {
         // load localized messages
         this.loadResources(this.resolveUrl('../locales/locales.json'));
+      },
+
+      /**
+       * Event handler for the view's paper-menu.
+       *
+       * @param e
+       * @private
+       */
+      _handleMenuSelect: function(e) {
+        // unselect the selected menu item
+        e.target.selected = null;
+        // get value of the paper-item
+        var selectedValue = e.detail.item.getAttribute('value');
+
+        if (selectedValue === 'edit') {
+          this._editMode = true;
+        } else if (selectedValue === 'delete') {
+          this.$.deleteDialog.open();
+        }
+      },
+
+      _handleCreateRequirementTap: function(e) {
+        this.$.createRequirementDialog.open();
+      },
+
+      _handleCreateRequirementClosed: function(e) {
+        if (e.detail.confirmed) {
+          var attachments = [];
+          var request = this.$.postRequirementRequest;
+          var components = [{id: this.componentId}];
+          // check if a file was uploaded as well
+          // xhr.response holds the file identifier
+          if (this.files != []){
+            for (var i = 0; i < this.files.length; i++) {
+              var obj = {
+                title: this.files[i].name,
+                fileUrl: this.fileServiceHref + this.files[i].xhr.response,
+                mimeType: "image/*",
+                identifier: this.files[i].xhr.response
+              };
+              attachments.push(obj);
+            }
+          }
+          request.body = JSON.stringify({
+            "title": this._newRequirementTitle,
+            "description": this._newRequirementDescription,
+            "projectId": this.projectId,
+            "components": components,
+            "attachments": attachments
+          });
+          request.generateRequest();
+        }
+
+
+        // reset the form and validation error messages
+        this.$.newRequirementTitle.required = false;
+        this.$.newRequirementDescription.required = false;
+
+        this.$.newRequirementTitle.value = null;
+        this.$.newRequirementDescription.value = null;
+
+        this.$.newRequirementTitle.required = true;
+        this.$.newRequirementDescription.required = true;
+        this.files = [];
+      },
+
+      _computeCreateRequirementDisabled: function(newRequirementTitle, newRequirementDescription) {
+        return (newRequirementTitle === '' || newRequirementDescription === '' || newRequirementTitle == null || newRequirementDescription == null );
+      },
+
+      /**
+       * Toggles the visibility of the options for the list of requirements.
+       *
+       * @private
+       */
+      _toggleOptions: function() {
+        this.$.collapseFilters.toggle();
       }
+
     });
   </script>
 </dom-module>
