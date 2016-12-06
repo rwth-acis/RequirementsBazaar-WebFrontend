@@ -24,6 +24,8 @@ var historyApiFallback = require('connect-history-api-fallback');
 var packageJson = require('./package.json');
 var crypto = require('crypto');
 var replace = require('gulp-replace');
+var MarkdownIt = require('markdown-it');
+var md = new MarkdownIt();
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -131,7 +133,7 @@ gulp.task('copy:beta', function () {
   var elements = gulp.src(['app/elements/**/*.html',
                            'app/elements/**/*.css',
                            'app/elements/**/*.js'])
-    .pipe(gulp.dest('dist/elements'));
+      .pipe(gulp.dest('dist/elements'));
 
   var swBootstrap = gulp.src(['components/platinum-sw/bootstrap/*.js'])
     .pipe(gulp.dest('dist/elements/bootstrap'));

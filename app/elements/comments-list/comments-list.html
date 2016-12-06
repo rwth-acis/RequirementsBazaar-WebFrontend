@@ -111,7 +111,8 @@
             <div class$="[[_computeCommentClasses(item)]]" attr="{{item.Id}}">
                 <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
                 <div class="layout vertical flex">
-                    <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
+                    <emoji-text text="{{item.message}}"></emoji-text>
+                    <!--<div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>-->
                     <div class="info helper">
                         <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
                     </div>

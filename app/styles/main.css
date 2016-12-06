@@ -142,7 +142,9 @@ paper-icon-button {
 }
 
 .description {
-    white-space: pre-wrap;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
 }
 
 .leader {
