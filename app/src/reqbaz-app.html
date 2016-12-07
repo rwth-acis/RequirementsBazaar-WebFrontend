@@ -58,10 +58,16 @@
         text-align: left;
       }
 
+      app-drawer activity-tracker {
+        height: 100%;
+      }
+
       app-toolbar > [main-title] {
         font-family: 'Ubuntu Condensed', sans-serif;
         font-size: 25px;
-        font-weight: semi-bold;
+        font-weight: 400;
+        pointer-events: auto !important;
+        cursor: pointer;
       }
 
       [hidden] {
@@ -85,7 +91,7 @@
       <app-header fixed effects="waterfall">
         <app-toolbar>
           <paper-icon-button icon="menu" left-drawer-toggle hidden></paper-icon-button>
-          <div main-title>Requirements Bazaar</div>
+          <div main-title on-tap="_gotoLanding">Requirements Bazaar</div>
           <paper-icon-button icon="social:notifications" right-drawer-toggle></paper-icon-button>
           <openidconnect-signin scopes="openid email profile" client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
                                 server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
@@ -93,7 +99,7 @@
       </app-header>
 
       <app-drawer align="right">
-        <activity-tracker initial-limit="10"></activity-tracker>
+        <activity-tracker initial-limit="20"></activity-tracker>
       </app-drawer>
 
       <iron-pages
@@ -159,6 +165,10 @@
 
       _showView404: function() {
         this.view = 'view404';
+      },
+
+      _gotoLanding: function() {
+        this.set('route.path', '/');
       }
     });
   </script>

@@ -1,7 +1,23 @@
 <link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../../components/paper-material/paper-material.html">
+<link rel="import" href="../../components/paper-card/paper-card.html">
+<link rel="import" href="../../components/paper-button/paper-button.html">
+<link rel="import" href="../../components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../components/paper-menu/paper-menu.html">
+<link rel="import" href="../../components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../components/paper-item/paper-item.html">
+<link rel="import" href="../../components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../components/masonry-layout/masonry-layout.html">
+<link rel="import" href="../../components/openidconnect-signin/openidconnect-signin-aware.html">
 <link rel="import" href="../../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../comments-list/comments-list.html">
 <link rel="import" href="../../src/config-behavior.html">
 
 <dom-module id="requirements-list">
@@ -39,14 +55,6 @@
         color: var(--paper-orange-500);
       }
 
-            /*
-            deactivated as a) on mobile it was always gray when clicked b) on desktop we can't make e.g. the comments
-             section gray then.
-            paper-material:hover {
-                background-color: var(--list-hover-background-color);
-            }
-            */
-
       paper-toolbar {
         background: none;
         color: #000000;
@@ -55,8 +63,8 @@
         right:15px;
       }
 
-      paper-toolbar .title {
-        margin-left: 0px;
+      paper-toolbar > div.title {
+        margin-left: 0px !important;
         margin-bottom: 10px;
       }
 
@@ -139,6 +147,14 @@
       #grids .starIcon {
         float: right;
         margin: 20px;
+      }
+
+      .line {
+        background: #c6c6c6 no-repeat scroll center;
+        margin-top: -20px;
+        /*margin-bottom: 10px;*/
+        width: 95%;
+        height: 1px;
       }
     </style>
 
