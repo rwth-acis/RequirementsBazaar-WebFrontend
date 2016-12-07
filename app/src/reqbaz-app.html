@@ -38,10 +38,20 @@
       app-header {
         color: #fff;
         background-color: var(--app-primary-color);
+        z-index: 105 !important;
       }
 
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
+      }
+
+      app-drawer {
+        /** paper-dialog has 103 **/
+        z-index: 104;
+      }
+
+      iron-pages {
+        z-index: 0;
       }
 
       app-drawer[align="right"] {
