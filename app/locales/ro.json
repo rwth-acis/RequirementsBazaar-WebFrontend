@@ -264,7 +264,7 @@
     "message": "Aceasta actiune are efecte permanente! Sunteti sigur ca vreti sa stergeti aceasta cerinta?"
   },
 
-  "showContributers": {
+  "showContributors": {
     "description": "...",
     "message": "Vizualizati Contributorii"
   },
@@ -334,7 +334,7 @@
     "message": "Cerinta a fost stearsa!"
   },
 
-  "hideContributers": {
+  "hideContributors": {
     "description": "...",
     "message": "Ascundeti Contributorii"
   },

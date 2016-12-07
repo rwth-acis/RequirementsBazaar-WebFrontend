@@ -31,7 +31,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // Middleware
         function scrollToTop(ctx, next) {
-            app.scrollPageToTop();
             next();
         }
 
@@ -62,10 +61,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         page('/projects/:projectId/components/:componentId', function(data) {
-            if (app.compChanged(data.params.componentId)){
+            if (app.componentChanged(data.params.componentId)){
                 app.route = 'component-info';
                 app.params = data.params;
                 app.selectedFilter = "active";
+                app.clearRequirements();
                 app.loadComponentInfo(data.params.componentId);
                 app.closeCollapses();
             }
@@ -77,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             // open create new requirement dialog
             if (app.currentUser){
                 app.loadComponentInfo(data.params.componentId);
-                app.showCreateRequirement();
+                app.showCreateRequirementDialog();
             } else {
                 page.redirect('/projects/' + data.params.projectId + "/components/" + data.params.componentId);
             }
@@ -92,7 +92,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         page('/projects/:projectId/components/:componentId/requirements/:requirementId', function(data) {
             app.route = 'component-info';
             app.params = data.params;
-            app.scrollToReq(data.params.componentId, data.params.requirementId);
+            app.scrollToRequirement(data.params.componentId, data.params.requirementId);
         });
 
 

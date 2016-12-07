@@ -81,26 +81,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             method="PUT"
             headers="{{header}}"></iron-ajax>
 
-    <!--<iron-ajax-->
-            <!--id="loginGithub"-->
-            <!--handle-as="json"-->
-            <!--content-type="application/json"-->
-            <!--headers={'content-type':'application/json'}-->
-            <!--method="GET"-->
-            <!--last-response="{{githubToken}}"-->
-            <!--on-response="handleSignInGithub"-->
-            <!--on-error="errorHandler"></iron-ajax>-->
-
-    <!--<iron-ajax-->
-            <!--id="getGithubRepos"-->
-            <!--handle-as="json"-->
-            <!--url="https://api.github.com/user/repos"-->
-            <!--params='{"access_token": "7d0f1a4f058c2029e319d63730aeb57ed28ca13a"}'-->
-            <!--content-type="application/json"-->
-            <!--method="GET"-->
-            <!--last-response="{{repositories}}"-->
-            <!--on-error="errorHandler"></iron-ajax>-->
-
     <paper-toast id="superToast"></paper-toast>
     <i18n-msg class="i18nlabel"></i18n-msg>
 
@@ -109,7 +89,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar">
-            <template is="dom-if" if="{{componentPage(route)}}">
+            <template is="dom-if" if="{{_isComponentPage(route)}}">
                 <paper-icon-button id="paperToggle" icon="menu" on-tap="toggCompDrawer"></paper-icon-button>
             </template>
             <!--<template is="dom-if" if="{{!componentPage(route)}}">-->
@@ -131,7 +111,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <template is="dom-if" if="{{isAuthorized}}">
                 <req-user user="[[currentUser]]" mini on-tap="openUserDialog" class="hidden-mobile"></req-user>
             </template>
-            <template is="dom-if" if="{{!landingPage(route)}}">
+            <template is="dom-if" if="{{!_isLandingPage(route)}}">
                 <paper-icon-button icon="social:notifications" on-click="toggNotDrawer"></paper-icon-button>
             </template>
 
@@ -253,7 +233,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             content-type="application/json"
                             method="POST"
                             headers="{{header}}"
-                            on-response="handleResponseFollowProj"
+                            on-response="handleResponseFollowProject"
                             on-error="errorHandler"></iron-ajax>
 
                     <iron-ajax
@@ -262,17 +242,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             content-type="application/json"
                             method="DELETE"
                             headers="{{header}}"
-                            on-response="handleResponseUnFollowProj"
+                            on-response="handleResponseUnFollowProject"
                             on-error="errorHandler"></iron-ajax>
 
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer0">
                         <paper-scroll-header-panel drawer fixed id="letsscroll1">
-                            <template is="dom-if" if="{{! activities}}">
-                                <paper-spinner active></paper-spinner>
-                            </template>
                             <!-- Drawer Content -->
-                            <activity-tracker url="{{activityHref}}" activities="{{activities}}"></activity-tracker>
+                            <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>
                     </paper-drawer-panel>
 
@@ -336,10 +313,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             content-type="application/json"
                             method="POST"
                             headers="{{header}}"
-                            on-response="handleResponseProject"
+                            on-response="handlePostResponseProject"
                             on-error="errorHandler"></iron-ajax>
-
-                    <paper-toast id="projToast"></paper-toast>
 
                     <template is="dom-if" if="{{isAuthorized}}">
                         <paper-fab class="fabAdd" on-tap="onCreateProjectTap" id="fab-btn" icon="add"></paper-fab>
@@ -354,15 +329,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer1">
                         <paper-scroll-header-panel drawer fixed id="letsscroll2">
-                            <template is="dom-if" if="{{! activities}}">
-                                <paper-spinner active></paper-spinner>
-                            </template>
                             <!-- Drawer Content -->
                             <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>
                     </paper-drawer-panel>
 
-                    <paper-dialog id="modal1" modal on-iron-overlay-closed="deleteProject" entry-animation="fade-in-animation"
+                    <paper-dialog id="deleteProject" modal on-iron-overlay-closed="deleteProject" entry-animation="fade-in-animation"
                                   exit-animation="fade-out-animation">
                         <h2><i18n-msg msgid="deleteProjectTitle"></i18n-msg>?</h2>
                         <p><i18n-msg msgid="deleteProjectDesc"></i18n-msg></p>
@@ -391,7 +363,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <paper-item on-tap="unfollowProject"><i18n-msg msgid="unfollowProject"></i18n-msg></paper-item>
                                         </template>
                                         <paper-item on-tap="editProject"><i18n-msg msgid="editProject"></i18n-msg></paper-item>
-                                        <paper-item on-tap="createModal1"><i18n-msg msgid="deleteProjectTitle"></i18n-msg></paper-item>
+                                        <paper-item on-tap="createModalDeleteProject"><i18n-msg msgid="deleteProjectTitle"></i18n-msg></paper-item>
                                     </paper-menu>
                                 </paper-menu-button>
 
@@ -410,8 +382,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                 <paper-input class="editTitle" label="[[formTitle]]" value="{{project.name}}"></paper-input>
                                 <paper-textarea class="editDesc" label="[[formDesc]]" value="{{project.description}}"></paper-textarea>
-                                <paper-button raised on-tap="cancEditProj"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
-                                <paper-button raised on-tap="saveEditProj"> <i18n-msg msgid="save"></i18n-msg> </paper-button>
+                                <paper-button raised on-tap="cancelEditProject"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
+                                <paper-button raised on-tap="saveEditProject"> <i18n-msg msgid="save"></i18n-msg> </paper-button>
 
                             </div>
                         </paper-material>
@@ -421,7 +393,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 handle-as="json"
                                 content-type="application/json"
                                 headers="{{header}}"
-                                on-response="handleResponseEditProj"
+                                on-response="handleEditResponseProject"
                                 on-error="errorHandler"></iron-ajax>
 
                         <components-list id="componentsList" loading="{{loading}}"></components-list>
@@ -448,10 +420,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             content-type="application/json"
                             method="POST"
                             headers="{{header}}"
-                            on-response="handleResponseComponent"
+                            on-response="handlePostResponseComponent"
                             on-error="errorHandler"></iron-ajax>
 
-                    <paper-toast id="compToast"></paper-toast>
 
                     <template is="dom-if" if="{{isAuthorized}}">
                         <paper-fab class="fabAdd" on-tap="onCreateComponentTap" id="fab-btn2" icon="add"></paper-fab>
@@ -464,7 +435,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <section data-route="component-info" href="{{baseUrl}}component-info" style="height:100%;">
 
                     <iron-ajax id="componentInfoLoader"
-                               last-response="{{component}}" on-response="handleNewComp"></iron-ajax>
+                               last-response="{{component}}" on-response="handleNewComponent"></iron-ajax>
 
                     <iron-ajax
                             id="followComp"
@@ -472,7 +443,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             content-type="application/json"
                             method="POST"
                             headers="{{header}}"
-                            on-response="handleResponseFollowComp"
+                            on-response="handleResponseFollowComponent"
                             on-error="errorHandler"></iron-ajax>
 
                     <iron-ajax
@@ -481,15 +452,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             content-type="application/json"
                             method="DELETE"
                             headers="{{header}}"
-                            on-response="handleResponseUnFollowComp"
+                            on-response="handleResponseUnFollowComponent"
                             on-error="errorHandler"></iron-ajax>
 
                     <!--Notification Drawer-->
                     <paper-drawer-panel right-drawer="true" id="notDrawer">
                         <paper-scroll-header-panel drawer fixed id="letsscroll3">
-                            <template is="dom-if" if="{{! activities}}">
-                                <paper-spinner active></paper-spinner>
-                            </template>
                             <!-- Drawer Content -->
                             <activity-tracker url="{{activityHref}}"></activity-tracker>
                         </paper-scroll-header-panel>
@@ -519,7 +487,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                                             <paper-menu id="componentInfoMenu" class="dropdown-content">
                                                 <paper-item on-tap="setDefault"><i18n-msg msgid="setAsDefault"></i18n-msg></paper-item>
-                                                <!--<paper-item on-tap="toggleContributers"><i18n-msg msgid="showContributers"></i18n-msg></paper-item>-->
                                                 <template is="dom-if" if="{{!followsComp}}">
                                                     <paper-item on-tap="followComponent"><i18n-msg msgid="followComponent"></i18n-msg></paper-item>
                                                 </template>
@@ -527,7 +494,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                     <paper-item on-tap="unfollowComponent"><i18n-msg msgid="unfollowComponent"></i18n-msg></paper-item>
                                                 </template>
                                                 <paper-item on-tap="editComponent"><i18n-msg msgid="editComponent"></i18n-msg></paper-item>
-                                                <paper-item on-tap="createModal2"><i18n-msg msgid="deleteComponent"></i18n-msg></paper-item>
+                                                <paper-item on-tap="createModalDeleteComponent"><i18n-msg msgid="deleteComponent"></i18n-msg></paper-item>
                                             </paper-menu>
                                         </paper-menu-button>
                                     </template>
@@ -571,8 +538,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <div>
                                                 <div style="display: flex; flex-wrap: wrap;">
                                                     <div style="flex-grow: 1; margin:20px;">
-                                                        <paper-radio-group selected="{{selectedFilter}}">
-                                                            <paper-radio-button name="active"><i18n-msg msgid="active-req"></i18n-msg></paper-radio-button>
+                                                        <paper-radio-group selected="{{requirementsStateFilter}}">
+                                                            <paper-radio-button name="open"><i18n-msg msgid="active-req"></i18n-msg></paper-radio-button>
                                                             <br>
                                                             <paper-radio-button name="realized"><i18n-msg msgid="realized-req"></i18n-msg></paper-radio-button>
                                                         </paper-radio-group>
@@ -588,7 +555,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                         <paper-radio-group selected="{{view}}">
                                                             <paper-radio-button name="list" on-tap="showListView"><i18n-msg msgid="list-view"></i18n-msg></paper-radio-button>
                                                             <br>
-                                                            <paper-radio-button name="grid" on-tap="showQuarantineView"><i18n-msg msgid="grid-view"></i18n-msg></paper-radio-button>
+                                                            <paper-radio-button name="grid" on-tap="showGridView"><i18n-msg msgid="grid-view"></i18n-msg></paper-radio-button>
                                                         </paper-radio-group>
                                                     </div>
                                                 </div>
@@ -611,7 +578,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                                         <paper-input class="editTitle" label="[[formTitle]]" value="{{component.name}}"></paper-input>
                                         <paper-textarea class="editDesc" label="[[formDesc]]" value="{{component.description}}"></paper-textarea>
-                                        <paper-button raised on-tap="cancEditComp"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
+                                        <paper-button raised on-tap="cancelEditComp"> <i18n-msg msgid="cancel"></i18n-msg> </paper-button>
                                         <paper-button raised on-tap="saveEditComp"> <i18n-msg msgid="save"></i18n-msg> </paper-button>
 
                                     </div>
@@ -625,10 +592,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         header="{{header}}"
                                         filter-value="[[reqFilterVal]]"
                                         base-href="{{baseHref}}"
-                                        selected="{{selectedFilter}}"
+                                        requirements-state-filter="{{requirementsStateFilter}}"
                                         loading="{{loading}}"
                                         list="{{list}}"
-                                        repositories="{{repositories}}"></requirements-list>
+                                        repositories="{{repositories}}"
+                                        current-user="{{currentUser}}"></requirements-list>
                             </div>
 
                             <paper-dialog id="createRequirement" class="create" entry-animation="fade-in-animation"
@@ -640,14 +608,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <paper-input char-counter maxlength="50" label="[[formTitle]]" id="newRequirementTitle" on-keydown="checkEnter"></paper-input>
                                 <paper-textarea label="[[formDesc]]" id="newRequirementDesc" max-rows="4" on-keydown="checkEnter"></paper-textarea>
                                 <div class="helper-highlight">Ctrl + Enter for new line</div>
-                                <!--<vaadin-upload-->
-                                        <!--target="https://requirements-bazaar.org/betafileservice/files/"-->
-                                        <!--method="POST"-->
-                                        <!--timeout="300000"-->
-                                        <!--files="{{files}}"-->
-                                        <!--max-file-size="10000000"-->
-                                        <!--accept="image/*">-->
-                                <!--</vaadin-upload>-->
+                                <vaadin-upload
+                                        target="[[fileServiceHref]]"
+                                        method="POST"
+                                        timeout="300000"
+                                        files="{{files}}"
+                                        max-file-size="1000000"
+                                        accept="image/*">
+                                </vaadin-upload>
 
                                 <div class="buttons">
                                     <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
@@ -655,7 +623,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 </div>
                             </paper-dialog>
 
-                            <paper-dialog id="modal2" modal on-iron-overlay-closed="deleteComponent" entry-animation="fade-in-animation"
+                            <paper-dialog id="deleteComponent" modal on-iron-overlay-closed="deleteComponent" entry-animation="fade-in-animation"
                                           exit-animation="fade-out-animation">
                                 <h2><i18n-msg msgid="deleteComponent"></i18n-msg>?</h2>
                                 <p><i18n-msg msgid="deleteCompDesc"></i18n-msg></p>
@@ -672,7 +640,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     content-type="application/json"
                                     method="POST"
                                     headers="{{header}}"
-                                    on-response="handleResponseRequirement"
+                                    on-response="handlePostResponseRequirement"
                                     on-error="errorHandler"></iron-ajax>
 
                             <iron-ajax  id="componentRequest"
@@ -686,7 +654,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         handle-as="json"
                                         content-type="application/json"
                                         headers="{{header}}"
-                                        on-response="compResponsePUT"
+                                        on-response="handlePutResponseComponent"
                                         on-error="errorHandler"></iron-ajax>
 
                             <template is="dom-if" if="{{isAuthorized}}">

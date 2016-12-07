@@ -23,6 +23,7 @@ var glob = require('glob');
 var historyApiFallback = require('connect-history-api-fallback');
 var packageJson = require('./package.json');
 var crypto = require('crypto');
+var replace = require('gulp-replace');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -98,7 +99,7 @@ gulp.task('images', function () {
 });
 
 // Copy all files at the root level (app)
-gulp.task('copy', function () {
+gulp.task('copy:beta', function () {
   var app = gulp.src([
     'app/*',
     '!app/test',
@@ -110,6 +111,14 @@ gulp.task('copy', function () {
   var bower = gulp.src([
     'components/**/*'
   ]).pipe(gulp.dest('dist/components'));
+
+  var scripts = gulp.src([
+    'app/scripts/*'
+  ]).pipe(replace(/\/bazaar/g, '/betabazaar'))
+      .pipe(replace(/\/activities/g, '/betaactivities'))
+      .pipe(replace(/\/fileservice/g, '/betafileservice'))
+      .pipe(replace(/app.baseUrl\W.*/g, 'app.baseUrl = "/beta/"'))
+      .pipe(gulp.dest('dist/scripts'));
 
   var locales = gulp.src([
     'app/locales/*'
@@ -136,6 +145,55 @@ gulp.task('copy', function () {
 
   return merge(app, bower, locales, htmlStyles, elements, vulcanized, swBootstrap, swToolbox)
     .pipe($.size({title: 'copy'}));
+});
+
+// Copy all files at the root level for live production (app)
+gulp.task('copy:live', function () {
+  var app = gulp.src([
+    'app/*',
+    '!app/test',
+    '!app/cache-config.json'
+  ], {
+    dot: true
+    }).pipe(gulp.dest('dist'));
+
+  var bower = gulp.src([
+    'components/**/*'
+  ]).pipe(gulp.dest('dist/components'));  
+  
+  var scripts = gulp.src([
+    'app/scripts/*'
+    ]).pipe(replace(/betabazaar/g, 'bazaar'))
+      .pipe(replace(/betaactivities/g, 'activities'))
+      .pipe(replace(/betafileservice/g, 'fileservice'))
+      .pipe(replace(/app.baseUrl\W.*/g, 'app.baseUrl = "/"'))
+      .pipe(gulp.dest('dist/scripts'));
+
+  var locales = gulp.src([
+    'app/locales/*'
+  ]).pipe(gulp.dest('dist/locales'));
+
+  var htmlStyles = gulp.src([
+    'app/styles/*.html'
+  ]).pipe(gulp.dest('dist/styles'));
+
+  var elements = gulp.src(['app/elements/**/*.html',
+    'app/elements/**/*.css',
+    'app/elements/**/*.js'])
+      .pipe(gulp.dest('dist/elements'));
+
+  var swBootstrap = gulp.src(['components/platinum-sw/bootstrap/*.js'])
+      .pipe(gulp.dest('dist/elements/bootstrap'));
+
+  var swToolbox = gulp.src(['components/sw-toolbox/*.js'])
+      .pipe(gulp.dest('dist/sw-toolbox'));
+
+  var vulcanized = gulp.src(['app/elements/elements.html'])
+      .pipe($.rename('elements.vulcanized.html'))
+      .pipe(gulp.dest('dist/elements'));
+
+  return merge(app, bower, scripts, locales, htmlStyles, elements, vulcanized, swBootstrap, swToolbox)
+      .pipe($.size({title: 'copy'}));
 });
 
 // Copy web fonts to dist
@@ -202,8 +260,7 @@ gulp.task('clean', function (cb) {
   del(['.tmp', 'dist'], cb);
 });
 
-// Watch files for changes & reload
-gulp.task('serve', ['styles', 'elements', 'images'], function () {
+gulp.task('serve', ['styles'], function() {
   browserSync({
     port: 5000,
     notify: false,
@@ -211,7 +268,7 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
-        fn: function (snippet) {
+        fn: function(snippet) {
           return snippet;
         }
       }
@@ -222,46 +279,21 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
     // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
-      middleware: [ historyApiFallback() ],
+      middleware: [historyApiFallback()],
       routes: {
         '/components': 'components'
       }
     }
   });
 
-  gulp.watch(['app/**/*.html'], ['js', reload]);
+  gulp.watch(['app/**/*.html', '!app/components/**/*.html'], reload);
   gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
-  gulp.watch(['app/elements/**/*.css'], ['elements', reload]);
+  gulp.watch(['app/scripts/**/*.js'], reload);
   gulp.watch(['app/images/**/*'], reload);
 });
 
-// Build and serve the output from the dist build
-// gulp.task('serve:dist', ['default'], function () {
-//   browserSync({
-//     browser: config.browserSync.browser,
-//     https: config.browserSync.https,
-//     notify: config.browserSync.notify,
-//     port: config.browserSync.port,
-//     logPrefix: 'PSK',
-//     snippetOptions: {
-//       rule: {
-//         match: '<span id="browser-sync-binding"></span>',
-//         fn: function(snippet) {
-//           return snippet;
-//         }
-//       }
-//     },
-//     server: {
-//       baseDir: 'dist',
-//       middleware: [historyApiFallback()]
-//     },
-//     ui: {
-//       port: config.browserSync.ui.port
-//     }
-//   });
-// });
 
-gulp.task('serve:dist', ['default'], function () {
+gulp.task('serve:beta', ['default:beta'], function () {
   browserSync({
     port: 5001,
     notify: false,
@@ -285,14 +317,49 @@ gulp.task('serve:dist', ['default'], function () {
 
 
 // Build production files, the default task
-gulp.task('default', ['clean'], function (cb) {
+gulp.task('default:beta', ['clean'], function (cb) {
   // Uncomment 'cache-config' after 'rename-index' if you are going to use service workers.
   runSequence(
-    ['copy', 'styles'],
+    ['copy:beta', 'styles'],
     'elements',
     ['images', 'fonts', 'html'],
     'vulcanize', //,'rename-index', 'remove-old-build-index', // 'cache-config',
     cb);
+});
+
+
+// Build and serve live production files
+gulp.task('serve:live', ['default:live'], function () {
+  browserSync({
+    port: 5001,
+    notify: false,
+    logPrefix: 'PSK',
+    snippetOptions: {
+      rule: {
+        match: '<span id="browser-sync-binding"></span>',
+        fn: function (snippet) {
+          return snippet;
+        }
+      }
+    },
+    // Run as an https by uncommenting 'https: true'
+    // Note: this uses an unsigned certificate which on first access
+    //       will present a certificate warning in the browser.
+    // https: true,
+    server: 'dist',
+    middleware: [ historyApiFallback() ]
+  });
+});
+
+// Build production live files, the default task
+gulp.task('default:live', ['clean'], function (cb) {
+  // Uncomment 'cache-config' after 'rename-index' if you are going to use service workers.
+  runSequence(
+      ['copy:live', 'styles'],
+      'elements',
+      ['images', 'fonts', 'html'],
+      'vulcanize', //,'rename-index', 'remove-old-build-index', // 'cache-config',
+      cb);
 });
 
 // Load tasks for web-component-tester
