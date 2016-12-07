@@ -18,6 +18,7 @@
 <link rel="import" href="../components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../elements/projects-list/projects-list.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="config-behavior.html">
 
 <dom-module id="view-projects-list">
   <template>
@@ -52,7 +53,7 @@
     <iron-ajax
       id="postProjectRequest"
       handle-as="json"
-      url="{{baseHref}}/projects"
+      url="{{_apiBaseUrl}}/projects"
       content-type="application/json"
       method="POST"
       headers="{{header}}"
@@ -123,7 +124,8 @@
       is: 'view-projects-list',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior
+        Polymer.AppLocalizeBehavior,
+        ConfigBehavior
       ],
 
       properties: {

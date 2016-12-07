@@ -2,6 +2,7 @@
 <link rel="import" href="../../components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../components/paper-card/paper-card.html">
+<link rel="import" href="../../src/config-behavior.html">
 
 <dom-module id="components-list">
   <template>
@@ -58,6 +59,10 @@
     Polymer({
       is: 'components-list',
 
+      behaviors: [
+        ConfigBehavior
+      ],
+
       properties: {
         projectId: {
           type: Number
@@ -73,12 +78,11 @@
         loading: {
           type: Boolean,
           notify: true
-        },
-        baseHref: String
+        }
       },
 
       _computeResourceURL: function (projectId) {
-        return this.baseHref + '/projects/' + projectId + '/components/';
+        return this._apiBaseUrl + '/projects/' + projectId + '/components/';
       },
 
       load: function() {

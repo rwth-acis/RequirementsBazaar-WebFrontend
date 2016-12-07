@@ -23,6 +23,7 @@
 <link rel="import" href="../elements/req-user/req-user.html">
 <link rel="import" href="../elements/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="config-behavior.html">
 
 <dom-module id="view-requirements">
   <template>
@@ -60,7 +61,7 @@
 
     <iron-ajax id="componentInfoLoader"
                content-type="application/json"
-               url="[[baseHref]]/components/[[componentId]]"
+               url="[[_apiBaseUrl]]/components/[[componentId]]"
                last-response="{{component}}"
                auto></iron-ajax>
 
@@ -84,7 +85,7 @@
 
     <iron-ajax id="postRequirementRequest"
                handle-as="json"
-               url="{{baseHref}}/requirements"
+               url="{{_apiBaseUrl}}/requirements"
                content-type="application/json"
                method="POST"
                headers="{{header}}"
@@ -128,7 +129,7 @@
 
       <div class="cmpTitle" hidden="[[_editMode]]">
         <div class="breadCrumb">
-          <bread-crumb project-id="{{params.projectId}}" component="{{component}}" base-url="{{baseUrl}}" base-href="{{baseHref}}"></bread-crumb>
+          <bread-crumb project-id="{{params.projectId}}" component="{{component}}" base-url="{{baseUrl}}" base-href="{{_apiBaseUrl}}"></bread-crumb>
         </div>
         <div class="componentName"><span>{{component.name}}</span></div>
       </div>
@@ -270,7 +271,8 @@
       is: 'view-requirements',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior
+        Polymer.AppLocalizeBehavior,
+        ConfigBehavior
       ],
 
       properties: {
@@ -303,10 +305,6 @@
         _createRequirementDisabled: {
           type: Boolean,
           computed: '_computeCreateRequirementDisabled(_newRequirementTitle, _newRequirementDescription)'
-        },
-        baseHref: {
-          type: String,
-          value: 'https://requirements-bazaar.org/betabazaar'
         }
       },
 

@@ -2,6 +2,7 @@
 <link rel="import" href="../../components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../components/paper-card/paper-card.html">
+<link rel="import" href="../../src/config-behavior.html">
 
 <dom-module id="projects-list">
   <template>
@@ -36,7 +37,7 @@
 
     <iron-ajax
       id="projectsLoader"
-      url="{{baseHref}}/projects/"
+      url="[[_apiBaseUrl]]/projects/"
       last-response="{{projects}}"
       params='{"page":"0", "per_page":"150"}'
       auto
@@ -67,6 +68,11 @@
   <script>
     Polymer({
       is: 'projects-list',
+
+      behaviors: [
+        ConfigBehavior
+      ],
+
       properties: {
         projects: {
           type: Array,
@@ -83,8 +89,7 @@
         loading:{
           type: Boolean,
           notify: true
-        },
-        baseHref: String
+        }
       },
 
       onProjectTap: function (e) {

@@ -1,342 +1,345 @@
 <link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../../src/config-behavior.html">
 
 <dom-module id="comments-list">
-    <template>
-        <style>
-            :host {
-                display: block;
-                font-size: 90%;
-            }
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-size: 90%;
+      }
 
-            /**
-             * Inspired by http://stackoverflow.com/questions/25685227/how-to-display-user-profile-image-in-circle
-             */
-            .profileImage {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%; /*don't forget prefixes*/
-                background-position: center center;
-                /* as mentioned by Vad: */
-                background-size: cover;
-                margin-right: 10px;
-            }
+      /**
+       * Inspired by http://stackoverflow.com/questions/25685227/how-to-display-user-profile-image-in-circle
+       */
+      .profileImage {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%; /*don't forget prefixes*/
+        background-position: center center;
+        /* as mentioned by Vad: */
+        background-size: cover;
+        margin-right: 10px;
+      }
 
-            .noComments {
-                font-style: italic;
-            }
+      .noComments {
+        font-style: italic;
+      }
 
-            .info {
-                margin: 5px 0 10px 0;
-                font-size: small;
-            }
+      .info {
+        margin: 5px 0 10px 0;
+        font-size: small;
+      }
 
-            .comment {
-                margin-top: 5px;
-            }
+      .comment {
+        margin-top: 5px;
+      }
 
-            .reply {
-                margin-left: 40px;
-            }
+      .reply {
+        margin-left: 40px;
+      }
 
-            paper-progress {
-                --paper-progress-active-color: #FF5252;
-                width: 100%;
-                z-index: 1;
-            }
-        </style>
+      paper-progress {
+        --paper-progress-active-color: #FF5252;
+        width: 100%;
+        z-index: 1;
+      }
+    </style>
 
-        <!--AJAX REQUEST FOR LOADING COMMENTS-->
+    <!-- XHR for loading comments: -->
 
-        <iron-ajax
-                id="commentsLoader"
-                url="{{resourceURL}}"
-                last-response="{{comments}}"
-                loading="{{loading}}"
-                params='{"page":"0", "per_page":"150"}'>
-        </iron-ajax>
+    <iron-ajax id="commentsLoader"
+               url="{{resourceURL}}"
+               last-response="{{comments}}"
+               loading="{{loading}}"
+               params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
-        <!--AJAX REQUEST FOR DELETING COMMENTS-->
+    <!-- XHR for deleting comments: -->
 
-        <iron-ajax
-            id="postDeleteComment"
-            handle-as="json"
-            content-type="application/json"
-            method="DELETE"
-            on-error="errorHandler">
-        </iron-ajax>
+    <iron-ajax id="postDeleteComment"
+               handle-as="json"
+               content-type="application/json"
+               method="DELETE"
+               on-error="errorHandler"></iron-ajax>
 
-        <!--AJAX REQUEST FOR POSTING COMMENTS-->
+    <!-- XHR for posting comments: -->
 
-        <iron-ajax
-                id="postCommentRequest"
-                handle-as="json"
-                content-type="application/json"
-                method="POST"
-                url="{{baseHref}}/comments"
-                headers="{{header}}"
-                on-response="handlePostResponseComment"
-                last-response="{{postResponse}}"
-                on-error="errorHandler">
-        </iron-ajax>
+    <iron-ajax id="postCommentRequest"
+               handle-as="json"
+               content-type="application/json"
+               method="POST"
+               url="{{_apiBaseUrl}}/comments"
+               headers="{{header}}"
+               on-response="handlePostResponseComment"
+               last-response="{{postResponse}}"
+               on-error="errorHandler"></iron-ajax>
 
+    <!-- Progress bar while doing requests: -->
 
-        <!--DIALOG WINDOW FOR DELETING A COMMENT-->
+    <paper-progress indeterminate hidden$="{{!loading}}"></paper-progress>
 
-        <paper-dialog id="modal" modal on-iron-overlay-closed="deleteComment" entry-animation="fade-in-animation"
-                      exit-animation="fade-out-animation">
-            <h2><i18n-msg msgid="delCommTitle"></i18n-msg>?</h2>
-            <p><i18n-msg msgid="delCommDesc"></i18n-msg></p>
-            <div class="buttons">
-                <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
-                <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
-            </div>
-        </paper-dialog>
+    <!-- Show this when no comments are there after loading: -->
 
-        <!--PROGRESS BAR WHEN LOADING COMMENTS-->
+    <div class="noComments" hidden$="[[!noComments]]">[[localize('noComments')]</div>
 
-        <paper-progress indeterminate hidden$="{{!loading}}"></paper-progress>
+    <!-- Comments: -->
 
-        <!--SHOW NO COMMENTS WHEN COMMENTS ARRAY IS EMPTY AND LOADING IS FINISHED-->
+    <template is="dom-repeat" items="{{comments}}">
 
-        <div class="noComments" hidden$="[[!noComments]]"><i18n-msg msgid="noComments"></i18n-msg></div>
-
-        <!--RENDER COMMENTS-->
-
-        <template is="dom-repeat" items="{{comments}}">
-
-            <!--    COMPUTE CLASS FOR NORMAL COMMENT OR REPLY TO A COMMENT,
-                    MAKE AN ATTRIBUTE WHERE THE COMMENT ID IS SAVED,
-                    SHOW COMMENT TEXT AND DELETE AND REPLY ICON ON THE RIGHT    -->
-
-            <div class$="[[_computeCommentClasses(item)]]" attr="{{item.Id}}">
-                <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
-                <div class="layout vertical flex">
-                    <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
-                    <div class="info helper">
-                        <time is="relative-time" datetime$="[[item.creationTime]]"></time> <i18n-msg msgid="by"></i18n-msg> <req-user user="[[item.creator]]" normal-view></req-user>
-                    </div>
-                    <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter"></paper-input>
-                </div>
-                <paper-icon-button on-tap="createModal" icon="close" hidden$="[[!isCreator(item.creatorId)]]"></paper-icon-button>
-                <paper-icon-button icon="reply" on-tap="showReplyInput" hidden$="[[!isAuthorized]]"></paper-icon-button>
-            </div>
-
-        </template>
-
-        <!--TOAST FOR APP NOTIFICATIONS-->
-
-        <paper-toast id="toast"></paper-toast>
+      <!-- Compute the styling classes, add attribute "reply" when it is a reply. -->
+      <div class$="[[_computeCommentClasses(item)]]" attr="{{item.Id}}">
+        <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
+        <div class="layout vertical flex">
+          <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
+          <div class="info helper">
+            <relative-time datetime$="[[item.creationTime]]"></relative-time>[[localize('by')] <req-user user="[[item.creator]]" normal-view></req-user>
+          </div>
+          <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter"></paper-input>
+        </div>
+        <paper-icon-button on-tap="createModal" icon="close" hidden$="[[!isCreator(item.creatorId)]]"></paper-icon-button>
+        <paper-icon-button icon="reply" on-tap="showReplyInput" hidden$="[[!isAuthorized]]"></paper-icon-button>
+      </div>
 
     </template>
 
-    <script>
-        (function () {
+    <!-- Dialog for deleting a comment: -->
 
-            Polymer({
-                is: 'comments-list',
-                properties: {
-                    /** Input from the requirement-list */
-                    requirementId: {
-                        type: Number
-                    },
-                    /** iron-ajax url for loading the requirement */
-                    resourceURL: {
-                        type: String,
-                        computed: '_computeResourceURL(requirementId)'
-                    },
-                    /** contains all comment objects */
-                    comments: {
-                        type: Array,
-                        notify: true
-                    },
-                    /** True when the iron-ajax request is on load */
-                    loading: {
-                        type: Boolean,
-                        observer: '_computeNoComments'
-                    },
-                    /** True when loading is false and comments are empty */
-                    noComments: Boolean,
-                    /** Saves the href for the beta or live version */
-                    baseHref: String,
-                    /** Saves the current comment DOM element */
-                    commentElement: Object,
-                    /** Header Object to be a property of iron-ajax */
-                    header: {
-                        type:Object,
-                        notify: true
-                    },
-                    /** True if user is logged-in */
-                    isAuthorized: Boolean
-                },
+    <paper-dialog id="modal" modal on-iron-overlay-closed="deleteComment" entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation">
+      <h2>[[localize('delCommTitle')]?</h2>
+      <p>[[localize('delCommDesc')]</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>[[localize('cancel')]</paper-button>
+        <paper-button dialog-confirm autofocus>[[localize('delete')]</paper-button>
+      </div>
+    </paper-dialog>
 
-                /**
-                 * Computes the classes for styling of a comment div tag. If comment is a reply then the reply class is added
-                 * @param comment
-                 * @returns {string}
-                 */
-                _computeCommentClasses: function(comment){
-                    var commentClasses = "comment layout horizontal";
-                    if (this.isReply(comment)){
-                        commentClasses += " reply";
-                    }
-                    return commentClasses;
-                },
+    <!-- Toast for app notifications: -->
 
-                /**
-                 * Computes the URL for sending a GET request to the comments for the specific requirement
-                 * @param requirementId
-                 * @returns {string}
-                 */
-                _computeResourceURL: function(requirementId){
-                    return app.baseHref + '/requirements/' + requirementId + '/comments/';
-                },
+    <paper-toast id="toast"></paper-toast>
 
-                /**
-                 * Updates the property noComments whenever loading property changes. It checks if there are still no comments even after the
-                 * request has finished loading.
-                 */
-                _computeNoComments: function(){
-                    if (this.comments !== undefined) {
-                        if ((this.comments.length === 0) && (!this.loading)) {
-                            this.noComments = true;
-                            return;
-                        }
-                    }
-                    this.noComments = false;
-                },
+  </template>
 
-                /**
-                 * Checks if at the end of typing in a reply paper-input the key Enter is Pressed.
-                 * If that's the case a request is create with non-empty text of the paper-input and the attr that corresponds
-                 * to comment that is being replied to.
-                 * @param e
-                 */
-                _checkForEnter: function(e){
-                    if (e.keyCode === 13) {
-                        var text = e.currentTarget.value;
-                        var replyTo = e.currentTarget.attr;
-                        var request = this.$.postCommentRequest;
-                        if (text != null && text != ''){
-                            request.body = JSON.stringify({
-                                "requirementId": this.requirementId,
-                                "message": text,
-                                "belongsToComment": parseInt(replyTo)
-                            });
-                            request.generateRequest();
-                        } else {
-                            //show message for empty comment
-                            this.$.toast.text = this.i18n.getMsg('commentNoEmpty');
-                            this.$.toast.open();
-                        }
-                        //clear the paper-input and hide it
-                        e.currentTarget.value = '';
-                        e.currentTarget.style.display = "none";
-                    }
-                },
+  <script>
+    Polymer({
+      is: 'comments-list',
 
-                /**
-                 * Handles the response after a reply comment is posted.
-                 * It loads the list of comments after the post is made.
-                 */
-                handlePostResponseComment: function(){
-                    if (this.postResponse){
-                        this.load();
-                    }
-                },
+      behaviors: [
+        Polymer.AppLocalizeBehavior,
+        ConfigBehavior
+      ],
 
-                /**
-                 * In case of any error display the toast with the corresponding error message
-                 *
-                 * @param e - event
-                 * @param detail - details of the event object
-                 */
-                errorHandler: function (e, detail){
-                    this.$.toast.text = detail.error.message;
-                    this.$.toast.open();
-                },
+      properties: {
+        language: {
+          type: String,
+          value: 'en'
+        },
+        /** Input from the requirement-list */
+        requirementId: {
+          type: Number
+        },
+        /** iron-ajax url for loading the requirement */
+        resourceURL: {
+          type: String,
+          computed: '_computeResourceURL(requirementId)'
+        },
+        /** contains all comment objects */
+        comments: {
+          type: Array,
+          notify: true
+        },
+        /** True when the iron-ajax request is on load */
+        loading: {
+          type: Boolean,
+          observer: '_computeNoComments'
+        },
+        /** True when loading is false and comments are empty */
+        noComments: Boolean,
+        /** Saves the current comment DOM element */
+        commentElement: Object,
+        /** Header Object to be a property of iron-ajax */
+        header: {
+          type:Object,
+          notify: true
+        },
+        /** True if user is logged-in */
+        isAuthorized: Boolean
+      },
 
-                /**
-                 * Computes the style of the profile picture returning the css for div class= profilePicture
-                 *
-                 * @param profileImage
-                 * @returns {string}
-                 */
-                getProfileStyle: function(profileImage) {
-                    return 'background-image: url("' + profileImage + '");';
-                },
+      attached: function() {
+        // load localized messages
+        this.loadResources(this.resolveUrl('../../locales/locales.json'));
+      },
 
-                /**
-                 * Generates request for loading comments.
-                 */
-                load: function() {
-                    this.$.commentsLoader.generateRequest();
-                },
+      /**
+       * Computes the classes for styling of a comment div tag. If comment is a reply then the reply class is added
+       * @param comment
+       * @returns {string}
+       */
+      _computeCommentClasses: function(comment) {
+        var commentClasses = "comment layout horizontal";
+        if (this.isReply(comment)) {
+          commentClasses += " reply";
+        }
+        return commentClasses;
+      },
 
-                /**
-                 * Creates modal window for deleting a comment.
-                 *
-                 * @param e
-                 */
-                createModal: function(e) {
-                    this.$.modal.open();
-                    this.commentElement = e.currentTarget.parentNode;
-                },
+      /**
+       * Computes the URL for sending a GET request to the comments for the specific requirement
+       * @param requirementId
+       * @returns {string}
+       */
+      _computeResourceURL: function(requirementId) {
+        return this._apiBaseUrl + '/requirements/' + requirementId + '/comments/';
+      },
 
-                /**
-                 * Performs Delete comment if the dialog modal is confirmed, sends a DELETE request and hides the deleted element from the dom.
-                 *
-                 * @param e
-                 */
-                deleteComment: function(e) {
-                    if (e.detail.confirmed) {
-                        var request = this.$.postDeleteComment;
-                        request.url = app.baseHref + "/comments/" + this.commentElement.attr;
-                        request.headers = app.header;
-                        request.generateRequest();
-                        this.commentElement.style.display = 'none';
-                    }
-                },
+      /**
+       * Updates the property noComments whenever loading property changes. It checks if there are still no comments even after the
+       * request has finished loading.
+       */
+      _computeNoComments: function() {
+        if (this.comments !== undefined) {
+          if ((this.comments.length === 0) && (!this.loading)) {
+            this.noComments = true;
+            return;
+          }
+        }
+        this.noComments = false;
+      },
 
-                /**
-                 * Checks if the usrId passed matches the logged-in user.
-                 *
-                 * @param usrId {Number}
-                 * @returns {boolean}
-                 */
-                isCreator: function(usrId) {
-                    if (this.isAuthorized) {
-                        if (usrId === app.currentUser.id) {
-                            return true;
-                        }
-                    }
-                    return false;
-                },
+      /**
+       * Checks if at the end of typing in a reply paper-input the key Enter is Pressed.
+       * If that's the case a request is create with non-empty text of the paper-input and the attr that corresponds
+       * to comment that is being replied to.
+       * @param e
+       */
+      _checkForEnter: function(e) {
+        if (e.keyCode === 13) {
+          var text = e.currentTarget.value;
+          var replyTo = e.currentTarget.attr;
+          var request = this.$.postCommentRequest;
+        if (text != null && text != '') {
+          request.body = JSON.stringify({
+            "requirementId": this.requirementId,
+            "message": text,
+            "belongsToComment": parseInt(replyTo)
+          });
+          request.generateRequest();
+        } else {
+          //show message for empty comment
+          this.$.toast.text = localize('commentNoEmpty');
+          this.$.toast.open();
+        }
+          //clear the paper-input and hide it
+          e.currentTarget.value = '';
+          e.currentTarget.style.display = "none";
+        }
+      },
 
-                /**
-                 * Checks if a comment is a reply
-                 *
-                 * @param item - the comment item passed from the comments list
-                 * @returns {boolean}
-                 */
-                isReply: function(item) {
-                    if (item.belongsToComment){
-                        return true;
-                    }
-                    return false;
-                },
+      /**
+       * Handles the response after a reply comment is posted.
+       * It loads the list of comments after the post is made.
+       */
+      handlePostResponseComment: function() {
+        if (this.postResponse) {
+          this.load();
+        }
+      },
 
-                /**
-                 * Shows and hides the reply paper-input if the reply button is pressed.
-                 *
-                 * @param e
-                 */
-                showReplyInput: function(e){
-                    if (e.currentTarget.parentNode.querySelector("paper-input").style.display === "none"){
-                        e.currentTarget.parentNode.querySelector("paper-input").style.display= "block";
-                        e.currentTarget.parentNode.querySelector("paper-input").$.input.focus();
-                    } else {
-                        e.currentTarget.parentNode.querySelector("paper-input").style.display= "none";
-                    }
+      /**
+       * In case of any error display the toast with the corresponding error message
+       *
+       * @param e - event
+       * @param detail - details of the event object
+       */
+      errorHandler: function (e, detail) {
+        this.$.toast.text = detail.error.message;
+        this.$.toast.open();
+      },
+
+      /**
+       * Computes the style of the profile picture returning the css for div class= profilePicture
+       *
+       * @param profileImage
+       * @returns {string}
+       */
+      getProfileStyle: function(profileImage) {
+        return 'background-image: url("' + profileImage + '");';
+      },
+
+      /**
+       * Generates request for loading comments.
+       */
+      load: function() {
+        this.$.commentsLoader.generateRequest();
+      },
+
+      /**
+       * Creates modal window for deleting a comment.
+       *
+       * @param e
+       */
+      createModal: function(e) {
+        this.$.modal.open();
+        this.commentElement = e.currentTarget.parentNode;
+      },
+
+      /**
+       * Performs Delete comment if the dialog modal is confirmed, sends a DELETE request and hides the deleted element from the dom.
+       *
+       * @param e
+       */
+      deleteComment: function(e) {
+        if (e.detail.confirmed) {
+          var request = this.$.postDeleteComment;
+          request.url = this._apiBaseUrl + "/comments/" + this.commentElement.attr;
+          request.headers = app.header;
+          request.generateRequest();
+          this.commentElement.style.display = 'none';
+        }
+      },
+
+      /**
+       * Checks if the usrId passed matches the logged-in user.
+       *
+       * @param usrId {Number}
+       * @returns {boolean}
+       */
+      isCreator: function(usrId) {
+        if (this.isAuthorized) {
+          if (usrId === app.currentUser.id) {
+            return true;
+          }
+        }
+        return false;
+      },
+
+      /**
+       * Checks if a comment is a reply
+       *
+       * @param item - the comment item passed from the comments list
+       * @returns {boolean}
+       */
+      isReply: function(item) {
+        if (item.belongsToComment) {
+          return true;
+        }
+        return false;
+      },
+
+      /**
+       * Shows and hides the reply paper-input if the reply button is pressed.
+       *
+       * @param e
+       */
+      showReplyInput: function(e) {
+        if (e.currentTarget.parentNode.querySelector("paper-input").style.display === "none") {
+          e.currentTarget.parentNode.querySelector("paper-input").style.display= "block";
+          e.currentTarget.parentNode.querySelector("paper-input").$.input.focus();
+        } else {
+          e.currentTarget.parentNode.querySelector("paper-input").style.display= "none";
+        }
 //                    var replyAttr = "Re-" + e.currentTarget.parentNode.attr;
 //                    var lastReply;
 //                    var allRep = document.querySelectorAll(".replies");
@@ -361,38 +364,38 @@
 //                    } else {
 //                        lastReply.parentNode.appendChild(newEl);
 //                    }
-                },
+      },
 
-                /**
-                 * Checks inside the comment text if there is a url inside.
-                 * check: http://stackoverflow.com/questions/30970068/js-regex-url-validation
-                 *
-                 * @param commentText {String}
-                 * @returns {*}
-                 */
-                validateUrl: function(commentText) {
-                    var str = commentText;
-                    var expression = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/gi;
-                    var regex = new RegExp(expression);
+      /**
+       * Checks inside the comment text if there is a url inside.
+       * check: http://stackoverflow.com/questions/30970068/js-regex-url-validation
+       *
+       * @param commentText {String}
+       * @returns {*}
+       */
+      validateUrl: function(commentText) {
+        var str = commentText;
+        var expression = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/gi;
+        var regex = new RegExp(expression);
 
-                    if(!str.match(regex)) {
-                        return str;
-                    } else {
-                        var txt = str;
-                        for (var i = 0; i < str.match(regex).length; i++){
-                            var replacement;
-                            if (str.match(regex)[i].startsWith("http")){
-                                replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
-                            } else {
-                                replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
-                            }
-                            txt = txt.replace(str.match(regex)[i], replacement);
-                        }
-                        return txt;
-                    }
-                }
-            });
-        })();
+        if (!str.match(regex)) {
+          return str;
+        } else {
+          var txt = str;
+          for (var i = 0; i < str.match(regex).length; i++) {
+            var replacement;
+            if (str.match(regex)[i].startsWith("http")) {
+              replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+            } else {
+              replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+            }
+            txt = txt.replace(str.match(regex)[i], replacement);
+          }
+          return txt;
+        }
+      }
+
+    });
     </script>
 
 </dom-module>

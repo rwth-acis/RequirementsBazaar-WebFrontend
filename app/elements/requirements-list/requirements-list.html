@@ -1,6 +1,8 @@
 <link rel="import" href="../../components/polymer/polymer.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../components/masonry-layout/masonry-layout.html">
+<link rel="import" href="../../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../../src/config-behavior.html">
 
 <dom-module id="requirements-list">
   <template>
@@ -253,7 +255,7 @@
     <iron-ajax
       id="postCommentRequest"
       handle-as="json"
-      url="{{baseHref}}/comments"
+      url="{{_apiBaseUrl}}/comments"
       content-type="application/json"
       method="POST"
       headers="{{header}}"
@@ -386,7 +388,7 @@
               <iron-collapse id="reqExpand">
                 <file-gallery attachments="{{req.attachments}}"></file-gallery>
                 <h4 style="margin:0px;padding:10px 0px 10px 0px;"><i18n-msg msgid="comments"></i18n-msg></h4>
-                <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
+                <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{_apiBaseUrl}}" is-authorized="{{isAuthorized}}"></comments-list>
                 <div class="container flex-horizontal" id="[[req.id]]" hidden$="[[!isAuthorized]]">
                   <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
                   <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
@@ -460,7 +462,7 @@
                   style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
       <h2><i18n-msg msgid="comments"></i18n-msg></h2>
       <p style="max-height: 80%;">
-        <comments-list header="{{header}}" base-href="{{baseHref}}" is-authorized="{{isAuthorized}}"></comments-list>
+        <comments-list header="{{header}}" base-href="{{_apiBaseUrl}}" is-authorized="{{isAuthorized}}"></comments-list>
       <div class="container flex-horizontal" hidden$="[[!isAuthorized]]">
         <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
         <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
@@ -491,7 +493,17 @@
         listeners: {
           'change': 'addToSelectedReq'
         },
+
+        behaviors: [
+          Polymer.AppLocalizeBehavior,
+          ConfigBehavior
+        ],
+
         properties: {
+          language: {
+            type: String,
+            value: 'en'
+          },
           componentId: {
             type: Number
           },
@@ -503,14 +515,9 @@
             notify: true,
             value: 'open'
           },
-          baseHref: {
-            type: String,
-            notify: true,
-            reflectToAttribute: true
-          },
           _resourceURL: {
             type: String,
-            computed: '_computeResourceURL(baseHref, componentId)'
+            computed: '_computeResourceURL(_apiBaseUrl, componentId)'
           },
           requirements: {
             type: Array,
@@ -605,6 +612,11 @@
           '_requirementsRequestParametersUpdated(_requirementsRequestParameters)'
         ],
 
+        attached: function() {
+          // load localized messages
+          this.loadResources(this.resolveUrl('../../locales/locales.json'));
+        },
+
         _hasEnoughItems: function () {
           if (!this.list){
             var n = Math.floor((window.innerWidth - 300) / 300);
@@ -618,8 +630,8 @@
         /**
          * Computes the resource URL for the requirements request.
          */
-        _computeResourceURL: function (baseHref, componentId) {
-          return baseHref + '/components/' + componentId + '/requirements';
+        _computeResourceURL: function (apiBaseUrl, componentId) {
+          return apiBaseUrl + '/components/' + componentId + '/requirements';
         },
 
         /**
@@ -922,7 +934,7 @@
               element = el;
           }
 
-          request.url = this.baseHref + "/requirements/" + element.id;
+          request.url = this._apiBaseUrl + "/requirements/" + element.id;
           var today = new Date();
           var month = today.toDateString().substring(4, 7);
           var date = today.getDate();
@@ -956,7 +968,7 @@
             if (el.tagName === tag)
               element = el;
           }
-          request.url = this.baseHref + "/requirements/" + element.id;
+          request.url = this._apiBaseUrl + "/requirements/" + element.id;
           request.body = JSON.stringify({
             "id": parseInt(element.id),
             "leadDeveloperId": app.currentUser.id
@@ -985,7 +997,7 @@
               element = el;
           }
 
-          request.url = this.baseHref + "/requirements/" + element.id;
+          request.url = this._apiBaseUrl + "/requirements/" + element.id;
           request.body = JSON.stringify({
             "id": parseInt(element.id),
             "realized": null
@@ -1031,7 +1043,7 @@
                 element = el;
             }
 
-            request.url = this.baseHref + "/requirements/" + element.id;
+            request.url = this._apiBaseUrl + "/requirements/" + element.id;
 
             request.generateRequest();
 
@@ -1065,7 +1077,7 @@
               element = el;
           }
 
-          request.url = this.baseHref + "/requirements/" + element.id + "/followers";
+          request.url = this._apiBaseUrl + "/requirements/" + element.id + "/followers";
           request.generateRequest();
         },
 
@@ -1089,7 +1101,7 @@
               element = el;
           }
 
-          request.url = this.baseHref + "/requirements/" + element.id + "/followers";
+          request.url = this._apiBaseUrl + "/requirements/" + element.id + "/followers";
           request.generateRequest();
         },
 
@@ -1113,7 +1125,7 @@
               element = el;
           }
 
-          request.url = this.baseHref + "/requirements/" + element.id + "/developers";
+          request.url = this._apiBaseUrl + "/requirements/" + element.id + "/developers";
           request.generateRequest();
         },
 
@@ -1137,7 +1149,7 @@
               element = el;
           }
 
-          request.url = this.baseHref + "/requirements/" + element.id + "/developers";
+          request.url = this._apiBaseUrl + "/requirements/" + element.id + "/developers";
           request.generateRequest();
         },
 
@@ -1276,7 +1288,7 @@
           var requirementId = model.req.id;
 
           var request = this.$.starReq;
-          request.url = this.baseHref + "/requirements/" + requirementId + "/vote";
+          request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/vote";
 
           // now construct the method and body based on the action
           if (vote === 'NO_VOTE') {
@@ -1357,7 +1369,7 @@
           var isFollower = this._isUserInArray(followers, app.currentUser);
 
           var request = this.$.followRequest;
-          request.url = this.baseHref + "/requirements/" + requirementId + "/followers";
+          request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/followers";
 
           if (!isFollower) {
             // follow requirement
@@ -1408,7 +1420,7 @@
           var isUserInArray = this._isUserInArray(userArray, this.currentUser);
 
           var request = this.$.userInResourceRequest;
-          request.url = this.baseHref + "/requirements/" + requirementId + "/" + resource;
+          request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/" + resource;
 
           if (!isUserInArray) {
             // POST user to resource
@@ -1486,7 +1498,7 @@
          */
         _toggleRealized: function(requirement) {
           var request = this.$.updateRequirementRequest;
-          request.url = this.baseHref + "/requirements/" + requirement.id;
+          request.url = this._apiBaseUrl + "/requirements/" + requirement.id;
 
           if (requirement.hasOwnProperty('realized')) {
             // unrealize it
@@ -1590,7 +1602,7 @@
           if (e.detail.confirmed) {
             var requirement = this.requirementToDelete;
             var request = this.$.deleteRequirementRequest;
-            request.url = this.baseHref + '/requirements/' + requirement.id;
+            request.url = this._apiBaseUrl + '/requirements/' + requirement.id;
 
             request.generateRequest();
           }
@@ -1622,7 +1634,7 @@
          */
         _toggleLeadDeveloper: function(requirement) {
           var request = this.$.updateRequirementRequest;
-          request.url = this.baseHref + '/requirements/' + requirement.id;
+          request.url = this._apiBaseUrl + '/requirements/' + requirement.id;
           request.body = JSON.stringify({
             'id': parseInt(requirement.id),
             'leadDeveloperId': (app.currentUser.id !== requirement.leadDeveloperId) ? app.currentUser.id : 1
@@ -1665,7 +1677,7 @@
           var request = this.$.postUpdateRequirement;
           //TODO: check if this is not harmful code when requirement belongs to multiple components
           var components = [{id: parseInt(app.params.componentId)}];
-          request.url = this.baseHref + "/requirements/" + model.req.id;
+          request.url = this._apiBaseUrl + "/requirements/" + model.req.id;
 
           if (title != '' && description != '') {
             request.body = JSON.stringify({
