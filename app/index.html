@@ -609,7 +609,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <paper-textarea label="[[formDesc]]" id="newRequirementDesc" max-rows="4" on-keydown="checkEnter"></paper-textarea>
                                 <div class="helper-highlight">Ctrl + Enter for new line</div>
                                 <vaadin-upload
-                                        target="https://requirements-bazaar.org/betafileservice/files/"
+                                        target="[[fileServiceHref]]"
                                         method="POST"
                                         timeout="300000"
                                         files="{{files}}"
