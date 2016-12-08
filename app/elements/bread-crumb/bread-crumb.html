@@ -1,78 +1,43 @@
 <link rel="import" href="../../components/polymer/polymer.html">
 
 <dom-module id="bread-crumb">
-    <template>
-        <style is="custom-style">
-            :host {
-                display: block;
-            }
-        </style>
+  <template>
+    <style is="custom-style">
+      :host {
+        display: block;
+      }
+    </style>
 
-        <iron-ajax
-                id="projectLoader"
-                url="{{baseHref}}/projects/[[projectId]]"
-                last-response="{{project}}"></iron-ajax>
-
-        <iron-ajax
-                id="componentLoader"
-                url="{{baseHref}}/components/[[componentId]]"
-                last-response="{{component}}"></iron-ajax>
-
-
-        <span><a href="{{baseUrl}}projects">Projects</a></span>
-        <template is="dom-if" if$="[[project]]">
-            <span> > <a href$="{{baseUrl}}projects/[[project.id]]">[[project.name]]</a></span>
-        </template>
-        <template is="dom-if" if$="[[component]]">
-            <span> > <a href$="{{baseUrl}}projects/[[project.id]]/components/[[component.id]]">[[component.name]]</a></span>
-        </template>
-
+    <span><a href="/projects">Projects</a></span>
+    <template is="dom-if" if$="[[projectId]]">
+      <span> > <a href$="/projects/[[projectId]]">Project [[projectId]]</a></span>
+    </template>
+    <template is="dom-if" if$="[[componentId]]">
+      <span> > <a href$="/projects/[[projectId]]/components/[[componentId]]">Component [[componentId]]</a></span>
     </template>
 
-    <script>
-        (function () {
-//            'use strict';
+  </template>
 
-            Polymer({
-                is: 'bread-crumb',
-                properties: {
-                    project: {
-                        type: Object
-                    },
-                    component: {
-                        type: Object
-                    },
-                    projectId: {
-                        type: String,
-                        observer: '_getProject'
-                    },
-                    componentId: {
-                        type: String,
-                        observer: '_getComponent'
-                    },
-                    baseUrl: {
-                        type: String
-                    },
-                    baseHref: {
-                        type: String
-                    }
-                },
+  <script>
+    Polymer({
+      is: 'bread-crumb',
 
-                _getProject: function(){
-                    if (this.projectId !== null){
-                        this.$.projectLoader.generateRequest();
-                    }
-                },
+      properties: {
+        project: {
+          type: Object
+        },
+        component: {
+          type: Object
+        },
+        projectId: {
+          type: Number
+        },
+        componentId: {
+          type: Number
+        }
+      }
 
-                _getComponent: function(){
-                    if (this.componentId !== null){
-                        this.$.componentLoader.generateRequest();
-                    }
-                }
-
-            });
-        })
-        ();
+    });
     </script>
 
 </dom-module>

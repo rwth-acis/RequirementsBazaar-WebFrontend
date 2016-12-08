@@ -41,17 +41,22 @@
           type: String,
           reflectToAttribute: true,
           observer: '_viewChanged'
-        },
+        }
       },
 
       observers: [
-        '_routeViewChanged(data.projectId)'
+        '_dataChanged(data.projectId)',
+        '_routeChanged(route)'
       ],
 
-      _routeViewChanged: function(view) {
-        if (view) {
+      _dataChanged: function(projectId) {
+        if (projectId) {
           this.view = 'components';
-        } else {
+        }
+      },
+
+      _routeChanged: function(route) {
+        if (route.path === '') {
           this.view = 'projects-list';
         }
       },

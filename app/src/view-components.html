@@ -48,14 +48,19 @@
       },
 
       observers: [
-        '_routeViewChanged(data)'
+        '_dataChanged(data.componentId)',
+        '_routeChanged(route)'
       ],
 
-      _routeViewChanged: function(data) {
-        if (!data.componentId) {
-          this.view = 'components-list';
-        } else {
+      _dataChanged: function(componentId) {
+        if (componentId) {
           this.view = 'requirements';
+        }
+      },
+
+      _routeChanged: function(route) {
+        if (route.path === '') {
+          this.view = 'components-list';
         }
       },
 
