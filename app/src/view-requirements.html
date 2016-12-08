@@ -1,5 +1,7 @@
 <link rel="import" href="../components/polymer/polymer.html">
 <link rel="import" href="../components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../components/paper-material/paper-material.html">
 <link rel="import" href="../components/paper-button/paper-button.html">
 <link rel="import" href="../components/paper-input/paper-input.html">
@@ -105,6 +107,14 @@
                 headers="{{header}}"
                 on-response="handlePutResponseComponent"
                 on-error="errorHandler"></iron-ajax>
+
+    <app-drawer id="drawer" align="left">
+      <app-toolbar>Menu</app-toolbar>
+      <div>This is it!</div>
+      <div>This is it!</div>
+      <div>This is it!</div>
+      <div>This is it!</div>
+    </app-drawer>
 
     <paper-material id="componentToolbar" style="padding-top: 64px;">
       <paper-menu-button horizontal-align="right"
@@ -311,6 +321,10 @@
       attached: function() {
         // load localized messages
         this.loadResources(this.resolveUrl('../locales/locales.json'));
+      },
+
+      getDrawer: function() {
+        return this.$.drawer;
       },
 
       /**

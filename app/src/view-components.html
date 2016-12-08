@@ -22,7 +22,7 @@
       role="main"
       content>
       <view-components-list name="components-list" project-id="[[projectId]]"></view-components-list>
-      <view-requirements name="requirements" project-id="[[projectId]]" component-id="[[data.componentId]]" route="[[subroute]]"></view-requirements>
+      <view-requirements name="requirements" id="requirementsView" project-id="[[projectId]]" component-id="[[data.componentId]]" route="[[subroute]]"></view-requirements>
       <view-404 name="view404"></view-404>
     </iron-pages>
 
@@ -52,6 +52,13 @@
         '_routeChanged(route)'
       ],
 
+      /**
+       * Fired when an attached view wants to register a drawer.
+       *
+       * @event drawer-registered
+       * @param {object} drawer The drawer that is registered.
+       */
+
       _dataChanged: function(componentId) {
         if (componentId) {
           this.view = 'requirements';
@@ -67,7 +74,13 @@
       _viewChanged: function(view) {
         // Load view import on demand. Show 404 view if fails
         var resolvedViewUrl = this.resolveUrl('view-' + view + '.html');
-        this.importHref(resolvedViewUrl, null, this._showView404, true);
+        this.importHref(resolvedViewUrl, function(e) {
+          // import successful
+          if (view === 'requirements') {
+            var drawer = this.$.requirementsView.getDrawer();
+            this.fire('drawer-registered', {drawer: drawer});
+          }
+        }, this._showView404, true);
       },
 
       _showView404: function() {

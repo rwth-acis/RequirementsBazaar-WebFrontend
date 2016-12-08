@@ -49,6 +49,13 @@
         '_routeChanged(route)'
       ],
 
+      /**
+       * Fired when an attached view wants to register a drawer.
+       *
+       * @event drawer-registered
+       * @param {object} drawer The drawer that is registered.
+       */
+
       _dataChanged: function(projectId) {
         if (projectId) {
           this.view = 'components';

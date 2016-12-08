@@ -112,7 +112,7 @@
         role="main"
         content>
         <view-landing name="landing"></view-landing>
-        <view-projects name="projects" route="{{subroute}}"></view-projects>
+        <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered"></view-projects>
         <view-404 name="view404"></view-404>
       </iron-pages>
 
@@ -144,11 +144,23 @@
       },
 
       observers: [
-        '_routeViewChanged(routeData.view)'
+        '_routeViewChanged(routeData.view)',
+        '_routeChanged(route)'
       ],
+
+      _handleDrawerRegistered: function(e) {
+        this.$.doubleDrawerLayout.leftDrawer = e.detail.drawer;
+      },
 
       _routeViewChanged: function(view) {
         this.view = view || 'landing';
+      },
+
+      _routeChanged: function(route) {
+        if (route.path.match(/\/projects\/[0-9]+\/components\/[0-9]+/) === null) {
+          // reset layout
+          this.$.doubleDrawerLayout.leftDrawer = null;
+        }
       },
 
       _viewChanged: function(view) {
