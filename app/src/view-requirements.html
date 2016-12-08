@@ -22,6 +22,7 @@
 <link rel="import" href="../components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../elements/requirements-list/requirements-list.html">
+<link rel="import" href="../elements/components-menu/components-menu.html">
 <link rel="import" href="../elements/req-user/req-user.html">
 <link rel="import" href="../elements/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="shared-styles.html">
@@ -34,6 +35,12 @@
         display: block;
 
         padding: 15px;
+      }
+
+      app-drawer {
+        /** paper-dialog has 103 **/
+        z-index: 104;
+        margin-top: 64px;
       }
 
       .componentName {
@@ -109,14 +116,14 @@
                 on-error="errorHandler"></iron-ajax>
 
     <app-drawer id="drawer" align="left">
-      <app-toolbar>Menu</app-toolbar>
-      <div>This is it!</div>
-      <div>This is it!</div>
-      <div>This is it!</div>
-      <div>This is it!</div>
+      <!-- Drawer Toolbar -->
+      <app-toolbar id="drawerToolbar">[[localize('components')]]</app-toolbar>
+
+      <!-- Drawer Content -->
+      <components-menu id="componentsMenu" project-id="[[projectId]]"></components-menu>
     </app-drawer>
 
-    <paper-material id="componentToolbar" style="padding-top: 64px;">
+    <paper-material id="componentToolbar">
       <paper-menu-button horizontal-align="right"
                          id="menuCompButton"
                          vertical-align="top"

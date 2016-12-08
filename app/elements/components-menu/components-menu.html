@@ -1,4 +1,5 @@
 <link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../../components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../src/config-behavior.html">
 
 <dom-module id="components-menu">
@@ -14,21 +15,26 @@
         };
       }
 
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
     </style>
 
-    <iron-ajax id="componentLoader"
-               url="{{componentResourceURL}}"
-               last-response="{{component}}"></iron-ajax>
-
-    <iron-ajax id="componentsLoader"
-               last-response="{{components}}"
-               params='{"page":"0", "per_page":"150"}'
-               loading="{{loading}}"></iron-ajax>
+    <iron-ajax
+      id="componentsLoader"
+      url="[[resourceURL]]"
+      last-response="{{components}}"
+      params='{"page":"0", "per_page":"150"}'
+      auto></iron-ajax>
 
     <paper-menu>
 
       <template is="dom-repeat" items="{{components}}">
-        <paper-item on-tap="onComponentTap">[[item.name]]</paper-item>
+        <a href$="/projects/[[projectId]]/components/[[item.id]]">
+          <paper-item>[[item.name]]</paper-item>
+        </a>
       </template>
 
     </paper-menu>
@@ -43,54 +49,21 @@
       ],
 
       properties: {
-        componentId: {
-          type: Number,
-          notify: true
-        },
         projectId: {
-          type: Number,
-          computed: 'computeProjectId(component)'
+          type: Number
         },
-      componentResourceURL: {
+        resourceURL: {
           type: String,
-          computed: 'computeComponentResourceURL(componentId)'
-        },
-        component: {
-          type: Object,
-          notify: true,
-          observer: '_componentChanged'
+          computed: '_computeResourceURL(projectId)'
         },
         components: {
           type: Array,
           notify: true
-        },
-        loading: {
-          type: Boolean,
-          notify: true
         }
       },
 
-      computeComponentResourceURL: function(componentId) {
-        return this._apiBaseUrl + '/components/' + componentId;
-      },
-
-      getComponentsResourceURL: function(projectId) {
-        if (projectId === null) {
-          return null;
-        }
+      _computeResourceURL: function (projectId) {
         return this._apiBaseUrl + '/projects/' + projectId + '/components/';
-      },
-
-      _componentChanged: function(newValue) {
-        this.$.componentsLoader.url = this.getComponentsResourceURL(newValue.projectId);
-        this.$.componentsLoader.generateRequest();
-      },
-
-      computeProjectId: function(component) {
-        if (component === null) {
-          return null;
-        }
-        return component.projectId;
       },
 
       onComponentTap: function(e) {
