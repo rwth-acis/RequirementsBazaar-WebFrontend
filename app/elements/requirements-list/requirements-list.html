@@ -549,15 +549,6 @@
            * Stores the requirement object that is going to be deleted, while modal dialog is shown.
            */
           requirementToDelete: Number,
-          isFollower: {
-            type: Boolean,
-            value: false
-          },
-          isDeveloper: {
-            type: Boolean,
-            value: false
-          },
-          commentlbl: String,
           filterValue: {
             type: String,
             value: ''
@@ -566,7 +557,7 @@
             type: Boolean,
             notify: true
           },
-          buttons:{
+          buttons: {
             type: Array,
             value: [],
             notify: true
@@ -914,37 +905,12 @@
           this.selectedRequirements = [];
         },
 
-        undoRequirement: function(e){
-          var el = e.currentTarget;
-          var tag = "PAPER-MATERIAL";
-          var element;
-          var request = this.$.postUpdateRequirement;
-
-          while (el.parentNode) {
-            el = el.parentNode;
-            if (el.tagName === tag)
-              element = el;
-          }
-
-          request.url = this._apiBaseUrl + "/requirements/" + element.id;
-          request.body = JSON.stringify({
-            "id": parseInt(element.id),
-            "realized": null
-          });
-          request.generateRequest();
-        },
-
         handleResponseEditReq: function(data) {
           if (data != null){
             this.feedback = this.localize('reqEditSucc');
             this.load();
           }
           this.$.toast.open();
-        },
-
-        createModal: function(e){
-          this.$.modal.open();
-          this.elem = e.currentTarget;
         },
 
         openCommentsDialog: function(e){
@@ -957,42 +923,6 @@
           this.$.commentsDialog.querySelector("comments-list").comments = [];
         },
 
-
-        deleteRequirement: function(e) {
-          if (e.detail.confirmed) {
-            var el = this.elem;
-            var tag = "PAPER-MATERIAL";
-            var element;
-            var request = this.$.postDeleteRequirement;
-
-            while (el.parentNode) {
-              el = el.parentNode;
-              if (el.tagName === tag)
-                element = el;
-            }
-
-            request.url = this._apiBaseUrl + "/requirements/" + element.id;
-
-            request.generateRequest();
-
-            element.parentNode.removeChild(element);
-
-            this.feedback = this.localize('reqDelSucc');
-
-            this.$.toast.open();
-          }
-
-        },
-
-        findUpTag: function(el, tag) {
-          while (el.parentNode) {
-            el = el.parentNode;
-            if (el.tagName === tag)
-              return el;
-          }
-          return null;
-        },
-
         searchFilter: function (val) {
           return function (item) {
             if (!val) {
@@ -1003,28 +933,13 @@
           };
         },
 
-        userVoted: function(vote){
-          if (vote === "NO_VOTE"){
-            return false;
-          } else {
-            return true;
-          }
-        },
-
-        isEmpty: function(arr){
-          if (arr === undefined){
-            return false;
-          } else
-
-          if (arr.length > 0){
-            return false;
-          }
-          return true;
-        },
-
+        /**
+         * Handles tapping a requirement.
+         *
+         * @param e
+         */
         _handleRequirementTap: function(e) {
           this.set('route.path', '/requirements/' + e.model.req.id);
-          //page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.model.req.id);
         },
 
         checkForEnter: function (e) {
