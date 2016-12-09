@@ -98,7 +98,8 @@
     "realized-req": "Realized Requirements",
     "list-view": "List View",
     "grid-view": "Grid View",
-    "inputRequired": "Please fill out this field."
+    "inputRequired": "Please fill out this field.",
+    "options": "Options"
   },
   "de": {
     "settings": "Einstellungen",
@@ -199,6 +200,7 @@
     "realized-req": "Realisierte Anforderungen",
     "list-view": "Listenansicht",
     "grid-view": "Kachelansicht",
-    "inputRequired": "Dieses Feld ist erforderlich."
+    "inputRequired": "Dieses Feld ist erforderlich.",
+    "options": "Optionen"
   }
 }

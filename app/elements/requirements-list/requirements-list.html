@@ -12,17 +12,19 @@
 <link rel="import" href="../../components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../../components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../../components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../components/iron-signals/iron-signals.html">
 <link rel="import" href="../../components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../components/masonry-layout/masonry-layout.html">
 <link rel="import" href="../../components/openidconnect-signin/openidconnect-signin-aware.html">
 <link rel="import" href="../../components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../comments-list/comments-list.html">
+<link rel="import" href="../../src/shared-styles.html">
 <link rel="import" href="../../src/config-behavior.html">
 
 <dom-module id="requirements-list">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: block;
       }
@@ -158,9 +160,9 @@
       }
     </style>
 
-    <openidconnect-signin-aware is-authorized="{{isAuthorized}}"></openidconnect-signin-aware>
+    <openidconnect-signin-aware is-authorized="{{_authorized}}"></openidconnect-signin-aware>
 
-    <i18n-msg class="hide" id="i18n"></i18n-msg>
+    <iron-signals on-iron-signal-language-updated="_handleLanguageUpdated"></iron-signals>
 
     <iron-ajax
       id="requirementsRequest"
@@ -300,14 +302,14 @@
 
     <!-- GRID VIEW -->
 
-    <template is="dom-if" if="{{!list}}" restamp>
+    <template is="dom-if" if="{{_isViewActive(viewOption, 'grid')}}" restamp>
       <masonry-layout id="grids" column-width="100">
         <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
 
             <div class="grid-item">
               <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
                 <!--<paper-checkbox></paper-checkbox>-->
-                <div style="display:inline-flex; padding-left: 16px;"><span><i18n-msg msgid="by"></i18n-msg> <req-user user="[[req.creator]]" normal-view></req-user></span></div>
+                <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[req.creator]]" normal-view></req-user></span></div>
                 <relative-time class="time" datetime$="[[req.creation_time]]"></relative-time>
                 <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
                 <div class="card-content" class="truncate">{{req.description}}</div>
@@ -315,10 +317,13 @@
                   <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
                     <iron-icon icon="editor:mode-comment"></iron-icon>
                   </paper-button>
-                  <span class="starIcon"><paper-icon-button icon="[[_calculateStarIcon(req.userVoted, isAuthorized)]]"
-                                           class$="[[_calculateStarClass(req.userVoted, isAuthorized)]]"
-                                           on-tap="_handleStarTap"
-                                           disabled="[[!isAuthorized]]"></paper-icon-button>[[req.upVotes]]</span>
+                  <span class="starIcon">
+                    <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, _authorized)]]"
+                                       class$="[[_calculateStarClass(req.userVoted, _authorized)]]"
+                                       on-tap="_handleStarTap"
+                                       disabled="[[!_authorized]]"></paper-icon-button>
+                    [[req.upVotes]]
+                  </span>
                 </div>
               </paper-card>
             </div>
@@ -329,7 +334,7 @@
 
     <!-- LIST VIEW -->
 
-    <template is="dom-if" if="{{list}}">
+    <template is="dom-if" if="{{_isViewActive(viewOption, 'list')}}">
       <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}" initial-count="4">
         <div class="layout vertical center">
 
@@ -338,33 +343,33 @@
 
               <div class="req-icons layout horizontal center">
                 <paper-checkbox></paper-checkbox>
-                <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, isAuthorized)]]"
-                                   class$="[[_calculateStarClass(req.userVoted, isAuthorized)]]"
+                <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, _authorized)]]"
+                                   class$="[[_calculateStarClass(req.userVoted, _authorized)]]"
                                    on-tap="_handleStarTap"
-                                   disabled="[[!isAuthorized]]"></paper-icon-button>
+                                   disabled="[[!_authorized]]"></paper-icon-button>
                 <div>[[req.upVotes]]</div>
 
-                <paper-menu-button horizontal-align="right" vertical-align="top" hidden$="[[!isAuthorized]]" on-iron-select="_handleRequirementMenuSelect">
+                <paper-menu-button horizontal-align="right" vertical-align="top" hidden$="[[_authorized]]" on-iron-select="_handleRequirementMenuSelect">
                   <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                   <paper-menu class="dropdown-content">
                     <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
-                    <paper-item value="toggleContributors" id="contr"><i18n-msg msgid="showContributors"></i18n-msg></paper-item>
-                    <paper-item value="realize"><i18n-msg msgid="[[_calculateRealizeMessage(req.realized)]]"></i18n-msg></paper-item>
-                    <paper-item value="follow" hidden$="[[req.realized]]"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]"></i18n-msg></paper-item>
-                    <paper-item value="develop" hidden$="[[req.realized]]"><i18n-msg msgid$="[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]"></i18n-msg></paper-item>
-                    <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]"><i18n-msg msgid="becomeLeadDeveloper"></i18n-msg></paper-item>
-                    <paper-item value="edit" hidden$="[[req.realized]]"><i18n-msg msgid="editRequirement"></i18n-msg></paper-item>
-                    <paper-item value="delete"><i18n-msg msgid="deleteRequirement"></i18n-msg></paper-item>
+                    <paper-item value="toggleContributors" id="contr">[[localize('showContributors')]]</paper-item>
+                    <paper-item value="realize">[[_calculateRealizeMessage(req.realized)]]</paper-item>
+                    <paper-item value="follow" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]</paper-item>
+                    <paper-item value="develop" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]</paper-item>
+                    <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]">[[localize('becomeLeadDeveloper')]]</paper-item>
+                    <paper-item value="edit" hidden$="[[req.realized]]">[[localize('editRequirement')]]</paper-item>
+                    <paper-item value="delete">[[localize('deleteRequirement')]]</paper-item>
                   </paper-menu>
                 </paper-menu-button>
 
               </div>
 
-              <paper-toolbar class="title" on-tap="onRequirementTap">
+              <paper-toolbar class="title" on-tap="_handleRequirementTap">
                 <div class="title">[[req.title]]</div>
                 <div class="bottom fit helper" style="margin-top:20px;">
                   <relative-time datetime$="[[req.creation_time]]"></relative-time>
-                  <i18n-msg msgid="by"></i18n-msg>
+                  [[localize('by')]]
                   <req-user user="[[req.creator]]" normal-view></req-user>
                 </div>
               </paper-toolbar>
@@ -374,9 +379,9 @@
             <div class="line"></div>
 
             <div class="contributors" id$="contributors{{req.id}}">
-              <div><i18n-msg msgid="creator"></i18n-msg>: <req-user user="[[req.creator]]" full-view></req-user></div>
-              <div><i18n-msg msgid="leadDeveloper"></i18n-msg>: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
-              <div><i18n-msg msgid="developers"></i18n-msg>:
+              <div>[[localize('creator')]]: <req-user user="[[req.creator]]" full-view></req-user></div>
+              <div>[[localize('leadDeveloper')]]: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
+              <div>[[localize('developers')]]:
                 <template is="dom-repeat" items="{{req.developers}}" as="developer">
                   <div style="display:inline-block">
                     <req-user user="[[developer]]" mini></req-user>
@@ -384,7 +389,7 @@
                   </div>
                 </template>
               </div>
-              <div><i18n-msg msgid="followers"></i18n-msg>:
+              <div>[[localize('followers')]]:
                 <template is="dom-repeat" items="{{req.followers}}" as="foll">
                   <div style="display:inline-block">
                     <req-user user="[[foll]]" mini></req-user>
@@ -403,11 +408,10 @@
 
               <iron-collapse id="reqExpand">
                 <file-gallery attachments="{{req.attachments}}"></file-gallery>
-                <h4 style="margin:0px;padding:10px 0px 10px 0px;"><i18n-msg msgid="comments"></i18n-msg></h4>
-                <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{_apiBaseUrl}}" is-authorized="{{isAuthorized}}"></comments-list>
-                <div class="container flex-horizontal" id="[[req.id]]" hidden$="[[!isAuthorized]]">
-                  <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-                  <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
+                <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{_apiBaseUrl}}" is-authorized="{{_authorized}}"></comments-list>
+                <div class="container flex-horizontal" id="[[req.id]]" hidden$="[[!_authorized]]">
+                  <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[localize('addComment')]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
                     <!--<emoji-selector suffix></emoji-selector>-->
                   </paper-input>
                   <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
@@ -420,8 +424,8 @@
 
               <paper-input class="editTitle title" value="{{req.title}}"></paper-input>
               <paper-textarea value="{{req.description}}"></paper-textarea>
-              <paper-button raised on-tap="_handleSaveEditTap" data-args="[[req.title]]"><i18n-msg msgid="save"></i18n-msg></paper-button>
-              <paper-button raised on-tap="_handleCancelEditTap" data-args="[[req.title]]"><i18n-msg msgid="cancel"></i18n-msg></paper-button>
+              <paper-button raised on-tap="_handleSaveEditTap" data-args="[[req.title]]">[[localize('save')]]</paper-button>
+              <paper-button raised on-tap="_handleCancelEditTap" data-args="[[req.title]]">[[localize('cancel')]]</paper-button>
 
             </div>
 
@@ -464,11 +468,11 @@
 
     <paper-dialog id="modal" modal on-iron-overlay-closed="_handleDeleteRequirement" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation">
-      <h2><i18n-msg msgid="deleteRequirement"></i18n-msg>?</h2>
-      <p><i18n-msg msgid="deleteRequirementDesc"></i18n-msg></p>
+      <h2>[[localize('deleteRequirement')]]?</h2>
+      <p>[[localize('deleteRequirementDesc')]]</p>
       <div class="buttons">
-        <paper-button dialog-dismiss><i18n-msg msgid="cancel"></i18n-msg></paper-button>
-        <paper-button dialog-confirm autofocus><i18n-msg msgid="delete"></i18n-msg></paper-button>
+        <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
+        <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
       </div>
     </paper-dialog>
 
@@ -476,12 +480,11 @@
 
     <paper-dialog id="commentsDialog" on-iron-overlay-closed="deleteLeftoverComment" entry-animation="fade-in-animation" exit-animation="fade-out-animation"
                   style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
-      <h2><i18n-msg msgid="comments"></i18n-msg></h2>
+      <h2>[[localize('comments')]]</h2>
       <p style="max-height: 80%;">
-        <comments-list header="{{header}}" base-href="{{_apiBaseUrl}}" is-authorized="{{isAuthorized}}"></comments-list>
-      <div class="container flex-horizontal" hidden$="[[!isAuthorized]]">
-        <i18n-msg class="i18nLabel" msgid="addComment" msg="{{commentlbl}}"></i18n-msg>
-        <paper-input is="iron-input" on-input="showSendButton" label="[[commentlbl]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
+        <comments-list header="{{header}}" base-href="{{_apiBaseUrl}}" is-authorized="{{_authorized}}"></comments-list>
+      <div class="container flex-horizontal" hidden$="[[!_authorized]]">
+        <paper-input is="iron-input" on-input="showSendButton" label="[[localize('addComment')]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
         </paper-input>
         <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
       </div>
@@ -516,10 +519,6 @@
         ],
 
         properties: {
-          language: {
-            type: String,
-            value: 'en'
-          },
           componentId: {
             type: Number
           },
@@ -530,6 +529,10 @@
             type: String,
             notify: true,
             value: 'open'
+          },
+          viewOption: {
+            type: String,
+            value: 'list'
           },
           _resourceURL: {
             type: String,
@@ -550,9 +553,9 @@
           /**
            * Defines whether the user is logged in or not.
            */
-          isAuthorized: {
+          _authorized: {
             type: Boolean,
-            notify: true
+            value: true
           },
           postUrl: String,
           body: Object,
@@ -587,7 +590,6 @@
             value: false
           },
           commentlbl: String,
-          i18n: Object,
           filterValue: {
             type: String,
             value: ''
@@ -641,6 +643,10 @@
           } else {
             this.style.paddingLeft = "0px";
           }
+        },
+
+        _isViewActive: function(viewOption, view) {
+          return (viewOption === view);
         },
 
         /**
@@ -828,16 +834,12 @@
         postGridComment: function(e){
           var reqId = e.currentTarget.parentNode.parentNode.querySelector("comments-list").requirementId;
           var request = this.$.postCommentRequest;
-          if (this.newComment != null && this.newComment != ''){
-            request.body = JSON.stringify({
-              "requirementId": reqId,
-              "message": this.newComment
-            });
-            request.generateRequest();
-          } else {
-            this.feedback = this.i18n.getMsg('');
-            this.$.toast.open();
-          }
+          request.body = JSON.stringify({
+            "requirementId": reqId,
+            "message": this.newComment
+          });
+          request.generateRequest();
+
           this.newComment = '';
           e.currentTarget.parentNode.parentNode.querySelector(".comments-input").value = null;
         },
@@ -891,7 +893,7 @@
             });
             request.generateRequest();
           } else {
-            this.$.toast.text = this.i18n.getMsg('commentNoEmpty');
+            this.$.toast.text = this.localize('commentNoEmpty');
             this.$.toast.open();
           }
           this.newComment = '';
@@ -1024,7 +1026,7 @@
 
         handleResponseEditReq: function(data) {
           if (data != null){
-            this.feedback = this.i18n.getMsg('reqEditSucc');
+            this.feedback = this.localize('reqEditSucc');
             this.load();
           }
           this.$.toast.open();
@@ -1065,7 +1067,7 @@
 
             element.parentNode.removeChild(element);
 
-            this.feedback = this.i18n.getMsg('reqDelSucc');
+            this.feedback = this.localize('reqDelSucc');
 
             this.$.toast.open();
           }
@@ -1099,7 +1101,7 @@
 
         handleResponseFollowReq: function(data){
           if (data != null){
-            this.feedback = this.i18n.getMsg('fdbFollowReq');
+            this.feedback = this.localize('fdbFollowReq');
             this.isFollower = true;
           }
           this.$.toast.open();
@@ -1123,7 +1125,7 @@
 
         handleResponseUnfollowReq: function(data){
           if (data != null){
-            this.feedback = this.i18n.getMsg('fdbUnfollowReq');
+            this.feedback = this.localize('fdbUnfollowReq');
             this.isFollower = false;
           }
           this.$.toast.open();
@@ -1147,7 +1149,7 @@
 
         handleResponseDevelopReq: function(data){
           if (data != null){
-            this.feedback = this.i18n.getMsg('fdbDevelopReq');
+            this.feedback = this.localize('fdbDevelopReq');
             this.isDeveloper = true;
           }
           this.$.toast.open();
@@ -1171,7 +1173,7 @@
 
         handleResponseUndevelopReq: function(data){
           if (data != null){
-            this.feedback = this.i18n.getMsg('fdbUndevelopReq');
+            this.feedback = this.localize('fdbUndevelopReq');
             this.isDeveloper = false;
           }
           this.$.toast.open();
@@ -1206,7 +1208,7 @@
           return true;
         },
 
-        onRequirementTap: function(e){
+        _handleRequirementTap: function(e) {
           page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.model.req.id);
         },
 
@@ -1266,12 +1268,12 @@
          * Calculates the specific star icon to show for the voting feature of the requirements.
          *
          * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
-         * @param isAuthorized whether the user is currently logged in or not.
+         * @param authorized whether the user is currently logged in or not.
          * @returns {string} the icon, either a filled star or just the outlines of a star.
          * @private
          */
-        _calculateStarIcon: function(vote, isAuthorized) {
-          if (isAuthorized && (vote === 'UP_VOTE')) {
+        _calculateStarIcon: function(vote, authorized) {
+          if (authorized && (vote === 'UP_VOTE')) {
             return 'star';
           }
           return 'star-border';
@@ -1281,12 +1283,12 @@
          * Calculates the CSS class for the star icon of the voting feature of the requirements.
          *
          * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
-         * @param isAuthorized whether the user is currently logged in or not.
+         * @param authorized whether the user is currently logged in or not.
          * @returns {string} the CSS class for the star icon.
          * @private
          */
-        _calculateStarClass: function(vote, isAuthorized) {
-          if (isAuthorized && (vote === 'UP_VOTE')) {
+        _calculateStarClass: function(vote, authorized) {
+          if (authorized && (vote === 'UP_VOTE')) {
             return 'colored';
           }
         },
@@ -1353,21 +1355,21 @@
         },
 
         /**
-         * Calculates the i18n key based on whether the provided user is in the provided array of user objects.
+         * Calculates the localized message based on whether the provided user is in the provided array of user objects.
          *
          * @param userArray an array of user objects.
          * @param user the currently logged in user's object. This is to be notified by the data
          *   binding system of Polymer about changes, and recalculate the value.
-         * @param falseMessage the i18n key to return when the user is not in the array.
-         * @param trueMessage the i18n key to return when the user is in the array.
-         * @returns {string} the i18n key.
+         * @param falseMessage the text to show when the user is not in the array.
+         * @param trueMessage the text to show when the user is in the array.
+         * @returns {string} the localized message.
          * @private
          */
         _calculateMessageBasedOnUserInArray: function(userArray, user, falseMessage, trueMessage) {
-          if (this.isAuthorized && this._isUserInArray(userArray, user)) {
-            return trueMessage;
+          if (this._authorized && this._isUserInArray(userArray, user)) {
+            return this.localize(trueMessage);
           } else {
-            return falseMessage;
+            return this.localize(falseMessage);
           }
         },
 
@@ -1409,9 +1411,9 @@
           var status = e.detail.status;
 
           if (status === 200) {
-            this.feedback = this.i18n.getMsg('fdbUnfollowReq');
+            this.feedback = this.localize('fdbUnfollowReq');
           } else if (status === 201) {
-            this.feedback = this.i18n.getMsg('fdbFollowReq');
+            this.feedback = this.localize('fdbFollowReq');
           } else {
             //TODO: add i18n
             this.feedback = 'error';
@@ -1460,9 +1462,9 @@
           var method = e.target.method;
 
           if (method === 'DELETE') {
-            this.feedback = this.i18n.getMsg('fdbUndevelopReq');
+            this.feedback = this.localize('fdbUndevelopReq');
           } else if (method === 'POST') {
-            this.feedback = this.i18n.getMsg('fdbDevelopReq');
+            this.feedback = this.localize('fdbDevelopReq');
           } else {
             //TODO: add i18n
             this.feedback = 'error';
@@ -1557,7 +1559,7 @@
          */
         _handleUpdateRequirementResponse: function(e) {
           if (e != null){
-            this.feedback = this.i18n.getMsg('reqEditSucc');
+            this.feedback = this.localize('reqEditSucc');
           }
 
           this.$.toast.open();
@@ -1593,7 +1595,7 @@
         },
 
         /**
-         * Calculates the i18n key for the realized menu button, depending on whether the requirement is realized or
+         * Calculates the localized message for the realized menu button, depending on whether the requirement is realized or
          * not.
          *
          * @param realized
@@ -1602,9 +1604,9 @@
          */
         _calculateRealizeMessage: function(realized) {
           if (realized) {
-            return 'markAsUnDone';
+            return this.localize('markAsUnDone');
           } else {
-            return 'markAsDone';
+            return this.localize('markAsDone');
           }
         },
 
@@ -1633,7 +1635,7 @@
         _handleDeleteRequirementResponse: function(e) {
           //TODO: check result
 
-          this.feedback = this.i18n.getMsg('reqDelSucc');
+          this.feedback = this.localize('reqDelSucc');
           this.$.toast.open();
 
           // now refresh the data behind by reloading all requirements
@@ -1709,7 +1711,7 @@
             this._handleCancelEditTap(e);
 
           } else {
-            this.$.toast.text = this.i18n.getMsg('fieldsNotEmptyReq');
+            this.$.toast.text = this.localize('fieldsNotEmptyReq');
             this.$.toast.open();
           }
         },

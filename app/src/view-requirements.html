@@ -167,7 +167,7 @@
 
         <paper-button on-tap="_toggleOptions" class="filterButton" toggles>
           <iron-icon icon="filter-list"></iron-icon>
-          <span>Filters</span>
+          <span>[[localize('options')]]</span>
         </paper-button>
       </div>
 
@@ -191,10 +191,10 @@
               <!--<paper-slider id="grade" pin value="65" style="width:100%;" disabled></paper-slider>-->
               <!--</div>-->
               <div style="flex-grow: 1; margin:20px;">
-                <paper-radio-group selected="{{view}}">
-                  <paper-radio-button name="list" on-tap="showListView">[[localize('list-view')]]</paper-radio-button>
+                <paper-radio-group selected="{{_viewOption}}">
+                  <paper-radio-button name="list">[[localize('list-view')]]</paper-radio-button>
                   <br>
-                  <paper-radio-button name="grid" on-tap="showGridView">[[localize('grid-view')]]</paper-radio-button>
+                  <paper-radio-button name="grid">[[localize('grid-view')]]</paper-radio-button>
                 </paper-radio-group>
               </div>
             </div>
@@ -229,7 +229,7 @@
         component-id="[[componentId]]"
         requirements-state-filter="{{requirementsStateFilter}}"
         loading="{{loading}}"
-        list
+        view-option="[[_viewOption]]"
         repositories="{{repositories}}"
         current-user="{{currentUser}}"></requirements-list>
     </div>
@@ -299,6 +299,10 @@
         _authorized: {
           type: Boolean,
           value: true
+        },
+        _viewOption: {
+          type: String,
+          value: 'list'
         },
         _editMode: {
           type: Boolean,
