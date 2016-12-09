@@ -1,140 +1,137 @@
 <link rel="import" href="../../components/polymer/polymer.html">
 
 <dom-module id="file-gallery">
-    <template>
-        <style is="custom-style">
-            #expandedImg {
-                width: 100%;
-            }
+  <template>
+    <style is="custom-style">
+      #expandedImg {
+        width: 100%;
+      }
 
-        </style>
+    </style>
 
-        <!--SHOW IMAGE THUMBNAILS; AT THE MOMENT THE SAME URL AS IMAGES; ADDED DYNAMICALLY-->
-        <div id="icons"></div>
+    <!-- Show thumbnails of the images, added dynamically: -->
 
-        <!--SHOW IMAGES IN THE LIST VIEW-->
-        <iron-collapse id="collapseImg" hidden$="[[grid]]">
-            <img id="expandedImg">
-        </iron-collapse>
+    <div id="icons"></div>
 
-        <!--LOAD ALL IMAGES AT ONCE IN GRID VIEW AND SHOW THEM IN PAPER-DIALOG ON CLICK - DOM-IF USED DO MAKE THE LOAD ONLY ON GRID VIEW-->
-        <template is="dom-if" if="[[grid]]">
-            <template is="dom-repeat" items="{{attachments}}">
-                <iron-image
-                        class="imgIcons"
-                        src="[[item.fileUrl]]"
-                        att="[[item.title]]"
-                        sizing="cover"
-                        preload="true"
-                        placeholder="images/loading.svg"
-                        on-tap="toggle"></iron-image>
-            </template>
+    <!-- show images in the list view -->
+    <iron-collapse id="collapseImg" hidden$="[[grid]]">
+      <img id="expandedImg">
+    </iron-collapse>
 
-            <!--SHOW CLICKED IMAGE IN DIALOG WINDOW-->
-            <paper-dialog id="imgPopupDialog" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-                <h2 id="imgTitle"></h2>
-                <div>
-                    <img id="popupImg" height="500">
-                </div>
-            </paper-dialog>
-        </template>
+    <!-- Load all images at once and show them in paper-dialog after a tap. Dom-if used to only load in grid view. -->
+    <template is="dom-if" if="[[grid]]">
+      <template is="dom-repeat" items="{{attachments}}">
+        <iron-image class="imgIcons"
+                    src="[[item.fileUrl]]"
+                    att="[[item.title]]"
+                    sizing="cover"
+                    preload="true"
+                    placeholder="images/loading.svg"
+                    on-tap="toggle"></iron-image>
+      </template>
 
+      <!-- Dialog for showing the image on small layouts: -->
+
+      <paper-dialog id="imgPopupDialog" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+        <h2 id="imgTitle"></h2>
+        <div>
+          <img id="popupImg" height="500">
+        </div>
+      </paper-dialog>
     </template>
 
-    <script>
-        (function () {
+  </template>
 
-            Polymer({
-                is: 'file-gallery',
-                properties: {
-                    /** Attachments array passed as parameter from requirements-list */
-                    attachments: {
-                        type: Array,
-                        notify: true
-                    },
-                    /** Prepares to show images into popups or dialogs. True for grid view, else false. */
-                    grid: {
-                        type: Boolean,
-                        value: false,
-                        notify: true
-                    }
-                },
+  <script>
+    Polymer({
+      is: 'file-gallery',
 
-                /**
-                 * Toggles the collapse menu to show the full image or opens the dialog.
-                 * Triggered by clicking on an image icon.
-                 *
-                 * @param e - click event on image icon
-                 */
-                toggle: function(e){
-                    // loads the target for different browser types
-                    var target = e.target || e.srcElement;
-                    // saves that clicked image url
-                    var clickedImgUrl = target.style.backgroundImage.slice(5, -2) || target.src;
-                    if (clickedImgUrl !== "images/loading.svg" && clickedImgUrl) {
-                        // work on click only if the images are clicked and not the load image
-                        if (this.grid){
-                            // Show dialog with image content if grid view.
-                            this.$$('#popupImg').src = clickedImgUrl;
-                            this.$$('#imgPopupDialog').open();
-                        } else {
-                            if (!this.$.collapseImg.opened) {
-                                // Open the collapse and display the full image.
-                                this.$.expandedImg.src = clickedImgUrl;
-                                this.$.collapseImg.show();
-                            } else {
-                                // Toggle the collapse if the same image clicked like before or change to new image content
-                                if (this.$.expandedImg.src === clickedImgUrl){
-                                    this.$.collapseImg.toggle();
-                                } else {
-                                    this.$.expandedImg.src = clickedImgUrl;
-                                }
-                            }
-                        }
-                    }
+      properties: {
+        /** Attachments array passed as parameter from requirements-list */
+        attachments: {
+          type: Array,
+          notify: true
+        },
+        /** Prepares to show images into popups or dialogs. True for grid view, else false. */
+        grid: {
+          type: Boolean,
+          value: false
+        }
+      },
 
-                },
+      /**
+       * Toggles the collapse menu to show the full image or opens the dialog.
+       * Triggered by clicking on an image icon.
+       *
+       * @param e - click event on image icon
+       */
+      toggle: function(e) {
+        // loads the target for different browser types
+        var target = e.target || e.srcElement;
+        // saves that clicked image url
+        var clickedImgUrl = target.style.backgroundImage.slice(5, -2) || target.src;
+        if (clickedImgUrl !== "images/loading.svg" && clickedImgUrl) {
+          // work on click only if the images are clicked and not the load image
+          if (this.grid){
+            // Show dialog with image content if grid view.
+            this.$$('#popupImg').src = clickedImgUrl;
+            this.$$('#imgPopupDialog').open();
+          } else {
+            if (!this.$.collapseImg.opened) {
+              // Open the collapse and display the full image.
+              this.$.expandedImg.src = clickedImgUrl;
+              this.$.collapseImg.show();
+            } else {
+              // Toggle the collapse if the same image clicked like before or change to new image content
+              if (this.$.expandedImg.src === clickedImgUrl){
+                  this.$.collapseImg.toggle();
+              } else {
+                  this.$.expandedImg.src = clickedImgUrl;
+              }
+            }
+          }
+        }
 
-                /**
-                 * Loads the icons and adds the image elements to the DOM.
-                 * Uses iron-image polymer element for showing also feedback.
-                 */
-                loadIcons: function() {
-                    var iconsPlaceholder = Polymer.dom(this.$.icons);
-                    // Remove the old icons, in case a new image is added. Atm not applicable because requirements images
-                    // can't yet be edited.
-                    this.removeIcons(iconsPlaceholder);
+      },
 
-                    for (var i = 0; i < this.attachments.length; i++) {
-                        var imgNode = document.createElement("iron-image");
-                        Polymer.dom(imgNode).setAttribute("class", "imgIcons");
-                        Polymer.dom(imgNode).setAttribute("sizing", "cover");
-                        Polymer.dom(imgNode).setAttribute("preload", "true");
-                        Polymer.dom(imgNode).setAttribute("placeholder", "images/loading.svg");
-                        Polymer.dom(imgNode).setAttribute("src", this.attachments[i].fileUrl);
-                        Polymer.dom(imgNode).setAttribute("att", this.attachments[i].title);
-                        this.addEventListener("tap", this.toggle);
-                        iconsPlaceholder.appendChild(imgNode);
-                        Polymer.dom.flush();
-                    }
-                },
+      /**
+       * Loads the icons and adds the image elements to the DOM.
+       * Uses iron-image polymer element for showing also feedback.
+       */
+      loadIcons: function() {
+        var iconsPlaceholder = Polymer.dom(this.$.icons);
+        // Remove the old icons, in case a new image is added. Atm not applicable because requirements images
+        // can't yet be edited.
+        this.removeIcons(iconsPlaceholder);
 
-                /**
-                 * Removes child elements of the element given from the DOM. Used to avoid duplication of icons
-                 * everytime they are loaded. In the future can be used to update icons when a new image is added
-                 * to the requirement.
-                 *
-                 * @param parentNode - DOM element
-                 */
-                removeIcons: function(parentNode) {
-                    while (parentNode.firstChild) {
-                        parentNode.removeChild(parentNode.firstChild);
-                    }
-                }
+        for (var i = 0; i < this.attachments.length; i++) {
+          var imgNode = document.createElement("iron-image");
+          Polymer.dom(imgNode).setAttribute("class", "imgIcons");
+          Polymer.dom(imgNode).setAttribute("sizing", "cover");
+          Polymer.dom(imgNode).setAttribute("preload", "true");
+          Polymer.dom(imgNode).setAttribute("placeholder", "images/loading.svg");
+          Polymer.dom(imgNode).setAttribute("src", this.attachments[i].fileUrl);
+          Polymer.dom(imgNode).setAttribute("att", this.attachments[i].title);
+          this.addEventListener("tap", this.toggle);
+          iconsPlaceholder.appendChild(imgNode);
+          Polymer.dom.flush();
+        }
+      },
 
-            });
-        })
-        ();
-    </script>
+      /**
+       * Removes child elements of the element given from the DOM. Used to avoid duplication of icons
+       * everytime they are loaded. In the future can be used to update icons when a new image is added
+       * to the requirement.
+       *
+       * @param parentNode - DOM element
+       */
+      removeIcons: function(parentNode) {
+        while (parentNode.firstChild) {
+          parentNode.removeChild(parentNode.firstChild);
+        }
+      }
+
+    });
+  </script>
 
 </dom-module>
