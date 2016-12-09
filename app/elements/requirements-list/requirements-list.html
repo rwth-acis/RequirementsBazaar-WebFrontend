@@ -519,6 +519,10 @@
         ],
 
         properties: {
+          route: {
+            type: Object,
+            notify: true
+          },
           componentId: {
             type: Number
           },
@@ -769,8 +773,6 @@
             }
           }
 
-          // console.log(selReq);
-
           //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
           var arrData = typeof selReq != 'object' ? JSON.parse(selReq) : selReq;
 
@@ -814,8 +816,6 @@
 
           //Initialize file format you want csv or xls
           var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
-
-          console.log(uri);
 
           //this trick will generate a temp <a /> tag
           var link = document.createElement("a");
@@ -1020,7 +1020,6 @@
             "id": parseInt(element.id),
             "realized": null
           });
-          console.log(request.url, request.body);
           request.generateRequest();
         },
 
@@ -1209,7 +1208,8 @@
         },
 
         _handleRequirementTap: function(e) {
-          page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.model.req.id);
+          this.set('route.path', '/requirements/' + e.model.req.id);
+          //page('/projects/'+ app.params.projectId +'/components/' + app.params.componentId + '/requirements/' + e.model.req.id);
         },
 
         checkForEnter: function (e) {
@@ -1261,7 +1261,6 @@
         },
 
         dragRequirement: function(){
-          console.log("drag start!");
         },
 
         /**

@@ -230,6 +230,7 @@
         requirements-state-filter="{{requirementsStateFilter}}"
         loading="{{loading}}"
         view-option="[[_viewOption]]"
+        route="{{route}}"
         repositories="{{repositories}}"
         current-user="{{currentUser}}"></requirements-list>
     </div>
@@ -296,6 +297,10 @@
       ],
 
       properties: {
+        route: {
+          type: Object,
+          notify: true
+        },
         _authorized: {
           type: Boolean,
           value: true
