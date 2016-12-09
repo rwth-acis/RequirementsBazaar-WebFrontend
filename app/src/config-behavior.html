@@ -1,13 +1,31 @@
 <link rel="import" href="../components/polymer/polymer.html">
 
 <script>
+
+  GlobalConfig = [];
+  GlobalConfig.language = 'en';
+
   ConfigBehavior = {
 
     properties: {
       _apiBaseUrl: {
         type: String,
         value: 'https://requirements-bazaar.org/betabazaar'
+      },
+      language: {
+        type: String,
+        value: function() { return GlobalConfig.language; },
+        observer: '_languageChanged'
       }
+    },
+
+    _languageChanged: function(newValue) {
+      GlobalConfig.language = newValue;
+      this.fire('iron-signal', {name: 'language-updated', data: newValue});
+    },
+
+    _handleLanguageUpdated: function(e, detail, sender) {
+      this.language = detail;
     }
 
   }

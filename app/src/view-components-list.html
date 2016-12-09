@@ -17,6 +17,7 @@
 <link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../components/iron-signals/iron-signals.html">
 <link rel="import" href="../elements/components-list/components-list.html">
 <link rel="import" href="../elements/bread-crumb/bread-crumb.html">
 <link rel="import" href="shared-styles.html">
@@ -34,6 +35,7 @@
 
     <openidconnect-signin-aware is-authorized="{{_authorized}}"></openidconnect-signin-aware>
 
+    <iron-signals on-iron-signal-language-updated="_handleLanguageUpdated"></iron-signals>
 
     <iron-ajax id="projectInfoLoader"
                content-type="application/json"
@@ -144,10 +146,6 @@
       ],
 
       properties: {
-        language: {
-          type: String,
-          value: 'en'
-        },
         _authorized: {
           type: Boolean,
           value: true
