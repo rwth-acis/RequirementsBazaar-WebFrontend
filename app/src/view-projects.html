@@ -63,7 +63,7 @@
       },
 
       _routeChanged: function(route) {
-        if (route.path === '') {
+        if ((route.path === '') || (route.path === '/')) {
           this.view = 'projects-list';
         }
       },

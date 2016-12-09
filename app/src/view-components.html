@@ -1,4 +1,5 @@
 <link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/app-route/app-route.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="view-components">
@@ -66,7 +67,7 @@
       },
 
       _routeChanged: function(route) {
-        if (route.path === '') {
+        if ((route.path === '') || (route.path === '/')) {
           this.view = 'components-list';
         }
       },
