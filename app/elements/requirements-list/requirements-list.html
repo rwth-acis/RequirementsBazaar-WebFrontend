@@ -211,24 +211,6 @@
       on-error="errorHandler"></iron-ajax>
 
     <iron-ajax
-      id="followReq"
-      handle-as="json"
-      content-type="application/json"
-      method="POST"
-      headers="{{header}}"
-      on-response="handleResponseFollowReq"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="unfollowReq"
-      handle-as="json"
-      content-type="application/json"
-      method="DELETE"
-      headers="{{header}}"
-      on-response="handleResponseUnfollowReq"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
       id="followRequest"
       handle-as="json"
       content-type="application/json"
@@ -245,25 +227,7 @@
       on-error="errorHandler"></iron-ajax>
 
     <iron-ajax
-      id="developReq"
-      handle-as="json"
-      content-type="application/json"
-      method="POST"
-      headers="{{header}}"
-      on-response="handleResponseDevelopReq"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="undevelopReq"
-      handle-as="json"
-      content-type="application/json"
-      method="DELETE"
-      headers="{{header}}"
-      on-response="handleResponseUndevelopReq"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="starReq"
+      id="starRequest"
       handle-as="json"
       content-type="application/json"
       headers="{{header}}"
@@ -758,7 +722,7 @@
               this.splice('selectedRequirements', index, 1);
             }
             if (this.selectedRequirements.length === 0){
-              document.querySelector(".tools").style.display = "none";
+              document.querySelector('.tools').style.display = 'none';
             }
           }
         },
@@ -779,16 +743,16 @@
           var CSV = '';
           //Set Report title in first row or line
 
-          CSV += "Requirements of " + arrData[0].components[0].name + '\r\n\n';
+          CSV += 'Requirements of ' + arrData[0].components[0].name + '\r\n\n';
 
-          var row = "TITLE, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, COMPONENT";
+          var row = 'TITLE, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, COMPONENT';
 
           //append Label row with line break
           CSV += row + '\r\n';
 
           //1st loop is to extract each row
           for (var i = 0; i < arrData.length; i++) {
-            var row = "";
+            var row = '';
 
             row += '"' + arrData[i].title + '",';
             row += '"' + arrData[i].description + '",';
@@ -805,25 +769,26 @@
           }
 
           if (CSV == '') {
-            alert("Invalid data");
+            //TODO: display toast
+            alert('Invalid data');
             return;
           }
 
           //Generate a file name
-          var fileName = arrData[0].components[0].name + "_";
+          var fileName = arrData[0].components[0].name + '_';
           //this will remove the blank-spaces from the title and replace it with an underscore
-          fileName += "Requirements".replace(/ /g,"_");
+          fileName += 'Requirements'.replace(/ /g, '_');
 
           //Initialize file format you want csv or xls
           var uri = 'data:text/csv;charset=utf-8,' + encodeURI(CSV);
 
           //this trick will generate a temp <a /> tag
-          var link = document.createElement("a");
+          var link = document.createElement('a');
           link.href = uri;
 
           //set the visibility hidden so it will not effect on your web-layout
-          link.style = "visibility:hidden";
-          link.download = fileName + ".csv";
+          link.style = 'visibility:hidden';
+          link.download = fileName + '.csv';
 
           //this part will append the anchor tag and remove it after automatic click
           document.body.appendChild(link);
@@ -832,7 +797,7 @@
         },
 
         postGridComment: function(e){
-          var reqId = e.currentTarget.parentNode.parentNode.querySelector("comments-list").requirementId;
+          var reqId = e.currentTarget.parentNode.parentNode.querySelector('comments-list').requirementId;
           var request = this.$.postCommentRequest;
           request.body = JSON.stringify({
             "requirementId": reqId,
@@ -841,13 +806,13 @@
           request.generateRequest();
 
           this.newComment = '';
-          e.currentTarget.parentNode.parentNode.querySelector(".comments-input").value = null;
+          e.currentTarget.parentNode.parentNode.querySelector('.comments-input').value = null;
         },
 
         showGithubRepos: function(e){
           this.$.reposContainer.open();
           var el = e.currentTarget;
-          var tag = "PAPER-MATERIAL";
+          var tag = 'PAPER-MATERIAL';
           var element;
 
           while (el.parentNode) {
@@ -870,14 +835,14 @@
               break;
             }
             var req = this.$.postIssueGit;
-            req.url = "https://api.github.com/repos/" + this.repositories[parseInt(this.$.selRepo.selected)].full_name + "/issues";
+            req.url = 'https://api.github.com/repos/' + this.repositories[parseInt(this.$.selRepo.selected)].full_name + '/issues';
             req.body = JSON.stringify({
               "title": title,
               "body": desc
             });
             req.generateRequest();
           } else {
-            this.$.selRepo.selected = "0";
+            this.$.selRepo.selected = '0';
             this.selReq = null;
           }
         },
@@ -906,15 +871,15 @@
             var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
             el.load();
           } else {
-            document.querySelector("comments-list").load();
-            document.querySelector("comments-list").parentNode.querySelector("paper-input").value = null;
+            document.querySelector('comments-list').load();
+            document.querySelector('comments-list').parentNode.querySelector('paper-input').value = null;
           }
 
         },
 
         showSendButton: function(e){
-          var fab = e.currentTarget.parentNode.querySelector("#fab");
-          if (this.newComment){
+          var fab = e.currentTarget.parentNode.querySelector('#fab');
+          if (this.newComment) {
             fab.style.display = 'block';
           } else {
             fab.style.display = 'none';
@@ -936,62 +901,8 @@
         },
 
         handleResponseGithubIssue: function(){
-          this.$.toast.text = "Issue posted to Github";
+          this.$.toast.text = 'Issue posted to Github';
           this.$.toast.open();
-        },
-
-        doneRequirement: function(e){
-          var el = e.currentTarget;
-          var tag = "PAPER-MATERIAL";
-          var element;
-          var request = this.$.postUpdateRequirement;
-
-          while (el.parentNode) {
-            el = el.parentNode;
-            if (el.tagName === tag)
-              element = el;
-          }
-
-          request.url = this._apiBaseUrl + "/requirements/" + element.id;
-          var today = new Date();
-          var month = today.toDateString().substring(4, 7);
-          var date = today.getDate();
-          var year = today.getUTCFullYear();
-          var hours = today.getHours();
-          var minutes = today.getMinutes();
-          var seconds = today.getSeconds();
-          var ampm = hours >= 12 ? 'PM' : 'AM';
-          hours = hours % 12;
-          hours = hours ? hours : 12; // the hour '0' should be '12'
-          minutes = minutes < 10 ? '0'+minutes : minutes;
-          seconds = seconds < 10 ? '0'+seconds : seconds;
-          var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-          var dateString = month + ' ' + date + ', ' + year + ' ' + strTime;
-          request.body = JSON.stringify({
-            "id": parseInt(element.id),
-            "realized": dateString
-          });
-
-          request.generateRequest();
-        },
-
-        becomeLeadDeveloper: function(e){
-          var el = e.currentTarget;
-          var tag = "PAPER-MATERIAL";
-          var element;
-          var request = this.$.postUpdateRequirement;
-
-          while (el.parentNode) {
-            el = el.parentNode;
-            if (el.tagName === tag)
-              element = el;
-          }
-          request.url = this._apiBaseUrl + "/requirements/" + element.id;
-          request.body = JSON.stringify({
-            "id": parseInt(element.id),
-            "leadDeveloperId": app.currentUser.id
-          });
-          request.generateRequest();
         },
 
         closeTools: function(){
@@ -1082,102 +993,6 @@
           return null;
         },
 
-        followReq: function(e){
-          var el = e.currentTarget;
-          var tag = "PAPER-MATERIAL";
-          var element;
-          var request = this.$.followReq;
-
-          while (el.parentNode) {
-            el = el.parentNode;
-            if (el.tagName === tag)
-              element = el;
-          }
-
-          request.url = this._apiBaseUrl + "/requirements/" + element.id + "/followers";
-          request.generateRequest();
-        },
-
-        handleResponseFollowReq: function(data){
-          if (data != null){
-            this.feedback = this.localize('fdbFollowReq');
-            this.isFollower = true;
-          }
-          this.$.toast.open();
-        },
-
-        unfollowReq: function(e){
-          var el = e.currentTarget;
-          var tag = "PAPER-MATERIAL";
-          var element;
-          var request = this.$.unfollowReq;
-
-          while (el.parentNode) {
-            el = el.parentNode;
-            if (el.tagName === tag)
-              element = el;
-          }
-
-          request.url = this._apiBaseUrl + "/requirements/" + element.id + "/followers";
-          request.generateRequest();
-        },
-
-        handleResponseUnfollowReq: function(data){
-          if (data != null){
-            this.feedback = this.localize('fdbUnfollowReq');
-            this.isFollower = false;
-          }
-          this.$.toast.open();
-        },
-
-        developReq: function(e){
-          var el = e.currentTarget;
-          var tag = "PAPER-MATERIAL";
-          var element;
-          var request = this.$.developReq;
-
-          while (el.parentNode) {
-            el = el.parentNode;
-            if (el.tagName === tag)
-              element = el;
-          }
-
-          request.url = this._apiBaseUrl + "/requirements/" + element.id + "/developers";
-          request.generateRequest();
-        },
-
-        handleResponseDevelopReq: function(data){
-          if (data != null){
-            this.feedback = this.localize('fdbDevelopReq');
-            this.isDeveloper = true;
-          }
-          this.$.toast.open();
-        },
-
-        undevelopReq: function(e){
-          var el = e.currentTarget;
-          var tag = "PAPER-MATERIAL";
-          var element;
-          var request = this.$.undevelopReq;
-
-          while (el.parentNode) {
-            el = el.parentNode;
-            if (el.tagName === tag)
-              element = el;
-          }
-
-          request.url = this._apiBaseUrl + "/requirements/" + element.id + "/developers";
-          request.generateRequest();
-        },
-
-        handleResponseUndevelopReq: function(data){
-          if (data != null){
-            this.feedback = this.localize('fdbUndevelopReq');
-            this.isDeveloper = false;
-          }
-          this.$.toast.open();
-        },
-
         searchFilter: function (val) {
           return function (item) {
             if (!val) {
@@ -1260,7 +1075,7 @@
           }
         },
 
-        dragRequirement: function(){
+        dragRequirement: function() {
         },
 
         /**
@@ -1304,7 +1119,7 @@
           var vote = model.req.userVoted;
           var requirementId = model.req.id;
 
-          var request = this.$.starReq;
+          var request = this.$.starRequest;
           request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/vote";
 
           // now construct the method and body based on the action
