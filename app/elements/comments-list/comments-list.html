@@ -47,6 +47,8 @@
       }
     </style>
 
+    <iron-signals on-iron-signal-language-updated="_handleLanguageUpdated"></iron-signals>
+
     <!-- XHR for loading comments: -->
 
     <iron-ajax id="commentsLoader"
@@ -81,7 +83,7 @@
 
     <!-- Show this when no comments are there after loading: -->
 
-    <div class="noComments" hidden$="[[!noComments]]">[[localize('noComments')]</div>
+    <div class="noComments" hidden$="[[!noComments]]">[[localize('noComments')]]</div>
 
     <!-- Comments: -->
 
@@ -93,7 +95,7 @@
         <div class="layout vertical flex">
           <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
           <div class="info helper">
-            <relative-time datetime$="[[item.creationTime]]"></relative-time>[[localize('by')] <req-user user="[[item.creator]]" normal-view></req-user>
+            <relative-time datetime$="[[item.creationTime]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
           </div>
           <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter"></paper-input>
         </div>

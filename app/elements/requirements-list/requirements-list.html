@@ -1,4 +1,5 @@
 <link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../../components/app-route/app-route.html">
 <link rel="import" href="../../components/paper-material/paper-material.html">
 <link rel="import" href="../../components/paper-card/paper-card.html">
 <link rel="import" href="../../components/paper-button/paper-button.html">
@@ -160,6 +161,11 @@
       }
     </style>
 
+    <app-route
+      route="{{route}}"
+      pattern="/requirements/:requirementId"
+      data="{{data}}"></app-route>
+
     <openidconnect-signin-aware is-authorized="{{_authorized}}"></openidconnect-signin-aware>
 
     <iron-signals on-iron-signal-language-updated="_handleLanguageUpdated"></iron-signals>
@@ -299,10 +305,11 @@
     <!-- LIST VIEW -->
 
     <template is="dom-if" if="{{_isViewActive(viewOption, 'list')}}">
+
       <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}" initial-count="4">
         <div class="layout vertical center">
 
-          <paper-material class="req" id="[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+          <paper-material class="req" id="requirement[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
             <div class="reqbody" id$="requirementBody{{req.id}}">
 
               <div class="req-icons layout horizontal center">
@@ -318,11 +325,11 @@
                   <paper-menu class="dropdown-content">
                     <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
                     <paper-item value="toggleContributors" id="contr">[[localize('showContributors')]]</paper-item>
-                    <paper-item value="realize">[[_calculateRealizeMessage(req.realized)]]</paper-item>
                     <paper-item value="follow" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.followers, currentUser, 'followRequirement', 'unfollowRequirement')]]</paper-item>
                     <paper-item value="develop" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.developers, currentUser, 'developRequirement', 'undevelopRequirement')]]</paper-item>
                     <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]">[[localize('becomeLeadDeveloper')]]</paper-item>
                     <paper-item value="edit" hidden$="[[req.realized]]">[[localize('editRequirement')]]</paper-item>
+                    <paper-item value="realize">[[_calculateRealizeMessage(req.realized)]]</paper-item>
                     <paper-item value="delete">[[localize('deleteRequirement')]]</paper-item>
                   </paper-menu>
                 </paper-menu-button>
@@ -370,7 +377,7 @@
 
             <div class="comments" id$="comments{{req.id}}">
 
-              <iron-collapse id="reqExpand">
+              <iron-collapse>
                 <file-gallery attachments="{{req.attachments}}"></file-gallery>
                 <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
                 <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{_apiBaseUrl}}" is-authorized="{{_authorized}}"></comments-list>
@@ -397,11 +404,8 @@
 
         </div>
       </template>
+
     </template>
-
-    <!-- Toast for toast notifications: -->
-
-    <paper-toast id="toast" text="[[feedback]]"></paper-toast>
 
     <!-- Dialog for GitHub export functionality: -->
 
@@ -462,6 +466,10 @@
       <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
       <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
     </paper-material>
+
+    <!-- Toast for toast notifications: -->
+
+    <paper-toast id="toast" text="[[feedback]]"></paper-toast>
 
   </template>
 
@@ -586,12 +594,36 @@
 
         observers: [
           'manageSelReq(selectedRequirements.splices)',
-          '_requirementsRequestParametersUpdated(_requirementsRequestParameters)'
+          '_requirementsRequestParametersUpdated(_requirementsRequestParameters)',
+          '_dataChanged(data.requirementId)',
+          '_routeChanged(route)'
         ],
 
         attached: function() {
           // load localized messages
           this.loadResources(this.resolveUrl('../../locales/locales.json'));
+        },
+
+        _dataChanged: function(requirementId) {
+          if (requirementId) {
+            // open the requirement
+            var requirementNode = this.$$('#requirement' + requirementId);
+            if (requirementNode) {
+              requirementNode.querySelector('iron-collapse').show();
+              // load comments
+              requirementNode.querySelector('comments-list').load();
+              // load attachments
+              requirementsNode.querySelector("file-gallery").loadIcons();
+            } else {
+              //TODO: wait till loading completes and try again
+            }
+          }
+        },
+
+        _routeChanged: function(route) {
+          if ((route.path === '') || (route.path === '/')) {
+            //TODO: reset open requirements
+          }
         },
 
         _hasEnoughItems: function () {
@@ -694,7 +726,7 @@
         },
 
         manageSelReq: function(selReq){
-          if(this.selectedRequirements.length !== 0){
+          if (this.selectedRequirements.length !== 0){
             document.querySelector(".tools").style.display = "block";
           }
         },
@@ -939,7 +971,14 @@
          * @param e
          */
         _handleRequirementTap: function(e) {
-          this.set('route.path', '/requirements/' + e.model.req.id);
+          if (this.route.path === '/requirements/' + e.model.req.id) {
+            this.set('route.path', '');
+            // close the requirement
+            var requirementNode = this.$$('#requirement' + e.model.req.id);
+            requirementNode.querySelector('iron-collapse').hide();
+          } else {
+            this.set('route.path', '/requirements/' + e.model.req.id);
+          }
         },
 
         checkForEnter: function (e) {
