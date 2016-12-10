@@ -96,7 +96,6 @@
 
       paper-fab {
         --paper-fab-background: var(--default-primary-color);
-        display: none;
       }
 
       .flex-horizontal {
@@ -135,12 +134,11 @@
         display: none;
       }
 
-      .tools {
+      #bottomToolbar {
         position: fixed;
         bottom: 50px;
         left: 10px;
         z-index: 10;
-        display: none;
         width: auto;
         padding: 10px;
       }
@@ -317,7 +315,7 @@
             <div class="reqbody" id$="requirementBody{{req.id}}">
 
               <div class="req-icons layout horizontal center">
-                <paper-checkbox></paper-checkbox>
+                <paper-checkbox id="checkbox[[req.id]]" on-change="_handleCheckboxChange"></paper-checkbox>
                 <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, authorized)]]"
                                    class$="[[_calculateStarClass(req.userVoted, authorized)]]"
                                    on-tap="_handleStarTap"
@@ -386,10 +384,10 @@
                 <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
                 <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" base-href="{{_apiBaseUrl}}"></comments-list>
                 <div class="container flex-horizontal" id="[[req.id]]" hidden="[[!authorized]]">
-                  <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[localize('addComment')]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                  <paper-input id="[[req.id]]input" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
                     <!--<emoji-selector suffix></emoji-selector>-->
                   </paper-input>
-                  <paper-fab id="[[req.id]]fab" mini icon="send" class="flex-end-align" on-tap="addComment"></paper-fab>
+                  <paper-icon-button id$="sendComment[[req.id]]" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
                 </div>
               </iron-collapse>
 
@@ -465,10 +463,10 @@
 
     <!-- Floating toolbar for selected requirements: -->
 
-    <paper-material elevation="5" id="tools" class="tools">
+    <paper-material elevation="5" id="bottomToolbar" hidden>
       <span>{{selectedRequirements.length}} Requirements selected.</span>
       <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
-      <paper-icon-button icon="close" on-tap="closeTools"></paper-icon-button>
+      <paper-icon-button icon="close" on-tap="closeBottomToolbar"></paper-icon-button>
     </paper-material>
 
     <!-- Toast for toast notifications: -->
@@ -484,7 +482,7 @@
       Polymer({
         is: 'requirements-list',
         listeners: {
-          'change': 'addToSelectedReq'
+          //'change': 'addToSelectedReq'
         },
 
         behaviors: [
@@ -616,7 +614,7 @@
         },
 
         _hasEnoughItems: function () {
-          if (!this.list){
+          if (!this.list) {
             var n = Math.floor((window.innerWidth - 300) / 300);
             var free = (window.innerWidth - 300) - n * (300 + 20);
             this.style.paddingLeft = "" + free / 2 + "px";
@@ -676,12 +674,12 @@
             contentNode.toggle();
           } else {
             var contentNode = data.parentNode.querySelector('iron-collapse');
-            if (contentNode.parentNode.parentNode.elevation === 1){
+            if (contentNode.parentNode.parentNode.elevation === 1) {
               contentNode.parentNode.parentNode.elevation = 5;
             } else {
               contentNode.parentNode.parentNode.elevation = 1;
             }
-            if (contentNode.parentNode.parentNode.querySelector(".description").classList.contains("helper")){
+            if (contentNode.parentNode.parentNode.querySelector(".description").classList.contains("helper")) {
               contentNode.parentNode.parentNode.querySelector(".description").classList.remove("helper");
             } else {
               contentNode.parentNode.parentNode.querySelector(".description").classList.add("helper");
@@ -702,48 +700,46 @@
           this.$.requirementsRequest.generateRequest();
         },
 
-        showOnHover: function(e){
+        showOnHover: function(e) {
           var chb = e.currentTarget.querySelector("paper-checkbox");
           chb.style.display = "block";
         },
 
         hideOnOut: function (e) {
           var chb = e.currentTarget.querySelector("paper-checkbox");
-          if (!chb.checked){
+          if (!chb.checked) {
             chb.style.display = "none";
           }
         },
 
-        manageSelReq: function(selReq){
-          if (this.selectedRequirements.length !== 0){
-            document.querySelector(".tools").style.display = "block";
+        manageSelReq: function(selReq) {
+          if (this.selectedRequirements.length !== 0) {
+            this.$.bottomToolbar.hidden = false;
           }
         },
 
-        showRepoSearchResults: function(){
+        showRepoSearchResults: function() {
           this.repositories = this.searchRepositories.items;
         },
 
-        addToSelectedReq: function(e){
-          var id = e.target.parentNode.parentNode.parentNode.id;
-          if (e.target.checked){
-            this.push('selectedRequirements', id);
+        _handleCheckboxChange: function(e) {
+          var requirementId = e.model.req.id;
+          if (e.target.checked) {
+            this.push('selectedRequirements', requirementId);
           } else {
-            var index = this.selectedRequirements.indexOf(id);
+            var index = this.selectedRequirements.indexOf(requirementId);
             if (index > -1) {
               this.splice('selectedRequirements', index, 1);
             }
-            if (this.selectedRequirements.length === 0){
-              document.querySelector('.tools').style.display = 'none';
-            }
           }
+          this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0)
         },
 
-        downloadRequirements: function(e){
+        downloadRequirements: function(e) {
           var selReq = [];
-          for (var i=0; i < this.selectedRequirements.length; i++){
-            for (var j=0; j < this.requirements.length; j++){
-              if (parseInt(this.selectedRequirements[i]) === this.requirements[j].id){
+          for (var i=0; i < this.selectedRequirements.length; i++) {
+            for (var j=0; j < this.requirements.length; j++) {
+              if (parseInt(this.selectedRequirements[i]) === this.requirements[j].id) {
                 selReq.push(this.requirements[j]);
               }
             }
@@ -808,7 +804,7 @@
           document.body.removeChild(link);
         },
 
-        postGridComment: function(e){
+        postGridComment: function(e) {
           var reqId = e.currentTarget.parentNode.parentNode.querySelector('comments-list').requirementId;
           var request = this.$.postCommentRequest;
           request.body = JSON.stringify({
@@ -821,7 +817,7 @@
           e.currentTarget.parentNode.parentNode.querySelector('.comments-input').value = null;
         },
 
-        showGithubRepos: function(e){
+        showGithubRepos: function(e) {
           this.$.reposContainer.open();
           var el = e.currentTarget;
           var tag = 'PAPER-MATERIAL';
@@ -836,11 +832,11 @@
         },
 
         onRepoDialogClosed: function (e) {
-          if(e.detail.confirmed){
+          if(e.detail.confirmed) {
             var title = "";
             var desc = "";
-            for (var i=0; i < this.requirements.length; i++){
-              if (this.requirements[i].id == this.selReq){
+            for (var i=0; i < this.requirements.length; i++) {
+              if (this.requirements[i].id == this.selReq) {
                 title = this.requirements[i].title;
                 desc = this.requirements[i].description;
               }
@@ -859,11 +855,11 @@
           }
         },
 
-        addComment: function(e){
-          var currentReqId = e.currentTarget.parentNode.id;
+        _handleAddCommentTap: function(e) {
+          var currentReqId = e.model.req.id;
           var currentInpId = currentReqId + 'input';
           var request = this.$.postCommentRequest;
-          if (this.newComment != null && this.newComment != ''){
+          if (this.newComment != null && this.newComment != '') {
             request.body = JSON.stringify({
               "requirementId": parseInt(currentReqId),
               "message": this.newComment
@@ -877,8 +873,8 @@
           document.getElementById(currentInpId).value = null;
         },
 
-        handleResponseComment: function(data){
-          if (this.list){
+        handleResponseComment: function(data) {
+          if (this.list) {
             var str = ''+ this.postResponse.requirementId + 'input';
             var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
             el.load();
@@ -889,7 +885,7 @@
 
         },
 
-        showSendButton: function(e){
+        showSendButton: function(e) {
           var fab = e.currentTarget.parentNode.querySelector('#fab');
           if (this.newComment) {
             fab.style.display = 'block';
@@ -898,49 +894,45 @@
           }
         },
 
-        showButton: function(e){
-          var fabId = e.currentTarget.parentNode.id + 'fab';
-          if (this.newComment){
-            document.getElementById(fabId).style.display = 'block';
-          } else {
-            document.getElementById(fabId).style.display = 'none';
-          }
+        _handleCommentInput: function(e) {
+          this.$$('#sendComment' + e.model.req.id).hidden = false;
         },
 
-        errorHandler: function (e, detail){
+        errorHandler: function (e, detail) {
           this.$.toast.text = detail.error.message;
           this.$.toast.open();
         },
 
-        handleResponseGithubIssue: function(){
+        handleResponseGithubIssue: function() {
           this.$.toast.text = 'Issue posted to Github';
           this.$.toast.open();
         },
 
-        closeTools: function(){
-          document.getElementById("tools").style.display = "none";
-          for (var i=0; i < this.selectedRequirements.length; i++){
-            document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").checked = false;
-            document.getElementById(this.selectedRequirements[i]).querySelector("paper-checkbox").style.display = "none";
+        closeBottomToolbar: function() {
+          this.$.bottomToolbar.hidden = true;
+          //TODO: fix unselection as soon as we use iron-list
+          for (var i=0; i < this.selectedRequirements.length; i++) {
+            this.$$('#checkbox' + this.selectedRequirements[i]).checked = false;
+            //this.$$('#checkbox' + this.selectedRequirements[i]).hidden = true;
           }
           this.selectedRequirements = [];
         },
 
         handleResponseEditReq: function(data) {
-          if (data != null){
+          if (data != null) {
             this.feedback = this.localize('reqEditSucc');
             this.load();
           }
           this.$.toast.open();
         },
 
-        openCommentsDialog: function(e){
+        openCommentsDialog: function(e) {
           this.$.commentsDialog.querySelector("comments-list").requirementId = e.currentTarget.atr;
           this.$.commentsDialog.querySelector("comments-list").load();
           this.$.commentsDialog.open();
         },
 
-        deleteLeftoverComment: function(e){
+        deleteLeftoverComment: function(e) {
           this.$.commentsDialog.querySelector("comments-list").comments = [];
         },
 
@@ -972,8 +964,8 @@
 
         checkForEnter: function (e) {
           if (e.keyCode === 13) {
-            if (!e.ctrlKey){
-              if (this.list){
+            if (!e.ctrlKey) {
+              if (this.list) {
                 this.addComment(e);
               } else {
                 this.postGridComment(e);
@@ -987,7 +979,7 @@
 
         searchGithubRepo: function (e) {
           if (e.keyCode === 13) {
-            if (!e.ctrlKey){
+            if (!e.ctrlKey) {
               var req = this.$.getSearchGit;
               req.url = "https://api.github.com/search/repositories?q=" + encodeURIComponent(this.$.searchGithubRepo.value);
               req.generateRequest();
@@ -1005,9 +997,9 @@
             return str;
           } else {
             var txt = str;
-            for (var i = 0; i < str.match(regex).length; i++){
+            for (var i = 0; i < str.match(regex).length; i++) {
               var replacement;
-              if (str.match(regex)[i].startsWith("http")){
+              if (str.match(regex)[i].startsWith("http")) {
                 replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
               } else {
                 replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
@@ -1315,7 +1307,7 @@
          * @private
          */
         _handleUpdateRequirementResponse: function(e) {
-          if (e != null){
+          if (e != null) {
             this.feedback = this.localize('reqEditSucc');
           }
 
