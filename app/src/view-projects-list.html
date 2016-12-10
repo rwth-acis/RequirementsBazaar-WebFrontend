@@ -30,16 +30,18 @@
       }
     </style>
 
-    <openidconnect-signin-aware is-authorized="{{_authorized}}"></openidconnect-signin-aware>
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
-    <iron-signals on-iron-signal-language-updated="_handleLanguageUpdated"></iron-signals>
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <iron-ajax
       id="followProj"
       handle-as="json"
       content-type="application/json"
       method="POST"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handleResponseFollowProject"
       on-error="errorHandler"></iron-ajax>
 
@@ -48,7 +50,7 @@
       handle-as="json"
       content-type="application/json"
       method="DELETE"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handleResponseUnFollowProject"
       on-error="errorHandler"></iron-ajax>
 
@@ -58,7 +60,7 @@
       url="{{_apiBaseUrl}}/projects"
       content-type="application/json"
       method="POST"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handlePostResponseProject"
       on-error="errorHandler"></iron-ajax>
 
@@ -70,12 +72,12 @@
                     horizontal-align="right"
                     vertical-align="top"
                     style="position:absolute;right:10px;"
-                    hidden$="[[_authorized]]">[[localize('createProject')]]</paper-button>
+                    hidden="[[!authorized]]">[[localize('createProject')]]</paper-button>
 
       <h2>[[localize('projects')]]</h2>
       <p>[[localize('pr-desc')]]</p>
 
-      <div horizontal-align="right" vertical-align="top" hidden$="[[_authorized]]" style="position:absolute;right:20px;text-align:center;margin-top: -20px;">
+      <div horizontal-align="right" vertical-align="top" hidden="[[!authorized]]" style="position:absolute;right:20px;text-align:center;margin-top: -20px;">
         <div id="toggleText">[[localize('all')]] [[localize('projects')]]</div>
         <paper-toggle-button on-tap="toggleProjects"></paper-toggle-button>
       </div>
@@ -114,7 +116,7 @@
       </div>
     </paper-dialog>
 
-    <paper-fab on-tap="_handleCreateProjectTap" id="fab" icon="add" hidden="[[_authorized]]"></paper-fab>
+    <paper-fab on-tap="_handleCreateProjectTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
     <paper-tooltip for="fab" position="left">[[localize('createProject')]]</paper-tooltip>
 
     <paper-toast id="superToast"></paper-toast>
@@ -131,10 +133,6 @@
       ],
 
       properties: {
-        _authorized: {
-          type: Boolean,
-          value: true
-        },
         _newProjectTitle: {
           type: String,
           value: ''

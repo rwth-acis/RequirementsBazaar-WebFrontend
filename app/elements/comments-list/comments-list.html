@@ -1,7 +1,9 @@
 <link rel="import" href="../../components/polymer/polymer.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../../components/openidconnect-signin/openidconnect-signin-aware.html">
 <link rel="import" href="../../src/config-behavior.html">
+<link rel="import" href="../../src/shared-styles.html">
 
 <dom-module id="comments-list">
   <template>
@@ -48,7 +50,11 @@
       }
     </style>
 
-    <iron-signals on-iron-signal-language-updated="_handleLanguageUpdated"></iron-signals>
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <!-- XHR for loading comments: -->
 
@@ -101,7 +107,7 @@
           <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter"></paper-input>
         </div>
         <paper-icon-button on-tap="createModal" icon="close" hidden$="[[!isCreator(item.creatorId)]]"></paper-icon-button>
-        <paper-icon-button icon="reply" on-tap="showReplyInput" hidden$="[[!isAuthorized]]"></paper-icon-button>
+        <paper-icon-button icon="reply" on-tap="showReplyInput" hidden="[[!authorized]]"></paper-icon-button>
       </div>
 
     </template>
@@ -134,10 +140,6 @@
       ],
 
       properties: {
-        language: {
-          type: String,
-          value: 'en'
-        },
         /** Input from the requirement-list */
         requirementId: {
           type: Number
@@ -165,9 +167,7 @@
         header: {
           type:Object,
           notify: true
-        },
-        /** True if user is logged-in */
-        isAuthorized: Boolean
+        }
       },
 
       attached: function() {
@@ -310,8 +310,8 @@
        * @returns {boolean}
        */
       isCreator: function(usrId) {
-        if (this.isAuthorized) {
-          if (usrId === app.currentUser.id) {
+        if (this.authorized) {
+          if (usrId === this.currentUser.id) {
             return true;
           }
         }

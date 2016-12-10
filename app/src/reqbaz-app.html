@@ -19,12 +19,13 @@
 <link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="config-behavior.html">
+<link rel="import" href="shared-styles.html">
 
 <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet">
 
 <dom-module id="reqbaz-app">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: block;
 
@@ -77,10 +78,6 @@
         cursor: pointer;
       }
 
-      [hidden] {
-        display: none !important;
-      }
-
       paper-icon-button[hidden] + div {
         padding-left: 40px;
       }
@@ -92,6 +89,16 @@
       pattern="/:view"
       data="{{routeData}}"
       tail="{{subroute}}"></app-route>
+
+    <iron-ajax
+      id="currentUserRequest"
+      handle-as="json"
+      url="[[_apiBaseUrl]]/users/current"
+      content-type="application/json"
+      method="GET"
+      headers="[[authHeader]]"
+      on-response="_handleCurrentUserResponse"
+      on-error="_handleCurrentUserError"></iron-ajax>
 
     <app-double-drawer-layout fullbleed id="doubleDrawerLayout">
 
@@ -109,8 +116,11 @@
             </paper-menu>
           </paper-menu-button>
           <paper-icon-button icon="social:notifications" right-drawer-toggle></paper-icon-button>
-          <openidconnect-signin scopes="openid email profile" client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
-                                server="https://api.learning-layers.eu/o/oauth2"></openidconnect-signin>
+          <openidconnect-signin id="openidconnectSignin" scopes="openid email profile"
+                                client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
+                                server="https://api.learning-layers.eu/o/oauth2"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccessApp"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin>
         </app-toolbar>
       </app-header>
 
@@ -158,6 +168,16 @@
         '_routeViewChanged(routeData.view)',
         '_routeChanged(route)'
       ],
+
+      _handleSigninSuccessApp: function(e) {
+        this._handleSigninSuccess(e);
+        this.$.currentUserRequest.generateRequest();
+      },
+
+      _handleCurrentUserError: function(e, detail) {
+        // the user is not authorized, log out
+        this.$.openidconnectSignin.signOut();
+      },
 
       _handleDrawerRegistered: function(e) {
         this.$.doubleDrawerLayout.leftDrawer = e.detail.drawer;

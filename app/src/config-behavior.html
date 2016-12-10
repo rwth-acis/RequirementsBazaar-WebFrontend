@@ -16,16 +16,45 @@
         type: String,
         value: function() { return GlobalConfig.language; },
         observer: '_languageChanged'
+      },
+      /**
+       * Defines whether the user is logged in or not.
+       */
+      authorized: {
+        type: Boolean
+      },
+      authHeader: {
+        type: Array
       }
+    },
+
+    get currentUser() {
+      return GlobalConfig.currentUser;
     },
 
     _languageChanged: function(newValue) {
       GlobalConfig.language = newValue;
-      this.fire('iron-signal', {name: 'language-updated', data: newValue});
+      this.fire('iron-signal', {name: 'language-changed', data: newValue});
     },
 
-    _handleLanguageUpdated: function(e, detail, sender) {
+    _handleLanguageChanged: function(e, detail, sender) {
       this.language = detail;
+    },
+
+    _handleSigninSuccess: function(e) {
+      this.authorized = true;
+      this.authHeader = {authorization: "Bearer " + e.detail.access_token};
+    },
+
+    _handleSignedOut: function(e) {
+      this.authorized = false;
+      this.authHeader = null;
+    },
+
+    _handleCurrentUserResponse: function(e, detail) {
+      var currentUser = detail.response;
+      GlobalConfig.currentUser = currentUser;
+      this.fire('iron-signal', {name: 'current-user-changed', data: currentUser});
     }
 
   }

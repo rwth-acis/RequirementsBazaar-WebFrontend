@@ -33,9 +33,11 @@
       }
     </style>
 
-    <openidconnect-signin-aware is-authorized="{{_authorized}}"></openidconnect-signin-aware>
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
-    <iron-signals on-iron-signal-language-updated="_handleLanguageUpdated"></iron-signals>
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <iron-ajax id="projectInfoLoader"
                content-type="application/json"
@@ -49,7 +51,7 @@
       url="{{_apiBaseUrl}}/components"
       content-type="application/json"
       method="POST"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handlePostResponseComponent"
       on-error="errorHandler"></iron-ajax>
 
@@ -57,13 +59,13 @@
       id="postUpdateProject"
       handle-as="json"
       content-type="application/json"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handleEditResponseProject"
       on-error="errorHandler"></iron-ajax>
 
     <paper-material elevation="1">
 
-      <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;" hidden$="[[_authorized]]" on-iron-select="_handleComponentMenuSelect">
+      <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute;right:8px;" hidden="[[!authorized]]" on-iron-select="_handleComponentMenuSelect">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
         <paper-menu id="componentInfoMenu" class="dropdown-content">
           <template is="dom-if" if="{{!isFollowerProj}}">
@@ -99,7 +101,7 @@
 
     <components-list id="componentsList" base-href="https://requirements-bazaar.org/betabazaar" project-id="[[projectId]]" loading="{{loading}}"></components-list>
 
-    <paper-fab on-tap="_handleCreateComponentTap" id="fab" icon="add" hidden$="[[_authorized]]"></paper-fab>
+    <paper-fab on-tap="_handleCreateComponentTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
     <paper-tooltip for="fab" position="left">[[localize('createComponent')]]</paper-tooltip>
 
     <!-- Dialog for creating a new component: -->
@@ -146,10 +148,6 @@
       ],
 
       properties: {
-        _authorized: {
-          type: Boolean,
-          value: true
-        },
         projectId: {
           type: Number
         },

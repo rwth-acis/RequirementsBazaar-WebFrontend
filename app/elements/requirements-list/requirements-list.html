@@ -168,15 +168,17 @@
       pattern="/requirements/:requirementId"
       data="{{data}}"></app-route>
 
-    <openidconnect-signin-aware is-authorized="{{_authorized}}"></openidconnect-signin-aware>
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
-    <iron-signals on-iron-signal-language-updated="_handleLanguageUpdated"></iron-signals>
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <iron-ajax
       id="requirementsRequest"
       url="[[_resourceURL]]"
       last-response="{{requirements}}"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       params="[[_requirementsRequestParameters]]"
       loading="{{loading}}"
       auto></iron-ajax>
@@ -186,7 +188,7 @@
       handle-as="json"
       content-type="application/json"
       method="PUT"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handleResponseEditReq"
       on-error="errorHandler"></iron-ajax>
 
@@ -195,7 +197,7 @@
       handle-as="json"
       content-type="application/json"
       method="PUT"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="_handleUpdateRequirementResponse"
       on-error="errorHandler"></iron-ajax>
 
@@ -205,7 +207,7 @@
       handle-as="json"
       content-type="application/json"
       method="DELETE"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handleResponseDeleteReq"
       on-error="errorHandler"></iron-ajax>
 
@@ -214,7 +216,7 @@
       handle-as="json"
       content-type="application/json"
       method="DELETE"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="_handleDeleteRequirementResponse"
       on-error="errorHandler"></iron-ajax>
 
@@ -222,7 +224,7 @@
       id="followRequest"
       handle-as="json"
       content-type="application/json"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="_handleFollowResponse"
       on-error="errorHandler"></iron-ajax>
 
@@ -230,7 +232,7 @@
       id="userInResourceRequest"
       handle-as="json"
       content-type="application/json"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="_handleUserInResourceResponse"
       on-error="errorHandler"></iron-ajax>
 
@@ -238,7 +240,7 @@
       id="starRequest"
       handle-as="json"
       content-type="application/json"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="load"
       on-error="errorHandler"></iron-ajax>
 
@@ -248,7 +250,7 @@
       url="{{_apiBaseUrl}}/comments"
       content-type="application/json"
       method="POST"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handleResponseComment"
       last-response="{{postResponse}}"
       on-error="errorHandler"></iron-ajax>
@@ -290,10 +292,10 @@
                     <iron-icon icon="editor:mode-comment"></iron-icon>
                   </paper-button>
                   <span class="starIcon">
-                    <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, _authorized)]]"
-                                       class$="[[_calculateStarClass(req.userVoted, _authorized)]]"
+                    <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, authorized)]]"
+                                       class$="[[_calculateStarClass(req.userVoted, authorized)]]"
                                        on-tap="_handleStarTap"
-                                       disabled="[[!_authorized]]"></paper-icon-button>
+                                       disabled="[[!authorized]]"></paper-icon-button>
                     [[req.upVotes]]
                   </span>
                 </div>
@@ -316,13 +318,13 @@
 
               <div class="req-icons layout horizontal center">
                 <paper-checkbox></paper-checkbox>
-                <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, _authorized)]]"
-                                   class$="[[_calculateStarClass(req.userVoted, _authorized)]]"
+                <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, authorized)]]"
+                                   class$="[[_calculateStarClass(req.userVoted, authorized)]]"
                                    on-tap="_handleStarTap"
-                                   disabled="[[!_authorized]]"></paper-icon-button>
+                                   disabled="[[!authorized]]"></paper-icon-button>
                 <div>[[req.upVotes]]</div>
 
-                <paper-menu-button horizontal-align="right" vertical-align="top" hidden$="[[_authorized]]" on-iron-select="_handleRequirementMenuSelect">
+                <paper-menu-button horizontal-align="right" vertical-align="top" hidden="[[!authorized]]" on-iron-select="_handleRequirementMenuSelect">
                   <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
                   <paper-menu class="dropdown-content">
                     <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
@@ -339,7 +341,7 @@
               </div>
 
               <paper-toolbar class="title" on-tap="_handleRequirementTap">
-                <div class="title">[[req.title]]</div>
+                <div class="title" style="overflow: visible;">[[req.title]]</div>
                 <div class="bottom fit helper" style="margin-top:20px;">
                   <relative-time datetime$="[[req.creation_time]]"></relative-time>
                   [[localize('by')]]
@@ -382,8 +384,8 @@
               <iron-collapse>
                 <file-gallery attachments="{{req.attachments}}"></file-gallery>
                 <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
-                <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" header="{{header}}" base-href="{{_apiBaseUrl}}" is-authorized="{{_authorized}}"></comments-list>
-                <div class="container flex-horizontal" id="[[req.id]]" hidden$="[[!_authorized]]">
+                <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" base-href="{{_apiBaseUrl}}"></comments-list>
+                <div class="container flex-horizontal" id="[[req.id]]" hidden="[[!authorized]]">
                   <paper-input id="[[req.id]]input" is="iron-input" on-input="showButton" label="[[localize('addComment')]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
                     <!--<emoji-selector suffix></emoji-selector>-->
                   </paper-input>
@@ -452,8 +454,8 @@
                   style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
       <h2>[[localize('comments')]]</h2>
       <p style="max-height: 80%;">
-        <comments-list header="{{header}}" base-href="{{_apiBaseUrl}}" is-authorized="{{_authorized}}"></comments-list>
-      <div class="container flex-horizontal" hidden$="[[!_authorized]]">
+        <comments-list base-href="{{_apiBaseUrl}}"></comments-list>
+      <div class="container flex-horizontal" hidden="[[!authorized]]">
         <paper-input is="iron-input" on-input="showSendButton" label="[[localize('addComment')]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
         </paper-input>
         <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
@@ -474,8 +476,6 @@
     <paper-toast id="toast" text="[[feedback]]"></paper-toast>
 
   </template>
-
-  <script src="../../components/time-elements/time-elements.js"></script>
 
   <script>
     (function () {
@@ -528,13 +528,6 @@
           newComment: {
             type: String
           },
-          /**
-           * Defines whether the user is logged in or not.
-           */
-          _authorized: {
-            type: Boolean,
-            value: true
-          },
           postUrl: String,
           body: Object,
           postResponse: Object,
@@ -582,15 +575,9 @@
             notify: true,
             reflectToAttribute: true
           },
-          currentUser: {
-            type: String,
-            value: null,
-            notify: true
-          },
           _contributorsVisible: {
             type: Object,
-            value: [],
-            notify: true
+            value: []
           }
         },
 
@@ -1136,7 +1123,7 @@
          * @private
          */
         _calculateMessageBasedOnUserInArray: function(userArray, user, falseMessage, trueMessage) {
-          if (this._authorized && this._isUserInArray(userArray, user)) {
+          if (this.authorized && this._isUserInArray(userArray, user)) {
             return this.localize(trueMessage);
           } else {
             return this.localize(falseMessage);
@@ -1154,7 +1141,7 @@
           var requirementId = requirement.id;
 
           var followers = requirement.followers;
-          var isFollower = this._isUserInArray(followers, app.currentUser);
+          var isFollower = this._isUserInArray(followers, this.currentUser);
 
           var request = this.$.followRequest;
           request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/followers";
@@ -1425,7 +1412,7 @@
           request.url = this._apiBaseUrl + '/requirements/' + requirement.id;
           request.body = JSON.stringify({
             'id': parseInt(requirement.id),
-            'leadDeveloperId': (app.currentUser.id !== requirement.leadDeveloperId) ? app.currentUser.id : 1
+            'leadDeveloperId': (this.currentUser.id !== requirement.leadDeveloperId) ? this.currentUser.id : 1
           });
 
           // fire
@@ -1464,7 +1451,7 @@
 
           var request = this.$.postUpdateRequirement;
           //TODO: check if this is not harmful code when requirement belongs to multiple components
-          var components = [{id: parseInt(app.params.componentId)}];
+          var components = [{id: this.componentId}];
           request.url = this._apiBaseUrl + "/requirements/" + model.req.id;
 
           if (title != '' && description != '') {
@@ -1472,7 +1459,7 @@
               "id": model.req.id,
               "title": title,
               "description": description,
-              "projectId": parseInt(app.params.projectId),
+              "projectId": this.projectId,
               "components": components
             });
             request.generateRequest();

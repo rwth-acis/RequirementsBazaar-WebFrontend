@@ -22,6 +22,7 @@
 <link rel="import" href="../components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../components/iron-signals/iron-signals.html">
+<link rel="import" href="../elements/bread-crumb/bread-crumb.html">
 <link rel="import" href="../elements/requirements-list/requirements-list.html">
 <link rel="import" href="../elements/components-menu/components-menu.html">
 <link rel="import" href="../elements/req-user/req-user.html">
@@ -67,9 +68,11 @@
       }
     </style>
 
-    <openidconnect-signin-aware is-authorized="{{_authorized}}"></openidconnect-signin-aware>
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
-    <iron-signals on-iron-signal-language-updated="_handleLanguageUpdated"></iron-signals>
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <iron-ajax id="componentInfoLoader"
                content-type="application/json"
@@ -82,7 +85,7 @@
       handle-as="json"
       content-type="application/json"
       method="POST"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handleResponseFollowComponent"
       on-error="errorHandler"></iron-ajax>
 
@@ -91,7 +94,7 @@
       handle-as="json"
       content-type="application/json"
       method="DELETE"
-      headers="{{header}}"
+      headers="[[authHeader]]"
       on-response="handleResponseUnFollowComponent"
       on-error="errorHandler"></iron-ajax>
 
@@ -100,21 +103,21 @@
                url="{{_apiBaseUrl}}/requirements"
                content-type="application/json"
                method="POST"
-               headers="{{header}}"
+               headers="[[authHeader]]"
                on-response="handlePostResponseRequirement"
                on-error="errorHandler"></iron-ajax>
 
     <iron-ajax id="componentRequest"
                handle-as="json"
                content-type="application/json"
-               headers="{{header}}"
+               headers="[[authHeader]]"
                on-response="compResponse"
                on-error="errorHandler"></iron-ajax>
 
     <iron-ajax  id="componentRequestPUT"
                 handle-as="json"
                 content-type="application/json"
-                headers="{{header}}"
+                headers="[[authHeader]]"
                 on-response="handlePutResponseComponent"
                 on-error="errorHandler"></iron-ajax>
 
@@ -132,7 +135,7 @@
                          vertical-align="top"
                          style="position:absolute;top:2px; right:8px;"
                          on-iron-select="_handleMenuSelect"
-                         hidden$="[[_authorized]]">
+                         hidden="[[!authorized]]">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
         <paper-menu id="componentInfoMenu" class="dropdown-content">
           <paper-item on-tap="setDefault">[[localize('setAsDefault')]]</paper-item>
@@ -149,7 +152,7 @@
 
       <div class="cmpTitle" hidden="[[_editMode]]">
         <div class="breadCrumb">
-          <bread-crumb project-id="{{projectId}}" component-id="{{componentId}}"></bread-crumb>
+          <bread-crumb project-id="[[projectId]]" component-id="[[componentId]]"></bread-crumb>
         </div>
         <div class="componentName"><span>{{component.name}}</span></div>
       </div>
@@ -222,7 +225,6 @@
 
       <requirements-list
         id="requirementsList"
-        header="{{header}}"
         filter-value="[[reqFilterVal]]"
         base-href="https://requirements-bazaar.org/betabazaar"
         project-id="[[projectId]]"
@@ -282,7 +284,7 @@
       </div>
     </paper-dialog>
 
-    <paper-fab on-tap="_handleCreateRequirementTap" id="fab" icon="add"></paper-fab>
+    <paper-fab on-tap="_handleCreateRequirementTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
     <paper-tooltip for="fab" position="left">[[localize('createRequirement')]]</paper-tooltip>
 
   </template>
@@ -300,10 +302,6 @@
         route: {
           type: Object,
           notify: true
-        },
-        _authorized: {
-          type: Boolean,
-          value: true
         },
         _viewOption: {
           type: String,
