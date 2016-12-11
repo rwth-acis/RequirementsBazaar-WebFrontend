@@ -1,4 +1,6 @@
 <link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="view-landing">
@@ -7,16 +9,112 @@
       :host {
         display: block;
 
-        padding: 10px;
+        background-color: white;
+        padding: 0px;
+        font-family: 'Ubuntu Condensed', sans-serif;
+      }
+
+      #landing {
+        @apply(--layout-vertical);
+        padding: 0px;
+      }
+
+      #welcome {
+        height: 200px;
+        padding: 30px 10px 30px 30px;
+      }
+
+      #welcome > h1 {
+        font-size: 50px;
+        margin: 0px;
+      }
+
+      #welcome > a {
+        font-size: 20px;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      #welcome paper-button {
+        background-color: #FF8324;
+        color: white;
+        font-weight: bold;
+      }
+
+      .gray-with-title {
+        text-align: center;
+        background-color: lightgray;
+      }
+
+      .gray-with-title > h2 {
+        font-size: 32px;
+      }
+
+      #how-it-works {
+
+      }
+
+      #cards {
+        @apply(--layout-horizontal);
+      }
+
+      #cards .card {
+        @apply(--layout-flex);
+        padding: 40px 0px;
+        text-align: center;
+      }
+
+      #try-it-out {
+
+      }
+
+      #footer {
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+        background-color: black;
+        color: white;
+        padding: 10px 30px 40px 10px;
       }
     </style>
 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p><a href="/projects">Proceed to the projects!</a>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+    <div id="landing">
+
+      <div id="welcome">
+        <h1>Welcome to Requirements Bazaar!</h1>
+        <a href="/projects">
+          <paper-button raised>Explore Public Projects</paper-button>
+        </a>
+      </div>
+
+      <div id="how-it-works" class="gray-with-title">
+        <h2>How It Works</h2>
+      </div>
+
+      <div id="cards">
+        <div class="card">
+          <img src="../images/speech-bubble.svg" height="150px">
+        </div>
+        <div class="card">
+          <img src="../images/motivational-arrow.svg" height="150px">
+        </div>
+        <div class="card">
+          <img src="../images/motivational-clock.svg" height="150px">
+        </div>
+      </div>
+
+      <div id="try-it-out" class="gray-with-title">
+        <h2>Try It Out</h2>
+      </div>
+
+      <div id="footer">
+        <div>
+          <h2>Contact Us</h2>
+          <div>Lehrstuhl Informatik 5 RWTH</div>
+          <div>reqbaz@dbis.rwth-aachen.de</div>
+        </div>
+      </div>
     </div>
+
   </template>
 
   <script>
