@@ -128,7 +128,7 @@
       <app-toolbar id="drawerToolbar">[[localize('components')]]</app-toolbar>
 
       <!-- Drawer Content -->
-      <components-menu id="componentsMenu" project-id="[[projectId]]"></components-menu>
+      <components-menu id="componentsMenu" project-id="[[projectId]]" on-link-tapped="_handleComponentLinkTapped"></components-menu>
     </app-drawer>
 
     <paper-material id="componentToolbar">
@@ -339,6 +339,12 @@
 
         // set fab button right padding
         this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
+      },
+
+      _handleComponentLinkTapped: function(e) {
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
       },
 
       getDrawer: function() {

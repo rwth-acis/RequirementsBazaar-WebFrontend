@@ -32,7 +32,7 @@
     <paper-menu>
 
       <template is="dom-repeat" items="{{components}}">
-        <a href$="/projects/[[projectId]]/components/[[item.id]]">
+        <a href$="/projects/[[projectId]]/components/[[item.id]]" on-tap="_handleLinkTap">
           <paper-item>[[item.name]]</paper-item>
         </a>
       </template>
@@ -66,10 +66,8 @@
         return this._apiBaseUrl + '/projects/' + projectId + '/components/';
       },
 
-      onComponentTap: function(e) {
-        var model = e.model;
-        page('/projects/'+ this.projectId +'/components/' + model.item.id);
-        document.querySelector("#reqDrawer").togglePanel();
+      _handleLinkTap: function(e) {
+        this.fire('link-tapped');
       },
 
       load: function() {
