@@ -22,8 +22,8 @@
       fallback-selection="404"
       role="main"
       content>
-      <view-components-list name="components-list" project-id="[[projectId]]"></view-components-list>
-      <view-requirements name="requirements" id="requirementsView" project-id="[[projectId]]" component-id="[[data.componentId]]" route="{{subroute}}"></view-requirements>
+      <view-components-list name="components-list" project-id="[[projectId]]" project="{{project}}"></view-components-list>
+      <view-requirements name="requirements" id="requirementsView" project-id="[[projectId]]" project="{{project}}" component-id="[[data.componentId]]" route="{{subroute}}"></view-requirements>
       <view-404 name="view404"></view-404>
     </iron-pages>
 
@@ -45,6 +45,9 @@
         },
         projectId: {
           type: Number
+        },
+        project: {
+          type: Object
         }
       },
 

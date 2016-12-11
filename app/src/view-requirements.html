@@ -52,7 +52,6 @@
 
       .cmpTitle {
         display: block;
-        margin-top: 10px;
         text-overflow: ellipsis;
       }
 
@@ -64,6 +63,10 @@
       .filterButton {
         font-size: medium;
         margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      .breadCrumb {
         margin-bottom: 10px;
       }
     </style>
@@ -135,7 +138,7 @@
       <paper-menu-button horizontal-align="right"
                          id="menuCompButton"
                          vertical-align="top"
-                         style="position:absolute;top:2px; right:8px;"
+                         style="position:absolute; top:2px; right:8px;"
                          on-iron-select="_handleMenuSelect"
                          hidden="[[!authorized]]">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
@@ -154,7 +157,7 @@
 
       <div class="cmpTitle" hidden="[[_editMode]]">
         <div class="breadCrumb">
-          <bread-crumb project-id="[[projectId]]" component-id="[[componentId]]"></bread-crumb>
+          <bread-crumb project-id="[[projectId]]" project="[[project]]" component-id="[[componentId]]" component="[[component]]"></bread-crumb>
         </div>
         <div class="componentName"><span>{{component.name}}</span></div>
       </div>
@@ -315,6 +318,9 @@
         },
         projectId: {
           type: Number
+        },
+        project: {
+          type: Object
         },
         componentId: {
           type: Number

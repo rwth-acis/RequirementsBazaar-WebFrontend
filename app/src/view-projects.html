@@ -1,5 +1,10 @@
 <link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/iron-pages/iron-pages.html">
+<link rel="import" href="../components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../components/app-route/app-route.html">
+<link rel="import" href="../components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="config-behavior.html">
 
 <dom-module id="view-projects">
   <template>
@@ -29,6 +34,11 @@
       data="{{data}}"
       tail="{{subroute}}"></app-route>
 
+    <iron-ajax id="projectRequest"
+               content-type="application/json"
+               url="[[_apiBaseUrl]]/projects/[[data.projectId]]"
+               last-response="{{project}}"></iron-ajax>
+
     <app-drawer id="drawer" align="right">
       <activity-tracker initial-limit="20"></activity-tracker>
     </app-drawer>
@@ -40,7 +50,7 @@
       role="main"
       content>
       <view-projects-list name="projects-list" route="{{subroute}}"></view-projects-list>
-      <view-components name="components" project-id="{{data.projectId}}" route="{{subroute}}"></view-components>
+      <view-components name="components" project-id="{{data.projectId}}" project="{{project}}" route="{{subroute}}"></view-components>
       <view-404 name="view404"></view-404>
     </iron-pages>
 
@@ -49,6 +59,10 @@
   <script>
     Polymer({
       is: 'view-projects',
+
+      behaviors: [
+        ConfigBehavior
+      ],
 
       properties: {
         route: {
@@ -59,6 +73,9 @@
           type: String,
           reflectToAttribute: true,
           observer: '_viewChanged'
+        },
+        project: {
+          type: Object
         }
       },
 
@@ -87,6 +104,8 @@
       },
 
       _viewChanged: function(view) {
+        // load project
+        this.$.projectRequest.generateRequest();
         // Load view import on demand. Show 404 view if fails
         var resolvedViewUrl = this.resolveUrl('view-' + view + '.html');
         this.importHref(resolvedViewUrl, null, this._showView404, true);

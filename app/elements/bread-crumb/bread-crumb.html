@@ -6,14 +6,18 @@
       :host {
         display: block;
       }
+
+      a {
+        color: inherit;
+      }
     </style>
 
     <span><a href="/projects">Projects</a></span>
     <template is="dom-if" if$="[[projectId]]">
-      <span> > <a href$="/projects/[[projectId]]">Project [[projectId]]</a></span>
+      <span> > <a href$="/projects/[[projectId]]">[[project.name]]</a></span>
     </template>
     <template is="dom-if" if$="[[componentId]]">
-      <span> > <a href$="/projects/[[projectId]]/components/[[componentId]]">Component [[componentId]]</a></span>
+      <span> > <a href$="/projects/[[projectId]]/components/[[componentId]]">[[component.name]]</a></span>
     </template>
 
   </template>
