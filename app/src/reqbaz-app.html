@@ -74,7 +74,7 @@
       }
     </style>
 
-    <app-location route="{{route}}"></app-location>
+    <app-location id="appLocation" route="{{route}}"></app-location>
     <app-route
       route="{{route}}"
       pattern="/:view"
@@ -153,8 +153,8 @@
       },
 
       observers: [
-        '_routeViewChanged(routeData.view)',
-        '_routeChanged(route)'
+        '_routeChanged(route)',
+        '_routeViewChanged(routeData.view)'
       ],
 
       _handleDrawerReserveSpaceChanged: function(e, detail) {
@@ -183,6 +183,13 @@
       },
 
       _routeViewChanged: function(view) {
+        // compatibility with previous Requirements Bazaar routing system...
+        if (this.$.appLocation.__hash.startsWith('!')) {
+          var hashRoute = this.$.appLocation.__hash.substr(1);
+          this.$.appLocation.__hash = "";
+          this.set('route.path', hashRoute);
+          return;
+        }
         this.view = view || 'landing';
       },
 
