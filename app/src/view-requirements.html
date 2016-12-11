@@ -74,6 +74,8 @@
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
+    <iron-signals on-iron-signal-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged"></iron-signals>
+
     <iron-ajax id="componentInfoLoader"
                content-type="application/json"
                url="[[_apiBaseUrl]]/components/[[componentId]]"
@@ -334,10 +336,19 @@
       attached: function() {
         // load localized messages
         this.loadResources(this.resolveUrl('../locales/locales.json'));
+
+        // set fab button right padding
+        this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
       },
 
       getDrawer: function() {
         return this.$.drawer;
+      },
+
+      _handleDrawerReserveSpaceChanged: function(e, detail) {
+        if (detail.drawerAlign === 'right') {
+          this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
+        }
       },
 
       /**

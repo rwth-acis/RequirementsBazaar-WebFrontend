@@ -36,6 +36,8 @@
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
+    <iron-signals on-iron-signal-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged"></iron-signals>
+
     <iron-ajax
       id="followProj"
       handle-as="json"
@@ -150,6 +152,15 @@
       attached: function() {
         // load localized messages
         this.loadResources(this.resolveUrl('../locales/locales.json'));
+
+        // set fab button right padding
+        this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
+      },
+
+      _handleDrawerReserveSpaceChanged: function(e, detail) {
+        if (detail.drawerAlign === 'right') {
+          this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
+        }
       },
 
       _handleCreateProjectTap: function(e) {

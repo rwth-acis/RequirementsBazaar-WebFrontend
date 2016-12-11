@@ -32,6 +32,14 @@
       return GlobalConfig.currentUser;
     },
 
+    get rightDrawerReserveSpace() {
+      return GlobalConfig.rightDrawerReserveSpace;
+    },
+
+    set rightDrawerReserveSpace(newValue) {
+      GlobalConfig.rightDrawerReserveSpace = newValue;
+    },
+
     _languageChanged: function(newValue) {
       GlobalConfig.language = newValue;
       this.fire('iron-signal', {name: 'language-changed', data: newValue});

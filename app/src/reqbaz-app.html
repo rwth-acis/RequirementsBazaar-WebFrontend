@@ -100,7 +100,8 @@
       on-response="_handleCurrentUserResponse"
       on-error="_handleCurrentUserError"></iron-ajax>
 
-    <app-double-drawer-layout fullbleed id="doubleDrawerLayout">
+    <app-double-drawer-layout fullbleed id="doubleDrawerLayout"
+                              on-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged">
 
       <app-header fixed effects="waterfall">
         <app-toolbar>
@@ -168,6 +169,13 @@
         '_routeViewChanged(routeData.view)',
         '_routeChanged(route)'
       ],
+
+      _handleDrawerReserveSpaceChanged: function(e, detail) {
+        this.fire('iron-signal', {name: 'drawer-reserve-space-changed', data: detail});
+        if (detail.drawerAlign === 'right') {
+          this.rightDrawerReserveSpace = detail.reserveSpace;
+        }
+      },
 
       _handleSigninSuccessApp: function(e) {
         this._handleSigninSuccess(e);
