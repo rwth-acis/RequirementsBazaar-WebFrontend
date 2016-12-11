@@ -7,6 +7,20 @@
       :host {
         display: block;
       }
+
+      app-drawer {
+        /** paper-dialog has 103 **/
+        z-index: 104;
+        margin-top: 64px;
+      }
+
+      app-drawer[align="right"] {
+        text-align: left;
+      }
+
+      app-drawer activity-tracker {
+        height: 100%;
+      }
     </style>
 
     <app-route
@@ -14,6 +28,10 @@
       pattern="/:projectId"
       data="{{data}}"
       tail="{{subroute}}"></app-route>
+
+    <app-drawer id="drawer" align="right">
+      <activity-tracker initial-limit="20"></activity-tracker>
+    </app-drawer>
 
     <iron-pages
       selected="[[view]]"
@@ -76,7 +94,11 @@
 
       _showView404: function() {
         this.view = 'view404';
-      }
+      },
+
+      getRightDrawer: function() {
+        return this.$.drawer;
+      },
     });
   </script>
 </dom-module>

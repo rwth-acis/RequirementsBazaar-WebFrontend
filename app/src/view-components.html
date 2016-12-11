@@ -79,7 +79,7 @@
           // import successful
           if (view === 'requirements') {
             var drawer = this.$.requirementsView.getDrawer();
-            this.fire('drawer-registered', {drawer: drawer});
+            this.fire('drawer-registered', {drawerAlign: 'left', drawer: drawer});
           }
         }, this._showView404, true);
       },

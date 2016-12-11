@@ -52,21 +52,8 @@
         --paper-icon-button-ink-color: white;
       }
 
-      app-drawer {
-        /** paper-dialog has 103 **/
-        z-index: 104;
-      }
-
       iron-pages {
         z-index: 0;
-      }
-
-      app-drawer[align="right"] {
-        text-align: left;
-      }
-
-      app-drawer activity-tracker {
-        height: 100%;
       }
 
       app-toolbar > [main-title] > span {
@@ -120,7 +107,7 @@
               <paper-item value="en">English</paper-item>
             </paper-menu>
           </paper-menu-button>
-          <paper-icon-button icon="social:notifications" right-drawer-toggle></paper-icon-button>
+          <paper-icon-button icon="social:notifications" right-drawer-toggle hidden></paper-icon-button>
           <openidconnect-signin id="openidconnectSignin" scopes="openid email profile"
                                 client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
                                 server="https://api.learning-layers.eu/o/oauth2"
@@ -128,10 +115,6 @@
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin>
         </app-toolbar>
       </app-header>
-
-      <app-drawer align="right">
-        <activity-tracker initial-limit="20"></activity-tracker>
-      </app-drawer>
 
       <iron-pages
         selected="[[view]]"
@@ -192,7 +175,11 @@
       },
 
       _handleDrawerRegistered: function(e) {
-        this.$.doubleDrawerLayout.leftDrawer = e.detail.drawer;
+        if (e.detail.drawerAlign === 'left') {
+          this.$.doubleDrawerLayout.leftDrawer = e.detail.drawer;
+        } else {
+          this.$.doubleDrawerLayout.rightDrawer = e.detail.drawer;
+        }
       },
 
       _routeViewChanged: function(view) {
@@ -211,12 +198,12 @@
         var resolvedViewUrl = this.resolveUrl('view-' + view + '.html');
         this.importHref(resolvedViewUrl, function(e) {
           // e.target.import is the import document.
-          if (view === 'requirements') {
-            var viewElement = this.$.view2;
-            this.$.doubleDrawerLayout.leftDrawer = viewElement.getDrawer();
+          if (view === 'projects') {
+            this.$.doubleDrawerLayout.rightDrawer = this.$.projectsView.getRightDrawer();
           } else {
             // reset layout
             this.$.doubleDrawerLayout.leftDrawer = null;
+            this.$.doubleDrawerLayout.rightDrawer = null;
           }
         }, this._showView404, true);
       },
