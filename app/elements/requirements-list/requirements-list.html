@@ -385,7 +385,7 @@
                 <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
                 <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" base-href="{{_apiBaseUrl}}"></comments-list>
                 <div class="container flex-horizontal" id="[[req.id]]" hidden="[[!authorized]]">
-                  <paper-input id="[[req.id]]input" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" bind-value="{{newComment}}" class="flexchild" on-keydown="checkForEnter">
+                  <paper-input id="comment[[req.id]]" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" value="{{newComment}}" class="flexchild" on-keydown="_handleCommentEnter">
                     <!--<emoji-selector suffix></emoji-selector>-->
                   </paper-input>
                   <paper-icon-button id$="sendComment[[req.id]]" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
@@ -455,7 +455,7 @@
       <p style="max-height: 80%;">
         <comments-list base-href="{{_apiBaseUrl}}"></comments-list>
       <div class="container flex-horizontal" hidden="[[!authorized]]">
-        <paper-input is="iron-input" on-input="showSendButton" label="[[localize('addComment')]]" bind-value="{{newComment}}" class="flexchild comments-input" on-keydown="checkForEnter">
+        <paper-input is="iron-input" on-input="showSendButton" label="[[localize('addComment')]]" value="{{newComment}}" class="flexchild comments-input" on-keydown="_handleCommentEnter">
         </paper-input>
         <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
       </div>
@@ -615,7 +615,7 @@
         },
 
         _hasEnoughItems: function () {
-          if (!this.list) {
+          if (!this.viewOption !== 'list') {
             var n = Math.floor((window.innerWidth - 300) / 300);
             var free = (window.innerWidth - 300) - n * (300 + 20);
             this.style.paddingLeft = "" + free / 2 + "px";
@@ -858,7 +858,6 @@
 
         _handleAddCommentTap: function(e) {
           var currentReqId = e.model.req.id;
-          var currentInpId = currentReqId + 'input';
           var request = this.$.postCommentRequest;
           if (this.newComment != null && this.newComment != '') {
             request.body = JSON.stringify({
@@ -871,17 +870,15 @@
             this.$.toast.open();
           }
           this.newComment = '';
-          document.getElementById(currentInpId).value = null;
+          this.$$('#comment' + currentReqId).value = null;
         },
 
         handleResponseComment: function(data) {
-          if (this.list) {
-            var str = ''+ this.postResponse.requirementId + 'input';
-            var el = document.getElementById(str).parentNode.parentNode.querySelector('comments-list')
-            el.load();
+          var requirementId = data.detail.response.requirementId;
+          if (this.viewOption === 'list') {
+            this.$$('#comments' + requirementId).querySelector('comments-list').load();
           } else {
-            document.querySelector('comments-list').load();
-            document.querySelector('comments-list').parentNode.querySelector('paper-input').value = null;
+            //TODO: reload comments in grid view
           }
 
         },
@@ -963,11 +960,11 @@
           }
         },
 
-        checkForEnter: function (e) {
+        _handleCommentEnter: function (e) {
           if (e.keyCode === 13) {
             if (!e.ctrlKey) {
-              if (this.list) {
-                this.addComment(e);
+              if (this.viewOption === 'list') {
+                this._handleAddCommentTap(e);
               } else {
                 this.postGridComment(e);
               }
