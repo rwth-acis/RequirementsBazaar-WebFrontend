@@ -90,7 +90,7 @@
       }
 
       #cards {
-        @apply(--layout-wrap);
+        @apply(--layout-horizontal);
       }
 
       #cards .card {
@@ -129,6 +129,10 @@
         #welcome > h1 {
           font-size: 30px;
           margin: 0px;
+        }
+
+        #cards {
+          @apply(--layout-vertical);
         }
 
         h2 {
@@ -182,7 +186,7 @@
       </div>
 
       <div id="try-it-out" class="gray-with-title">
-        <h2>Try It Out</h2>
+        <h2>[[localize('landing-try-it-out')]]</h2>
         <div>[[localize('takeAlook')]]</div>
         <a href="/projects">
           <paper-button raised>[[localize('explore-projects')]]</paper-button>
