@@ -222,11 +222,10 @@
 
       _handleEditProjectResponse: function(e) {
         if (e.detail.status === 200) {
-          console.log('saved');
           this.$.componentsList.load();
-          this.$.toast.text = this.localize('prjEditSucc');
+          this.$.toast.text = this.localize('projectEditSuccess');
         } else {
-          this.$.toast.text = this.localize('errorCrePrj');
+          this.$.toast.text = this.localize('projectEditError');
           //TODO: reset the project object
         }
         this.$.toast.open();
