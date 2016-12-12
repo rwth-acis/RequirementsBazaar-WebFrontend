@@ -18,13 +18,16 @@
 <link rel="import" href="../../components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../components/masonry-layout/masonry-layout.html">
 <link rel="import" href="../../components/openidconnect-signin/openidconnect-signin-aware.html">
 <link rel="import" href="../../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../../components/iron-icons/iron-icons.html">
+<link rel="import" href="../../components/iron-icons/editor-icons.html">
 <link rel="import" href="../comments-list/comments-list.html">
 <link rel="import" href="../file-gallery/file-gallery.html">
 <link rel="import" href="../../src/shared-styles.html">
 <link rel="import" href="../../src/config-behavior.html">
+
+<script src="../../components/masonry/dist/masonry.pkgd.min.js"></script>
 
 <dom-module id="requirements-list">
   <template>
@@ -152,9 +155,14 @@
         display: none;
       }
 
-      #grids .starIcon {
+      #grid .starIcon {
         float: right;
         margin: 20px;
+      }
+
+      .grid-item {
+        margin: 5px;
+        margin-bottom: 10px;
       }
 
       .line {
@@ -280,33 +288,33 @@
     <!-- GRID VIEW -->
 
     <template is="dom-if" if="{{_isViewActive(viewOption, 'grid')}}" restamp>
-      <masonry-layout id="grids" column-width="100">
-        <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}">
+      <div id="grid">
+        <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}" on-dom-change="_handleGridDomChange">
 
-            <div class="grid-item">
-              <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
-                <!--<paper-checkbox></paper-checkbox>-->
-                <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[req.creator]]" normal-view></req-user></span></div>
-                <relative-time class="time" datetime$="[[req.creation_time]]"></relative-time>
-                <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
-                <div class="card-content" class="truncate">{{req.description}}</div>
-                <div class="card-actions">
-                  <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
-                    <iron-icon icon="editor:mode-comment"></iron-icon>
-                  </paper-button>
-                  <span class="starIcon">
-                    <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, authorized)]]"
-                                       class$="[[_calculateStarClass(req.userVoted, authorized)]]"
-                                       on-tap="_handleStarTap"
-                                       disabled="[[!authorized]]"></paper-icon-button>
-                    [[req.upVotes]]
-                  </span>
-                </div>
-              </paper-card>
-            </div>
+          <div class="grid-item">
+            <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
+              <!--<paper-checkbox></paper-checkbox>-->
+              <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[req.creator]]" normal-view></req-user></span></div>
+              <relative-time class="time" datetime$="[[req.creation_time]]"></relative-time>
+              <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
+              <div class="card-content" class="truncate">{{req.description}}</div>
+              <div class="card-actions">
+                <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
+                  <iron-icon icon="editor:mode-comment"></iron-icon>
+                </paper-button>
+                <span class="starIcon">
+                  <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, authorized)]]"
+                                     class$="[[_calculateStarClass(req.userVoted, authorized)]]"
+                                     on-tap="_handleStarTap"
+                                     disabled="[[!authorized]]"></paper-icon-button>
+                  [[req.upVotes]]
+                </span>
+              </div>
+            </paper-card>
+          </div>
 
         </template>
-      </masonry-layout>
+      </div>
     </template>
 
     <!-- LIST VIEW -->
@@ -626,6 +634,15 @@
           } else {
             this.style.paddingLeft = "0px";
           }
+        },
+
+        _handleGridDomChange: function(e) {
+          console.log('change');
+          var grid = this.$$('#grid');
+          var msnry = new Masonry(grid, {
+            itemSelector: '.grid-item',
+            columnWidth: 110
+          });
         },
 
         _isViewActive: function(viewOption, view) {

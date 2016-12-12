@@ -14,7 +14,7 @@
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2",
     "emoji-selector": "https://github.com/notwaldorf/emoji-selector.git#^1.1.1",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
-    "masonry-layout": "^1.0.4",
+    "masonry": "^4.1.1",
     "app-double-drawer-layout": "istvank/app-double-drawer-layout",
     "app-route": "PolymerElements/app-route#^0.9.3",
     "app-layout": "PolymerElements/app-layout#^0.10.6",
