@@ -3,6 +3,7 @@
 <link rel="import" href="../components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../components/app-route/app-route.html">
 <link rel="import" href="../components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../components/activity-tracker/activity-tracker.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 
@@ -40,7 +41,7 @@
                last-response="{{project}}"></iron-ajax>
 
     <app-drawer id="drawer" align="right">
-      <activity-tracker initial-limit="20"></activity-tracker>
+      <activity-tracker initial-limit="20" url="https://requirements-bazaar.org/betaactivities"></activity-tracker>
     </app-drawer>
 
     <iron-pages
