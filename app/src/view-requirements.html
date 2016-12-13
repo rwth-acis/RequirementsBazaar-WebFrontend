@@ -69,6 +69,44 @@
       .breadCrumb {
         margin-bottom: 10px;
       }
+
+      app-drawer > a {
+        width: 100%;
+        display: inline-block;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      #drawerProjectLink {
+        height: 35px;
+        line-height: 35px;
+        background-color: #eceff1;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--secondary-text-color);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      #drawerProjectLink > iron-icon {
+        position: relative;
+        top: -1px;
+      }
+
+      #drawerProjectLink > span {
+        text-overflow: ellipsis;
+      }
+
+      #drawerToolbar {
+        color: var(--secondary-text-color);
+        /*border-bottom: 1px solid rgba(0, 0, 0, 0.22);*/
+      }
+
+      app-toolbar {
+        margin-top: 10px;
+        height: 40px;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{authorized}}"
@@ -128,6 +166,12 @@
 
     <app-drawer id="drawer" align="left">
       <!-- Drawer Toolbar -->
+      <a href$="/projects/[[projectId]]" tabindex="-1">
+        <div id="drawerProjectLink">
+          <iron-icon icon="chevron-left"></iron-icon>
+          <span>[[project.name]]</span>
+        </div>
+      </a>
       <app-toolbar id="drawerToolbar">[[localize('components')]]</app-toolbar>
 
       <!-- Drawer Content -->
