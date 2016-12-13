@@ -109,7 +109,7 @@
                content-type="application/json"
                method="POST"
                headers="[[authHeader]]"
-               on-response="handlePostResponseRequirement"
+               on-response="_handlePostResponseRequirement"
                on-error="errorHandler"></iron-ajax>
 
     <iron-ajax id="componentRequest"
@@ -427,6 +427,10 @@
         this.$.newRequirementTitle.required = true;
         this.$.newRequirementDescription.required = true;
         this.files = [];
+      },
+
+      _handlePostResponseRequirement: function(e) {
+        //TODO show toast
       },
 
       _handleCancelEditTap: function(e) {

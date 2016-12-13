@@ -636,8 +636,12 @@
           }
         },
 
+        /**
+         * Called when the requirement DOM has been stamped. Triggers the masonry layout.
+         *
+         * @param e
+         */
         _handleGridDomChange: function(e) {
-          console.log('change');
           var grid = this.$$('#grid');
           var msnry = new Masonry(grid, {
             itemSelector: '.grid-item',
