@@ -596,7 +596,8 @@
           'manageSelReq(selectedRequirements.splices)',
           '_requirementsRequestParametersUpdated(_requirementsRequestParameters)',
           '_dataChanged(data.requirementId)',
-          '_routeChanged(route)'
+          '_routeChanged(route)',
+          '_componentIdChanged(componentId)'
         ],
 
         attached: function() {
@@ -606,6 +607,7 @@
 
         _dataChanged: function(requirementId) {
           if (requirementId) {
+            /*
             // open the requirement
             var requirementNode = this.$$('#requirement' + requirementId);
             if (requirementNode) {
@@ -617,6 +619,7 @@
             } else {
               //TODO: wait till loading completes and try again
             }
+            */
           }
         },
 
@@ -975,12 +978,24 @@
          * @param e
          */
         _handleRequirementTap: function(e) {
-          if (this.route.path === '/requirements/' + e.model.req.id) {
-            this.set('route.path', '');
+          var requirementNode = this.$$('#requirement' + e.model.req.id);
+
+          if (requirementNode.querySelector('iron-collapse').opened) {
+            // remove elevation
+            requirementNode.elevation = 1;
             // close the requirement
-            var requirementNode = this.$$('#requirement' + e.model.req.id);
             requirementNode.querySelector('iron-collapse').hide();
+            // reset route
+            this.set('route.path', '');
           } else {
+            // set elevation
+            requirementNode.elevation = 4;
+            // open the requirement
+            requirementNode.querySelector('iron-collapse').show();
+            // load comments
+            requirementNode.querySelector('comments-list').load();
+            // load attachments
+            requirementNode.querySelector("file-gallery").loadIcons();
             this.set('route.path', '/requirements/' + e.model.req.id);
           }
         },
@@ -1506,6 +1521,21 @@
           this.querySelector('#comments' + requirementId).style.display = 'block';
           this.querySelector('#description' + requirementId).style.display = 'block';
 
+        },
+
+        /**
+         * Reset the view when the component id changes.
+         *
+         * @param componentId
+         * @private
+         */
+        _componentIdChanged: function(componentId) {
+          this.resetView();
+        },
+
+        resetView: function() {
+          //TODO: this seems to be a rather naive approach...
+          this.requirements = [];
         }
 
       });
