@@ -296,7 +296,6 @@
               <!--<paper-checkbox></paper-checkbox>-->
               <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[req.creator]]" normal-view></req-user></span></div>
               <relative-time class="time" datetime$="[[req.creation_time]]"></relative-time>
-              <div style="position:relative; padding: 16px;"><file-gallery attachments="{{req.attachments}}" grid></file-gallery></div>
               <div class="card-content" class="truncate">{{req.description}}</div>
               <div class="card-actions">
                 <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
@@ -691,38 +690,6 @@
          */
         _requirementsRequestParametersUpdated: function(_requirementsRequestParameters) {
           //this.load();
-        },
-
-        toggleCollapsible: function(e, data) {
-          if (e != null) {
-            var contentNode = Polymer.dom(e.currentTarget).parentNode.parentNode.querySelector('iron-collapse');
-            if (!contentNode.opened) {
-              // since we are about to open it, trigger loading the comments
-              Polymer.dom(e.currentTarget).parentNode.parentNode.querySelector('comments-list').load();
-            }
-            contentNode.toggle();
-          } else {
-            var contentNode = data.parentNode.querySelector('iron-collapse');
-            if (contentNode.parentNode.parentNode.elevation === 1) {
-              contentNode.parentNode.parentNode.elevation = 5;
-            } else {
-              contentNode.parentNode.parentNode.elevation = 1;
-            }
-            if (contentNode.parentNode.parentNode.querySelector(".description").classList.contains("helper")) {
-              contentNode.parentNode.parentNode.querySelector(".description").classList.remove("helper");
-            } else {
-              contentNode.parentNode.parentNode.querySelector(".description").classList.add("helper");
-            }
-            if (!contentNode.opened) {
-              // since we are about to open it, trigger loading the comments
-              data.parentNode.querySelector("comments-list").load();
-              // and load the images
-              data.parentNode.querySelector("file-gallery").loadIcons();
-            } else {
-              page.redirect("/projects/" + app.params.projectId + "/components/" + app.params.componentId);
-            }
-            contentNode.toggle();
-          }
         },
 
         load: function() {
