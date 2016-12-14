@@ -12,6 +12,8 @@
 <link rel="import" href="../components/iron-pages/iron-pages.html">
 <link rel="import" href="../components/iron-selector/iron-selector.html">
 <link rel="import" href="../components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../components/app-double-drawer-layout/app-double-drawer-layout.html">
 <link rel="import" href="../components/iron-icons/iron-icons.html">
 <link rel="import" href="../components/iron-icons/social-icons.html">
@@ -90,6 +92,13 @@
       on-response="_handleCurrentUserResponse"
       on-error="_handleCurrentUserError"></iron-ajax>
 
+    <iron-ajax
+      id="userSettingsRequest"
+      handle-as="json"
+      content-type="application/json"
+      method="PUT"
+      headers="[[authHeader]]"></iron-ajax>
+
     <app-double-drawer-layout fullbleed id="doubleDrawerLayout"
                               on-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged">
 
@@ -134,6 +143,32 @@
       </iron-pages>
 
     </app-double-drawer-layout>
+
+    <!-- Dialog for user settings: -->
+
+    <paper-dialog id="settingsDialog" modal>
+      <h2>[[localize('settings')]]</h2>
+      <div>
+        [[localize('mailDefaultLeader')]]:
+        <paper-toggle-button checked="[[currentUser.emailLeadItems]]" on-change="_handleUserSettingsLeadChange"></paper-toggle-button>
+      </div>
+      <div>
+        [[localize('mailDefaultFollow')]]:
+        <paper-toggle-button checked="[[currentUser.emailFollowItems]]" on-tap="_handleUserSettingsFollowChange"></paper-toggle-button>
+      </div>
+      <!--<div>-->
+      <!--Connect Github Account:-->
+      <!--<template is="dom-if" if="{{!code}}">-->
+      <!--<paper-button on-tap="loginGit">Connect Github</paper-button>-->
+      <!--</template>-->
+      <!--<template is="dom-if" if="{{code}}">-->
+      <!--<div>Logged in</div>-->
+      <!--</template>-->
+      <!--</div>-->
+      <div class="buttons">
+        <paper-button dialog-dismiss>Close</paper-button>
+      </div>
+    </paper-dialog>
   </template>
 
   <script>
@@ -195,10 +230,12 @@
       },
 
       _handleUserMenuSelect: function(e) {
+        // unselect the selected menu item
+        e.target.selected = null;
         var selectedValue = e.detail.item.getAttribute('value');
 
         if (selectedValue === 'settings') {
-          //TODO: show user settings
+          this.$.settingsDialog.open();
         }
       },
 
@@ -241,6 +278,30 @@
 
       _gotoLanding: function() {
         this.set('route.path', '/');
+      },
+
+      _handleUserSettingsLeadChange: function(e) {
+        var request = this.$.userSettingsRequest;
+        request.url = this._apiBaseUrl + "/users/" + this.currentUser.id;
+
+        request.body = JSON.stringify({
+          "id": this.currentUser.id,
+          "emailLeadItems": !(this.currentUser.emailLeadItems)
+        });
+
+        request.generateRequest();
+      },
+
+      _handleUserSettingsFollowChange: function(e) {
+        var request = this.$.userSettingsRequest;
+        request.url = this._apiBaseUrl + "/users/" + this.currentUser.id;
+
+        request.body = JSON.stringify({
+          "id": this.currentUser.id,
+          "emailFollowItems": !(this.currentUser.emailFollowItems)
+        });
+
+        request.generateRequest();
       }
     });
   </script>
