@@ -117,9 +117,9 @@
                   on-iron-overlay-closed="_handleCreateComponentClosed">
       <h2>[[localize('createComponent')]]</h2>
       <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newComponentTitle"
-                   value="{{_newComponentTitle}}"></paper-input>
+                   value="{{_newComponentTitle}}" required></paper-input>
       <paper-textarea label="[[localize('formDesc')]]" id="newComponentDescription"
-                      value="{{_newComponentDescription}}"></paper-textarea>
+                      value="{{_newComponentDescription}}" required></paper-textarea>
 
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>

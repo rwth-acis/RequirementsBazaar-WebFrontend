@@ -53,6 +53,7 @@
       .cmpTitle {
         display: block;
         text-overflow: ellipsis;
+        margin-top: 10px;
       }
 
       .cmpDesc{
@@ -63,10 +64,6 @@
       .filterButton {
         font-size: medium;
         margin-top: 10px;
-        margin-bottom: 10px;
-      }
-
-      .breadCrumb {
         margin-bottom: 10px;
       }
 
@@ -199,10 +196,9 @@
         </paper-menu>
       </paper-menu-button>
 
+      <bread-crumb project-id="[[projectId]]" project="[[project]]" component-id="[[componentId]]" component="[[component]]"></bread-crumb>
+
       <div class="cmpTitle" hidden="[[_editMode]]">
-        <div class="breadCrumb">
-          <bread-crumb project-id="[[projectId]]" project="[[project]]" component-id="[[componentId]]" component="[[component]]"></bread-crumb>
-        </div>
         <div class="componentName"><span>{{component.name}}</span></div>
       </div>
 
@@ -261,8 +257,10 @@
 
       <div class="editFormComp middle middle-container center layout" hidden="[[!_editMode]]">
 
-        <paper-input id="editTitle" class="editTitle" label="[[formTitle]]" value="{{component.name}}"></paper-input>
-        <paper-textarea id="editDescription" class="editDesc" label="[[formDesc]]" value="{{component.description}}"></paper-textarea>
+        <h2>[[localize('editComponent')]]</h2>
+
+        <paper-input id="editTitle" class="editTitle" label="[[localize('formTitle')]]" value="{{component.name}}" auto-validate error-message="[[localize('inputRequired')]]" maxlength="50" char-counter required></paper-input>
+        <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="{{component.description}}" max-rows="5" auto-validate error-message="[[localize('inputRequired')]]" required></paper-textarea>
         <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
         <paper-button raised on-tap="_handleSaveEditTap">[[localize('save')]]</paper-button>
 
