@@ -217,8 +217,10 @@
       },
 
       _handleCurrentUserError: function(e, detail) {
-        // the user is not authorized, log out
-        this.$.openidconnectSignin.signOut();
+        if (detail.status && (detail.status === 401)) {
+          // the user is not authorized, log out
+          this.$.openidconnectSignin.signOut();
+        }
       },
 
       _handleDrawerRegistered: function(e) {
