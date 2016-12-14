@@ -75,6 +75,7 @@
                handle-as="json"
                content-type="application/json"
                method="DELETE"
+               headers="[[authHeader]]"
                on-error="errorHandler"></iron-ajax>
 
     <!-- XHR for posting comments: -->
@@ -84,7 +85,7 @@
                content-type="application/json"
                method="POST"
                url="{{_apiBaseUrl}}/comments"
-               headers="{{header}}"
+               headers="[[authHeader]]"
                on-response="handlePostResponseComment"
                last-response="{{postResponse}}"
                on-error="errorHandler"></iron-ajax>
