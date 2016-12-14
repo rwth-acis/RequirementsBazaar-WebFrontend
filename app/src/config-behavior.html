@@ -32,6 +32,10 @@
       return GlobalConfig.currentUser;
     },
 
+    set currentUser(newValue) {
+      GlobalConfig.currentUser = newValue;
+    },
+
     get rightDrawerReserveSpace() {
       return GlobalConfig.rightDrawerReserveSpace;
     },
@@ -57,12 +61,6 @@
     _handleSignedOut: function(e) {
       this.authorized = false;
       this.authHeader = null;
-    },
-
-    _handleCurrentUserResponse: function(e, detail) {
-      var currentUser = detail.response;
-      GlobalConfig.currentUser = currentUser;
-      this.fire('iron-signal', {name: 'current-user-changed', data: currentUser});
     }
 
   }

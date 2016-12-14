@@ -107,9 +107,16 @@
             </paper-menu>
           </paper-menu-button>
           <paper-icon-button icon="social:notifications" right-drawer-toggle hidden></paper-icon-button>
+          <paper-menu-button on-iron-select="_handleUserMenuSelect" hidden="[[!_authorized]]">
+            <paper-icon-button src="[[currentUser.profileImage]]" class="dropdown-trigger" alt="menu"></paper-icon-button>
+            <paper-menu class="dropdown-content">
+              <paper-item value="settings">[[localize('settings')]]</paper-item>
+            </paper-menu>
+          </paper-menu-button>
           <openidconnect-signin id="openidconnectSignin" scopes="openid email profile"
                                 client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
                                 server="https://api.learning-layers.eu/o/oauth2"
+                                is-authorized="{{_authorized}}"
                                 on-openidconnect-signin-aware-success="_handleSigninSuccessApp"
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin>
         </app-toolbar>
@@ -168,6 +175,12 @@
         this.$.currentUserRequest.generateRequest();
       },
 
+      _handleCurrentUserResponse: function(e, detail) {
+        var currentUser = detail.response;
+        this.currentUser = currentUser;
+        this.fire('iron-signal', {name: 'current-user-changed', data: currentUser});
+      },
+
       _handleCurrentUserError: function(e, detail) {
         // the user is not authorized, log out
         this.$.openidconnectSignin.signOut();
@@ -178,6 +191,14 @@
           this.$.doubleDrawerLayout.leftDrawer = e.detail.drawer;
         } else {
           this.$.doubleDrawerLayout.rightDrawer = e.detail.drawer;
+        }
+      },
+
+      _handleUserMenuSelect: function(e) {
+        var selectedValue = e.detail.item.getAttribute('value');
+
+        if (selectedValue === 'settings') {
+          //TODO: show user settings
         }
       },
 
