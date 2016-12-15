@@ -224,14 +224,18 @@
       },
 
       _handleEditProjectResponse: function(e) {
-        if (e.detail.status === 200) {
-          this.$.componentsList.load();
-          this.$.toast.text = this.localize('projectEditSuccess');
+        if (e.target.method === 'DELETE') {
+          window.location.href = '/projects';
         } else {
-          this.$.toast.text = this.localize('projectEditError');
-          //TODO: reset the project object
+          if (e.detail.status === 200) {
+            this.$.componentsList.load();
+            this.$.toast.text = this.localize('projectEditSuccess');
+          } else {
+            this.$.toast.text = this.localize('projectEditError');
+            //TODO: reset the project object
+          }
+          this.$.toast.open();
         }
-        this.$.toast.open();
       },
 
       _handleEditProjectError: function(e) {
@@ -294,6 +298,15 @@
       _handlePostComponentError: function(e) {
         this.$.toast.text = this.localize('errorCreCmp');
         this.$.toast.open();
+      },
+
+      deleteProject: function(e) {
+        if (e.detail.confirmed) {
+          var request = this.$.editProjectRequest;
+          request.url = this._apiBaseUrl + "/projects/" + this.projectId;
+          request.method = "DELETE";
+          request.generateRequest();
+        }
       }
 
     });
