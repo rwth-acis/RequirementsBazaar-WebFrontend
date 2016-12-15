@@ -217,7 +217,7 @@
       },
 
       _handleCurrentUserError: function(e, detail) {
-        if (detail.status && (detail.status === 401)) {
+        if (detail.request.status && (detail.request.status === 401)) {
           // the user is not authorized, log out
           this.$.openidconnectSignin.signOut();
         }
