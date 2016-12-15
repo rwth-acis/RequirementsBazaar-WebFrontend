@@ -1120,7 +1120,7 @@
          * @private
          */
         _calculateMessageBasedOnUserInArray: function(userArray, falseMessage, trueMessage) {
-          if (this.authorized && this._isUserInArray(userArray, this.currentUser)) {
+          if (this.authorized && this.currentUser && this._isUserInArray(userArray, this.currentUser)) {
             return this.localize(trueMessage);
           } else {
             return this.localize(falseMessage);

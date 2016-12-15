@@ -53,6 +53,10 @@
       paper-toast {
         z-index: 105;
       }
+
+      a {
+        text-decoration: underline;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{authorized}}"
@@ -109,11 +113,11 @@
           <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
           <div class="info helper">
             <relative-time datetime$="[[item.creationTime]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
+            <a on-tap="_handleReplyTap" hidden="[[!authorized]]">[[localize('reply')]]</a>
           </div>
-          <paper-input style="display: none;" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter"></paper-input>
+          <paper-input class$="replyInput[[item.Id]]" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
         </div>
         <paper-icon-button on-tap="createModal" icon="close" hidden$="[[!isCreator(item.creatorId)]]"></paper-icon-button>
-        <paper-icon-button icon="reply" on-tap="showReplyInput" hidden="[[!authorized]]"></paper-icon-button>
       </div>
 
     </template>
@@ -226,20 +230,25 @@
       _checkForEnter: function(e) {
         if (e.keyCode === 13) {
           var text = e.currentTarget.value;
-          var replyTo = e.currentTarget.attr;
+          var replyTo;
+          if (e.model.item.belongsToComment) {
+            replyTo = e.model.item.belongsToComment;
+          } else {
+            replyTo = e.model.item.Id;
+          }
           var request = this.$.postCommentRequest;
-        if (text != null && text != '') {
-          request.body = JSON.stringify({
-            "requirementId": this.requirementId,
-            "message": text,
-            "belongsToComment": parseInt(replyTo)
-          });
-          request.generateRequest();
-        } else {
-          //show message for empty comment
-          this.$.toast.text = localize('commentNoEmpty');
-          this.$.toast.open();
-        }
+          if (text != null && text != '') {
+            request.body = JSON.stringify({
+              "requirementId": this.requirementId,
+              "message": text,
+              "belongsToComment": parseInt(replyTo)
+            });
+            request.generateRequest();
+          } else {
+            //show message for empty comment
+            this.$.toast.text = localize('commentNoEmpty');
+            this.$.toast.open();
+          }
           //clear the paper-input and hide it
           e.currentTarget.value = '';
           e.currentTarget.style.display = "none";
@@ -316,7 +325,7 @@
        * @returns {boolean}
        */
       isCreator: function(usrId) {
-        if (this.authorized) {
+        if (this.authorized && this.currentUser) {
           if (usrId === this.currentUser.id) {
             return true;
           }
@@ -338,41 +347,17 @@
       },
 
       /**
-       * Shows and hides the reply paper-input if the reply button is pressed.
+       * Shows an input field for replying to a comment
        *
        * @param e
        */
-      showReplyInput: function(e) {
-        if (e.currentTarget.parentNode.querySelector("paper-input").style.display === "none") {
-          e.currentTarget.parentNode.querySelector("paper-input").style.display= "block";
-          e.currentTarget.parentNode.querySelector("paper-input").$.input.focus();
-        } else {
-          e.currentTarget.parentNode.querySelector("paper-input").style.display= "none";
-        }
-//                    var replyAttr = "Re-" + e.currentTarget.parentNode.attr;
-//                    var lastReply;
-//                    var allRep = document.querySelectorAll(".replies");
-//
-//                    //get last reply for the clicked comment
-//                    for (var i=0; i<allRep.length; i++){
-//                        if (allRep[i].attr == replyAttr){
-//                            lastReply = allRep[i];
-//                        }
-//                    }
+      _handleReplyTap: function(e) {
+        var replyInput = this.$$('.replyInput' + e.model.item.Id);
 
-//                    //create input element
-//                    var newEl = document.createElement("paper-input");
-//
-//                    //add input at the correct position
-//                    if (!lastReply){
-//                        e.currentTarget.parentNode.parentNode.insertBefore(newEl, e.currentTarget.parentNode.nextSibling);
-//                    }
-//
-//                    if (lastReply.nextSibling){
-//                        lastReply.parentNode.insertBefore(newEl, lastReply.nextSibling);
-//                    } else {
-//                        lastReply.parentNode.appendChild(newEl);
-//                    }
+        replyInput.hidden = false;
+        replyInput.focus();
+
+        e.preventDefault();
       },
 
       /**

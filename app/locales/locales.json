@@ -106,7 +106,8 @@
     "list-view": "List View",
     "grid-view": "Grid View",
     "inputRequired": "Please fill out this field.",
-    "options": "Options"
+    "options": "Options",
+    "reply": "Reply"
   },
   "de": {
     "settings": "Einstellungen",
@@ -215,6 +216,7 @@
     "list-view": "Listenansicht",
     "grid-view": "Kachelansicht",
     "inputRequired": "Dieses Feld ist erforderlich.",
-    "options": "Optionen"
+    "options": "Optionen",
+    "reply": "Antworten"
   }
 }
