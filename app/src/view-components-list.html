@@ -268,7 +268,7 @@
            });
            request.generateRequest();
            this.$.newComponentTitle.value = null;
-           this.$.newComponentDesc.value = null;
+           this.$.newComponentDescription.value = null;
          }
 
          // reset the form and validation error messages
@@ -284,6 +284,16 @@
 
       _computeCreateComponentDisabled: function(newComponentTitle, newComponentDescription) {
         return (newComponentTitle === '' || newComponentDescription === '' || newComponentTitle == null || newComponentDescription == null );
+      },
+
+      _handlePostComponentResponse: function(e) {
+        this.$.toast.text = this.localize('cmpCreatedSucc');
+        this.$.toast.open();
+      },
+
+      _handlePostComponentError: function(e) {
+        this.$.toast.text = this.localize('errorCreCmp');
+        this.$.toast.open();
       }
 
     });

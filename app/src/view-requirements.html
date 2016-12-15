@@ -161,6 +161,13 @@
                 on-response="_handleEditComponentResponse"
                 on-error="errorHandler"></iron-ajax>
 
+    <iron-ajax id="editProjectRequest"
+               handle-as="json"
+               content-type="application/json"
+               headers="[[authHeader]]"
+               on-response="_handleEditProjectResponse"
+               on-error="_handleEditProjectError"></iron-ajax>
+
     <app-drawer id="drawer" align="left">
       <!-- Drawer Toolbar -->
       <a href$="/projects/[[projectId]]" tabindex="-1">
@@ -184,7 +191,7 @@
                          hidden="[[!authorized]]">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
         <paper-menu id="componentInfoMenu" class="dropdown-content">
-          <paper-item on-tap="setDefault">[[localize('setAsDefault')]]</paper-item>
+          <paper-item value="default">[[localize('setAsDefault')]]</paper-item>
           <template is="dom-if" if="{{!followsComp}}">
             <paper-item on-tap="followComponent">[[localize('followComponent')]]</paper-item>
           </template>
@@ -419,7 +426,9 @@
         // get value of the paper-item
         var selectedValue = e.detail.item.getAttribute('value');
 
-        if (selectedValue === 'edit') {
+        if (selectedValue === 'default') {
+          this.setAsDefaultComponent();
+        } else if (selectedValue === 'edit') {
           this._editMode = true;
         } else if (selectedValue === 'delete') {
           this.$.deleteDialog.open();
@@ -503,14 +512,18 @@
       },
 
       _handleEditComponentResponse: function(e) {
-        if (e.detail.status === 200) {
-          this.$.requirementsList.load();
-          this.$.toast.text = this.localize('componentEditSuccess');
+        if (e.target.method === 'DELETE') {
+          window.location.href = '/projects/' + this.projectId;
         } else {
-          this.$.toast.text = this.localize('componentEditError');
-          //TODO: reset the project object
+          if (e.detail.status === 200) {
+            this.$.requirementsList.load();
+            this.$.toast.text = this.localize('componentEditSuccess');
+          } else {
+            this.$.toast.text = this.localize('componentEditError');
+            //TODO: reset the project object
+          }
+          this.$.toast.open();
         }
-        this.$.toast.open();
       },
 
       _computeCreateRequirementDisabled: function(newRequirementTitle, newRequirementDescription) {
@@ -524,6 +537,36 @@
        */
       _toggleOptions: function() {
         this.$.collapseFilters.toggle();
+      },
+
+      setAsDefaultComponent: function() {
+        var request = this.$.editProjectRequest;
+        request.url = this._apiBaseUrl + "/projects/" + this.projectId;
+        request.method = "PUT";
+        request.body = JSON.stringify({
+          "id": this.projectId,
+          "defaultComponentId": this.componentId
+        });
+        request.generateRequest();
+      },
+
+      _handleEditProjectResponse: function(e) {
+        this.$.toast.text = this.localize('projectEditSuccess');
+        this.$.toast.open();
+      },
+
+      _handleEditProjectError: function(e) {
+        this.$.toast.text = this.localize('projectEditError');
+        this.$.toast.open();
+      },
+
+      deleteComponent: function(e) {
+        if (e.detail.confirmed) {
+          var request = this.$.editComponentRequest;
+          request.url = this._apiBaseUrl + "/components/" + this.componentId;
+          request.method = "DELETE";
+          request.generateRequest();
+        }
       }
 
     });
