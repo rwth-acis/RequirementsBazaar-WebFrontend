@@ -359,10 +359,16 @@
           type: Object,
           notify: true
         },
+        /**
+         * Sets the style of how requirements are shown, either 'list' or 'grid'.
+         */
         _viewOption: {
           type: String,
           value: 'list'
         },
+        /**
+         * Defines whether the component is currently being edited.
+         */
         _editMode: {
           type: Boolean,
           value: false
@@ -404,6 +410,9 @@
         }
       },
 
+      /**
+       * Returns this view's drawer.
+       */
       getDrawer: function() {
         return this.$.drawer;
       },
@@ -466,7 +475,6 @@
           });
           request.generateRequest();
         }
-
 
         // reset the form and validation error messages
         this.$.newRequirementTitle.required = false;
@@ -539,6 +547,9 @@
         this.$.collapseFilters.toggle();
       },
 
+      /**
+       * Sets the currently shown component as default component for its project. Sends a request to the server.
+       */
       setAsDefaultComponent: function() {
         var request = this.$.editProjectRequest;
         request.url = this._apiBaseUrl + "/projects/" + this.projectId;
@@ -560,6 +571,11 @@
         this.$.toast.open();
       },
 
+      /**
+       * Deletes the currently shown component.
+       *
+       * @param e
+       */
       deleteComponent: function(e) {
         if (e.detail.confirmed) {
           var request = this.$.editComponentRequest;
