@@ -163,11 +163,23 @@
         }
       },
 
+      /**
+       * Event handler for the "create project" buttons.
+       *
+       * @param e
+       * @private
+       */
       _handleCreateProjectTap: function(e) {
         var createDialog = this.$.createProjectDialog;
         createDialog.open();
       },
 
+      /**
+       * Event handler for closing the "create rroject" dialog.
+       *
+       * @param e
+       * @private
+       */
       _handleCreateProjectClosed: function(e) {
         if (e.detail.confirmed) {
           var request = this.$.postProjectRequest;
@@ -190,6 +202,14 @@
         this.$.newProjectDescription.required = true;
       },
 
+      /**
+       * Computes whether the "Save" button in the "create project" dialog is disabled or not.
+       *
+       * @param newProjectTitle
+       * @param newProjectDescription
+       * @returns {boolean}
+       * @private
+       */
       _computeCreateProjectDisabled: function(newProjectTitle, newProjectDescription) {
         return (newProjectTitle === '' || newProjectDescription === '' || newProjectTitle == null || newProjectDescription == null );
       }
