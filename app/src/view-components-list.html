@@ -228,7 +228,6 @@
           window.location.href = '/projects';
         } else {
           if (e.detail.status === 200) {
-            this.$.componentsList.load();
             this.$.toast.text = this.localize('projectEditSuccess');
           } else {
             this.$.toast.text = this.localize('projectEditError');
@@ -291,6 +290,7 @@
       },
 
       _handlePostComponentResponse: function(e) {
+        this.$.componentsList.refresh();
         this.$.toast.text = this.localize('cmpCreatedSucc');
         this.$.toast.open();
       },
