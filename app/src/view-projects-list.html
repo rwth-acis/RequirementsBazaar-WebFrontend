@@ -63,8 +63,8 @@
       content-type="application/json"
       method="POST"
       headers="[[authHeader]]"
-      on-response="handlePostResponseProject"
-      on-error="errorHandler"></iron-ajax>
+      on-response="_handlePostResponseProject"
+      on-error="_handlePostResponseError"></iron-ajax>
 
     <paper-material elevation="1" style="height:180px;">
 
@@ -121,7 +121,7 @@
     <paper-fab on-tap="_handleCreateProjectTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
     <paper-tooltip for="fab" position="left">[[localize('createProject')]]</paper-tooltip>
 
-    <paper-toast id="superToast"></paper-toast>
+    <paper-toast id="toast"></paper-toast>
 
   </template>
 
@@ -212,6 +212,17 @@
        */
       _computeCreateProjectDisabled: function(newProjectTitle, newProjectDescription) {
         return (newProjectTitle === '' || newProjectDescription === '' || newProjectTitle == null || newProjectDescription == null );
+      },
+
+      _handlePostResponseProject: function(e) {
+        this.$.projectsList.refresh();
+        this.$.toast.text = this.localize('prjCreatedSucc');
+        this.$.toast.open();
+      },
+
+      _handlePostResponseError: function(e) {
+        this.$.toast.text = this.localize('errorCrePrj');
+        this.$.toast.open();
       }
 
     });
