@@ -84,15 +84,15 @@
         <paper-toggle-button on-tap="toggleProjects"></paper-toggle-button>
       </div>
 
-      <paper-input id="searchInput" class="large" label="[[localize('searchLabel')]]" value="{{projectFilterVal}}" autofocus>
+      <paper-input id="searchInput" class="large" label="[[localize('searchLabel')]]" value="{{_projectFilterVal}}" autofocus>
         <iron-icon icon="search" prefix class="big"></iron-icon>
-        <paper-icon-button suffix onclick="{{clearInput}}"
+        <paper-icon-button suffix on-tap="_handleClearInputTap"
                            icon="clear" alt="clear" title="clear" tabindex="0">
         </paper-icon-button>
       </paper-input>
     </paper-material>
 
-    <projects-list filter-value="{{projectFilterVal}}"
+    <projects-list filter-value="{{_projectFilterVal}}"
                    id="projectsList"
                    base-href="https://requirements-bazaar.org/betabazaar"
                    loading="{{loading}}"
@@ -135,6 +135,9 @@
       ],
 
       properties: {
+        _projectFilterVal: {
+          type: String
+        },
         _newProjectTitle: {
           type: String,
           value: ''
@@ -161,6 +164,10 @@
         if (detail.drawerAlign === 'right') {
           this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
         }
+      },
+
+      _handleClearInputTap: function(e) {
+        this._projectFilterVal = '';
       },
 
       /**
