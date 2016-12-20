@@ -144,8 +144,8 @@
                content-type="application/json"
                method="POST"
                headers="[[authHeader]]"
-               on-response="_handlePostResponseRequirement"
-               on-error="errorHandler"></iron-ajax>
+               on-response="_handlePostRequirementResponse"
+               on-error="_handlePostRequirementError"></iron-ajax>
 
     <iron-ajax id="componentRequest"
                handle-as="json"
@@ -488,8 +488,15 @@
         this.files = [];
       },
 
-      _handlePostResponseRequirement: function(e) {
-        //TODO show toast
+      _handlePostRequirementResponse: function(e) {
+        this.$.requirementsList.refresh();
+        this.$.toast.text = this.localize('reqCreatedSucc');
+        this.$.toast.open();
+      },
+
+      _handlePostRequirementError: function(e) {
+        this.$.toast.text = this.localize('errorCreReq');
+        this.$.toast.open();
       },
 
       _handleCancelEditTap: function(e) {
@@ -524,7 +531,7 @@
           window.location.href = '/projects/' + this.projectId;
         } else {
           if (e.detail.status === 200) {
-            this.$.requirementsList.load();
+            this.$.requirementsList.refresh();
             this.$.toast.text = this.localize('componentEditSuccess');
           } else {
             this.$.toast.text = this.localize('componentEditError');

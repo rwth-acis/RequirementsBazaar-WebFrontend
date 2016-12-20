@@ -688,7 +688,7 @@
           //this.load();
         },
 
-        load: function() {
+        refresh: function() {
           this.$.requirementsRequest.generateRequest();
         },
 
@@ -910,7 +910,7 @@
         handleResponseEditReq: function(data) {
           if (data != null) {
             this.feedback = this.localize('reqEditSucc');
-            this.load();
+            this.refresh();
           }
           this.$.toast.open();
         },
@@ -1173,7 +1173,7 @@
 
           // now refresh the data behind by reloading all requirements
           // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.load();
+          this.refresh();
         },
 
         /**
@@ -1224,7 +1224,7 @@
 
           // now refresh the data behind by reloading all requirements
           // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.load();
+          this.refresh();
         },
 
         /**
@@ -1316,7 +1316,7 @@
 
           // now refresh the data behind by reloading all requirements
           // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.load();
+          this.refresh();
         },
 
         /**
@@ -1376,7 +1376,7 @@
 
           // now refresh the data behind by reloading all requirements
           // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.load();
+          this.refresh();
         },
 
         /**
