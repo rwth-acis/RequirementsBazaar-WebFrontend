@@ -467,8 +467,8 @@
             }
           }
           request.body = JSON.stringify({
-            "title": this._newRequirementTitle,
-            "description": this._newRequirementDescription,
+            "title": this._newRequirementTitle.trim(),
+            "description": this._newRequirementDescription.trim(),
             "projectId": this.projectId,
             "components": components,
             "attachments": attachments
@@ -535,7 +535,7 @@
       },
 
       _computeCreateRequirementDisabled: function(newRequirementTitle, newRequirementDescription) {
-        return (newRequirementTitle === '' || newRequirementDescription === '' || newRequirementTitle == null || newRequirementDescription == null );
+        return (newRequirementTitle == null || newRequirementDescription == null || newRequirementTitle.trim() === '' || newRequirementDescription.trim() === '');
       },
 
       /**

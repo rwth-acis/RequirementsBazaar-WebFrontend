@@ -191,8 +191,8 @@
         if (e.detail.confirmed) {
           var request = this.$.postProjectRequest;
           request.body = JSON.stringify({
-            "description": this.$.newProjectDescription.value,
-            "name": this.$.newProjectTitle.value,
+            "description": this.$.newProjectDescription.value.trim(),
+            "name": this.$.newProjectTitle.value.trim(),
             "visibility": "PUBLIC"
           });
           request.generateRequest();
@@ -218,7 +218,7 @@
        * @private
        */
       _computeCreateProjectDisabled: function(newProjectTitle, newProjectDescription) {
-        return (newProjectTitle === '' || newProjectDescription === '' || newProjectTitle == null || newProjectDescription == null );
+        return (newProjectTitle == null || newProjectDescription == null || newProjectTitle.trim() === '' || newProjectDescription.trim() === '');
       },
 
       _handlePostResponseProject: function(e) {

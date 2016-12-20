@@ -265,8 +265,8 @@
          if (e.detail.confirmed) {
            var request = this.$.postComponentRequest;
            request.body = JSON.stringify({
-             "description": this._newComponentDescription,
-             "name": this._newComponentTitle,
+             "description": this._newComponentDescription.trim(),
+             "name": this._newComponentTitle.trim(),
              "projectId": this.projectId
            });
            request.generateRequest();
@@ -286,7 +286,7 @@
       },
 
       _computeCreateComponentDisabled: function(newComponentTitle, newComponentDescription) {
-        return (newComponentTitle === '' || newComponentDescription === '' || newComponentTitle == null || newComponentDescription == null );
+        return (newComponentTitle == null || newComponentDescription == null || newComponentTitle.trim() === '' || newComponentDescription.trim() === '');
       },
 
       _handlePostComponentResponse: function(e) {
