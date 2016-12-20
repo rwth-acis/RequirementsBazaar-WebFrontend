@@ -266,8 +266,8 @@
 
         <h2>[[localize('editComponent')]]</h2>
 
-        <paper-input id="editTitle" class="editTitle" label="[[localize('formTitle')]]" value="{{component.name}}" auto-validate error-message="[[localize('inputRequired')]]" maxlength="50" char-counter required></paper-input>
-        <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="{{component.description}}" max-rows="5" auto-validate error-message="[[localize('inputRequired')]]" required></paper-textarea>
+        <paper-input id="editTitle" class="editTitle" label="[[localize('formTitle')]]" value="[[component.name]]" auto-validate error-message="[[localize('inputRequired')]]" maxlength="50" char-counter required></paper-input>
+        <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="[[component.description]]" max-rows="5" auto-validate error-message="[[localize('inputRequired')]]" required></paper-textarea>
         <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
         <paper-button raised on-tap="_handleSaveEditTap">[[localize('save')]]</paper-button>
 
