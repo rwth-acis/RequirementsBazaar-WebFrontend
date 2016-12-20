@@ -32,7 +32,12 @@
       return GlobalConfig.currentUser;
     },
 
-    set currentUser(newValue) {
+    /**
+     * Went for set* method as in the Polymer object, this.currentUser didn't call this setter.
+     *
+     * @param newValue
+     */
+    setCurrentUser: function(newValue) {
       GlobalConfig.currentUser = newValue;
     },
 

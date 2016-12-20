@@ -1237,12 +1237,12 @@
           // unselect the selected menu item
           e.target.selected = null;
           // get value of the paper-item
-          var selectedValue = e.detail.item.getAttribute("value");
+          var selectedValue = e.detail.item.getAttribute('value');
           var requirement = e.model.req;
 
-          if (selectedValue === "follow") {
+          if (selectedValue === 'follow') {
             this._toggleFollowRequirement(requirement);
-          } else if (selectedValue === "toggleContributors") {
+          } else if (selectedValue === 'toggleContributors') {
             this._toggleContributors(requirement);
           } else if (selectedValue === 'develop') {
             this._toggleUserInResource(requirement.id, requirement.developers, 'developers');
@@ -1390,7 +1390,7 @@
           var request = this.$.updateRequirementRequest;
           request.url = this._apiBaseUrl + '/requirements/' + requirement.id;
           request.body = JSON.stringify({
-            'id': parseInt(requirement.id),
+            'id': requirement.id,
             'leadDeveloperId': (this.currentUser.id !== requirement.leadDeveloperId) ? this.currentUser.id : 1
           });
 
