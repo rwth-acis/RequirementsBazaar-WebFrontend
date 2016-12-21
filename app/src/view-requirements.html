@@ -400,8 +400,9 @@
         // load localized messages
         this.loadResources(this.resolveUrl('../locales/locales.json'));
 
-        // set fab button right padding
+        // set fab button and create dialog right padding
         this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
+        this.$.createRequirementDialog.toggleClass('drawer', this.rightDrawerReserveSpace);
       },
 
       _handleComponentLinkTapped: function(e) {
@@ -420,6 +421,7 @@
       _handleDrawerReserveSpaceChanged: function(e, detail) {
         if (detail.drawerAlign === 'right') {
           this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
+          this.$.createRequirementDialog.toggleClass('drawer', detail.reserveSpace);
         }
       },
 
