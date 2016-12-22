@@ -15,6 +15,10 @@
         };
       }
 
+      .iron-selected > paper-item {
+        background-color: #eceff1;
+      }
+
       a {
         color: inherit;
         text-decoration: none;
@@ -29,10 +33,10 @@
       params='{"page":"0", "per_page":"150"}'
       auto></iron-ajax>
 
-    <paper-menu>
+    <paper-menu selected="[[componentId]]" attr-for-selected="value">
 
       <template is="dom-repeat" items="{{components}}">
-        <a href$="/projects/[[projectId]]/components/[[item.id]]" on-tap="_handleLinkTap">
+        <a href$="/projects/[[projectId]]/components/[[item.id]]" on-tap="_handleLinkTap" value="[[item.id]]">
           <paper-item>[[item.name]]</paper-item>
         </a>
       </template>
@@ -59,6 +63,12 @@
         components: {
           type: Array,
           notify: true
+        },
+        /**
+         * The selected component id.
+         */
+        componentId: {
+          type: Number
         }
       },
 
