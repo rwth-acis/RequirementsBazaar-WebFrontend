@@ -104,6 +104,12 @@
         margin-top: 10px;
         height: 40px;
       }
+
+      .helper-highlight {
+        color: #669900;
+        font-size: small;
+        margin-top: -5px;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{authorized}}"
@@ -303,12 +309,12 @@
       <paper-button class="expand-button" on-tap="expandDialog"><iron-icon icon="fullscreen"></iron-icon></paper-button>
       <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]"
                    id="newRequirementTitle"
-                   on-keydown="checkEnter"
+                   on-keydown="_handleEnterCheck"
                    value="{{_newRequirementTitle}}"></paper-input>
       <paper-textarea label="[[localize('formDesc')]]"
                       id="newRequirementDescription"
                       max-rows="4"
-                      on-keydown="checkEnter"
+                      on-keydown="_handleEnterCheck"
                       value="{{_newRequirementDescription}}"></paper-textarea>
       <div class="helper-highlight">Ctrl + Enter for new line</div>
       <vaadin-upload
@@ -452,32 +458,38 @@
 
       _handleCreateRequirementClosed: function(e) {
         if (e.detail.confirmed) {
-          var attachments = [];
-          var request = this.$.postRequirementRequest;
-          var components = [{id: this.componentId}];
-          // check if a file was uploaded as well
-          // xhr.response holds the file identifier
-          if (this.files != []){
-            for (var i = 0; i < this.files.length; i++) {
-              var obj = {
-                title: this.files[i].name,
-                fileUrl: this.fileServiceHref + this.files[i].xhr.response,
-                mimeType: "image/*",
-                identifier: this.files[i].xhr.response
-              };
-              attachments.push(obj);
-            }
-          }
-          request.body = JSON.stringify({
-            "title": this._newRequirementTitle.trim(),
-            "description": this._newRequirementDescription.trim(),
-            "projectId": this.projectId,
-            "components": components,
-            "attachments": attachments
-          });
-          request.generateRequest();
+          this._postRequirement();
         }
+      },
 
+      _postRequirement: function() {
+        var attachments = [];
+        var request = this.$.postRequirementRequest;
+        var components = [{id: this.componentId}];
+        // check if a file was uploaded as well
+        // xhr.response holds the file identifier
+        if (this.files != []){
+          for (var i = 0; i < this.files.length; i++) {
+            var obj = {
+              title: this.files[i].name,
+              fileUrl: this.fileServiceHref + this.files[i].xhr.response,
+              mimeType: "image/*",
+              identifier: this.files[i].xhr.response
+            };
+            attachments.push(obj);
+          }
+        }
+        request.body = JSON.stringify({
+          "title": this._newRequirementTitle.trim(),
+          "description": this._newRequirementDescription.trim(),
+          "projectId": this.projectId,
+          "components": components,
+          "attachments": attachments
+        });
+        request.generateRequest();
+      },
+
+      _clearNewRequirementForm: function() {
         // reset the form and validation error messages
         this.$.newRequirementTitle.required = false;
         this.$.newRequirementDescription.required = false;
@@ -591,6 +603,27 @@
           request.url = this._apiBaseUrl + "/components/" + this.componentId;
           request.method = "DELETE";
           request.generateRequest();
+        }
+      },
+
+      /**
+       * An event handler for the keydown event of the new requirement input fields. If CTRL+Enter is pressed in the
+       * input for the description, a new line is entered. Otherwise the requirement is posted.
+       *
+       * @param e
+       * @returns
+       * @private
+       */
+      _handleEnterCheck: function(e) {
+        if (e.keyCode === 13) {
+          if (e.ctrlKey) {
+            if (this.$.newRequirementDescription.focused){
+              this.$.newRequirementDescription.value += '\n';
+            }
+          } else {
+            // post requirement
+            this._postRequirement();
+          }
         }
       }
 
