@@ -161,6 +161,13 @@
         this.$.createProjectDialog.toggleClass('drawer', this.rightDrawerReserveSpace);
       },
 
+      /**
+       * Event handler for when a drawer changes its state. Toggles the fab's and the create project dialog's right
+       * position.
+       *
+       * @param e
+       * @param detail
+       */
       _handleDrawerReserveSpaceChanged: function(e, detail) {
         if (detail.drawerAlign === 'right') {
           this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
@@ -168,6 +175,9 @@
         }
       },
 
+      /**
+       * Resets the value of the filter input field.
+       */
       _handleClearInputTap: function(e) {
         this._projectFilterVal = '';
       },
@@ -223,12 +233,24 @@
         return (newProjectTitle == null || newProjectDescription == null || newProjectTitle.trim() === '' || newProjectDescription.trim() === '');
       },
 
+      /**
+       * Event handler for the post request for saving new projects. Shows a toast notification.
+       *
+       * @param e
+       * @private
+       */
       _handlePostResponseProject: function(e) {
         this.$.projectsList.refresh();
         this.$.toast.text = this.localize('prjCreatedSucc');
         this.$.toast.open();
       },
 
+      /**
+       * Event handler for errors when posting a new project to the server. Shows a toast notification.
+       *
+       * @param e
+       * @private
+       */
       _handlePostResponseError: function(e) {
         this.$.toast.text = this.localize('errorCrePrj');
         this.$.toast.open();
