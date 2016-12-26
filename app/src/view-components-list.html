@@ -70,12 +70,10 @@
       <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute; top:2px; right:8px;" hidden="[[!authorized]]" on-iron-select="_handleComponentMenuSelect">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
         <paper-menu id="componentInfoMenu" class="dropdown-content">
-          <template is="dom-if" if="{{!isFollowerProj}}">
-            <paper-item on-tap="followProject">[[localize('followProject')]]</paper-item>
-          </template>
-          <template is="dom-if" if="{{isFollowerProj}}">
+          <paper-item value="follow">[[localize('followProject')]]</paper-item>
+          <!--<template is="dom-if" if="{{isFollowerProj}}">
             <paper-item on-tap="unfollowProject">[[localize('unfollowProject')]]</paper-item>
-          </template>
+          </template>-->
           <paper-item value="edit">[[localize('editProject')]]</paper-item>
           <paper-item value="delete">[[localize('deleteProjectTitle')]]</paper-item>
         </paper-menu>
@@ -229,7 +227,7 @@
         if (e.target.method === 'DELETE') {
           window.location.href = '/projects';
         } else {
-          if (e.detail.status === 200) {
+          if (e.detail.status === 201) {
             this.$.toast.text = this.localize('projectEditSuccess');
           } else {
             this.$.toast.text = this.localize('projectEditError');
@@ -256,7 +254,9 @@
         // get value of the paper-item
         var selectedValue = e.detail.item.getAttribute('value');
 
-        if (selectedValue === 'edit') {
+        if (selectedValue === 'follow') {
+          this._toggleFollowProject();
+        } else if (selectedValue === 'edit') {
           this._editMode = true;
         } else if (selectedValue === 'delete') {
           this.$.deleteDialog.open();
@@ -309,7 +309,48 @@
           request.method = "DELETE";
           request.generateRequest();
         }
-      }
+      },
+
+      _toggleFollowProject: function() {
+        var followers = this.project.followers;
+        var isFollower = this._isUserInArray(followers, this.currentUser);
+
+        var request = this.$.editProjectRequest;
+        request.url = this._apiBaseUrl + '/projects/' + this.projectId + '/followers';
+
+        if (!isFollower) {
+          // follow requirement
+          request.method = 'POST';
+        } else {
+          // unfollow requirement
+          request.method = 'DELETE';
+        }
+
+        request.generateRequest();
+      },
+
+      /**
+       * Checks whether a user is in the users array. Compares the user's id.
+       *
+       * @param usersArray an array of user objects.
+       * @param user a user object.
+       * @returns {boolean} whether the user is in the array or not.
+       * @private
+       */
+      _isUserInArray: function(usersArray, user) {
+        if ((usersArray == null) || (user == null)) {
+          return false;
+        } else {
+          // check if the user's id is in the users array
+          for (var index = 0; index < usersArray.length; ++index) {
+            if (usersArray[index].id === user.id) {
+              return true;
+            }
+          }
+
+          return false;
+        }
+      },
 
     });
   </script>

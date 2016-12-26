@@ -29,6 +29,10 @@
       }
     </style>
 
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
     <app-route
       route="{{route}}"
       pattern="/:projectId"
@@ -38,6 +42,7 @@
     <iron-ajax id="projectRequest"
                content-type="application/json"
                url="[[_apiBaseUrl]]/projects/[[data.projectId]]"
+               headers="[[authHeader]]"
                last-response="{{project}}"></iron-ajax>
 
     <app-drawer id="drawer" align="right">
