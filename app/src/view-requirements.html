@@ -120,29 +120,13 @@
 
     <iron-signals on-iron-signal-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged"></iron-signals>
 
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
     <iron-ajax id="componentInfoLoader"
                content-type="application/json"
                url="[[_apiBaseUrl]]/components/[[componentId]]"
                last-response="{{component}}"
                auto></iron-ajax>
-
-    <iron-ajax
-      id="followComp"
-      handle-as="json"
-      content-type="application/json"
-      method="POST"
-      headers="[[authHeader]]"
-      on-response="handleResponseFollowComponent"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="unfollowComp"
-      handle-as="json"
-      content-type="application/json"
-      method="DELETE"
-      headers="[[authHeader]]"
-      on-response="handleResponseUnFollowComponent"
-      on-error="errorHandler"></iron-ajax>
 
     <iron-ajax id="postRequirementRequest"
                handle-as="json"
@@ -197,13 +181,8 @@
                          hidden="[[!authorized]]">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
         <paper-menu id="componentInfoMenu" class="dropdown-content">
+          <paper-item value="follow">[[localize('followComponent')]]</paper-item>
           <paper-item value="default">[[localize('setAsDefault')]]</paper-item>
-          <template is="dom-if" if="{{!followsComp}}">
-            <paper-item on-tap="followComponent">[[localize('followComponent')]]</paper-item>
-          </template>
-          <template is="dom-if" if="{{followsComp}}">
-            <paper-item on-tap="unfollowComponent">[[localize('unfollowComponent')]]</paper-item>
-          </template>
           <paper-item value="edit">[[localize('editComponent')]]</paper-item>
           <paper-item value="delete">[[localize('deleteComponent')]]</paper-item>
         </paper-menu>
@@ -448,12 +427,60 @@
         // get value of the paper-item
         var selectedValue = e.detail.item.getAttribute('value');
 
-        if (selectedValue === 'default') {
+        if (selectedValue === 'follow') {
+          this._toggleFollowComponent();
+        } else if (selectedValue === 'default') {
           this.setAsDefaultComponent();
         } else if (selectedValue === 'edit') {
           this._editMode = true;
         } else if (selectedValue === 'delete') {
           this.$.deleteDialog.open();
+        }
+      },
+
+      /**
+       * Toggles following the component.
+       *
+       */
+      _toggleFollowComponent: function() {
+        var followers = this.component.followers;
+        var user = this.currentUser;
+        var isFollower = this._isUserInArray(followers, this.currentUser);
+
+        var request = this.$.editComponentRequest;
+        request.url = this._apiBaseUrl + '/components/' + this.componentId + '/followers';
+
+        if (!isFollower) {
+          // follow requirement
+          request.method = 'POST';
+        } else {
+          // unfollow requirement
+          request.method = 'DELETE';
+        }
+
+        request.generateRequest();
+      },
+
+      /**
+       * Checks whether a user is in the users array. Compares the user's id.
+       *
+       * @param usersArray an array of user objects.
+       * @param user a user object.
+       * @returns {boolean} whether the user is in the array or not.
+       * @private
+       */
+      _isUserInArray: function(usersArray, user) {
+        if ((usersArray == null) || (user == null)) {
+          return false;
+        } else {
+          // check if the user's id is in the users array
+          for (var index = 0; index < usersArray.length; ++index) {
+            if (usersArray[index].id === user.id) {
+              return true;
+            }
+          }
+
+          return false;
         }
       },
 
@@ -589,9 +616,13 @@
        */
       _handleEditComponentResponse: function(e) {
         if (e.target.method === 'DELETE') {
-          window.location.href = '/projects/' + this.projectId;
+          if (e.detail.url.endsWith('/followers')) {
+            this.$.toast.text = this.localize('componentEditSuccess');
+          } else {
+            window.location.href = '/projects/' + this.projectId;
+          }
         } else {
-          if (e.detail.status === 200) {
+          if (e.detail.status === 201) {
             this.$.requirementsList.refresh();
             this.$.toast.text = this.localize('componentEditSuccess');
           } else {

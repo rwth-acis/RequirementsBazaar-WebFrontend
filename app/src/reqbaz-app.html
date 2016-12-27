@@ -211,10 +211,7 @@
       },
 
       _handleCurrentUserResponse: function(e, detail) {
-        var currentUser = detail.response;
-        this.setCurrentUser(currentUser);
-        this.notifyPath('currentUser', currentUser);
-        this.fire('iron-signal', {name: 'current-user-changed', data: currentUser});
+        this.currentUser = detail.response;
       },
 
       _handleCurrentUserError: function(e, detail) {

@@ -17,6 +17,11 @@
         value: function() { return GlobalConfig.language; },
         observer: '_languageChanged'
       },
+      currentUser: {
+        type: String,
+        value: function() { return GlobalConfig.currentUser; },
+        observer: '_currentUserChanged'
+      },
       /**
        * Defines whether the user is logged in or not.
        */
@@ -26,10 +31,6 @@
       authHeader: {
         type: Array
       }
-    },
-
-    get currentUser() {
-      return GlobalConfig.currentUser;
     },
 
     /**
@@ -66,6 +67,15 @@
     _handleSignedOut: function(e) {
       this.authorized = false;
       this.authHeader = null;
+    },
+
+    _currentUserChanged: function(newValue) {
+      GlobalConfig.currentUser = newValue;
+      this.fire('iron-signal', {name: 'current-user-changed', data: newValue});
+    },
+
+    _handleCurrentUserChanged: function(e, detail) {
+      this.currentUser = detail;
     }
 
   }
