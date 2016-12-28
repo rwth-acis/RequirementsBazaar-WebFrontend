@@ -38,6 +38,8 @@
 
     <iron-signals on-iron-signal-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged"></iron-signals>
 
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
     <iron-ajax
       id="followProj"
       handle-as="json"
@@ -80,8 +82,8 @@
       <p>[[localize('pr-desc')]]</p>
 
       <div horizontal-align="right" vertical-align="top" hidden="[[!authorized]]" style="position:absolute;right:20px;text-align:center;margin-top: -20px;">
-        <div id="toggleText">[[localize('all')]] [[localize('projects')]]</div>
-        <paper-toggle-button on-tap="toggleProjects"></paper-toggle-button>
+        <div id="toggleText">[[localize('onlyMyProjects')]]</div>
+        <paper-toggle-button checked="{{_onlyOwnedProjects}}"></paper-toggle-button>
       </div>
 
       <paper-input id="searchInput" class="large" label="[[localize('searchLabel')]]" value="{{_projectFilterVal}}" autofocus>
@@ -93,6 +95,7 @@
     </paper-material>
 
     <projects-list filter-value="{{_projectFilterVal}}"
+                   only-owned-projects="[[_onlyOwnedProjects]]"
                    id="projectsList"
                    base-href="https://requirements-bazaar.org/betabazaar"
                    loading="{{loading}}"
@@ -149,6 +152,13 @@
         _createProjectDisabled: {
           type: Boolean,
           computed: '_computeCreateProjectDisabled(_newProjectTitle, _newProjectDescription)'
+        },
+        /**
+         * Whether the projects-list only shows projects created by the current user.
+         */
+        _onlyOwnedProjects: {
+          type: Boolean,
+          value: false
         }
       },
 

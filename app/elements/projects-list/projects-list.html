@@ -1,6 +1,7 @@
 <link rel="import" href="../../components/polymer/polymer.html">
 <link rel="import" href="../../components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../components/iron-signals/iron-signals.html">
 <link rel="import" href="../../components/paper-card/paper-card.html">
 <link rel="import" href="../../src/config-behavior.html">
 
@@ -35,6 +36,8 @@
       }
     </style>
 
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
     <iron-ajax
       id="projectsLoader"
       url="[[_apiBaseUrl]]/projects/"
@@ -44,22 +47,12 @@
       loading="{{loading}}"></iron-ajax>
 
     <div id="projectsList">
-      <template is="dom-if" if="{{!specific}}">
-        <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue)}}">
-          <a href$="/projects/[[item.id]]">
-            <paper-card heading="[[item.name]]">
-              <div class="card-content">[[item.description]]</div>
-            </paper-card>
-          </a>
-        </template>
-      </template>
-
-      <template is="dom-if" if="{{specific}}">
-        <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter2(filterValue)}}">
-          <paper-card heading="[[item.name]]" on-tap="onProjectTap">
+      <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue, onlyOwnedProjects)}}">
+        <a href$="/projects/[[item.id]]">
+          <paper-card heading="[[item.name]]">
             <div class="card-content">[[item.description]]</div>
           </paper-card>
-        </template>
+        </a>
       </template>
     </div>
 
@@ -82,20 +75,13 @@
           type: String,
           value: ''
         },
-        specific: {
-          type: Boolean,
-          value: false
-        },
-        loading:{
+        loading: {
           type: Boolean,
           notify: true
+        },
+        onlyOwnedProjects: {
+          type: Boolean
         }
-      },
-
-      onProjectTap: function (e) {
-        var model = e.model;
-        //window.history.pushState({}, null, '/projects/' + model.item.id);
-        //location.href = 'projects/' + model.item.id;
       },
 
       // thanks goes to http://jcrowther.io/2015/06/09/polymer-dom-repeat-filtering-and-sorting/ for the great help
@@ -106,33 +92,18 @@
        * @param val
        * @returns {Function}
        */
-      searchFilter: function (val) {
+      searchFilter: function (filterValue, onlyOwnedProjects) {
+        var currentUser = this.currentUser;
         return function (item) {
-          if (!val) {
-            return true;
+          if (!filterValue) {
+            return (!onlyOwnedProjects || (item.leaderId == currentUser.id));
           }
-          //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
-          return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
+          return ((!onlyOwnedProjects || (item.leaderId == currentUser.id)) && item.name && ~item.name.toLowerCase().indexOf(filterValue.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(filterValue.toLowerCase()));
         };
       },
 
       refresh: function() {
         this.$.projectsLoader.generateRequest();
-      },
-
-      //to toggle between all projects and my projects
-      toggle: function() {
-        this.specific = ! this.specific;
-      },
-
-      searchFilter2: function (val) {
-        return function (item) {
-          if (!val) {
-            return item.leaderId == app.currentUser.id;
-          }
-          //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
-          return (item.leaderId == app.currentUser.id && item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.leaderId == app.currentUser.id && item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
-        };
       }
 
     });
