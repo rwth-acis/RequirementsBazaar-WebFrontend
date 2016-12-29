@@ -1,6 +1,7 @@
 <link rel="import" href="../../components/polymer/polymer.html">
 <link rel="import" href="../../components/paper-toast/paper-toast.html">
 <link rel="import" href="../../components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../components/iron-signals/iron-signals.html">
 <link rel="import" href="../../components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../../components/openidconnect-signin/openidconnect-signin-aware.html">
 <link rel="import" href="../../src/config-behavior.html">
@@ -65,6 +66,8 @@
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
     <!-- XHR for loading comments: -->
 
     <iron-ajax id="commentsLoader"
@@ -75,11 +78,12 @@
 
     <!-- XHR for deleting comments: -->
 
-    <iron-ajax id="postDeleteComment"
+    <iron-ajax id="deleteCommentRequest"
                handle-as="json"
                content-type="application/json"
                method="DELETE"
                headers="[[authHeader]]"
+               on-response="_handleDeleteCommentResponse"
                on-error="errorHandler"></iron-ajax>
 
     <!-- XHR for posting comments: -->
@@ -112,25 +116,25 @@
         <div class="layout vertical flex">
           <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
           <div class="info helper">
-            <relative-time datetime$="[[item.creationTime]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
             <a on-tap="_handleReplyTap" hidden="[[!authorized]]">[[localize('reply')]]</a>
+            <span hidden="[[!isCreator(item.creatorId)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a></span>
+            <relative-time datetime$="[[item.creationTime]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
           </div>
           <paper-input class$="replyInput[[item.Id]]" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
         </div>
-        <paper-icon-button on-tap="createModal" icon="close" hidden$="[[!isCreator(item.creatorId)]]"></paper-icon-button>
       </div>
 
     </template>
 
     <!-- Dialog for deleting a comment: -->
 
-    <paper-dialog id="modal" modal on-iron-overlay-closed="deleteComment" entry-animation="fade-in-animation"
+    <paper-dialog id="deleteDialog" modal on-iron-overlay-closed="_handleDeleteDialogClosed" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation">
-      <h2>[[localize('delCommTitle')]?</h2>
-      <p>[[localize('delCommDesc')]</p>
+      <h2>[[localize('delCommTitle')]]?</h2>
+      <p>[[localize('delCommDesc')]]</p>
       <div class="buttons">
-        <paper-button dialog-dismiss>[[localize('cancel')]</paper-button>
-        <paper-button dialog-confirm autofocus>[[localize('delete')]</paper-button>
+        <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
+        <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
       </div>
     </paper-dialog>
 
@@ -171,12 +175,11 @@
         },
         /** True when loading is false and comments are empty */
         noComments: Boolean,
-        /** Saves the current comment DOM element */
-        commentElement: Object,
-        /** Header Object to be a property of iron-ajax */
-        header: {
-          type:Object,
-          notify: true
+        /**
+         * The ID of the comment to be deleted.
+         */
+        _currentDeleteId: {
+          type: Number
         }
       },
 
@@ -261,7 +264,7 @@
        */
       handlePostResponseComment: function() {
         if (this.postResponse) {
-          this.load();
+          this.refresh();
         }
       },
 
@@ -289,32 +292,29 @@
       /**
        * Generates request for loading comments.
        */
-      load: function() {
+      refresh: function() {
         this.$.commentsLoader.generateRequest();
       },
 
       /**
-       * Creates modal window for deleting a comment.
+       * Deletes the comment if the dialog modal is confirmed, sends a DELETE request and refreshes the comments.
        *
        * @param e
        */
-      createModal: function(e) {
-        this.$.modal.open();
-        this.commentElement = e.currentTarget.parentNode;
+      _handleDeleteDialogClosed: function(e) {
+        if (e.detail.confirmed) {
+          var request = this.$.deleteCommentRequest;
+          request.url = this._apiBaseUrl + "/comments/" + this._currentDeleteId;
+          request.generateRequest();
+        }
       },
 
-      /**
-       * Performs Delete comment if the dialog modal is confirmed, sends a DELETE request and hides the deleted element from the dom.
-       *
-       * @param e
-       */
-      deleteComment: function(e) {
-        if (e.detail.confirmed) {
-          var request = this.$.postDeleteComment;
-          request.url = this._apiBaseUrl + "/comments/" + this.commentElement.attr;
-          request.headers = app.header;
-          request.generateRequest();
-          this.commentElement.style.display = 'none';
+      _handleDeleteCommentResponse: function(e) {
+        if (e.target.method === 'DELETE') {
+          this.$.toast.text = this.localize('commentDeleteSuccess');
+          this.$.toast.open();
+
+          this.refresh();
         }
       },
 
@@ -358,6 +358,16 @@
         replyInput.focus();
 
         e.preventDefault();
+      },
+
+      /**
+       * Event handler for tapping the delete comment link.
+       *
+       * @property e
+       */
+      _handleDeleteTap: function(e) {
+        this._currentDeleteId = e.model.item.Id
+        this.$.deleteDialog.open();
       },
 
       /**

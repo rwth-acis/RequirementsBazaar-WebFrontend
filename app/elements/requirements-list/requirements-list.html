@@ -867,7 +867,7 @@
         handleResponseComment: function(data) {
           var requirementId = data.detail.response.requirementId;
           if (this.viewOption === 'list') {
-            this.$$('#comments' + requirementId).querySelector('comments-list').load();
+            this.$$('#comments' + requirementId).querySelector('comments-list').refresh();
           } else {
             //TODO: reload comments in grid view
           }
@@ -917,7 +917,7 @@
 
         openCommentsDialog: function(e) {
           this.$.commentsDialog.querySelector("comments-list").requirementId = e.currentTarget.atr;
-          this.$.commentsDialog.querySelector("comments-list").load();
+          this.$.commentsDialog.querySelector("comments-list").refresh();
           this.$.commentsDialog.open();
         },
 
@@ -956,7 +956,7 @@
             // open the requirement
             requirementNode.querySelector('iron-collapse').show();
             // load comments
-            requirementNode.querySelector('comments-list').load();
+            requirementNode.querySelector('comments-list').refresh();
             // load attachments
             requirementNode.querySelector("file-gallery").loadIcons();
             this.set('route.path', '/requirements/' + e.model.req.id);
