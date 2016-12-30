@@ -110,6 +110,12 @@
         font-size: small;
         margin-top: -5px;
       }
+
+      .expand-button {
+        position: absolute;
+        right: 0px;
+        top: 15px;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{authorized}}"
@@ -285,7 +291,7 @@
                   no-cancel-on-esc-key
                   on-iron-overlay-closed="_handleCreateRequirementClosed">
       <h2>[[localize('createRequirement')]]</h2>
-      <paper-button class="expand-button" on-tap="expandDialog"><iron-icon icon="fullscreen"></iron-icon></paper-button>
+      <paper-button class="expand-button" on-tap="_expandDialog"><iron-icon icon="fullscreen"></iron-icon></paper-button>
       <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]"
                    id="newRequirementTitle"
                    on-keydown="_handleEnterCheck"
@@ -721,6 +727,12 @@
             this._postRequirement();
           }
         }
+      },
+
+      _expandDialog: function(e) {
+        this.$.createRequirementDialog.toggleClass('create-dialog');
+        this.$.createRequirementDialog.toggleClass('create-dialog-expanded');
+        this.$.createRequirementDialog.refit();
       }
 
     });
