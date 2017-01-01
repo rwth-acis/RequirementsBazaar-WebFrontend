@@ -45,7 +45,7 @@
 
     <div id="componentsList">
       <template is="dom-repeat" items="{{components}}">
-        <a href$="/projects/[[projectId]]/components/[[item.id]]">
+        <a href$="[[_frontendBasePath]]projects/[[projectId]]/components/[[item.id]]">
           <paper-card heading="[[item.name]]">
             <div class="card-content">[[item.description]]</div>
           </paper-card>

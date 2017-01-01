@@ -36,7 +36,7 @@
     <paper-menu selected="[[componentId]]" attr-for-selected="value">
 
       <template is="dom-repeat" items="{{components}}">
-        <a href$="/projects/[[projectId]]/components/[[item.id]]" on-tap="_handleLinkTap" value="[[item.id]]">
+        <a href$="[[_frontendBasePath]]projects/[[projectId]]/components/[[item.id]]" on-tap="_handleLinkTap" value="[[item.id]]">
           <paper-item>[[item.name]]</paper-item>
         </a>
       </template>

@@ -166,7 +166,7 @@
 
     <app-drawer id="drawer" align="left">
       <!-- Drawer Toolbar -->
-      <a href$="/projects/[[projectId]]" tabindex="-1">
+      <a href$="[[_frontendBasePath]]projects/[[projectId]]" tabindex="-1">
         <div id="drawerProjectLink">
           <iron-icon icon="chevron-left"></iron-icon>
           <span>[[project.name]]</span>
@@ -625,7 +625,7 @@
           if (e.detail.url.endsWith('/followers')) {
             this.$.toast.text = this.localize('componentEditSuccess');
           } else {
-            window.location.href = '/projects/' + this.projectId;
+            window.location.href = this._frontendBasePath + 'projects/' + this.projectId;
           }
         } else {
           if (e.detail.status === 201) {
