@@ -2,7 +2,7 @@
 <link rel="import" href="../components/app-route/app-route.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="view-components">
+<dom-module id="view-categories">
   <template>
     <style include="shared-styles">
       :host {
@@ -12,7 +12,7 @@
 
     <app-route
       route="{{route}}"
-      pattern="/components/:componentId"
+      pattern="/categories/:categoryId"
       data="{{data}}"
       tail="{{subroute}}"></app-route>
 
@@ -22,8 +22,8 @@
       fallback-selection="404"
       role="main"
       content>
-      <view-components-list name="components-list" project-id="[[projectId]]" project="{{project}}"></view-components-list>
-      <view-requirements name="requirements" id="requirementsView" project-id="[[projectId]]" project="{{project}}" component-id="[[data.componentId]]" route="{{subroute}}"></view-requirements>
+      <view-categories-list name="categories-list" project-id="[[projectId]]" project="{{project}}"></view-categories-list>
+      <view-requirements name="requirements" id="requirementsView" project-id="[[projectId]]" project="{{project}}" category-id="[[data.categoryId]]" route="{{subroute}}"></view-requirements>
       <view-404 name="view404"></view-404>
     </iron-pages>
 
@@ -31,7 +31,7 @@
 
   <script>
     Polymer({
-      is: 'view-components',
+      is: 'view-categories',
 
       properties: {
         route: {
@@ -52,7 +52,7 @@
       },
 
       observers: [
-        '_dataChanged(data.componentId)',
+        '_dataChanged(data.categoryId)',
         '_routeChanged(route)'
       ],
 
@@ -63,15 +63,15 @@
        * @param {object} drawer The drawer that is registered.
        */
 
-      _dataChanged: function(componentId) {
-        if (componentId) {
+      _dataChanged: function(categoryId) {
+        if (categoryId) {
           this.view = 'requirements';
         }
       },
 
       _routeChanged: function(route) {
         if ((route.path === '') || (route.path === '/')) {
-          this.view = 'components-list';
+          this.view = 'categories-list';
         }
       },
 

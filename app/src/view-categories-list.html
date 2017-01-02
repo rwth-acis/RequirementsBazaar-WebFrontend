@@ -18,12 +18,12 @@
 <link rel="import" href="../components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../components/iron-signals/iron-signals.html">
-<link rel="import" href="../elements/components-list/components-list.html">
+<link rel="import" href="../elements/categories-list/categories-list.html">
 <link rel="import" href="../elements/bread-crumb/bread-crumb.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 
-<dom-module id="view-components-list">
+<dom-module id="view-categories-list">
   <template>
     <style include="shared-styles">
       :host {
@@ -48,14 +48,14 @@
                auto></iron-ajax>-->
 
     <iron-ajax
-      id="postComponentRequest"
+      id="postCategoryRequest"
       handle-as="json"
       url="{{_apiBaseUrl}}/components"
       content-type="application/json"
       method="POST"
       headers="[[authHeader]]"
-      on-response="_handlePostComponentResponse"
-      on-error="_handlePostComponentError"></iron-ajax>
+      on-response="_handlePostCategoryResponse"
+      on-error="_handlePostCategoryError"></iron-ajax>
 
     <iron-ajax
       id="editProjectRequest"
@@ -67,9 +67,9 @@
 
     <paper-material elevation="1">
 
-      <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute; top:2px; right:8px;" hidden="[[!authorized]]" on-iron-select="_handleComponentMenuSelect">
+      <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute; top:2px; right:8px;" hidden="[[!authorized]]" on-iron-select="_handleCategorytMenuSelect">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-        <paper-menu id="componentInfoMenu" class="dropdown-content">
+        <paper-menu id="categoryInfoMenu" class="dropdown-content">
           <paper-item value="follow">[[localize('followProject')]]</paper-item>
           <!--<template is="dom-if" if="{{isFollowerProj}}">
             <paper-item on-tap="unfollowProject">[[localize('unfollowProject')]]</paper-item>
@@ -102,30 +102,30 @@
       </div>
     </paper-material>
 
-    <components-list id="componentsList" project-id="[[projectId]]" loading="{{loading}}"></components-list>
+    <categories-list id="categoriesList" project-id="[[projectId]]" loading="{{loading}}"></categories-list>
 
-    <paper-fab on-tap="_handleCreateComponentTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
-    <paper-tooltip for="fab" position="left">[[localize('createComponent')]]</paper-tooltip>
+    <paper-fab on-tap="_handleCreateCategoryTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
+    <paper-tooltip for="fab" position="left">[[localize('createCategory')]]</paper-tooltip>
 
-    <!-- Dialog for creating a new component: -->
+    <!-- Dialog for creating a new category: -->
 
-    <paper-dialog id="createComponentDialog" class="create-dialog" entry-animation="fade-in-animation"
+    <paper-dialog id="createCategoryDialog" class="create-dialog" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation" no-cancel-on-outside-click
                   no-cancel-on-esc-key
-                  on-iron-overlay-closed="_handleCreateComponentClosed">
-      <h2>[[localize('createComponent')]]</h2>
-      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newComponentTitle"
-                   value="{{_newComponentTitle}}" required></paper-input>
-      <paper-textarea label="[[localize('formDesc')]]" id="newComponentDescription"
-                      value="{{_newComponentDescription}}" max-rows="5" required></paper-textarea>
+                  on-iron-overlay-closed="_handleCreateCategoryClosed">
+      <h2>[[localize('createCategory')]]</h2>
+      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newCategoryTitle"
+                   value="{{_newCategoryTitle}}" required></paper-input>
+      <paper-textarea label="[[localize('formDesc')]]" id="newCategoryDescription"
+                      value="{{_newCategoryDescription}}" max-rows="5" required></paper-textarea>
 
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
-        <paper-button dialog-confirm autofocus disabled="[[_createComponentDisabled]]">[[localize('save')]]</paper-button>
+        <paper-button dialog-confirm autofocus disabled="[[_createCategoryDisabled]]">[[localize('save')]]</paper-button>
       </div>
     </paper-dialog>
 
-    <!-- Dialog for confirming deletion of a component: -->
+    <!-- Dialog for confirming deletion of a category: -->
 
     <paper-dialog id="deleteDialog" modal on-iron-overlay-closed="deleteProject" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation">
@@ -143,7 +143,7 @@
 
   <script>
     Polymer({
-      is: 'view-components-list',
+      is: 'view-categories-list',
 
       behaviors: [
         Polymer.AppLocalizeBehavior,
@@ -161,17 +161,17 @@
           type: Boolean,
           value: false
         },
-        _newComponentTitle: {
+        _newCategoryTitle: {
           type: String,
           value: ''
         },
-        _newComponentDescription: {
+        _newCategoryDescription: {
           type: String,
           value: ''
         },
-        _createComponentDisabled: {
+        _createCategoryDisabled: {
           type: Boolean,
-          computed: '_computeCreateComponentDisabled(_newComponentTitle, _newComponentDescription)'
+          computed: '_computeCreateCategoryDisabled(_newCategoryTitle, _newCategoryDescription)'
         }
       },
 
@@ -181,18 +181,18 @@
 
         // set fab button and create dialog right padding
         this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
-        this.$.createComponentDialog.toggleClass('drawer', this.rightDrawerReserveSpace);
+        this.$.createCategoryDialog.toggleClass('drawer', this.rightDrawerReserveSpace);
       },
 
       _handleDrawerReserveSpaceChanged: function(e, detail) {
         if (detail.drawerAlign === 'right') {
           this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
-          this.$.createComponentDialog.toggleClass('drawer', detail.reserveSpace);
+          this.$.createCategoryDialog.toggleClass('drawer', detail.reserveSpace);
         }
       },
 
-      _handleCreateComponentTap: function(e) {
-        var createDialog = this.$.createComponentDialog;
+      _handleCreateCategoryTap: function(e) {
+        var createDialog = this.$.createCategoryDialog;
         createDialog.open();
       },
 
@@ -243,12 +243,12 @@
       },
 
       /**
-       * Event handler for the component's paper-menu.
+       * Event handler for the category's paper-menu.
        *
        * @param e
        * @private
        */
-      _handleComponentMenuSelect: function(e) {
+      _handleCategoryMenuSelect: function(e) {
         // unselect the selected menu item
         e.target.selected = null;
         // get value of the paper-item
@@ -263,42 +263,42 @@
         }
       },
 
-      _handleCreateComponentClosed: function(e) {
+      _handleCreateCategoryClosed: function(e) {
          if (e.detail.confirmed) {
-           var request = this.$.postComponentRequest;
+           var request = this.$.postCategoryRequest;
            request.body = JSON.stringify({
-             "description": this._newComponentDescription.trim(),
-             "name": this._newComponentTitle.trim(),
+             "description": this._newCategoryDescription.trim(),
+             "name": this._newCategoryTitle.trim(),
              "projectId": this.projectId
            });
            request.generateRequest();
-           this.$.newComponentTitle.value = null;
-           this.$.newComponentDescription.value = null;
+           this.$.newCategoryTitle.value = null;
+           this.$.newCategoryDescription.value = null;
          }
 
          // reset the form and validation error messages
-         this.$.newComponentTitle.required = false;
-         this.$.newComponentDescription.required = false;
+         this.$.newCategoryTitle.required = false;
+         this.$.newCategoryDescription.required = false;
 
-         this.$.newComponentTitle.value = null;
-         this.$.newComponentDescription.value = null;
+         this.$.newCategoryTitle.value = null;
+         this.$.newCategoryDescription.value = null;
 
-         this.$.newComponentTitle.required = true;
-         this.$.newComponentDescription.required = true;
+         this.$.newCategoryTitle.required = true;
+         this.$.newCategoryDescription.required = true;
       },
 
-      _computeCreateComponentDisabled: function(newComponentTitle, newComponentDescription) {
-        return (newComponentTitle == null || newComponentDescription == null || newComponentTitle.trim() === '' || newComponentDescription.trim() === '');
+      _computeCreateCategoryDisabled: function(newCategoryTitle, newCategoryDescription) {
+        return (newCategoryTitle == null || newCategoryDescription == null || newCategoryTitle.trim() === '' || newCategoryDescription.trim() === '');
       },
 
-      _handlePostComponentResponse: function(e) {
-        this.$.componentsList.refresh();
-        this.$.toast.text = this.localize('cmpCreatedSucc');
+      _handlePostCategoryResponse: function(e) {
+        this.$.categoriesList.refresh();
+        this.$.toast.text = this.localize('categoryCreateSuccess');
         this.$.toast.open();
       },
 
-      _handlePostComponentError: function(e) {
-        this.$.toast.text = this.localize('errorCreCmp');
+      _handlePostCategoryError: function(e) {
+        this.$.toast.text = this.localize('categoryCreateError');
         this.$.toast.open();
       },
 

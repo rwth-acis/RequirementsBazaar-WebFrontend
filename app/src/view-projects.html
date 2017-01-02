@@ -56,7 +56,7 @@
       role="main"
       content>
       <view-projects-list name="projects-list" route="{{subroute}}"></view-projects-list>
-      <view-components name="components" project-id="{{data.projectId}}" project="{{project}}" route="{{subroute}}"></view-components>
+      <view-categories name="categories" project-id="{{data.projectId}}" project="{{project}}" route="{{subroute}}"></view-categories>
       <view-404 name="view404"></view-404>
     </iron-pages>
 
@@ -99,7 +99,7 @@
 
       _dataChanged: function(projectId) {
         if (projectId) {
-          this.view = 'components';
+          this.view = 'categories';
         }
       },
 

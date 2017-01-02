@@ -17,8 +17,8 @@
     <template is="dom-if" if$="[[projectId]]">
       <span> > <a href$="[[_frontendBasePath]]projects/[[projectId]]">[[project.name]]</a></span>
     </template>
-    <template is="dom-if" if$="[[componentId]]">
-      <span> > <a href$="[[_frontendBasePath]]projects/[[projectId]]/components/[[componentId]]">[[component.name]]</a></span>
+    <template is="dom-if" if$="[[categoryId]]">
+      <span> > <a href$="[[_frontendBasePath]]projects/[[projectId]]/categories/[[categoryId]]">[[category.name]]</a></span>
     </template>
 
   </template>
@@ -35,13 +35,13 @@
         project: {
           type: Object
         },
-        component: {
+        category: {
           type: Object
         },
         projectId: {
           type: Number
         },
-        componentId: {
+        categoryId: {
           type: Number
         }
       }

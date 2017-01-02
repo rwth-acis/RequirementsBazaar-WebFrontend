@@ -503,7 +503,7 @@
             type: Object,
             notify: true
           },
-          componentId: {
+          categoryId: {
             type: Number
           },
           /**
@@ -520,7 +520,7 @@
           },
           _resourceURL: {
             type: String,
-            computed: '_computeResourceURL(_apiBaseUrl, componentId)'
+            computed: '_computeResourceURL(_apiBaseUrl, categoryId)'
           },
           requirements: {
             type: Array,
@@ -592,7 +592,7 @@
           '_requirementsRequestParametersUpdated(_requirementsRequestParameters)',
           '_dataChanged(data.requirementId)',
           '_routeChanged(route)',
-          '_componentIdChanged(componentId)'
+          '_categoryIdChanged(categoryId)'
         ],
 
         attached: function() {
@@ -654,8 +654,8 @@
         /**
          * Computes the resource URL for the requirements request.
          */
-        _computeResourceURL: function (apiBaseUrl, componentId) {
-          return apiBaseUrl + '/components/' + componentId + '/requirements';
+        _computeResourceURL: function (apiBaseUrl, categoryId) {
+          return apiBaseUrl + '/components/' + categoryId + '/requirements';
         },
 
         /**
@@ -745,7 +745,7 @@
 
           CSV += 'Requirements of ' + arrData[0].components[0].name + '\r\n\n';
 
-          var row = 'TITLE, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, COMPONENT';
+          var row = 'TITLE, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, CATEGORY';
 
           //append Label row with line break
           CSV += row + '\r\n';
@@ -1429,8 +1429,8 @@
           var description = e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').value;
 
           var request = this.$.postUpdateRequirement;
-          //TODO: check if this is not harmful code when requirement belongs to multiple components
-          var components = [{id: this.componentId}];
+          //TODO: check if this is not harmful code when requirement belongs to multiple categories
+          var categories = [{id: this.categoryId}];
           request.url = this._apiBaseUrl + "/requirements/" + model.req.id;
 
           if (title != '' && description != '') {
@@ -1439,7 +1439,7 @@
               "title": title,
               "description": description,
               "projectId": this.projectId,
-              "components": components
+              "categories": categories
             });
             request.generateRequest();
 
@@ -1473,12 +1473,12 @@
         },
 
         /**
-         * Reset the view when the component id changes.
+         * Reset the view when the category id changes.
          *
-         * @param componentId
+         * @param categoryId
          * @private
          */
-        _componentIdChanged: function(componentId) {
+        _categoryIdChanged: function(categoryId) {
           this.resetView();
         },
 

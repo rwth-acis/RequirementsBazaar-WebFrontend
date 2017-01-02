@@ -2,7 +2,7 @@
 <link rel="import" href="../../components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../src/config-behavior.html">
 
-<dom-module id="components-menu">
+<dom-module id="categories-menu">
   <template>
     <style>
       :host {
@@ -27,16 +27,16 @@
     </style>
 
     <iron-ajax
-      id="componentsLoader"
+      id="categoriesLoader"
       url="[[resourceURL]]"
-      last-response="{{components}}"
+      last-response="{{categories}}"
       params='{"page":"0", "per_page":"150"}'
       auto></iron-ajax>
 
-    <paper-menu selected="[[componentId]]" attr-for-selected="value">
+    <paper-menu selected="[[categoryId]]" attr-for-selected="value">
 
-      <template is="dom-repeat" items="{{components}}">
-        <a href$="[[_frontendBasePath]]projects/[[projectId]]/components/[[item.id]]" on-tap="_handleLinkTap" value="[[item.id]]">
+      <template is="dom-repeat" items="{{categories}}">
+        <a href$="[[_frontendBasePath]]projects/[[projectId]]/categories/[[item.id]]" on-tap="_handleLinkTap" value="[[item.id]]">
           <paper-item>[[item.name]]</paper-item>
         </a>
       </template>
@@ -46,7 +46,7 @@
 
   <script>
     Polymer({
-      is: 'components-menu',
+      is: 'categories-menu',
 
       behaviors: [
         ConfigBehavior
@@ -60,14 +60,14 @@
           type: String,
           computed: '_computeResourceURL(projectId)'
         },
-        components: {
+        categories: {
           type: Array,
           notify: true
         },
         /**
-         * The selected component id.
+         * The selected category id.
          */
-        componentId: {
+        categoryId: {
           type: Number
         }
       },
@@ -81,7 +81,7 @@
       },
 
       load: function() {
-        this.$.componentLoader.generateRequest();
+        this.$.categoriesLoader.generateRequest();
       }
 
     });

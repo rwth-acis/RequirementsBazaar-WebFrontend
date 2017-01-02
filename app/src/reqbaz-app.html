@@ -243,6 +243,8 @@
         // compatibility with previous Requirements Bazaar routing system...
         if (this.$.appLocation.__hash.startsWith('!')) {
           var hashRoute = this.$.appLocation.__hash.substr(1);
+          // set components to categories
+          hashRoute = hashRoute.replace('components', 'categories');
           this.$.appLocation.__hash = "";
           this.set('route.path', hashRoute);
           return;
@@ -251,7 +253,7 @@
       },
 
       _routeChanged: function(route) {
-        if (route.path.match(/\/projects\/[0-9]+\/components\/[0-9]+/) === null) {
+        if (route.path.match(/\/projects\/[0-9]+\/categories\/[0-9]+/) === null) {
           // reset layout
           this.$.doubleDrawerLayout.leftDrawer = null;
         }

@@ -4,19 +4,19 @@
 <link rel="import" href="../../components/paper-card/paper-card.html">
 <link rel="import" href="../../src/config-behavior.html">
 
-<dom-module id="components-list">
+<dom-module id="categories-list">
   <template>
     <style>
       :host {
         display: block;
       }
 
-      #componentsList {
+      #categoriesList {
         @apply(--layout-vertical);
         @apply(--layout-center);
       }
 
-      #componentsList > a {
+      #categoriesList > a {
         width: 100%;
         max-width: 700px;
         margin-bottom: 16px;
@@ -36,16 +36,16 @@
     </style>
 
     <iron-ajax
-      id="componentsLoader"
+      id="categoriesLoader"
       url="[[resourceURL]]"
-      last-response="{{components}}"
+      last-response="{{categories}}"
       params='{"page":"0", "per_page":"150"}'
       loading="{{loading}}"
       auto></iron-ajax>
 
-    <div id="componentsList">
-      <template is="dom-repeat" items="{{components}}">
-        <a href$="[[_frontendBasePath]]projects/[[projectId]]/components/[[item.id]]">
+    <div id="categoriesList">
+      <template is="dom-repeat" items="{{categories}}">
+        <a href$="[[_frontendBasePath]]projects/[[projectId]]/categories/[[item.id]]">
           <paper-card heading="[[item.name]]">
             <div class="card-content">[[item.description]]</div>
           </paper-card>
@@ -57,7 +57,7 @@
 
   <script>
     Polymer({
-      is: 'components-list',
+      is: 'categories-list',
 
       behaviors: [
         ConfigBehavior
@@ -71,7 +71,7 @@
           type: String,
           computed: '_computeResourceURL(projectId)'
         },
-        components: {
+        categories: {
           type: Array,
           notify: true
         },
@@ -86,7 +86,7 @@
       },
 
       refresh: function() {
-        this.$.componentsLoader.generateRequest();
+        this.$.categoriesLoader.generateRequest();
       }
     });
   </script>

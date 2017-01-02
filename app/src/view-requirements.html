@@ -24,7 +24,7 @@
 <link rel="import" href="../components/iron-signals/iron-signals.html">
 <link rel="import" href="../elements/bread-crumb/bread-crumb.html">
 <link rel="import" href="../elements/requirements-list/requirements-list.html">
-<link rel="import" href="../elements/components-menu/components-menu.html">
+<link rel="import" href="../elements/categories-menu/categories-menu.html">
 <link rel="import" href="../elements/req-user/req-user.html">
 <link rel="import" href="../elements/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="shared-styles.html">
@@ -45,7 +45,7 @@
         margin-top: 64px;
       }
 
-      .componentName {
+      .categoryName {
         font-size: 40px;
         font-weight: 400;
       }
@@ -128,10 +128,10 @@
 
     <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
 
-    <iron-ajax id="componentInfoLoader"
+    <iron-ajax id="categoryInfoLoader"
                content-type="application/json"
-               url="[[_apiBaseUrl]]/components/[[componentId]]"
-               last-response="{{component}}"
+               url="[[_apiBaseUrl]]/components/[[categoryId]]"
+               last-response="{{category}}"
                auto></iron-ajax>
 
     <iron-ajax id="postRequirementRequest"
@@ -143,18 +143,18 @@
                on-response="_handlePostRequirementResponse"
                on-error="_handlePostRequirementError"></iron-ajax>
 
-    <iron-ajax id="componentRequest"
+    <iron-ajax id="categoryRequest"
                handle-as="json"
                content-type="application/json"
                headers="[[authHeader]]"
                on-response="compResponse"
                on-error="errorHandler"></iron-ajax>
 
-    <iron-ajax  id="editComponentRequest"
+    <iron-ajax  id="editCategoryRequest"
                 handle-as="json"
                 content-type="application/json"
                 headers="[[authHeader]]"
-                on-response="_handleEditComponentResponse"
+                on-response="_handleEditCategoryResponse"
                 on-error="errorHandler"></iron-ajax>
 
     <iron-ajax id="editProjectRequest"
@@ -172,13 +172,13 @@
           <span>[[project.name]]</span>
         </div>
       </a>
-      <app-toolbar id="drawerToolbar">[[localize('components')]]</app-toolbar>
+      <app-toolbar id="drawerToolbar">[[localize('categories')]]</app-toolbar>
 
       <!-- Drawer Content -->
-      <components-menu id="componentsMenu" project-id="[[projectId]]" component-id="[[componentId]]" on-link-tapped="_handleComponentLinkTapped"></components-menu>
+      <categories-menu id="categoriesMenu" project-id="[[projectId]]" category-id="[[categoryId]]" on-link-tapped="_handleCategoryLinkTapped"></categories-menu>
     </app-drawer>
 
-    <paper-material id="componentToolbar">
+    <paper-material id="categoryToolbar">
       <paper-menu-button horizontal-align="right"
                          id="menuCompButton"
                          vertical-align="top"
@@ -186,29 +186,29 @@
                          on-iron-select="_handleMenuSelect"
                          hidden="[[!authorized]]">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-        <paper-menu id="componentInfoMenu" class="dropdown-content">
-          <paper-item value="follow">[[localize('followComponent')]]</paper-item>
+        <paper-menu id="categoryInfoMenu" class="dropdown-content">
+          <paper-item value="follow">[[localize('followCategory')]]</paper-item>
           <paper-item value="default">[[localize('setAsDefault')]]</paper-item>
-          <paper-item value="edit">[[localize('editComponent')]]</paper-item>
-          <paper-item value="delete">[[localize('deleteComponent')]]</paper-item>
+          <paper-item value="edit">[[localize('editCategory')]]</paper-item>
+          <paper-item value="delete">[[localize('deleteCategory')]]</paper-item>
         </paper-menu>
       </paper-menu-button>
 
-      <bread-crumb project-id="[[projectId]]" project="[[project]]" component-id="[[componentId]]" component="[[component]]"></bread-crumb>
+      <bread-crumb project-id="[[projectId]]" project="[[project]]" category-id="[[categoryId]]" category="[[category]]"></bread-crumb>
 
       <div class="cmpTitle" hidden="[[_editMode]]">
-        <div class="componentName"><span>{{component.name}}</span></div>
+        <div class="categoryName"><span>{{category.name}}</span></div>
       </div>
 
       <div class="cmpDesc" hidden="[[_editMode]]">
-        <span>{{component.description}}</span>
+        <span>{{category.description}}</span>
       </div>
 
       <div class="bottom-container bottom" hidden="[[_editMode]]">
         <div class="timing helper">
-          [[localize('created')]] <relative-time datetime$="[[component.creation_time]]"></relative-time>
+          [[localize('created')]] <relative-time datetime$="[[category.creation_time]]"></relative-time>
           [[localize('by')]]
-          <req-user user="{{component.leader}}" normal-view no-popover></req-user>
+          <req-user user="{{category.leader}}" normal-view no-popover></req-user>
         </div>
 
         <paper-button on-tap="_toggleOptions" class="filterButton" toggles>
@@ -255,10 +255,10 @@
 
       <div class="editFormComp middle middle-container center layout" hidden="[[!_editMode]]">
 
-        <h2>[[localize('editComponent')]]</h2>
+        <h2>[[localize('editCategory')]]</h2>
 
-        <paper-input id="editTitle" class="editTitle" label="[[localize('formTitle')]]" value="[[component.name]]" auto-validate error-message="[[localize('inputRequired')]]" maxlength="50" char-counter required></paper-input>
-        <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="[[component.description]]" max-rows="5" auto-validate error-message="[[localize('inputRequired')]]" required></paper-textarea>
+        <paper-input id="editTitle" class="editTitle" label="[[localize('formTitle')]]" value="[[category.name]]" auto-validate error-message="[[localize('inputRequired')]]" maxlength="50" char-counter required></paper-input>
+        <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="[[category.description]]" max-rows="5" auto-validate error-message="[[localize('inputRequired')]]" required></paper-textarea>
         <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
         <paper-button raised on-tap="_handleSaveEditTap">[[localize('save')]]</paper-button>
 
@@ -273,7 +273,7 @@
         filter-value="[[reqFilterVal]]"
         base-href="https://requirements-bazaar.org/betabazaar"
         project-id="[[projectId]]"
-        component-id="[[componentId]]"
+        category-id="[[categoryId]]"
         requirements-state-filter="{{requirementsStateFilter}}"
         loading="{{loading}}"
         view-option="[[_viewOption]]"
@@ -317,11 +317,11 @@
       </div>
     </paper-dialog>
 
-    <!-- Dialog for deleting the component: -->
+    <!-- Dialog for deleting the category: -->
 
-    <paper-dialog id="deleteDialog" modal on-iron-overlay-closed="deleteComponent" entry-animation="fade-in-animation"
+    <paper-dialog id="deleteDialog" modal on-iron-overlay-closed="deleteCategory" entry-animation="fade-in-animation"
                   exit-animation="fade-out-animation">
-      <h2>[[localize('deleteComponent')]]?</h2>
+      <h2>[[localize('deleteCategory')]]?</h2>
       <p>[[localize('deleteCompDesc')]]</p>
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
@@ -358,7 +358,7 @@
           value: 'list'
         },
         /**
-         * Defines whether the component is currently being edited.
+         * Defines whether the category is currently being edited.
          */
         _editMode: {
           type: Boolean,
@@ -370,7 +370,7 @@
         project: {
           type: Object
         },
-        componentId: {
+        categoryId: {
           type: Number
         },
         _newRequirementTitle: {
@@ -397,11 +397,11 @@
       },
 
       /**
-       * Event handler for when a link is tapped on the components-menu. Closes the drawer if it is not persistent.
+       * Event handler for when a link is tapped on the categories-menu. Closes the drawer if it is not persistent.
        *
        * @param e
        */
-      _handleComponentLinkTapped: function(e) {
+      _handleCategoryLinkTapped: function(e) {
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
@@ -434,9 +434,9 @@
         var selectedValue = e.detail.item.getAttribute('value');
 
         if (selectedValue === 'follow') {
-          this._toggleFollowComponent();
+          this._toggleFollowCategory();
         } else if (selectedValue === 'default') {
-          this.setAsDefaultComponent();
+          this.setAsDefaultCategory();
         } else if (selectedValue === 'edit') {
           this._editMode = true;
         } else if (selectedValue === 'delete') {
@@ -445,16 +445,16 @@
       },
 
       /**
-       * Toggles following the component.
+       * Toggles following the category.
        *
        */
-      _toggleFollowComponent: function() {
-        var followers = this.component.followers;
+      _toggleFollowCategory: function() {
+        var followers = this.category.followers;
         var user = this.currentUser;
         var isFollower = this._isUserInArray(followers, this.currentUser);
 
-        var request = this.$.editComponentRequest;
-        request.url = this._apiBaseUrl + '/components/' + this.componentId + '/followers';
+        var request = this.$.editCategoryRequest;
+        request.url = this._apiBaseUrl + '/components/' + this.categoryId + '/followers';
 
         if (!isFollower) {
           // follow requirement
@@ -517,7 +517,7 @@
       _postRequirement: function() {
         var attachments = [];
         var request = this.$.postRequirementRequest;
-        var components = [{id: this.componentId}];
+        var categories = [{id: this.categoryId}];
         // check if a file was uploaded as well
         // xhr.response holds the file identifier
         if (this.files != []){
@@ -535,7 +535,7 @@
           "title": this._newRequirementTitle.trim(),
           "description": this._newRequirementDescription.trim(),
           "projectId": this.projectId,
-          "components": components,
+          "categories": categories,
           "attachments": attachments
         });
         request.generateRequest();
@@ -588,7 +588,7 @@
       },
 
       /**
-       * Event handler that puts component edits to the server.
+       * Event handler that puts category edits to the server.
        *
        * @param e
        */
@@ -596,10 +596,10 @@
         var title = this.$.editTitle.value;
         var description = this.$.editDescription.value;
 
-        var request = this.$.editComponentRequest;
-        request.url = this._apiBaseUrl + '/components/' + this.componentId;
+        var request = this.$.editCategoryRequest;
+        request.url = this._apiBaseUrl + '/components/' + this.categoryId;
         request.body = JSON.stringify({
-          "id": this.componentId,
+          "id": this.categoryId,
           "name": title,
           "description": description
         });
@@ -607,32 +607,32 @@
         request.generateRequest();
 
         // update local project object
-        this.component.name = title;
-        this.component.description = description;
-        this.notifyPath('component.name', this.component.name);
-        this.notifyPath('component.description', this.component.description);
+        this.category.name = title;
+        this.category.description = description;
+        this.notifyPath('category.name', this.category.name);
+        this.notifyPath('category.description', this.category.description);
 
         this._editMode = false;
       },
 
       /**
-       * Event handler for the response of component edits.
+       * Event handler for the response of category edits.
        *
        * @param e
        */
-      _handleEditComponentResponse: function(e) {
+      _handleEditCategoryResponse: function(e) {
         if (e.target.method === 'DELETE') {
           if (e.detail.url.endsWith('/followers')) {
-            this.$.toast.text = this.localize('componentEditSuccess');
+            this.$.toast.text = this.localize('categoryEditSuccess');
           } else {
             window.location.href = this._frontendBasePath + 'projects/' + this.projectId;
           }
         } else {
           if (e.detail.status === 201) {
             this.$.requirementsList.refresh();
-            this.$.toast.text = this.localize('componentEditSuccess');
+            this.$.toast.text = this.localize('categoryEditSuccess');
           } else {
-            this.$.toast.text = this.localize('componentEditError');
+            this.$.toast.text = this.localize('categoryEditError');
             //TODO: reset the project object
           }
           this.$.toast.open();
@@ -661,15 +661,15 @@
       },
 
       /**
-       * Sets the currently shown component as default component for its project. Sends a request to the server.
+       * Sets the currently shown category as default category for its project. Sends a request to the server.
        */
-      setAsDefaultComponent: function() {
+      setAsDefaultCategory: function() {
         var request = this.$.editProjectRequest;
         request.url = this._apiBaseUrl + "/projects/" + this.projectId;
         request.method = "PUT";
         request.body = JSON.stringify({
           "id": this.projectId,
-          "defaultComponentId": this.componentId
+          "defaultComponentId": this.categoryId
         });
         request.generateRequest();
       },
@@ -695,14 +695,14 @@
       },
 
       /**
-       * Deletes the currently shown component.
+       * Deletes the currently shown category.
        *
        * @param e
        */
-      deleteComponent: function(e) {
+      deleteCategory: function(e) {
         if (e.detail.confirmed) {
-          var request = this.$.editComponentRequest;
-          request.url = this._apiBaseUrl + "/components/" + this.componentId;
+          var request = this.$.editCategoryRequest;
+          request.url = this._apiBaseUrl + "/components/" + this.categoryId;
           request.method = "DELETE";
           request.generateRequest();
         }
