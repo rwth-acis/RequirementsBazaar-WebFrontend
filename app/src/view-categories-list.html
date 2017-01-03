@@ -239,7 +239,7 @@
         if (e.target.method === 'DELETE') {
           window.location.href = this._frontendBasePath + 'projects';
         } else {
-          //TODO: change this to only 201 after backend update
+          // 200 for PUT, 201 for POST
           if ((e.detail.status === 200) || (e.detail.status === 201)) {
             this.$.toast.text = this.localize('projectEditSuccess');
           } else {
