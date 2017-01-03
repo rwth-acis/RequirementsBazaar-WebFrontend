@@ -67,7 +67,7 @@
 
     <paper-material elevation="1">
 
-      <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute; top:2px; right:8px;" hidden="[[!authorized]]" on-iron-select="_handleCategorytMenuSelect">
+      <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute; top:2px; right:8px;" hidden="[[!authorized]]" on-iron-select="_handleCategoryMenuSelect">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
         <paper-menu id="categoryInfoMenu" class="dropdown-content">
           <paper-item value="follow">[[localize('followProject')]]</paper-item>
@@ -93,11 +93,11 @@
 
         <h2>[[localize('editProject')]]</h2>
 
-        <paper-input id="editTitle" class="editTitle" maxlength="50" label="[[localize('formTitle')]]" value="[[project.name]]" auto-validate error-message="[[localize('inputRequired')]]" char-counter required></paper-input>
-        <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="[[project.description]]" auto-validate error-message="[[localize('inputRequired')]]" max-rows="5" required></paper-textarea>
+        <paper-input id="editTitle" class="editTitle" maxlength="50" label="[[localize('formTitle')]]" value="{{_editProjectTitle}}" auto-validate error-message="[[localize('inputRequired')]]" char-counter required></paper-input>
+        <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="{{_editProjectDescription}}" auto-validate error-message="[[localize('inputRequired')]]" max-rows="5" required></paper-textarea>
 
         <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
-        <paper-button raised on-tap="_handleSaveEditTap">[[localize('save')]]</paper-button>
+        <paper-button raised on-tap="_handleSaveEditTap" disabled="[[_editProjectSaveDisabled]]">[[localize('save')]]</paper-button>
 
       </div>
     </paper-material>
@@ -161,6 +161,18 @@
           type: Boolean,
           value: false
         },
+        _editProjectTitle: {
+          type: String,
+          value: ''
+        },
+        _editProjectDescription: {
+          type: String,
+          value: ''
+        },
+        _editProjectSaveDisabled: {
+          type: Boolean,
+          computed: '_computeEditProjectSaveDisabled(_editProjectTitle, _editProjectDescription)'
+        },
         _newCategoryTitle: {
           type: String,
           value: ''
@@ -201,8 +213,8 @@
       },
 
       _handleSaveEditTap: function(e) {
-        var title = this.$.editTitle.value;
-        var description = this.$.editDescription.value;
+        var title = this._editProjectTitle;
+        var description = this._editProjectDescription;
 
         var request = this.$.editProjectRequest;
         request.url = this._apiBaseUrl + '/projects/' + this.projectId;
@@ -227,7 +239,8 @@
         if (e.target.method === 'DELETE') {
           window.location.href = this._frontendBasePath + 'projects';
         } else {
-          if (e.detail.status === 201) {
+          //TODO: change this to only 201 after backend update
+          if ((e.detail.status === 200) || (e.detail.status === 201)) {
             this.$.toast.text = this.localize('projectEditSuccess');
           } else {
             this.$.toast.text = this.localize('projectEditError');
@@ -257,6 +270,8 @@
         if (selectedValue === 'follow') {
           this._toggleFollowProject();
         } else if (selectedValue === 'edit') {
+          this._editProjectTitle = this.project.name;
+          this._editProjectDescription = this.project.description;
           this._editMode = true;
         } else if (selectedValue === 'delete') {
           this.$.deleteDialog.open();
@@ -285,6 +300,10 @@
 
          this.$.newCategoryTitle.required = true;
          this.$.newCategoryDescription.required = true;
+      },
+
+      _computeEditProjectSaveDisabled: function(editProjectTitle, editProjectDescription) {
+        return (editProjectTitle == null || editProjectDescription == null || editProjectTitle.trim() === '' || editProjectDescription.trim() === '');
       },
 
       _computeCreateCategoryDisabled: function(newCategoryTitle, newCategoryDescription) {
