@@ -60,6 +60,10 @@
         display: block;
       }
 
+      .inactive {
+        color: #838383;
+      }
+
       .colored {
         color: var(--paper-orange-500);
       }
@@ -348,7 +352,7 @@
 
               <paper-toolbar class="title" on-tap="_handleRequirementTap">
                 <div class="title" style="overflow: visible;">[[req.title]]</div>
-                <div class="bottom fit helper" style="margin-top:20px;">
+                <div class="bottom fit" style="margin-top:20px;">
                   <relative-time datetime$="[[req.creation_time]]"></relative-time>
                   [[localize('by')]]
                   <req-user user="[[req.creator]]" normal-view></req-user>
@@ -383,7 +387,7 @@
 
             </div>
 
-            <div class="description helper" inner-h-t-m-l="{{validateUrl(req.description)}}" id$="description{{req.id}}"></div>
+            <div class="description inactive" inner-h-t-m-l="{{validateUrl(req.description)}}" id$="description[[req.id]]"></div>
 
             <div class="comments" id$="comments{{req.id}}">
 
@@ -942,12 +946,15 @@
          */
         _handleRequirementTap: function(e) {
           var requirementNode = this.$$('#requirement' + e.model.req.id);
+          var descriptionNode = requirementNode.querySelector('#description' + e.model.req.id);
 
           if (requirementNode.querySelector('iron-collapse').opened) {
             // remove elevation
             requirementNode.elevation = 1;
             // close the requirement
             requirementNode.querySelector('iron-collapse').hide();
+            // make description gray
+            descriptionNode.classList.toggle('inactive');
             // reset route
             this.set('route.path', '');
           } else {
@@ -955,6 +962,8 @@
             requirementNode.elevation = 4;
             // open the requirement
             requirementNode.querySelector('iron-collapse').show();
+            // make description gray
+            descriptionNode.classList.toggle('inactive');
             // load comments
             requirementNode.querySelector('comments-list').refresh();
             // load attachments
