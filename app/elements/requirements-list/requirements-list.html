@@ -341,7 +341,7 @@
                     <paper-item value="toggleContributors">[[localize('showContributors')]]</paper-item>
                     <paper-item value="follow" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.followers, 'followRequirement', 'unfollowRequirement')]]</paper-item>
                     <paper-item value="develop" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.developers, 'developRequirement', 'undevelopRequirement')]]</paper-item>
-                    <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]">[[localize('becomeLeadDeveloper')]]</paper-item>
+                    <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]">[[_calculateLeadDeveloperLocalization(req.leadDeveloperId)]]</paper-item>
                     <paper-item value="edit" hidden$="[[req.realized]]">[[localize('editRequirement')]]</paper-item>
                     <paper-item value="realize">[[_calculateRealizeMessage(req.realized)]]</paper-item>
                     <paper-item value="delete">[[localize('deleteRequirement')]]</paper-item>
@@ -1130,6 +1130,14 @@
           } else {
             return this.localize(falseMessage);
           }
+        },
+
+        _calculateLeadDeveloperLocalization: function(leadDeveloperId) {
+          if (this.currentUser && (this.currentUser.id === leadDeveloperId)) {
+            return this.localize('stopLeadDeveloper');
+          }
+
+          return this.localize('becomeLeadDeveloper');
         },
 
         /**
