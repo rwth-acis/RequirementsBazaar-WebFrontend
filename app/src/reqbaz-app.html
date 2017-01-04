@@ -18,6 +18,7 @@
 <link rel="import" href="../components/iron-icons/iron-icons.html">
 <link rel="import" href="../components/iron-icons/social-icons.html">
 <link rel="import" href="../components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../components/app-storage/app-localstorage/app-localstorage-document.html">
 <link rel="import" href="../components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
@@ -74,6 +75,9 @@
         padding: 0px;
       }
     </style>
+
+    <app-localstorage-document key="language" data="{{language}}">
+    </app-localstorage-document>
 
     <app-location id="appLocation" route="{{route}}"></app-location>
     <app-route

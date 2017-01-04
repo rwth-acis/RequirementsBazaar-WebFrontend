@@ -28,7 +28,8 @@
     "paper-icon-button": "PolymerElements/paper-icon-button#^1.1.4",
     "paper-checkbox": "PolymerElements/paper-checkbox#^1.4.2",
     "iron-signals": "PolymerElements/iron-signals#^1.0.3",
-    "iron-image": "PolymerElements/iron-image#^1.2.5"
+    "iron-image": "PolymerElements/iron-image#^1.2.5",
+    "app-storage": "PolymerElements/app-storage#^0.9.8"
   },
   "devDependencies": {
     "web-component-tester": "*",
