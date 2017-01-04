@@ -303,13 +303,12 @@
                       on-keydown="_handleEnterCheck"
                       value="{{_newRequirementDescription}}"></paper-textarea>
       <div class="helper-highlight">Ctrl + Enter for new line</div>
-      <vaadin-upload
-        target="https://requirements-bazaar.org/betafileservice/files/"
-        method="POST"
-        timeout="300000"
-        files="{{files}}"
-        max-file-size="1000000"
-        accept="image/*">
+      <vaadin-upload target="[[_fileApiBaseUrl]]"
+                     method="POST"
+                     timeout="300000"
+                     files="{{files}}"
+                     max-file-size="1000000"
+                     accept="image/*">
       </vaadin-upload>
 
       <div class="buttons">
@@ -397,6 +396,10 @@
         _createRequirementDisabled: {
           type: Boolean,
           computed: '_computeCreateRequirementDisabled(_newRequirementTitle, _newRequirementDescription)'
+        },
+        files: {
+          type: Array,
+          value: []
         }
       },
 
@@ -539,7 +542,7 @@
           for (var i = 0; i < this.files.length; i++) {
             var obj = {
               title: this.files[i].name,
-              fileUrl: this.fileServiceHref + this.files[i].xhr.response,
+              fileUrl: this._fileApiBaseUrl + this.files[i].xhr.response,
               mimeType: "image/*",
               identifier: this.files[i].xhr.response
             };
