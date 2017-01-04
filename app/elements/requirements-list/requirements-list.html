@@ -1423,11 +1423,11 @@
          */
         _editRequirement: function(requirementId) {
           //hide card elements
-          this.querySelector('#requirementBody' + requirementId).style.display = 'none';
-          this.querySelector('#comments' + requirementId).style.display = 'none';
-          this.querySelector('#description' + requirementId).style.display = 'none';
+          this.$$('#requirementBody' + requirementId).style.display = 'none';
+          this.$$('#comments' + requirementId).style.display = 'none';
+          this.$$('#description' + requirementId).style.display = 'none';
           //show form elements
-          this.querySelector('#edit' + requirementId).style.display = 'block';
+          this.$$('#edit' + requirementId).style.display = 'block';
         },
 
         /**
@@ -1456,7 +1456,7 @@
               "title": title,
               "description": description,
               "projectId": this.projectId,
-              "categories": categories
+              "components": categories
             });
             request.generateRequest();
 
@@ -1480,13 +1480,12 @@
           var requirementId = e.model.req.id;
 
           // show form elements
-          this.querySelector('#edit' + requirementId).style.display = 'none';
+          this.$$('#edit' + requirementId).style.display = 'none';
 
           // show card elements
-          this.querySelector('#requirementBody' + requirementId).style.display = 'block';
-          this.querySelector('#comments' + requirementId).style.display = 'block';
-          this.querySelector('#description' + requirementId).style.display = 'block';
-
+          this.$$('#requirementBody' + requirementId).style.display = 'block';
+          this.$$('#comments' + requirementId).style.display = 'block';
+          this.$$('#description' + requirementId).style.display = 'block';
         },
 
         /**
