@@ -1,16 +1,22 @@
 {
-  "entrypoint": "app/index.html",
-  "shell": "app/src/reqbaz-app.html",
+  "entrypoint": "index.html",
+  "shell": "src/reqbaz-app.html",
   "fragments": [
-    "app/src/view-landing.html",
-    "app/src/view-projects.html",
-    "app/src/view-components.html",
-    "app/src/view-404.html"
+    "src/reqbaz-app.html",
+    "src/view-404.html",
+    "src/view-categories.html",
+    "src/view-categories-list.html",
+    "src/view-landing.html",
+    "src/view-projects.html",
+    "src/view-projects-list.html",
+    "src/view-requirements.html"
   ],
   "sourceGlobs": [
-   "app/src/**/*",
-   "app/images/**/*",
-   "bower.json"
+    "elements/**/*",
+    "images/**/*",
+    "locales/**/*",
+    "src/**/*",
+    "bower.json"
   ],
   "includeDependencies": [
     "manifest.json",
