@@ -8,8 +8,13 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-/* eslint no-console: ["error", { allow: ["info"] }] */
+/* eslint-env node */
 
-console.info(
-  'Service worker disabled for development, will be generated at build time.'
-);
+module.exports = {
+  staticFileGlobs: [
+    '/index.html',
+    '/manifest.json',
+    '/bower_components/webcomponentsjs/webcomponents-lite.min.js',
+  ],
+  navigateFallback: 'index.html',
+};
