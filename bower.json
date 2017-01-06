@@ -42,7 +42,8 @@
     "paper-ripple": "PolymerElements/paper-ripple#^1.0.10",
     "paper-progress": "PolymerElements/paper-progress#^1.0.11",
     "iron-icon": "PolymerElements/iron-icon#^1.0.12",
-    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.2.5"
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.2.5",
+    "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.7"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
