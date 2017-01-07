@@ -1,6 +1,12 @@
 {
-  "name": "requirements-bazaar",
-  "private": true,
+  "name": "requirements-bazaar-web-frontend",
+  "authors": [
+    "István Koren",
+    "Albi Sema",
+    "Kristjan Liiva",
+    "Adam Gavronek"
+  ],
+  "license": "MIT",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.6.0",
     "time-elements": "^0.6.0",

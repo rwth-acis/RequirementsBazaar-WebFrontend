@@ -1,8 +1,28 @@
 # License
 
+The Requirements Bazaar Web Frontend is licensed under the MIT License. However, it is
+built upon the Polymer Starter Kit from Google, thus here we first list the Requirements
+Bazaar's license and then the license of the underlying framework.
+
+
+## Requirements Bazaar Web Frontend License
+
+Copyright 2017 Advanced Community Information Systems (ACIS) Group, Chair of Computer Science 5 (Databases & Information Systems), RWTH Aachen University, Germany
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+## Polymer License
+see https://polymer.github.io/LICENSE.txt:
+
 Everything in this repo is BSD style license unless otherwise specified.
 
-Copyright (c) 2015 The Polymer Authors. All rights reserved.
+Copyright (c) 2014 The Polymer Authors. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
