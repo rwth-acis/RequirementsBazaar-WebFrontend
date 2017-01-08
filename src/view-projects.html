@@ -40,13 +40,14 @@
       tail="{{subroute}}"></app-route>
 
     <iron-ajax id="projectRequest"
+               loading="{{loading}}"
                content-type="application/json"
                url="[[_apiBaseUrl]]/projects/[[data.projectId]]"
                headers="[[authHeader]]"
                last-response="{{project}}"></iron-ajax>
 
     <app-drawer id="drawer" align="right">
-      <activity-tracker initial-limit="20" url="https://requirements-bazaar.org/betaactivities" auto-update-interval="90"></activity-tracker>
+      <activity-tracker initial-limit="20" url="https://requirements-bazaar.org/betaactivities" auto-update-interval="90" loading="{{loading}}"></activity-tracker>
     </app-drawer>
 
     <iron-pages
@@ -55,8 +56,8 @@
       fallback-selection="404"
       role="main"
       content>
-      <view-projects-list name="projects-list" route="{{subroute}}"></view-projects-list>
-      <view-categories name="categories" project-id="{{data.projectId}}" project="{{project}}" route="{{subroute}}"></view-categories>
+      <view-projects-list name="projects-list" route="{{subroute}}" loading="{{loading}}"></view-projects-list>
+      <view-categories name="categories" project-id="{{data.projectId}}" project="{{project}}" route="{{subroute}}" loading="{{loading}}"></view-categories>
       <view-404 name="view404"></view-404>
     </iron-pages>
 
@@ -79,6 +80,13 @@
           type: String,
           reflectToAttribute: true,
           observer: '_viewChanged'
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
+          notify: true
         },
         project: {
           type: Object

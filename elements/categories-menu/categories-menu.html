@@ -28,6 +28,7 @@
 
     <iron-ajax
       id="categoriesLoader"
+      loading="{{loading}}"
       url="[[resourceURL]]"
       last-response="{{categories}}"
       params='{"page":"0", "per_page":"150"}'
@@ -69,6 +70,13 @@
          */
         categoryId: {
           type: Number
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
+          notify: true
         }
       },
 

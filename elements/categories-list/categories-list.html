@@ -37,10 +37,10 @@
 
     <iron-ajax
       id="categoriesLoader"
+      loading="{{loading}}"
       url="[[resourceURL]]"
       last-response="{{categories}}"
       params='{"page":"0", "per_page":"150"}'
-      loading="{{loading}}"
       auto></iron-ajax>
 
     <div id="categoriesList">
@@ -75,6 +75,9 @@
           type: Array,
           notify: true
         },
+        /**
+         * Whether any loading operation is currently active.
+         */
         loading: {
           type: Boolean,
           notify: true

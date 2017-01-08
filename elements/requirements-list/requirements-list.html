@@ -187,15 +187,16 @@
 
     <iron-ajax
       id="requirementsRequest"
+      loading="{{loading}}"
       url="[[_resourceURL]]"
       last-response="{{requirements}}"
       headers="[[authHeader]]"
       params="[[_requirementsRequestParameters]]"
-      loading="{{loading}}"
       auto></iron-ajax>
 
     <iron-ajax
       id="postUpdateRequirement"
+      loading="{{loading}}"
       handle-as="json"
       content-type="application/json"
       method="PUT"
@@ -205,6 +206,7 @@
 
     <iron-ajax
       id="updateRequirementRequest"
+      loading="{{loading}}"
       handle-as="json"
       content-type="application/json"
       method="PUT"
@@ -215,6 +217,7 @@
 
     <iron-ajax
       id="postDeleteRequirement"
+      loading="{{loading}}"
       handle-as="json"
       content-type="application/json"
       method="DELETE"
@@ -224,6 +227,7 @@
 
     <iron-ajax
       id="deleteRequirementRequest"
+      loading="{{loading}}"
       handle-as="json"
       content-type="application/json"
       method="DELETE"
@@ -233,6 +237,7 @@
 
     <iron-ajax
       id="followRequest"
+      loading="{{loading}}"
       handle-as="json"
       content-type="application/json"
       headers="[[authHeader]]"
@@ -241,6 +246,7 @@
 
     <iron-ajax
       id="userInResourceRequest"
+      loading="{{loading}}"
       handle-as="json"
       content-type="application/json"
       headers="[[authHeader]]"
@@ -249,6 +255,7 @@
 
     <iron-ajax
       id="starRequest"
+      loading="{{loading}}"
       handle-as="json"
       content-type="application/json"
       headers="[[authHeader]]"
@@ -257,6 +264,7 @@
 
     <iron-ajax
       id="postCommentRequest"
+      loading="{{loading}}"
       handle-as="json"
       url="{{_apiBaseUrl}}/comments"
       content-type="application/json"
@@ -566,6 +574,9 @@
             type: String,
             value: ''
           },
+          /**
+           * Whether any loading operation is currently active.
+           */
           loading: {
             type: Boolean,
             notify: true

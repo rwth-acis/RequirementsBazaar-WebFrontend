@@ -71,9 +71,9 @@
     <!-- XHR for loading comments: -->
 
     <iron-ajax id="commentsLoader"
+               loading="{{loading}}"
                url="{{resourceURL}}"
                last-response="{{comments}}"
-               loading="{{loading}}"
                params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
     <!-- XHR for deleting comments: -->

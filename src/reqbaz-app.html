@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -74,6 +75,14 @@
       app-toolbar paper-menu-button {
         padding: 0px;
       }
+
+      paper-progress {
+        position: absolute;
+        left: 0px;
+        top: 60px;
+        width: 100%;
+        --paper-progress-active-color: #FF5252;
+      }
     </style>
 
     <app-localstorage-document key="language" data="{{language}}">
@@ -88,6 +97,7 @@
 
     <iron-ajax
       id="currentUserRequest"
+      loading="{{loading}}"
       handle-as="json"
       url="[[_apiBaseUrl]]/users/current"
       content-type="application/json"
@@ -98,6 +108,7 @@
 
     <iron-ajax
       id="userSettingsRequest"
+      loading="{{loading}}"
       handle-as="json"
       content-type="application/json"
       method="PUT"
@@ -132,6 +143,7 @@
                                 is-authorized="{{_authorized}}"
                                 on-openidconnect-signin-aware-success="_handleSigninSuccessApp"
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin>
+          <paper-progress indeterminate disabled="[[!loading]]" hidden="[[!loading]]"></paper-progress>
         </app-toolbar>
       </app-header>
 
@@ -141,8 +153,8 @@
         fallback-selection="404"
         role="main"
         content>
-        <view-landing name="landing"></view-landing>
-        <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered"></view-projects>
+        <view-landing name="landing" loading="{{loading}}"></view-landing>
+        <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered" loading="{{loading}}"></view-projects>
         <view-404 name="view404"></view-404>
       </iron-pages>
 
@@ -189,6 +201,13 @@
           type: String,
           reflectToAttribute: true,
           observer: '_viewChanged'
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
+          value: false
         }
       },
 

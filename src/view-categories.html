@@ -22,8 +22,8 @@
       fallback-selection="404"
       role="main"
       content>
-      <view-categories-list name="categories-list" project-id="[[projectId]]" project="{{project}}"></view-categories-list>
-      <view-requirements name="requirements" id="requirementsView" project-id="[[projectId]]" project="{{project}}" category-id="[[data.categoryId]]" route="{{subroute}}"></view-requirements>
+      <view-categories-list name="categories-list" project-id="[[projectId]]" project="{{project}}" loading="{{loading}}"></view-categories-list>
+      <view-requirements name="requirements" id="requirementsView" project-id="[[projectId]]" project="{{project}}" category-id="[[data.categoryId]]" route="{{subroute}}" loading="{{loading}}"></view-requirements>
       <view-404 name="view404"></view-404>
     </iron-pages>
 
@@ -42,6 +42,13 @@
           type: String,
           reflectToAttribute: true,
           observer: '_viewChanged'
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
+          notify: true
         },
         projectId: {
           type: Number

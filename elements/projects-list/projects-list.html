@@ -40,11 +40,11 @@
 
     <iron-ajax
       id="projectsLoader"
+      loading="{{loading}}"
       url="[[_apiBaseUrl]]/projects/"
       last-response="{{projects}}"
       params='{"page":"0", "per_page":"150"}'
-      auto
-      loading="{{loading}}"></iron-ajax>
+      auto></iron-ajax>
 
     <div id="projectsList">
       <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue, onlyOwnedProjects)}}">
@@ -75,6 +75,9 @@
           type: String,
           value: ''
         },
+        /**
+         * Whether any loading operation is currently active.
+         */
         loading: {
           type: Boolean,
           notify: true

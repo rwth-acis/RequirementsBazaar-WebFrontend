@@ -49,6 +49,7 @@
 
     <iron-ajax
       id="postCategoryRequest"
+      loading="{{loading}}"
       handle-as="json"
       url="{{_apiBaseUrl}}/components"
       content-type="application/json"
@@ -59,6 +60,7 @@
 
     <iron-ajax
       id="editProjectRequest"
+      loading="{{loading}}"
       handle-as="json"
       content-type="application/json"
       headers="[[authHeader]]"
@@ -156,6 +158,13 @@
         },
         project: {
           type: Object
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
+          notify: true
         },
         _editMode: {
           type: Boolean,
