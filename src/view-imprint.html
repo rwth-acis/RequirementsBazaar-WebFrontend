@@ -1,0 +1,86 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="config-behavior.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="view-imprint">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 15px;
+      }
+    </style>
+
+    <paper-material elevation="1">
+      <h1>Imprint</h1>
+
+      <div>This site is subject to German legislation and thus requires the following imprint.</div>
+
+      <h2>Information according to German legislation, § 5 TMG</h2>
+      <div>Lehrstuhl für Informatik 5, RWTH Aachen</div>
+      <div>Ahornstr. 55</div>
+      <div>52056 Aachen</div>
+
+      <h2>Represented by</h2>
+      <div>Dipl.-Medieninf. István Koren</div>
+
+      <h2>Contact</h2>
+      <div>Telefon: +492418021514</div>
+      <div>Telefon: +492418022321</div>
+      <div>E-Mail: reqbaz@dbis.rwth-aachen.de</div>
+
+      <h2>Haftungsausschluss (Disclaimer)</h2>
+
+      <h3>Haftung für Inhalte</h3>
+      <div>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen
+        Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet,
+        übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine
+        rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen
+        nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem
+        Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden
+        Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</div>
+
+      <h3>Haftung für Links</h3>
+      <div>Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben.
+        Deshalb können wir für diese fremden Inhalte keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist
+        stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum
+        Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der
+        Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete
+        Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir
+        derartige Links umgehend entfernen.</div>
+
+      <h3>Urheberrecht</h3>
+      <div>Alle durch die Seitenbetreiber sowie durch andere Autoren erstellten Inhalte auf diesen Seiten unterliegen
+        der Creative Commons Attribution 4.0 International License. Die genauen Lizenzbedingungen sind unter der URL
+        <a href="http://creativecommons.org/licenses/by/4.0/legalcode">
+           http://creativecommons.org/licenses/by/4.0/legalcode
+        </a>
+        öffentlich verfügbar.</div>
+
+      <div>Soweit die Inhalte auf dieser Seite nicht von den Betreibern erstellt wurden, werden die Urheberrechte
+        Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine
+        Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von
+        Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</div>
+
+    </paper-material>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'view-imprint',
+
+      behaviors: [
+        Polymer.AppLocalizeBehavior,
+        ConfigBehavior
+      ],
+
+      attached: function() {
+        // load localized messages
+        this.loadResources(this.resolveUrl('../locales/locales.json'));
+      }
+    });
+  </script>
+</dom-module>

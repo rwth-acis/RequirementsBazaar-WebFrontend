@@ -1,0 +1,98 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../src/config-behavior.html">
+
+<dom-module id="categories-menu">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      paper-item {
+        --paper-item: {
+          cursor: pointer;
+        };
+      }
+
+      .iron-selected > paper-item {
+        background-color: #eceff1;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+    </style>
+
+    <iron-ajax
+      id="categoriesLoader"
+      loading="{{loading}}"
+      url="[[resourceURL]]"
+      last-response="{{categories}}"
+      params='{"page":"0", "per_page":"150"}'
+      auto></iron-ajax>
+
+    <paper-menu selected="[[categoryId]]" attr-for-selected="value">
+
+      <template is="dom-repeat" items="{{categories}}">
+        <a href$="[[_frontendBasePath]]projects/[[projectId]]/categories/[[item.id]]" on-tap="_handleLinkTap" value="[[item.id]]">
+          <paper-item>[[item.name]]</paper-item>
+        </a>
+      </template>
+
+    </paper-menu>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'categories-menu',
+
+      behaviors: [
+        ConfigBehavior
+      ],
+
+      properties: {
+        projectId: {
+          type: Number
+        },
+        resourceURL: {
+          type: String,
+          computed: '_computeResourceURL(projectId)'
+        },
+        categories: {
+          type: Array,
+          notify: true
+        },
+        /**
+         * The selected category id.
+         */
+        categoryId: {
+          type: Number
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
+          notify: true
+        }
+      },
+
+      _computeResourceURL: function (projectId) {
+        return this._apiBaseUrl + '/projects/' + projectId + '/components/';
+      },
+
+      _handleLinkTap: function(e) {
+        this.fire('link-tapped');
+      },
+
+      load: function() {
+        this.$.categoriesLoader.generateRequest();
+      }
+
+    });
+  </script>
+
+</dom-module>

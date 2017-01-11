@@ -1,0 +1,148 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../src/config-behavior.html">
+
+<dom-module id="req-user">
+  <template>
+    <style is="custom-style">
+
+      paper-tooltip.custom img {
+        float: left;
+      }
+
+      .custom {
+        --paper-tooltip-background: white;
+        --paper-tooltip-text-color: black;
+        --paper-tooltip-opacity: 1;
+        width: auto;
+        box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+      }
+
+      .profileImage {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%; /*don't forget prefixes*/
+        background-position: center center;
+        background-size: cover;
+        margin-right: 10px;
+        margin-top: 10px;
+      }
+
+      .name {
+        font-size: 18px;
+        font-weight: 400;
+      }
+
+      .username {
+        font-size: 12px;
+        padding-top: 5px;
+      }
+
+      #user {
+        font-weight: 700;
+        color: #5e5e5e;
+      }
+
+      @media (max-width: 600px) {
+        .hidden-mobile {
+          display: none;
+        }
+      }
+
+    </style>
+
+    <iron-ajax id="usrReq"
+               url="{{usersUrl}}"
+               last-response="{{user}}"></iron-ajax>
+
+    <template is="dom-if" if="{{normalView}}">
+
+      <span id="user">{{user.userName}}</span>
+
+      <template is="dom-if" if="{{!noPopover}}">
+        <paper-tooltip for="user" class="custom hidden-mobile" animation-delay="0" position="top">
+          <img src="{{user.profileImage}}" class="profileImage">
+          <paper-item-body two-line>
+            <div class="name">
+              <span>{{user.firstName}}</span>
+              <span>{{user.lastName}}</span>
+            </div>
+            <div class="username">{{user.userName}}</div>
+          </paper-item-body>
+        </paper-tooltip>
+      </template>
+
+
+    </template>
+
+    <template is="dom-if" if="{{fullView}}">
+
+      <paper-item>
+        <img src="{{user.profileImage}}" class="profileImage">
+        <paper-item-body two-line>
+          <div class="name">
+            <span>{{user.firstName}}</span>
+            <span>{{user.lastName}}</span>
+          </div>
+          <div secondary>{{user.userName}}</div>
+        </paper-item-body>
+      </paper-item>
+
+    </template>
+
+    <template is="dom-if" if="{{mini}}">
+      <paper-icon-button src="{{user.profileImage}}">
+      </paper-icon-button>
+    </template>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'req-user',
+
+      behaviors: [
+        ConfigBehavior
+      ],
+
+      properties: {
+        userId: {
+          type: Number
+        },
+        user:{
+          type: Object,
+          notify: true
+        },
+        noPopover:{
+          type: Boolean,
+          value: false
+        },
+        usersUrl: {
+          type: String,
+          computed: 'computeUsersUrl(userId)'
+        },
+        fullView: {
+          type: Boolean,
+          value: false
+        },
+        mini: {
+          type:Boolean,
+          value: false
+        },
+        normalView: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      computeUsersUrl: function(userId){
+        return _apiBaseUrl + "/users/" + userId;
+      },
+
+      load: function (){
+        this.$.usrReq.generateRequest();
+      }
+
+    });
+  </script>
+
+</dom-module>

@@ -1,0 +1,115 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../src/config-behavior.html">
+
+<dom-module id="projects-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #projectsList {
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+
+      #projectsList > a {
+        width: 100%;
+        max-width: 700px;
+        margin-bottom: 16px;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      paper-card {
+        width: 100%;
+        max-width: 700px;
+        cursor: pointer;
+      }
+
+      paper-card:hover {
+        background-color: var(--list-hover-background-color);
+      }
+    </style>
+
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
+    <iron-ajax
+      id="projectsLoader"
+      loading="{{loading}}"
+      url="[[_apiBaseUrl]]/projects/"
+      last-response="{{projects}}"
+      params='{"page":"0", "per_page":"150"}'
+      auto></iron-ajax>
+
+    <div id="projectsList">
+      <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue, onlyOwnedProjects)}}">
+        <a href$="/projects/[[item.id]]">
+          <paper-card heading="[[item.name]]">
+            <div class="card-content">[[item.description]]</div>
+          </paper-card>
+        </a>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'projects-list',
+
+      behaviors: [
+        ConfigBehavior
+      ],
+
+      properties: {
+        projects: {
+          type: Array,
+          notify: true
+        },
+        filterValue: {
+          type: String,
+          value: ''
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
+          notify: true
+        },
+        onlyOwnedProjects: {
+          type: Boolean
+        }
+      },
+
+      // thanks goes to http://jcrowther.io/2015/06/09/polymer-dom-repeat-filtering-and-sorting/ for the great help
+      /**
+       * Returns true either if the filter expression is empty, or if the filter expression is included in
+       * either the project's name or description.
+       *
+       * @param val
+       * @returns {Function}
+       */
+      searchFilter: function (filterValue, onlyOwnedProjects) {
+        var currentUser = this.currentUser;
+        return function (item) {
+          if (!filterValue) {
+            return (!onlyOwnedProjects || (item.leaderId == currentUser.id));
+          }
+          return ((!onlyOwnedProjects || (item.leaderId == currentUser.id)) && item.name && ~item.name.toLowerCase().indexOf(filterValue.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(filterValue.toLowerCase()));
+        };
+      },
+
+      refresh: function() {
+        this.$.projectsLoader.generateRequest();
+      }
+
+    });
+  </script>
+
+</dom-module>
