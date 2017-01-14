@@ -117,6 +117,12 @@
         right: 0px;
         top: 15px;
       }
+
+      @media (max-width: 600px) {
+        :host {
+          padding: 0px;
+        }
+      }
     </style>
 
     <app-localstorage-document key="requirementsViewOption" data="{{_viewOption}}">
