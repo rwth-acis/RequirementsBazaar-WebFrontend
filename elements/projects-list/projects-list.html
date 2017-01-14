@@ -48,7 +48,7 @@
 
     <div id="projectsList">
       <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue, onlyOwnedProjects)}}">
-        <a href$="/projects/[[item.id]]">
+        <a href$="[[_frontendBasePath]]projects/[[item.id]]">
           <paper-card heading="[[item.name]]">
             <div class="card-content">[[item.description]]</div>
           </paper-card>

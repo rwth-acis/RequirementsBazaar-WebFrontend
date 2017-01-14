@@ -91,7 +91,7 @@
     <app-location id="appLocation" route="{{route}}"></app-location>
     <app-route
       route="{{route}}"
-      pattern="/:view"
+      pattern="/beta/:view"
       data="{{routeData}}"
       tail="{{subroute}}"></app-route>
 
@@ -268,7 +268,7 @@
         if (this.$.appLocation.__hash.startsWith('!')) {
           var hashRoute = this.$.appLocation.__hash.substr(1);
           // set components to categories
-          hashRoute = hashRoute.replace('components', 'categories');
+          hashRoute = '/beta' + hashRoute.replace('components', 'categories');
           this.$.appLocation.__hash = "";
           this.set('route.path', hashRoute);
           return;
@@ -303,7 +303,7 @@
       },
 
       _gotoLanding: function() {
-        this.set('route.path', '/');
+        this.set('route.path', this._frontendBasePath);
       },
 
       _handleUserSettingsLeadChange: function(e) {
