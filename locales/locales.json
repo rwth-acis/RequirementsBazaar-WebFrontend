@@ -109,7 +109,9 @@
     "grid-view": "Grid View",
     "inputRequired": "Please fill out this field.",
     "options": "Options",
-    "reply": "Reply"
+    "reply": "Reply",
+    "language": "Language",
+    "showActivityTracker": "Show Activity Tracker"
   },
   "de": {
     "settings": "Einstellungen",
@@ -221,6 +223,8 @@
     "grid-view": "Kachelansicht",
     "inputRequired": "Dieses Feld ist erforderlich.",
     "options": "Optionen",
-    "reply": "Antworten"
+    "reply": "Antworten",
+    "language": "Sprache",
+    "showActivityTracker": "Activity Tracker zeigen"
   }
 }

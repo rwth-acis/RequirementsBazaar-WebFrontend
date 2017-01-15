@@ -83,6 +83,20 @@
         width: 100%;
         --paper-progress-active-color: #FF5252;
       }
+
+      #mainMenuButton {
+        display: none;
+      }
+
+      @media (max-width: 550px) {
+        #languageMenuButton, #activitiesToggle, #profileImage, #openidconnectSignin {
+          display: none !important;
+        }
+
+        #mainMenuButton {
+          display: block;
+        }
+      }
     </style>
 
     <app-localstorage-document key="language" data="{{language}}">
@@ -123,15 +137,15 @@
           <div main-title>
             <span on-tap="_gotoLanding">Requirements Bazaar</span>
           </div>
-          <paper-menu-button>
+          <paper-menu-button id="languageMenuButton">
             <paper-icon-button icon="language" class="dropdown-trigger" alt="menu"></paper-icon-button>
             <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{language}}">
               <paper-item value="de">Deutsch</paper-item>
               <paper-item value="en">English</paper-item>
             </paper-menu>
           </paper-menu-button>
-          <paper-icon-button icon="social:notifications" right-drawer-toggle hidden></paper-icon-button>
-          <paper-menu-button on-iron-select="_handleUserMenuSelect" hidden="[[!_authorized]]">
+          <paper-icon-button icon="social:notifications" right-drawer-toggle hidden id="activitiesToggle"></paper-icon-button>
+          <paper-menu-button on-iron-select="_handleUserMenuSelect" hidden="[[!_authorized]]" id="profileImage">
             <paper-icon-button src="[[currentUser.profileImage]]" class="dropdown-trigger" alt="menu"></paper-icon-button>
             <paper-menu class="dropdown-content">
               <paper-item value="settings">[[localize('settings')]]</paper-item>
@@ -143,6 +157,21 @@
                                 is-authorized="{{_authorized}}"
                                 on-openidconnect-signin-aware-success="_handleSigninSuccessApp"
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin>
+
+          <paper-menu-button horizontal-align="right" vertical-align="top" on-iron-select="_handleMainMenuSelect" id="mainMenuButton">
+            <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+            <paper-menu id="mainMenu" class="dropdown-content">
+              <paper-item value="activities" right-drawer-toggle>[[localize('showActivityTracker')]]</paper-item>
+              <paper-item value="language">[[localize('language')]]</paper-item>
+              <openidconnect-signin id="openidconnectSigninMenuItem" scopes="openid email profile"
+                                    client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
+                                    server="https://api.learning-layers.eu/o/oauth2"
+                                    is-authorized="{{_authorized}}"
+                                    on-openidconnect-signin-aware-success="_handleSigninSuccessApp"
+                                    on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin>
+            </paper-menu>
+          </paper-menu-button>
+
           <paper-progress indeterminate disabled="[[!loading]]" hidden="[[!loading]]"></paper-progress>
         </app-toolbar>
       </app-header>
@@ -186,6 +215,17 @@
         <paper-button dialog-dismiss>Close</paper-button>
       </div>
     </paper-dialog>
+
+    <!-- Dialog for language settings: -->
+
+    <paper-dialog id="languageDialog" modal>
+      <h2>[[localize('language')]]</h2>
+      <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{language}}" on-iron-select="_handleLanguageMenuSelect">
+        <paper-item value="de">Deutsch</paper-item>
+        <paper-item value="en">English</paper-item>
+      </paper-menu>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -261,6 +301,22 @@
         if (selectedValue === 'settings') {
           this.$.settingsDialog.open();
         }
+      },
+
+      _handleMainMenuSelect: function(e) {
+        // unselect the selected menu item
+        e.target.selected = null;
+        var selectedValue = e.detail.item.getAttribute('value');
+
+        if (selectedValue === 'activities') {
+          this.$.doubleDrawerLayout.toggleRightDrawer();
+        } else if (selectedValue === 'language') {
+          this.$.languageDialog.open();
+        }
+      },
+
+      _handleLanguageMenuSelect: function() {
+        this.$.languageDialog.close();
       },
 
       _routeViewChanged: function(view) {
