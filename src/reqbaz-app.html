@@ -161,7 +161,8 @@
           <paper-menu-button horizontal-align="right" vertical-align="top" on-iron-select="_handleMainMenuSelect" id="mainMenuButton">
             <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
             <paper-menu id="mainMenu" class="dropdown-content">
-              <paper-item value="activities" right-drawer-toggle>[[localize('showActivityTracker')]]</paper-item>
+              <paper-item value="activities" right-drawer-toggle hidden$="[[!hasRightDrawer]]">[[localize('showActivityTracker')]]</paper-item>
+              <paper-item value="user" hidden$="[[!_authorized]]">[[localize('userSettings')]]</paper-item>
               <paper-item value="language">[[localize('language')]]</paper-item>
               <openidconnect-signin id="openidconnectSigninMenuItem" scopes="openid email profile"
                                     client-id="c7588efc-f831-4e31-928e-0f46a91fb311"
@@ -218,7 +219,7 @@
 
     <!-- Dialog for language settings: -->
 
-    <paper-dialog id="languageDialog" modal>
+    <paper-dialog id="languageDialog">
       <h2>[[localize('language')]]</h2>
       <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{language}}" on-iron-select="_handleLanguageMenuSelect">
         <paper-item value="de">Deutsch</paper-item>
@@ -249,6 +250,10 @@
         loading: {
           type: Boolean,
           value: false
+        },
+        hasRightDrawer: {
+          type: Boolean,
+          value: false
         }
       },
 
@@ -272,6 +277,9 @@
       _handleSigninSuccessApp: function(e) {
         this._handleSigninSuccess(e);
         this.$.currentUserRequest.generateRequest();
+
+        // deactivate menu entry selection, just in case the login was made from the main menu
+        this.$.mainMenu.selected = null;
       },
 
       _handleCurrentUserResponse: function(e, detail) {
@@ -290,6 +298,7 @@
           this.$.doubleDrawerLayout.leftDrawer = e.detail.drawer;
         } else {
           this.$.doubleDrawerLayout.rightDrawer = e.detail.drawer;
+          console.log('rightDrawerRegistered');
         }
       },
 
@@ -310,6 +319,8 @@
 
         if (selectedValue === 'activities') {
           this.$.doubleDrawerLayout.toggleRightDrawer();
+        } else if (selectedValue === 'user') {
+          this.$.settingsDialog.open();
         } else if (selectedValue === 'language') {
           this.$.languageDialog.open();
         }
@@ -346,10 +357,12 @@
           // e.target.import is the import document.
           if (view === 'projects') {
             this.$.doubleDrawerLayout.rightDrawer = this.$.projectsView.getRightDrawer();
+            this.hasRightDrawer = true;
           } else {
             // reset layout
             this.$.doubleDrawerLayout.leftDrawer = null;
             this.$.doubleDrawerLayout.rightDrawer = null;
+            this.hasRightDrawer = false;
           }
         }, this._showView404, true);
       },

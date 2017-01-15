@@ -111,7 +111,8 @@
     "options": "Options",
     "reply": "Reply",
     "language": "Language",
-    "showActivityTracker": "Show Activity Tracker"
+    "showActivityTracker": "Show Activity Tracker",
+    "userSettings": "User Settings"
   },
   "de": {
     "settings": "Einstellungen",
@@ -225,6 +226,7 @@
     "options": "Optionen",
     "reply": "Antworten",
     "language": "Sprache",
-    "showActivityTracker": "Activity Tracker zeigen"
+    "showActivityTracker": "Activity Tracker zeigen",
+    "userSettings": "Benutzereinstellungen"
   }
 }
