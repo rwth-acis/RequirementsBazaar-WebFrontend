@@ -51,9 +51,10 @@
       paper-material {
         border-radius: 2px;
         /*height: 100%;*/
-        width: calc(98.66% - 16px);
-        margin: 5px auto;
-        padding: 0;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 5px;
+        padding: 0 16px 0 16px;
         max-width: 800px;
         background: white;
         cursor: pointer;
@@ -72,7 +73,6 @@
         background: none;
         color: #000000;
         height: 75px;
-        margin-right: 125px;
         right: 15px;
       }
 
@@ -95,7 +95,7 @@
       }
 
       paper-material > div {
-        margin: 0 16px 10px 16px;
+        margin-bottom: 10px;
       }
 
       h3 {
