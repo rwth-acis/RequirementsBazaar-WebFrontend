@@ -603,6 +603,10 @@
        * @param e
        */
       _handlePostRequirementResponse: function(e) {
+        // reset UI
+        this._clearNewRequirementForm();
+
+        // update list and notify user about success
         this.$.requirementsList.refresh();
         this.$.toast.text = this.localize('reqCreatedSucc');
         this.$.toast.open();
