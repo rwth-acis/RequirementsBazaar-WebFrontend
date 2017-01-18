@@ -1282,35 +1282,14 @@
          */
         _toggleRealized: function(requirement) {
           var request = this.$.updateRequirementRequest;
-          request.url = this._apiBaseUrl + "/requirements/" + requirement.id;
+          request.url = this._apiBaseUrl + '/requirements/' + requirement.id + '/realized';
 
           if (requirement.hasOwnProperty('realized')) {
             // unrealize it
-            request.body = JSON.stringify({
-              "id": parseInt(requirement.id),
-              "realized": null
-            });
+            request.method = 'DELETE';
           } else {
             // realize it
-            var today = new Date();
-            var month = today.toDateString().substring(4, 7);
-            var date = today.getDate();
-            var year = today.getUTCFullYear();
-            var hours = today.getHours();
-            var minutes = today.getMinutes();
-            var seconds = today.getSeconds();
-            var ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0'+minutes : minutes;
-            seconds = seconds < 10 ? '0'+seconds : seconds;
-            var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-            var dateString = month + ' ' + date + ', ' + year + ' ' + strTime;
-
-            request.body = JSON.stringify({
-              "id": parseInt(requirement.id),
-              "realized": dateString
-            });
+            request.method = 'POST';
           }
 
           // fire
@@ -1405,6 +1384,7 @@
         _toggleLeadDeveloper: function(requirement) {
           var request = this.$.updateRequirementRequest;
           request.url = this._apiBaseUrl + '/requirements/' + requirement.id;
+          request.method = 'PUT';
           request.body = JSON.stringify({
             'id': requirement.id,
             'leadDeveloperId': (this.currentUser.id !== requirement.leadDeveloperId) ? this.currentUser.id : 1
