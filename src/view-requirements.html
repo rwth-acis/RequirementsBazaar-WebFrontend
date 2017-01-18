@@ -23,6 +23,7 @@
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../elements/bread-crumb/bread-crumb.html">
 <link rel="import" href="../elements/requirements-list/requirements-list.html">
 <link rel="import" href="../elements/categories-menu/categories-menu.html">
@@ -123,6 +124,16 @@
           padding: 0px;
         }
       }
+
+      @media (max-width: 480px) {
+        .expand-button {
+          display: none !important;
+        }
+
+        .create-dialog-expanded {
+          width: 90%;
+        }
+      }
     </style>
 
     <app-localstorage-document key="requirementsViewOption" data="{{_viewOption}}">
@@ -137,6 +148,8 @@
     <iron-signals on-iron-signal-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged"></iron-signals>
 
     <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
+    <iron-media-query query="(max-width: 480px)" query-matches="{{_isSmallLayout}}"></iron-media-query>
 
     <iron-ajax id="categoryInfoLoader"
                loading="{{loading}}"
@@ -364,6 +377,13 @@
         route: {
           type: Object,
           notify: true
+        },
+        /**
+         * True if we are in a small layout.
+         */
+        _isSmallLayout: {
+          type: Boolean,
+          observer: '_isSmallLayoutChanged'
         },
         /**
          * Sets the style of how requirements are shown, either 'list' or 'grid'.
@@ -603,6 +623,10 @@
        * @param e
        */
       _handlePostRequirementResponse: function(e) {
+        // reset UI
+        this._clearNewRequirementForm();
+
+        // update list and notify user about success
         this.$.requirementsList.refresh();
         this.$.toast.text = this.localize('reqCreatedSucc');
         this.$.toast.open();
@@ -786,6 +810,12 @@
       _expandDialog: function(e) {
         this.$.createRequirementDialog.toggleClass('create-dialog');
         this.$.createRequirementDialog.toggleClass('create-dialog-expanded');
+        this.$.createRequirementDialog.refit();
+      },
+
+      _isSmallLayoutChanged: function(newValue) {
+        this.$.createRequirementDialog.toggleClass('create-dialog', !newValue);
+        this.$.createRequirementDialog.toggleClass('create-dialog-expanded', newValue);
         this.$.createRequirementDialog.refit();
       }
 
