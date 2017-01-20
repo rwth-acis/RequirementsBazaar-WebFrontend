@@ -1398,12 +1398,16 @@
          */
         _toggleLeadDeveloper: function(requirement) {
           var request = this.$.updateRequirementRequest;
-          request.url = this._apiBaseUrl + '/requirements/' + requirement.id;
-          request.method = 'PUT';
-          request.body = JSON.stringify({
-            'id': requirement.id,
-            'leadDeveloperId': (this.currentUser.id !== requirement.leadDeveloperId) ? this.currentUser.id : 1
-          });
+          request.url = this._apiBaseUrl + '/requirements/' + requirement.id + '/leaddevelopers';
+
+          var leaddevelopers = requirement.leaddevelopers;
+          var isLeadDeveloper = this._isUserInArray(leaddevelopers, this.currentUser);
+
+          if (!isLeadDeveloper) {
+            request.method = 'POST';
+          } else {
+            request.method = 'DELETE';
+          }
 
           // fire
           request.generateRequest();
