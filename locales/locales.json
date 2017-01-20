@@ -112,7 +112,9 @@
     "reply": "Reply",
     "language": "Language",
     "showActivityTracker": "Show Activity Tracker",
-    "userSettings": "User Settings"
+    "userSettings": "User Settings",
+    "voteSuccessful": "You have successfully voted for this requirement.",
+    "unvoteSuccessful": "You have successfully removed your vote for this requirement."
   },
   "de": {
     "settings": "Einstellungen",
@@ -227,6 +229,8 @@
     "reply": "Antworten",
     "language": "Sprache",
     "showActivityTracker": "Activity Tracker zeigen",
-    "userSettings": "Benutzereinstellungen"
+    "userSettings": "Benutzereinstellungen",
+    "voteSuccessful": "Ihre Stimme wurde gezählt.",
+    "unvoteSuccessful": "Sie haben Ihre Wahl erfolgreich zurückgezogen."
   }
 }
