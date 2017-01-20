@@ -337,7 +337,7 @@
                     <paper-item value="toggleContributors">[[localize('showContributors')]]</paper-item>
                     <paper-item value="follow" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.followers, 'followRequirement', 'unfollowRequirement')]]</paper-item>
                     <paper-item value="develop" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.developers, 'developRequirement', 'undevelopRequirement')]]</paper-item>
-                    <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]">[[_calculateLeadDeveloperLocalization(req.leadDeveloperId)]]</paper-item>
+                    <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]">[[_calculateLeadDeveloperLocalization(req.leadDeveloper)]]</paper-item>
                     <paper-item value="edit" hidden$="[[req.realized]]">[[localize('editRequirement')]]</paper-item>
                     <paper-item value="realize">[[_calculateRealizeMessage(req.realized)]]</paper-item>
                     <paper-item value="delete">[[localize('deleteRequirement')]]</paper-item>
@@ -1146,8 +1146,8 @@
           }
         },
 
-        _calculateLeadDeveloperLocalization: function(leadDeveloperId) {
-          if (this.currentUser && (this.currentUser.id === leadDeveloperId)) {
+        _calculateLeadDeveloperLocalization: function(leadDeveloper) {
+          if (this.currentUser && leadDeveloper && (this.currentUser.id === leadDeveloper.id)) {
             return this.localize('stopLeadDeveloper');
           }
 
@@ -1400,13 +1400,10 @@
           var request = this.$.updateRequirementRequest;
           request.url = this._apiBaseUrl + '/requirements/' + requirement.id + '/leaddevelopers';
 
-          var leaddevelopers = requirement.leaddevelopers;
-          var isLeadDeveloper = this._isUserInArray(leaddevelopers, this.currentUser);
-
-          if (!isLeadDeveloper) {
-            request.method = 'POST';
-          } else {
+          if (requirement.hasOwnProperty('leadDeveloper') && (requirement.leadDeveloper.id === this.currentUser.id)) {
             request.method = 'DELETE';
+          } else {
+            request.method = 'POST';
           }
 
           // fire
