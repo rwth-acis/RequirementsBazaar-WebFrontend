@@ -140,6 +140,7 @@
           <paper-menu-button id="languageMenuButton">
             <paper-icon-button icon="language" class="dropdown-trigger" alt="menu"></paper-icon-button>
             <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{language}}">
+              <paper-item value="sq">Albanian</paper-item>
               <paper-item value="de">Deutsch</paper-item>
               <paper-item value="en">English</paper-item>
               <paper-item value="ro">Romanian</paper-item>
@@ -223,6 +224,7 @@
     <paper-dialog id="languageDialog">
       <h2>[[localize('language')]]</h2>
       <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{language}}" on-iron-select="_handleLanguageMenuSelect">
+        <paper-item value="sq">Albanian</paper-item>
         <paper-item value="de">Deutsch</paper-item>
         <paper-item value="en">English</paper-item>
         <paper-item value="ro">Romanian</paper-item>
