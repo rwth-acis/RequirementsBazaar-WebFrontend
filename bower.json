@@ -1,5 +1,6 @@
 {
   "name": "requirements-bazaar-web-frontend",
+  "version": "1.4.0",
   "authors": [
     "István Koren",
     "Albi Sema",
