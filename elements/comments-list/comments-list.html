@@ -57,6 +57,7 @@
 
       a {
         text-decoration: underline;
+        cursor: pointer;
       }
     </style>
 
@@ -115,9 +116,9 @@
         <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
         <div class="layout vertical flex">
           <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
-          <div class="info helper">
+          <div class="actions">
             <a on-tap="_handleReplyTap" hidden="[[!authorized]]">[[localize('reply')]]</a>
-            <span hidden="[[!isCreator(item.creatorId)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a></span>
+            <span hidden="[[!isCreator(item.creatorId)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
             <relative-time datetime$="[[item.creationTime]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
           </div>
           <paper-input class$="replyInput[[item.Id]]" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>

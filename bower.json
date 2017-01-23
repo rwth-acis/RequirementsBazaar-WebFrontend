@@ -1,5 +1,6 @@
 {
   "name": "requirements-bazaar-web-frontend",
+  "version": "1.4.0",
   "authors": [
     "István Koren",
     "Albi Sema",
@@ -11,7 +12,7 @@
     "polymer": "Polymer/polymer#^1.6.0",
     "time-elements": "^0.6.0",
     "openidconnect-signin": "rwth-acis/openidconnect-signin#update-signin",
-    "activity-tracker": "rwth-acis/activity-tracker#fix-variable-size",
+    "activity-tracker": "rwth-acis/activity-tracker#^1.1.1",
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2",
     "emoji-selector": "https://github.com/notwaldorf/emoji-selector.git#^1.1.1",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
