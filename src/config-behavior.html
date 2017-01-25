@@ -1,0 +1,90 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<script>
+
+  GlobalConfig = [];
+  GlobalConfig.language = 'en';
+
+  ConfigBehavior = {
+
+    properties: {
+      _apiBaseUrl: {
+        type: String,
+        value: 'https://requirements-bazaar.org/bazaar'
+      },
+      _fileApiBaseUrl: {
+        type: String,
+        value: 'https://requirements-bazaar.org/fileservice/files/'
+      },
+      _frontendBasePath: {
+        type: String,
+        value: '/'
+      },
+      language: {
+        type: String,
+        value: function() { return GlobalConfig.language; },
+        observer: '_languageChanged'
+      },
+      currentUser: {
+        type: String,
+        value: function() { return GlobalConfig.currentUser; },
+        observer: '_currentUserChanged'
+      },
+      /**
+       * Defines whether the user is logged in or not.
+       */
+      authorized: {
+        type: Boolean
+      },
+      authHeader: {
+        type: Array
+      }
+    },
+
+    /**
+     * Went for set* method as in the Polymer object, this.currentUser didn't call this setter.
+     *
+     * @param newValue
+     */
+    setCurrentUser: function(newValue) {
+      GlobalConfig.currentUser = newValue;
+    },
+
+    get rightDrawerReserveSpace() {
+      return GlobalConfig.rightDrawerReserveSpace;
+    },
+
+    set rightDrawerReserveSpace(newValue) {
+      GlobalConfig.rightDrawerReserveSpace = newValue;
+    },
+
+    _languageChanged: function(newValue) {
+      GlobalConfig.language = newValue;
+      this.fire('iron-signal', {name: 'language-changed', data: newValue});
+    },
+
+    _handleLanguageChanged: function(e, detail, sender) {
+      this.language = detail;
+    },
+
+    _handleSigninSuccess: function(e) {
+      this.authorized = true;
+      this.authHeader = {authorization: "Bearer " + e.detail.access_token};
+    },
+
+    _handleSignedOut: function(e) {
+      this.authorized = false;
+      this.authHeader = null;
+    },
+
+    _currentUserChanged: function(newValue) {
+      GlobalConfig.currentUser = newValue;
+      this.fire('iron-signal', {name: 'current-user-changed', data: newValue});
+    },
+
+    _handleCurrentUserChanged: function(e, detail) {
+      this.currentUser = detail;
+    }
+
+  }
+</script>

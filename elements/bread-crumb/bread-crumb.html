@@ -1,0 +1,52 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../src/config-behavior.html">
+
+<dom-module id="bread-crumb">
+  <template>
+    <style is="custom-style">
+      :host {
+        display: block;
+      }
+
+      a {
+        color: inherit;
+      }
+    </style>
+
+    <span><a href$="[[_frontendBasePath]]projects">Projects</a></span>
+    <template is="dom-if" if$="[[projectId]]">
+      <span> > <a href$="[[_frontendBasePath]]projects/[[projectId]]">[[project.name]]</a></span>
+    </template>
+    <template is="dom-if" if$="[[categoryId]]">
+      <span> > <a href$="[[_frontendBasePath]]projects/[[projectId]]/categories/[[categoryId]]">[[category.name]]</a></span>
+    </template>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'bread-crumb',
+
+      behaviors: [
+        ConfigBehavior
+      ],
+
+      properties: {
+        project: {
+          type: Object
+        },
+        category: {
+          type: Object
+        },
+        projectId: {
+          type: Number
+        },
+        categoryId: {
+          type: Number
+        }
+      }
+
+    });
+    </script>
+
+</dom-module>

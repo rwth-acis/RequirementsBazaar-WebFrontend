@@ -1,0 +1,824 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../elements/bread-crumb/bread-crumb.html">
+<link rel="import" href="../elements/requirements-list/requirements-list.html">
+<link rel="import" href="../elements/categories-menu/categories-menu.html">
+<link rel="import" href="../elements/req-user/req-user.html">
+<link rel="import" href="../elements/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="config-behavior.html">
+
+<dom-module id="view-requirements">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 15px;
+      }
+
+      app-drawer {
+        /** paper-dialog has 103 **/
+        z-index: 104;
+        margin-top: 64px;
+      }
+
+      .categoryName {
+        font-size: 40px;
+        font-weight: 400;
+      }
+
+      .cmpTitle {
+        display: block;
+        text-overflow: ellipsis;
+        margin-top: 10px;
+      }
+
+      .cmpDesc{
+        display: block;
+        text-overflow: ellipsis;
+      }
+
+      .filterButton {
+        font-size: medium;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      app-drawer > a {
+        width: 100%;
+        display: inline-block;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      #drawerProjectLink {
+        height: 35px;
+        line-height: 35px;
+        background-color: #eceff1;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--secondary-text-color);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      #drawerProjectLink > iron-icon {
+        position: relative;
+        top: -1px;
+      }
+
+      #drawerProjectLink > span {
+        text-overflow: ellipsis;
+      }
+
+      #drawerToolbar {
+        color: var(--secondary-text-color);
+        /*border-bottom: 1px solid rgba(0, 0, 0, 0.22);*/
+      }
+
+      app-toolbar {
+        margin-top: 10px;
+        height: 40px;
+      }
+
+      .helper-highlight {
+        color: #669900;
+        font-size: small;
+        margin-top: -5px;
+      }
+
+      .expand-button {
+        position: absolute;
+        right: 0px;
+        top: 15px;
+      }
+
+      @media (max-width: 600px) {
+        :host {
+          padding: 0px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .expand-button {
+          display: none !important;
+        }
+
+        .create-dialog-expanded {
+          width: 90%;
+        }
+      }
+    </style>
+
+    <app-localstorage-document key="requirementsViewOption" data="{{_viewOption}}">
+    </app-localstorage-document>
+
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
+
+    <iron-signals on-iron-signal-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged"></iron-signals>
+
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
+    <iron-media-query query="(max-width: 480px)" query-matches="{{_isSmallLayout}}"></iron-media-query>
+
+    <iron-ajax id="categoryInfoLoader"
+               loading="{{loading}}"
+               content-type="application/json"
+               url="[[_apiBaseUrl]]/components/[[categoryId]]"
+               last-response="{{category}}"
+               auto></iron-ajax>
+
+    <iron-ajax id="postRequirementRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               url="{{_apiBaseUrl}}/requirements"
+               content-type="application/json"
+               method="POST"
+               headers="[[authHeader]]"
+               on-response="_handlePostRequirementResponse"
+               on-error="_handlePostRequirementError"></iron-ajax>
+
+    <iron-ajax id="categoryRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               content-type="application/json"
+               headers="[[authHeader]]"
+               on-response="compResponse"
+               on-error="errorHandler"></iron-ajax>
+
+    <iron-ajax  id="editCategoryRequest"
+                loading="{{loading}}"
+                handle-as="json"
+                content-type="application/json"
+                headers="[[authHeader]]"
+                on-response="_handleEditCategoryResponse"
+                on-error="errorHandler"></iron-ajax>
+
+    <iron-ajax id="editProjectRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               content-type="application/json"
+               headers="[[authHeader]]"
+               on-response="_handleEditProjectResponse"
+               on-error="_handleEditProjectError"></iron-ajax>
+
+    <app-drawer id="drawer" align="left">
+      <!-- Drawer Toolbar -->
+      <a href$="[[_frontendBasePath]]projects/[[projectId]]" tabindex="-1">
+        <div id="drawerProjectLink">
+          <iron-icon icon="chevron-left"></iron-icon>
+          <span>[[project.name]]</span>
+        </div>
+      </a>
+      <app-toolbar id="drawerToolbar">[[localize('categories')]]</app-toolbar>
+
+      <!-- Drawer Content -->
+      <categories-menu id="categoriesMenu" project-id="[[projectId]]" category-id="[[categoryId]]" on-link-tapped="_handleCategoryLinkTapped" loading="{{loading}}"></categories-menu>
+    </app-drawer>
+
+    <paper-material id="categoryToolbar">
+      <paper-menu-button horizontal-align="right"
+                         id="menuCompButton"
+                         vertical-align="top"
+                         style="position:absolute; top:2px; right:8px;"
+                         on-iron-select="_handleMenuSelect"
+                         hidden="[[!authorized]]">
+        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
+        <paper-menu id="categoryInfoMenu" class="dropdown-content">
+          <paper-item value="follow">[[localize('followCategory')]]</paper-item>
+          <paper-item value="default">[[localize('setAsDefault')]]</paper-item>
+          <paper-item value="edit">[[localize('editCategory')]]</paper-item>
+          <paper-item value="delete">[[localize('deleteCategory')]]</paper-item>
+        </paper-menu>
+      </paper-menu-button>
+
+      <bread-crumb project-id="[[projectId]]" project="[[project]]" category-id="[[categoryId]]" category="[[category]]"></bread-crumb>
+
+      <div class="cmpTitle" hidden="[[_editMode]]">
+        <div class="categoryName"><span>{{category.name}}</span></div>
+      </div>
+
+      <div class="cmpDesc" hidden="[[_editMode]]">
+        <span>{{category.description}}</span>
+      </div>
+
+      <div class="bottom-container bottom" hidden="[[_editMode]]">
+        <div class="timing helper">
+          [[localize('created')]] <relative-time datetime$="[[category.creation_time]]"></relative-time>
+          [[localize('by')]]
+          <req-user user="{{category.leader}}" normal-view no-popover></req-user>
+        </div>
+
+        <paper-button on-tap="_toggleOptions" class="filterButton" toggles>
+          <iron-icon icon="filter-list"></iron-icon>
+          <span>[[localize('options')]]</span>
+        </paper-button>
+      </div>
+
+      <div class="filtering" hidden="[[_editMode]]">
+
+        <iron-collapse id="collapseFilters">
+          <div>
+            <div style="display: flex; flex-wrap: wrap;">
+              <div style="flex-grow: 1; margin:20px;">
+                <paper-radio-group selected="{{requirementsStateFilter}}">
+                  <paper-radio-button name="open">[[localize('active-req')]]</paper-radio-button>
+                  <br>
+                  <paper-radio-button name="realized">[[localize('realized-req')]]</paper-radio-button>
+                </paper-radio-group>
+              </div>
+
+              <!--<div style="flex-grow: 1; margin:20px;">-->
+              <!--<div>User Rating: <span id="ratingsLabel" class="caption"></span></div>-->
+              <!--<paper-slider id="ratings" pin value="5" style="width:100%;" disabled></paper-slider>-->
+              <!--<div>User Behaviour: <span id="gradeLabel" class="caption"></span></div>-->
+              <!--<paper-slider id="grade" pin value="65" style="width:100%;" disabled></paper-slider>-->
+              <!--</div>-->
+              <div style="flex-grow: 1; margin:20px;">
+                <paper-radio-group selected="{{_viewOption}}">
+                  <paper-radio-button name="list">[[localize('list-view')]]</paper-radio-button>
+                  <br>
+                  <paper-radio-button name="grid">[[localize('grid-view')]]</paper-radio-button>
+                </paper-radio-group>
+              </div>
+            </div>
+            <div>
+              <paper-input label="[[localize('srchReq')]]" value="{{reqFilterVal}}">
+                <iron-icon icon="search" prefix class="big"></iron-icon>
+              </paper-input>
+            </div>
+          </div>
+        </iron-collapse>
+      </div>
+
+      <div class="editFormComp middle middle-container center layout" hidden="[[!_editMode]]">
+
+        <h2>[[localize('editCategory')]]</h2>
+
+        <paper-input id="editTitle" class="editTitle" label="[[localize('formTitle')]]" value="{{_editCategoryTitle}}" auto-validate error-message="[[localize('inputRequired')]]" maxlength="50" char-counter required></paper-input>
+        <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="{{_editCategoryDescription}}" max-rows="5" auto-validate error-message="[[localize('inputRequired')]]" required></paper-textarea>
+
+        <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
+        <paper-button raised on-tap="_handleSaveEditTap" disabled="[[_editCategorySaveDisabled]]">[[localize('save')]]</paper-button>
+
+      </div>
+    </paper-material>
+    <!--</paper-toolbar>-->
+
+    <div style="padding-top:10px; z-index: 1;">
+
+      <requirements-list
+        id="requirementsList"
+        filter-value="[[reqFilterVal]]"
+        base-href="https://requirements-bazaar.org/betabazaar"
+        project-id="[[projectId]]"
+        category-id="[[categoryId]]"
+        requirements-state-filter="{{requirementsStateFilter}}"
+        loading="{{loading}}"
+        view-option="[[_viewOption]]"
+        route="{{route}}"
+        repositories="{{repositories}}"
+        current-user="{{currentUser}}"></requirements-list>
+    </div>
+
+    <!-- Dialog for creating a requirement: -->
+
+    <paper-dialog id="createRequirementDialog" class="create-dialog"
+                  entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation"
+                  no-cancel-on-outside-click
+                  no-cancel-on-esc-key
+                  on-iron-overlay-closed="_handleCreateRequirementClosed">
+      <h2>[[localize('createRequirement')]]</h2>
+      <paper-button class="expand-button" on-tap="_expandDialog"><iron-icon icon="fullscreen"></iron-icon></paper-button>
+      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]"
+                   id="newRequirementTitle"
+                   on-keydown="_handleEnterCheck"
+                   value="{{_newRequirementTitle}}"></paper-input>
+      <paper-textarea label="[[localize('formDesc')]]"
+                      id="newRequirementDescription"
+                      max-rows="4"
+                      on-keydown="_handleEnterCheck"
+                      value="{{_newRequirementDescription}}"></paper-textarea>
+      <div class="helper-highlight">Ctrl + Enter for new line</div>
+      <vaadin-upload target="[[_fileApiBaseUrl]]"
+                     method="POST"
+                     timeout="300000"
+                     files="{{files}}"
+                     max-file-size="1000000"
+                     accept="image/*">
+      </vaadin-upload>
+
+      <div class="buttons">
+        <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
+        <paper-button dialog-confirm autofocus disabled="[[_createRequirementDisabled]]">[[localize('save')]]</paper-button>
+      </div>
+    </paper-dialog>
+
+    <!-- Dialog for deleting the category: -->
+
+    <paper-dialog id="deleteDialog" modal on-iron-overlay-closed="deleteCategory" entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation">
+      <h2>[[localize('deleteCategory')]]?</h2>
+      <p>[[localize('deleteCompDesc')]]</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
+        <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-fab on-tap="_handleCreateRequirementTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
+    <paper-tooltip for="fab" position="left">[[localize('createRequirement')]]</paper-tooltip>
+
+    <paper-toast id="toast"></paper-toast>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'view-requirements',
+
+      behaviors: [
+        Polymer.AppLocalizeBehavior,
+        ConfigBehavior
+      ],
+
+      properties: {
+        route: {
+          type: Object,
+          notify: true
+        },
+        /**
+         * True if we are in a small layout.
+         */
+        _isSmallLayout: {
+          type: Boolean,
+          observer: '_isSmallLayoutChanged'
+        },
+        /**
+         * Sets the style of how requirements are shown, either 'list' or 'grid'.
+         */
+        _viewOption: {
+          type: String,
+          value: 'list'
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
+          notify: true
+        },
+        /**
+         * Defines whether the category is currently being edited.
+         */
+        _editMode: {
+          type: Boolean,
+          value: false
+        },
+        projectId: {
+          type: Number
+        },
+        project: {
+          type: Object
+        },
+        categoryId: {
+          type: Number
+        },
+        _editCategoryTitle: {
+          type: String,
+          value: ''
+        },
+        _editCategoryDescription: {
+          type: String,
+          value: ''
+        },
+        _editCategorySaveDisabled: {
+          type: Boolean,
+          computed: '_computeEditCategorySaveDisabled(_editCategoryTitle, _editCategoryDescription)'
+        },
+        _newRequirementTitle: {
+          type: String,
+          value: ''
+        },
+        _newRequirementDescription: {
+          type: String,
+          value: ''
+        },
+        _createRequirementDisabled: {
+          type: Boolean,
+          computed: '_computeCreateRequirementDisabled(_newRequirementTitle, _newRequirementDescription)'
+        },
+        files: {
+          type: Array,
+          value: []
+        }
+      },
+
+      attached: function() {
+        // load localized messages
+        this.loadResources(this.resolveUrl('../locales/locales.json'));
+
+        // set fab button and create dialog right padding
+        this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
+        this.$.createRequirementDialog.toggleClass('drawer', this.rightDrawerReserveSpace);
+      },
+
+      /**
+       * Event handler for when a link is tapped on the categories-menu. Closes the drawer if it is not persistent.
+       *
+       * @param e
+       */
+      _handleCategoryLinkTapped: function(e) {
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      },
+
+      /**
+       * Returns this view's drawer.
+       */
+      getDrawer: function() {
+        return this.$.drawer;
+      },
+
+      _handleDrawerReserveSpaceChanged: function(e, detail) {
+        if (detail.drawerAlign === 'right') {
+          this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
+          this.$.createRequirementDialog.toggleClass('drawer', detail.reserveSpace);
+        }
+      },
+
+      /**
+       * Event handler for the view's paper-menu.
+       *
+       * @param e
+       * @private
+       */
+      _handleMenuSelect: function(e) {
+        // unselect the selected menu item
+        e.target.selected = null;
+        // get value of the paper-item
+        var selectedValue = e.detail.item.getAttribute('value');
+
+        if (selectedValue === 'follow') {
+          this._toggleFollowCategory();
+        } else if (selectedValue === 'default') {
+          this.setAsDefaultCategory();
+        } else if (selectedValue === 'edit') {
+          this._editCategoryTitle = this.category.name;
+          this._editCategoryDescription = this.category.description;
+          this._editMode = true;
+        } else if (selectedValue === 'delete') {
+          this.$.deleteDialog.open();
+        }
+      },
+
+      /**
+       * Toggles following the category.
+       *
+       */
+      _toggleFollowCategory: function() {
+        var followers = this.category.followers;
+        var user = this.currentUser;
+        var isFollower = this._isUserInArray(followers, this.currentUser);
+
+        var request = this.$.editCategoryRequest;
+        request.url = this._apiBaseUrl + '/components/' + this.categoryId + '/followers';
+
+        if (!isFollower) {
+          // follow requirement
+          request.method = 'POST';
+        } else {
+          // unfollow requirement
+          request.method = 'DELETE';
+        }
+
+        request.generateRequest();
+      },
+
+      /**
+       * Checks whether a user is in the users array. Compares the user's id.
+       *
+       * @param usersArray an array of user objects.
+       * @param user a user object.
+       * @returns {boolean} whether the user is in the array or not.
+       * @private
+       */
+      _isUserInArray: function(usersArray, user) {
+        if ((usersArray == null) || (user == null)) {
+          return false;
+        } else {
+          // check if the user's id is in the users array
+          for (var index = 0; index < usersArray.length; ++index) {
+            if (usersArray[index].id === user.id) {
+              return true;
+            }
+          }
+
+          return false;
+        }
+      },
+
+      /**
+       * Opens the create requirement dialog.
+       *
+       * @param e
+       */
+      _handleCreateRequirementTap: function(e) {
+        this.$.createRequirementDialog.open();
+      },
+
+      /**
+       * Event handler called when the create requirement dialog is closed.
+       *
+       * @param e
+       */
+      _handleCreateRequirementClosed: function(e) {
+        if (e.detail.confirmed) {
+          this._postRequirement();
+        }
+      },
+
+      /**
+       * Posts a new requirement to the server.
+       *
+       */
+      _postRequirement: function() {
+        var attachments = [];
+        var request = this.$.postRequirementRequest;
+        var categories = [{id: this.categoryId}];
+        // check if a file was uploaded as well
+        // xhr.response holds the file identifier
+        if (this.files != []){
+          for (var i = 0; i < this.files.length; i++) {
+            var obj = {
+              title: this.files[i].name,
+              fileUrl: this._fileApiBaseUrl + this.files[i].xhr.response,
+              mimeType: "image/*",
+              identifier: this.files[i].xhr.response
+            };
+            attachments.push(obj);
+          }
+        }
+        request.body = JSON.stringify({
+          "title": this._newRequirementTitle.trim(),
+          "description": this._newRequirementDescription.trim(),
+          "projectId": this.projectId,
+          "components": categories,
+          "attachments": attachments
+        });
+        request.generateRequest();
+      },
+
+      /**
+       * Clears the input fields in the create requirement dialog.
+       */
+      _clearNewRequirementForm: function() {
+        // reset the form and validation error messages
+        this.$.newRequirementTitle.required = false;
+        this.$.newRequirementDescription.required = false;
+
+        this.$.newRequirementTitle.value = null;
+        this.$.newRequirementDescription.value = null;
+
+        this.$.newRequirementTitle.required = true;
+        this.$.newRequirementDescription.required = true;
+        this.files = [];
+      },
+
+      /**
+       * Event handler for the response for posting requirements to the server.
+       *
+       * @param e
+       */
+      _handlePostRequirementResponse: function(e) {
+        // reset UI
+        this._clearNewRequirementForm();
+
+        // update list and notify user about success
+        this.$.requirementsList.refresh();
+        this.$.toast.text = this.localize('reqCreatedSucc');
+        this.$.toast.open();
+      },
+
+      /**
+       * Event handler for errors when posting requirements to the server.
+       *
+       * @param e
+       */
+      _handlePostRequirementError: function(e) {
+        this.$.toast.text = this.localize('errorCreReq');
+        this.$.toast.open();
+      },
+
+      /**
+       * Disables the edit mode.
+       *
+       * @param e
+       */
+      _handleCancelEditTap: function(e) {
+        this._editMode = false;
+      },
+
+      /**
+       * Event handler that puts category edits to the server.
+       *
+       * @param e
+       */
+      _handleSaveEditTap: function(e) {
+        var title = this._editCategoryTitle;
+        var description = this._editCategoryDescription;
+
+        var request = this.$.editCategoryRequest;
+        request.url = this._apiBaseUrl + '/components/' + this.categoryId;
+        request.body = JSON.stringify({
+          "id": this.categoryId,
+          "name": title,
+          "description": description
+        });
+        request.method = 'PUT';
+        request.generateRequest();
+
+        // update local project object
+        this.category.name = title;
+        this.category.description = description;
+        this.notifyPath('category.name', this.category.name);
+        this.notifyPath('category.description', this.category.description);
+
+        this._editMode = false;
+      },
+
+      /**
+       * Event handler for the response of category edits.
+       *
+       * @param e
+       */
+      _handleEditCategoryResponse: function(e) {
+        if (e.target.method === 'DELETE') {
+          if (e.detail.url.endsWith('/followers')) {
+            this.$.toast.text = this.localize('categoryEditSuccess');
+          } else {
+            window.location.href = this._frontendBasePath + 'projects/' + this.projectId;
+          }
+        } else {
+          // 200 for PUT, 201 for POST
+          if ((e.detail.status === 200) || (e.detail.status === 201)) {
+            this.$.requirementsList.refresh();
+            this.$.toast.text = this.localize('categoryEditSuccess');
+          } else {
+            this.$.toast.text = this.localize('categoryEditError');
+            //TODO: reset the project object
+          }
+          this.$.toast.open();
+        }
+      },
+
+      /**
+       * Computes whether the save button in the edit category form is disabled or not. It is enabled if both input
+       * fields contain text.
+       *
+       * @param editCategoryTitle
+       * @param editCategoryDescription
+       * @returns whether the save button is disabled or not.
+       */
+      _computeEditCategorySaveDisabled: function(editCategoryTitle, editCategoryDescription) {
+        return (editCategoryTitle == null || editCategoryDescription == null || editCategoryTitle.trim() === '' || editCategoryDescription.trim() === '');
+      },
+
+      /**
+       * Computes whether the save button in the create requirement dialog is disabled or not. It is enabled if both
+       * input fields contain text.
+       *
+       * @param newRequirementTitle
+       * @param newRequirementDescription
+       * @returns whether the save button is disabled or not.
+       */
+      _computeCreateRequirementDisabled: function(newRequirementTitle, newRequirementDescription) {
+        return (newRequirementTitle == null || newRequirementDescription == null || newRequirementTitle.trim() === '' || newRequirementDescription.trim() === '');
+      },
+
+      /**
+       * Toggles the visibility of the options for the list of requirements.
+       *
+       * @private
+       */
+      _toggleOptions: function() {
+        this.$.collapseFilters.toggle();
+      },
+
+      /**
+       * Sets the currently shown category as default category for its project. Sends a request to the server.
+       */
+      setAsDefaultCategory: function() {
+        var request = this.$.editProjectRequest;
+        request.url = this._apiBaseUrl + "/projects/" + this.projectId;
+        request.method = "PUT";
+        request.body = JSON.stringify({
+          "id": this.projectId,
+          "defaultComponentId": this.categoryId
+        });
+        request.generateRequest();
+      },
+
+      /**
+       * Event handler for project edits.
+       *
+       * @param e
+       */
+      _handleEditProjectResponse: function(e) {
+        this.$.toast.text = this.localize('projectEditSuccess');
+        this.$.toast.open();
+      },
+
+      /**
+       * Event handler for project edit errors.
+       *
+       * @param e
+       */
+      _handleEditProjectError: function(e) {
+        this.$.toast.text = this.localize('projectEditError');
+        this.$.toast.open();
+      },
+
+      /**
+       * Deletes the currently shown category.
+       *
+       * @param e
+       */
+      deleteCategory: function(e) {
+        if (e.detail.confirmed) {
+          var request = this.$.editCategoryRequest;
+          request.url = this._apiBaseUrl + "/components/" + this.categoryId;
+          request.method = "DELETE";
+          request.generateRequest();
+        }
+      },
+
+      /**
+       * An event handler for the keydown event of the new requirement input fields. If CTRL+Enter is pressed in the
+       * input for the description, a new line is entered. Otherwise the requirement is posted.
+       *
+       * @param e
+       * @returns
+       * @private
+       */
+      _handleEnterCheck: function(e) {
+        if (e.keyCode === 13) {
+          if (e.ctrlKey) {
+            if (this.$.newRequirementDescription.focused){
+              this.$.newRequirementDescription.value += '\n';
+            }
+          } else {
+            // post requirement
+            this.$.createRequirementDialog.close();
+            this._postRequirement();
+          }
+        }
+      },
+
+      _expandDialog: function(e) {
+        this.$.createRequirementDialog.toggleClass('create-dialog');
+        this.$.createRequirementDialog.toggleClass('create-dialog-expanded');
+        this.$.createRequirementDialog.refit();
+      },
+
+      _isSmallLayoutChanged: function(newValue) {
+        this.$.createRequirementDialog.toggleClass('create-dialog', !newValue);
+        this.$.createRequirementDialog.toggleClass('create-dialog-expanded', newValue);
+        this.$.createRequirementDialog.refit();
+      }
+
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,96 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<!-- shared styles for all views -->
+<dom-module id="shared-styles">
+  <template>
+    <style>
+      [hidden] {
+        display: none !important;
+      }
+
+      .create-dialog {
+        position: fixed;
+        max-height: none !important;
+        bottom: 0px;
+        right: 0px;
+        width: 350px;
+        margin-bottom: 0px;
+        background-color: white;
+      }
+
+      .create-dialog-expanded {
+        width: 70%;
+        overflow: scroll;
+      }
+
+      .drawer {
+        right: var(--spacer-right-drawer);
+      }
+
+      paper-dialog {
+        z-index: 104;
+      }
+
+      paper-toast {
+        z-index: 105;
+      }
+
+      paper-fab {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+      }
+
+      paper-fab[drawer] {
+        right: calc(30px + var(--spacer-right-drawer));
+      }
+
+      paper-material {
+        border-radius: 2px;
+        padding: 16px;
+        /*width: calc(98.66% - 46px);*/
+        margin: 16px auto;
+        margin-bottom: 32px;
+        background: white;
+      }
+
+      paper-input.large {
+        --paper-input-container-input: {
+          font-size: xx-large;
+        };
+      }
+
+      paper-menu {
+        white-space: nowrap;
+      }
+
+      iron-icon.big {
+        --iron-icon-height: 32px;
+        --iron-icon-width: 32px;
+      }
+
+      @media (max-width: 600px) {
+        paper-material {
+          padding: 16px;
+          margin: 0px auto;
+          margin-bottom: 15px;
+          background: white;
+        }
+
+        paper-dialog paper-input, paper-textarea {
+          margin-top: 0px !important;
+        }
+      }
+    </style>
+  </template>
+</dom-module>

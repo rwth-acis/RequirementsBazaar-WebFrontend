@@ -1,0 +1,25 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/reqbaz-app.html",
+  "fragments": [
+    "src/reqbaz-app.html",
+    "src/view-404.html",
+    "src/view-categories.html",
+    "src/view-categories-list.html",
+    "src/view-landing.html",
+    "src/view-projects.html",
+    "src/view-projects-list.html",
+    "src/view-requirements.html"
+  ],
+  "sourceGlobs": [
+    "elements/**/*",
+    "images/**/*",
+    "locales/**/*",
+    "src/**/*",
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}
