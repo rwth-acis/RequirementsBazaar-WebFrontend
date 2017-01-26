@@ -19,5 +19,5 @@ module.exports = {
     '/bower_components/webcomponentsjs/webcomponents-lite.min.js'
   ],
   navigateFallback: 'index.html',
-  navigateFallbackWhitelist: [/^\/projects/,/^\/imprint/]
+  navigateFallbackWhitelist: [/^(?!\/beta)/,/^(?!\/bazaar)/]
 };
