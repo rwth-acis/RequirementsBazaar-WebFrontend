@@ -16,7 +16,8 @@ module.exports = {
     '/manifest.json',
     '/images/**/*',
     '/locales/locales.json',
-    '/bower_components/webcomponentsjs/webcomponents-lite.min.js',
+    '/bower_components/webcomponentsjs/webcomponents-lite.min.js'
   ],
-  navigateFallback: 'index.html'
+  navigateFallback: 'index.html',
+  navigateFallbackWhitelist: [/^\/projects/,/^\/imprint/]
 };
