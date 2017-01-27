@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
@@ -12,28 +13,35 @@
         display: block;
       }
 
-      #projectsList {
-        @apply(--layout-vertical);
-        @apply(--layout-center);
+      .projectsList {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        @apply(--layout-wrap);
       }
 
-      #projectsList > a {
+      .wrapper {
+        display: inline-block;
+        margin: 10px;
+        width: 300px;
+      }
+
+      .projectsList a {
         width: 100%;
-        max-width: 700px;
-        margin-bottom: 16px;
         color: inherit;
         text-decoration: none;
       }
 
       paper-card {
         width: 100%;
-        max-width: 700px;
+        height: 300px;
         cursor: pointer;
+        border-radius: 3px;
       }
 
       paper-card:hover {
         background-color: var(--list-hover-background-color);
       }
+
     </style>
 
     <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
@@ -46,13 +54,28 @@
       params='{"page":"0", "per_page":"150"}'
       auto></iron-ajax>
 
-    <div id="projectsList">
+    <div class="projectsList">
+
+<!--
+      <iron-list id="projectsList" items="[[projects]]" as="project">
+        <template>
+          <a href$="[[_frontendBasePath]]projects/[[item.id]]">
+            <paper-card heading="[[item.name]]">
+              <div class="card-content">[[item.description]]</div>
+            </paper-card>
+          </a>
+        </template>
+      </iron-list>
+-->
+
       <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue, onlyOwnedProjects)}}">
-        <a href$="[[_frontendBasePath]]projects/[[item.id]]">
-          <paper-card heading="[[item.name]]">
-            <div class="card-content">[[item.description]]</div>
-          </paper-card>
-        </a>
+        <div class="wrapper">
+          <a href$="[[_frontendBasePath]]projects/[[item.id]]">
+            <paper-card heading="[[item.name]]">
+              <div class="card-content">[[item.description]]</div>
+            </paper-card>
+          </a>
+        </div>
       </template>
     </div>
 

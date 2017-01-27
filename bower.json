@@ -51,7 +51,8 @@
     "iron-icon": "PolymerElements/iron-icon#^1.0.12",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.2.5",
     "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.7",
-    "iron-media-query": "PolymerElements/iron-media-query#^1.0.8"
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.8",
+    "iron-list": "PolymerElements/iron-list#^1.4.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
