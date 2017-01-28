@@ -4,6 +4,8 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../src/config-behavior.html">
 
 <dom-module id="projects-list">
@@ -22,7 +24,7 @@
       .wrapper {
         display: inline-block;
         margin: 10px;
-        width: 300px;
+        width: 250px;
       }
 
       .projectsList a {
@@ -33,13 +35,39 @@
 
       paper-card {
         width: 100%;
-        height: 300px;
+        height: 250px; /* could be 350px once we have real images */
         cursor: pointer;
         border-radius: 3px;
       }
 
-      paper-card:hover {
-        background-color: var(--list-hover-background-color);
+      .card-header {
+        height: 30px; /* could be 130px once we have real images */
+      }
+
+      .project-header {
+        @apply(--paper-font-headline);
+        height: 64px;
+        overflow-y: hidden;
+      }
+
+      .project-description {
+        height: 125px;
+        overflow-y: hidden;
+      }
+
+      .project-light {
+        color: var(--paper-grey-600);
+        margin-top: 5px;
+      }
+
+      .project-description:before {
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        bottom: 16px;
+        background: linear-gradient(transparent 120px, white);
       }
 
     </style>
@@ -71,8 +99,14 @@
       <template is="dom-repeat" items="{{projects}}" filter="{{searchFilter(filterValue, onlyOwnedProjects)}}">
         <div class="wrapper">
           <a href$="[[_frontendBasePath]]projects/[[item.id]]">
-            <paper-card heading="[[item.name]]">
-              <div class="card-content">[[item.description]]</div>
+            <paper-card alt="[[item.name]]">
+              <div class="card-header" style$="background-color:[[_calculateBackgroundColor(item.name)]]"></div>
+              <div class="card-content">
+                <div class="project-header">[[item.name]]</div>
+                <div class="project-description">
+                  <p class="project-light">[[item.description]]</p>
+                </div>
+              </div>
             </paper-card>
           </a>
         </div>
@@ -80,6 +114,26 @@
     </div>
 
   </template>
+
+  <script>
+    // thanks to http://stackoverflow.com/posts/16533568/
+
+    function djb2(str){
+      var hash = 5381;
+      for (var i = 0; i < str.length; i++) {
+        hash = ((hash << 5) + hash) + str.charCodeAt(i); /* hash * 33 + c */
+      }
+      return hash;
+    }
+
+    function hashStringToColor(str) {
+      var hash = djb2(str);
+      var r = (hash & 0xFF0000) >> 16;
+      var g = (hash & 0x00FF00) >> 8;
+      var b = hash & 0x0000FF;
+      return "#" + ("0" + r.toString(16)).substr(-2) + ("0" + g.toString(16)).substr(-2) + ("0" + b.toString(16)).substr(-2);
+    }
+  </script>
 
   <script>
     Polymer({
@@ -97,6 +151,13 @@
         filterValue: {
           type: String,
           value: ''
+        },
+        /**
+         * The sorting parameter of projects, either `name`, `date`, `requirement` or `follower`.
+         */
+        sorting: {
+          type: String,
+          value: 'name'
         },
         /**
          * Whether any loading operation is currently active.
@@ -130,6 +191,10 @@
 
       refresh: function() {
         this.$.projectsLoader.generateRequest();
+      },
+
+      _calculateBackgroundColor: function(projectName) {
+        return hashStringToColor(projectName);
       }
 
     });
