@@ -79,7 +79,7 @@
       loading="{{loading}}"
       url="[[_apiBaseUrl]]/projects/"
       last-response="{{projects}}"
-      params='{"page":"0", "per_page":"150"}'
+      params$='{"page":"0", "per_page":"150", "sort":"[[sorting]]"}'
       auto></iron-ajax>
 
     <div class="projectsList">
@@ -118,7 +118,7 @@
   <script>
     // thanks to http://stackoverflow.com/posts/16533568/
 
-    function djb2(str){
+    function djb2(str) {
       var hash = 5381;
       for (var i = 0; i < str.length; i++) {
         hash = ((hash << 5) + hash) + str.charCodeAt(i); /* hash * 33 + c */
@@ -156,8 +156,7 @@
          * The sorting parameter of projects, either `name`, `date`, `requirement` or `follower`.
          */
         sorting: {
-          type: String,
-          value: 'name'
+          type: String
         },
         /**
          * Whether any loading operation is currently active.

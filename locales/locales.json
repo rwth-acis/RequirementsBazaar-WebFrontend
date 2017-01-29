@@ -115,7 +115,11 @@
     "userSettings": "User Settings",
     "voteSuccessful": "You have successfully voted for this requirement.",
     "unvoteSuccessful": "You have successfully removed your vote for this requirement.",
-    "sorting": "Sorting"
+    "sorting": "Sorting",
+    "sorting-alphabetical": "A-Z",
+    "sorting-popularity": "Popularity",
+    "sorting-activity": "Last Activity",
+    "sorting-requirement": "Requirements Count"
   },
   "de": {
     "settings": "Einstellungen",
@@ -233,7 +237,11 @@
     "userSettings": "Benutzereinstellungen",
     "voteSuccessful": "Ihre Stimme wurde gezählt.",
     "unvoteSuccessful": "Sie haben Ihre Wahl erfolgreich zurückgezogen.",
-    "sorting": "Sortierung"
+    "sorting": "Sortierung",
+    "sorting-alphabetical": "A-Z",
+    "sorting-popularity": "Popularität",
+    "sorting-activity": "Letzte Aktivität",
+    "sorting-requirement": "Anzahl Anforderungen"
   },
   "ro": {
     "settings": "Setari",
@@ -351,7 +359,11 @@
     "userSettings": "User Settings",
     "voteSuccessful": "You have successfully voted for this requirement.",
     "unvoteSuccessful": "You have successfully removed your vote for this requirement.",
-    "sorting": "Sorting"
+    "sorting": "Sorting",
+    "sorting-alphabetical": "A-Z",
+    "sorting-popularity": "Popularity",
+    "sorting-activity": "Last Activity",
+    "sorting-requirement": "Requirements Count"
   },
   "sq": {
     "settings": "Konfigurim",
@@ -469,6 +481,10 @@
     "userSettings": "User Settings",
     "voteSuccessful": "You have successfully voted for this requirement.",
     "unvoteSuccessful": "You have successfully removed your vote for this requirement.",
-    "sorting": "Sorting"
+    "sorting": "Sorting",
+    "sorting-alphabetical": "A-Z",
+    "sorting-popularity": "Popularity",
+    "sorting-activity": "Last Activity",
+    "sorting-requirement": "Requirements Count"
   }
 }

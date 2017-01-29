@@ -131,11 +131,11 @@
 
       <div class="toolbar">
         <paper-dropdown-menu label="[[localize('sorting')]]">
-          <paper-listbox class="dropdown-content" selected="0">
-            <paper-item>A-Z</paper-item>
-            <paper-item>Most Popular</paper-item>
-            <paper-item>Last Activity</paper-item>
-            <paper-item>Most Requirements</paper-item>
+          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectSorting}}">
+            <paper-item value="name">A-Z</paper-item>
+            <paper-item value="follower">[[localize('sorting-popularity')]]</paper-item>
+            <paper-item value="date">[[localize('sorting-activity')]]</paper-item>
+            <paper-item value="requirement">[[localize('sorting-requirement')]]</paper-item>
           </paper-listbox>
         </paper-dropdown-menu>
 
@@ -150,10 +150,10 @@
     </paper-material>
 
     <projects-list filter-value="{{_projectFilterVal}}"
+                   sorting="[[_projectSorting]]"
                    only-owned-projects="[[_onlyOwnedProjects]]"
                    id="projectsList"
-                   loading="{{loading}}"
-                   style="margin-top: 20px;"></projects-list>
+                   loading="{{loading}}"></projects-list>
 
     <!-- Dialog for creating a new project: -->
 
@@ -201,6 +201,10 @@
         },
         _projectFilterVal: {
           type: String
+        },
+        _projectSorting: {
+          type: String,
+          value: 'name'
         },
         _newProjectTitle: {
           type: String,
