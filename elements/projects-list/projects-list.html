@@ -74,13 +74,12 @@
 
     <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
 
-    <iron-ajax
-      id="projectsLoader"
-      loading="{{loading}}"
-      url="[[_apiBaseUrl]]/projects/"
-      last-response="{{projects}}"
-      params$='{"page":"0", "per_page":"150", "sort":"[[sorting]]"}'
-      auto></iron-ajax>
+    <iron-ajax id="projectsLoader"
+               loading="{{loading}}"
+               url="[[_apiBaseUrl]]/projects/"
+               last-response="{{projects}}"
+               params$='{"page":"0", "per_page":"150", "sort":"[[sorting]]"}'
+               auto></iron-ajax>
 
     <div class="projectsList">
 
