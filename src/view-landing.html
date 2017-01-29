@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
@@ -24,7 +25,7 @@
       }
 
       #welcome {
-        padding: 30px 10px 30px 30px;
+        padding: 30px 30px 0 30px;
       }
 
       #welcome > h1 {
@@ -78,6 +79,41 @@
       h2 {
         font-size: 32px;
         margin-top: 0px;
+      }
+
+      #figures-activities {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        margin-bottom: 20px;
+      }
+
+      #figures {
+        @apply(--layout-flex);
+      }
+
+      #activities {
+        @apply(--layout-flex);
+      }
+
+      .table {
+        display: table;
+        width: 100%;
+        font-size: x-large;
+      }
+
+      .tableRow {
+        display: table-row;
+      }
+
+      .tableCell {
+        display: table-cell;
+        width: 50%;
+      }
+
+      .tableCell.number {
+        text-align: right;
+        padding-right: 10px;
+        font-size: xx-large;
       }
 
       #how-it-works > div {
@@ -145,6 +181,13 @@
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
+    <iron-ajax
+      id="statisticsLoader"
+      loading="{{loading}}"
+      url="[[_apiBaseUrl]]/statistics/"
+      last-response="{{statistics}}"
+      auto></iron-ajax>
+
     <div id="landing">
 
       <div id="welcome">
@@ -160,6 +203,37 @@
               </a>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div id="figures-activities">
+        <div id="figures">
+          <div class="table">
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfProjects]]</div>
+              <div class="tableCell">Projects</div>
+            </div>
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfComponents]]</div>
+              <div class="tableCell">Categories</div>
+            </div>
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfRequirements]]</div>
+              <div class="tableCell">Requirements</div>
+            </div>
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfComments]]</div>
+              <div class="tableCell">Comments</div>
+            </div>
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfVotes]]</div>
+              <div class="tableCell">Votes</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="activities">
+
         </div>
       </div>
 
