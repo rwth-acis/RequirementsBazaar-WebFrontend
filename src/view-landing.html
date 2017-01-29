@@ -132,11 +132,17 @@
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-around-justified);
+        margin-top: 10px;
         margin-bottom: 20px;
+      }
+
+      #figures {
+        width: 100%;
       }
 
       #activities {
         @apply(--layout-vertical);
+        width: 100%;
       }
 
       .table {
@@ -210,10 +216,15 @@
 
         #figures-activities {
           @apply(--layout-vertical);
+          margin-top: 20px;
         }
 
         #figures {
           margin-bottom: 20px;
+        }
+
+        #activities {
+          @apply(--layout-center);
         }
 
         #welcome > h1 {
