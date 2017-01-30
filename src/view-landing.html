@@ -1,6 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="config-behavior.html">
@@ -24,10 +26,12 @@
       }
 
       #welcome {
-        padding: 30px 10px 30px 30px;
+        padding: 30px 30px 0 30px;
       }
 
       #welcome > h1 {
+        width: 100%;
+        text-align: center;
         font-size: 50px;
         margin: 0px;
       }
@@ -35,7 +39,7 @@
       #welcome .two-fold {
         @apply(--layout-horizontal);
         margin-top: 10px;
-        padding: 20px 0px;
+        padding: 20px 0 0 0;
       }
 
       #welcome .two-fold > div {
@@ -50,6 +54,52 @@
       #welcome paper-button {
         margin-top: 30px;
       }
+
+      /* project cards */
+
+      .projects-list {
+        width: 250px;
+      }
+
+      .wrapper {
+        display: inline-block;
+        margin-bottom: 5px;
+        width: 250px;
+      }
+
+      .projects-list a {
+        width: 250px;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      paper-card {
+        width: 100%;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+
+      .card-content {
+        @apply(--layout-horizontal);
+        padding: 0 !important;
+      }
+
+      .vertical-project-bar {
+        width: 20px;
+        margin-right: 10px;
+      }
+
+      .project-header {
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        font-size: large;
+        font-weight: bold;
+        height: 60px;
+        overflow-y: hidden;
+      }
+
+      /* end project cards */
 
       .landing-claim {
         margin-left: 15px;
@@ -76,6 +126,44 @@
       h2 {
         font-size: 32px;
         margin-top: 0px;
+      }
+
+      #figures-activities {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-around-justified);
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+
+      #figures {
+        width: 100%;
+      }
+
+      #activities {
+        @apply(--layout-vertical);
+        width: 100%;
+      }
+
+      .table {
+        display: table;
+        width: 100%;
+        font-size: x-large;
+      }
+
+      .tableRow {
+        display: table-row;
+      }
+
+      .tableCell {
+        display: table-cell;
+        width: 50%;
+      }
+
+      .tableCell.number {
+        text-align: right;
+        padding-right: 10px;
+        font-size: xx-large;
       }
 
       #how-it-works > div {
@@ -126,6 +214,19 @@
           @apply(--layout-vertical);
         }
 
+        #figures-activities {
+          @apply(--layout-vertical);
+          margin-top: 20px;
+        }
+
+        #figures {
+          margin-bottom: 20px;
+        }
+
+        #activities {
+          @apply(--layout-center);
+        }
+
         #welcome > h1 {
           font-size: 30px;
           margin: 0px;
@@ -143,12 +244,27 @@
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
+    <iron-ajax
+      id="statisticsLoader"
+      loading="{{loading}}"
+      url="[[_apiBaseUrl]]/statistics/"
+      last-response="{{statistics}}"
+      auto></iron-ajax>
+
+    <iron-ajax
+      id="projectsRequest"
+      loading="{{loading}}"
+      url="[[_apiBaseUrl]]/projects/"
+      last-response="{{projects}}"
+      params='{"page":"0", "per_page":"3", "sort":"follower"}'
+      auto></iron-ajax>
+
     <div id="landing">
 
       <div id="welcome">
         <h1>[[localize('landing-welcome')]]</h1>
         <div class="two-fold">
-          <div><img src="../images/landing-screenshot.png"></div>
+          <div><img src="../images/reqbaz-responsive.png"></div>
           <div class="landing-claim">
             <h2>[[localize('lp-title')]]</h2>
             <div>
@@ -159,6 +275,53 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div id="figures-activities">
+
+        <div id="figures">
+          <div class="table">
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfProjects]]</div>
+              <div class="tableCell">Projects</div>
+            </div>
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfComponents]]</div>
+              <div class="tableCell">Categories</div>
+            </div>
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfRequirements]]</div>
+              <div class="tableCell">Requirements</div>
+            </div>
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfComments]]</div>
+              <div class="tableCell">Comments</div>
+            </div>
+            <div class="tableRow">
+              <div class="tableCell number">[[statistics.numberOfVotes]]</div>
+              <div class="tableCell">Votes</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="activities">
+          <h2>Popular Projects</h2>
+          <div class="projects-list">
+            <template is="dom-repeat" items="{{projects}}">
+              <div class="wrapper">
+                <a href$="[[_frontendBasePath]]projects/[[item.id]]">
+                  <paper-card alt="[[item.name]]">
+                    <div class="card-content">
+                      <div class="vertical-project-bar" style$="background-color:[[_calculateBackgroundColor(item.name)]]"></div>
+                      <div class="project-header">[[item.name]]</div>
+                    </div>
+                  </paper-card>
+                </a>
+              </div>
+            </template>
+          </div>
+        </div>
+
       </div>
 
       <div id="how-it-works" class="gray-with-title">
@@ -208,6 +371,26 @@
   </template>
 
   <script>
+    // thanks to http://stackoverflow.com/posts/16533568/
+
+    function djb2(str) {
+      var hash = 5381;
+      for (var i = 0; i < str.length; i++) {
+        hash = ((hash << 5) + hash) + str.charCodeAt(i); /* hash * 33 + c */
+      }
+      return hash;
+    }
+
+    function hashStringToColor(str) {
+      var hash = djb2(str);
+      var r = (hash & 0xFF0000) >> 16;
+      var g = (hash & 0x00FF00) >> 8;
+      var b = hash & 0x0000FF;
+      return "#" + ("0" + r.toString(16)).substr(-2) + ("0" + g.toString(16)).substr(-2) + ("0" + b.toString(16)).substr(-2);
+    }
+  </script>
+
+  <script>
     Polymer({
       is: 'view-landing',
 
@@ -219,6 +402,10 @@
       attached: function() {
         // load localized messages
         this.loadResources(this.resolveUrl('../locales/locales.json'));
+      },
+
+      _calculateBackgroundColor: function(projectName) {
+        return hashStringToColor(projectName);
       }
     });
   </script>

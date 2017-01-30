@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
@@ -8,6 +9,9 @@
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
@@ -29,9 +33,39 @@
         padding: 15px;
       }
 
+      paper-material {
+        margin-top: 0;
+      }
+
+      paper-dropdown-menu {
+        margin-right: 15px;
+
+        --paper-input-container-input: {
+          font-size: x-large;
+        };
+      }
+
+      paper-icon-button {
+        padding: 0;
+        width: 24px;
+        height: 24px;
+      }
+
+      .toolbar {
+        @apply(--layout-horizontal);
+      }
+
+      .toolbar > paper-input {
+        @apply(--layout-flex);
+      }
+
       @media (max-width: 600px) {
         :host {
           padding: 0px;
+        }
+
+        .toolbar {
+          @apply(--layout-vertical);
         }
       }
     </style>
@@ -77,7 +111,7 @@
       on-response="_handlePostResponseProject"
       on-error="_handlePostResponseError"></iron-ajax>
 
-    <paper-material elevation="1" style="height:180px;">
+    <paper-material elevation="1">
 
       <!-- the button on top right to create a new project -->
       <paper-button raised
@@ -95,19 +129,31 @@
         <paper-toggle-button checked="{{_onlyOwnedProjects}}"></paper-toggle-button>
       </div>
 
-      <paper-input id="searchInput" class="large" label="[[localize('searchLabel')]]" value="{{_projectFilterVal}}" autofocus>
-        <iron-icon icon="search" prefix class="big"></iron-icon>
-        <paper-icon-button suffix on-tap="_handleClearInputTap"
-                           icon="clear" alt="clear" title="clear" tabindex="0">
-        </paper-icon-button>
-      </paper-input>
+      <div class="toolbar">
+        <paper-dropdown-menu label="[[localize('sorting')]]">
+          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectSorting}}">
+            <paper-item value="name">A-Z</paper-item>
+            <paper-item value="follower">[[localize('sorting-popularity')]]</paper-item>
+            <paper-item value="date">[[localize('sorting-activity')]]</paper-item>
+            <paper-item value="requirement">[[localize('sorting-requirement')]]</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+
+        <paper-input id="searchInput" class="large" label="[[localize('searchLabel')]]" value="{{_projectFilterVal}}">
+          <iron-icon icon="search" prefix></iron-icon>
+          <paper-icon-button suffix on-tap="_handleClearInputTap"
+                             icon="clear" alt="clear" title="clear" tabindex="0">
+          </paper-icon-button>-->
+        </paper-input>
+      </div>
+
     </paper-material>
 
     <projects-list filter-value="{{_projectFilterVal}}"
+                   sorting="[[_projectSorting]]"
                    only-owned-projects="[[_onlyOwnedProjects]]"
                    id="projectsList"
-                   loading="{{loading}}"
-                   style="margin-top: 20px;"></projects-list>
+                   loading="{{loading}}"></projects-list>
 
     <!-- Dialog for creating a new project: -->
 
@@ -155,6 +201,10 @@
         },
         _projectFilterVal: {
           type: String
+        },
+        _projectSorting: {
+          type: String,
+          value: 'name'
         },
         _newProjectTitle: {
           type: String,
