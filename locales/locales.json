@@ -119,7 +119,8 @@
     "sorting-alphabetical": "A-Z",
     "sorting-popularity": "Popularity",
     "sorting-activity": "Last Activity",
-    "sorting-requirement": "Requirements Count"
+    "sorting-requirement": "Requirements Count",
+    "about": "About"
   },
   "de": {
     "settings": "Einstellungen",

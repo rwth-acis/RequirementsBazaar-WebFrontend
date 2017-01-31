@@ -1,0 +1,72 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="config-behavior.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="view-about">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 15px;
+      }
+
+      paper-material {
+        max-width: 900px;
+      }
+    </style>
+
+    <paper-material elevation="1">
+      <i>Please note, that this resource is currently only available in English. We are sorry for any inconveniences!
+      </i>
+
+      <h1>About</h1>
+
+      <p>Requirements Bazaar is a Web-based tool for continuous innovation through stakeholder participation. On this
+        page, we introduce our team and explain the background of the methodology, the research work behind and finally
+        suggest some ways how to contribute.</p>
+
+      <h2>Presentations</h2>
+
+      <p>Here, we list some of the presentations we gave about the Requirements Bazaar at various outlets.</p>
+
+      <h2>Research</h2>
+
+      <p>Here is a non-comprehensive list of research literature that is either about the Requirements Bazaar, or citing
+        such work and putting it in the context of related work.</p>
+
+      <h2>Technical Background</h2>
+
+      <p>Requirements Bazaar consists of a Java-based backend and an HTML5 frontend. The backend is driven by the
+        peer-to-peer platform <a href="https://las2peer.org" target="_blank">las2peer</a> which is part of our research.
+        The frontend is developed using HTML5 Web Components with the help of the Polymer library.</p>
+
+
+      <h2>How to Contribute</h2>
+
+      <p>If you are convinced about Requirements Bazaar and want to participate, you are more than welcome! Either
+        by pull requests to one of our open source repositories, by sending us design proposals, or by volunteering
+        to translate the page to one of your native languages.</p>
+
+
+    </paper-material>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'view-about',
+
+      behaviors: [
+        Polymer.AppLocalizeBehavior,
+        ConfigBehavior
+      ],
+
+      attached: function() {
+        // load localized messages
+        this.loadResources(this.resolveUrl('../locales/locales.json'));
+      }
+    });
+  </script>
+</dom-module>
