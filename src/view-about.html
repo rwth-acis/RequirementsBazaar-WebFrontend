@@ -1,0 +1,112 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="config-behavior.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="view-about">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 15px;
+      }
+
+      paper-material {
+        max-width: 900px;
+      }
+    </style>
+
+    <paper-material elevation="1">
+      <i>Please note, that this resource is currently only available in English. We are sorry for any inconveniences!
+      </i>
+
+      <h1>About</h1>
+
+      <p>Requirements Bazaar is a Web-based tool for continuous innovation through stakeholder participation. It builds
+        on the principles of social requirements engineering, which allows communities to express, discuss and
+        prioritize their requirements and trace their realization in a way known from social networking.</p>
+
+      <p>On this page, we give you some links to our research and the source.</p>
+
+<!--
+      <h2>Presentations</h2>
+
+      <p>Here, we list some of the presentations we gave about the Requirements Bazaar at various outlets.</p>
+-->
+      <h2>Research</h2>
+
+      <p>Here is a non-comprehensive list of research articles that we have published over the last years.</p>
+
+      <ul>
+        <li>
+          Requirements Bazaar: Experiences, Added-Value and Acceptance of Requirements Negotiation between End-Users and
+          Open Source Software Developers. Published in Software Engineering & Management 2015, Dresden, March 17-20,
+          2015, Lecture Notes in Informatics (LNI) 239, 122-123 by Dominik Renzel, Ralf Klamma, Matthias Jarke</li>
+        <li>
+          Requirements Bazaar: Social Requirements Engineering for Community-Driven Innovation. Published in 2013 21st
+          IEEE International Requirements Engineering Conference (RE) Proceedings (Best Tool Demo Award) by Dominik
+          Renzel, Malte Behrendt, Ralf Klamma, Matthias Jarke
+        </li>
+        <li>
+          Der Bazar der Anforderungen - Open Innovation in emergenten Communities. Published in Informatik-Spektrum
+          Volume 34(2):178-191, Springer Berlin/Heidelberg, DOI 10.1007/s00287-010-0516-5 by Ralf Klamma, Matthias
+          Jarke, Anna Hannemann, Dominik Renzel
+        </li>
+      </ul>
+
+      <h2>Technical Background</h2>
+
+      <p>Requirements Bazaar consists of a Java-based backend and an HTML5 frontend. The backend is driven by the
+        peer-to-peer platform <a href="https://las2peer.org" target="_blank">las2peer</a> which is part of our research.
+        The frontend is developed using HTML5 Web Components with the help of the Polymer library.</p>
+
+      <ul>
+        <li><a href="https://github.com/rwth-acis/RequirementsBazaar" target="_blank">
+          https://github.com/rwth-acis/RequirementsBazaar</a>: This repository contains the code for the service
+          backend.</li>
+        <li><a href="https://github.com/rwth-acis/RequirementsBazaar-WebFrontend" target="_blank">
+          https://github.com/rwth-acis/RequirementsBazaar-WebFrontend</a>: This repository contains the code for the Web
+          frontend, the same that you are using right now.</li>
+        <li><a href="https://github.com/rwth-acis/las2peer-ActivityTracker" target="_blank">
+          https://github.com/rwth-acis/las2peer-ActivityTracker</a>: This repository contains the code for the Activity
+          Tracker backend service that powers the activity tracker.</li>
+        <li><a href="https://github.com/rwth-acis/activity-tracker" target="_blank">
+          https://github.com/rwth-acis/activity-tracker</a>: This repository contains the code for the Activity
+          Tracker Web component that asks the service above to fill its content.</li>
+        <li><a href="https://github.com/rwth-acis/requirements-grid" target="_blank">
+          https://github.com/rwth-acis/requirements-grid</a>: Yet another Web component. This one can be embedded on
+          3rd-party websites to display a grid of requirements in a specific project and category. You can see an
+          example on the <a href="https://wekit-community.org/ideas/" target="_blank">WEKIT Community website</a> where
+          new ideas for Augmented Reality tools are collected.</li>
+      </ul>
+
+      <h2>How to Contribute</h2>
+
+      <p>If you are convinced about Requirements Bazaar and want to participate, you are more than welcome! First option
+        to add your ideas would be the <a href="https://requirements-bazaar.org/projects/2" target="_blank">Requirements
+          Bazaar project</a> here in Requirements Bazaar. ;) You may also help us by issueing a pull request to one of
+        our open source repositories, by sending us design proposals, or by volunteering to translate the page to one of
+        your native languages. Simply drop us an email at reqbaz@dbis.rwth-aachen.de and tell us about your idea.</p>
+
+
+    </paper-material>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'view-about',
+
+      behaviors: [
+        Polymer.AppLocalizeBehavior,
+        ConfigBehavior
+      ],
+
+      attached: function() {
+        // load localized messages
+        this.loadResources(this.resolveUrl('../locales/locales.json'));
+      }
+    });
+  </script>
+</dom-module>
