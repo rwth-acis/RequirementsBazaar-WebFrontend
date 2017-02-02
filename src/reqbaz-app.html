@@ -349,6 +349,8 @@
           this.$.settingsDialog.open();
         } else if (selectedValue === 'language') {
           this.$.languageDialog.open();
+        } else if (selectedValue === 'about') {
+          window.location.href = this._frontendBasePath + 'about';
         }
       },
 
