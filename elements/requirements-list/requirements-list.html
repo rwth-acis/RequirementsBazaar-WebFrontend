@@ -254,7 +254,7 @@
       content-type="application/json"
       method="POST"
       headers="[[authHeader]]"
-      on-response="handleResponseComment"
+      on-response="_handleCommentResponse"
       last-response="{{postResponse}}"
       on-error="errorHandler"></iron-ajax>
 
@@ -390,7 +390,7 @@
               <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
               <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" base-href="{{_apiBaseUrl}}"></comments-list>
               <div class="container flex-horizontal" id="[[req.id]]" hidden="[[!authorized]]">
-                <paper-input id="comment[[req.id]]" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" value="{{newComment}}" class="flexchild" on-keydown="_handleCommentEnter">
+                <paper-input id="comment[[req.id]]" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild" on-keydown="_handleCommentEnter">
                   <!--<emoji-selector suffix></emoji-selector>-->
                 </paper-input>
                 <paper-icon-button id$="sendComment[[req.id]]" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
@@ -461,7 +461,7 @@
       <p style="max-height: 80%;">
         <comments-list base-href="{{_apiBaseUrl}}"></comments-list>
       <div class="container flex-horizontal" hidden="[[!authorized]]">
-        <paper-input is="iron-input" on-input="showSendButton" label="[[localize('addComment')]]" value="{{newComment}}" class="flexchild comments-input" on-keydown="_handleCommentEnter">
+        <paper-input is="iron-input" on-input="showSendButton" label="[[localize('addComment')]]" class="flexchild comments-input" on-keydown="_handleCommentEnter">
         </paper-input>
         <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
       </div>
@@ -529,9 +529,6 @@
             type: Array,
             value: [],
             notify: true
-          },
-          newComment: {
-            type: String
           },
           postUrl: String,
           body: Object,
@@ -801,13 +798,14 @@
         postGridComment: function(e) {
           var reqId = e.currentTarget.parentNode.parentNode.querySelector('comments-list').requirementId;
           var request = this.$.postCommentRequest;
+          var message = e.currentTarget.value;
           request.body = JSON.stringify({
             "requirementId": reqId,
-            "message": this.newComment
+            "message": message
           });
           request.generateRequest();
 
-          this.newComment = '';
+          e.currentTarget.value = '';
           e.currentTarget.parentNode.parentNode.querySelector('.comments-input').value = null;
         },
 
@@ -852,33 +850,51 @@
         _handleAddCommentTap: function(e) {
           var currentReqId = e.model.req.id;
           var request = this.$.postCommentRequest;
-          if (this.newComment != null && this.newComment != '') {
+          var message;
+          if (this.viewOption === 'list') {
+            message = this.$$('#comment' + currentReqId).value;
+          } else {
+            message = this.$.commentsDialog.querySelector('paper-input').value;
+          }
+          if (message != null && (message !== '')) {
             request.body = JSON.stringify({
               "requirementId": parseInt(currentReqId),
-              "message": this.newComment
+              "message": message
             });
             request.generateRequest();
           } else {
             this.$.toast.text = this.localize('commentNoEmpty');
             this.$.toast.open();
           }
-          this.newComment = '';
+          var message;
+          if (this.viewOption === 'list') {
+            this.$$('#comment' + currentReqId).value = '';
+          } else {
+            this.$.commentsDialog.querySelector('paper-input').value = '';
+          }
           this.$$('#comment' + currentReqId).value = null;
         },
 
-        handleResponseComment: function(data) {
+        _handleCommentResponse: function(data) {
           var requirementId = data.detail.response.requirementId;
           if (this.viewOption === 'list') {
             this.$$('#comments' + requirementId).querySelector('comments-list').refresh();
           } else {
-            //TODO: reload comments in grid view
+            // reload comments in grid view
+            this.$.commentsDialog.querySelector('comments-list').refresh();
           }
 
         },
 
         showSendButton: function(e) {
           var fab = e.currentTarget.parentNode.querySelector('#fab');
-          if (this.newComment) {
+          var message;
+          if (this.viewOption === 'list') {
+            message = this.$$('#comment' + requirementId).value;
+          } else {
+            message = this.$.commentsDialog.querySelector('paper-input').value;
+          }
+          if (message) {
             fab.style.display = 'block';
           } else {
             fab.style.display = 'none';
@@ -971,7 +987,10 @@
         },
 
         _handleCommentEnter: function (e) {
+          //TODO: refactor the code
+          // keyCode 13 is Enter
           if (e.keyCode === 13) {
+            // check if the Enter key was pressed...
             if (!e.ctrlKey) {
               if (this.viewOption === 'list') {
                 this._handleAddCommentTap(e);

@@ -4,8 +4,10 @@
   "fragments": [
     "src/reqbaz-app.html",
     "src/view-404.html",
+    "src/view-about.html",
     "src/view-categories.html",
     "src/view-categories-list.html",
+    "src/view-imprint.html",
     "src/view-landing.html",
     "src/view-projects.html",
     "src/view-projects-list.html",

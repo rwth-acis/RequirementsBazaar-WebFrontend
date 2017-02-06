@@ -89,6 +89,12 @@
         padding: 0px;
       }
 
+      app-toolbar a {
+        color: inherit;
+        text-decoration: none;
+        margin-right: 10px;
+      }
+
       paper-progress {
         position: absolute;
         left: 0px;
@@ -101,8 +107,8 @@
         display: none;
       }
 
-      @media (max-width: 550px) {
-        #languageMenuButton, #activitiesToggle, #profileImage, #openidconnectSignin {
+      @media (max-width: 600px) {
+        #aboutMenuItem, #languageMenuButton, #activitiesToggle, #profileImage, #openidconnectSignin {
           display: none !important;
         }
 
@@ -150,6 +156,7 @@
           <div main-title on-tap="_gotoLanding">
             <span><img src="../images/reqbaz-logo.svg">Requirements Bazaar</span>
           </div>
+          <a id="aboutMenuItem" href$="[[_frontendBasePath]]about" hidden$="[[hasRightDrawer]]">[[localize('about')]]</a>
           <paper-menu-button id="languageMenuButton">
             <paper-icon-button icon="language" class="dropdown-trigger" alt="menu"></paper-icon-button>
             <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{language}}">
@@ -176,6 +183,7 @@
           <paper-menu-button horizontal-align="right" vertical-align="top" on-iron-select="_handleMainMenuSelect" id="mainMenuButton">
             <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
             <paper-menu id="mainMenu" class="dropdown-content">
+              <paper-item value="about" hidden$="[[hasRightDrawer]]">[[localize('about')]]</paper-item>
               <paper-item value="activities" right-drawer-toggle hidden$="[[!hasRightDrawer]]">[[localize('showActivityTracker')]]</paper-item>
               <paper-item value="user" hidden$="[[!_authorized]]">[[localize('userSettings')]]</paper-item>
               <paper-item value="language">[[localize('language')]]</paper-item>
@@ -199,9 +207,10 @@
         role="main"
         content>
         <view-landing name="landing" loading="{{loading}}"></view-landing>
+        <view-about name="about"></view-about>
         <view-imprint name="imprint"></view-imprint>
         <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered" loading="{{loading}}"></view-projects>
-        <view-404 name="view404"></view-404>
+        <view-404 name="404"></view-404>
       </iron-pages>
 
     </app-double-drawer-layout>
@@ -340,6 +349,8 @@
           this.$.settingsDialog.open();
         } else if (selectedValue === 'language') {
           this.$.languageDialog.open();
+        } else if (selectedValue === 'about') {
+          window.location.href = this._frontendBasePath + 'about';
         }
       },
 
@@ -385,7 +396,7 @@
       },
 
       _showView404: function() {
-        this.view = 'view404';
+        this.view = '404';
       },
 
       _gotoLanding: function() {

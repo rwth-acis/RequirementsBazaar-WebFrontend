@@ -2,7 +2,7 @@
   "en": {
     "settings": "Settings",
     "lp-title": "We Connect the People That Matter",
-    "lp-desc": "Requirements Bazaar allows your users to give you valuable feedback so that you can focus on features that really matter.",
+    "lp-desc": "Requirements Bazaar allows users to discuss innovative ideas so that developers can focus on features that really matter.",
     "landing-welcome": "Welcome to Requirements Bazaar!",
     "landing-how-it-works": "How It Works",
     "landing-step-1": "1. Create a project",
@@ -17,7 +17,7 @@
     "onlyMyProjects": "Only show projects owned by me",
     "createProject": "Create a Project",
     "pr-desc": "This is the list of all projects.",
-    "searchLabel": "Search a project by name or description",
+    "searchLabel": "Filter the list by project name or description",
     "formTitle": "Title",
     "formDesc": "Description",
     "cancel": "Cancel",
@@ -114,7 +114,13 @@
     "showActivityTracker": "Show Activity Tracker",
     "userSettings": "User Settings",
     "voteSuccessful": "You have successfully voted for this requirement.",
-    "unvoteSuccessful": "You have successfully removed your vote for this requirement."
+    "unvoteSuccessful": "You have successfully removed your vote for this requirement.",
+    "sorting": "Sorting",
+    "sorting-alphabetical": "A-Z",
+    "sorting-popularity": "Popularity",
+    "sorting-activity": "Last Activity",
+    "sorting-requirement": "Requirements Count",
+    "about": "About"
   },
   "de": {
     "settings": "Einstellungen",
@@ -134,7 +140,7 @@
     "onlyMyProjects": "Nur meine eigenen Projekte anzeigen",
     "createProject": "Projekt erstellen",
     "pr-desc": "Hier findet sich die Übersicht aller im Requirements Bazaar vorhandenen Projekte.",
-    "searchLabel": "Projektbeschreibungen durchsuchen",
+    "searchLabel": "Projekte nach Namen oder Beschreibung filtern",
     "formTitle": "Titel",
     "formDesc": "Beschreibung",
     "cancel": "Abbrechen",
@@ -231,7 +237,12 @@
     "showActivityTracker": "Activity Tracker zeigen",
     "userSettings": "Benutzereinstellungen",
     "voteSuccessful": "Ihre Stimme wurde gezählt.",
-    "unvoteSuccessful": "Sie haben Ihre Wahl erfolgreich zurückgezogen."
+    "unvoteSuccessful": "Sie haben Ihre Wahl erfolgreich zurückgezogen.",
+    "sorting": "Sortierung",
+    "sorting-alphabetical": "A-Z",
+    "sorting-popularity": "Popularität",
+    "sorting-activity": "Letzte Aktivität",
+    "sorting-requirement": "Anzahl Anforderungen"
   },
   "ro": {
     "settings": "Setari",
@@ -348,7 +359,12 @@
     "showActivityTracker": "Show Activity Tracker",
     "userSettings": "User Settings",
     "voteSuccessful": "You have successfully voted for this requirement.",
-    "unvoteSuccessful": "You have successfully removed your vote for this requirement."
+    "unvoteSuccessful": "You have successfully removed your vote for this requirement.",
+    "sorting": "Sorting",
+    "sorting-alphabetical": "A-Z",
+    "sorting-popularity": "Popularity",
+    "sorting-activity": "Last Activity",
+    "sorting-requirement": "Requirements Count"
   },
   "sq": {
     "settings": "Konfigurim",
@@ -465,6 +481,11 @@
     "showActivityTracker": "Show Activity Tracker",
     "userSettings": "User Settings",
     "voteSuccessful": "You have successfully voted for this requirement.",
-    "unvoteSuccessful": "You have successfully removed your vote for this requirement."
+    "unvoteSuccessful": "You have successfully removed your vote for this requirement.",
+    "sorting": "Sorting",
+    "sorting-alphabetical": "A-Z",
+    "sorting-popularity": "Popularity",
+    "sorting-activity": "Last Activity",
+    "sorting-requirement": "Requirements Count"
   }
 }
