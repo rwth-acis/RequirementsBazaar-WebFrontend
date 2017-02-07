@@ -198,17 +198,6 @@
       on-response="_handleUpdateRequirementResponse"
       on-error="errorHandler"></iron-ajax>
 
-
-    <iron-ajax
-      id="postDeleteRequirement"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      method="DELETE"
-      headers="[[authHeader]]"
-      on-response="handleResponseDeleteReq"
-      on-error="errorHandler"></iron-ajax>
-
     <iron-ajax
       id="deleteRequirementRequest"
       loading="{{loading}}"
