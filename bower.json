@@ -54,7 +54,8 @@
     "iron-media-query": "PolymerElements/iron-media-query#^1.0.8",
     "iron-list": "PolymerElements/iron-list#^1.4.0",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.5.0",
-    "paper-listbox": "PolymerElements/paper-listbox#^1.1.2"
+    "paper-listbox": "PolymerElements/paper-listbox#^1.1.2",
+    "iron-scroll-threshold": "PolymerElements/iron-scroll-threshold#^1.0.3"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
