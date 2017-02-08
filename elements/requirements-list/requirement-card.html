@@ -1,5 +1,20 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
+<link rel="import" href="../req-user/req-user.html">
+<link rel="import" href="../comments-list/comments-list.html">
 <link rel="import" href="../../src/config-behavior.html">
 <link rel="import" href="../../src/shared-styles.html">
 
@@ -9,7 +24,24 @@
       :host {
         display: block;
       }
+
+      paper-material {
+        display: block;
+        border-radius: 2px;
+        width: 100%;
+        max-width: 800px;
+        box-sizing: border-box;
+        margin: 5px;
+        padding: 0 16px 0 16px;
+        background: white;
+      }
     </style>
+
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <paper-material class="req" id="requirement[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
       <div id$="requirementBody{{req.id}}">
@@ -124,7 +156,12 @@
       behaviors: [
         Polymer.AppLocalizeBehavior,
         ConfigBehavior
-      ]
+      ],
+
+      attached: function() {
+        // load localized messages
+        this.loadResources(this.resolveUrl('../locales/locales.json'));
+      }
     });
   </script>
 </dom-module>
