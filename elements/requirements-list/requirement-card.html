@@ -35,6 +35,76 @@
         padding: 0 16px 0 16px;
         background: white;
       }
+
+      .inactive {
+        color: #838383;
+      }
+
+      .requirementToolbar {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        margin-top: 10px;
+        height: 35px;
+      }
+
+      .requirementTitle {
+        @apply(--layout-flex);
+        width: 0;
+        font-size: 20px;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .requirementIcons {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      .requirementIcons paper-menu-button {
+        padding: 0px;
+      }
+
+      .requirementTime {
+        font-size: small;
+      }
+
+      paper-material > div {
+        margin-bottom: 10px;
+      }
+
+      .flex-horizontal {
+        @apply(--layout-horizontal);
+      }
+
+      .flexchild {
+        @apply(--layout-flex);
+      }
+
+      .flex-end-align {
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+
+      .editForm {
+        display: none;
+      }
+
+      paper-button {
+        float: right;
+        margin: 20px;
+      }
+
+      paper-checkbox {
+        display: none;
+      }
+
+      .line {
+        background: #c6c6c6 no-repeat scroll center;
+        width: 100%;
+        height: 1px;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{authorized}}"
@@ -43,17 +113,17 @@
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
-    <paper-material class="req" id="requirement[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
-      <div id$="requirementBody{{req.id}}">
+    <paper-material class="req" id="requirement[[requirement.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+      <div id$="requirementBody{{requirement.id}}">
 
         <div class="requirementToolbar">
 
-          <div class="requirementTitle" on-tap="_handleRequirementTap">[[req.title]]</div>
+          <div class="requirementTitle" on-tap="_handleRequirementTap">[[requirement.title]]</div>
 
           <div class="requirementIcons">
-            <paper-checkbox id="checkbox[[req.id]]" on-change="_handleCheckboxChange"></paper-checkbox>
-            <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, authorized)]]"
-                               class$="[[_calculateStarClass(req.userVoted, authorized)]]"
+            <paper-checkbox id="checkbox[[requirement.id]]" on-change="_handleCheckboxChange"></paper-checkbox>
+            <paper-icon-button icon="[[_calculateStarIcon(requirement.userVoted, authorized)]]"
+                               class$="[[_calculateStarClass(requirement.userVoted, authorized)]]"
                                on-tap="_handleStarTap"
                                disabled="[[!authorized]]"></paper-icon-button>
             <div>[[req.upVotes]]</div>
@@ -62,11 +132,11 @@
               <paper-menu class="dropdown-content">
                 <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
                 <paper-item value="toggleContributors">[[localize('showContributors')]]</paper-item>
-                <paper-item value="follow" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.followers, 'followRequirement', 'unfollowRequirement')]]</paper-item>
-                <paper-item value="develop" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.developers, 'developRequirement', 'undevelopRequirement')]]</paper-item>
-                <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]">[[_calculateLeadDeveloperLocalization(req.leadDeveloper)]]</paper-item>
-                <paper-item value="edit" hidden$="[[req.realized]]">[[localize('editRequirement')]]</paper-item>
-                <paper-item value="realize">[[_calculateRealizeMessage(req.realized)]]</paper-item>
+                <paper-item value="follow" hidden$="[[requirement.realized]]">[[_calculateMessageBasedOnUserInArray(requirement.followers, 'followRequirement', 'unfollowRequirement')]]</paper-item>
+                <paper-item value="develop" hidden$="[[requirement.realized]]">[[_calculateMessageBasedOnUserInArray(requirement.developers, 'developRequirement', 'undevelopRequirement')]]</paper-item>
+                <paper-item value="becomeLeadDeveloper" hidden$="[[requirement.realized]]">[[_calculateLeadDeveloperLocalization(requirement.leadDeveloper)]]</paper-item>
+                <paper-item value="edit" hidden$="[[requirement.realized]]">[[localize('editRequirement')]]</paper-item>
+                <paper-item value="realize">[[_calculateRealizeMessage(requirement.realized)]]</paper-item>
                 <paper-item value="delete">[[localize('deleteRequirement')]]</paper-item>
               </paper-menu>
             </paper-menu-button>
@@ -75,20 +145,20 @@
         </div>
 
         <div class="requirementTime">
-          <relative-time datetime$="[[req.creation_time]]"></relative-time>
+          <relative-time datetime$="[[requirement.creation_time]]"></relative-time>
           [[localize('by')]]
-          <req-user user="[[req.creator]]" normal-view></req-user>
+          <req-user user="[[requirement.creator]]" normal-view></req-user>
         </div>
 
       </div>
 
       <div class="line"></div>
 
-      <div id$="contributors[[req.id]]" hidden>
-        <div>[[localize('creator')]]: <req-user user="[[req.creator]]" full-view></req-user></div>
-        <div>[[localize('leadDeveloper')]]: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
+      <div id$="contributors[[requirement.id]]" hidden>
+        <div>[[localize('creator')]]: <req-user user="[[requirement.creator]]" full-view></req-user></div>
+        <div>[[localize('leadDeveloper')]]: <req-user user="[[requirement.leadDeveloper]]" full-view></req-user></div>
         <div>[[localize('developers')]]:
-          <template is="dom-repeat" items="{{req.developers}}" as="developer">
+          <template is="dom-repeat" items="{{requirement.developers}}" as="developer">
             <div style="display:inline-block">
               <req-user user="[[developer]]" mini></req-user>
               <paper-tooltip>{{developer.userName}}</paper-tooltip>
@@ -96,7 +166,7 @@
           </template>
         </div>
         <div>[[localize('followers')]]:
-          <template is="dom-repeat" items="{{req.followers}}" as="foll">
+          <template is="dom-repeat" items="{{requirement.followers}}" as="foll">
             <div style="display:inline-block">
               <req-user user="[[foll]]" mini></req-user>
               <paper-tooltip>{{foll.userName}}</paper-tooltip>
@@ -108,30 +178,30 @@
 
       </div>
 
-      <div class="description inactive" inner-h-t-m-l="{{validateUrl(req.description)}}" id$="description[[req.id]]"></div>
+      <div class="description inactive" inner-h-t-m-l="{{validateUrl(requirement.description)}}" id$="description[[requirement.id]]"></div>
 
-      <div class="comments" id$="comments{{req.id}}">
+      <div class="comments" id$="comments{{requirement.id}}">
 
         <iron-collapse>
-          <file-gallery attachments="{{req.attachments}}"></file-gallery>
+          <file-gallery attachments="{{requirement.attachments}}"></file-gallery>
           <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
-          <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" base-href="{{_apiBaseUrl}}"></comments-list>
-          <div class="container flex-horizontal" id="[[req.id]]" hidden="[[!authorized]]">
-            <paper-input id="comment[[req.id]]" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild" on-keydown="_handleCommentEnter">
+          <comments-list requirement-id="[[requirement.id]]" data-a="[[requirement.id]]" base-href="{{_apiBaseUrl}}"></comments-list>
+          <div class="container flex-horizontal" id="[[requirement.id]]" hidden="[[!authorized]]">
+            <paper-input id="comment[[requirement.id]]" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild" on-keydown="_handleCommentEnter">
               <!--<emoji-selector suffix></emoji-selector>-->
             </paper-input>
-            <paper-icon-button id$="sendComment[[req.id]]" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
+            <paper-icon-button id$="sendComment[[requirement.id]]" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
           </div>
         </iron-collapse>
 
       </div>
 
-      <div class="editForm" id$="edit{{req.id}}">
+      <div class="editForm" id$="edit{{requirement.id}}">
 
-        <paper-input class="editTitle title" value="{{req.title}}"></paper-input>
-        <paper-textarea value="{{req.description}}"></paper-textarea>
-        <paper-button raised on-tap="_handleSaveEditTap" data-args="[[req.title]]">[[localize('save')]]</paper-button>
-        <paper-button raised on-tap="_handleCancelEditTap" data-args="[[req.title]]">[[localize('cancel')]]</paper-button>
+        <paper-input class="editTitle title" value="{{requirement.title}}"></paper-input>
+        <paper-textarea value="{{requirement.description}}"></paper-textarea>
+        <paper-button raised on-tap="_handleSaveEditTap" data-args="[[requirement.title]]">[[localize('save')]]</paper-button>
+        <paper-button raised on-tap="_handleCancelEditTap" data-args="[[requirement.title]]">[[localize('cancel')]]</paper-button>
 
       </div>
 
@@ -148,7 +218,7 @@
           type: Boolean,
           reflectToAttribute: true
         },
-        requirementItem: {
+        requirement: {
           type: Object
         }
       },
@@ -160,7 +230,7 @@
 
       attached: function() {
         // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
+        this.loadResources(this.resolveUrl('../../locales/locales.json'));
       }
     });
   </script>

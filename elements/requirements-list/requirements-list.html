@@ -60,40 +60,6 @@
         color: var(--paper-orange-500);
       }
 
-      .requirementToolbar {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        margin-top: 10px;
-        height: 35px;
-      }
-
-      .requirementTitle {
-        @apply(--layout-flex);
-        width: 0;
-        font-size: 20px;
-        cursor: pointer;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .requirementIcons {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-      }
-
-      .requirementIcons paper-menu-button {
-        padding: 0px;
-      }
-
-      .requirementTime {
-        font-size: small;
-      }
-
-      paper-material > div {
-        margin-bottom: 10px;
-      }
-
       paper-fab {
         --paper-fab-background: var(--default-primary-color);
       }
@@ -115,20 +81,12 @@
         margin-bottom: auto;
       }
 
-      .editForm {
-        display: none;
-      }
-
       paper-button {
         float: right;
         margin: 20px;
       }
 
       .hide {
-        display: none;
-      }
-
-      paper-checkbox {
         display: none;
       }
 
@@ -149,12 +107,6 @@
       .grid-item {
         margin: 5px;
         margin-bottom: 10px;
-      }
-
-      .line {
-        background: #c6c6c6 no-repeat scroll center;
-        width: 100%;
-        height: 1px;
       }
     </style>
 
@@ -305,7 +257,7 @@
 
           <template>
 
-            <requirement-card requirement-item="{{requirement.requirementItem}}"></requirement-card>
+            <requirement-card requirement="{{requirement.requirementItem}}"></requirement-card>
 
           </template>
 
