@@ -34,11 +34,19 @@
     <style include="shared-styles iron-flex iron-flex-alignment">
       :host {
         display: block;
+        height: 100%;
+        width: 100%;
       }
 
       paper-card {
         max-width: 300px;
         min-width: 300px;
+      }
+
+      #requirementsList {
+        @apply(--layout-center);
+        height: 100%;
+        width: 100%;
       }
 
       paper-material {
@@ -108,10 +116,6 @@
         margin: 5px;
         margin-bottom: 10px;
       }
-
-      requirement-card {
-        width: 100%;
-      }
     </style>
 
     <app-route
@@ -124,6 +128,8 @@
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
+
+    <iron-signals on-iron-signal-resize="_handleIronResize"></iron-signals>
 
     <iron-ajax
       id="requirementsRequest"
@@ -220,68 +226,17 @@
                 <!--on-response="showRepoSearchResults"-->
                 <!--on-error="errorHandler"></iron-ajax>-->
 
-
-    <!-- GRID VIEW -->
-
-    <template is="dom-if" if="{{_isViewActive(viewOption, 'grid')}}" restamp>
-      <div id="grid">
-        <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}" on-dom-change="_handleGridDomChange">
-
-          <div class="grid-item">
-            <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
-              <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[req.creator]]" normal-view></req-user></span></div>
-              <relative-time class="time" datetime$="[[req.creation_time]]"></relative-time>
-              <div class="card-content" class="truncate">{{req.description}}</div>
-              <div class="card-actions">
-                <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
-                  <iron-icon icon="editor:mode-comment"></iron-icon>
-                </paper-button>
-                <span class="starIcon">
-                  <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, authorized)]]"
-                                     class$="[[_calculateStarClass(req.userVoted, authorized)]]"
-                                     on-tap="_handleStarTap"
-                                     disabled="[[!authorized]]"></paper-icon-button>
-                  [[req.upVotes]]
-                </span>
-              </div>
-            </paper-card>
-          </div>
-
-        </template>
-      </div>
-    </template>
-
-    <!-- LIST VIEW -->
-
-    <template is="dom-if" if="{{_isViewActive(viewOption, 'list')}}">
-
-      <div class="layout vertical center">
-
-        <iron-list id="requirementsList" items="{{requirements}}" as="requirement">
-
-          <template>
-
-            <requirement-card requirement$="{{requirement.requirementItem}}"></requirement-card>
-
-          </template>
-
-        </iron-list>
-
-      <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}" initial-count="4">
-
-        <requirement-card></requirement-card>
-
+    <iron-list id="requirementsList" items="[[requirements]]" scroll-target="document">
+      <template>
+        <requirement-card route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
       </template>
-
-      </div>
-
-    </template>
+    </iron-list>
 
     <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
     <iron-scroll-threshold id="scrollThreshold"
                            lower-threshold="500"
                            on-lower-threshold="_loadMoreData"
-                           scroll-target="document">
+                           scroll-target="requirementsList">
     </iron-scroll-threshold>
 
     <!-- Dialog for GitHub export functionality: -->
@@ -574,18 +529,6 @@
           this.$.requirementsRequest.generateRequest();
         },
 
-        showOnHover: function(e) {
-          var chb = e.currentTarget.querySelector("paper-checkbox");
-          chb.style.display = "block";
-        },
-
-        hideOnOut: function (e) {
-          var chb = e.currentTarget.querySelector("paper-checkbox");
-          if (!chb.checked) {
-            chb.style.display = "none";
-          }
-        },
-
         manageSelReq: function(selReq) {
           if (this.selectedRequirements.length !== 0) {
             this.$.bottomToolbar.hidden = false;
@@ -594,19 +537,6 @@
 
         showRepoSearchResults: function() {
           this.repositories = this.searchRepositories.items;
-        },
-
-        _handleCheckboxChange: function(e) {
-          var requirementId = e.model.req.id;
-          if (e.target.checked) {
-            this.push('selectedRequirements', requirementId);
-          } else {
-            var index = this.selectedRequirements.indexOf(requirementId);
-            if (index > -1) {
-              this.splice('selectedRequirements', index, 1);
-            }
-          }
-          this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0)
         },
 
         downloadRequirements: function(e) {
@@ -865,58 +795,7 @@
           }
         },
 
-        validateUrl: function(requirementDesc) {
-          var str = requirementDesc;
-          var expression = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/gi;
-          var regex = new RegExp(expression);
-
-          if(!str.match(regex)) {
-            return str;
-          } else {
-            var txt = str;
-            for (var i = 0; i < str.match(regex).length; i++) {
-              var replacement;
-              if (str.match(regex)[i].startsWith("http")) {
-                replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
-              } else {
-                replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
-              }
-              txt = txt.replace(str.match(regex)[i], replacement);
-            }
-            return txt;
-          }
-        },
-
         dragRequirement: function() {
-        },
-
-        /**
-         * Calculates the specific star icon to show for the voting feature of the requirements.
-         *
-         * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
-         * @param authorized whether the user is currently logged in or not.
-         * @returns {string} the icon, either a filled star or just the outlines of a star.
-         * @private
-         */
-        _calculateStarIcon: function(vote, authorized) {
-          if (authorized && (vote === 'UP_VOTE')) {
-            return 'star';
-          }
-          return 'star-border';
-        },
-
-        /**
-         * Calculates the CSS class for the star icon of the voting feature of the requirements.
-         *
-         * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
-         * @param authorized whether the user is currently logged in or not.
-         * @returns {string} the CSS class for the star icon.
-         * @private
-         */
-        _calculateStarClass: function(vote, authorized) {
-          if (authorized && (vote === 'UP_VOTE')) {
-            return 'colored';
-          }
         },
 
         /**
@@ -994,33 +873,6 @@
 
             return false;
           }
-        },
-
-        /**
-         * Calculates the localized message based on whether the provided user is in the provided array of user objects.
-         *
-         * @param userArray an array of user objects.
-         * @param user the currently logged in user's object. This is to be notified by the data
-         *   binding system of Polymer about changes, and recalculate the value.
-         * @param falseMessage the text to show when the user is not in the array.
-         * @param trueMessage the text to show when the user is in the array.
-         * @returns {string} the localized message.
-         * @private
-         */
-        _calculateMessageBasedOnUserInArray: function(userArray, falseMessage, trueMessage) {
-          if (this.authorized && this.currentUser && this._isUserInArray(userArray, this.currentUser)) {
-            return this.localize(trueMessage);
-          } else {
-            return this.localize(falseMessage);
-          }
-        },
-
-        _calculateLeadDeveloperLocalization: function(leadDeveloper) {
-          if (this.currentUser && leadDeveloper && (this.currentUser.id === leadDeveloper.id)) {
-            return this.localize('stopLeadDeveloper');
-          }
-
-          return this.localize('becomeLeadDeveloper');
         },
 
         /**
@@ -1210,22 +1062,6 @@
         },
 
         /**
-         * Calculates the localized message for the realized menu button, depending on whether the requirement is realized or
-         * not.
-         *
-         * @param realized
-         * @returns {*}
-         * @private
-         */
-        _calculateRealizeMessage: function(realized) {
-          if (realized) {
-            return this.localize('markAsUnDone');
-          } else {
-            return this.localize('markAsDone');
-          }
-        },
-
-        /**
          * Handles the delete modal dialog closed event.
          *
          * @param e
@@ -1382,6 +1218,11 @@
           this._requirementsRequestCurrentPage++;
           this.$.requirementsRequest.generateRequest();
         },
+
+        _handleIronResize: function() {
+          console.log('wtf');
+          this.$.requirementsList.notifyResize();
+        }
 
       });
 

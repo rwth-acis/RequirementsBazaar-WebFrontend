@@ -293,23 +293,19 @@
 
       </div>
     </paper-material>
-    <!--</paper-toolbar>-->
 
-    <div style="padding-top:10px; z-index: 1;">
-
-      <requirements-list
-        id="requirementsList"
-        filter-value="[[reqFilterVal]]"
-        base-href="https://requirements-bazaar.org/betabazaar"
-        project-id="[[projectId]]"
-        category-id="[[categoryId]]"
-        requirements-state-filter="{{requirementsStateFilter}}"
-        loading="{{loading}}"
-        view-option="[[_viewOption]]"
-        route="{{route}}"
-        repositories="{{repositories}}"
-        current-user="{{currentUser}}"></requirements-list>
-    </div>
+    <requirements-list
+      id="requirementsList"
+      filter-value="[[reqFilterVal]]"
+      base-href="https://requirements-bazaar.org/betabazaar"
+      project-id="[[projectId]]"
+      category-id="[[categoryId]]"
+      requirements-state-filter="{{requirementsStateFilter}}"
+      loading="{{loading}}"
+      view-option="[[_viewOption]]"
+      route="{{route}}"
+      repositories="{{repositories}}"
+      current-user="{{currentUser}}"></requirements-list>
 
     <!-- Dialog for creating a requirement: -->
 

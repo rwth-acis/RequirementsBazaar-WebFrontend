@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -23,6 +24,8 @@
     <style include="shared-styles">
       :host {
         display: block;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
       }
 
       paper-material {
@@ -154,7 +157,7 @@
 
       <div class="line"></div>
 
-      <div id$="contributors[[requirement.id]]" hidden>
+      <div id="contributors" hidden>
         <div>[[localize('creator')]]: <req-user user="[[requirement.creator]]" full-view></req-user></div>
         <div>[[localize('leadDeveloper')]]: <req-user user="[[requirement.leadDeveloper]]" full-view></req-user></div>
         <div>[[localize('developers')]]:
@@ -178,25 +181,25 @@
 
       </div>
 
-      <div class="description inactive" inner-h-t-m-l="{{validateUrl(requirement.description)}}" id$="description[[requirement.id]]"></div>
+      <div class="description inactive" inner-h-t-m-l="{{validateUrl(requirement.description)}}" id="description"></div>
 
-      <div class="comments" id$="comments{{requirement.id}}">
+      <div class="comments" id="comments">
 
-        <iron-collapse>
+        <iron-collapse no-animation>
           <file-gallery attachments="{{requirement.attachments}}"></file-gallery>
           <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
           <comments-list requirement-id="[[requirement.id]]" data-a="[[requirement.id]]" base-href="{{_apiBaseUrl}}"></comments-list>
           <div class="container flex-horizontal" id="[[requirement.id]]" hidden="[[!authorized]]">
-            <paper-input id="comment[[requirement.id]]" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild" on-keydown="_handleCommentEnter">
+            <paper-input id="commentInput" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild" on-keydown="_handleCommentEnter">
               <!--<emoji-selector suffix></emoji-selector>-->
             </paper-input>
-            <paper-icon-button id$="sendComment[[requirement.id]]" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
+            <paper-icon-button id="sendComment" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
           </div>
         </iron-collapse>
 
       </div>
 
-      <div class="editForm" id$="edit{{requirement.id}}">
+      <div class="editForm" id="edit">
 
         <paper-input class="editTitle title" value="{{requirement.title}}"></paper-input>
         <paper-textarea value="{{requirement.description}}"></paper-textarea>
@@ -214,6 +217,10 @@
       is: 'requirement-card',
 
       properties: {
+        route: {
+          type: Object,
+          notify: true
+        },
         opened: {
           type: Boolean,
           reflectToAttribute: true
@@ -225,6 +232,7 @@
       },
 
       behaviors: [
+        Polymer.IronResizableBehavior,
         Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
@@ -234,18 +242,14 @@
         this.loadResources(this.resolveUrl('../../locales/locales.json'));
       },
 
-      ready: function() {
-        console.log('hey');
-      },
-
       /**
        * Handles tapping a requirement.
        *
        * @param e
        */
       _handleRequirementTap: function(e) {
-        var requirementNode = this.$$('#requirement' + e.model.req.id);
-        var descriptionNode = requirementNode.querySelector('#description' + e.model.req.id);
+        var requirementNode = this.$.requirementCard;
+        var descriptionNode = this.$.description;
 
         if (requirementNode.querySelector('iron-collapse').opened) {
           // remove elevation
@@ -267,9 +271,133 @@
           requirementNode.querySelector('comments-list').refresh();
           // load attachments
           requirementNode.querySelector("file-gallery").loadIcons();
-          this.set('route.path', '/requirements/' + e.model.req.id);
+          this.set('route.path', '/requirements/' + this.requirement.id);
+        }
+
+        this.fire('iron-signal', {name: 'resize'});
+      },
+
+      /**
+       * Calculates the specific star icon to show for the voting feature of the requirements.
+       *
+       * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
+       * @param authorized whether the user is currently logged in or not.
+       * @returns {string} the icon, either a filled star or just the outlines of a star.
+       * @private
+       */
+      _calculateStarIcon: function(vote, authorized) {
+        if (authorized && (vote === 'UP_VOTE')) {
+          return 'star';
+        }
+        return 'star-border';
+      },
+
+      /**
+       * Calculates the CSS class for the star icon of the voting feature of the requirements.
+       *
+       * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
+       * @param authorized whether the user is currently logged in or not.
+       * @returns {string} the CSS class for the star icon.
+       * @private
+       */
+      _calculateStarClass: function(vote, authorized) {
+        if (authorized && (vote === 'UP_VOTE')) {
+          return 'colored';
         }
       },
+
+      validateUrl: function(requirementDesc) {
+        var str = requirementDesc;
+        var expression = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/gi;
+        var regex = new RegExp(expression);
+
+        if(!str.match(regex)) {
+          return str;
+        } else {
+          var txt = str;
+          for (var i = 0; i < str.match(regex).length; i++) {
+            var replacement;
+            if (str.match(regex)[i].startsWith("http")) {
+              replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+            } else {
+              replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
+            }
+            txt = txt.replace(str.match(regex)[i], replacement);
+          }
+          return txt;
+        }
+      },
+
+      /**
+       * Calculates the localized message for the realized menu button, depending on whether the requirement is realized or
+       * not.
+       *
+       * @param realized
+       * @returns {*}
+       * @private
+       */
+      _calculateRealizeMessage: function(realized) {
+        if (realized) {
+          return this.async(function() { this.localize('markAsUnDone');}.bind(this), 100);//this.localize('markAsUnDone');
+        } else {
+          return this.async(function() { this.localize('markAsDone');}.bind(this), 100);// this.localize('markAsDone');
+        }
+      },
+
+      _calculateLeadDeveloperLocalization: function(leadDeveloper) {
+        if (this.currentUser && leadDeveloper && (this.currentUser.id === leadDeveloper.id)) {
+          return this.async(function() { this.localize('stopLeadDeveloper');}.bind(this), 100);
+          //return this.localize('stopLeadDeveloper');
+        }
+
+        return this.async(function() { this.localize('becomeLeadDeveloper');}.bind(this), 100);
+        //return this.localize('becomeLeadDeveloper');
+      },
+
+      /**
+       * Calculates the localized message based on whether the provided user is in the provided array of user objects.
+       *
+       * @param userArray an array of user objects.
+       * @param user the currently logged in user's object. This is to be notified by the data
+       *   binding system of Polymer about changes, and recalculate the value.
+       * @param falseMessage the text to show when the user is not in the array.
+       * @param trueMessage the text to show when the user is in the array.
+       * @returns {string} the localized message.
+       * @private
+       */
+      _calculateMessageBasedOnUserInArray: function(userArray, falseMessage, trueMessage) {
+        if (this.authorized && this.currentUser && this._isUserInArray(userArray, this.currentUser)) {
+          return this.async(function() { this.localize(trueMessage);}.bind(this), 100);
+          //return this.localize(trueMessage);
+        } else {
+          return this.async(function() { this.localize(falseMessage);}.bind(this), 100);
+          //return this.localize(falseMessage);
+        }
+      },
+
+      showOnHover: function(e) {
+        this.$.checkbox.style.display = "block";
+      },
+
+      hideOnOut: function (e) {
+        if (!this.$.checkbox.checked) {
+          this.$.checkbox.style.display = "none";
+        }
+      },
+
+      _handleCheckboxChange: function(e) {
+        var requirementId = e.model.req.id;
+        if (e.target.checked) {
+          this.push('selectedRequirements', requirementId);
+        } else {
+          var index = this.selectedRequirements.indexOf(requirementId);
+          if (index > -1) {
+            this.splice('selectedRequirements', index, 1);
+          }
+        }
+        this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0)
+      }
+
     });
   </script>
 </dom-module>
