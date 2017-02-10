@@ -113,15 +113,15 @@
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
-    <paper-material class="req" id="requirement[[requirement.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
-      <div id$="requirementBody{{requirement.id}}">
+    <paper-material class="req" id="requirementCard" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+      <div id="requirementBody">
 
         <div class="requirementToolbar">
 
           <div class="requirementTitle" on-tap="_handleRequirementTap">[[requirement.title]]</div>
 
           <div class="requirementIcons">
-            <paper-checkbox id="checkbox[[requirement.id]]" on-change="_handleCheckboxChange"></paper-checkbox>
+            <paper-checkbox id="checkbox" on-change="_handleCheckboxChange"></paper-checkbox>
             <paper-icon-button icon="[[_calculateStarIcon(requirement.userVoted, authorized)]]"
                                class$="[[_calculateStarClass(requirement.userVoted, authorized)]]"
                                on-tap="_handleStarTap"
@@ -219,7 +219,8 @@
           reflectToAttribute: true
         },
         requirement: {
-          type: Object
+          type: Object,
+          notify: true
         }
       },
 
@@ -231,7 +232,44 @@
       attached: function() {
         // load localized messages
         this.loadResources(this.resolveUrl('../../locales/locales.json'));
-      }
+      },
+
+      ready: function() {
+        console.log('hey');
+      },
+
+      /**
+       * Handles tapping a requirement.
+       *
+       * @param e
+       */
+      _handleRequirementTap: function(e) {
+        var requirementNode = this.$$('#requirement' + e.model.req.id);
+        var descriptionNode = requirementNode.querySelector('#description' + e.model.req.id);
+
+        if (requirementNode.querySelector('iron-collapse').opened) {
+          // remove elevation
+          requirementNode.elevation = 1;
+          // close the requirement
+          requirementNode.querySelector('iron-collapse').hide();
+          // make description gray
+          descriptionNode.classList.toggle('inactive');
+          // reset route
+          this.set('route.path', '');
+        } else {
+          // set elevation
+          requirementNode.elevation = 4;
+          // open the requirement
+          requirementNode.querySelector('iron-collapse').show();
+          // make description gray
+          descriptionNode.classList.toggle('inactive');
+          // load comments
+          requirementNode.querySelector('comments-list').refresh();
+          // load attachments
+          requirementNode.querySelector("file-gallery").loadIcons();
+          this.set('route.path', '/requirements/' + e.model.req.id);
+        }
+      },
     });
   </script>
 </dom-module>

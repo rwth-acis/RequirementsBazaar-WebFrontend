@@ -108,6 +108,10 @@
         margin: 5px;
         margin-bottom: 10px;
       }
+
+      requirement-card {
+        width: 100%;
+      }
     </style>
 
     <app-route
@@ -257,7 +261,7 @@
 
           <template>
 
-            <requirement-card requirement="{{requirement.requirementItem}}"></requirement-card>
+            <requirement-card requirement$="{{requirement.requirementItem}}"></requirement-card>
 
           </template>
 
@@ -830,39 +834,6 @@
             //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
             return (item.title && ~item.title.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
           };
-        },
-
-        /**
-         * Handles tapping a requirement.
-         *
-         * @param e
-         */
-        _handleRequirementTap: function(e) {
-          var requirementNode = this.$$('#requirement' + e.model.req.id);
-          var descriptionNode = requirementNode.querySelector('#description' + e.model.req.id);
-
-          if (requirementNode.querySelector('iron-collapse').opened) {
-            // remove elevation
-            requirementNode.elevation = 1;
-            // close the requirement
-            requirementNode.querySelector('iron-collapse').hide();
-            // make description gray
-            descriptionNode.classList.toggle('inactive');
-            // reset route
-            this.set('route.path', '');
-          } else {
-            // set elevation
-            requirementNode.elevation = 4;
-            // open the requirement
-            requirementNode.querySelector('iron-collapse').show();
-            // make description gray
-            descriptionNode.classList.toggle('inactive');
-            // load comments
-            requirementNode.querySelector('comments-list').refresh();
-            // load attachments
-            requirementNode.querySelector("file-gallery").loadIcons();
-            this.set('route.path', '/requirements/' + e.model.req.id);
-          }
         },
 
         _handleCommentEnter: function (e) {
