@@ -228,7 +228,7 @@
 
     <iron-list id="requirementsList" items="[[requirements]]" scroll-target="document">
       <template>
-        <requirement-card route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
+        <requirement-card loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
       </template>
     </iron-list>
 

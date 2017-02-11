@@ -71,7 +71,7 @@
 
     <!-- XHR for loading comments: -->
 
-    <iron-ajax id="commentsLoader"
+    <iron-ajax id="commentsRequest"
                loading="{{loading}}"
                url="{{resourceURL}}"
                last-response="{{comments}}"
@@ -80,6 +80,7 @@
     <!-- XHR for deleting comments: -->
 
     <iron-ajax id="deleteCommentRequest"
+               loading="{{loading}}"
                handle-as="json"
                content-type="application/json"
                method="DELETE"
@@ -90,6 +91,7 @@
     <!-- XHR for posting comments: -->
 
     <iron-ajax id="postCommentRequest"
+               loading="{{loading}}"
                handle-as="json"
                content-type="application/json"
                method="POST"
@@ -99,17 +101,12 @@
                last-response="{{postResponse}}"
                on-error="errorHandler"></iron-ajax>
 
-    <!-- Progress bar while doing requests: -->
+    <!-- Show this when no comments are there after loading -->
+    <div class="noComments" hidden$="[[_computeNoCommentsHidden(comments)]]">[[localize('noComments')]]</div>
 
-    <paper-progress indeterminate hidden$="{{!loading}}"></paper-progress>
+    <!-- Comments -->
 
-    <!-- Show this when no comments are there after loading: -->
-
-    <div class="noComments" hidden$="[[!noComments]]">[[localize('noComments')]]</div>
-
-    <!-- Comments: -->
-
-    <template is="dom-repeat" items="{{comments}}">
+    <template is="dom-repeat" items="{{comments}}" on-dom-change="_handleCommentsDomChange">
 
       <!-- Compute the styling classes, add attribute "reply" when it is a reply. -->
       <div class$="[[_computeCommentClasses(item)]]" attr="{{item.Id}}">
@@ -169,13 +166,13 @@
           type: Array,
           notify: true
         },
-        /** True when the iron-ajax request is on load */
+        /**
+         * Whether any loading operation is currently active.
+         */
         loading: {
           type: Boolean,
-          observer: '_computeNoComments'
+          notify: true
         },
-        /** True when loading is false and comments are empty */
-        noComments: Boolean,
         /**
          * The ID of the comment to be deleted.
          */
@@ -212,17 +209,16 @@
       },
 
       /**
-       * Updates the property noComments whenever loading property changes. It checks if there are still no comments even after the
-       * request has finished loading.
+       * Calculates whether the "no comments" div is shown or not.
        */
-      _computeNoComments: function() {
+      _computeNoCommentsHidden: function(comments) {
         if (this.comments !== undefined) {
-          if ((this.comments.length === 0) && (!this.loading)) {
-            this.noComments = true;
-            return;
+          if (this.comments.length === 0) {
+            return false;
           }
         }
-        this.noComments = false;
+
+        return true;
       },
 
       /**
@@ -294,7 +290,7 @@
        * Generates request for loading comments.
        */
       refresh: function() {
-        this.$.commentsLoader.generateRequest();
+        this.$.commentsRequest.generateRequest();
       },
 
       /**
@@ -398,6 +394,17 @@
           }
           return txt;
         }
+      },
+
+      /**
+       * Event handler for adding new comments to the DOM. Needs to fire a resize event so that the iron-list can
+       * resize appropriately.
+       *
+       * @param e
+       * @private
+       */
+      _handleCommentsDomChange: function(e) {
+        this.fire('iron-signal', {name: 'resize'});
       }
 
     });

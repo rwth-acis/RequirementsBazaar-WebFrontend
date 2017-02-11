@@ -188,7 +188,7 @@
         <iron-collapse no-animation>
           <file-gallery attachments="{{requirement.attachments}}"></file-gallery>
           <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
-          <comments-list requirement-id="[[requirement.id]]" data-a="[[requirement.id]]" base-href="{{_apiBaseUrl}}"></comments-list>
+          <comments-list loading="{{loading}}" requirement-id="[[requirement.id]]" data-a="[[requirement.id]]"></comments-list>
           <div class="container flex-horizontal" id="[[requirement.id]]" hidden="[[!authorized]]">
             <paper-input id="commentInput" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild" on-keydown="_handleCommentEnter">
               <!--<emoji-selector suffix></emoji-selector>-->
@@ -219,6 +219,13 @@
       properties: {
         route: {
           type: Object,
+          notify: true
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
           notify: true
         },
         opened: {
