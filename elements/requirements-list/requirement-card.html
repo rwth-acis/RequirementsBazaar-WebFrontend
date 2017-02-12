@@ -135,11 +135,15 @@
               <paper-menu class="dropdown-content">
                 <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
                 <paper-item value="toggleContributors">[[localize('showContributors')]]</paper-item>
-                <paper-item value="follow" hidden$="[[requirement.realized]]">[[_calculateMessageBasedOnUserInArray(requirement.followers, 'followRequirement', 'unfollowRequirement')]]</paper-item>
-                <paper-item value="develop" hidden$="[[requirement.realized]]">[[_calculateMessageBasedOnUserInArray(requirement.developers, 'developRequirement', 'undevelopRequirement')]]</paper-item>
-                <paper-item value="becomeLeadDeveloper" hidden$="[[requirement.realized]]">[[_calculateLeadDeveloperLocalization(requirement.leadDeveloper)]]</paper-item>
+                <paper-item value="follow" hidden="[[_calculateHiddenIfUserFollowing(requirement)]]">[[localize('followRequirement')]]</paper-item>
+                <paper-item value="unfollow" hidden$="[[_calculateHiddenIfUserNotFollowing(requirement)]]">[[localize('unfollowRequirement')]]</paper-item>
+                <paper-item value="develop" hidden$="[[_calculateHiddenIfUserDeveloping(requirement)]]">[[localize('developRequirement')]]</paper-item>
+                <paper-item value="undevelop" hidden$="[[_calculateHiddenIfUserNotDeveloping(requirement)]]">[[localize('undevelopRequirement')]]</paper-item>
+                <paper-item value="becomeLeadDeveloper" hidden$="[[_calculateBecomeLeadDeveloperHidden(requirement.realized,requirement.leadDeveloper, true)]]">[[localize('becomeLeadDeveloper')]]</paper-item>
+                <paper-item value="unbecomeLeadDeveloper" hidden$="[[_calculateBecomeLeadDeveloperHidden(requirement.realized,requirement.leadDeveloper, false)]]">[[localize('stopLeadDeveloper')]]</paper-item>
                 <paper-item value="edit" hidden$="[[requirement.realized]]">[[localize('editRequirement')]]</paper-item>
-                <paper-item value="realize">[[_calculateRealizeMessage(requirement.realized)]]</paper-item>
+                <paper-item value="realize" hidden$="[[requirement.realized]]">[[localize('markAsDone')]]</paper-item>
+                <paper-item value="unrealize" hidden$="[[!requirement.realized]]">[[localize('markAsUndone')]]</paper-item>
                 <paper-item value="delete">[[localize('deleteRequirement')]]</paper-item>
               </paper-menu>
             </paper-menu-button>
@@ -227,6 +231,10 @@
         loading: {
           type: Boolean,
           notify: true
+        },
+        authorized: {
+          type: Boolean,
+          observer: '_authorizedChanged'
         },
         opened: {
           type: Boolean,
@@ -351,14 +359,45 @@
         }
       },
 
-      _calculateLeadDeveloperLocalization: function(leadDeveloper) {
+      _calculateBecomeLeadDeveloperHidden: function(realized, leadDeveloper, become) {
         if (this.currentUser && leadDeveloper && (this.currentUser.id === leadDeveloper.id)) {
-          return this.async(function() { this.localize('stopLeadDeveloper');}.bind(this), 100);
-          //return this.localize('stopLeadDeveloper');
+          // the current user is already lead developer, thus hide the button
+          return become;
         }
 
-        return this.async(function() { this.localize('becomeLeadDeveloper');}.bind(this), 100);
-        //return this.localize('becomeLeadDeveloper');
+        return !become;
+      },
+
+      _calculateHiddenIfUserFollowing(requirement) {
+        if (requirement.realized) {
+          return true;
+        } else {
+          return (this.authorized && this.currentUser && this._isUserInArray(requirement.followers, this.currentUser));
+        }
+      },
+
+      _calculateHiddenIfUserNotFollowing(requirement) {
+        if (requirement.realized) {
+          return true;
+        } else {
+          return (this.authorized && this.currentUser && !this._isUserInArray(requirement.followers, this.currentUser));
+        }
+      },
+
+      _calculateHiddenIfUserDeveloping(requirement) {
+        if (requirement.realized) {
+          return true;
+        } else {
+          return (this.authorized && this.currentUser && this._isUserInArray(requirement.developers, this.currentUser));
+        }
+      },
+
+      _calculateHiddenIfUserNotDeveloping(requirement) {
+        if (requirement.realized) {
+          return true;
+        } else {
+          return (this.authorized && this.currentUser && !this._isUserInArray(requirement.developers, this.currentUser));
+        }
       },
 
       /**
@@ -403,6 +442,116 @@
           }
         }
         this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0)
+      },
+
+      _authorizedChanged: function(newValue) {
+        //this.fire('iron-signal', {name: 'resize'});
+      },
+
+      /**
+       * Checks whether a user is in the users array. Compares the user's id.
+       *
+       * @param usersArray an array of user objects.
+       * @param user a user object.
+       * @returns {boolean} whether the user is in the array or not.
+       * @private
+       */
+      _isUserInArray: function(usersArray, user) {
+        if (user === null) {
+          return false;
+        } else {
+          // check if the user's id is in the users array
+          for (var index = 0; index < usersArray.length; ++index) {
+            if (usersArray[index].id === user.id) {
+              return true;
+            }
+          }
+
+          return false;
+        }
+      },
+
+      /**
+       * Handles toggling the following of requirements by firing the state to the server.
+       *
+       * @param requirement the requirement to (un)follow.
+       * @returns {boolean}
+       * @private
+       */
+      _toggleFollowRequirement: function(requirement) {
+        var requirementId = requirement.id;
+
+        var followers = requirement.followers;
+        var isFollower = this._isUserInArray(followers, this.currentUser);
+
+        var request = this.$.followRequest;
+        request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/followers";
+
+        if (!isFollower) {
+          // follow requirement
+          request.method = 'POST';
+        } else {
+          // unfollow requirement
+          request.method = 'DELETE';
+        }
+
+        request.generateRequest();
+      },
+
+      /**
+       * Handles toggling the existence of a user within an HTTP resource.
+       * TODO: currently only for resource 'developers'
+       *
+       * @param e
+       * @returns {boolean}
+       * @private
+       */
+      _toggleUserInResource: function(requirementId, userArray, resource) {
+        var isUserInArray = this._isUserInArray(userArray, this.currentUser);
+
+        var request = this.$.userInResourceRequest;
+        request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/" + resource;
+
+        if (!isUserInArray) {
+          // POST user to resource
+          request.method = 'POST';
+        } else {
+          // DELETE user from resource
+          request.method = 'DELETE';
+        }
+
+        request.generateRequest();
+      },
+
+      /**
+       * Event handler for requirement's paper-menu.
+       *
+       * @param e
+       * @private
+       */
+      _handleRequirementMenuSelect: function(e) {
+        // unselect the selected menu item
+        e.target.selected = null;
+        // get value of the paper-item
+        var selectedValue = e.detail.item.getAttribute('value');
+        var requirement = e.model.req;
+
+        if ((selectedValue === 'follow') || (selectedValue === 'unfollow')) {
+          this._toggleFollowRequirement(requirement);
+        } else if (selectedValue === 'toggleContributors') {
+          this._toggleContributors(requirement);
+        } else if ((selectedValue === 'develop') || (selectedValue === 'undevelop')) {
+          this._toggleUserInResource(requirement.id, requirement.developers, 'developers');
+        } else if ((selectedValue === 'realize') || (selectedValue === 'unrealize')) {
+          this._toggleRealized(requirement);
+        } else if (selectedValue === 'delete') {
+          this.requirementToDelete = requirement;
+          this.$.modal.open();
+        } else if ((selectedValue === 'becomeLeadDeveloper') || (selectedValue === 'unbecomeLeadDeveloper')) {
+          this._toggleLeadDeveloper(requirement);
+        } else if (selectedValue === 'edit') {
+          this._editRequirement(requirement.id);
+        }
       }
 
     });

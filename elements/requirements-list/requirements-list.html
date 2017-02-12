@@ -853,56 +853,6 @@
         },
 
         /**
-         * Checks whether a user is in the users array. Compares the user's id.
-         *
-         * @param usersArray an array of user objects.
-         * @param user a user object.
-         * @returns {boolean} whether the user is in the array or not.
-         * @private
-         */
-        _isUserInArray: function(usersArray, user) {
-          if (user === null) {
-            return false;
-          } else {
-            // check if the user's id is in the users array
-            for (var index = 0; index < usersArray.length; ++index) {
-              if (usersArray[index].id === user.id) {
-                return true;
-              }
-            }
-
-            return false;
-          }
-        },
-
-        /**
-         * Handles toggling the following of requirements by firing the state to the server.
-         *
-         * @param requirement the requirement to (un)follow.
-         * @returns {boolean}
-         * @private
-         */
-        _toggleFollowRequirement: function(requirement) {
-          var requirementId = requirement.id;
-
-          var followers = requirement.followers;
-          var isFollower = this._isUserInArray(followers, this.currentUser);
-
-          var request = this.$.followRequest;
-          request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/followers";
-
-          if (!isFollower) {
-            // follow requirement
-            request.method = 'POST';
-          } else {
-            // unfollow requirement
-            request.method = 'DELETE';
-          }
-
-          request.generateRequest();
-        },
-
-        /**
          * Handles the iron-ajax response for following/unfollowing requirements,
          * shows toast message.
          *
@@ -929,31 +879,6 @@
         },
 
         /**
-         * Handles toggling the existence of a user within an HTTP resource.
-         * TODO: currently only for resource 'developers'
-         *
-         * @param e
-         * @returns {boolean}
-         * @private
-         */
-        _toggleUserInResource: function(requirementId, userArray, resource) {
-          var isUserInArray = this._isUserInArray(userArray, this.currentUser);
-
-          var request = this.$.userInResourceRequest;
-          request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/" + resource;
-
-          if (!isUserInArray) {
-            // POST user to resource
-            request.method = 'POST';
-          } else {
-            // DELETE user from resource
-            request.method = 'DELETE';
-          }
-
-          request.generateRequest();
-        },
-
-        /**
          * Handles the iron-ajax response for posting/deleting users to/from a resoure,
          * shows toast message.
          *
@@ -977,37 +902,6 @@
           // now refresh the data behind by reloading all requirements
           // TODO: eliminate this heavy operation by only refreshing the respective requirement
           this.refresh();
-        },
-
-        /**
-         * Event handler for requirement's paper-menu.
-         *
-         * @param e
-         * @private
-         */
-        _handleRequirementMenuSelect: function(e) {
-          // unselect the selected menu item
-          e.target.selected = null;
-          // get value of the paper-item
-          var selectedValue = e.detail.item.getAttribute('value');
-          var requirement = e.model.req;
-
-          if (selectedValue === 'follow') {
-            this._toggleFollowRequirement(requirement);
-          } else if (selectedValue === 'toggleContributors') {
-            this._toggleContributors(requirement);
-          } else if (selectedValue === 'develop') {
-            this._toggleUserInResource(requirement.id, requirement.developers, 'developers');
-          } else if (selectedValue === 'realize') {
-            this._toggleRealized(requirement);
-          } else if (selectedValue === 'delete') {
-            this.requirementToDelete = requirement;
-            this.$.modal.open();
-          } else if (selectedValue === 'becomeLeadDeveloper') {
-            this._toggleLeadDeveloper(requirement);
-          } else if (selectedValue === 'edit') {
-            this._editRequirement(requirement.id);
-          }
         },
 
         /**
