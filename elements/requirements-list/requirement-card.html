@@ -135,12 +135,12 @@
               <paper-menu class="dropdown-content">
                 <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
                 <paper-item value="toggleContributors">[[localize('showContributors')]]</paper-item>
-                <paper-item value="follow" hidden="[[_calculateHiddenIfUserFollowing(requirement)]]">[[localize('followRequirement')]]</paper-item>
-                <paper-item value="unfollow" hidden$="[[_calculateHiddenIfUserNotFollowing(requirement)]]">[[localize('unfollowRequirement')]]</paper-item>
-                <paper-item value="develop" hidden$="[[_calculateHiddenIfUserDeveloping(requirement)]]">[[localize('developRequirement')]]</paper-item>
-                <paper-item value="undevelop" hidden$="[[_calculateHiddenIfUserNotDeveloping(requirement)]]">[[localize('undevelopRequirement')]]</paper-item>
-                <paper-item value="becomeLeadDeveloper" hidden$="[[_calculateBecomeLeadDeveloperHidden(requirement.realized,requirement.leadDeveloper, true)]]">[[localize('becomeLeadDeveloper')]]</paper-item>
-                <paper-item value="unbecomeLeadDeveloper" hidden$="[[_calculateBecomeLeadDeveloperHidden(requirement.realized,requirement.leadDeveloper, false)]]">[[localize('stopLeadDeveloper')]]</paper-item>
+                <paper-item value="follow" hidden="[[_followHidden]]">[[localize('followRequirement')]]</paper-item>
+                <paper-item value="unfollow" hidden$="[[_unfollowHidden]]">[[localize('unfollowRequirement')]]</paper-item>
+                <paper-item value="develop" hidden$="[[_developHidden]]">[[localize('developRequirement')]]</paper-item>
+                <paper-item value="undevelop" hidden$="[[_undevelopHidden]]">[[localize('undevelopRequirement')]]</paper-item>
+                <paper-item value="becomeLeadDeveloper" hidden$="[[_becomeLeadDeveloperHidden]]">[[localize('becomeLeadDeveloper')]]</paper-item>
+                <paper-item value="unbecomeLeadDeveloper" hidden$="[[_unbecomeLeadDeveloperHidden]]">[[localize('stopLeadDeveloper')]]</paper-item>
                 <paper-item value="edit" hidden$="[[requirement.realized]]">[[localize('editRequirement')]]</paper-item>
                 <paper-item value="realize" hidden$="[[requirement.realized]]">[[localize('markAsDone')]]</paper-item>
                 <paper-item value="unrealize" hidden$="[[!requirement.realized]]">[[localize('markAsUndone')]]</paper-item>
@@ -243,6 +243,24 @@
         requirement: {
           type: Object,
           notify: true
+        },
+        _followHidden: {
+          type: Boolean
+        },
+        _unfollowHidden: {
+          type: Boolean
+        },
+        _developHidden: {
+          type: Boolean
+        },
+        _undevelopHidden: {
+          type: Boolean
+        },
+        _becomeLeadDeveloperHidden: {
+          type: Boolean
+        },
+        _unbecomeLeadDeveloperHidden: {
+          type: Boolean
         }
       },
 
@@ -250,6 +268,10 @@
         Polymer.IronResizableBehavior,
         Polymer.AppLocalizeBehavior,
         ConfigBehavior
+      ],
+
+      observers: [
+        '_followersChanged(authorized, requirement.*)'
       ],
 
       attached: function() {
@@ -368,23 +390,23 @@
         return !become;
       },
 
-      _calculateHiddenIfUserFollowing(requirement) {
+      _followersChanged: function(authorized, requirementChange) {
+        var requirement = requirementChange.value;
         if (requirement.realized) {
-          return true;
+          this._followHidden = true;
+          this._unfollowHidden = true;
         } else {
-          return (this.authorized && this.currentUser && this._isUserInArray(requirement.followers, this.currentUser));
+          if (authorized && this.currentUser && this._isUserInArray(requirement.followers, this.currentUser)) {
+            this._followHidden = true;
+            this._unfollowHidden = false;
+          } else {
+            this._followHidden = false;
+            this._unfollowHidden = true;
+          }
         }
       },
 
-      _calculateHiddenIfUserNotFollowing(requirement) {
-        if (requirement.realized) {
-          return true;
-        } else {
-          return (this.authorized && this.currentUser && !this._isUserInArray(requirement.followers, this.currentUser));
-        }
-      },
-
-      _calculateHiddenIfUserDeveloping(requirement) {
+      _calculateHiddenIfUserDeveloping: function(requirement) {
         if (requirement.realized) {
           return true;
         } else {
@@ -392,7 +414,7 @@
         }
       },
 
-      _calculateHiddenIfUserNotDeveloping(requirement) {
+      _calculateHiddenIfUserNotDeveloping: function(requirement) {
         if (requirement.realized) {
           return true;
         } else {
