@@ -136,11 +136,11 @@
                 <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
                 <paper-item value="toggleContributors">[[localize('showContributors')]]</paper-item>
                 <paper-item value="follow" hidden="[[_followHidden]]">[[localize('followRequirement')]]</paper-item>
-                <paper-item value="unfollow" hidden$="[[_unfollowHidden]]">[[localize('unfollowRequirement')]]</paper-item>
-                <paper-item value="develop" hidden$="[[_developHidden]]">[[localize('developRequirement')]]</paper-item>
-                <paper-item value="undevelop" hidden$="[[_undevelopHidden]]">[[localize('undevelopRequirement')]]</paper-item>
-                <paper-item value="becomeLeadDeveloper" hidden$="[[_becomeLeadDeveloperHidden]]">[[localize('becomeLeadDeveloper')]]</paper-item>
-                <paper-item value="unbecomeLeadDeveloper" hidden$="[[_unbecomeLeadDeveloperHidden]]">[[localize('stopLeadDeveloper')]]</paper-item>
+                <paper-item value="unfollow" hidden="[[_unfollowHidden]]">[[localize('unfollowRequirement')]]</paper-item>
+                <paper-item value="develop" hidden="[[_developHidden]]">[[localize('developRequirement')]]</paper-item>
+                <paper-item value="undevelop" hidden="[[_undevelopHidden]]">[[localize('undevelopRequirement')]]</paper-item>
+                <paper-item value="becomeLeadDeveloper" hidden="[[_becomeLeadDeveloperHidden]]">[[localize('becomeLeadDeveloper')]]</paper-item>
+                <paper-item value="unbecomeLeadDeveloper" hidden="[[_unbecomeLeadDeveloperHidden]]">[[localize('stopLeadDeveloper')]]</paper-item>
                 <paper-item value="edit" hidden$="[[requirement.realized]]">[[localize('editRequirement')]]</paper-item>
                 <paper-item value="realize" hidden$="[[requirement.realized]]">[[localize('markAsDone')]]</paper-item>
                 <paper-item value="unrealize" hidden$="[[!requirement.realized]]">[[localize('markAsUndone')]]</paper-item>
@@ -271,7 +271,7 @@
       ],
 
       observers: [
-        '_followersChanged(authorized, requirement.*)'
+        '_requirementChanged(authorized, requirement.*)'
       ],
 
       attached: function() {
@@ -381,21 +381,20 @@
         }
       },
 
-      _calculateBecomeLeadDeveloperHidden: function(realized, leadDeveloper, become) {
-        if (this.currentUser && leadDeveloper && (this.currentUser.id === leadDeveloper.id)) {
-          // the current user is already lead developer, thus hide the button
-          return become;
-        }
-
-        return !become;
-      },
-
-      _followersChanged: function(authorized, requirementChange) {
+      _requirementChanged: function(authorized, requirementChange) {
         var requirement = requirementChange.value;
         if (requirement.realized) {
+          // following
           this._followHidden = true;
           this._unfollowHidden = true;
+          // developing
+          this._developHidden = true;
+          this._undevelopHidden = true;
+          // lead developer
+          this._becomeLeadDeveloperHidden = true;
+          this._unbecomeLeadDeveloperHidden = true;
         } else {
+          // following
           if (authorized && this.currentUser && this._isUserInArray(requirement.followers, this.currentUser)) {
             this._followHidden = true;
             this._unfollowHidden = false;
@@ -403,43 +402,22 @@
             this._followHidden = false;
             this._unfollowHidden = true;
           }
-        }
-      },
-
-      _calculateHiddenIfUserDeveloping: function(requirement) {
-        if (requirement.realized) {
-          return true;
-        } else {
-          return (this.authorized && this.currentUser && this._isUserInArray(requirement.developers, this.currentUser));
-        }
-      },
-
-      _calculateHiddenIfUserNotDeveloping: function(requirement) {
-        if (requirement.realized) {
-          return true;
-        } else {
-          return (this.authorized && this.currentUser && !this._isUserInArray(requirement.developers, this.currentUser));
-        }
-      },
-
-      /**
-       * Calculates the localized message based on whether the provided user is in the provided array of user objects.
-       *
-       * @param userArray an array of user objects.
-       * @param user the currently logged in user's object. This is to be notified by the data
-       *   binding system of Polymer about changes, and recalculate the value.
-       * @param falseMessage the text to show when the user is not in the array.
-       * @param trueMessage the text to show when the user is in the array.
-       * @returns {string} the localized message.
-       * @private
-       */
-      _calculateMessageBasedOnUserInArray: function(userArray, falseMessage, trueMessage) {
-        if (this.authorized && this.currentUser && this._isUserInArray(userArray, this.currentUser)) {
-          return this.async(function() { this.localize(trueMessage);}.bind(this), 100);
-          //return this.localize(trueMessage);
-        } else {
-          return this.async(function() { this.localize(falseMessage);}.bind(this), 100);
-          //return this.localize(falseMessage);
+          // developing
+          if (this.authorized && this.currentUser && this._isUserInArray(requirement.developers, this.currentUser)) {
+            this._developHidden = true;
+            this._undevelopHidden = false;
+          } else {
+            this._developHidden = false;
+            this._undevelopHidden = true;
+          }
+          // lead developer
+          if (this.currentUser && requirement.leadDeveloper && (this.currentUser.id === requirement.leadDeveloper.id)) {
+            this._becomeLeadDeveloperHidden = true;
+            this._unbecomeLeadDeveloperHidden = false;
+          } else {
+            this._becomeLeadDeveloperHidden = false;
+            this._unbecomeLeadDeveloperHidden = true;
+          }
         }
       },
 
