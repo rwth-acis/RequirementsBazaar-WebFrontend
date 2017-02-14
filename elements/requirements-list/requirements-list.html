@@ -131,6 +131,10 @@
 
     <iron-signals on-iron-signal-resize="_handleIronResize"></iron-signals>
 
+    <iron-signals on-iron-signal-menu-open="_handleMenuOpen"></iron-signals>
+
+    <iron-signals on-iron-signal-menu-close="_handleMenuClose"></iron-signals>
+
     <iron-ajax
       id="requirementsRequest"
       loading="{{loading}}"
@@ -1115,6 +1119,22 @@
 
         _handleIronResize: function() {
           this.$.requirementsList.notifyResize();
+        },
+
+        /**
+         * A fix for the issue that paper-dropdown within an iron-list disappear behind the next list item.
+         * Check https://github.com/PolymerElements/iron-list/issues/242 for the issue.
+         *
+         * @param e
+         * @param detail
+         * @private
+         */
+        _handleMenuOpen: function(e, detail) {
+          detail.style.zIndex = 1;
+        },
+
+        _handleMenuClose: function(e, detail) {
+          detail.style.zIndex = 0;
         }
 
       });

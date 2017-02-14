@@ -130,7 +130,12 @@
                                on-tap="_handleStarTap"
                                disabled="[[!authorized]]"></paper-icon-button>
             <div>[[req.upVotes]]</div>
-            <paper-menu-button horizontal-align="right" vertical-align="top" hidden="[[!authorized]]" on-iron-select="_handleRequirementMenuSelect">
+            <paper-menu-button horizontal-align="right"
+                               vertical-align="top"
+                               hidden="[[!authorized]]"
+                               on-paper-dropdown-open="_handleRequirementMenuOpen"
+                               on-paper-dropdown-close="_handleRequirementMenuClose"
+                               on-iron-select="_handleRequirementMenuSelect">
               <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
               <paper-menu class="dropdown-content">
                 <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
@@ -552,6 +557,14 @@
         } else if (selectedValue === 'edit') {
           this._editRequirement(requirement.id);
         }
+      },
+
+      _handleRequirementMenuOpen: function(e) {
+        this.fire('iron-signal', {name: 'menu-open', data: this});
+      },
+
+      _handleRequirementMenuClose: function(e) {
+        this.fire('iron-signal', {name: 'menu-close', data: this});
       }
 
     });
