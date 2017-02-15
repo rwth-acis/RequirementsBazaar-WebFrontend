@@ -127,6 +127,8 @@
 
     <iron-signals on-iron-signal-menu-close="_handleMenuClose"></iron-signals>
 
+    <iron-signals on-iron-signal-show-toast="_handleShowToast"></iron-signals>
+
     <iron-ajax
       id="requirementsRequest"
       loading="{{loading}}"
@@ -181,15 +183,6 @@
       content-type="application/json"
       headers="[[authHeader]]"
       on-response="_handleUserInResourceResponse"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="starRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      headers="[[authHeader]]"
-      on-response="_handleStarResponse"
       on-error="errorHandler"></iron-ajax>
 
     <iron-ajax
@@ -297,7 +290,7 @@
 
     <!-- Toast for toast notifications: -->
 
-    <paper-toast id="toast" text="[[feedback]]"></paper-toast>
+    <paper-toast id="toast" text="[[toastFeedback]]"></paper-toast>
 
   </template>
 
@@ -351,7 +344,10 @@
           postUrl: String,
           body: Object,
           postResponse: Object,
-          feedback: String,
+          /**
+           * The text shown on the paper-toast element for notifying the user.
+           */
+          toastFeedback: String,
           header: {
             type:Object,
             notify: true
@@ -736,7 +732,7 @@
 
         handleResponseEditReq: function(data) {
           if (data != null) {
-            this.feedback = this.localize('reqEditSucc');
+            this.toastFeedback = this.localize('reqEditSucc');
             this.refresh();
           }
           this.$.toast.open();
@@ -795,60 +791,6 @@
         },
 
         /**
-         * Handles tapping the star icon.
-         *
-         * @param e
-         * @private
-         */
-        _handleStarTap: function(e) {
-          // first, get the dom-repeat's template instance that generated the item
-          var model = e.model;
-          var vote = model.req.userVoted;
-          var requirementId = model.req.id;
-
-          var request = this.$.starRequest;
-          request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/votes";
-
-          // now construct the method and body based on the action
-          if (vote === 'NO_VOTE') {
-            request.method = 'POST';
-
-            // give user immediate feedback
-            Polymer.dom(e).localTarget.toggleClass('colored');
-            e.target.setAttribute('icon', 'star');
-          } else {
-            request.method = 'DELETE';
-
-            // give user immediate feedback
-            Polymer.dom(e).localTarget.toggleClass('colored');
-            e.target.setAttribute('icon', 'star-border');
-          }
-
-          // fire the event to the server
-          request.generateRequest();
-        },
-
-        _handleStarResponse: function(e) {
-          var status = e.detail.status;
-
-          if (status === 200) {
-            this.feedback = this.localize('unvoteSuccessful');
-          } else if (status === 201) {
-            // delete successful
-            this.feedback = this.localize('voteSuccessful');
-          } else {
-            //TODO: add i18n
-            this.feedback = 'error';
-          }
-
-          this.$.toast.open();
-
-          // now refresh the data behind by reloading all requirements
-          // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.refresh();
-        },
-
-        /**
          * Handles the iron-ajax response for following/unfollowing requirements,
          * shows toast message.
          *
@@ -859,12 +801,12 @@
           var status = e.detail.status;
 
           if (status === 200) {
-            this.feedback = this.localize('fdbUnfollowReq');
+            this.toastFeedback = this.localize('fdbUnfollowReq');
           } else if (status === 201) {
-            this.feedback = this.localize('fdbFollowReq');
+            this.toastFeedback = this.localize('fdbFollowReq');
           } else {
             //TODO: add i18n
-            this.feedback = 'error';
+            this.toastFeedback = 'error';
           }
 
           this.$.toast.open();
@@ -885,12 +827,12 @@
           var method = e.target.method;
 
           if (method === 'DELETE') {
-            this.feedback = this.localize('fdbUndevelopReq');
+            this.toastFeedback = this.localize('fdbUndevelopReq');
           } else if (method === 'POST') {
-            this.feedback = this.localize('fdbDevelopReq');
+            this.toastFeedback = this.localize('fdbDevelopReq');
           } else {
             //TODO: add i18n
-            this.feedback = 'error';
+            this.toastFeedback = 'error';
           }
 
           this.$.toast.open();
@@ -930,7 +872,7 @@
          */
         _handleUpdateRequirementResponse: function(e) {
           if (e != null) {
-            this.feedback = this.localize('reqEditSucc');
+            this.toastFeedback = this.localize('reqEditSucc');
           }
 
           this.$.toast.open();
@@ -976,7 +918,7 @@
         _handleDeleteRequirementResponse: function(e) {
           //TODO: check result
 
-          this.feedback = this.localize('reqDelSucc');
+          this.toastFeedback = this.localize('reqDelSucc');
           this.$.toast.open();
 
           // now refresh the data behind by reloading all requirements
@@ -1127,6 +1069,11 @@
 
         _handleMenuClose: function(e, detail) {
           detail.style.zIndex = 0;
+        },
+
+        _handleShowToast: function(e, detail) {
+          this.toastFeedback = detail;
+          this.$.toast.open();
         }
 
       });
