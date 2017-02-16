@@ -134,6 +134,17 @@
                on-response="_handleStarResponse"
                on-error="errorHandler"></iron-ajax>
 
+    <iron-ajax id="postCommentRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               url="{{_apiBaseUrl}}/comments"
+               content-type="application/json"
+               method="POST"
+               headers="[[authHeader]]"
+               on-response="_handleCommentResponse"
+               last-response="{{postResponse}}"
+               on-error="errorHandler"></iron-ajax>
+
     <paper-material class="req" id="requirementCard" on-mouseover="showOnHover" on-mouseout="hideOnOut">
       <div id="requirementBody">
 
@@ -215,12 +226,12 @@
         <iron-collapse no-animation>
           <file-gallery attachments="{{requirement.attachments}}"></file-gallery>
           <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
-          <comments-list loading="{{loading}}" requirement-id="[[requirement.id]]" data-a="[[requirement.id]]"></comments-list>
+          <comments-list id="commentsList" loading="{{loading}}" requirement-id="[[requirement.id]]" data-a="[[requirement.id]]"></comments-list>
           <div class="container flex-horizontal" id="[[requirement.id]]" hidden="[[!authorized]]">
             <paper-input id="commentInput" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild" on-keydown="_handleCommentEnter">
               <!--<emoji-selector suffix></emoji-selector>-->
             </paper-input>
-            <paper-icon-button id="sendComment" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
+            <paper-icon-button id="commentSendButton" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
           </div>
         </iron-collapse>
 
@@ -615,6 +626,12 @@
         request.generateRequest();
       },
 
+      /**
+       * Event handler for the iron-ajax for submitting votes to the server.
+       *
+       * @param e
+       * @private
+       */
       _handleStarResponse: function(e) {
         var status = e.detail.status;
         var feedback;
@@ -634,6 +651,48 @@
         // now refresh the data behind by reloading all requirements
         // refreshing the requirement
         this.$.requirementRequest.generateRequest();
+      },
+
+      _handleCommentInput: function(e) {
+        this.$.commentSendButton.hidden = false;
+      },
+
+      _handleCommentEnter: function (e) {
+        //TODO: refactor the code
+        // keyCode 13 is Enter
+        if (e.keyCode === 13) {
+          // check if the Enter key was pressed...
+          if (!e.ctrlKey) {
+            this._handleAddCommentTap(e);
+            e.preventDefault();
+          } else {
+            e.currentTarget.value += "<br/>";
+          }
+        }
+      },
+
+      _handleAddCommentTap: function(e) {
+        var request = this.$.postCommentRequest;
+        var message = this.$.commentInput.value;
+
+        if (message != null && (message !== '')) {
+          request.body = JSON.stringify({
+            "requirementId": this.requirement.id,
+            "message": message
+          });
+          request.generateRequest();
+
+          this.$.commentInput.value = '';
+        }
+      },
+
+      _handleCommentResponse: function(data) {
+        var requirementId = data.detail.response.requirementId;
+
+        // reload comments
+        this.$.commentsList.refresh();
+
+        //TODO: Add a toast message that the comment was saved successfully.
       }
 
     });
