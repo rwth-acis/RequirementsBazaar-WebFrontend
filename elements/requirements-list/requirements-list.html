@@ -883,17 +883,6 @@
         },
 
         /**
-         * Toggles the state of contributors' bar.
-         *
-         * @param requirement a requirement object.
-         * @private
-         */
-        _toggleContributors: function(requirement) {
-          var contributorNode = this.$$('#contributors' + requirement.id);
-          this.toggleAttribute('hidden', contributorNode.getAttribute('hidden') == null, contributorNode);
-        },
-
-        /**
          * Handles the delete modal dialog closed event.
          *
          * @param e

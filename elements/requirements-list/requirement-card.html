@@ -568,12 +568,11 @@
         e.target.selected = null;
         // get value of the paper-item
         var selectedValue = e.detail.item.getAttribute('value');
-        var requirement = e.model.req;
 
         if ((selectedValue === 'follow') || (selectedValue === 'unfollow')) {
-          this._toggleFollowRequirement(requirement);
+          this._toggleFollowRequirement();
         } else if (selectedValue === 'toggleContributors') {
-          this._toggleContributors(requirement);
+          this._toggleContributors();
         } else if ((selectedValue === 'develop') || (selectedValue === 'undevelop')) {
           this._toggleUserInResource(requirement.id, requirement.developers, 'developers');
         } else if ((selectedValue === 'realize') || (selectedValue === 'unrealize')) {
@@ -693,7 +692,20 @@
         this.$.commentsList.refresh();
 
         //TODO: Add a toast message that the comment was saved successfully.
-      }
+      },
+
+      /**
+       * Toggles the state of contributors' bar.
+       *
+       * @param requirement a requirement object.
+       * @private
+       */
+      _toggleContributors: function() {
+        var contributorNode = this.$.contributors;
+        this.toggleAttribute('hidden', contributorNode.getAttribute('hidden') == null, contributorNode);
+        // notify outer iron-list
+        this.fire('iron-signal', {name: 'resize'});
+      },
 
     });
   </script>
