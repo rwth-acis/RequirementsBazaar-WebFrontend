@@ -143,6 +143,14 @@
                on-response="_handleFollowResponse"
                on-error="errorHandler"></iron-ajax>
 
+    <iron-ajax id="userInResourceRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               content-type="application/json"
+               headers="[[authHeader]]"
+               on-response="_handleUserInResourceResponse"
+               on-error="errorHandler"></iron-ajax>
+
     <iron-ajax id="postCommentRequest"
                loading="{{loading}}"
                handle-as="json"
@@ -541,15 +549,15 @@
        * Handles toggling the existence of a user within an HTTP resource.
        * TODO: currently only for resource 'developers'
        *
-       * @param e
-       * @returns {boolean}
+       * @param userArray
+       * @param resource
        * @private
        */
-      _toggleUserInResource: function(requirementId, userArray, resource) {
+      _toggleUserInResource: function(userArray, resource) {
         var isUserInArray = this._isUserInArray(userArray, this.currentUser);
 
         var request = this.$.userInResourceRequest;
-        request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/" + resource;
+        request.url = this._apiBaseUrl + "/requirements/" + this.requirement.id + "/" + resource;
 
         if (!isUserInArray) {
           // POST user to resource
@@ -579,7 +587,7 @@
         } else if (selectedValue === 'toggleContributors') {
           this._toggleContributors();
         } else if ((selectedValue === 'develop') || (selectedValue === 'undevelop')) {
-          this._toggleUserInResource(requirement.id, requirement.developers, 'developers');
+          this._toggleUserInResource(this.requirement.developers, 'developers');
         } else if ((selectedValue === 'realize') || (selectedValue === 'unrealize')) {
           this._toggleRealized(requirement);
         } else if (selectedValue === 'delete') {
@@ -735,7 +743,33 @@
 
         // refresh the requirement
         this.$.requirementRequest.generateRequest();
-      }
+      },
+
+      /**
+       * Handles the iron-ajax response for posting/deleting users to/from a resoure,
+       * shows toast message.
+       *
+       * @param data
+       * @private
+       */
+      _handleUserInResourceResponse: function(e) {
+        var method = e.target.method;
+        var toastFeedback;
+
+        if (method === 'DELETE') {
+          toastFeedback = this.localize('fdbUndevelopReq');
+        } else if (method === 'POST') {
+          toastFeedback = this.localize('fdbDevelopReq');
+        } else {
+          //TODO: add i18n
+          toastFeedback = 'error';
+        }
+
+        this.fire('iron-signal', {name: 'show-toast', data: toastFeedback});
+
+        // refresh the requirement
+        this.$.requirementRequest.generateRequest();
+      },
 
     });
   </script>
