@@ -148,16 +148,6 @@
       on-error="errorHandler"></iron-ajax>
 
     <iron-ajax
-      id="updateRequirementRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      method="PUT"
-      headers="[[authHeader]]"
-      on-response="_handleUpdateRequirementResponse"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
       id="deleteRequirementRequest"
       loading="{{loading}}"
       handle-as="json"
@@ -795,24 +785,6 @@
         },
 
         /**
-         * Handles the iron-ajax response for updating requirements, shows toast message.
-         *
-         * @param e
-         * @private
-         */
-        _handleUpdateRequirementResponse: function(e) {
-          if (e != null) {
-            this.toastFeedback = this.localize('reqEditSucc');
-          }
-
-          this.$.toast.open();
-
-          // now refresh the data behind by reloading all requirements
-          // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.refresh();
-        },
-
-        /**
          * Handles the delete modal dialog closed event.
          *
          * @param e
@@ -843,27 +815,6 @@
           // now refresh the data behind by reloading all requirements
           // TODO: eliminate this heavy operation by only refreshing the respective requirement
           this.refresh();
-        },
-
-        /**
-         * Updates the lead developer for a specified requirement on the server. If the user is already lead developer,
-         * then the user 1 (anonymous) is becoming lead developer, otherwise the user takes this role.
-         *
-         * @param requirement a requirement object.
-         * @private
-         */
-        _toggleLeadDeveloper: function(requirement) {
-          var request = this.$.updateRequirementRequest;
-          request.url = this._apiBaseUrl + '/requirements/' + requirement.id + '/leaddevelopers';
-
-          if (requirement.hasOwnProperty('leadDeveloper') && (requirement.leadDeveloper.id === this.currentUser.id)) {
-            request.method = 'DELETE';
-          } else {
-            request.method = 'POST';
-          }
-
-          // fire
-          request.generateRequest();
         },
 
         /**
