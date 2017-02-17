@@ -424,22 +424,6 @@
         }
       },
 
-      /**
-       * Calculates the localized message for the realized menu button, depending on whether the requirement is realized or
-       * not.
-       *
-       * @param realized
-       * @returns {*}
-       * @private
-       */
-      _calculateRealizeMessage: function(realized) {
-        if (realized) {
-          return this.async(function() { this.localize('markAsUnDone');}.bind(this), 100);//this.localize('markAsUnDone');
-        } else {
-          return this.async(function() { this.localize('markAsDone');}.bind(this), 100);// this.localize('markAsDone');
-        }
-      },
-
       _requirementChanged: function(authorized, requirementChange) {
         var requirement = requirementChange.value;
         if (requirement.realized) {
@@ -597,7 +581,7 @@
         } else if ((selectedValue === 'develop') || (selectedValue === 'undevelop')) {
           this._toggleUserInResource(this.requirement.developers, 'developers');
         } else if ((selectedValue === 'realize') || (selectedValue === 'unrealize')) {
-          this._toggleRealized(requirement);
+          this._toggleRealized();
         } else if (selectedValue === 'delete') {
           this.requirementToDelete = requirement;
           this.$.modal.open();
@@ -818,6 +802,26 @@
         // refresh the requirement
         this.$.requirementRequest.generateRequest();
       },
+
+      /**
+       * Toggles the 'realized' property of a requirement on the server.
+       *
+       */
+      _toggleRealized: function() {
+        var request = this.$.updateRequirementRequest;
+        request.url = this._apiBaseUrl + '/requirements/' + this.requirement.id + '/realized';
+
+        if (this.requirement.hasOwnProperty('realized')) {
+          // unrealize it
+          request.method = 'DELETE';
+        } else {
+          // realize it
+          request.method = 'POST';
+        }
+
+        // fire
+        request.generateRequest();
+      }
 
     });
   </script>

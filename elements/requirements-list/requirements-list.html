@@ -763,28 +763,6 @@
         },
 
         /**
-         * Toggles the 'realized' property of a requirement on the server. If the requirement was not realized yet,
-         * the current timestamp is sent to the server. Otherwise, the realized property is reset.
-         *
-         * @param requirement {object} the requirements object.
-         */
-        _toggleRealized: function(requirement) {
-          var request = this.$.updateRequirementRequest;
-          request.url = this._apiBaseUrl + '/requirements/' + requirement.id + '/realized';
-
-          if (requirement.hasOwnProperty('realized')) {
-            // unrealize it
-            request.method = 'DELETE';
-          } else {
-            // realize it
-            request.method = 'POST';
-          }
-
-          // fire
-          request.generateRequest();
-        },
-
-        /**
          * Handles the delete modal dialog closed event.
          *
          * @param e
