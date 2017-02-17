@@ -134,6 +134,15 @@
                on-response="_handleStarResponse"
                on-error="errorHandler"></iron-ajax>
 
+    <iron-ajax id="followRequest"
+               loading="{{loading}}"
+               url="[[_apiBaseUrl]]/requirements/[[requirement.id]]/followers"
+               handle-as="json"
+               content-type="application/json"
+               headers="[[authHeader]]"
+               on-response="_handleFollowResponse"
+               on-error="errorHandler"></iron-ajax>
+
     <iron-ajax id="postCommentRequest"
                loading="{{loading}}"
                handle-as="json"
@@ -506,20 +515,16 @@
       },
 
       /**
-       * Handles toggling the following of requirements by firing the state to the server.
+       * Handles toggling the following of the requirement by firing the state to the server.
        *
-       * @param requirement the requirement to (un)follow.
        * @returns {boolean}
        * @private
        */
-      _toggleFollowRequirement: function(requirement) {
-        var requirementId = requirement.id;
-
-        var followers = requirement.followers;
+      _toggleFollowRequirement: function() {
+        var followers = this.requirement.followers;
         var isFollower = this._isUserInArray(followers, this.currentUser);
 
         var request = this.$.followRequest;
-        request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/followers";
 
         if (!isFollower) {
           // follow requirement
@@ -647,8 +652,7 @@
 
         this.fire('iron-signal', {name: 'show-toast', data: feedback});
 
-        // now refresh the data behind by reloading all requirements
-        // refreshing the requirement
+        // refresh the requirement
         this.$.requirementRequest.generateRequest();
       },
 
@@ -706,6 +710,32 @@
         // notify outer iron-list
         this.fire('iron-signal', {name: 'resize'});
       },
+
+      /**
+       * Handles the iron-ajax response for following/unfollowing requirements,
+       * shows toast message.
+       *
+       * @param e
+       * @private
+       */
+      _handleFollowResponse: function(e) {
+        var status = e.detail.status;
+        var toastFeedback;
+
+        if (status === 200) {
+          toastFeedback = this.localize('fdbUnfollowReq');
+        } else if (status === 201) {
+          toastFeedback = this.localize('fdbFollowReq');
+        } else {
+          //TODO: add i18n
+          toastFeedback = 'error';
+        }
+
+        this.fire('iron-signal', {name: 'show-toast', data: toastFeedback});
+
+        // refresh the requirement
+        this.$.requirementRequest.generateRequest();
+      }
 
     });
   </script>
