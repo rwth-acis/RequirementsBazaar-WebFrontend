@@ -264,10 +264,10 @@
 
       <div class="editForm" id="edit">
 
-        <paper-input class="editTitle title" value="{{requirement.title}}"></paper-input>
-        <paper-textarea value="{{requirement.description}}"></paper-textarea>
-        <paper-button raised on-tap="_handleSaveEditTap" data-args="[[requirement.title]]">[[localize('save')]]</paper-button>
-        <paper-button raised on-tap="_handleCancelEditTap" data-args="[[requirement.title]]">[[localize('cancel')]]</paper-button>
+        <paper-input id="editTitleInput" class="editTitle title"></paper-input>
+        <paper-textarea id="editDescriptionInput"></paper-textarea>
+        <paper-button raised on-tap="_handleSaveEditTap">[[localize('save')]]</paper-button>
+        <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
 
       </div>
 
@@ -475,7 +475,6 @@
       },
 
       _handleCheckboxChange: function(e) {
-        var requirementId = e.model.req.id;
         if (e.target.checked) {
           this.push('selectedRequirements', requirementId);
         } else {
@@ -588,7 +587,7 @@
         } else if ((selectedValue === 'becomeLeadDeveloper') || (selectedValue === 'unbecomeLeadDeveloper')) {
           this._toggleLeadDeveloper();
         } else if (selectedValue === 'edit') {
-          this._editRequirement(requirement.id);
+          this._editRequirement();
         }
       },
 
@@ -821,6 +820,73 @@
 
         // fire
         request.generateRequest();
+      },
+
+      /**
+       * Shows the editing form of the requirement.
+       *
+       * @private
+       */
+      _editRequirement: function() {
+        // set values
+        this.$.editTitleInput.value = this.requirement.title;
+        this.$.editDescriptionInput.value = this.requirement.description;
+
+        // hide card elements
+        this.$.requirementBody.style.display = 'none';
+        this.$.comments.style.display = 'none';
+        this.$.description.style.display = 'none';
+        // show form elements
+        this.$.edit.style.display = 'block';
+      },
+
+
+
+      /**
+       * Saves the edited requirement on the server.
+       *
+       * @param e
+       * @private
+       */
+      _handleSaveEditTap: function(e) {
+        var title = this.$.editTitleInput.value;
+        var description = this.$.editDescriptionInput.value;
+
+        var request = this.$.updateRequirementRequest;
+        request.url = this._apiBaseUrl + '/requirements/' + this.requirement.id;
+        request.method = 'PUT';
+
+        if ((title !== '') && (description !== '')) {
+          request.body = JSON.stringify({
+            "id": this.requirement.id,
+            "title": title,
+            "description": description
+          });
+          request.generateRequest();
+
+          // revert the look
+          this._handleCancelEditTap(e);
+
+        } else {
+          var toastFeedback = this.localize('fieldsNotEmptyReq');
+          this.fire('iron-signal', {name: 'show-toast', data: toastFeedback});
+        }
+      },
+
+      /**
+       * Cancels editing a requirement by hiding the form.
+       *
+       * @param e
+       * @private
+       */
+      _handleCancelEditTap: function(e) {
+        // show form elements
+        this.$.edit.style.display = 'none';
+
+        // show card elements
+        this.$.requirementBody.style.display = 'block';
+        this.$.comments.style.display = 'block';
+        this.$.description.style.display = 'block';
       }
 
     });
