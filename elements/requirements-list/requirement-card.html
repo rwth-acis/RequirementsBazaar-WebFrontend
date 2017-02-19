@@ -203,7 +203,7 @@
                 <paper-item value="edit" hidden$="[[requirement.realized]]">[[localize('editRequirement')]]</paper-item>
                 <paper-item value="realize" hidden$="[[requirement.realized]]">[[localize('markAsDone')]]</paper-item>
                 <paper-item value="unrealize" hidden$="[[!requirement.realized]]">[[localize('markAsUndone')]]</paper-item>
-                <paper-item value="delete">[[localize('deleteRequirement')]]</paper-item>
+                <paper-item value="delete" hidden$="[[_deleteHidden]]">[[localize('deleteRequirement')]]</paper-item>
               </paper-menu>
             </paper-menu-button>
           </div>
@@ -319,6 +319,9 @@
           type: Boolean
         },
         _unbecomeLeadDeveloperHidden: {
+          type: Boolean
+        },
+        _deleteHidden: {
           type: Boolean
         }
       },
@@ -461,6 +464,12 @@
             this._becomeLeadDeveloperHidden = false;
             this._unbecomeLeadDeveloperHidden = true;
           }
+          // delete
+          if (this.currentUser && (this.currentUser.id === requirement.creator.id)) {
+            this._deleteHidden = false;
+          } else {
+            this._deleteHidden = true;
+          }
         }
       },
 
@@ -582,8 +591,7 @@
         } else if ((selectedValue === 'realize') || (selectedValue === 'unrealize')) {
           this._toggleRealized();
         } else if (selectedValue === 'delete') {
-          this.requirementToDelete = requirement;
-          this.$.modal.open();
+          this.fire('iron-signal', {name: 'delete-requirement', data: this.requirement});
         } else if ((selectedValue === 'becomeLeadDeveloper') || (selectedValue === 'unbecomeLeadDeveloper')) {
           this._toggleLeadDeveloper();
         } else if (selectedValue === 'edit') {

@@ -120,14 +120,11 @@
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
-
     <iron-signals on-iron-signal-resize="_handleIronResize"></iron-signals>
-
     <iron-signals on-iron-signal-menu-open="_handleMenuOpen"></iron-signals>
-
     <iron-signals on-iron-signal-menu-close="_handleMenuClose"></iron-signals>
-
     <iron-signals on-iron-signal-show-toast="_handleShowToast"></iron-signals>
+    <iron-signals on-iron-signal-delete-requirement="_handleDeleteRequirement"></iron-signals>
 
     <iron-ajax
       id="requirementsRequest"
@@ -227,8 +224,11 @@
 
     <!-- Dialog for confirming the deletion of a requirement: -->
 
-    <paper-dialog id="modal" modal on-iron-overlay-closed="_handleDeleteRequirement" entry-animation="fade-in-animation"
-                  exit-animation="fade-out-animation">
+    <paper-dialog id="deleteRequirementDialog"
+                  on-iron-overlay-closed="_handleDeleteRequirementClosed"
+                  entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation"
+                  modal>
       <h2>[[localize('deleteRequirement')]]?</h2>
       <p>[[localize('deleteRequirementDesc')]]</p>
       <div class="buttons">
@@ -352,9 +352,9 @@
            */
           elem: Object,
           /**
-           * Stores the requirement object that is going to be deleted, while modal dialog is shown.
+           * Stores the requirement that is going to be deleted, while modal dialog is shown.
            */
-          requirementToDelete: Number,
+          requirementToDelete: Object,
           filterValue: {
             type: String,
             value: ''
@@ -768,7 +768,7 @@
          * @param e
          * @private
          */
-        _handleDeleteRequirement: function(e) {
+        _handleDeleteRequirementClosed: function(e) {
           if (e.detail.confirmed) {
             var requirement = this.requirementToDelete;
             var request = this.$.deleteRequirementRequest;
@@ -790,9 +790,14 @@
           this.toastFeedback = this.localize('reqDelSucc');
           this.$.toast.open();
 
-          // now refresh the data behind by reloading all requirements
-          // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.refresh();
+          // now delete the requirement from the model
+          for (var i = 0; i<this.requirements.length; i++) {
+            if (this.requirements[i].requirementItem.id === this.requirementToDelete.id) {
+              this.splice('requirements', i, 1);
+            }
+          }
+
+          this.requirementToDelete = null;
         },
 
         /**
@@ -849,6 +854,11 @@
         _handleShowToast: function(e, detail) {
           this.toastFeedback = detail;
           this.$.toast.open();
+        },
+
+        _handleDeleteRequirement: function(e, detail) {
+          this.requirementToDelete = detail;
+          this.$.deleteRequirementDialog.open();
         }
 
       });
