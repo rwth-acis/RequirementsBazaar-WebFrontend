@@ -76,17 +76,6 @@
                last-response="{{comments}}"
                params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
-    <!-- XHR for deleting comments: -->
-
-    <iron-ajax id="deleteCommentRequest"
-               loading="{{loading}}"
-               handle-as="json"
-               content-type="application/json"
-               method="DELETE"
-               headers="[[authHeader]]"
-               on-response="_handleDeleteCommentResponse"
-               on-error="errorHandler"></iron-ajax>
-
     <!-- XHR for posting comments: -->
 
     <iron-ajax id="postCommentRequest"
@@ -122,18 +111,6 @@
       </div>
 
     </template>
-
-    <!-- Dialog for deleting a comment: -->
-
-    <paper-dialog id="deleteDialog" modal on-iron-overlay-closed="_handleDeleteDialogClosed" entry-animation="fade-in-animation"
-                  exit-animation="fade-out-animation">
-      <h2>[[localize('delCommTitle')]]?</h2>
-      <p>[[localize('delCommDesc')]]</p>
-      <div class="buttons">
-        <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
-        <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
-      </div>
-    </paper-dialog>
 
     <!-- Toast for app notifications: -->
 
@@ -368,8 +345,17 @@
        * @property e
        */
       _handleDeleteTap: function(e) {
-        this._currentDeleteId = e.model.item.Id
-        this.$.deleteDialog.open();
+        var data = {};
+        data.comment = e.model.item;
+        data.onDelete = function() {
+          // delete the comment from the model
+          for (var i = 0; i<this.comments.length; i++) {
+            if (this.comments[i].Id === data.comment.Id) {
+              this.splice('comments', i, 1);
+            }
+          }
+        }.bind(this);
+        this.fire('iron-signal', {name: 'delete-comment', data: data});
       },
 
       /**

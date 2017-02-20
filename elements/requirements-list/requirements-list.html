@@ -125,6 +125,7 @@
     <iron-signals on-iron-signal-menu-close="_handleMenuClose"></iron-signals>
     <iron-signals on-iron-signal-show-toast="_handleShowToast"></iron-signals>
     <iron-signals on-iron-signal-delete-requirement="_handleDeleteRequirement"></iron-signals>
+    <iron-signals on-iron-signal-delete-comment="_handleDeleteComment"></iron-signals>
 
     <iron-ajax
       id="requirementsRequest"
@@ -165,6 +166,15 @@
       on-response="_handleCommentResponse"
       last-response="{{postResponse}}"
       on-error="errorHandler"></iron-ajax>
+
+    <iron-ajax id="deleteCommentRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               content-type="application/json"
+               method="DELETE"
+               headers="[[authHeader]]"
+               on-response="_handleDeleteCommentResponse"
+               on-error="errorHandler"></iron-ajax>
 
         <!--<iron-ajax-->
                 <!--id="postIssueGit"-->
@@ -231,6 +241,21 @@
                   modal>
       <h2>[[localize('deleteRequirement')]]?</h2>
       <p>[[localize('deleteRequirementDesc')]]</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
+        <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
+      </div>
+    </paper-dialog>
+
+    <!-- Dialog for deleting a comment -->
+
+    <paper-dialog id="deleteCommentDialog"
+                  entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation"
+                  on-iron-overlay-closed="_handleDeleteCommentDialogClosed"
+                  modal>
+      <h2>[[localize('delCommTitle')]]?</h2>
+      <p>[[localize('delCommDesc')]]</p>
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
         <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
@@ -354,7 +379,12 @@
           /**
            * Stores the requirement that is going to be deleted, while modal dialog is shown.
            */
-          requirementToDelete: Object,
+          requirementToDelete: {
+            type: Object
+          },
+          commentToDeleteData: {
+            type: Object
+          },
           filterValue: {
             type: String,
             value: ''
@@ -859,7 +889,44 @@
         _handleDeleteRequirement: function(e, detail) {
           this.requirementToDelete = detail;
           this.$.deleteRequirementDialog.open();
-        }
+        },
+
+        _handleDeleteComment: function(e, detail) {
+          this.commentToDeleteData = detail;
+          this.$.deleteCommentDialog.open();
+        },
+
+        /**
+         * Handles the delete modal dialog closed event.
+         *
+         * @param e
+         * @private
+         */
+        _handleDeleteCommentDialogClosed: function(e) {
+          if (e.detail.confirmed) {
+            var commentData = this.commentToDeleteData;
+            var request = this.$.deleteCommentRequest;
+            request.url = this._apiBaseUrl + '/comments/' + commentData.comment.Id;
+
+            request.generateRequest();
+          }
+        },
+
+        /**
+         * Handles the result of the DELETE requirement request.
+         *
+         * @param e
+         * @private
+         */
+        _handleDeleteCommentResponse: function(e) {
+          this.toastFeedback = this.localize('commentDeleteSuccess');
+          this.$.toast.open();
+
+          // now execute the delete callback
+          this.commentToDeleteData.onDelete();
+
+          this.commentToDeleteData = null;
+        },
 
       });
 
