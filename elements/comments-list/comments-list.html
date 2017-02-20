@@ -250,7 +250,10 @@
           }
           //clear the paper-input and hide it
           e.currentTarget.value = '';
-          e.currentTarget.style.display = "none";
+          e.currentTarget.hidden = true;
+
+          // notify container to resize
+          this.fire('iron-signal', {name: 'resize'});
         }
       },
 
@@ -352,6 +355,9 @@
 
         replyInput.hidden = false;
         replyInput.focus();
+
+        // notify container to resize
+        this.fire('iron-signal', {name: 'resize'});
 
         e.preventDefault();
       },
