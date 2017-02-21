@@ -857,7 +857,9 @@
             this.push('requirements', requirement);
           }.bind(this));
 
-          this.$.scrollThreshold.clearTriggers();
+          if (requirementsResponse.length > 0) {
+            this.$.scrollThreshold.clearTriggers();
+          }
         },
 
         _loadMoreData: function(e) {
