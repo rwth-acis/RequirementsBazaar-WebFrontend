@@ -108,6 +108,11 @@
         margin: 5px;
         margin-bottom: 10px;
       }
+
+      iron-scroll-threshold {
+        height: 100%;
+        overflow: auto;
+      }
     </style>
 
     <app-route
@@ -194,17 +199,16 @@
                 <!--on-response="showRepoSearchResults"-->
                 <!--on-error="errorHandler"></iron-ajax>-->
 
-    <iron-list id="requirementsList" items="[[requirements]]" scroll-target="document">
-      <template>
-        <requirement-card loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
-      </template>
-    </iron-list>
+      <iron-list id="requirementsList" items="[[requirements]]" scroll-target="document">
+        <template>
+          <requirement-card loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
+        </template>
+      </iron-list>
 
     <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
     <iron-scroll-threshold id="scrollThreshold"
-                           lower-threshold="500"
                            on-lower-threshold="_loadMoreData"
-                           scroll-target="requirementsList">
+                           scroll-target="document">
     </iron-scroll-threshold>
 
     <!-- Dialog for GitHub export functionality: -->
@@ -856,7 +860,8 @@
           this.$.scrollThreshold.clearTriggers();
         },
 
-        _loadMoreData: function() {
+        _loadMoreData: function(e) {
+          console.log('lower threshold reached');
           this._requirementsRequestCurrentPage++;
           this.$.requirementsRequest.generateRequest();
         },
