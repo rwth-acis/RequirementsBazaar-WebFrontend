@@ -273,7 +273,7 @@
               </div>
             </div>
             <div>
-              <paper-input label="[[localize('srchReq')]]" value="{{reqFilterVal}}">
+              <paper-input label="[[localize('srchReq')]]" value="{{requirementSearchFilter}}">
                 <iron-icon icon="search" prefix class="big"></iron-icon>
               </paper-input>
             </div>
@@ -296,7 +296,7 @@
 
     <requirements-list
       id="requirementsList"
-      filter-value="[[reqFilterVal]]"
+      search-filter="[[requirementSearchFilter]]"
       base-href="https://requirements-bazaar.org/betabazaar"
       project-id="[[projectId]]"
       category-id="[[categoryId]]"

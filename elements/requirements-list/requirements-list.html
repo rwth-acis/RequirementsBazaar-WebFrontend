@@ -132,45 +132,33 @@
     <iron-signals on-iron-signal-delete-requirement="_handleDeleteRequirement"></iron-signals>
     <iron-signals on-iron-signal-delete-comment="_handleDeleteComment"></iron-signals>
 
-    <iron-ajax
-      id="requirementsRequest"
-      loading="{{loading}}"
-      url="[[_resourceURL]]"
-      headers="[[authHeader]]"
-      params="[[_requirementsRequestParameters]]"
-      on-response="_handleRequirementsResponse"></iron-ajax>
+    <iron-ajax id="requirementsRequest"
+               loading="{{loading}}"
+               url="[[_resourceUrl]]"
+               headers="[[authHeader]]"
+               params="[[_requirementsRequestParameters]]"
+               on-response="_handleRequirementsResponse"
+               debounce-duration="600"
+               auto></iron-ajax>
 
-    <iron-ajax
-      id="postUpdateRequirement"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      method="PUT"
-      headers="[[authHeader]]"
-      on-response="handleResponseEditReq"
-      on-error="errorHandler"></iron-ajax>
+    <iron-ajax id="deleteRequirementRequest"
+               loading="{{loading}}"
+               handle-as="json" content-type="application/json"
+               method="DELETE"
+               headers="[[authHeader]]"
+               on-response="_handleDeleteRequirementResponse"
+               on-error="errorHandler"></iron-ajax>
 
-    <iron-ajax
-      id="deleteRequirementRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      method="DELETE"
-      headers="[[authHeader]]"
-      on-response="_handleDeleteRequirementResponse"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="postCommentRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      url="{{_apiBaseUrl}}/comments"
-      content-type="application/json"
-      method="POST"
-      headers="[[authHeader]]"
-      on-response="_handleCommentResponse"
-      last-response="{{postResponse}}"
-      on-error="errorHandler"></iron-ajax>
+    <iron-ajax id="postCommentRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               url="{{_apiBaseUrl}}/comments"
+               content-type="application/json"
+               method="POST"
+               headers="[[authHeader]]"
+               on-response="_handleCommentResponse"
+               last-response="{{postResponse}}"
+               on-error="errorHandler"></iron-ajax>
 
     <iron-ajax id="deleteCommentRequest"
                loading="{{loading}}"
@@ -274,7 +262,7 @@
       <p style="max-height: 80%;">
         <comments-list base-href="{{_apiBaseUrl}}"></comments-list>
       <div class="container flex-horizontal" hidden="[[!authorized]]">
-        <paper-input is="iron-input" on-input="showSendButton" label="[[localize('addComment')]]" class="flexchild comments-input" on-keydown="_handleCommentEnter">
+        <paper-input is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild comments-input" on-keydown="_handleCommentEnter">
         </paper-input>
         <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
       </div>
@@ -330,7 +318,7 @@
             type: String,
             value: 'list'
           },
-          _resourceURL: {
+          _resourceUrl: {
             type: String,
             computed: '_computeResourceURL(_apiBaseUrl, categoryId)'
           },
@@ -354,12 +342,21 @@
             notify: true
           },
           /**
+           * Search filter for the requirements list.
+           */
+          searchFilter: {
+            type: String,
+            value: '',
+            //observer: '_searchFilterChanged'
+          },
+          /**
            * The parameters for the request to the requirements resource.
            */
           _requirementsRequestParameters: {
             type: Object,
             notify: true,
-            computed: '_computeRequirementsRequestParameters(requirementsStateFilter, _requirementsRequestPerPage, _requirementsRequestCurrentPage)'
+            computed: '_computeRequirementsRequestParameters(_apiBaseUrl, categoryId, requirementsStateFilter, _requirementsRequestPerPage, _requirementsRequestCurrentPage, searchFilter)',
+            observer: '_requirementsRequestParametersUpdated'
           },
           /**
            * Defines how many requirements are loaded per page.
@@ -374,7 +371,7 @@
            */
           _requirementsRequestCurrentPage: {
             type: Number,
-            value: -1 // because we get a scroll lower threshold event once the page loads
+            value: 0 // because we get a scroll lower threshold event once the page loads
           },
           /**
            * The requirement's element to be deleted.
@@ -423,8 +420,7 @@
 
         observers: [
           'manageSelReq(selectedRequirements.splices)',
-          '_requirementsRequestParametersUpdated(_requirementsRequestParameters)',
-          '_dataChanged(data.requirementId)',
+          //'_requirementsRequestParametersUpdated(_requirementsRequestParameters)',
           '_routeChanged(route)',
           '_categoryIdChanged(categoryId)'
         ],
@@ -432,24 +428,6 @@
         attached: function() {
           // load localized messages
           this.loadResources(this.resolveUrl('../../locales/locales.json'));
-        },
-
-        _dataChanged: function(requirementId) {
-          if (requirementId) {
-            /*
-            // open the requirement
-            var requirementNode = this.$$('#requirement' + requirementId);
-            if (requirementNode) {
-              requirementNode.querySelector('iron-collapse').show();
-              // load comments
-              requirementNode.querySelector('comments-list').load();
-              // load attachments
-              requirementNode.querySelector("file-gallery").loadIcons();
-            } else {
-              //TODO: wait till loading completes and try again
-            }
-            */
-          }
         },
 
         _routeChanged: function(route) {
@@ -492,12 +470,27 @@
           return apiBaseUrl + '/components/' + categoryId + '/requirements';
         },
 
+        _searchFilterChanged: function(searchFilter) {
+          console.log('change');
+          this.$.scrollThreshold.clearTriggers();
+          this._requirementsRequestCurrentPage = 0;
+        },
+
         /**
          * Computes the parameter array for the request to the requirements resource.
          *
          * @param requirementsStateFilter {string} the requirement's state, either 'open', 'realized' or 'all'.
          */
-        _computeRequirementsRequestParameters: function(requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage) {
+        _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
+          console.log('_computeRequirementsRequestParameters');
+          this._resourceUrl = apiBaseUrl + '/components/' + categoryId + '/requirements';
+
+          // if we have a new search string or a new state, reset the page to 0
+          if (this._requirementsRequestParameters && ((this._requirementsRequestParameters.search !== searchFilter) || (this._requirementsRequestParameters.state !== requirementsStateFilter))) {
+            this._requirementsRequestCurrentPage = 0;
+            this.resetView();
+          }
+
           var parameters = new Object();
           parameters.per_page = requirementsRequestPerPage;
           parameters.page = requirementsRequestCurrentPage;
@@ -509,6 +502,7 @@
           } else if (requirementsStateFilter === 'all') {
             parameters.state = 'all';
           }
+          parameters.search = searchFilter;
 
           return parameters;
         },
@@ -520,10 +514,11 @@
          * @param _requirementsRequestParameters {array} the requirements request parameter.
          */
         _requirementsRequestParametersUpdated: function(_requirementsRequestParameters) {
-          //this.load();
+          //this.refresh();
         },
 
         refresh: function() {
+          console.log('sending request to server');
           this.$.requirementsRequest.generateRequest();
         },
 
@@ -697,7 +692,7 @@
 
         },
 
-        showSendButton: function(e) {
+        _handleCommentInput: function(e) {
           var fab = e.currentTarget.parentNode.querySelector('#fab');
           var message;
           if (this.viewOption === 'list') {
@@ -710,10 +705,6 @@
           } else {
             fab.style.display = 'none';
           }
-        },
-
-        _handleCommentInput: function(e) {
-          this.$$('#sendComment' + e.model.req.id).hidden = false;
         },
 
         errorHandler: function (e, detail) {
@@ -736,14 +727,6 @@
           this.selectedRequirements = [];
         },
 
-        handleResponseEditReq: function(data) {
-          if (data != null) {
-            this.toastFeedback = this.localize('reqEditSucc');
-            this.refresh();
-          }
-          this.$.toast.open();
-        },
-
         openCommentsDialog: function(e) {
           this.$.commentsDialog.querySelector("comments-list").requirementId = e.currentTarget.atr;
           this.$.commentsDialog.querySelector("comments-list").refresh();
@@ -754,6 +737,7 @@
           this.$.commentsDialog.querySelector("comments-list").comments = [];
         },
 
+        /**
         searchFilter: function (val) {
           return function (item) {
             if (!val) {
@@ -762,7 +746,7 @@
             //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
             return (item.title && ~item.title.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
           };
-        },
+        },**/
 
         _handleCommentEnter: function (e) {
           //TODO: refactor the code
@@ -864,8 +848,9 @@
 
         _loadMoreData: function(e) {
           console.log('lower threshold reached');
-          this._requirementsRequestCurrentPage++;
-          this.$.requirementsRequest.generateRequest();
+          if (this.requirements.length > 0) {
+            this._requirementsRequestCurrentPage++;
+          }
         },
 
         _handleIronResize: function() {
