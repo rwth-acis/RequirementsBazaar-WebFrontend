@@ -9,6 +9,8 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
@@ -63,12 +65,6 @@
         text-overflow: ellipsis;
       }
 
-      .filterButton {
-        font-size: medium;
-        margin-top: 10px;
-        margin-bottom: 10px;
-      }
-
       app-drawer > a {
         width: 100%;
         display: inline-block;
@@ -119,9 +115,29 @@
         top: 15px;
       }
 
+      .toolbar {
+        @apply(--layout-horizontal);
+      }
+
+      .toolbar > paper-input {
+        @apply(--layout-flex);
+      }
+
+      paper-dropdown-menu {
+        margin-right: 15px;
+
+        --paper-input-container-input: {
+          font-size: x-large;
+        };
+      }
+
       @media (max-width: 600px) {
         :host {
           padding: 0px;
+        }
+
+        .toolbar {
+          @apply(--layout-vertical);
         }
       }
 
@@ -238,47 +254,30 @@
           [[localize('by')]]
           <req-user user="{{category.leader}}" normal-view no-popover></req-user>
         </div>
-
-        <paper-button on-tap="_toggleOptions" class="filterButton" toggles>
-          <iron-icon icon="filter-list"></iron-icon>
-          <span>[[localize('options')]]</span>
-        </paper-button>
       </div>
 
       <div class="filtering" hidden="[[_editMode]]">
 
-        <iron-collapse id="collapseFilters">
-          <div>
-            <div style="display: flex; flex-wrap: wrap;">
-              <div style="flex-grow: 1; margin:20px;">
-                <paper-radio-group selected="{{requirementsStateFilter}}">
-                  <paper-radio-button name="open">[[localize('active-req')]]</paper-radio-button>
-                  <br>
-                  <paper-radio-button name="realized">[[localize('realized-req')]]</paper-radio-button>
-                </paper-radio-group>
-              </div>
+        <div class="toolbar">
+          <paper-dropdown-menu label="State">
+            <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_requirementsState}}">
+              <paper-item value="open">[[localize('active-req')]]</paper-item>
+              <paper-item value="realized">[[localize('realized-req')]]</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
 
-              <!--<div style="flex-grow: 1; margin:20px;">-->
-              <!--<div>User Rating: <span id="ratingsLabel" class="caption"></span></div>-->
-              <!--<paper-slider id="ratings" pin value="5" style="width:100%;" disabled></paper-slider>-->
-              <!--<div>User Behaviour: <span id="gradeLabel" class="caption"></span></div>-->
-              <!--<paper-slider id="grade" pin value="65" style="width:100%;" disabled></paper-slider>-->
-              <!--</div>-->
-              <div style="flex-grow: 1; margin:20px;">
-                <paper-radio-group selected="{{_viewOption}}">
-                  <paper-radio-button name="list">[[localize('list-view')]]</paper-radio-button>
-                  <br>
-                  <paper-radio-button name="grid">[[localize('grid-view')]]</paper-radio-button>
-                </paper-radio-group>
-              </div>
-            </div>
-            <div>
-              <paper-input label="[[localize('srchReq')]]" value="{{requirementSearchFilter}}">
-                <iron-icon icon="search" prefix class="big"></iron-icon>
-              </paper-input>
-            </div>
-          </div>
-        </iron-collapse>
+          <paper-dropdown-menu label="Display mode">
+            <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
+              <paper-item value="list">[[localize('active-req')]]</paper-item>
+              <paper-item value="grid">[[localize('realized-req')]]</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <paper-input class="large" label="[[localize('srchReq')]]" value="{{requirementSearchFilter}}">
+            <iron-icon icon="search" prefix></iron-icon>
+          </paper-input>
+        </div>
+
       </div>
 
       <div class="editFormComp middle middle-container center layout" hidden="[[!_editMode]]">
@@ -300,7 +299,7 @@
       base-href="https://requirements-bazaar.org/betabazaar"
       project-id="[[projectId]]"
       category-id="[[categoryId]]"
-      requirements-state-filter="{{requirementsStateFilter}}"
+      requirements-state-filter="{{_requirementsState}}"
       loading="{{loading}}"
       view-option="[[_viewOption]]"
       route="{{route}}"
@@ -380,6 +379,10 @@
         _isSmallLayout: {
           type: Boolean,
           observer: '_isSmallLayoutChanged'
+        },
+        _requirementsState: {
+          type: String,
+          value: 'open'
         },
         /**
          * Sets the style of how requirements are shown, either 'list' or 'grid'.
@@ -722,15 +725,6 @@
        */
       _computeCreateRequirementDisabled: function(newRequirementTitle, newRequirementDescription) {
         return (newRequirementTitle == null || newRequirementDescription == null || newRequirementTitle.trim() === '' || newRequirementDescription.trim() === '');
-      },
-
-      /**
-       * Toggles the visibility of the options for the list of requirements.
-       *
-       * @private
-       */
-      _toggleOptions: function() {
-        this.$.collapseFilters.toggle();
       },
 
       /**
