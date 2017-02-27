@@ -119,6 +119,10 @@
         @apply(--layout-horizontal);
       }
 
+      .toolbar > #stateDropdown, #displayDropdown {
+        @apply(--layout-flex);
+      }
+
       .toolbar > paper-input {
         @apply(--layout-flex);
       }
@@ -259,17 +263,27 @@
       <div class="filtering" hidden="[[_editMode]]">
 
         <div class="toolbar">
-          <paper-dropdown-menu label="State">
+          <paper-dropdown-menu id="stateDropdown" label="Requirements' state">
             <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_requirementsState}}">
               <paper-item value="open">[[localize('active-req')]]</paper-item>
               <paper-item value="realized">[[localize('realized-req')]]</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
 
-          <paper-dropdown-menu label="Display mode">
+          <paper-dropdown-menu id="displayDropdown" label="View option">
             <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
-              <paper-item value="list">[[localize('active-req')]]</paper-item>
-              <paper-item value="grid">[[localize('realized-req')]]</paper-item>
+              <paper-item value="list">[[localize('list-view')]]</paper-item>
+              <paper-item value="grid">[[localize('grid-view')]]</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </div>
+
+        <div class="toolbar">
+          <paper-dropdown-menu label="[[localize('sorting')]]">
+            <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_requirementsSorting}}">
+              <paper-item value="name">A-Z</paper-item>
+              <paper-item value="follower">[[localize('sorting-popularity')]]</paper-item>
+              <paper-item value="date">[[localize('sorting-activity')]]</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
 
@@ -437,6 +451,13 @@
         _createRequirementDisabled: {
           type: Boolean,
           computed: '_computeCreateRequirementDisabled(_newRequirementTitle, _newRequirementDescription)'
+        },
+        /**
+         * Defines how the requirements list is sorted.
+         */
+        _requirementsSorting: {
+          type: String,
+          value: 'name'
         },
         files: {
           type: Array,
