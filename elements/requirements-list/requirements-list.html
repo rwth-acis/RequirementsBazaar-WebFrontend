@@ -190,7 +190,7 @@
       <iron-list id="requirementsList"
                  items="[[filterItems(requirements, searchFilter, requirements.*)]]"
                  scroll-target="document"
-                 scroll-offset="339">
+                 scroll-offset="405">
         <template>
           <requirement-card loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
         </template>
@@ -324,6 +324,9 @@
           _resourceUrl: {
             type: String,
             computed: '_computeResourceURL(_apiBaseUrl, categoryId)'
+          },
+          _lastRequestCategoryId: {
+            type: Number
           },
           requirements: {
             type: Array
@@ -488,10 +491,17 @@
           console.log('_computeRequirementsRequestParameters');
           this._resourceUrl = apiBaseUrl + '/components/' + categoryId + '/requirements';
 
-          // if we have a new search string or a new state, reset the page to 0
-          if (this._requirementsRequestParameters && ((this._requirementsRequestParameters.search !== searchFilter) || (this._requirementsRequestParameters.state !== requirementsStateFilter))) {
+          // if we have a new search string, a new component ID or a new state, reset the page to 0
+          if (this._requirementsRequestParameters && ((this._requirementsRequestParameters.search !== searchFilter) ||
+            (this._requirementsRequestParameters.state !== requirementsStateFilter) ||
+            (this._lastRequestCategoryId !== categoryId))) {
             this._requirementsRequestCurrentPage = 0;
-            //this.resetView();
+            requirementsRequestCurrentPage = 0;
+
+            this._lastRequestCategoryId = categoryId;
+
+            // scroll to top
+            this.$.scrollThreshold.scroll(0, 0);
           }
 
           var parameters = new Object();
