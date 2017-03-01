@@ -281,9 +281,11 @@
         <div class="toolbar">
           <paper-dropdown-menu label="[[localize('sorting')]]">
             <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_requirementsSorting}}">
-              <paper-item value="name">A-Z</paper-item>
-              <paper-item value="follower">[[localize('sorting-popularity')]]</paper-item>
-              <paper-item value="date">[[localize('sorting-activity')]]</paper-item>
+              <paper-item value="title">A-Z</paper-item>
+              <paper-item value="date">Date</paper-item>
+              <paper-item value="follower">Followers</paper-item>
+              <paper-item value="vote">Votes</paper-item>
+              <paper-item value="comment">Comments</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
 
@@ -313,6 +315,7 @@
       base-href="https://requirements-bazaar.org/betabazaar"
       project-id="[[projectId]]"
       category-id="[[categoryId]]"
+      sorting="{{_requirementsSorting}}"
       requirements-state-filter="{{_requirementsState}}"
       loading="{{loading}}"
       view-option="[[_viewOption]]"
@@ -394,6 +397,12 @@
           type: Boolean,
           observer: '_isSmallLayoutChanged'
         },
+        /**
+         * Defines how the requirements list is sorted.
+         */
+        _requirementsSorting: {
+          type: String
+        },
         _requirementsState: {
           type: String,
           value: 'open'
@@ -451,13 +460,6 @@
         _createRequirementDisabled: {
           type: Boolean,
           computed: '_computeCreateRequirementDisabled(_newRequirementTitle, _newRequirementDescription)'
-        },
-        /**
-         * Defines how the requirements list is sorted.
-         */
-        _requirementsSorting: {
-          type: String,
-          value: 'name'
         },
         files: {
           type: Array,

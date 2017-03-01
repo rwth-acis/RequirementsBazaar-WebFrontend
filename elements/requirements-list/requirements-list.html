@@ -316,16 +316,25 @@
             type: Number
           },
           /**
+           * The sorting parameter of requirements, either `date`, `title`, `vote`, `comment`, `follower` or `realized`.
+           */
+          sorting: {
+            type: String,
+            value: 'date',
+            notify: true
+          },
+          /**
            * Whether to show 'open' or 'realized' requirements.
            */
           requirementsStateFilter: {
             type: String,
-            notify: true,
-            value: 'open'
+            value: 'open',
+            notify: true
           },
           viewOption: {
             type: String,
-            value: 'list'
+            value: 'list',
+            notify: true
           },
           _resourceUrl: {
             type: String,
@@ -367,7 +376,7 @@
           _requirementsRequestParameters: {
             type: Object,
             notify: true,
-            computed: '_computeRequirementsRequestParameters(_apiBaseUrl, categoryId, requirementsStateFilter, _requirementsRequestPerPage, _requirementsRequestCurrentPage, searchFilter)',
+            computed: '_computeRequirementsRequestParameters(_apiBaseUrl, categoryId, sorting, requirementsStateFilter, _requirementsRequestPerPage, _requirementsRequestCurrentPage, searchFilter)',
             observer: '_requirementsRequestParametersUpdated'
           },
           /**
@@ -483,7 +492,6 @@
         },
 
         _searchFilterChanged: function(searchFilter) {
-          console.log('change');
           this.$.scrollThreshold.clearTriggers();
           this._requirementsRequestCurrentPage = 0;
         },
@@ -493,8 +501,7 @@
          *
          * @param requirementsStateFilter {string} the requirement's state, either 'open', 'realized' or 'all'.
          */
-        _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
-          console.log('_computeRequirementsRequestParameters');
+        _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, sorting, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
           this._resourceUrl = apiBaseUrl + '/components/' + categoryId + '/requirements';
 
           // if we have a new search string, a new component ID or a new state, reset the page to 0
@@ -510,7 +517,18 @@
             this.$.scrollThreshold.scroll(0, 0);
           }
 
+          // check if we have a new sorting parameter; if yes, reset the list
+          if (this._requirementsRequestParameters && (this._requirementsRequestParameters.sort !== sorting)) {
+            this.requirements = [];
+            this._requirementsRequestCurrentPage = 0;
+            requirementsRequestCurrentPage = 0;
+
+            // scroll to top
+            this.$.scrollThreshold.scroll(0, 0);
+          }
+
           var parameters = new Object();
+          parameters.sort = sorting;
           parameters.per_page = requirementsRequestPerPage;
           parameters.page = requirementsRequestCurrentPage;
           // better check this type as it's a public property of the element
@@ -537,7 +555,6 @@
         },
 
         refresh: function() {
-          console.log('sending request to server');
           this.$.requirementsRequest.generateRequest();
         },
 
@@ -894,7 +911,6 @@
         },
 
         _loadMoreData: function(e) {
-          console.log('lower threshold reached');
           if (this.requirements.length > 0) {
             this._requirementsRequestCurrentPage++;
           }
@@ -977,7 +993,6 @@
          */
         filterItems: function(searchFilter) {
           return function(item) { // Array.prototype.filter
-            console.log('comparing in filter');
             return (item.requirementItem.title && ~item.requirementItem.title.toLowerCase().indexOf(searchFilter.toLowerCase())) || (item.requirementItem.description && ~item.requirementItem.description.toLowerCase().indexOf(searchFilter.toLowerCase()));
           };
         }
