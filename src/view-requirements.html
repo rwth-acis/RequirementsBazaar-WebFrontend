@@ -435,7 +435,8 @@
           type: Object
         },
         categoryId: {
-          type: Number
+          type: Number,
+          observer: '_handleCategoryIdChanged'
         },
         _editCategoryTitle: {
           type: String,
@@ -830,6 +831,18 @@
         this.$.createRequirementDialog.toggleClass('create-dialog', !newValue);
         this.$.createRequirementDialog.toggleClass('create-dialog-expanded', newValue);
         this.$.createRequirementDialog.refit();
+      },
+
+      /**
+       * Resets the view options to the default values.
+       *
+       * @param newValue
+       * @private
+       */
+      _handleCategoryIdChanged: function(newValue) {
+        this._viewOption = 'list';
+        this._requirementsSorting = 'date';
+        this._requirementsState = 'open';
       }
 
     });
