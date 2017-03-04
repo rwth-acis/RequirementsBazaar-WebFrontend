@@ -270,12 +270,22 @@
             </paper-listbox>
           </paper-dropdown-menu>
 
+          <paper-menu-button>
+            <paper-icon-button id="displayMenuIcon" icon="view-headline" class="dropdown-trigger"></paper-icon-button>
+            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
+              <paper-item value="list">[[localize('list-view')]]</paper-item>
+              <paper-item value="grid">[[localize('grid-view')]]</paper-item>
+            </paper-menu>
+          </paper-menu-button>
+
+          <!--
           <paper-dropdown-menu id="displayDropdown" label="View option">
             <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
               <paper-item value="list">[[localize('list-view')]]</paper-item>
               <paper-item value="grid">[[localize('grid-view')]]</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
+          -->
         </div>
 
         <div class="toolbar">
@@ -412,7 +422,8 @@
          */
         _viewOption: {
           type: String,
-          value: 'list'
+          value: 'list',
+          observer: '_viewOptionChanged'
         },
         /**
          * Whether any loading operation is currently active.
@@ -436,7 +447,7 @@
         },
         categoryId: {
           type: Number,
-          observer: '_handleCategoryIdChanged'
+          observer: '_categoryIdChanged'
         },
         _editCategoryTitle: {
           type: String,
@@ -839,10 +850,18 @@
        * @param newValue
        * @private
        */
-      _handleCategoryIdChanged: function(newValue) {
+      _categoryIdChanged: function(newValue) {
         this._viewOption = 'list';
         this._requirementsSorting = 'date';
         this._requirementsState = 'open';
+      },
+
+      _viewOptionChanged: function(newValue) {
+        if (newValue === 'list') {
+          this.$.displayMenuIcon.icon = 'view-headline';
+        } else {
+          this.$.displayMenuIcon.icon = 'view-module';
+        }
       }
 
     });
