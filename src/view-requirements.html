@@ -263,12 +263,23 @@
       <div class="filtering" hidden="[[_editMode]]">
 
         <div class="toolbar">
+
+          <paper-menu-button>
+            <paper-icon-button id="stateMenuIcon" icon="assignment" class="dropdown-trigger"></paper-icon-button>
+            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_requirementsState}}">
+              <paper-item value="open">[[localize('active-req')]]</paper-item>
+              <paper-item value="realized">[[localize('realized-req')]]</paper-item>
+            </paper-menu>
+          </paper-menu-button>
+
+          <!--
           <paper-dropdown-menu id="stateDropdown" label="Requirements' state">
             <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_requirementsState}}">
               <paper-item value="open">[[localize('active-req')]]</paper-item>
               <paper-item value="realized">[[localize('realized-req')]]</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
+          -->
 
           <paper-menu-button>
             <paper-icon-button id="displayMenuIcon" icon="view-headline" class="dropdown-trigger"></paper-icon-button>
@@ -278,14 +289,6 @@
             </paper-menu>
           </paper-menu-button>
 
-          <!--
-          <paper-dropdown-menu id="displayDropdown" label="View option">
-            <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
-              <paper-item value="list">[[localize('list-view')]]</paper-item>
-              <paper-item value="grid">[[localize('grid-view')]]</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
-          -->
         </div>
 
         <div class="toolbar">
@@ -415,7 +418,8 @@
         },
         _requirementsState: {
           type: String,
-          value: 'open'
+          value: 'open',
+          observer: '_requirementsStateChanged'
         },
         /**
          * Sets the style of how requirements are shown, either 'list' or 'grid'.
@@ -861,6 +865,15 @@
           this.$.displayMenuIcon.icon = 'view-headline';
         } else {
           this.$.displayMenuIcon.icon = 'view-module';
+        }
+      },
+
+      _requirementsStateChanged: function(newValue) {
+        if (newValue === 'open') {
+          this.$.stateMenuIcon.icon = 'assignment';
+        } else {
+          // realized
+          this.$.stateMenuIcon.icon = 'assignment-turned-in';
         }
       }
 
