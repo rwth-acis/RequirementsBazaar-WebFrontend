@@ -119,12 +119,22 @@
         @apply(--layout-horizontal);
       }
 
-      .toolbar > #stateDropdown, #displayDropdown {
+      .toolbar > paper-dropdown-menu {
         @apply(--layout-flex);
       }
 
       .toolbar > paper-input {
-        @apply(--layout-flex);
+        @apply(--layout-flex-2);
+      }
+
+      .toolbarIcons {
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+      }
+
+      .toolbarIcons > paper-menu-button {
+        padding: 0;
+        padding-bottom: 5px;
       }
 
       paper-dropdown-menu {
@@ -264,34 +274,26 @@
 
         <div class="toolbar">
 
-          <paper-menu-button>
-            <paper-icon-button id="stateMenuIcon" icon="assignment" class="dropdown-trigger"></paper-icon-button>
-            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_requirementsState}}">
-              <paper-item value="open">[[localize('active-req')]]</paper-item>
-              <paper-item value="realized">[[localize('realized-req')]]</paper-item>
-            </paper-menu>
-          </paper-menu-button>
+          <div class="toolbarIcons">
 
-          <!--
-          <paper-dropdown-menu id="stateDropdown" label="Requirements' state">
-            <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_requirementsState}}">
-              <paper-item value="open">[[localize('active-req')]]</paper-item>
-              <paper-item value="realized">[[localize('realized-req')]]</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
-          -->
+            <paper-menu-button>
+              <paper-icon-button id="stateMenuIcon" icon="assignment" class="dropdown-trigger"></paper-icon-button>
+              <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_requirementsState}}">
+                <paper-item value="open">[[localize('active-req')]]</paper-item>
+                <paper-item value="realized">[[localize('realized-req')]]</paper-item>
+              </paper-menu>
+            </paper-menu-button>
 
-          <paper-menu-button>
-            <paper-icon-button id="displayMenuIcon" icon="view-headline" class="dropdown-trigger"></paper-icon-button>
-            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
-              <paper-item value="list">[[localize('list-view')]]</paper-item>
-              <paper-item value="grid">[[localize('grid-view')]]</paper-item>
-            </paper-menu>
-          </paper-menu-button>
+            <paper-menu-button>
+              <paper-icon-button id="displayMenuIcon" icon="view-headline" class="dropdown-trigger"></paper-icon-button>
+              <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
+                <paper-item value="list">[[localize('list-view')]]</paper-item>
+                <paper-item value="grid">[[localize('grid-view')]]</paper-item>
+              </paper-menu>
+            </paper-menu-button>
 
-        </div>
+          </div>
 
-        <div class="toolbar">
           <paper-dropdown-menu label="[[localize('sorting')]]">
             <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_requirementsSorting}}">
               <paper-item value="title">A-Z</paper-item>
@@ -305,6 +307,7 @@
           <paper-input class="large" label="[[localize('srchReq')]]" value="{{requirementSearchFilter}}">
             <iron-icon icon="search" prefix></iron-icon>
           </paper-input>
+
         </div>
 
       </div>
