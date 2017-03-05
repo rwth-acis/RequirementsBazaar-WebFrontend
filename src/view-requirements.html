@@ -271,29 +271,7 @@
       </div>
 
       <div class="filtering" hidden="[[_editMode]]">
-
         <div class="toolbar">
-
-          <div class="toolbarIcons">
-
-            <paper-menu-button>
-              <paper-icon-button id="stateMenuIcon" icon="assignment" class="dropdown-trigger"></paper-icon-button>
-              <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_requirementsState}}">
-                <paper-item value="open">[[localize('active-req')]]</paper-item>
-                <paper-item value="realized">[[localize('realized-req')]]</paper-item>
-              </paper-menu>
-            </paper-menu-button>
-
-            <paper-menu-button>
-              <paper-icon-button id="displayMenuIcon" icon="view-headline" class="dropdown-trigger"></paper-icon-button>
-              <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
-                <paper-item value="list">[[localize('list-view')]]</paper-item>
-                <paper-item value="grid">[[localize('grid-view')]]</paper-item>
-              </paper-menu>
-            </paper-menu-button>
-
-          </div>
-
           <paper-dropdown-menu label="[[localize('sorting')]]">
             <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_requirementsSorting}}">
               <paper-item value="title">A-Z</paper-item>
@@ -308,8 +286,24 @@
             <iron-icon icon="search" prefix></iron-icon>
           </paper-input>
 
-        </div>
+          <div class="toolbarIcons">
+            <paper-menu-button horizontal-align="right">
+              <paper-icon-button id="displayMenuIcon" icon="view-headline" class="dropdown-trigger"></paper-icon-button>
+              <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
+                <paper-item value="list">[[localize('list-view')]]</paper-item>
+                <paper-item value="grid">[[localize('grid-view')]]</paper-item>
+              </paper-menu>
+            </paper-menu-button>
 
+            <paper-menu-button horizontal-align="right">
+              <paper-icon-button id="stateMenuIcon" icon="assignment" class="dropdown-trigger"></paper-icon-button>
+              <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_requirementsState}}">
+                <paper-item value="open">[[localize('active-req')]]</paper-item>
+                <paper-item value="realized">[[localize('realized-req')]]</paper-item>
+              </paper-menu>
+            </paper-menu-button>
+          </div>
+        </div>
       </div>
 
       <div class="editFormComp middle middle-container center layout" hidden="[[!_editMode]]">
