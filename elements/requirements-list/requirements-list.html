@@ -198,9 +198,11 @@
       </iron-list>
       -->
 
-    <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5">
-      <requirement-card loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
-    </template>
+    <div id="grid">
+      <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5">
+        <requirement-card loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
+      </template>
+    </div>
 
     <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
     <iron-scroll-threshold id="scrollThreshold"
@@ -334,7 +336,8 @@
           viewOption: {
             type: String,
             value: 'list',
-            notify: true
+            notify: true,
+            observer: '_viewOptionChanged'
           },
           _resourceUrl: {
             type: String,
@@ -478,6 +481,16 @@
             itemSelector: '.grid-item',
             columnWidth: 110
           });
+        },
+
+        _viewOptionChanged: function(viewOption) {
+          if (viewOption === 'grid') {
+            var grid = this.$$('#grid');
+            var msnry = new Masonry(grid, {
+              itemSelector: 'requirement-card',
+              columnWidth: 110
+            });
+          }
         },
 
         _isViewActive: function(viewOption, view) {
