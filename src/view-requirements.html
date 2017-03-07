@@ -120,7 +120,7 @@
       }
 
       .toolbar > paper-dropdown-menu {
-        @apply(--layout-flex);
+        /*@apply(--layout-flex);*/
       }
 
       .toolbar > paper-input {
@@ -138,8 +138,6 @@
       }
 
       paper-dropdown-menu {
-        margin-right: 15px;
-
         --paper-input-container-input: {
           font-size: x-large;
         };
@@ -206,13 +204,13 @@
                on-response="compResponse"
                on-error="errorHandler"></iron-ajax>
 
-    <iron-ajax  id="editCategoryRequest"
-                loading="{{loading}}"
-                handle-as="json"
-                content-type="application/json"
-                headers="[[authHeader]]"
-                on-response="_handleEditCategoryResponse"
-                on-error="errorHandler"></iron-ajax>
+    <iron-ajax id="editCategoryRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               content-type="application/json"
+               headers="[[authHeader]]"
+               on-response="_handleEditCategoryResponse"
+               on-error="errorHandler"></iron-ajax>
 
     <iron-ajax id="editProjectRequest"
                loading="{{loading}}"
@@ -281,6 +279,16 @@
               <paper-item value="comment">Comments</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
+
+          <div class="toolbarIcons">
+            <paper-menu-button>
+              <paper-icon-button id="sortDirectionMenuIcon" icon="sort" class="dropdown-trigger"></paper-icon-button>
+              <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_requirementsSortDirection}}">
+                <paper-item value="ascending">Ascending</paper-item>
+                <paper-item value="descending">Descending</paper-item>
+              </paper-menu>
+            </paper-menu-button>
+          </div>
 
           <paper-input class="large" label="[[localize('srchReq')]]" value="{{requirementSearchFilter}}">
             <iron-icon icon="search" prefix></iron-icon>
