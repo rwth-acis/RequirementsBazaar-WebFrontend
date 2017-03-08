@@ -296,7 +296,7 @@
 
           <div class="toolbarIcons">
             <paper-menu-button horizontal-align="right">
-              <paper-icon-button id="displayMenuIcon" icon="view-headline" class="dropdown-trigger"></paper-icon-button>
+              <paper-icon-button id="displayMenuIcon" icon="view-list" class="dropdown-trigger"></paper-icon-button>
               <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_viewOption}}">
                 <paper-item value="list">[[localize('list-view')]]</paper-item>
                 <paper-item value="grid">[[localize('grid-view')]]</paper-item>
@@ -867,7 +867,7 @@
 
       _viewOptionChanged: function(newValue) {
         if (newValue === 'list') {
-          this.$.displayMenuIcon.icon = 'view-headline';
+          this.$.displayMenuIcon.icon = 'view-list';
         } else {
           this.$.displayMenuIcon.icon = 'view-module';
         }
