@@ -485,6 +485,13 @@
 
       _handleCheckboxChange: function(e) {
         if (e.target.checked) {
+          // requirement was selected
+          this.fire('iron-signal', {name: 'select-requirement', data: this.requirement});
+        } else {
+          // requirement was unselected
+          this.fire('iron-signal', {name: 'unselect-requirement', data: this.requirement});
+        }
+          /*
           this.push('selectedRequirements', requirementId);
         } else {
           var index = this.selectedRequirements.indexOf(requirementId);
@@ -493,6 +500,7 @@
           }
         }
         this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0)
+        */
       },
 
       _authorizedChanged: function(newValue) {

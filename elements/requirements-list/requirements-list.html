@@ -131,6 +131,8 @@
     <iron-signals on-iron-signal-show-toast="_handleShowToast"></iron-signals>
     <iron-signals on-iron-signal-delete-requirement="_handleDeleteRequirement"></iron-signals>
     <iron-signals on-iron-signal-delete-comment="_handleDeleteComment"></iron-signals>
+    <iron-signals on-iron-signal-select-requirement="_handleSelectRequirement"></iron-signals>
+    <iron-signals on-iron-signal-unselect-requirement="_handleUnselectRequirement"></iron-signals>
 
     <iron-ajax
       id="requirementsRequest"
@@ -367,7 +369,7 @@
            */
           _requirementsRequestPerPage: {
             type: Number,
-            value: 10
+            value: 15
           },
           /**
            * Stores the current page number.
@@ -888,6 +890,11 @@
           detail.style.zIndex = 0;
         },
 
+        /**
+         * Shows a toast notification.
+         *
+         * @param detail a text that is displayed in the toast.
+         */
         _handleShowToast: function(e, detail) {
           this.toastFeedback = detail;
           this.$.toast.open();
@@ -934,6 +941,21 @@
 
           this.commentToDeleteData = null;
         },
+
+        _handleSelectRequirement: function(e, detail) {
+          this.push('selectedRequirements', detail.id);
+
+          this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0);
+        },
+
+        _handleUnselectRequirement: function(e, detail) {
+          var index = this.selectedRequirements.indexOf(detail.id);
+          if (index > -1) {
+            this.splice('selectedRequirements', index, 1);
+          }
+
+          this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0);
+        }
 
       });
 
