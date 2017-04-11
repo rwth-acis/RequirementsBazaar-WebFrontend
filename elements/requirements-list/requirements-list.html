@@ -1015,7 +1015,7 @@
           return function(item) { // Array.prototype.filter
             return (item.requirementItem.title && ~item.requirementItem.title.toLowerCase().indexOf(searchFilter.toLowerCase())) || (item.requirementItem.description && ~item.requirementItem.description.toLowerCase().indexOf(searchFilter.toLowerCase()));
           };
-        }
+        },
 
         _handleSelectRequirement: function(e, detail) {
           this.push('selectedRequirements', detail.id);
