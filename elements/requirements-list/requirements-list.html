@@ -202,7 +202,7 @@
 
     <div id="grid">
       <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5">
-        <requirement-card loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
+        <requirement-card id$="requirement{{item.requirementItem.id}}" loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
       </template>
     </div>
 
@@ -287,7 +287,7 @@
     <paper-material elevation="5" id="bottomToolbar" hidden>
       <span>{{selectedRequirements.length}} Requirements selected.</span>
       <paper-icon-button icon="file-download" on-tap="_exportSelectedRequirements"></paper-icon-button>
-      <paper-icon-button icon="close" on-tap="closeBottomToolbar"></paper-icon-button>
+      <paper-icon-button icon="close" on-tap="_closeBottomToolbar"></paper-icon-button>
     </paper-material>
 
     <!-- Toast for toast notifications: -->
@@ -766,12 +766,11 @@
           this.$.toast.open();
         },
 
-        closeBottomToolbar: function() {
+        _closeBottomToolbar: function() {
           this.$.bottomToolbar.hidden = true;
           //TODO: fix unselection as soon as we use iron-list
           for (var i=0; i < this.selectedRequirements.length; i++) {
-            this.$$('#checkbox' + this.selectedRequirements[i]).checked = false;
-            //this.$$('#checkbox' + this.selectedRequirements[i]).hidden = true;
+            this.$$('#requirement' + this.selectedRequirements[i]).selected = false;
           }
           this.selectedRequirements = [];
         },

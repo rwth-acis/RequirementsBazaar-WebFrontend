@@ -299,6 +299,12 @@
           type: Boolean,
           reflectToAttribute: true
         },
+        selected: {
+          type: Boolean,
+          reflectToAttribute: true,
+          notify: true,
+          observer: '_selectedChanged'
+        },
         requirement: {
           type: Object,
           notify: true
@@ -484,6 +490,7 @@
       },
 
       _handleCheckboxChange: function(e) {
+        this.selected = e.target.checked;
         if (e.target.checked) {
           // requirement was selected
           this.fire('iron-signal', {name: 'select-requirement', data: this.requirement});
@@ -505,6 +512,10 @@
 
       _authorizedChanged: function(newValue) {
         //this.fire('iron-signal', {name: 'resize'});
+      },
+
+      _selectedChanged: function(newValue) {
+        this.$.checkbox.checked = newValue;
       },
 
       /**
