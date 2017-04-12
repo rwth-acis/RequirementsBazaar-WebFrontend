@@ -532,8 +532,8 @@
             this.$.scrollThreshold.scroll(0, 0);
           }
 
-          // check if we have a new sorting parameter; if yes, reset the list
-          if (this._requirementsRequestParameters && (this._requirementsRequestParameters.sort !== sorting)) {
+          // check if we have a new sorting or state parameter; if yes, reset the list
+          if (this._requirementsRequestParameters && ((this._requirementsRequestParameters.sort !== sorting) || (this._requirementsRequestParameters.state !== requirementsStateFilter))) {
             this.requirements = [];
             this._requirementsRequestCurrentPage = 0;
             requirementsRequestCurrentPage = 0;
