@@ -286,7 +286,7 @@
 
     <paper-material elevation="5" id="bottomToolbar" hidden>
       <span>{{selectedRequirements.length}} Requirements selected.</span>
-      <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
+      <paper-icon-button icon="file-download" on-tap="_exportSelectedRequirements"></paper-icon-button>
       <paper-icon-button icon="close" on-tap="closeBottomToolbar"></paper-icon-button>
     </paper-material>
 
@@ -583,18 +583,18 @@
           this.repositories = this.searchRepositories.items;
         },
 
-        downloadRequirements: function(e) {
-          var selReq = [];
+        _exportSelectedRequirements: function(e) {
+          var selectedRequirements = [];
           for (var i=0; i < this.selectedRequirements.length; i++) {
             for (var j=0; j < this.requirements.length; j++) {
-              if (parseInt(this.selectedRequirements[i]) === this.requirements[j].id) {
-                selReq.push(this.requirements[j]);
+              if (parseInt(this.selectedRequirements[i]) === this.requirements[j].requirementItem.id) {
+                selectedRequirements.push(this.requirements[j].requirementItem);
               }
             }
           }
 
           //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
-          var arrData = typeof selReq != 'object' ? JSON.parse(selReq) : selReq;
+          var arrData = typeof selectedRequirements != 'object' ? JSON.parse(selectedRequirements) : selectedRequirements;
 
           var CSV = '';
           //Set Report title in first row or line
@@ -616,9 +616,7 @@
             row += '"' + arrData[i].creator.userName + '",';
             row += '"' + arrData[i].developers.length + '",';
             row += '"' + arrData[i].followers.length + '",';
-            row += '"' + arrData[i].components[0].name + '",';
-
-            row.slice(0, row.length - 1);
+            row += '"' + arrData[i].components[0].name + '"';
 
             //add a line break after each row
             CSV += row + '\r\n';
