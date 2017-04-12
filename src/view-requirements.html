@@ -284,8 +284,8 @@
             <paper-menu-button>
               <paper-icon-button id="sortDirectionMenuIcon" icon="sort" class="dropdown-trigger"></paper-icon-button>
               <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_requirementsSortDirection}}">
-                <paper-item value="ascending">Ascending</paper-item>
-                <paper-item value="descending">Descending</paper-item>
+                <paper-item value="+">Ascending</paper-item>
+                <paper-item value="-">Descending</paper-item>
               </paper-menu>
             </paper-menu-button>
           </div>
@@ -334,6 +334,7 @@
       project-id="[[projectId]]"
       category-id="[[categoryId]]"
       sorting="{{_requirementsSorting}}"
+      sort-direction="{{_requirementsSortDirection}}"
       requirements-state-filter="{{_requirementsState}}"
       loading="{{loading}}"
       view-option="[[_viewOption]]"
@@ -419,6 +420,9 @@
          * Defines how the requirements list is sorted.
          */
         _requirementsSorting: {
+          type: String
+        },
+        _requirementsSortDirection: {
           type: String
         },
         _requirementsState: {
@@ -862,6 +866,7 @@
       _categoryIdChanged: function(newValue) {
         this._viewOption = 'list';
         this._requirementsSorting = 'date';
+        this._requirementsSortDirection = '+';
         this._requirementsState = 'open';
       },
 

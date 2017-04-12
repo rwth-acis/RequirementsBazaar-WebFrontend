@@ -327,6 +327,11 @@
             value: 'date',
             notify: true
           },
+          sortDirection: {
+            type: String,
+            value: '+',
+            notify: true
+          },
           /**
            * Whether to show 'open' or 'realized' requirements.
            */
@@ -381,7 +386,7 @@
           _requirementsRequestParameters: {
             type: Object,
             notify: true,
-            computed: '_computeRequirementsRequestParameters(_apiBaseUrl, categoryId, sorting, requirementsStateFilter, _requirementsRequestPerPage, _requirementsRequestCurrentPage, searchFilter)',
+            computed: '_computeRequirementsRequestParameters(_apiBaseUrl, categoryId, sorting, sortDirection, requirementsStateFilter, _requirementsRequestPerPage, _requirementsRequestCurrentPage, searchFilter)',
             observer: '_requirementsRequestParametersUpdated'
           },
           /**
@@ -516,7 +521,7 @@
          *
          * @param requirementsStateFilter {string} the requirement's state, either 'open', 'realized' or 'all'.
          */
-        _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, sorting, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
+        _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, sorting, sortDirection, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
           this._resourceUrl = apiBaseUrl + '/components/' + categoryId + '/requirements';
 
           // if we have a new search string, a new component ID or a new state, reset the page to 0
@@ -533,17 +538,20 @@
           }
 
           // check if we have a new sorting or state parameter; if yes, reset the list
-          if (this._requirementsRequestParameters && ((this._requirementsRequestParameters.sort !== sorting) || (this._requirementsRequestParameters.state !== requirementsStateFilter))) {
+          if (this._requirementsRequestParameters && ((this._requirementsRequestParameters.sort !== (sortDirection + sorting)) || (this._requirementsRequestParameters.state !== requirementsStateFilter))) {
             this.requirements = [];
             this._requirementsRequestCurrentPage = 0;
             requirementsRequestCurrentPage = 0;
+
+            // reset sorting direction
+            this.sortDirection = '+';
 
             // scroll to top
             this.$.scrollThreshold.scroll(0, 0);
           }
 
           var parameters = new Object();
-          parameters.sort = sorting;
+          parameters.sort = sortDirection + sorting;
           parameters.per_page = requirementsRequestPerPage;
           parameters.page = requirementsRequestCurrentPage;
           // better check this type as it's a public property of the element
