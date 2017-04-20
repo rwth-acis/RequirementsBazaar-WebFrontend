@@ -486,13 +486,18 @@
          */
         _handleGridDomChange: function(e) {
           console.log('a');
-          var grid = this.$$('#grid');
-
           var columnWidth = (this.viewOption === 'list') ? 800 : 250;
 
+          // change the width of all children
+          var cards = this.$.grid.children;
+          for (var i = 0; i < cards.length; i++) {
+            cards[i].style.width = columnWidth + 'px';
+          }
+
+          var grid = this.$.grid;
           var msnry = new Masonry(grid, {
             itemSelector: 'requirement-card',
-            fitWidth: true,
+            //fitWidth: true,
             gutter: 10,
             columnWidth: columnWidth
           });
@@ -502,17 +507,19 @@
           console.log('b');
           var columnWidth = (viewOption === 'list') ? 800 : 250;
 
-          var grid = this.$.grid;
-          if (!this.masonryGrid) {
-            this.masonryGrid = new Masonry(grid, {
-              itemSelector: 'requirement-card',
-              gutter: 20,
-              fitWidth: true,
-              columnWidth: columnWidth
-            });
-          } else {
-            this.masonryGrid.columnWidth = columnWidth;
+          // change the width of all children
+          var cards = this.$.grid.children;
+          for (var i = 0; i < cards.length; i++) {
+            cards[i].style.width = columnWidth + 'px';
           }
+
+          var grid = this.$.grid;
+          var msnry = new Masonry(grid, {
+            itemSelector: 'requirement-card',
+            gutter: 20,
+            //fitWidth: true,
+            columnWidth: columnWidth
+          });
         },
 
         _isViewActive: function(viewOption, view) {
