@@ -514,6 +514,11 @@
           });
 
           this.$.scrollThreshold.scroll(0, 0);
+
+          // load more items if we changed to grid
+          if (viewOption === 'grid') {
+            this._loadMoreData();
+          }
         },
 
         _isViewActive: function(viewOption, view) {
@@ -547,11 +552,11 @@
             this._requirementsRequestCurrentPage = 0;
             requirementsRequestCurrentPage = 0;
 
-            this._lastRequestCategoryId = categoryId;
-
             // scroll to top
             this.$.scrollThreshold.scroll(0, 0);
           }
+
+          this._lastRequestCategoryId = categoryId;
 
           // check if we have a new sorting or state parameter; if yes, reset the list
           if (this._requirementsRequestParameters && ((this._requirementsRequestParameters.sort !== (sortDirection + sorting)) || (this._requirementsRequestParameters.state !== requirementsStateFilter))) {
@@ -947,7 +952,7 @@
         },
 
         _loadMoreData: function(e) {
-          if (this.requirements.length > 0) {
+          if (this.requirements && (this.requirements.length > 0)) {
             this._requirementsRequestCurrentPage++;
           }
         },
