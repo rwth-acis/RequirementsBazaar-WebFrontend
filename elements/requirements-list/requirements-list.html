@@ -107,6 +107,7 @@
       .grid-item {
         margin: 5px;
         margin-bottom: 10px;
+        width: 250px;
       }
 
       iron-scroll-threshold {
@@ -200,12 +201,16 @@
       </iron-list>
       -->
 
-    <div style="min-width:10px;">
-      <div id="grid">
-        <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5" on-dom-change="_handleGridDomChange">
-          <requirement-card id$="requirement{{item.requirementItem.id}}" loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
-        </template>
-      </div>
+    <div id="list" hidden="[[!_isViewActive(viewOption, 'list')]]">
+      <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5">
+        <requirement-card id$="requirement{{item.requirementItem.id}}" loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
+      </template>
+    </div>
+
+    <div id="grid" hidden="[[!_isViewActive(viewOption, 'grid')]]">
+      <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5" on-dom-change="_handleGridDomChange">
+        <requirement-card id$="requirement{{item.requirementItem.id}}" loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]" class="grid-item"></requirement-card>
+      </template>
     </div>
 
     <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
@@ -486,18 +491,11 @@
          */
         _handleGridDomChange: function(e) {
           console.log('a');
-          var columnWidth = (this.viewOption === 'list') ? 800 : 250;
-
-          // change the width of all children
-          var cards = this.$.grid.children;
-          for (var i = 0; i < cards.length; i++) {
-            cards[i].style.width = columnWidth + 'px';
-          }
+          var columnWidth = 250;
 
           var grid = this.$.grid;
           var msnry = new Masonry(grid, {
             itemSelector: 'requirement-card',
-            //fitWidth: true,
             gutter: 10,
             columnWidth: columnWidth
           });
@@ -505,13 +503,7 @@
 
         _viewOptionChanged: function(viewOption) {
           console.log('b');
-          var columnWidth = (viewOption === 'list') ? 800 : 250;
-
-          // change the width of all children
-          var cards = this.$.grid.children;
-          for (var i = 0; i < cards.length; i++) {
-            cards[i].style.width = columnWidth + 'px';
-          }
+          var columnWidth = 250;
 
           var grid = this.$.grid;
           var msnry = new Masonry(grid, {
@@ -520,6 +512,8 @@
             //fitWidth: true,
             columnWidth: columnWidth
           });
+
+          this.$.scrollThreshold.scroll(0, 0);
         },
 
         _isViewActive: function(viewOption, view) {
