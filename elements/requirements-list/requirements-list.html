@@ -209,7 +209,24 @@
 
     <div id="grid" hidden="[[!_isViewActive(viewOption, 'grid')]]">
       <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5" on-dom-change="_handleGridDomChange">
-        <requirement-card id$="requirement{{item.requirementItem.id}}" loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]" class="grid-item"></requirement-card>
+        <paper-card heading="{{item.requirementItem.title}}" elevation="2" class="grid-item">
+          <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[item.requirementItem.creator]]" normal-view></req-user></span></div>
+          <relative-time class="time" datetime$="[[item.requirementItem.creation_time]]"></relative-time>
+          <div class="card-content" class="truncate">{{item.requirementItem.description}}</div>
+          <div class="card-actions">
+            <paper-button on-tap="openCommentsDialog">
+              <iron-icon icon="editor:mode-comment"></iron-icon>
+              [[item.requirementItem.numberOfComments]]
+            </paper-button>
+            <span class="starIcon">
+              <paper-icon-button icon="[[_calculateStarIcon(item.requirementItem.userVoted, authorized)]]"
+                                 class$="[[_calculateStarClass(item.requirementItem.userVoted, authorized)]]"
+                                 on-tap="_handleStarTap"
+                                 disabled="[[!authorized]]"></paper-icon-button>
+              [[item.requirementItem.upVotes]]
+            </span>
+          </div>
+        </paper-card>
       </template>
     </div>
 
@@ -490,7 +507,6 @@
          * @param e
          */
         _handleGridDomChange: function(e) {
-          console.log('a');
           var columnWidth = 250;
 
           var grid = this.$.grid;
@@ -502,7 +518,6 @@
         },
 
         _viewOptionChanged: function(viewOption) {
-          console.log('b');
           var columnWidth = 250;
 
           var grid = this.$.grid;
@@ -805,7 +820,7 @@
         },
 
         openCommentsDialog: function(e) {
-          this.$.commentsDialog.querySelector("comments-list").requirementId = e.currentTarget.atr;
+          this.$.commentsDialog.querySelector("comments-list").requirementId = e.model.item.requirementItem.id;
           this.$.commentsDialog.querySelector("comments-list").refresh();
           this.$.commentsDialog.open();
         },
@@ -1056,6 +1071,39 @@
           }
 
           this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0);
+        },
+
+        /**
+         * Still needed for requirements cards in grid view
+         */
+
+        /**
+         * Calculates the specific star icon to show for the voting feature of the requirements.
+         *
+         * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
+         * @param authorized whether the user is currently logged in or not.
+         * @returns {string} the icon, either a filled star or just the outlines of a star.
+         * @private
+         */
+        _calculateStarIcon: function(vote, authorized) {
+          if (authorized && (vote === 'UP_VOTE')) {
+            return 'star';
+          }
+          return 'star-border';
+        },
+
+        /**
+         * Calculates the CSS class for the star icon of the voting feature of the requirements.
+         *
+         * @param vote the vote field coming from the backend, either 'UP_VOTE' or 'NO_VOTE'.
+         * @param authorized whether the user is currently logged in or not.
+         * @returns {string} the CSS class for the star icon.
+         * @private
+         */
+        _calculateStarClass: function(vote, authorized) {
+          if (authorized && (vote === 'UP_VOTE')) {
+            return 'colored';
+          }
         }
 
       });
