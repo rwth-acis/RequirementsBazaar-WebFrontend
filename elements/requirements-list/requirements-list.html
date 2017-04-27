@@ -353,8 +353,9 @@
           },
           sortDirection: {
             type: String,
-            value: '+',
-            notify: true
+            value: '-',
+            notify: true,
+            reflectToAttribute: true
           },
           /**
            * Whether to show 'open' or 'realized' requirements.
@@ -376,6 +377,9 @@
           },
           _lastRequestCategoryId: {
             type: Number
+          },
+          _lastRequestSorting: {
+            type: String
           },
           requirements: {
             type: Array
@@ -560,31 +564,43 @@
         _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, sorting, sortDirection, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
           this._resourceUrl = apiBaseUrl + '/components/' + categoryId + '/requirements';
 
-          // if we have a new search string, a new component ID or a new state, reset the page to 0
-          if (this._requirementsRequestParameters && ((this._requirementsRequestParameters.search !== searchFilter) ||
-            (this._requirementsRequestParameters.state !== requirementsStateFilter) ||
-            (this._lastRequestCategoryId !== categoryId))) {
-            this._requirementsRequestCurrentPage = 0;
-            requirementsRequestCurrentPage = 0;
+          if (this._requirementsRequestParameters) {
 
-            // scroll to top
-            this.$.scrollThreshold.scroll(0, 0);
+            // if we have a new search string, a new component ID or a new state, reset the page to 0
+            if ((this._requirementsRequestParameters.search !== searchFilter) ||
+                (this._requirementsRequestParameters.state !== requirementsStateFilter) ||
+                (this._lastRequestCategoryId !== categoryId)) {
+              this._requirementsRequestCurrentPage = 0;
+              requirementsRequestCurrentPage = 0;
+
+              // scroll to top
+              this.$.scrollThreshold.scroll(0, 0);
+            }
+
+            // if we have a new sorting parameter, reset the sort direction
+            if (this._lastRequestSorting !== sorting) {
+              if (['date', 'vote', 'comment', 'follower'].indexOf(sorting) >= 0) {
+                this.sortDirection = '-';
+                sortDirection = '-';
+              } else {
+                this.sortDirection = '+';
+                sortDirection = '+';
+              }
+            }
+
+            // check if we have a new sorting or state parameter; if yes, reset the list
+            if ((this._requirementsRequestParameters.sort !== (sortDirection + sorting)) || (this._requirementsRequestParameters.state !== requirementsStateFilter)) {
+              this.requirements = [];
+              this._requirementsRequestCurrentPage = 0;
+              requirementsRequestCurrentPage = 0;
+
+              // scroll to top
+              this.$.scrollThreshold.scroll(0, 0);
+            }
           }
 
           this._lastRequestCategoryId = categoryId;
-
-          // check if we have a new sorting or state parameter; if yes, reset the list
-          if (this._requirementsRequestParameters && ((this._requirementsRequestParameters.sort !== (sortDirection + sorting)) || (this._requirementsRequestParameters.state !== requirementsStateFilter))) {
-            this.requirements = [];
-            this._requirementsRequestCurrentPage = 0;
-            requirementsRequestCurrentPage = 0;
-
-            // reset sorting direction
-            this.sortDirection = '+';
-
-            // scroll to top
-            this.$.scrollThreshold.scroll(0, 0);
-          }
+          this._lastRequestSorting = sorting;
 
           var parameters = new Object();
           parameters.sort = sortDirection + sorting;

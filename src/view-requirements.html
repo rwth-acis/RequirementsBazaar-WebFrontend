@@ -866,9 +866,10 @@
        * @private
        */
       _categoryIdChanged: function(newValue) {
+        console.log('categoryIdChanged');
         this._viewOption = 'list';
         this._requirementsSorting = 'date';
-        this._requirementsSortDirection = '+';
+        this._requirementsSortDirection = '-';
         this._requirementsState = 'open';
       },
 
@@ -890,6 +891,7 @@
       },
 
       _requirementsSortDirectionChanged: function(newValue) {
+        console.log('sortdirectionchanged');
         if (newValue === '+') {
           this.$.sortDirectionMenuIcon.icon = 'reqbaz:sort-ascending';
         } else {
