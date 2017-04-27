@@ -33,6 +33,7 @@
 <link rel="import" href="../elements/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
+<link rel="import" href="reqbaz-icons.html">
 
 <dom-module id="view-requirements">
   <template>
@@ -282,7 +283,7 @@
 
           <div class="toolbarIcons">
             <paper-menu-button>
-              <paper-icon-button id="sortDirectionMenuIcon" icon="sort" class="dropdown-trigger"></paper-icon-button>
+              <paper-icon-button id="sortDirectionMenuIcon" icon="reqbaz:sort-ascending" class="dropdown-trigger"></paper-icon-button>
               <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_requirementsSortDirection}}">
                 <paper-item value="+">Ascending</paper-item>
                 <paper-item value="-">Descending</paper-item>
@@ -423,7 +424,8 @@
           type: String
         },
         _requirementsSortDirection: {
-          type: String
+          type: String,
+          observer: '_requirementsSortDirectionChanged'
         },
         _requirementsState: {
           type: String,
@@ -884,6 +886,14 @@
         } else {
           // realized
           this.$.stateMenuIcon.icon = 'assignment-turned-in';
+        }
+      },
+
+      _requirementsSortDirectionChanged: function(newValue) {
+        if (newValue === '+') {
+          this.$.sortDirectionMenuIcon.icon = 'reqbaz:sort-ascending';
+        } else {
+          this.$.sortDirectionMenuIcon.icon = 'reqbaz:sort-descending';
         }
       }
 
