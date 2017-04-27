@@ -73,6 +73,16 @@
       on-response="_handleEditProjectResponse"
       on-error="_handleEditProjectError"></iron-ajax>
 
+    <iron-ajax id="projectStatisticsRequest"
+               url="[[_apiBaseUrl]]/statistics"
+               loading="{{loading}}"
+               handle-as="json"
+               content-type="application/json"
+               headers="[[authHeader]]"
+               params="[[_computeStatisticsParams(projectId)]]"
+               last-response="{{statistics}}"
+               on-error="_handleProjectStatisticsError"></iron-ajax>
+
     <paper-material elevation="1">
 
       <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute; top:2px; right:8px;" hidden="[[!authorized]]" on-iron-select="_handleCategoryMenuSelect">
@@ -384,6 +394,13 @@
 
           return false;
         }
+      },
+
+      _computeStatisticsParams: function(projectId) {
+        return {
+          "scopeField": "project",
+          "scopeId": projectId
+        };
       }
 
     });

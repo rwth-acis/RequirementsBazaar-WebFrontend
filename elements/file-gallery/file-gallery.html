@@ -33,7 +33,7 @@
     </template>
 
     <!-- show images in the list view -->
-    <iron-collapse id="imageCollapse">
+    <iron-collapse id="imageCollapse" no-animation>
       <img id="expandedImage">
     </iron-collapse>
 
@@ -85,6 +85,8 @@
           this.$.expandedImage.src = imageUrl;
           this.$.imageCollapse.show();
         }
+
+        this.fire('iron-signal', {name: 'resize'});
       },
 
       /**

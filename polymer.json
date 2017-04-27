@@ -13,14 +13,14 @@
     "src/view-projects-list.html",
     "src/view-requirements.html"
   ],
-  "sourceGlobs": [
+  "sources": [
     "elements/**/*",
     "images/**/*",
     "locales/**/*",
     "src/**/*",
     "bower.json"
   ],
-  "includeDependencies": [
+  "extraDependencies": [
     "manifest.json",
     "bower_components/webcomponentsjs/webcomponents-lite.min.js"
   ]
