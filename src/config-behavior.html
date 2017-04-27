@@ -5,6 +5,10 @@
   GlobalConfig = [];
   GlobalConfig.language = 'en';
 
+  /**
+   * @polymerBehavior ConfigBehavior
+   * @type {{properties: {_apiBaseUrl: {type: String, value: string}, _fileApiBaseUrl: {type: String, value: string}, _frontendBasePath: {type: String, value: string}, language: {type: String, value: ConfigBehavior.properties.language.value, observer: string}, currentUser: {type: String, value: ConfigBehavior.properties.currentUser.value, observer: string}, authorized: {type: Boolean}, authHeader: {type: Array}}, setCurrentUser: ConfigBehavior.setCurrentUser, rightDrawerReserveSpace, rightDrawerReserveSpace, _languageChanged: ConfigBehavior._languageChanged, _handleLanguageChanged: ConfigBehavior._handleLanguageChanged, _handleSigninSuccess: ConfigBehavior._handleSigninSuccess, _handleSignedOut: ConfigBehavior._handleSignedOut, _currentUserChanged: ConfigBehavior._currentUserChanged, _handleCurrentUserChanged: ConfigBehavior._handleCurrentUserChanged}}
+   */
   ConfigBehavior = {
 
     properties: {
