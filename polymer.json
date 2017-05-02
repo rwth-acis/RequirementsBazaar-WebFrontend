@@ -1,6 +1,13 @@
 {
   "entrypoint": "index.html",
   "shell": "src/reqbaz-app.html",
+  "builds": [{
+    "bundle": true,
+    "addServiceWorker": true,
+    "js": {"minify": true},
+    "css": {"minify": true},
+    "html": {"minify": true}
+  }],
   "fragments": [
     "src/reqbaz-app.html",
     "src/view-404.html",
