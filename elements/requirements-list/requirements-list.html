@@ -4,16 +4,12 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
-<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
@@ -22,23 +18,35 @@
 <link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../req-user/req-user.html">
 <link rel="import" href="../comments-list/comments-list.html">
 <link rel="import" href="../file-gallery/file-gallery.html">
+<link rel="import" href="requirement-card.html">
 <link rel="import" href="../../src/shared-styles.html">
 <link rel="import" href="../../src/config-behavior.html">
 
-<script src="../../bower_components/masonry/dist/masonry.pkgd.min.js"></script>
+<script src="../../bower_components/masonry/dist/masonry.pkgd.js"></script>
 
 <dom-module id="requirements-list">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
       :host {
         display: block;
+        height: 100%;
+        width: 100%;
       }
 
       paper-card {
         max-width: 300px;
         min-width: 300px;
+      }
+
+      #requirementsList {
+        @apply(--layout-center);
+        height: 100%;
+        width: 100%;
       }
 
       paper-material {
@@ -50,48 +58,6 @@
         margin: 5px;
         padding: 0 16px 0 16px;
         background: white;
-      }
-
-      .inactive {
-        color: #838383;
-      }
-
-      .colored {
-        color: var(--paper-orange-500);
-      }
-
-      .requirementToolbar {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        margin-top: 10px;
-        height: 35px;
-      }
-
-      .requirementTitle {
-        @apply(--layout-flex);
-        width: 0;
-        font-size: 20px;
-        cursor: pointer;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .requirementIcons {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-      }
-
-      .requirementIcons paper-menu-button {
-        padding: 0px;
-      }
-
-      .requirementTime {
-        font-size: small;
-      }
-
-      paper-material > div {
-        margin-bottom: 10px;
       }
 
       paper-fab {
@@ -115,20 +81,12 @@
         margin-bottom: auto;
       }
 
-      .editForm {
-        display: none;
-      }
-
       paper-button {
         float: right;
         margin: 20px;
       }
 
       .hide {
-        display: none;
-      }
-
-      paper-checkbox {
         display: none;
       }
 
@@ -149,12 +107,12 @@
       .grid-item {
         margin: 5px;
         margin-bottom: 10px;
+        width: 250px;
       }
 
-      .line {
-        background: #c6c6c6 no-repeat scroll center;
-        width: 100%;
-        height: 1px;
+      iron-scroll-threshold {
+        height: 100%;
+        overflow: auto;
       }
     </style>
 
@@ -168,95 +126,51 @@
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
+    <iron-signals on-iron-signal-resize="_handleIronResize"></iron-signals>
+    <iron-signals on-iron-signal-menu-open="_handleMenuOpen"></iron-signals>
+    <iron-signals on-iron-signal-menu-close="_handleMenuClose"></iron-signals>
+    <iron-signals on-iron-signal-show-toast="_handleShowToast"></iron-signals>
+    <iron-signals on-iron-signal-delete-requirement="_handleDeleteRequirement"></iron-signals>
+    <iron-signals on-iron-signal-delete-comment="_handleDeleteComment"></iron-signals>
+    <iron-signals on-iron-signal-select-requirement="_handleSelectRequirement"></iron-signals>
+    <iron-signals on-iron-signal-unselect-requirement="_handleUnselectRequirement"></iron-signals>
 
-    <iron-ajax
-      id="requirementsRequest"
-      loading="{{loading}}"
-      url="[[_resourceURL]]"
-      last-response="{{requirements}}"
-      headers="[[authHeader]]"
-      params="[[_requirementsRequestParameters]]"
-      auto></iron-ajax>
+    <iron-ajax id="requirementsRequest"
+               loading="{{loading}}"
+               url="[[_resourceUrl]]"
+               headers="[[authHeader]]"
+               params="[[_requirementsRequestParameters]]"
+               on-response="_handleRequirementsResponse"
+               debounce-duration="600"
+               auto></iron-ajax>
 
-    <iron-ajax
-      id="postUpdateRequirement"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      method="PUT"
-      headers="[[authHeader]]"
-      on-response="handleResponseEditReq"
-      on-error="errorHandler"></iron-ajax>
+    <iron-ajax id="deleteRequirementRequest"
+               loading="{{loading}}"
+               handle-as="json" content-type="application/json"
+               method="DELETE"
+               headers="[[authHeader]]"
+               on-response="_handleDeleteRequirementResponse"
+               on-error="errorHandler"></iron-ajax>
 
-    <iron-ajax
-      id="updateRequirementRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      method="PUT"
-      headers="[[authHeader]]"
-      on-response="_handleUpdateRequirementResponse"
-      on-error="errorHandler"></iron-ajax>
+    <iron-ajax id="postCommentRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               url="{{_apiBaseUrl}}/comments"
+               content-type="application/json"
+               method="POST"
+               headers="[[authHeader]]"
+               on-response="_handleCommentResponse"
+               last-response="{{postResponse}}"
+               on-error="errorHandler"></iron-ajax>
 
-
-    <iron-ajax
-      id="postDeleteRequirement"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      method="DELETE"
-      headers="[[authHeader]]"
-      on-response="handleResponseDeleteReq"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="deleteRequirementRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      method="DELETE"
-      headers="[[authHeader]]"
-      on-response="_handleDeleteRequirementResponse"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="followRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      headers="[[authHeader]]"
-      on-response="_handleFollowResponse"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="userInResourceRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      headers="[[authHeader]]"
-      on-response="_handleUserInResourceResponse"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="starRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      content-type="application/json"
-      headers="[[authHeader]]"
-      on-response="_handleStarResponse"
-      on-error="errorHandler"></iron-ajax>
-
-    <iron-ajax
-      id="postCommentRequest"
-      loading="{{loading}}"
-      handle-as="json"
-      url="{{_apiBaseUrl}}/comments"
-      content-type="application/json"
-      method="POST"
-      headers="[[authHeader]]"
-      on-response="_handleCommentResponse"
-      last-response="{{postResponse}}"
-      on-error="errorHandler"></iron-ajax>
+    <iron-ajax id="deleteCommentRequest"
+               loading="{{loading}}"
+               handle-as="json"
+               content-type="application/json"
+               method="DELETE"
+               headers="[[authHeader]]"
+               on-response="_handleDeleteCommentResponse"
+               on-error="errorHandler"></iron-ajax>
 
         <!--<iron-ajax-->
                 <!--id="postIssueGit"-->
@@ -276,145 +190,51 @@
                 <!--on-response="showRepoSearchResults"-->
                 <!--on-error="errorHandler"></iron-ajax>-->
 
-
-    <!-- GRID VIEW -->
-
-    <template is="dom-if" if="{{_isViewActive(viewOption, 'grid')}}" restamp>
-      <div id="grid">
-        <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}" on-dom-change="_handleGridDomChange">
-
-          <div class="grid-item">
-            <paper-card heading="{{req.title}}" elevation="2" id="[[req.id]]">
-              <!--<paper-checkbox></paper-checkbox>-->
-              <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[req.creator]]" normal-view></req-user></span></div>
-              <relative-time class="time" datetime$="[[req.creation_time]]"></relative-time>
-              <div class="card-content" class="truncate">{{req.description}}</div>
-              <div class="card-actions">
-                <paper-button on-tap="openCommentsDialog" atr="[[req.id]]">
-                  <iron-icon icon="editor:mode-comment"></iron-icon>
-                </paper-button>
-                <span class="starIcon">
-                  <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, authorized)]]"
-                                     class$="[[_calculateStarClass(req.userVoted, authorized)]]"
-                                     on-tap="_handleStarTap"
-                                     disabled="[[!authorized]]"></paper-icon-button>
-                  [[req.upVotes]]
-                </span>
-              </div>
-            </paper-card>
-          </div>
-
+    <!--
+      <iron-list id="requirementsList"
+                 items="[[filterItems(requirements, searchFilter, requirements.*)]]"
+                 scroll-target="document"
+                 scroll-offset="405">
+        <template>
+          <requirement-card loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
         </template>
-      </div>
-    </template>
+      </iron-list>
+      -->
 
-    <!-- LIST VIEW -->
-
-    <template is="dom-if" if="{{_isViewActive(viewOption, 'list')}}">
-
-      <div class="layout vertical center">
-
-      <template is="dom-repeat" items="{{requirements}}" as="req" filter="{{searchFilter(filterValue)}}" initial-count="4">
-
-        <paper-material class="req" id="requirement[[req.id]]" on-mouseover="showOnHover" on-mouseout="hideOnOut">
-          <div id$="requirementBody{{req.id}}">
-
-            <div class="requirementToolbar">
-
-              <div class="requirementTitle" on-tap="_handleRequirementTap">[[req.title]]</div>
-
-              <div class="requirementIcons">
-                <paper-checkbox id="checkbox[[req.id]]" on-change="_handleCheckboxChange"></paper-checkbox>
-                <paper-icon-button icon="[[_calculateStarIcon(req.userVoted, authorized)]]"
-                                   class$="[[_calculateStarClass(req.userVoted, authorized)]]"
-                                   on-tap="_handleStarTap"
-                                   disabled="[[!authorized]]"></paper-icon-button>
-                <div>[[req.upVotes]]</div>
-                <paper-menu-button horizontal-align="right" vertical-align="top" hidden="[[!authorized]]" on-iron-select="_handleRequirementMenuSelect">
-                  <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-                  <paper-menu class="dropdown-content">
-                    <!--<paper-item on-tap="showGithubRepos">Post as Github Issue</paper-item>-->
-                    <paper-item value="toggleContributors">[[localize('showContributors')]]</paper-item>
-                    <paper-item value="follow" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.followers, 'followRequirement', 'unfollowRequirement')]]</paper-item>
-                    <paper-item value="develop" hidden$="[[req.realized]]">[[_calculateMessageBasedOnUserInArray(req.developers, 'developRequirement', 'undevelopRequirement')]]</paper-item>
-                    <paper-item value="becomeLeadDeveloper" hidden$="[[req.realized]]">[[_calculateLeadDeveloperLocalization(req.leadDeveloper)]]</paper-item>
-                    <paper-item value="edit" hidden$="[[req.realized]]">[[localize('editRequirement')]]</paper-item>
-                    <paper-item value="realize">[[_calculateRealizeMessage(req.realized)]]</paper-item>
-                    <paper-item value="delete">[[localize('deleteRequirement')]]</paper-item>
-                  </paper-menu>
-                </paper-menu-button>
-              </div>
-
-            </div>
-
-            <div class="requirementTime">
-              <relative-time datetime$="[[req.creation_time]]"></relative-time>
-              [[localize('by')]]
-              <req-user user="[[req.creator]]" normal-view></req-user>
-            </div>
-
-          </div>
-
-          <div class="line"></div>
-
-          <div id$="contributors[[req.id]]" hidden>
-            <div>[[localize('creator')]]: <req-user user="[[req.creator]]" full-view></req-user></div>
-            <div>[[localize('leadDeveloper')]]: <req-user user="[[req.leadDeveloper]]" full-view></req-user></div>
-            <div>[[localize('developers')]]:
-              <template is="dom-repeat" items="{{req.developers}}" as="developer">
-                <div style="display:inline-block">
-                  <req-user user="[[developer]]" mini></req-user>
-                  <paper-tooltip>{{developer.userName}}</paper-tooltip>
-                </div>
-              </template>
-            </div>
-            <div>[[localize('followers')]]:
-              <template is="dom-repeat" items="{{req.followers}}" as="foll">
-                <div style="display:inline-block">
-                  <req-user user="[[foll]]" mini></req-user>
-                  <paper-tooltip>{{foll.userName}}</paper-tooltip>
-                </div>
-              </template>
-            </div>
-
-            <div class="line" style="margin-top: 10px;"></div>
-
-          </div>
-
-          <div class="description inactive" inner-h-t-m-l="{{validateUrl(req.description)}}" id$="description[[req.id]]"></div>
-
-          <div class="comments" id$="comments{{req.id}}">
-
-            <iron-collapse>
-              <file-gallery attachments="{{req.attachments}}"></file-gallery>
-              <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
-              <comments-list requirement-id="[[req.id]]" data-a="[[req.id]]" base-href="{{_apiBaseUrl}}"></comments-list>
-              <div class="container flex-horizontal" id="[[req.id]]" hidden="[[!authorized]]">
-                <paper-input id="comment[[req.id]]" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild" on-keydown="_handleCommentEnter">
-                  <!--<emoji-selector suffix></emoji-selector>-->
-                </paper-input>
-                <paper-icon-button id$="sendComment[[req.id]]" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
-              </div>
-            </iron-collapse>
-
-          </div>
-
-          <div class="editForm" id$="edit{{req.id}}">
-
-            <paper-input class="editTitle title" value="{{req.title}}"></paper-input>
-            <paper-textarea value="{{req.description}}"></paper-textarea>
-            <paper-button raised on-tap="_handleSaveEditTap" data-args="[[req.title]]">[[localize('save')]]</paper-button>
-            <paper-button raised on-tap="_handleCancelEditTap" data-args="[[req.title]]">[[localize('cancel')]]</paper-button>
-
-          </div>
-
-        </paper-material>
-
+    <div id="list" hidden="[[!_isViewActive(viewOption, 'list')]]">
+      <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5">
+        <requirement-card id$="requirement{{item.requirementItem.id}}" loading="{{loading}}" route="{{route}}" requirement="[[item.requirementItem]]"></requirement-card>
       </template>
+    </div>
 
-      </div>
+    <div id="grid" hidden="[[!_isViewActive(viewOption, 'grid')]]">
+      <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5" on-dom-change="_handleGridDomChange">
+        <paper-card heading="{{item.requirementItem.title}}" elevation="2" class="grid-item">
+          <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[item.requirementItem.creator]]" normal-view></req-user></span></div>
+          <relative-time class="time" datetime$="[[item.requirementItem.creation_time]]"></relative-time>
+          <div class="card-content" class="truncate">{{item.requirementItem.description}}</div>
+          <div class="card-actions">
+            <paper-button on-tap="openCommentsDialog">
+              <iron-icon icon="editor:mode-comment"></iron-icon>
+              [[item.requirementItem.numberOfComments]]
+            </paper-button>
+            <span class="starIcon">
+              <paper-icon-button icon="[[_calculateStarIcon(item.requirementItem.userVoted, authorized)]]"
+                                 class$="[[_calculateStarClass(item.requirementItem.userVoted, authorized)]]"
+                                 on-tap="_handleStarTap"
+                                 disabled="[[!authorized]]"></paper-icon-button>
+              [[item.requirementItem.upVotes]]
+            </span>
+          </div>
+        </paper-card>
+      </template>
+    </div>
 
-    </template>
+    <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
+    <iron-scroll-threshold id="scrollThreshold"
+                           on-lower-threshold="_loadMoreData"
+                           scroll-target="document">
+    </iron-scroll-threshold>
 
     <!-- Dialog for GitHub export functionality: -->
 
@@ -443,10 +263,28 @@
 
     <!-- Dialog for confirming the deletion of a requirement: -->
 
-    <paper-dialog id="modal" modal on-iron-overlay-closed="_handleDeleteRequirement" entry-animation="fade-in-animation"
-                  exit-animation="fade-out-animation">
+    <paper-dialog id="deleteRequirementDialog"
+                  on-iron-overlay-closed="_handleDeleteRequirementClosed"
+                  entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation"
+                  modal>
       <h2>[[localize('deleteRequirement')]]?</h2>
       <p>[[localize('deleteRequirementDesc')]]</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
+        <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
+      </div>
+    </paper-dialog>
+
+    <!-- Dialog for deleting a comment -->
+
+    <paper-dialog id="deleteCommentDialog"
+                  entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation"
+                  on-iron-overlay-closed="_handleDeleteCommentDialogClosed"
+                  modal>
+      <h2>[[localize('delCommTitle')]]?</h2>
+      <p>[[localize('delCommDesc')]]</p>
       <div class="buttons">
         <paper-button dialog-dismiss>[[localize('cancel')]]</paper-button>
         <paper-button dialog-confirm autofocus>[[localize('delete')]]</paper-button>
@@ -461,7 +299,7 @@
       <p style="max-height: 80%;">
         <comments-list base-href="{{_apiBaseUrl}}"></comments-list>
       <div class="container flex-horizontal" hidden="[[!authorized]]">
-        <paper-input is="iron-input" on-input="showSendButton" label="[[localize('addComment')]]" class="flexchild comments-input" on-keydown="_handleCommentEnter">
+        <paper-input is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild comments-input" on-keydown="_handleCommentEnter">
         </paper-input>
         <paper-fab id="fab" mini icon="send" class="flex-end-align" on-tap="postGridComment"></paper-fab>
       </div>
@@ -472,13 +310,13 @@
 
     <paper-material elevation="5" id="bottomToolbar" hidden>
       <span>{{selectedRequirements.length}} Requirements selected.</span>
-      <paper-icon-button icon="file-download" on-tap="downloadRequirements"></paper-icon-button>
-      <paper-icon-button icon="close" on-tap="closeBottomToolbar"></paper-icon-button>
+      <paper-icon-button icon="file-download" on-tap="_exportSelectedRequirements"></paper-icon-button>
+      <paper-icon-button icon="close" on-tap="_closeBottomToolbar"></paper-icon-button>
     </paper-material>
 
     <!-- Toast for toast notifications: -->
 
-    <paper-toast id="toast" text="[[feedback]]"></paper-toast>
+    <paper-toast id="toast" text="[[toastFeedback]]"></paper-toast>
 
   </template>
 
@@ -506,24 +344,45 @@
             type: Number
           },
           /**
+           * The sorting parameter of requirements, either `date`, `title`, `vote`, `comment`, `follower` or `realized`.
+           */
+          sorting: {
+            type: String,
+            value: 'date',
+            notify: true
+          },
+          sortDirection: {
+            type: String,
+            value: '-',
+            notify: true,
+            reflectToAttribute: true
+          },
+          /**
            * Whether to show 'open' or 'realized' requirements.
            */
           requirementsStateFilter: {
             type: String,
-            notify: true,
-            value: 'open'
+            value: 'open',
+            notify: true
           },
           viewOption: {
             type: String,
-            value: 'list'
+            value: 'list',
+            notify: true,
+            observer: '_viewOptionChanged'
           },
-          _resourceURL: {
+          _resourceUrl: {
             type: String,
             computed: '_computeResourceURL(_apiBaseUrl, categoryId)'
           },
+          _lastRequestCategoryId: {
+            type: Number
+          },
+          _lastRequestSorting: {
+            type: String
+          },
           requirements: {
-            type: Array,
-            notify: true
+            type: Array
           },
           selectedRequirements: {
             type: Array,
@@ -533,27 +392,59 @@
           postUrl: String,
           body: Object,
           postResponse: Object,
-          feedback: String,
+          /**
+           * The text shown on the paper-toast element for notifying the user.
+           */
+          toastFeedback: String,
           header: {
             type:Object,
             notify: true
           },
           /**
+           * Search filter for the requirements list.
+           */
+          searchFilter: {
+            type: String,
+            value: '',
+            //observer: '_searchFilterChanged'
+          },
+          /**
            * The parameters for the request to the requirements resource.
            */
           _requirementsRequestParameters: {
-            type:Object,
+            type: Object,
             notify: true,
-            computed: '_computeRequirementsRequestParameters(requirementsStateFilter)'
+            computed: '_computeRequirementsRequestParameters(_apiBaseUrl, categoryId, sorting, sortDirection, requirementsStateFilter, _requirementsRequestPerPage, _requirementsRequestCurrentPage, searchFilter)',
+            observer: '_requirementsRequestParametersUpdated'
+          },
+          /**
+           * Defines how many requirements are loaded per page.
+           * TODO: recalculate when resizing the window.
+           */
+          _requirementsRequestPerPage: {
+            type: Number,
+            value: 14
+          },
+          /**
+           * Stores the current page number.
+           */
+          _requirementsRequestCurrentPage: {
+            type: Number,
+            value: 0 // because we get a scroll lower threshold event once the page loads
           },
           /**
            * The requirement's element to be deleted.
            */
           elem: Object,
           /**
-           * Stores the requirement object that is going to be deleted, while modal dialog is shown.
+           * Stores the requirement that is going to be deleted, while modal dialog is shown.
            */
-          requirementToDelete: Number,
+          requirementToDelete: {
+            type: Object
+          },
+          commentToDeleteData: {
+            type: Object
+          },
           filterValue: {
             type: String,
             value: ''
@@ -588,8 +479,7 @@
 
         observers: [
           'manageSelReq(selectedRequirements.splices)',
-          '_requirementsRequestParametersUpdated(_requirementsRequestParameters)',
-          '_dataChanged(data.requirementId)',
+          //'_requirementsRequestParametersUpdated(_requirementsRequestParameters)',
           '_routeChanged(route)',
           '_categoryIdChanged(categoryId)'
         ],
@@ -597,24 +487,6 @@
         attached: function() {
           // load localized messages
           this.loadResources(this.resolveUrl('../../locales/locales.json'));
-        },
-
-        _dataChanged: function(requirementId) {
-          if (requirementId) {
-            /*
-            // open the requirement
-            var requirementNode = this.$$('#requirement' + requirementId);
-            if (requirementNode) {
-              requirementNode.querySelector('iron-collapse').show();
-              // load comments
-              requirementNode.querySelector('comments-list').load();
-              // load attachments
-              requirementNode.querySelector("file-gallery").loadIcons();
-            } else {
-              //TODO: wait till loading completes and try again
-            }
-            */
-          }
         },
 
         _routeChanged: function(route) {
@@ -639,11 +511,33 @@
          * @param e
          */
         _handleGridDomChange: function(e) {
-          var grid = this.$$('#grid');
+          var columnWidth = 250;
+
+          var grid = this.$.grid;
           var msnry = new Masonry(grid, {
-            itemSelector: '.grid-item',
-            columnWidth: 110
+            itemSelector: 'requirement-card',
+            gutter: 10,
+            columnWidth: columnWidth
           });
+        },
+
+        _viewOptionChanged: function(viewOption) {
+          var columnWidth = 250;
+
+          var grid = this.$.grid;
+          var msnry = new Masonry(grid, {
+            itemSelector: 'requirement-card',
+            gutter: 20,
+            //fitWidth: true,
+            columnWidth: columnWidth
+          });
+
+          this.$.scrollThreshold.scroll(0, 0);
+
+          // load more items if we changed to grid
+          if (viewOption === 'grid') {
+            this._loadMoreData();
+          }
         },
 
         _isViewActive: function(viewOption, view) {
@@ -657,14 +551,61 @@
           return apiBaseUrl + '/components/' + categoryId + '/requirements';
         },
 
+        _searchFilterChanged: function(searchFilter) {
+          this.$.scrollThreshold.clearTriggers();
+          this._requirementsRequestCurrentPage = 0;
+        },
+
         /**
          * Computes the parameter array for the request to the requirements resource.
          *
          * @param requirementsStateFilter {string} the requirement's state, either 'open', 'realized' or 'all'.
          */
-        _computeRequirementsRequestParameters: function(requirementsStateFilter) {
+        _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, sorting, sortDirection, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
+          this._resourceUrl = apiBaseUrl + '/components/' + categoryId + '/requirements';
+
+          if (this._requirementsRequestParameters) {
+
+            // if we have a new search string, a new component ID or a new state, reset the page to 0
+            if ((this._requirementsRequestParameters.search !== searchFilter) ||
+                (this._requirementsRequestParameters.state !== requirementsStateFilter) ||
+                (this._lastRequestCategoryId !== categoryId)) {
+              this._requirementsRequestCurrentPage = 0;
+              requirementsRequestCurrentPage = 0;
+
+              // scroll to top
+              this.$.scrollThreshold.scroll(0, 0);
+            }
+
+            // if we have a new sorting parameter, reset the sort direction
+            if (this._lastRequestSorting !== sorting) {
+              if (['date', 'vote', 'comment', 'follower'].indexOf(sorting) >= 0) {
+                this.sortDirection = '-';
+                sortDirection = '-';
+              } else {
+                this.sortDirection = '+';
+                sortDirection = '+';
+              }
+            }
+
+            // check if we have a new sorting or state parameter; if yes, reset the list
+            if ((this._requirementsRequestParameters.sort !== (sortDirection + sorting)) || (this._requirementsRequestParameters.state !== requirementsStateFilter)) {
+              this.requirements = [];
+              this._requirementsRequestCurrentPage = 0;
+              requirementsRequestCurrentPage = 0;
+
+              // scroll to top
+              this.$.scrollThreshold.scroll(0, 0);
+            }
+          }
+
+          this._lastRequestCategoryId = categoryId;
+          this._lastRequestSorting = sorting;
+
           var parameters = new Object();
-          parameters.per_page = 60;
+          parameters.sort = sortDirection + sorting;
+          parameters.per_page = requirementsRequestPerPage;
+          parameters.page = requirementsRequestCurrentPage;
           // better check this type as it's a public property of the element
           if (requirementsStateFilter === 'open') {
             parameters.state = 'open';
@@ -673,6 +614,7 @@
           } else if (requirementsStateFilter === 'all') {
             parameters.state = 'all';
           }
+          parameters.search = searchFilter;
 
           return parameters;
         },
@@ -684,23 +626,11 @@
          * @param _requirementsRequestParameters {array} the requirements request parameter.
          */
         _requirementsRequestParametersUpdated: function(_requirementsRequestParameters) {
-          //this.load();
+          //this.refresh();
         },
 
         refresh: function() {
           this.$.requirementsRequest.generateRequest();
-        },
-
-        showOnHover: function(e) {
-          var chb = e.currentTarget.querySelector("paper-checkbox");
-          chb.style.display = "block";
-        },
-
-        hideOnOut: function (e) {
-          var chb = e.currentTarget.querySelector("paper-checkbox");
-          if (!chb.checked) {
-            chb.style.display = "none";
-          }
         },
 
         manageSelReq: function(selReq) {
@@ -713,31 +643,18 @@
           this.repositories = this.searchRepositories.items;
         },
 
-        _handleCheckboxChange: function(e) {
-          var requirementId = e.model.req.id;
-          if (e.target.checked) {
-            this.push('selectedRequirements', requirementId);
-          } else {
-            var index = this.selectedRequirements.indexOf(requirementId);
-            if (index > -1) {
-              this.splice('selectedRequirements', index, 1);
-            }
-          }
-          this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0)
-        },
-
-        downloadRequirements: function(e) {
-          var selReq = [];
+        _exportSelectedRequirements: function(e) {
+          var selectedRequirements = [];
           for (var i=0; i < this.selectedRequirements.length; i++) {
             for (var j=0; j < this.requirements.length; j++) {
-              if (parseInt(this.selectedRequirements[i]) === this.requirements[j].id) {
-                selReq.push(this.requirements[j]);
+              if (parseInt(this.selectedRequirements[i]) === this.requirements[j].requirementItem.id) {
+                selectedRequirements.push(this.requirements[j].requirementItem);
               }
             }
           }
 
           //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
-          var arrData = typeof selReq != 'object' ? JSON.parse(selReq) : selReq;
+          var arrData = typeof selectedRequirements != 'object' ? JSON.parse(selectedRequirements) : selectedRequirements;
 
           var CSV = '';
           //Set Report title in first row or line
@@ -759,9 +676,7 @@
             row += '"' + arrData[i].creator.userName + '",';
             row += '"' + arrData[i].developers.length + '",';
             row += '"' + arrData[i].followers.length + '",';
-            row += '"' + arrData[i].components[0].name + '",';
-
-            row.slice(0, row.length - 1);
+            row += '"' + arrData[i].components[0].name + '"';
 
             //add a line break after each row
             CSV += row + '\r\n';
@@ -886,7 +801,7 @@
 
         },
 
-        showSendButton: function(e) {
+        _handleCommentInput: function(e) {
           var fab = e.currentTarget.parentNode.querySelector('#fab');
           var message;
           if (this.viewOption === 'list') {
@@ -901,10 +816,6 @@
           }
         },
 
-        _handleCommentInput: function(e) {
-          this.$$('#sendComment' + e.model.req.id).hidden = false;
-        },
-
         errorHandler: function (e, detail) {
           this.$.toast.text = detail.error.message;
           this.$.toast.open();
@@ -915,26 +826,17 @@
           this.$.toast.open();
         },
 
-        closeBottomToolbar: function() {
+        _closeBottomToolbar: function() {
           this.$.bottomToolbar.hidden = true;
           //TODO: fix unselection as soon as we use iron-list
           for (var i=0; i < this.selectedRequirements.length; i++) {
-            this.$$('#checkbox' + this.selectedRequirements[i]).checked = false;
-            //this.$$('#checkbox' + this.selectedRequirements[i]).hidden = true;
+            this.$$('#requirement' + this.selectedRequirements[i]).selected = false;
           }
           this.selectedRequirements = [];
         },
 
-        handleResponseEditReq: function(data) {
-          if (data != null) {
-            this.feedback = this.localize('reqEditSucc');
-            this.refresh();
-          }
-          this.$.toast.open();
-        },
-
         openCommentsDialog: function(e) {
-          this.$.commentsDialog.querySelector("comments-list").requirementId = e.currentTarget.atr;
+          this.$.commentsDialog.querySelector("comments-list").requirementId = e.model.item.requirementItem.id;
           this.$.commentsDialog.querySelector("comments-list").refresh();
           this.$.commentsDialog.open();
         },
@@ -943,6 +845,7 @@
           this.$.commentsDialog.querySelector("comments-list").comments = [];
         },
 
+        /**
         searchFilter: function (val) {
           return function (item) {
             if (!val) {
@@ -951,40 +854,7 @@
             //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
             return (item.title && ~item.title.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
           };
-        },
-
-        /**
-         * Handles tapping a requirement.
-         *
-         * @param e
-         */
-        _handleRequirementTap: function(e) {
-          var requirementNode = this.$$('#requirement' + e.model.req.id);
-          var descriptionNode = requirementNode.querySelector('#description' + e.model.req.id);
-
-          if (requirementNode.querySelector('iron-collapse').opened) {
-            // remove elevation
-            requirementNode.elevation = 1;
-            // close the requirement
-            requirementNode.querySelector('iron-collapse').hide();
-            // make description gray
-            descriptionNode.classList.toggle('inactive');
-            // reset route
-            this.set('route.path', '');
-          } else {
-            // set elevation
-            requirementNode.elevation = 4;
-            // open the requirement
-            requirementNode.querySelector('iron-collapse').show();
-            // make description gray
-            descriptionNode.classList.toggle('inactive');
-            // load comments
-            requirementNode.querySelector('comments-list').refresh();
-            // load attachments
-            requirementNode.querySelector("file-gallery").loadIcons();
-            this.set('route.path', '/requirements/' + e.model.req.id);
-          }
-        },
+        },**/
 
         _handleCommentEnter: function (e) {
           //TODO: refactor the code
@@ -1015,30 +885,213 @@
           }
         },
 
-        validateUrl: function(requirementDesc) {
-          var str = requirementDesc;
-          var expression = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/gi;
-          var regex = new RegExp(expression);
+        dragRequirement: function() {
+        },
 
-          if(!str.match(regex)) {
-            return str;
-          } else {
-            var txt = str;
-            for (var i = 0; i < str.match(regex).length; i++) {
-              var replacement;
-              if (str.match(regex)[i].startsWith("http")) {
-                replacement = "<a href='" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
-              } else {
-                replacement = "<a href='http://" + str.match(regex)[i] + "' target='_blank' class='highlight'>"+ str.match(regex)[i] +"</a>"
-              }
-              txt = txt.replace(str.match(regex)[i], replacement);
-            }
-            return txt;
+        /**
+         * Handles the delete modal dialog closed event.
+         *
+         * @param e
+         * @private
+         */
+        _handleDeleteRequirementClosed: function(e) {
+          if (e.detail.confirmed) {
+            var requirement = this.requirementToDelete;
+            var request = this.$.deleteRequirementRequest;
+            request.url = this._apiBaseUrl + '/requirements/' + requirement.id;
+
+            request.generateRequest();
           }
         },
 
-        dragRequirement: function() {
+        /**
+         * Handles the result of the DELETE requirement request.
+         *
+         * @param e
+         * @private
+         */
+        _handleDeleteRequirementResponse: function(e) {
+          //TODO: check result
+
+          this.toastFeedback = this.localize('reqDelSucc');
+          this.$.toast.open();
+
+          // now delete the requirement from the model
+          for (var i = 0; i<this.requirements.length; i++) {
+            if (this.requirements[i].requirementItem.id === this.requirementToDelete.id) {
+              this.splice('requirements', i, 1);
+              break;
+            }
+          }
+
+          this.requirementToDelete = null;
         },
+
+        /**
+         * Reset the view when the category id changes.
+         *
+         * @param categoryId
+         * @private
+         */
+        _categoryIdChanged: function(categoryId) {
+          this.resetView();
+        },
+
+        resetView: function() {
+          //TODO: this seems to be a rather naive approach...
+          this.requirements = [];
+        },
+
+        _handleRequirementsResponse: function(e) {
+          var requirementsResponse = e.detail.response;
+          var requirementsToAdd = [];
+          // remember scroll position
+          //var firstVisibleIndex = this.$.requirementsList.firstVisibleIndex;
+          //var scrollTop = this.$.requirementsList._scrollPosition;
+
+          requirementsResponse.forEach(function(requirementItem) {
+            // check if the requirement is already existing in the local model
+            var existing = false;
+            for (var i=0; i<this.requirements.length; i++) {
+              if (this.requirements[i].requirementItem.id === requirementItem.id) {
+                existing = true;
+                break;
+              }
+            }
+
+            if (!existing) {
+              var requirement = {"opened": false, "requirementItem": requirementItem};
+              requirementsToAdd.push(requirement);
+            }
+          }.bind(this));
+
+          // push the items to the requirements array and notify Polymer
+          var index = this.requirements.length;
+          this.requirements.push.apply(this.requirements, requirementsToAdd);
+          this.notifySplices('requirements', [{ index: index, removed: [], addedCount: requirementsToAdd.length, object: this.requirements, type: 'splice'}]);
+
+          // scroll back
+          //this.$.scrollThreshold.scroll(0, scrollTop);
+          //if (firstVisibleIndex > 0) {
+          //  this.$.requirementsList.scrollToIndex(firstVisibleIndex);
+          //}
+
+          // if we get back the maximum number of items per page, the likelihood is high that there is another page...
+          if (requirementsResponse.length === this._requirementsRequestPerPage) {
+            this.$.scrollThreshold.clearTriggers();
+          }
+        },
+
+        _loadMoreData: function(e) {
+          if (this.requirements && (this.requirements.length > 0)) {
+            this._requirementsRequestCurrentPage++;
+          }
+        },
+
+        _handleIronResize: function() {
+          //this.$.requirementsList.notifyResize();
+        },
+
+        /**
+         * A fix for the issue that paper-dropdown within an iron-list disappear behind the next list item.
+         * Check https://github.com/PolymerElements/iron-list/issues/242 for the issue.
+         *
+         * @param e
+         * @param detail
+         * @private
+         */
+        _handleMenuOpen: function(e, detail) {
+          detail.style.zIndex = 1;
+        },
+
+        _handleMenuClose: function(e, detail) {
+          detail.style.zIndex = 0;
+        },
+
+        /**
+         * Shows a toast notification.
+         *
+         * @param detail a text that is displayed in the toast.
+         */
+        _handleShowToast: function(e, detail) {
+          this.toastFeedback = detail;
+          this.$.toast.open();
+        },
+
+        _handleDeleteRequirement: function(e, detail) {
+          this.requirementToDelete = detail;
+          this.$.deleteRequirementDialog.open();
+        },
+
+        _handleDeleteComment: function(e, detail) {
+          this.commentToDeleteData = detail;
+          this.$.deleteCommentDialog.open();
+        },
+
+        /**
+         * Handles the delete modal dialog closed event.
+         *
+         * @param e
+         * @private
+         */
+        _handleDeleteCommentDialogClosed: function(e) {
+          if (e.detail.confirmed) {
+            var commentData = this.commentToDeleteData;
+            var request = this.$.deleteCommentRequest;
+            request.url = this._apiBaseUrl + '/comments/' + commentData.comment.Id;
+
+            request.generateRequest();
+          }
+        },
+
+        /**
+         * Handles the result of the DELETE requirement request.
+         *
+         * @param e
+         * @private
+         */
+        _handleDeleteCommentResponse: function(e) {
+          this.toastFeedback = this.localize('commentDeleteSuccess');
+          this.$.toast.open();
+
+          // now execute the delete callback
+          this.commentToDeleteData.onDelete();
+
+          this.commentToDeleteData = null;
+        },
+
+        /**
+         * Filters the requirements and only returns those whose title or description contains the search filter string.
+         *
+         * Thanks to https://github.com/PolymerElements/iron-list/issues/193
+         *
+         * @param requirements
+         * @param searchFilter
+         */
+        filterItems: function(searchFilter) {
+          return function(item) { // Array.prototype.filter
+            return (item.requirementItem.title && ~item.requirementItem.title.toLowerCase().indexOf(searchFilter.toLowerCase())) || (item.requirementItem.description && ~item.requirementItem.description.toLowerCase().indexOf(searchFilter.toLowerCase()));
+          };
+        },
+
+        _handleSelectRequirement: function(e, detail) {
+          this.push('selectedRequirements', detail.id);
+
+          this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0);
+        },
+
+        _handleUnselectRequirement: function(e, detail) {
+          var index = this.selectedRequirements.indexOf(detail.id);
+          if (index > -1) {
+            this.splice('selectedRequirements', index, 1);
+          }
+
+          this.$.bottomToolbar.hidden = (this.selectedRequirements.length === 0);
+        },
+
+        /**
+         * Still needed for requirements cards in grid view
+         */
 
         /**
          * Calculates the specific star icon to show for the voting feature of the requirements.
@@ -1067,454 +1120,6 @@
           if (authorized && (vote === 'UP_VOTE')) {
             return 'colored';
           }
-        },
-
-        /**
-         * Handles tapping the star icon.
-         *
-         * @param e
-         * @private
-         */
-        _handleStarTap: function(e) {
-          // first, get the dom-repeat's template instance that generated the item
-          var model = e.model;
-          var vote = model.req.userVoted;
-          var requirementId = model.req.id;
-
-          var request = this.$.starRequest;
-          request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/votes";
-
-          // now construct the method and body based on the action
-          if (vote === 'NO_VOTE') {
-            request.method = 'POST';
-
-            // give user immediate feedback
-            Polymer.dom(e).localTarget.toggleClass('colored');
-            e.target.setAttribute('icon', 'star');
-          } else {
-            request.method = 'DELETE';
-
-            // give user immediate feedback
-            Polymer.dom(e).localTarget.toggleClass('colored');
-            e.target.setAttribute('icon', 'star-border');
-          }
-
-          // fire the event to the server
-          request.generateRequest();
-        },
-
-        _handleStarResponse: function(e) {
-          var status = e.detail.status;
-
-          if (status === 200) {
-            this.feedback = this.localize('unvoteSuccessful');
-          } else if (status === 201) {
-            // delete successful
-            this.feedback = this.localize('voteSuccessful');
-          } else {
-            //TODO: add i18n
-            this.feedback = 'error';
-          }
-
-          this.$.toast.open();
-
-          // now refresh the data behind by reloading all requirements
-          // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.refresh();
-        },
-
-        /**
-         * Checks whether a user is in the users array. Compares the user's id.
-         *
-         * @param usersArray an array of user objects.
-         * @param user a user object.
-         * @returns {boolean} whether the user is in the array or not.
-         * @private
-         */
-        _isUserInArray: function(usersArray, user) {
-          if (user === null) {
-            return false;
-          } else {
-            // check if the user's id is in the users array
-            for (var index = 0; index < usersArray.length; ++index) {
-              if (usersArray[index].id === user.id) {
-                return true;
-              }
-            }
-
-            return false;
-          }
-        },
-
-        /**
-         * Calculates the localized message based on whether the provided user is in the provided array of user objects.
-         *
-         * @param userArray an array of user objects.
-         * @param user the currently logged in user's object. This is to be notified by the data
-         *   binding system of Polymer about changes, and recalculate the value.
-         * @param falseMessage the text to show when the user is not in the array.
-         * @param trueMessage the text to show when the user is in the array.
-         * @returns {string} the localized message.
-         * @private
-         */
-        _calculateMessageBasedOnUserInArray: function(userArray, falseMessage, trueMessage) {
-          if (this.authorized && this.currentUser && this._isUserInArray(userArray, this.currentUser)) {
-            return this.localize(trueMessage);
-          } else {
-            return this.localize(falseMessage);
-          }
-        },
-
-        _calculateLeadDeveloperLocalization: function(leadDeveloper) {
-          if (this.currentUser && leadDeveloper && (this.currentUser.id === leadDeveloper.id)) {
-            return this.localize('stopLeadDeveloper');
-          }
-
-          return this.localize('becomeLeadDeveloper');
-        },
-
-        /**
-         * Handles toggling the following of requirements by firing the state to the server.
-         *
-         * @param requirement the requirement to (un)follow.
-         * @returns {boolean}
-         * @private
-         */
-        _toggleFollowRequirement: function(requirement) {
-          var requirementId = requirement.id;
-
-          var followers = requirement.followers;
-          var isFollower = this._isUserInArray(followers, this.currentUser);
-
-          var request = this.$.followRequest;
-          request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/followers";
-
-          if (!isFollower) {
-            // follow requirement
-            request.method = 'POST';
-          } else {
-            // unfollow requirement
-            request.method = 'DELETE';
-          }
-
-          request.generateRequest();
-        },
-
-        /**
-         * Handles the iron-ajax response for following/unfollowing requirements,
-         * shows toast message.
-         *
-         * @param data
-         * @private
-         */
-        _handleFollowResponse: function(e) {
-          var status = e.detail.status;
-
-          if (status === 200) {
-            this.feedback = this.localize('fdbUnfollowReq');
-          } else if (status === 201) {
-            this.feedback = this.localize('fdbFollowReq');
-          } else {
-            //TODO: add i18n
-            this.feedback = 'error';
-          }
-
-          this.$.toast.open();
-
-          // now refresh the data behind by reloading all requirements
-          // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.refresh();
-        },
-
-        /**
-         * Handles toggling the existence of a user within an HTTP resource.
-         * TODO: currently only for resource 'developers'
-         *
-         * @param e
-         * @returns {boolean}
-         * @private
-         */
-        _toggleUserInResource: function(requirementId, userArray, resource) {
-          var isUserInArray = this._isUserInArray(userArray, this.currentUser);
-
-          var request = this.$.userInResourceRequest;
-          request.url = this._apiBaseUrl + "/requirements/" + requirementId + "/" + resource;
-
-          if (!isUserInArray) {
-            // POST user to resource
-            request.method = 'POST';
-          } else {
-            // DELETE user from resource
-            request.method = 'DELETE';
-          }
-
-          request.generateRequest();
-        },
-
-        /**
-         * Handles the iron-ajax response for posting/deleting users to/from a resoure,
-         * shows toast message.
-         *
-         * @param data
-         * @private
-         */
-        _handleUserInResourceResponse: function(e) {
-          var method = e.target.method;
-
-          if (method === 'DELETE') {
-            this.feedback = this.localize('fdbUndevelopReq');
-          } else if (method === 'POST') {
-            this.feedback = this.localize('fdbDevelopReq');
-          } else {
-            //TODO: add i18n
-            this.feedback = 'error';
-          }
-
-          this.$.toast.open();
-
-          // now refresh the data behind by reloading all requirements
-          // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.refresh();
-        },
-
-        /**
-         * Event handler for requirement's paper-menu.
-         *
-         * @param e
-         * @private
-         */
-        _handleRequirementMenuSelect: function(e) {
-          // unselect the selected menu item
-          e.target.selected = null;
-          // get value of the paper-item
-          var selectedValue = e.detail.item.getAttribute('value');
-          var requirement = e.model.req;
-
-          if (selectedValue === 'follow') {
-            this._toggleFollowRequirement(requirement);
-          } else if (selectedValue === 'toggleContributors') {
-            this._toggleContributors(requirement);
-          } else if (selectedValue === 'develop') {
-            this._toggleUserInResource(requirement.id, requirement.developers, 'developers');
-          } else if (selectedValue === 'realize') {
-            this._toggleRealized(requirement);
-          } else if (selectedValue === 'delete') {
-            this.requirementToDelete = requirement;
-            this.$.modal.open();
-          } else if (selectedValue === 'becomeLeadDeveloper') {
-            this._toggleLeadDeveloper(requirement);
-          } else if (selectedValue === 'edit') {
-            this._editRequirement(requirement.id);
-          }
-        },
-
-        /**
-         * Toggles the 'realized' property of a requirement on the server. If the requirement was not realized yet,
-         * the current timestamp is sent to the server. Otherwise, the realized property is reset.
-         *
-         * @param requirement {object} the requirements object.
-         */
-        _toggleRealized: function(requirement) {
-          var request = this.$.updateRequirementRequest;
-          request.url = this._apiBaseUrl + '/requirements/' + requirement.id + '/realized';
-
-          if (requirement.hasOwnProperty('realized')) {
-            // unrealize it
-            request.method = 'DELETE';
-          } else {
-            // realize it
-            request.method = 'POST';
-          }
-
-          // fire
-          request.generateRequest();
-        },
-
-        /**
-         * Handles the iron-ajax response for updating requirements, shows toast message.
-         *
-         * @param e
-         * @private
-         */
-        _handleUpdateRequirementResponse: function(e) {
-          if (e != null) {
-            this.feedback = this.localize('reqEditSucc');
-          }
-
-          this.$.toast.open();
-
-          // now refresh the data behind by reloading all requirements
-          // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.refresh();
-        },
-
-        /**
-         * Toggles the state of contributors' bar.
-         *
-         * @param requirement a requirement object.
-         * @private
-         */
-        _toggleContributors: function(requirement) {
-          var contributorNode = this.$$('#contributors' + requirement.id);
-          this.toggleAttribute('hidden', contributorNode.getAttribute('hidden') == null, contributorNode);
-        },
-
-        /**
-         * Calculates the localized message for the realized menu button, depending on whether the requirement is realized or
-         * not.
-         *
-         * @param realized
-         * @returns {*}
-         * @private
-         */
-        _calculateRealizeMessage: function(realized) {
-          if (realized) {
-            return this.localize('markAsUnDone');
-          } else {
-            return this.localize('markAsDone');
-          }
-        },
-
-        /**
-         * Handles the delete modal dialog closed event.
-         *
-         * @param e
-         * @private
-         */
-        _handleDeleteRequirement: function(e) {
-          if (e.detail.confirmed) {
-            var requirement = this.requirementToDelete;
-            var request = this.$.deleteRequirementRequest;
-            request.url = this._apiBaseUrl + '/requirements/' + requirement.id;
-
-            request.generateRequest();
-          }
-        },
-
-        /**
-         * Handles the result of the DELETE requirement request.
-         *
-         * @param e
-         * @private
-         */
-        _handleDeleteRequirementResponse: function(e) {
-          //TODO: check result
-
-          this.feedback = this.localize('reqDelSucc');
-          this.$.toast.open();
-
-          // now refresh the data behind by reloading all requirements
-          // TODO: eliminate this heavy operation by only refreshing the respective requirement
-          this.refresh();
-        },
-
-        /**
-         * Updates the lead developer for a specified requirement on the server. If the user is already lead developer,
-         * then the user 1 (anonymous) is becoming lead developer, otherwise the user takes this role.
-         *
-         * @param requirement a requirement object.
-         * @private
-         */
-        _toggleLeadDeveloper: function(requirement) {
-          var request = this.$.updateRequirementRequest;
-          request.url = this._apiBaseUrl + '/requirements/' + requirement.id + '/leaddevelopers';
-
-          if (requirement.hasOwnProperty('leadDeveloper') && (requirement.leadDeveloper.id === this.currentUser.id)) {
-            request.method = 'DELETE';
-          } else {
-            request.method = 'POST';
-          }
-
-          // fire
-          request.generateRequest();
-        },
-
-        /**
-         * Shows the editing form of the specified requirement.
-         *
-         * @param requirementId
-         * @private
-         */
-        _editRequirement: function(requirementId) {
-          //hide card elements
-          this.$$('#requirementBody' + requirementId).style.display = 'none';
-          this.$$('#comments' + requirementId).style.display = 'none';
-          this.$$('#description' + requirementId).style.display = 'none';
-          //show form elements
-          this.$$('#edit' + requirementId).style.display = 'block';
-        },
-
-        /**
-         * Saves the edited requirement on the server.
-         *
-         * @param e
-         * @private
-         */
-        _handleSaveEditTap: function(e) {
-          // refactoring: formerly known as saveEditReq
-
-          var model = e.model;
-
-          //TODO: use proper ids!
-          var title = e.currentTarget.parentNode.querySelector('PAPER-INPUT').value;
-          var description = e.currentTarget.parentNode.querySelector('PAPER-TEXTAREA').value;
-
-          var request = this.$.postUpdateRequirement;
-          //TODO: check if this is not harmful code when requirement belongs to multiple categories
-          var categories = [{id: this.categoryId}];
-          request.url = this._apiBaseUrl + "/requirements/" + model.req.id;
-
-          if (title != '' && description != '') {
-            request.body = JSON.stringify({
-              "id": model.req.id,
-              "title": title,
-              "description": description,
-              "projectId": this.projectId,
-              "components": categories
-            });
-            request.generateRequest();
-
-            // revert the look
-            this._handleCancelEditTap(e);
-
-          } else {
-            this.$.toast.text = this.localize('fieldsNotEmptyReq');
-            this.$.toast.open();
-          }
-        },
-
-        /**
-         * Cancels editing a requirement by hiding the form.
-         *
-         * @param e
-         * @private
-         */
-        _handleCancelEditTap: function(e) {
-          // refactoring: formerly known as cancelRequirement
-          var requirementId = e.model.req.id;
-
-          // show form elements
-          this.$$('#edit' + requirementId).style.display = 'none';
-
-          // show card elements
-          this.$$('#requirementBody' + requirementId).style.display = 'block';
-          this.$$('#comments' + requirementId).style.display = 'block';
-          this.$$('#description' + requirementId).style.display = 'block';
-        },
-
-        /**
-         * Reset the view when the category id changes.
-         *
-         * @param categoryId
-         * @private
-         */
-        _categoryIdChanged: function(categoryId) {
-          this.resetView();
-        },
-
-        resetView: function() {
-          //TODO: this seems to be a rather naive approach...
-          this.requirements = [];
         }
 
       });
