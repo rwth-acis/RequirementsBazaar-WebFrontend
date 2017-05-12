@@ -50,7 +50,7 @@
 
     </style>
 
-    <iron-ajax id="usrReq"
+    <iron-ajax id="userRequest"
                url="{{usersUrl}}"
                last-response="{{user}}"></iron-ajax>
 
@@ -108,11 +108,11 @@
         userId: {
           type: Number
         },
-        user:{
+        user: {
           type: Object,
           notify: true
         },
-        noPopover:{
+        noPopover: {
           type: Boolean,
           value: false
         },
@@ -134,12 +134,12 @@
         }
       },
 
-      computeUsersUrl: function(userId){
+      computeUsersUrl: function(userId) {
         return _apiBaseUrl + "/users/" + userId;
       },
 
-      load: function (){
-        this.$.usrReq.generateRequest();
+      load: function() {
+        this.$.userRequest.generateRequest();
       }
 
     });
