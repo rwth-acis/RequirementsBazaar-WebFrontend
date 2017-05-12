@@ -1,4 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <script>
 
@@ -9,7 +11,7 @@
    * @polymerBehavior ConfigBehavior
    * @type {{properties: {_apiBaseUrl: {type: String, value: string}, _fileApiBaseUrl: {type: String, value: string}, _frontendBasePath: {type: String, value: string}, language: {type: String, value: ConfigBehavior.properties.language.value, observer: string}, currentUser: {type: String, value: ConfigBehavior.properties.currentUser.value, observer: string}, authorized: {type: Boolean}, authHeader: {type: Array}}, setCurrentUser: ConfigBehavior.setCurrentUser, rightDrawerReserveSpace, rightDrawerReserveSpace, _languageChanged: ConfigBehavior._languageChanged, _handleLanguageChanged: ConfigBehavior._handleLanguageChanged, _handleSigninSuccess: ConfigBehavior._handleSigninSuccess, _handleSignedOut: ConfigBehavior._handleSignedOut, _currentUserChanged: ConfigBehavior._currentUserChanged, _handleCurrentUserChanged: ConfigBehavior._handleCurrentUserChanged}}
    */
-  ConfigBehavior = {
+  ConfigBehaviorImpl = {
 
     properties: {
       _apiBaseUrl: {
@@ -27,7 +29,8 @@
       language: {
         type: String,
         value: function() { return GlobalConfig.language; },
-        observer: '_languageChanged'
+        observer: '_languageChanged',
+        notify: true
       },
       currentUser: {
         type: String,
@@ -42,7 +45,27 @@
       },
       authHeader: {
         type: Array
+      },
+      _preliminaryResources: {
+        type: Object
+      },
+      _resourcesToFetch: {
+        type: Number
+      },
+      _resourcesFetched: {
+        type: Number,
+        value: 0
       }
+    },
+
+    attached: function() {
+      // load localized messages
+      this._resourcesToFetch = 4;
+      this.loadLanguageResource(this.resolveUrl('../locales/de.json'));
+      this.loadLanguageResource(this.resolveUrl('../locales/en.json'));
+      //this.loadLanguageResource(this.resolveUrl('../locales/fa.json'));
+      this.loadLanguageResource(this.resolveUrl('../locales/ro.json'));
+      this.loadLanguageResource(this.resolveUrl('../locales/sq.json'));
     },
 
     /**
@@ -88,7 +111,69 @@
 
     _handleCurrentUserChanged: function(e, detail) {
       this.currentUser = detail;
+    },
+
+    /**
+     * Localization pimping
+     */
+
+    /**
+     * Internal singleton cache. This is the private implementation of the
+     * behaviour; don't interact with it directly.
+     */
+    __localizationCache: {
+      requests: {},  /* One iron-request per unique resources path. */
+      messages: {},  /* Unique localized strings. Invalidated when the language, formats or resources change. */
+      ajax: null     /* Global iron-ajax object used to request resource files. */
+    },
+
+    loadLanguageResource: function(path) {
+      var proto = this.constructor.prototype;
+      // Check if localCache exist just in case.
+      this.__checkLocalizationCache(proto);
+      // If the global ajax object has not been initialized, initialize and cache it.
+      var ajax = proto.__localizationCache.ajax;
+      if (!ajax) {
+        ajax = proto.__localizationCache.ajax = document.createElement('iron-ajax');
+      }
+      var request = proto.__localizationCache.requests[path];
+      if (!request) {
+        ajax.url = path;
+        var request = ajax.generateRequest();
+        request.completes.then(
+          this.__onLanguageRequestResponse.bind(this),
+          this.__onLanguageRequestError.bind(this));
+        // Cache the instance so that it can be reused if the same path is loaded.
+        proto.__localizationCache.requests[path] = request;
+      } else {
+        request.completes.then(
+          this.__onLanguageRequestResponse.bind(this),
+          this.__onLanguageRequestError.bind(this));
+      }
+    },
+
+    __onLanguageRequestResponse: function(event) {
+      var languageCode = event.url.substr(event.url.length - 7, 2);
+
+      if (!this._preliminaryResources) {
+        this._preliminaryResources = {};
+      }
+
+      this._preliminaryResources[languageCode] = event.response;
+
+      this._resourcesFetched++;
+      if (this._resourcesFetched === this._resourcesToFetch) {
+        this.resources = this._preliminaryResources;
+      }
+
+      this.fire('app-localize-resources-loaded', event, { bubbles: false});
+    },
+
+    __onLanguageRequestError: function(event) {
+      this.fire('app-localize-resources-error');
     }
 
-  }
+  };
+
+  ConfigBehavior = [ConfigBehaviorImpl, Polymer.AppLocalizeBehavior];
 </script>

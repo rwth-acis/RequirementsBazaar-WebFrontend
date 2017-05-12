@@ -163,6 +163,7 @@
               <paper-item value="sq">Albanian</paper-item>
               <paper-item value="de">Deutsch</paper-item>
               <paper-item value="en">English</paper-item>
+              <!--<paper-item value="fa">Farsi</paper-item>-->
               <paper-item value="ro">Romanian</paper-item>
             </paper-menu>
           </paper-menu-button>
@@ -249,6 +250,7 @@
         <paper-item value="sq">Albanian</paper-item>
         <paper-item value="de">Deutsch</paper-item>
         <paper-item value="en">English</paper-item>
+        <!--<paper-item value="fa">Farsi</paper-item>-->
         <paper-item value="ro">Romanian</paper-item>
       </paper-menu>
     </paper-dialog>
@@ -260,7 +262,6 @@
       is: 'reqbaz-app',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
 
@@ -281,11 +282,6 @@
           type: Boolean,
           value: false
         }
-      },
-
-      attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
       },
 
       observers: [

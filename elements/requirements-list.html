@@ -1,33 +1,33 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/app-route/app-route.html">
-<link rel="import" href="../../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
-<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../../bower_components/neon-animation/animations/fade-in-animation.html">
-<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
-<link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
-<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
-<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../bower_components/iron-icons/editor-icons.html">
-<link rel="import" href="../../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
-<link rel="import" href="../req-user/req-user.html">
-<link rel="import" href="../comments-list/comments-list.html">
-<link rel="import" href="../file-gallery/file-gallery.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="req-user.html">
+<link rel="import" href="comments-list.html">
+<link rel="import" href="file-gallery.html">
 <link rel="import" href="requirement-card.html">
-<link rel="import" href="../../src/shared-styles.html">
-<link rel="import" href="../../src/config-behavior.html">
+<link rel="import" href="../src/shared-styles.html">
+<link rel="import" href="../src/config-behavior.html">
 
-<script src="../../bower_components/masonry/dist/masonry.pkgd.js"></script>
+<script src="../bower_components/masonry/dist/masonry.pkgd.js"></script>
 
 <dom-module id="requirements-list">
   <template>
@@ -331,7 +331,6 @@
         },
 
         behaviors: [
-          Polymer.AppLocalizeBehavior,
           ConfigBehavior
         ],
 
@@ -483,11 +482,6 @@
           '_routeChanged(route)',
           '_categoryIdChanged(categoryId)'
         ],
-
-        attached: function() {
-          // load localized messages
-          this.loadResources(this.resolveUrl('../../locales/locales.json'));
-        },
 
         _routeChanged: function(route) {
           if ((route.path === '') || (route.path === '/')) {

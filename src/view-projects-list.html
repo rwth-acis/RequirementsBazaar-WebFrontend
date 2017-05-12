@@ -21,7 +21,7 @@
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
-<link rel="import" href="../elements/projects-list/projects-list.html">
+<link rel="import" href="../elements/projects-list.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 
@@ -187,7 +187,6 @@
       is: 'view-projects-list',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
 
@@ -228,9 +227,6 @@
       },
 
       attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
-
         // set fab button and create dialog right padding
         this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
         this.$.createProjectDialog.toggleClass('drawer', this.rightDrawerReserveSpace);
