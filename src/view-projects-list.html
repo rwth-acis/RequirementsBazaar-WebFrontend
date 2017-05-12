@@ -187,7 +187,6 @@
       is: 'view-projects-list',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
 
@@ -228,9 +227,6 @@
       },
 
       attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
-
         // set fab button and create dialog right padding
         this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
         this.$.createProjectDialog.toggleClass('drawer', this.rightDrawerReserveSpace);

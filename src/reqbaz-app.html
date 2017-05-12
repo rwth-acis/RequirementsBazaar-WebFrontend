@@ -262,7 +262,6 @@
       is: 'reqbaz-app',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
 
@@ -283,11 +282,6 @@
           type: Boolean,
           value: false
         }
-      },
-
-      attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
       },
 
       observers: [
