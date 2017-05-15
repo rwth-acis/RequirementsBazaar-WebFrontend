@@ -103,7 +103,7 @@
           <div class="actions">
             <a on-tap="_handleReplyTap" hidden="[[!authorized]]">[[localize('reply')]]</a>
             <span hidden="[[!isCreator(item.creatorId)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
-            <relative-time datetime$="[[item.creationTime]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
+            <relative-time datetime$="[[item.creationDate]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
           </div>
           <paper-input class$="replyInput[[item.Id]]" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
         </div>
