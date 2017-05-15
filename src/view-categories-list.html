@@ -12,7 +12,6 @@
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
@@ -164,7 +163,6 @@
       is: 'view-categories-list',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
 
@@ -213,9 +211,6 @@
       },
 
       attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
-
         // set fab button and create dialog right padding
         this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
         this.$.createCategoryDialog.toggleClass('drawer', this.rightDrawerReserveSpace);
