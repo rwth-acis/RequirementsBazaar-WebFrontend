@@ -96,7 +96,7 @@
     <template is="dom-repeat" items="{{comments}}" on-dom-change="_handleCommentsDomChange">
 
       <!-- Compute the styling classes, add attribute "reply" when it is a reply. -->
-      <div class$="[[_computeCommentClasses(item)]]" attr="{{item.Id}}">
+      <div class$="[[_computeCommentClasses(item)]]" attr="{{item.id}}">
         <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
         <div class="layout vertical flex">
           <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
@@ -105,7 +105,7 @@
             <span hidden="[[!isCreator(item.creatorId)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
             <relative-time datetime$="[[item.creationDate]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
           </div>
-          <paper-input class$="replyInput[[item.Id]]" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
+          <paper-input class$="replyInput[[item.id]]" attr="{{item.id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
         </div>
       </div>
 
@@ -203,7 +203,7 @@
           if (e.model.item.belongsToComment) {
             replyTo = e.model.item.belongsToComment;
           } else {
-            replyTo = e.model.item.Id;
+            replyTo = e.model.item.id;
           }
           var request = this.$.postCommentRequest;
           if (text != null && text != '') {
@@ -321,7 +321,7 @@
        * @param e
        */
       _handleReplyTap: function(e) {
-        var replyInput = this.$$('.replyInput' + e.model.item.Id);
+        var replyInput = this.$$('.replyInput' + e.model.item.id);
 
         replyInput.hidden = false;
         replyInput.focus();
@@ -343,7 +343,7 @@
         data.onDelete = function() {
           // delete the comment from the model
           for (var i = 0; i<this.comments.length; i++) {
-            if (this.comments[i].Id === data.comment.Id) {
+            if (this.comments[i].id === data.comment.id) {
               this.splice('comments', i, 1);
             }
           }

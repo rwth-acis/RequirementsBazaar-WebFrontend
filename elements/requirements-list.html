@@ -1031,7 +1031,7 @@
           if (e.detail.confirmed) {
             var commentData = this.commentToDeleteData;
             var request = this.$.deleteCommentRequest;
-            request.url = this._apiBaseUrl + '/comments/' + commentData.comment.Id;
+            request.url = this._apiBaseUrl + '/comments/' + commentData.comment.id;
 
             request.generateRequest();
           }
