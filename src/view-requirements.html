@@ -182,7 +182,7 @@
     <iron-ajax id="categoryInfoLoader"
                loading="{{loading}}"
                content-type="application/json"
-               url="[[_apiBaseUrl]]/components/[[categoryId]]"
+               url="[[_apiBaseUrl]]/categories/[[categoryId]]"
                last-response="{{category}}"
                auto></iron-ajax>
 
@@ -558,7 +558,7 @@
         var isFollower = this._isUserInArray(followers, this.currentUser);
 
         var request = this.$.editCategoryRequest;
-        request.url = this._apiBaseUrl + '/components/' + this.categoryId + '/followers';
+        request.url = this._apiBaseUrl + '/categories/' + this.categoryId + '/followers';
 
         if (!isFollower) {
           // follow requirement
@@ -705,7 +705,7 @@
         var description = this._editCategoryDescription;
 
         var request = this.$.editCategoryRequest;
-        request.url = this._apiBaseUrl + '/components/' + this.categoryId;
+        request.url = this._apiBaseUrl + '/categories/' + this.categoryId;
         request.body = JSON.stringify({
           "id": this.categoryId,
           "name": title,
@@ -814,7 +814,7 @@
       deleteCategory: function(e) {
         if (e.detail.confirmed) {
           var request = this.$.editCategoryRequest;
-          request.url = this._apiBaseUrl + "/components/" + this.categoryId;
+          request.url = this._apiBaseUrl + "/categories/" + this.categoryId;
           request.method = "DELETE";
           request.generateRequest();
         }

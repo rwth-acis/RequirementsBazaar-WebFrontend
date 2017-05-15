@@ -541,7 +541,7 @@
          * Computes the resource URL for the requirements request.
          */
         _computeResourceURL: function (apiBaseUrl, categoryId) {
-          return apiBaseUrl + '/components/' + categoryId + '/requirements';
+          return apiBaseUrl + '/categories/' + categoryId + '/requirements';
         },
 
         _searchFilterChanged: function(searchFilter) {
@@ -555,7 +555,7 @@
          * @param requirementsStateFilter {string} the requirement's state, either 'open', 'realized' or 'all'.
          */
         _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, sorting, sortDirection, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
-          this._resourceUrl = apiBaseUrl + '/components/' + categoryId + '/requirements';
+          this._resourceUrl = apiBaseUrl + '/categories/' + categoryId + '/requirements';
 
           if (this._requirementsRequestParameters) {
 
@@ -652,7 +652,7 @@
           var CSV = '';
           //Set Report title in first row or line
 
-          CSV += 'Requirements of ' + arrData[0].components[0].name + '\r\n\n';
+          CSV += 'Requirements of ' + arrData[0].categories[0].name + '\r\n\n';
 
           var row = 'TITLE, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, CATEGORY';
 
@@ -669,7 +669,7 @@
             row += '"' + arrData[i].creator.userName + '",';
             row += '"' + arrData[i].developers.length + '",';
             row += '"' + arrData[i].followers.length + '",';
-            row += '"' + arrData[i].components[0].name + '"';
+            row += '"' + arrData[i].categories[0].name + '"';
 
             //add a line break after each row
             CSV += row + '\r\n';
@@ -682,7 +682,7 @@
           }
 
           //Generate a file name
-          var fileName = arrData[0].components[0].name + '_';
+          var fileName = arrData[0].categories[0].name + '_';
           //this will remove the blank-spaces from the title and replace it with an underscore
           fileName += 'Requirements'.replace(/ /g, '_');
 
