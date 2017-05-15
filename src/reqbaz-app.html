@@ -221,11 +221,11 @@
       <h2>[[localize('settings')]]</h2>
       <div>
         [[localize('mailDefaultLeader')]]:
-        <paper-toggle-button checked="[[currentUser.emailLeadItems]]" on-change="_handleUserSettingsLeadChange"></paper-toggle-button>
+        <paper-toggle-button checked="[[currentUser.emailLeadSubscription]]" on-change="_handleUserSettingsLeadChange"></paper-toggle-button>
       </div>
       <div>
         [[localize('mailDefaultFollow')]]:
-        <paper-toggle-button checked="[[currentUser.emailFollowItems]]" on-tap="_handleUserSettingsFollowChange"></paper-toggle-button>
+        <paper-toggle-button checked="[[currentUser.emailFollowSubscription]]" on-tap="_handleUserSettingsFollowChange"></paper-toggle-button>
       </div>
       <!--<div>-->
       <!--Connect Github Account:-->
@@ -404,7 +404,7 @@
 
         request.body = JSON.stringify({
           "id": this.currentUser.id,
-          "emailLeadItems": !(this.currentUser.emailLeadItems)
+          "emailLeadSubscription": !(this.currentUser.emailLeadSubscription)
         });
 
         request.generateRequest();
@@ -416,7 +416,7 @@
 
         request.body = JSON.stringify({
           "id": this.currentUser.id,
-          "emailFollowItems": !(this.currentUser.emailFollowItems)
+          "emailFollowSubscription": !(this.currentUser.emailFollowSubscription)
         });
 
         request.generateRequest();
