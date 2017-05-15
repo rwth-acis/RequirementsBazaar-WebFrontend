@@ -110,7 +110,7 @@
 
         <h2>[[localize('editProject')]]</h2>
 
-        <paper-input id="editTitle" class="editTitle" maxlength="50" label="[[localize('formTitle')]]" value="{{_editProjectTitle}}" auto-validate error-message="[[localize('inputRequired')]]" char-counter required></paper-input>
+        <paper-input id="editName" class="editName" maxlength="50" label="[[localize('formTitle')]]" value="{{_editProjectName}}" auto-validate error-message="[[localize('inputRequired')]]" char-counter required></paper-input>
         <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="{{_editProjectDescription}}" auto-validate error-message="[[localize('inputRequired')]]" max-rows="5" required></paper-textarea>
 
         <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
@@ -131,8 +131,8 @@
                   no-cancel-on-esc-key
                   on-iron-overlay-closed="_handleCreateCategoryClosed">
       <h2>[[localize('createCategory')]]</h2>
-      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newCategoryTitle"
-                   value="{{_newCategoryTitle}}" required></paper-input>
+      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newCategoryName"
+                   value="{{_newCategoryName}}" required></paper-input>
       <paper-textarea label="[[localize('formDesc')]]" id="newCategoryDescription"
                       value="{{_newCategoryDescription}}" max-rows="5" required></paper-textarea>
 
@@ -184,7 +184,7 @@
           type: Boolean,
           value: false
         },
-        _editProjectTitle: {
+        _editProjectName: {
           type: String,
           value: ''
         },
@@ -194,9 +194,9 @@
         },
         _editProjectSaveDisabled: {
           type: Boolean,
-          computed: '_computeEditProjectSaveDisabled(_editProjectTitle, _editProjectDescription)'
+          computed: '_computeEditProjectSaveDisabled(_editProjectName, _editProjectDescription)'
         },
-        _newCategoryTitle: {
+        _newCategoryName: {
           type: String,
           value: ''
         },
@@ -206,7 +206,7 @@
         },
         _createCategoryDisabled: {
           type: Boolean,
-          computed: '_computeCreateCategoryDisabled(_newCategoryTitle, _newCategoryDescription)'
+          computed: '_computeCreateCategoryDisabled(_newCategoryName, _newCategoryDescription)'
         }
       },
 
@@ -233,21 +233,21 @@
       },
 
       _handleSaveEditTap: function(e) {
-        var title = this._editProjectTitle;
+        var name = this._editProjectName;
         var description = this._editProjectDescription;
 
         var request = this.$.editProjectRequest;
         request.url = this._apiBaseUrl + '/projects/' + this.projectId;
         request.body = JSON.stringify({
           "id": this.projectId,
-          "name": title,
+          "name": name,
           "description": description
         });
         request.method = 'PUT';
         request.generateRequest();
 
         // update local project object
-        this.project.name = title;
+        this.project.name = name;
         this.project.description = description;
         this.notifyPath('project.name', this.project.name);
         this.notifyPath('project.description', this.project.description);
@@ -290,7 +290,7 @@
         if (selectedValue === 'follow') {
           this._toggleFollowProject();
         } else if (selectedValue === 'edit') {
-          this._editProjectTitle = this.project.name;
+          this._editProjectName = this.project.name;
           this._editProjectDescription = this.project.description;
           this._editMode = true;
         } else if (selectedValue === 'delete') {
@@ -303,31 +303,31 @@
            var request = this.$.postCategoryRequest;
            request.body = JSON.stringify({
              "description": this._newCategoryDescription.trim(),
-             "name": this._newCategoryTitle.trim(),
+             "name": this._newCategoryName.trim(),
              "projectId": this.projectId
            });
            request.generateRequest();
-           this.$.newCategoryTitle.value = null;
+           this.$.newCategoryName.value = null;
            this.$.newCategoryDescription.value = null;
          }
 
          // reset the form and validation error messages
-         this.$.newCategoryTitle.required = false;
+         this.$.newCategoryName.required = false;
          this.$.newCategoryDescription.required = false;
 
-         this.$.newCategoryTitle.value = null;
+         this.$.newCategoryName.value = null;
          this.$.newCategoryDescription.value = null;
 
-         this.$.newCategoryTitle.required = true;
+         this.$.newCategoryName.required = true;
          this.$.newCategoryDescription.required = true;
       },
 
-      _computeEditProjectSaveDisabled: function(editProjectTitle, editProjectDescription) {
-        return (editProjectTitle == null || editProjectDescription == null || editProjectTitle.trim() === '' || editProjectDescription.trim() === '');
+      _computeEditProjectSaveDisabled: function(editProjectName, editProjectDescription) {
+        return (editProjectName == null || editProjectDescription == null || editProjectName.trim() === '' || editProjectDescription.trim() === '');
       },
 
-      _computeCreateCategoryDisabled: function(newCategoryTitle, newCategoryDescription) {
-        return (newCategoryTitle == null || newCategoryDescription == null || newCategoryTitle.trim() === '' || newCategoryDescription.trim() === '');
+      _computeCreateCategoryDisabled: function(newCategoryName, newCategoryDescription) {
+        return (newCategoryName == null || newCategoryDescription == null || newCategoryName.trim() === '' || newCategoryDescription.trim() === '');
       },
 
       _handlePostCategoryResponse: function(e) {

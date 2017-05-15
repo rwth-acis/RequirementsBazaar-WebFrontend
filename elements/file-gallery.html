@@ -24,7 +24,7 @@
       <template is="dom-repeat" items="[[attachments]]">
         <iron-image class="imageIcon"
                     src="[[item.fileUrl]]"
-                    alt="[[item.title]]"
+                    alt="[[item.name]]"
                     sizing="cover"
                     on-tap="_handleImageToggle"
                     preload
@@ -41,7 +41,7 @@
     <!-- Dialog for showing the image on small layouts: -->
 
     <paper-dialog id="imgPopupDialog" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-      <h2 id="imgTitle"></h2>
+      <h2 id="imgName"></h2>
       <div>
         <img id="popupImg" height="500">
       </div>

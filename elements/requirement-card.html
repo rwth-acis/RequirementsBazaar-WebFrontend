@@ -55,7 +55,7 @@
         height: 35px;
       }
 
-      .requirementTitle {
+      .requirementName {
         @apply(--layout-flex);
         width: 0;
         font-size: 20px;
@@ -176,7 +176,7 @@
 
         <div class="requirementToolbar">
 
-          <div class="requirementTitle" on-tap="_handleRequirementTap">[[requirement.title]]</div>
+          <div class="requirementName" on-tap="_handleRequirementTap">[[requirement.name]]</div>
 
           <div class="requirementIcons">
             <paper-checkbox id="checkbox" on-change="_handleCheckboxChange"></paper-checkbox>
@@ -265,7 +265,7 @@
 
       <div class="editForm" id="edit">
 
-        <paper-input id="editTitleInput" class="editTitle title"></paper-input>
+        <paper-input id="editNameInput" class="editName name"></paper-input>
         <paper-textarea id="editDescriptionInput"></paper-textarea>
         <paper-button raised on-tap="_handleSaveEditTap">[[localize('save')]]</paper-button>
         <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
@@ -851,7 +851,7 @@
        */
       _editRequirement: function() {
         // set values
-        this.$.editTitleInput.value = this.requirement.title;
+        this.$.editNameInput.value = this.requirement.name;
         this.$.editDescriptionInput.value = this.requirement.description;
 
         // hide card elements
@@ -872,17 +872,17 @@
        * @private
        */
       _handleSaveEditTap: function(e) {
-        var title = this.$.editTitleInput.value;
+        var name = this.$.editNameInput.value;
         var description = this.$.editDescriptionInput.value;
 
         var request = this.$.updateRequirementRequest;
         request.url = this._apiBaseUrl + '/requirements/' + this.requirement.id;
         request.method = 'PUT';
 
-        if ((title !== '') && (description !== '')) {
+        if ((name !== '') && (description !== '')) {
           request.body = JSON.stringify({
             "id": this.requirement.id,
-            "title": title,
+            "name": name,
             "description": description
           });
           request.generateRequest();
