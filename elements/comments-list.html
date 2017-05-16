@@ -102,7 +102,7 @@
           <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
           <div class="actions">
             <a on-tap="_handleReplyTap" hidden="[[!authorized]]">[[localize('reply')]]</a>
-            <span hidden="[[!isCreator(item.creatorId)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
+            <span hidden="[[!isCreator(item.creator.id)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
             <relative-time datetime$="[[item.creationDate]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
           </div>
           <paper-input class$="replyInput[[item.id]]" attr="{{item.id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
@@ -200,8 +200,8 @@
         if (e.keyCode === 13) {
           var text = e.currentTarget.value;
           var replyTo;
-          if (e.model.item.belongsToComment) {
-            replyTo = e.model.item.belongsToComment;
+          if (e.model.item.replyToComment) {
+            replyTo = e.model.item.replyToComment;
           } else {
             replyTo = e.model.item.id;
           }
@@ -210,7 +210,7 @@
             request.body = JSON.stringify({
               "requirementId": this.requirementId,
               "message": text,
-              "belongsToComment": parseInt(replyTo)
+              "replyToComment": parseInt(replyTo)
             });
             request.generateRequest();
           } else {
@@ -309,7 +309,7 @@
        * @returns {boolean}
        */
       isReply: function(item) {
-        if (item.belongsToComment) {
+        if (item.replyToComment) {
           return true;
         }
         return false;
