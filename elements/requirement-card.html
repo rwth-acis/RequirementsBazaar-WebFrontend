@@ -212,7 +212,7 @@
         </div>
 
         <div class="requirementTime">
-          <relative-time datetime$="[[requirement.creation_time]]"></relative-time>
+          <relative-time datetime$="[[requirement.creationDate]]"></relative-time>
           [[localize('by')]]
           <req-user user="[[requirement.creator]]" normal-view></req-user>
         </div>
@@ -442,7 +442,7 @@
           this._unbecomeLeadDeveloperHidden = true;
         } else {
           // following
-          if (authorized && this.currentUser && this._isUserInArray(requirement.followers, this.currentUser)) {
+          if (authorized && this.currentUser && requirement.isFollower) {
             this._followHidden = true;
             this._unfollowHidden = false;
           } else {
@@ -450,7 +450,7 @@
             this._unfollowHidden = true;
           }
           // developing
-          if (this.authorized && this.currentUser && this._isUserInArray(requirement.developers, this.currentUser)) {
+          if (this.authorized && this.currentUser && requirement.isDeveloper) {
             this._developHidden = true;
             this._undevelopHidden = false;
           } else {
@@ -514,41 +514,15 @@
       },
 
       /**
-       * Checks whether a user is in the users array. Compares the user's id.
-       *
-       * @param usersArray an array of user objects.
-       * @param user a user object.
-       * @returns {boolean} whether the user is in the array or not.
-       * @private
-       */
-      _isUserInArray: function(usersArray, user) {
-        if (user === null) {
-          return false;
-        } else {
-          // check if the user's id is in the users array
-          for (var index = 0; index < usersArray.length; ++index) {
-            if (usersArray[index].id === user.id) {
-              return true;
-            }
-          }
-
-          return false;
-        }
-      },
-
-      /**
        * Handles toggling the following of the requirement by firing the state to the server.
        *
        * @returns {boolean}
        * @private
        */
       _toggleFollowRequirement: function() {
-        var followers = this.requirement.followers;
-        var isFollower = this._isUserInArray(followers, this.currentUser);
-
         var request = this.$.followRequest;
 
-        if (!isFollower) {
+        if (!this.requirement.isFollower) {
           // follow requirement
           request.method = 'POST';
         } else {
@@ -567,13 +541,11 @@
        * @param resource
        * @private
        */
-      _toggleUserInResource: function(userArray, resource) {
-        var isUserInArray = this._isUserInArray(userArray, this.currentUser);
-
+      _toggleUserInResource: function(resource, isInResource) {
         var request = this.$.userInResourceRequest;
         request.url = this._apiBaseUrl + "/requirements/" + this.requirement.id + "/" + resource;
 
-        if (!isUserInArray) {
+        if (!isInResource) {
           // POST user to resource
           request.method = 'POST';
         } else {
@@ -601,7 +573,7 @@
         } else if (selectedValue === 'toggleContributors') {
           this._toggleContributors();
         } else if ((selectedValue === 'develop') || (selectedValue === 'undevelop')) {
-          this._toggleUserInResource(this.requirement.developers, 'developers');
+          this._toggleUserInResource('developers', this.requirement.isDeveloper);
         } else if ((selectedValue === 'realize') || (selectedValue === 'unrealize')) {
           this._toggleRealized();
         } else if (selectedValue === 'delete') {
