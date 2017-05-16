@@ -296,11 +296,14 @@
       },
 
       _handleSigninSuccessApp: function(e) {
-        this._handleSigninSuccess(e);
-        this.$.currentUserRequest.generateRequest();
+        // bugfix for only handling the main item's event
+        if (e.currentTarget.id === 'openidconnectSignin') {
+          this._handleSigninSuccess(e);
+          this.$.currentUserRequest.generateRequest();
 
-        // deactivate menu entry selection, just in case the login was made from the main menu
-        this.$.mainMenu.selected = null;
+          // deactivate menu entry selection, just in case the login was made from the main menu
+          this.$.mainMenu.selected = null;
+        }
       },
 
       _handleCurrentUserResponse: function(e, detail) {
