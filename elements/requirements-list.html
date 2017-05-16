@@ -15,7 +15,6 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
-<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/editor-icons.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
@@ -209,7 +208,7 @@
 
     <div id="grid" hidden="[[!_isViewActive(viewOption, 'grid')]]">
       <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5" on-dom-change="_handleGridDomChange">
-        <paper-card heading="{{item.requirementItem.title}}" elevation="2" class="grid-item">
+        <paper-card heading="{{item.requirementItem.name}}" elevation="2" class="grid-item">
           <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[item.requirementItem.creator]]" normal-view></req-user></span></div>
           <relative-time class="time" datetime$="[[item.requirementItem.creation_time]]"></relative-time>
           <div class="card-content" class="truncate">{{item.requirementItem.description}}</div>
@@ -343,7 +342,7 @@
             type: Number
           },
           /**
-           * The sorting parameter of requirements, either `date`, `title`, `vote`, `comment`, `follower` or `realized`.
+           * The sorting parameter of requirements, either `date`, `name`, `vote`, `comment`, `follower` or `realized`.
            */
           sorting: {
             type: String,
@@ -542,7 +541,7 @@
          * Computes the resource URL for the requirements request.
          */
         _computeResourceURL: function (apiBaseUrl, categoryId) {
-          return apiBaseUrl + '/components/' + categoryId + '/requirements';
+          return apiBaseUrl + '/categories/' + categoryId + '/requirements';
         },
 
         _searchFilterChanged: function(searchFilter) {
@@ -556,7 +555,7 @@
          * @param requirementsStateFilter {string} the requirement's state, either 'open', 'realized' or 'all'.
          */
         _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, sorting, sortDirection, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
-          this._resourceUrl = apiBaseUrl + '/components/' + categoryId + '/requirements';
+          this._resourceUrl = apiBaseUrl + '/categories/' + categoryId + '/requirements';
 
           if (this._requirementsRequestParameters) {
 
@@ -651,11 +650,11 @@
           var arrData = typeof selectedRequirements != 'object' ? JSON.parse(selectedRequirements) : selectedRequirements;
 
           var CSV = '';
-          //Set Report title in first row or line
+          //Set Report name in first row or line
 
-          CSV += 'Requirements of ' + arrData[0].components[0].name + '\r\n\n';
+          CSV += 'Requirements of ' + arrData[0].categories[0].name + '\r\n\n';
 
-          var row = 'TITLE, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, CATEGORY';
+          var row = 'NAME, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, CATEGORY';
 
           //append Label row with line break
           CSV += row + '\r\n';
@@ -664,13 +663,13 @@
           for (var i = 0; i < arrData.length; i++) {
             var row = '';
 
-            row += '"' + arrData[i].title + '",';
+            row += '"' + arrData[i].name + '",';
             row += '"' + arrData[i].description + '",';
             row += '"' + arrData[i].creation_time + '",';
             row += '"' + arrData[i].creator.userName + '",';
             row += '"' + arrData[i].developers.length + '",';
             row += '"' + arrData[i].followers.length + '",';
-            row += '"' + arrData[i].components[0].name + '"';
+            row += '"' + arrData[i].categories[0].name + '"';
 
             //add a line break after each row
             CSV += row + '\r\n';
@@ -683,8 +682,8 @@
           }
 
           //Generate a file name
-          var fileName = arrData[0].components[0].name + '_';
-          //this will remove the blank-spaces from the title and replace it with an underscore
+          var fileName = arrData[0].categories[0].name + '_';
+          //this will remove the blank-spaces from the name and replace it with an underscore
           fileName += 'Requirements'.replace(/ /g, '_');
 
           //Initialize file format you want csv or xls
@@ -734,11 +733,11 @@
 
         onRepoDialogClosed: function (e) {
           if(e.detail.confirmed) {
-            var title = "";
+            var name = "";
             var desc = "";
             for (var i=0; i < this.requirements.length; i++) {
               if (this.requirements[i].id == this.selReq) {
-                title = this.requirements[i].title;
+                name = this.requirements[i].name;
                 desc = this.requirements[i].description;
               }
               break;
@@ -746,7 +745,7 @@
             var req = this.$.postIssueGit;
             req.url = 'https://api.github.com/repos/' + this.repositories[parseInt(this.$.selRepo.selected)].full_name + '/issues';
             req.body = JSON.stringify({
-              "title": title,
+              "name": name,
               "body": desc
             });
             req.generateRequest();
@@ -846,7 +845,7 @@
               return true;
             }
             //return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase()));
-            return (item.title && ~item.title.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
+            return (item.name && ~item.name.toLowerCase().indexOf(val.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(val.toLowerCase()));
           };
         },**/
 
@@ -1032,7 +1031,7 @@
           if (e.detail.confirmed) {
             var commentData = this.commentToDeleteData;
             var request = this.$.deleteCommentRequest;
-            request.url = this._apiBaseUrl + '/comments/' + commentData.comment.Id;
+            request.url = this._apiBaseUrl + '/comments/' + commentData.comment.id;
 
             request.generateRequest();
           }
@@ -1055,7 +1054,7 @@
         },
 
         /**
-         * Filters the requirements and only returns those whose title or description contains the search filter string.
+         * Filters the requirements and only returns those whose name or description contains the search filter string.
          *
          * Thanks to https://github.com/PolymerElements/iron-list/issues/193
          *
@@ -1064,7 +1063,7 @@
          */
         filterItems: function(searchFilter) {
           return function(item) { // Array.prototype.filter
-            return (item.requirementItem.title && ~item.requirementItem.title.toLowerCase().indexOf(searchFilter.toLowerCase())) || (item.requirementItem.description && ~item.requirementItem.description.toLowerCase().indexOf(searchFilter.toLowerCase()));
+            return (item.requirementItem.name && ~item.requirementItem.name.toLowerCase().indexOf(searchFilter.toLowerCase())) || (item.requirementItem.description && ~item.requirementItem.description.toLowerCase().indexOf(searchFilter.toLowerCase()));
           };
         },
 

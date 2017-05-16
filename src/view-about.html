@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
 
@@ -99,14 +98,9 @@
       is: 'view-about',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
-      ],
+      ]
 
-      attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
-      }
     });
   </script>
 </dom-module>
