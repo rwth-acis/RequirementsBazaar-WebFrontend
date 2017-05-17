@@ -262,7 +262,7 @@
 
       <div class="bottom-container bottom" hidden="[[_editMode]]">
         <div class="timing helper">
-          [[localize('created')]] <relative-time datetime$="[[category.creation_time]]"></relative-time>
+          [[localize('created')]] <relative-time datetime$="[[category.creationDate]]"></relative-time>
           [[localize('by')]]
           <req-user user="{{category.leader}}" normal-view no-popover></req-user>
         </div>
@@ -639,7 +639,7 @@
           "name": this._newRequirementName.trim(),
           "description": this._newRequirementDescription.trim(),
           "projectId": this.projectId,
-          "components": categories,
+          "categories": categories,
           "attachments": attachments
         });
         request.generateRequest();
@@ -781,7 +781,7 @@
         request.method = "PUT";
         request.body = JSON.stringify({
           "id": this.projectId,
-          "defaultComponentId": this.categoryId
+          "defaultCategoryId": this.categoryId
         });
         request.generateRequest();
       },

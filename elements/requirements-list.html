@@ -210,7 +210,7 @@
       <template is="dom-repeat" items="{{requirements}}" filter="{{filterItems(searchFilter)}}" initial-count="5" on-dom-change="_handleGridDomChange">
         <paper-card heading="{{item.requirementItem.name}}" elevation="2" class="grid-item">
           <div style="display:inline-flex; padding-left: 16px;"><span>[[localize('by')]] <req-user user="[[item.requirementItem.creator]]" normal-view></req-user></span></div>
-          <relative-time class="time" datetime$="[[item.requirementItem.creation_time]]"></relative-time>
+          <relative-time class="time" datetime$="[[item.requirementItem.creationDate]]"></relative-time>
           <div class="card-content" class="truncate">{{item.requirementItem.description}}</div>
           <div class="card-actions">
             <paper-button on-tap="openCommentsDialog">
@@ -654,7 +654,7 @@
 
           CSV += 'Requirements of ' + arrData[0].categories[0].name + '\r\n\n';
 
-          var row = 'NAME, DESCRIPTION, CREATION DATE, CREATOR, DEVELOPERS, FOLLOWERS, CATEGORY';
+          var row = 'NAME; DESCRIPTION; CREATION DATE; CREATOR; CATEGORY';
 
           //append Label row with line break
           CSV += row + '\r\n';
@@ -663,12 +663,10 @@
           for (var i = 0; i < arrData.length; i++) {
             var row = '';
 
-            row += '"' + arrData[i].name + '",';
-            row += '"' + arrData[i].description + '",';
-            row += '"' + arrData[i].creation_time + '",';
-            row += '"' + arrData[i].creator.userName + '",';
-            row += '"' + arrData[i].developers.length + '",';
-            row += '"' + arrData[i].followers.length + '",';
+            row += '"' + arrData[i].name + '";';
+            row += '"' + arrData[i].description + '";';
+            row += '"' + arrData[i].creationDate + '";';
+            row += '"' + arrData[i].creator.userName + '";';
             row += '"' + arrData[i].categories[0].name + '"';
 
             //add a line break after each row
@@ -691,6 +689,7 @@
 
           //this trick will generate a temp <a /> tag
           var link = document.createElement('a');
+          link.setAttribute('type', 'text/csv');
           link.href = uri;
 
           //set the visibility hidden so it will not effect on your web-layout

@@ -60,7 +60,7 @@
   "deleteRequirementDesc": "This action can't be undone! Are you sure that you want to permanently delete this requirement?",
   "showContributors": "Show Contributors",
   "markAsDone": "Mark as done",
-  "markAsUnDone": "Re-Open",
+  "markAsUndone": "Re-Open",
   "followRequirement": "Follow Requirement",
   "unfollowRequirement": "Unfollow Requirement",
   "developRequirement": "Develop Requirement",

@@ -60,7 +60,7 @@
   "deleteRequirementDesc": "Diese Aktion kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie diese Anforderung löschen möchten?",
   "showContributors": "Zeige alle Beteiligten",
   "markAsDone": "Als erledigt markieren",
-  "markAsUnDone": "Als nicht erledigt markieren",
+  "markAsUndone": "Als nicht erledigt markieren",
   "followRequirement": "Benachrichtigungen aktivieren",
   "unfollowRequirement": "Benachrichtigungen deaktivieren",
   "developRequirement": "Anforderung entwickeln",

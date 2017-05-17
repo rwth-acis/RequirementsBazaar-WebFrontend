@@ -60,7 +60,7 @@
   "deleteRequirementDesc": "Aceasta actiune are efecte permanente! Sunteti sigur ca vreti sa stergeti aceasta cerinta?",
   "showContributors": "Vizualizati Contributorii",
   "markAsDone": "Marcati ca efectuat",
-  "markAsUnDone": "Re-Open",
+  "markAsUndone": "Re-Open",
   "followRequirement": "Abonati-va la Cerinta",
   "unfollowRequirement": "Dezabonati-va la Cerinta",
   "developRequirement": "Dezvoltati Cerinta",
