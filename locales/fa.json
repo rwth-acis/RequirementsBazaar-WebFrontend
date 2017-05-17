@@ -60,7 +60,7 @@
   "deleteRequirementDesc": "این عمل قابل بازگشت نیست. آیا مطمئنید که می خواهید این نیاز را برای همیشه حذف نمایید؟",
   "showContributors": "نمایش همکاران",
   "markAsDone": "علامت گذاری به عنوان انجام شده",
-  "markAsUnDone": "دوباره باز کردن",
+  "markAsUndone": "دوباره باز کردن",
   "followRequirement": "دنبال کردن نیاز",
   "unfollowRequirement": "دنبال نکردن نیاز",
   "developRequirement": "توسعه دادن نیاز",

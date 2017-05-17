@@ -60,7 +60,7 @@
   "deleteRequirementDesc": "Ky aksion nuk mund te zhbëhet! Jeni të sigurt që doni ta fshini përfundimisht këtë kërkesë?",
   "showContributors": "Shfaq Kontribuesit",
   "markAsDone": "Markoje të bërë",
-  "markAsUnDone": "Ri-Hape",
+  "markAsUndone": "Ri-Hape",
   "followRequirement": "Ndiqe Kërkesë",
   "unfollowRequirement": "Mos e ndiq Kërkesën",
   "developRequirement": "Zhvillo Kërkesën",
