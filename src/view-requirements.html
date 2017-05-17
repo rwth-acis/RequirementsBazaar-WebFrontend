@@ -639,7 +639,7 @@
           "name": this._newRequirementName.trim(),
           "description": this._newRequirementDescription.trim(),
           "projectId": this.projectId,
-          "components": categories,
+          "categories": categories,
           "attachments": attachments
         });
         request.generateRequest();
@@ -781,7 +781,7 @@
         request.method = "PUT";
         request.body = JSON.stringify({
           "id": this.projectId,
-          "defaultComponentId": this.categoryId
+          "defaultCategoryId": this.categoryId
         });
         request.generateRequest();
       },
