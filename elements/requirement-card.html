@@ -250,7 +250,7 @@
       <div class="comments" id="comments">
 
         <iron-collapse>
-          <file-gallery attachments="{{requirement.attachments}}"></file-gallery>
+          <file-gallery id="attachmentsList" loading="{{loading}}" requirement-id="[[requirement.id]]"></file-gallery>
           <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
           <comments-list id="commentsList" loading="{{loading}}" requirement-id="[[requirement.id]]" data-a="[[requirement.id]]"></comments-list>
           <div class="container flex-horizontal" id="[[requirement.id]]" hidden="[[!authorized]]">
@@ -370,7 +370,7 @@
           // load comments
           requirementNode.querySelector('comments-list').refresh();
           // load attachments
-          requirementNode.querySelector("file-gallery").loadIcons();
+          requirementNode.querySelector("file-gallery").refresh();
           this.set('route.path', '/requirements/' + this.requirement.id);
         }
 

@@ -1,6 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
+<link rel="import" href="../src/config-behavior.html">
 
 <dom-module id="file-gallery">
   <template>
@@ -18,18 +22,30 @@
       }
     </style>
 
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
+
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
+    <iron-ajax id="attachmentsRequest"
+               loading="{{loading}}"
+               url="{{_resourceURL}}"
+               last-response="{{attachments}}"
+               params='{"page":"0", "per_page":"150"}'></iron-ajax>
+
     <!-- Show thumbnails of the images, added dynamically: -->
 
-    <template is="dom-if" if="[[loadTrigger]]">
-      <template is="dom-repeat" items="[[attachments]]">
-        <iron-image class="imageIcon"
-                    src="[[item.fileUrl]]"
-                    alt="[[item.name]]"
-                    sizing="cover"
-                    on-tap="_handleImageToggle"
-                    preload
-                    fade></iron-image>
-      </template>
+    <template is="dom-repeat" items="[[attachments]]">
+      <iron-image class="imageIcon"
+                  src="[[item.fileUrl]]"
+                  alt="[[item.name]]"
+                  sizing="cover"
+                  on-tap="_handleImageToggle"
+                  preload
+                  fade></iron-image>
     </template>
 
     <!-- show images in the list view -->
@@ -53,16 +69,53 @@
     Polymer({
       is: 'file-gallery',
 
+      behaviors: [
+        ConfigBehavior
+      ],
+
       properties: {
-        /** Attachments array passed as parameter from requirements-list */
+        /**
+         * The id of the requirement to show attachments for.
+         */
+        requirementId: {
+          type: Number
+        },
+        _resourceURL: {
+          type: String,
+          computed: '_computeResourceURL(requirementId)'
+        },
+        /**
+         * All retrieved attachments.
+         */
         attachments: {
           type: Array,
           notify: true
         },
-        loadTrigger: {
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
           type: Boolean,
-          value: function() { return false; }
+          notify: true
         }
+      },
+
+      /**
+       * Computes the URL for sending a GET request to the attachments for the specified requirement.
+       *
+       * @param requirementId
+       * @returns {string}
+       */
+      _computeResourceURL: function(requirementId) {
+        return this._apiBaseUrl + '/requirements/' + requirementId + '/attachments/';
+      },
+
+      /**
+       * Generates request for loading comments.
+       */
+      refresh: function() {
+        console.log('refreshing');
+        this.$.attachmentsRequest.generateRequest();
       },
 
       /**
@@ -87,14 +140,6 @@
         }
 
         this.fire('iron-signal', {name: 'resize'});
-      },
-
-      /**
-       * Loads the icons and adds the image elements to the DOM.
-       * Uses iron-image polymer element for showing also feedback.
-       */
-      loadIcons: function() {
-        this.loadTrigger = true;
       }
 
     });
