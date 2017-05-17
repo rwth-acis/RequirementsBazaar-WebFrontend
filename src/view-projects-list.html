@@ -275,7 +275,7 @@
           request.body = JSON.stringify({
             "description": this.$.newProjectDescription.value.trim(),
             "name": this.$.newProjectName.value.trim(),
-            "visibility": "PUBLIC"
+            "visibility": true
           });
           request.generateRequest();
         }
