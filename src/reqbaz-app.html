@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
@@ -116,6 +117,8 @@
         }
       }
     </style>
+
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <app-localstorage-document key="language" data="{{language}}">
     </app-localstorage-document>
