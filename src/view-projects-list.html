@@ -14,14 +14,13 @@
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
-<link rel="import" href="../elements/projects-list/projects-list.html">
+<link rel="import" href="../elements/projects-list.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 
@@ -162,9 +161,9 @@
                   no-cancel-on-esc-key
                   on-iron-overlay-closed="_handleCreateProjectClosed">
       <h2>[[localize('createProject')]]</h2>
-      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newProjectTitle"
+      <paper-input char-counter maxlength="50" label="[[localize('formTitle')]]" id="newProjectName"
                    required auto-validate error-message="[[localize('inputRequired')]]"
-                   value="{{_newProjectTitle}}"></paper-input>
+                   value="{{_newProjectName}}"></paper-input>
       <paper-textarea max-rows="5" label="[[localize('formDesc')]]" id="newProjectDescription"
                       required auto-validate error-message="[[localize('inputRequired')]]"
                       value="{{_newProjectDescription}}"></paper-textarea>
@@ -187,7 +186,6 @@
       is: 'view-projects-list',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
 
@@ -206,7 +204,7 @@
           type: String,
           value: 'name'
         },
-        _newProjectTitle: {
+        _newProjectName: {
           type: String,
           value: ''
         },
@@ -216,7 +214,7 @@
         },
         _createProjectDisabled: {
           type: Boolean,
-          computed: '_computeCreateProjectDisabled(_newProjectTitle, _newProjectDescription)'
+          computed: '_computeCreateProjectDisabled(_newProjectName, _newProjectDescription)'
         },
         /**
          * Whether the projects-list only shows projects created by the current user.
@@ -228,9 +226,6 @@
       },
 
       attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
-
         // set fab button and create dialog right padding
         this.$.fab.toggleAttribute('drawer', this.rightDrawerReserveSpace);
         this.$.createProjectDialog.toggleClass('drawer', this.rightDrawerReserveSpace);
@@ -279,33 +274,33 @@
           var request = this.$.postProjectRequest;
           request.body = JSON.stringify({
             "description": this.$.newProjectDescription.value.trim(),
-            "name": this.$.newProjectTitle.value.trim(),
-            "visibility": "PUBLIC"
+            "name": this.$.newProjectName.value.trim(),
+            "visibility": true
           });
           request.generateRequest();
         }
 
         // reset the form and validation error messages
-        this.$.newProjectTitle.required = false;
+        this.$.newProjectName.required = false;
         this.$.newProjectDescription.required = false;
 
-        this.$.newProjectTitle.value = null;
+        this.$.newProjectName.value = null;
         this.$.newProjectDescription.value = null;
 
-        this.$.newProjectTitle.required = true;
+        this.$.newProjectName.required = true;
         this.$.newProjectDescription.required = true;
       },
 
       /**
        * Computes whether the "Save" button in the "create project" dialog is disabled or not.
        *
-       * @param newProjectTitle
+       * @param newProjectName
        * @param newProjectDescription
        * @returns {boolean}
        * @private
        */
-      _computeCreateProjectDisabled: function(newProjectTitle, newProjectDescription) {
-        return (newProjectTitle == null || newProjectDescription == null || newProjectTitle.trim() === '' || newProjectDescription.trim() === '');
+      _computeCreateProjectDisabled: function(newProjectName, newProjectDescription) {
+        return (newProjectName == null || newProjectDescription == null || newProjectName.trim() === '' || newProjectDescription.trim() === '');
       },
 
       /**

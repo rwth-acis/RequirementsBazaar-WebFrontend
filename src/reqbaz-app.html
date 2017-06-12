@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
@@ -19,7 +20,6 @@
 <link rel="import" href="../bower_components/app-double-drawer-layout/app-double-drawer-layout.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="config-behavior.html">
@@ -118,6 +118,8 @@
       }
     </style>
 
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
+
     <app-localstorage-document key="language" data="{{language}}">
     </app-localstorage-document>
 
@@ -163,6 +165,7 @@
               <paper-item value="sq">Albanian</paper-item>
               <paper-item value="de">Deutsch</paper-item>
               <paper-item value="en">English</paper-item>
+              <!--<paper-item value="fa">Farsi</paper-item>-->
               <paper-item value="ro">Romanian</paper-item>
             </paper-menu>
           </paper-menu-button>
@@ -221,11 +224,11 @@
       <h2>[[localize('settings')]]</h2>
       <div>
         [[localize('mailDefaultLeader')]]:
-        <paper-toggle-button checked="[[currentUser.emailLeadItems]]" on-change="_handleUserSettingsLeadChange"></paper-toggle-button>
+        <paper-toggle-button checked="[[currentUser.emailLeadSubscription]]" on-change="_handleUserSettingsLeadChange"></paper-toggle-button>
       </div>
       <div>
         [[localize('mailDefaultFollow')]]:
-        <paper-toggle-button checked="[[currentUser.emailFollowItems]]" on-tap="_handleUserSettingsFollowChange"></paper-toggle-button>
+        <paper-toggle-button checked="[[currentUser.emailFollowSubscription]]" on-tap="_handleUserSettingsFollowChange"></paper-toggle-button>
       </div>
       <!--<div>-->
       <!--Connect Github Account:-->
@@ -249,6 +252,7 @@
         <paper-item value="sq">Albanian</paper-item>
         <paper-item value="de">Deutsch</paper-item>
         <paper-item value="en">English</paper-item>
+        <!--<paper-item value="fa">Farsi</paper-item>-->
         <paper-item value="ro">Romanian</paper-item>
       </paper-menu>
     </paper-dialog>
@@ -260,7 +264,6 @@
       is: 'reqbaz-app',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
 
@@ -283,11 +286,6 @@
         }
       },
 
-      attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
-      },
-
       observers: [
         '_routeChanged(route)',
         '_routeViewChanged(routeData.view)'
@@ -301,11 +299,14 @@
       },
 
       _handleSigninSuccessApp: function(e) {
-        this._handleSigninSuccess(e);
-        this.$.currentUserRequest.generateRequest();
+        // bugfix for only handling the main item's event
+        if (e.currentTarget.id === 'openidconnectSignin') {
+          this._handleSigninSuccess(e);
+          this.$.currentUserRequest.generateRequest();
 
-        // deactivate menu entry selection, just in case the login was made from the main menu
-        this.$.mainMenu.selected = null;
+          // deactivate menu entry selection, just in case the login was made from the main menu
+          this.$.mainMenu.selected = null;
+        }
       },
 
       _handleCurrentUserResponse: function(e, detail) {
@@ -409,7 +410,7 @@
 
         request.body = JSON.stringify({
           "id": this.currentUser.id,
-          "emailLeadItems": !(this.currentUser.emailLeadItems)
+          "emailLeadSubscription": !(this.currentUser.emailLeadSubscription)
         });
 
         request.generateRequest();
@@ -421,7 +422,7 @@
 
         request.body = JSON.stringify({
           "id": this.currentUser.id,
-          "emailFollowItems": !(this.currentUser.emailFollowItems)
+          "emailFollowSubscription": !(this.currentUser.emailFollowSubscription)
         });
 
         request.generateRequest();

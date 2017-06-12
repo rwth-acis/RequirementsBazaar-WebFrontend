@@ -1,11 +1,10 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
-<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
-<link rel="import" href="../../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
-<link rel="import" href="../../src/config-behavior.html">
-<link rel="import" href="../../src/shared-styles.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
+<link rel="import" href="../src/config-behavior.html">
+<link rel="import" href="../src/shared-styles.html">
 
 <dom-module id="comments-list">
   <template>
@@ -97,16 +96,16 @@
     <template is="dom-repeat" items="{{comments}}" on-dom-change="_handleCommentsDomChange">
 
       <!-- Compute the styling classes, add attribute "reply" when it is a reply. -->
-      <div class$="[[_computeCommentClasses(item)]]" attr="{{item.Id}}">
+      <div class$="[[_computeCommentClasses(item)]]" attr="{{item.id}}">
         <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
         <div class="layout vertical flex">
           <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
           <div class="actions">
             <a on-tap="_handleReplyTap" hidden="[[!authorized]]">[[localize('reply')]]</a>
-            <span hidden="[[!isCreator(item.creatorId)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
-            <relative-time datetime$="[[item.creationTime]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
+            <span hidden="[[!isCreator(item.creator.id)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
+            <relative-time datetime$="[[item.creationDate]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
           </div>
-          <paper-input class$="replyInput[[item.Id]]" attr="{{item.Id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
+          <paper-input class$="replyInput[[item.id]]" attr="{{item.id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
         </div>
       </div>
 
@@ -123,7 +122,6 @@
       is: 'comments-list',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
 
@@ -155,11 +153,6 @@
         _currentDeleteId: {
           type: Number
         }
-      },
-
-      attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../../locales/locales.json'));
       },
 
       /**
@@ -207,17 +200,17 @@
         if (e.keyCode === 13) {
           var text = e.currentTarget.value;
           var replyTo;
-          if (e.model.item.belongsToComment) {
-            replyTo = e.model.item.belongsToComment;
+          if (e.model.item.replyToComment) {
+            replyTo = e.model.item.replyToComment;
           } else {
-            replyTo = e.model.item.Id;
+            replyTo = e.model.item.id;
           }
           var request = this.$.postCommentRequest;
           if (text != null && text != '') {
             request.body = JSON.stringify({
               "requirementId": this.requirementId,
               "message": text,
-              "belongsToComment": parseInt(replyTo)
+              "replyToComment": parseInt(replyTo)
             });
             request.generateRequest();
           } else {
@@ -316,7 +309,7 @@
        * @returns {boolean}
        */
       isReply: function(item) {
-        if (item.belongsToComment) {
+        if (item.replyToComment) {
           return true;
         }
         return false;
@@ -328,7 +321,7 @@
        * @param e
        */
       _handleReplyTap: function(e) {
-        var replyInput = this.$$('.replyInput' + e.model.item.Id);
+        var replyInput = this.$$('.replyInput' + e.model.item.id);
 
         replyInput.hidden = false;
         replyInput.focus();
@@ -350,7 +343,7 @@
         data.onDelete = function() {
           // delete the comment from the model
           for (var i = 0; i<this.comments.length; i++) {
-            if (this.comments[i].Id === data.comment.Id) {
+            if (this.comments[i].id === data.comment.id) {
               this.splice('comments', i, 1);
             }
           }

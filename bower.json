@@ -1,6 +1,6 @@
 {
   "name": "requirements-bazaar-web-frontend",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "authors": [
     "István Koren",
     "Albi Sema",
@@ -12,7 +12,7 @@
     "polymer": "Polymer/polymer#^1.6.0",
     "time-elements": "^0.6.0",
     "openidconnect-signin": "rwth-acis/openidconnect-signin#update-signin",
-    "activity-tracker": "rwth-acis/activity-tracker#^1.1.1",
+    "activity-tracker": "rwth-acis/activity-tracker#~1.2.0",
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2",
     "emoji-selector": "https://github.com/notwaldorf/emoji-selector.git#^1.1.1",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
@@ -20,7 +20,7 @@
     "app-double-drawer-layout": "istvank/app-double-drawer-layout",
     "app-route": "PolymerElements/app-route#^0.9.3",
     "app-layout": "PolymerElements/app-layout#^0.10.6",
-    "app-localize-behavior": "PolymerElements/app-localize-behavior#^0.10.1",
+    "app-localize-behavior": "PolymerElements/app-localize-behavior#^1.0.2",
     "paper-fab": "PolymerElements/paper-fab#^1.2.1",
     "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.3",
     "paper-toggle-button": "PolymerElements/paper-toggle-button#^1.2.1",

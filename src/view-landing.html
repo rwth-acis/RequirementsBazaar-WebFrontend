@@ -4,7 +4,6 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
-<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
 
@@ -283,19 +282,19 @@
           <div class="table">
             <div class="tableRow">
               <div class="tableCell number">[[statistics.numberOfProjects]]</div>
-              <div class="tableCell">Projects</div>
+              <div class="tableCell">[[localize('projects')]]</div>
             </div>
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfComponents]]</div>
-              <div class="tableCell">Categories</div>
+              <div class="tableCell number">[[statistics.numberOfCategories]]</div>
+              <div class="tableCell">[[localize('categories')]]</div>
             </div>
             <div class="tableRow">
               <div class="tableCell number">[[statistics.numberOfRequirements]]</div>
-              <div class="tableCell">Requirements</div>
+              <div class="tableCell">[[localize('requirements')]]</div>
             </div>
             <div class="tableRow">
               <div class="tableCell number">[[statistics.numberOfComments]]</div>
-              <div class="tableCell">Comments</div>
+              <div class="tableCell">[[localize('comments')]]</div>
             </div>
             <div class="tableRow">
               <div class="tableCell number">[[statistics.numberOfVotes]]</div>
@@ -395,14 +394,8 @@
       is: 'view-landing',
 
       behaviors: [
-        Polymer.AppLocalizeBehavior,
         ConfigBehavior
       ],
-
-      attached: function() {
-        // load localized messages
-        this.loadResources(this.resolveUrl('../locales/locales.json'));
-      },
 
       _calculateBackgroundColor: function(projectName) {
         return hashStringToColor(projectName);
