@@ -90,6 +90,9 @@
         },
         project: {
           type: Object
+        },
+        _lastProjectId: {
+          type: Number
         }
       },
 
@@ -107,6 +110,11 @@
 
       _dataChanged: function(projectId) {
         if (projectId) {
+          if (this._lastProjectId && (this._lastProjectId !== projectId)) {
+            this.$.projectRequest.generateRequest();
+          }
+          this._lastProjectId = projectId;
+
           this.view = 'categories';
         }
       },
@@ -131,7 +139,7 @@
 
       getRightDrawer: function() {
         return this.$.drawer;
-      },
+      }
     });
   </script>
 </dom-module>
