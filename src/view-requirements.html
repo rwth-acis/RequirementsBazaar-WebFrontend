@@ -1,62 +1,75 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../elements/categories-menu.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 
 <dom-module id="view-requirements">
+  <style include="shared-styles">
+    :host {
+      display: block;
+    }
+
+    app-drawer {
+      /** paper-dialog has 103 **/
+      z-index: 104;
+      margin-top: 64px;
+    }
+
+    .drawerContent {
+      @apply(--layout-vertical);
+      height: 100%;
+    }
+
+    app-drawer > a {
+      width: 100%;
+      display: inline-block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    app-toolbar {
+      margin-top: 10px;
+      height: 40px;
+    }
+
+    #drawerProjectLink {
+      height: 35px;
+      line-height: 35px;
+      background-color: #eceff1;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--secondary-text-color);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    #drawerProjectLink > iron-icon {
+      position: relative;
+      top: -1px;
+    }
+
+    #drawerProjectLink > span {
+      text-overflow: ellipsis;
+    }
+
+    #drawerToolbar {
+      color: var(--secondary-text-color);
+      /*border-bottom: 1px solid rgba(0, 0, 0, 0.22);*/
+    }
+
+    #categoriesContainer {
+      @apply(--layout-flex);
+      overflow: scroll;
+    }
+
+  </style>
   <template>
-    <style include="shared-styles">
-      :host {
-        display: block;
-      }
-
-      app-drawer {
-        /** paper-dialog has 103 **/
-        z-index: 104;
-        margin-top: 64px;
-      }
-
-      app-drawer > a {
-        width: 100%;
-        display: inline-block;
-        color: inherit;
-        text-decoration: none;
-      }
-
-      app-toolbar {
-        margin-top: 10px;
-        height: 40px;
-      }
-
-      #drawerProjectLink {
-        height: 35px;
-        line-height: 35px;
-        background-color: #eceff1;
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--secondary-text-color);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.22);
-        overflow: hidden;
-        white-space: nowrap;
-      }
-
-      #drawerProjectLink > iron-icon {
-        position: relative;
-        top: -1px;
-      }
-
-      #drawerProjectLink > span {
-        text-overflow: ellipsis;
-      }
-
-      #drawerToolbar {
-        color: var(--secondary-text-color);
-        /*border-bottom: 1px solid rgba(0, 0, 0, 0.22);*/
-      }
-    </style>
 
     <app-route
       route="{{route}}"
@@ -81,16 +94,20 @@
 
     <app-drawer id="drawer" align="left">
       <!-- Drawer Toolbar -->
-      <a href$="[[_frontendBasePath]]projects/[[projectId]]" tabindex="-1">
-        <div id="drawerProjectLink">
-          <iron-icon icon="chevron-left"></iron-icon>
-          <span>[[project.name]]</span>
-        </div>
-      </a>
-      <app-toolbar id="drawerToolbar">[[localize('categories')]]</app-toolbar>
+      <div class="drawerContent">
+        <a href$="[[_frontendBasePath]]projects/[[projectId]]" tabindex="-1">
+          <div id="drawerProjectLink">
+            <iron-icon icon="chevron-left"></iron-icon>
+            <span>[[project.name]]</span>
+          </div>
+        </a>
+        <app-toolbar id="drawerToolbar">[[localize('categories')]]</app-toolbar>
 
-      <!-- Drawer Content -->
-      <categories-menu id="categoriesMenu" project-id="[[projectId]]" category-id="[[categoryId]]" on-link-tapped="_handleCategoryLinkTapped" loading="{{loading}}"></categories-menu>
+        <!-- Drawer Content -->
+        <div id="categoriesContainer">
+          <categories-menu id="categoriesMenu" project-id="[[projectId]]" category-id="[[categoryId]]" on-link-tapped="_handleCategoryLinkTapped" loading="{{loading}}"></categories-menu>
+        </div>
+      </div>
     </app-drawer>
 
     <iron-pages
@@ -99,8 +116,8 @@
       fallback-selection="404"
       role="main"
       content>
-      <view-requirement name="requirement" project-id="[[projectId]]" project="{{project}}" category-id="[[data.categoryId]]" category="{{category}}" loading="{{loading}}"></view-requirement>
-      <view-requirements-list name="requirements-list" id="requirementsView" project-id="[[projectId]]" project="{{project}}" category-id="[[categoryId]]" category="{{category}}" route="{{route}}" loading="{{loading}}"></view-requirements-list>
+      <view-requirement name="requirement" project-id="[[projectId]]" project="{{project}}" category-id="[[categoryId]]" category="{{category}}" requirement-id="[[data.requirementId]]" loading="{{loading}}"></view-requirement>
+      <view-requirements-list name="requirements-list" project-id="[[projectId]]" project="{{project}}" category-id="[[categoryId]]" category="{{category}}" route="{{route}}" loading="{{loading}}"></view-requirements-list>
       <view-404 name="view404"></view-404>
     </iron-pages>
 
@@ -140,6 +157,13 @@
         categoryId: {
           type: Number
         },
+        /**
+         * Stores the last category ID that was shown so when opening a requirement, we know whether the
+         * requirements-list view should be kept or the requirement view should be opened.
+         */
+        _lastCategoryId: {
+          type: Number
+        },
         category: {
           type: Object
         }
@@ -160,7 +184,10 @@
       _dataChanged: function(requirementId) {
         if (requirementId) {
           // check if the category ID is the same as in the last request
-          this.view = 'requirement';
+          if (this._lastCategoryId !== this.categoryId) {
+            this.view = 'requirement';
+          }
+          // else just keep the current view
         }
       },
 
@@ -168,6 +195,7 @@
         if ((route.path === '') || (route.path === '/')) {
           this.view = 'requirements-list';
         }
+        this._lastCategoryId = this.categoryId;
       },
 
       _viewChanged: function(view) {
