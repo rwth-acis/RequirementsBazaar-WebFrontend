@@ -249,7 +249,7 @@
 
       <div class="comments" id="comments">
 
-        <iron-collapse>
+        <iron-collapse opened="[[standalone]]">
           <file-gallery id="attachmentsList" loading="{{loading}}" requirement-id="[[requirement.id]]"></file-gallery>
           <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
           <comments-list id="commentsList" loading="{{loading}}" requirement-id="[[requirement.id]]" data-a="[[requirement.id]]"></comments-list>
@@ -295,6 +295,13 @@
         authorized: {
           type: Boolean,
           observer: '_authorizedChanged'
+        },
+        /**
+         * If this attribute is set, the open/close functionality is not available and a bread crumb is shown.
+         */
+        standalone: {
+          type: Boolean,
+          value: false
         },
         opened: {
           type: Boolean,
@@ -348,33 +355,35 @@
        * @param e
        */
       _handleRequirementTap: function(e) {
-        var requirementNode = this.$.requirementCard;
-        var descriptionNode = this.$.description;
+        if (!this.standalone) {
+          var requirementNode = this.$.requirementCard;
+          var descriptionNode = this.$.description;
 
-        if (requirementNode.querySelector('iron-collapse').opened) {
-          // remove elevation
-          requirementNode.elevation = 1;
-          // close the requirement
-          requirementNode.querySelector('iron-collapse').hide();
-          // make description gray
-          descriptionNode.classList.toggle('inactive');
-          // reset route
-          this.set('route.path', '');
-        } else {
-          // set elevation
-          requirementNode.elevation = 4;
-          // open the requirement
-          requirementNode.querySelector('iron-collapse').show();
-          // make description gray
-          descriptionNode.classList.toggle('inactive');
-          // load comments
-          requirementNode.querySelector('comments-list').refresh();
-          // load attachments
-          requirementNode.querySelector("file-gallery").refresh();
-          this.set('route.path', '/requirements/' + this.requirement.id);
+          if (requirementNode.querySelector('iron-collapse').opened) {
+            // remove elevation
+            requirementNode.elevation = 1;
+            // close the requirement
+            requirementNode.querySelector('iron-collapse').hide();
+            // make description gray
+            descriptionNode.classList.toggle('inactive');
+            // reset route
+            this.set('route.path', '');
+          } else {
+            // set elevation
+            requirementNode.elevation = 4;
+            // open the requirement
+            requirementNode.querySelector('iron-collapse').show();
+            // make description gray
+            descriptionNode.classList.toggle('inactive');
+            // load comments
+            this.$.commentsList.refresh();
+            // load attachments
+            requirementNode.querySelector("file-gallery").refresh();
+            this.set('route.path', '/requirements/' + this.requirement.id);
+          }
+
+          this.fire('iron-signal', {name: 'resize'});
         }
-
-        this.fire('iron-signal', {name: 'resize'});
       },
 
       /**
@@ -429,6 +438,9 @@
       },
 
       _requirementChanged: function(authorized, requirementChange) {
+        // load comments
+        this.$.commentsList.refresh();
+
         var requirement = requirementChange.value;
         if (requirement.realized) {
           // following
@@ -475,7 +487,9 @@
       },
 
       showOnHover: function(e) {
-        this.$.checkbox.style.display = "block";
+        if (!this.standalone) {
+          this.$.checkbox.style.display = "block";
+        }
       },
 
       hideOnOut: function (e) {

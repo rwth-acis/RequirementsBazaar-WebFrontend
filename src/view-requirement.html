@@ -11,6 +11,7 @@
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../elements/bread-crumb.html">
 <link rel="import" href="../elements/req-user.html">
+<link rel="import" href="../elements/requirement-card.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 
@@ -21,22 +22,6 @@
         display: block;
 
         padding: 15px;
-      }
-
-      .viewTitleBar {
-        display: block;
-        text-overflow: ellipsis;
-        margin-top: 10px;
-      }
-
-      .viewTitle {
-        font-size: 40px;
-        font-weight: 400;
-      }
-
-      .requirementDescription {
-        display: block;
-        text-overflow: ellipsis;
       }
 
       @media (max-width: 600px) {
@@ -57,51 +42,10 @@
                last-response="{{requirement}}"
                auto></iron-ajax>
 
-    <paper-material>
-      <paper-menu-button horizontal-align="right"
-                         vertical-align="top"
-                         style="position:absolute; top:2px; right:8px;"
-                         on-iron-select="_handleMenuSelect"
-                         hidden="[[!authorized]]">
-        <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
-        <paper-menu id="categoryInfoMenu" class="dropdown-content">
-          <paper-item value="follow">[[localize('followCategory')]]</paper-item>
-          <paper-item value="default">[[localize('setAsDefault')]]</paper-item>
-          <paper-item value="edit">[[localize('editCategory')]]</paper-item>
-          <paper-item value="delete">[[localize('deleteCategory')]]</paper-item>
-        </paper-menu>
-      </paper-menu-button>
-
-      <bread-crumb project-id="[[projectId]]" project="[[project]]" category-id="[[categoryId]]" category="[[category]]" requirement-id="[[requirementId]]" requirement="[[requirement]]"></bread-crumb>
-
-      <div class="viewTitleBar" hidden="[[_editMode]]">
-        <div class="viewTitle"><span>{{requirement.name}}</span></div>
-      </div>
-
-      <div class="requirementDescription" hidden="[[_editMode]]">
-        <span>{{requirement.description}}</span>
-      </div>
-
-      <div class="bottom-container bottom" hidden="[[_editMode]]">
-        <div class="timing helper">
-          [[localize('created')]] <relative-time datetime$="[[requirement.creationDate]]"></relative-time>
-          [[localize('by')]]
-          <req-user user="{{requirement.creator.id}}" normal-view no-popover></req-user>
-        </div>
-      </div>
-
-      <div class="middle middle-container center layout" hidden="[[!_editMode]]">
-
-        <h2>[[localize('editRequirement')]]</h2>
-
-        <paper-input id="editName" class="editName" label="[[localize('formTitle')]]" value="{{_editRequirementName}}" auto-validate error-message="[[localize('inputRequired')]]" maxlength="50" char-counter required></paper-input>
-        <paper-textarea id="editDescription" class="editDesc" label="[[localize('formDesc')]]" value="{{_editRequirementDescription}}" max-rows="5" auto-validate error-message="[[localize('inputRequired')]]" required></paper-textarea>
-
-        <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
-        <paper-button raised on-tap="_handleSaveEditTap" disabled="[[_editRequirementSaveDisabled]]">[[localize('save')]]</paper-button>
-
-      </div>
-    </paper-material>
+    <requirement-card requirement="[[requirement]]"
+                      loading="{{loading}}"
+                      route="{{route}}"
+                      standalone></requirement-card>
 
   </template>
 
@@ -138,31 +82,6 @@
         },
         requirement: {
           type: Object
-        }
-      },
-
-      /**
-       * Event handler for the view's paper-menu.
-       *
-       * @param e
-       * @private
-       */
-      _handleMenuSelect: function(e) {
-        // unselect the selected menu item
-        e.target.selected = null;
-        // get value of the paper-item
-        var selectedValue = e.detail.item.getAttribute('value');
-
-        if (selectedValue === 'follow') {
-          this._toggleFollowCategory();
-        } else if (selectedValue === 'default') {
-          this.setAsDefaultCategory();
-        } else if (selectedValue === 'edit') {
-          this._editCategoryName = this.category.name;
-          this._editCategoryDescription = this.category.description;
-          this._editMode = true;
-        } else if (selectedValue === 'delete') {
-          this.$.deleteDialog.open();
         }
       }
 
