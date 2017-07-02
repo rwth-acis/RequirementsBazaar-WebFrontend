@@ -28,6 +28,7 @@
         width: 100%;
         @apply(--layout-vertical);
         @apply(--layout-center);
+        --requirement-name-cursor: pointer;
       }
 
       paper-material {
@@ -62,9 +63,9 @@
 
       .requirementName {
         @apply(--layout-flex);
+        cursor: var(--requirement-name-cursor);
         width: 0;
         font-size: 20px;
-        cursor: pointer;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -312,7 +313,8 @@
          */
         standalone: {
           type: Boolean,
-          value: false
+          value: false,
+          observer: '_standaloneChanged'
         },
         opened: {
           type: Boolean,
@@ -371,6 +373,13 @@
       observers: [
         '_requirementChanged(authorized, requirement.*)'
       ],
+
+      _standaloneChanged: function(newValue) {
+        if (newValue) {
+          this.customStyle['--requirement-name-cursor'] = 'auto';
+          this.updateStyles();
+        }
+      },
 
       /**
        * Handles tapping a requirement.
