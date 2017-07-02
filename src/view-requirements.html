@@ -183,11 +183,16 @@
 
       _dataChanged: function(requirementId) {
         if (requirementId) {
-          // check if the category ID is the same as in the last request
-          if (this._lastCategoryId !== this.categoryId) {
+          // only change the view if it is intended to show a requirement-view.
+          if (history.state && history.state.requirement) {
+            this.view = 'requirements-list';
+            //TODO: remove the requirement from the URL as anyways we don't open it within the list
+            //var newPath = this._frontendBasePath + this.route.prefix.substr(1);
+            //history.replaceState({}, null, newPath);
+            //window.dispatchEvent(new CustomEvent('location-changed'));
+          } else {
             this.view = 'requirement';
           }
-          // else just keep the current view
         }
       },
 

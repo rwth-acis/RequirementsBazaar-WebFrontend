@@ -16,6 +16,7 @@
 <link rel="import" href="bread-crumb.html">
 <link rel="import" href="req-user.html">
 <link rel="import" href="comments-list.html">
+<link rel="import" href="file-gallery.html">
 <link rel="import" href="../src/config-behavior.html">
 <link rel="import" href="../src/shared-styles.html">
 
@@ -399,7 +400,12 @@
             // make description gray
             descriptionNode.classList.toggle('inactive');
             // reset route
-            this.set('route.path', '');
+            //this.set('route.path', '');
+            if (history.state.requirement) {
+              //history.back();
+              var newPath = this._frontendBasePath + this.route.prefix.substr(1);
+              history.replaceState({requirement: false}, null, newPath);
+            }
           } else {
             // set elevation
             requirementNode.elevation = 4;
@@ -410,8 +416,11 @@
             // load comments
             this.$.commentsList.refresh();
             // load attachments
-            requirementNode.querySelector("file-gallery").refresh();
-            this.set('route.path', '/requirements/' + this.requirement.id);
+            this.$.attachmentsList.refresh();
+            //this.set('route.path', '/requirements/' + this.requirement.id);
+            // better replace route via browser API
+            var newPath = this._frontendBasePath + this.route.prefix.substr(1) + '/requirements/' + this.requirement.id;
+            history.replaceState({requirement: true}, null, newPath);
           }
 
           this.fire('iron-signal', {name: 'resize'});
@@ -473,6 +482,7 @@
         // load comments
         if (this.standalone) {
           this.$.commentsList.refresh();
+          this.$.attachmentsList.refresh();
         }
 
         var requirement = requirementChange.value;
