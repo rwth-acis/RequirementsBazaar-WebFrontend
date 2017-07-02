@@ -13,6 +13,7 @@
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
+<link rel="import" href="bread-crumb.html">
 <link rel="import" href="req-user.html">
 <link rel="import" href="comments-list.html">
 <link rel="import" href="../src/config-behavior.html">
@@ -36,7 +37,7 @@
         max-width: 800px;
         box-sizing: border-box;
         margin: 5px;
-        padding: 0 16px 0 16px;
+        padding: 10px 16px 0 16px;
         background: white;
       }
 
@@ -48,10 +49,14 @@
         color: var(--paper-orange-500);
       }
 
+      bread-crumb {
+        margin-top: 6px; /* the difference between 10 and 16 */
+        margin-bottom: 10px;
+      }
+
       .requirementToolbar {
         @apply(--layout-horizontal);
         @apply(--layout-center);
-        margin-top: 10px;
         height: 35px;
       }
 
@@ -172,6 +177,12 @@
                on-error="errorHandler"></iron-ajax>
 
     <paper-material class="req" id="requirementCard" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+
+      <bread-crumb project-id="[[projectId]]" project="[[project]]"
+                   category-id="[[categoryId]]" category="[[category]]"
+                   requirement-id="[[requirement.id]]" requirement="[[requirement]]"
+                   hidden="[[!standalone]]"></bread-crumb>
+
       <div id="requirementBody">
 
         <div class="requirementToolbar">
@@ -337,6 +348,18 @@
         },
         _deleteHidden: {
           type: Boolean
+        },
+        projectId: {
+          type: Number
+        },
+        project: {
+          type: Object
+        },
+        categoryId: {
+          type: Number
+        },
+        category: {
+          type: Object
         }
       },
 
@@ -439,7 +462,9 @@
 
       _requirementChanged: function(authorized, requirementChange) {
         // load comments
-        this.$.commentsList.refresh();
+        if (this.standalone) {
+          this.$.commentsList.refresh();
+        }
 
         var requirement = requirementChange.value;
         if (requirement.realized) {

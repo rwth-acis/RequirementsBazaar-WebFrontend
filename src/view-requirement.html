@@ -9,7 +9,6 @@
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
-<link rel="import" href="../elements/bread-crumb.html">
 <link rel="import" href="../elements/req-user.html">
 <link rel="import" href="../elements/requirement-card.html">
 <link rel="import" href="shared-styles.html">
@@ -45,6 +44,8 @@
     <requirement-card requirement="[[requirement]]"
                       loading="{{loading}}"
                       route="{{route}}"
+                      project-id="[[projectId]]" project="[[project]]"
+                      category-id="[[categoryId]]" category="[[category]]"
                       standalone></requirement-card>
 
   </template>
