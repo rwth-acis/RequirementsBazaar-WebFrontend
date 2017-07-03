@@ -13,8 +13,10 @@
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
+<link rel="import" href="bread-crumb.html">
 <link rel="import" href="req-user.html">
 <link rel="import" href="comments-list.html">
+<link rel="import" href="file-gallery.html">
 <link rel="import" href="../src/config-behavior.html">
 <link rel="import" href="../src/shared-styles.html">
 
@@ -27,6 +29,7 @@
         width: 100%;
         @apply(--layout-vertical);
         @apply(--layout-center);
+        --requirement-name-cursor: pointer;
       }
 
       paper-material {
@@ -36,7 +39,7 @@
         max-width: 800px;
         box-sizing: border-box;
         margin: 5px;
-        padding: 0 16px 0 16px;
+        padding: 10px 16px 0 16px;
         background: white;
       }
 
@@ -48,18 +51,22 @@
         color: var(--paper-orange-500);
       }
 
+      bread-crumb {
+        margin-top: 6px; /* the difference between 10 and 16 */
+        margin-bottom: 10px;
+      }
+
       .requirementToolbar {
         @apply(--layout-horizontal);
         @apply(--layout-center);
-        margin-top: 10px;
         height: 35px;
       }
 
       .requirementName {
         @apply(--layout-flex);
+        cursor: var(--requirement-name-cursor);
         width: 0;
         font-size: 20px;
-        cursor: pointer;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -172,6 +179,12 @@
                on-error="errorHandler"></iron-ajax>
 
     <paper-material class="req" id="requirementCard" on-mouseover="showOnHover" on-mouseout="hideOnOut">
+
+      <bread-crumb project-id="[[projectId]]" project="[[project]]"
+                   category-id="[[categoryId]]" category="[[category]]"
+                   requirement-id="[[requirement.id]]" requirement="[[requirement]]"
+                   hidden="[[!standalone]]"></bread-crumb>
+
       <div id="requirementBody">
 
         <div class="requirementToolbar">
@@ -249,7 +262,7 @@
 
       <div class="comments" id="comments">
 
-        <iron-collapse>
+        <iron-collapse opened="[[standalone]]">
           <file-gallery id="attachmentsList" loading="{{loading}}" requirement-id="[[requirement.id]]"></file-gallery>
           <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
           <comments-list id="commentsList" loading="{{loading}}" requirement-id="[[requirement.id]]" data-a="[[requirement.id]]"></comments-list>
@@ -296,6 +309,14 @@
           type: Boolean,
           observer: '_authorizedChanged'
         },
+        /**
+         * If this attribute is set, the open/close functionality is not available and a bread crumb is shown.
+         */
+        standalone: {
+          type: Boolean,
+          value: false,
+          observer: '_standaloneChanged'
+        },
         opened: {
           type: Boolean,
           reflectToAttribute: true
@@ -330,6 +351,18 @@
         },
         _deleteHidden: {
           type: Boolean
+        },
+        projectId: {
+          type: Number
+        },
+        project: {
+          type: Object
+        },
+        categoryId: {
+          type: Number
+        },
+        category: {
+          type: Object
         }
       },
 
@@ -342,39 +375,56 @@
         '_requirementChanged(authorized, requirement.*)'
       ],
 
+      _standaloneChanged: function(newValue) {
+        if (newValue) {
+          this.customStyle['--requirement-name-cursor'] = 'auto';
+          this.updateStyles();
+        }
+      },
+
       /**
        * Handles tapping a requirement.
        *
        * @param e
        */
       _handleRequirementTap: function(e) {
-        var requirementNode = this.$.requirementCard;
-        var descriptionNode = this.$.description;
+        if (!this.standalone) {
+          var requirementNode = this.$.requirementCard;
+          var descriptionNode = this.$.description;
 
-        if (requirementNode.querySelector('iron-collapse').opened) {
-          // remove elevation
-          requirementNode.elevation = 1;
-          // close the requirement
-          requirementNode.querySelector('iron-collapse').hide();
-          // make description gray
-          descriptionNode.classList.toggle('inactive');
-          // reset route
-          this.set('route.path', '');
-        } else {
-          // set elevation
-          requirementNode.elevation = 4;
-          // open the requirement
-          requirementNode.querySelector('iron-collapse').show();
-          // make description gray
-          descriptionNode.classList.toggle('inactive');
-          // load comments
-          requirementNode.querySelector('comments-list').refresh();
-          // load attachments
-          requirementNode.querySelector("file-gallery").refresh();
-          this.set('route.path', '/requirements/' + this.requirement.id);
+          if (requirementNode.querySelector('iron-collapse').opened) {
+            // remove elevation
+            requirementNode.elevation = 1;
+            // close the requirement
+            requirementNode.querySelector('iron-collapse').hide();
+            // make description gray
+            descriptionNode.classList.toggle('inactive');
+            // reset route
+            //this.set('route.path', '');
+            if (history.state.requirement) {
+              //history.back();
+              var newPath = this._frontendBasePath + this.route.prefix.substr(1);
+              history.replaceState({requirement: false}, null, newPath);
+            }
+          } else {
+            // set elevation
+            requirementNode.elevation = 4;
+            // open the requirement
+            requirementNode.querySelector('iron-collapse').show();
+            // make description gray
+            descriptionNode.classList.toggle('inactive');
+            // load comments
+            this.$.commentsList.refresh();
+            // load attachments
+            this.$.attachmentsList.refresh();
+            //this.set('route.path', '/requirements/' + this.requirement.id);
+            // better replace route via browser API
+            var newPath = this._frontendBasePath + this.route.prefix.substr(1) + '/requirements/' + this.requirement.id;
+            history.replaceState({requirement: true}, null, newPath);
+          }
+
+          this.fire('iron-signal', {name: 'resize'});
         }
-
-        this.fire('iron-signal', {name: 'resize'});
       },
 
       /**
@@ -429,6 +479,12 @@
       },
 
       _requirementChanged: function(authorized, requirementChange) {
+        // load comments
+        if (this.standalone) {
+          this.$.commentsList.refresh();
+          this.$.attachmentsList.refresh();
+        }
+
         var requirement = requirementChange.value;
         if (requirement.realized) {
           // following
@@ -475,7 +531,9 @@
       },
 
       showOnHover: function(e) {
-        this.$.checkbox.style.display = "block";
+        if (!this.standalone) {
+          this.$.checkbox.style.display = "block";
+        }
       },
 
       hideOnOut: function (e) {
