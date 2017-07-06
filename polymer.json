@@ -14,7 +14,9 @@
     "src/view-landing.html",
     "src/view-projects.html",
     "src/view-projects-list.html",
-    "src/view-requirements.html"
+    "src/view-requirement.html",
+    "src/view-requirements.html",
+    "src/view-requirements-list.html"
   ],
   "sources": [
     "elements/**/*",
