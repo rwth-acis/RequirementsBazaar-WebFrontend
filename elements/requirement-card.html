@@ -403,7 +403,7 @@
             //this.set('route.path', '');
             if (history.state.requirement) {
               //history.back();
-              var newPath = this._frontendBasePath + this.route.prefix.substr(1);
+              var newPath = this.route.prefix;
               history.replaceState({requirement: false}, null, newPath);
             }
           } else {
@@ -419,7 +419,7 @@
             this.$.attachmentsList.refresh();
             //this.set('route.path', '/requirements/' + this.requirement.id);
             // better replace route via browser API
-            var newPath = this._frontendBasePath + this.route.prefix.substr(1) + '/requirements/' + this.requirement.id;
+            var newPath = this.route.prefix + '/requirements/' + this.requirement.id;
             history.replaceState({requirement: true}, null, newPath);
           }
 
