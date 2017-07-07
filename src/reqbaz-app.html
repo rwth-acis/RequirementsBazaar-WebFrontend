@@ -212,7 +212,7 @@
         <view-landing name="landing" loading="{{loading}}"></view-landing>
         <view-about name="about"></view-about>
         <view-imprint name="imprint"></view-imprint>
-        <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered" loading="{{loading}}"></view-projects>
+        <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered" loading="{{loading}}" missedActivities="{{missedActivities}}"></view-projects>
         <view-404 name="404"></view-404>
       </iron-pages>
 
@@ -283,6 +283,10 @@
         hasRightDrawer: {
           type: Boolean,
           value: false
+        },
+        missedActivities: {
+          type: Boolean,
+          observer: '_missedActivitiesChanged'
         }
       },
 
@@ -426,6 +430,14 @@
         });
 
         request.generateRequest();
+      },
+
+      _missedActivitiesChanged: function(missed) {
+        if (missed) {
+          this.$.activitiesToggle.icon = 'social:notifications-active';
+        } else {
+          this.$.activitiesToggle.icon = 'social:notifications';
+        }
       }
     });
   </script>

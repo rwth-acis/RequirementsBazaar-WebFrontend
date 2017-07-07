@@ -47,8 +47,17 @@
                last-response="{{project}}"></iron-ajax>
 
     <app-drawer id="drawer" align="right">
-      <activity-tracker initial-limit="20" url="https://requirements-bazaar.org/betaactivities" auto-update-interval="90" loading="{{loading}}"></activity-tracker>
+      <activity-tracker initial-limit="20" url="https://requirements-bazaar.org/betaactivities" auto-update-interval="30" loading="{{loading}}" activities="{{_activities}}"></activity-tracker>
     </app-drawer>
+
+    Test for _activities:
+    <br>
+    Activities:
+    <template is="dom-repeat" items="{{_activities}}">
+      {{item.id}},
+    </template>
+    <br>
+    Missed Activities: {{missedActivities}}
 
     <iron-pages
       selected="[[view]]"
@@ -70,6 +79,10 @@
       behaviors: [
         ConfigBehavior
       ],
+
+      listeners: {
+        'opened-changed': '_drawerOpenChanged'
+      },
 
       properties: {
         route: {
@@ -93,6 +106,15 @@
         },
         _lastProjectId: {
           type: Number
+        },
+        _activities: {
+          type: Array,
+          observer: '_newActivitiesReceived',
+        },
+        missedActivities: {
+          type: Boolean,
+          value: false,
+          notify: true
         }
       },
 
@@ -135,6 +157,18 @@
 
       _showView404: function() {
         this.view = 'view404';
+      },
+
+      _newActivitiesReceived: function() { // observer is not called when property change
+        if (this.$.drawer.opened) {
+          this.missedActivities = true;
+        }
+      },
+
+      _drawerOpenChanged: function() {
+        if (! this.$.drawer.opened) {
+          this.missedActivities = false;
+        }
       },
 
       getRightDrawer: function() {
