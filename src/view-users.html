@@ -1,0 +1,120 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="config-behavior.html">
+
+<dom-module id="view-users">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+    </style>
+
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+    <app-route route="{{route}}"
+               pattern="/:userId"
+               data="{{data}}"
+               tail="{{subroute}}"></app-route>
+
+    <iron-ajax id="userRequest"
+               loading="{{loading}}"
+               content-type="application/json"
+               url="[[_apiBaseUrl]]/users/[[data.userId]]"
+               headers="[[authHeader]]"
+               last-response="{{user}}"></iron-ajax>
+
+    <iron-pages
+      selected="[[view]]"
+      attr-for-selected="name"
+      fallback-selection="404"
+      role="main"
+      content>
+      <view-user name="user" user-id="{{data.userId}}" user="{{user}}" route="{{subroute}}" loading="{{loading}}"></view-user>
+      <view-404 name="view404"></view-404>
+    </iron-pages>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'view-users',
+
+      behaviors: [
+        ConfigBehavior
+      ],
+
+      properties: {
+        route: {
+          type: Object,
+          notify: true
+        },
+        view: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_viewChanged'
+        },
+        /**
+         * Whether any loading operation is currently active.
+         */
+        loading: {
+          type: Boolean,
+          notify: true
+        },
+        project: {
+          type: Object
+        },
+        _lastUserId: {
+          type: String
+        }
+      },
+
+      observers: [
+        '_dataChanged(data.userId)',
+        '_routeChanged(route)'
+      ],
+
+      /**
+       * Fired when an attached view wants to register a drawer.
+       *
+       * @event drawer-registered
+       * @param {object} drawer The drawer that is registered.
+       */
+
+      _dataChanged: function(userId) {
+        if (userId) {
+          if (this._lastUserId && (this._lastUserId !== userId)) {
+            this.$.userRequest.generateRequest();
+          }
+          this._lastUserId = userId;
+
+          this.view = 'user';
+        }
+      },
+
+      _routeChanged: function(route) {
+        if ((route.path === '') || (route.path === '/')) {
+          this.view = 'user';
+        }
+      },
+
+      _viewChanged: function(view) {
+        // load project
+        this.$.userRequest.generateRequest();
+        // Load view import on demand. Show 404 view if fails
+        var resolvedViewUrl = this.resolveUrl('view-' + view + '.html');
+        this.importHref(resolvedViewUrl, null, this._showView404, true);
+      },
+
+      _showView404: function() {
+        this.view = 'view404';
+      },
+    });
+  </script>
+</dom-module>

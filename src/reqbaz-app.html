@@ -213,6 +213,7 @@
         <view-about name="about"></view-about>
         <view-imprint name="imprint"></view-imprint>
         <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered" loading="{{loading}}"></view-projects>
+        <view-users name="users" id="usersView" route="{{subroute}}" loading="{{loading}}"></view-users>
         <view-404 name="404"></view-404>
       </iron-pages>
 
@@ -373,7 +374,7 @@
       },
 
       _routeChanged: function(route) {
-        if (route.path.match(/\/projects\/[0-9]+\/categories\/[0-9]+/) === null) {
+        if (route.path.match(/\/projects\/[0-9]+\/categories\/[0-9]+\/users\/[0-9]/) === null) {
           // reset layout
           this.$.doubleDrawerLayout.leftDrawer = null;
         }
