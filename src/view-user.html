@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../bower_components/gamification-framework-webComponent/gamification-visualization.html">
 <link rel="import" href="../elements/req-user.html">
 <link rel="import" href="../elements/requirement-card.html">
 <link rel="import" href="shared-styles.html">
@@ -35,6 +36,11 @@
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
     <div>Welcome [[user.userName]]!</div>
+    <gamification-visualization backendurl="http://137.226.58.16:8086/"
+                                gameid="testspiel"
+                                memberid="gottschlich"
+                                accesstokenkeyname="openidconnect-signin-token">
+    </gamification-visualization>
 
   </template>
 
