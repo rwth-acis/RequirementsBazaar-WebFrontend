@@ -545,6 +545,9 @@
       _handleCreateRequirementClosed: function(e) {
         if (e.detail.confirmed) {
           this._postRequirement();
+
+          // trigger createRequirement action in gamification
+          this.fire('iron-signal', {name: 'gamification', data: 'createRequirement'});
         }
       },
 

@@ -714,6 +714,9 @@
 
           e.currentTarget.value = '';
           e.currentTarget.parentNode.parentNode.querySelector('.comments-input').value = null;
+
+          // trigger commentRequirement action in gamification
+          this.fire('iron-signal', {name: 'gamification', data: 'commentRequirement'});
         },
 
         showGithubRepos: function(e) {

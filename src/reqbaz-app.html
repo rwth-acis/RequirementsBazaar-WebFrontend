@@ -22,6 +22,7 @@
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../bower_components/gamification-action-trigger/gamification-action-trigger.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
 
@@ -258,6 +259,13 @@
       </paper-menu>
     </paper-dialog>
 
+
+    <gamification-action-trigger backendurl="http://137.226.58.16:8086/"
+                                 gameid="reqbaz"
+                                 memberid="[[currentUser.userName]]"
+                                 accesstokenkeyname="openidconnect-signin-token">
+    </gamification-action-trigger>
+
   </template>
 
   <script>
@@ -307,6 +315,9 @@
 
           // deactivate menu entry selection, just in case the login was made from the main menu
           this.$.mainMenu.selected = null;
+
+          // trigger login action in gamification
+            this.fire('iron-signal', {name: 'gamification', data: 'login'});
         }
       },
 

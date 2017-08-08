@@ -679,6 +679,11 @@
 
         // fire the event to the server
         request.generateRequest();
+
+        if(vote === 'NO_VOTE') {
+            // trigger favorRequirement action in gamification
+            this.fire('iron-signal', {name: 'gamification', data: 'favorRequirement'});
+        }
       },
 
       /**
