@@ -752,6 +752,9 @@
         this.$.commentsList.refresh();
 
         //TODO: Add a toast message that the comment was saved successfully.
+
+        // trigger commentRequirement action in gamification
+        this.fire('iron-signal', {name: 'gamification', data: 'commentRequirement'});
       },
 
       /**
