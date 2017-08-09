@@ -316,13 +316,14 @@
           // deactivate menu entry selection, just in case the login was made from the main menu
           this.$.mainMenu.selected = null;
 
-          // trigger login action in gamification
-            this.fire('iron-signal', {name: 'gamification', data: 'login'});
         }
       },
 
       _handleCurrentUserResponse: function(e, detail) {
         this.currentUser = detail.response;
+
+        // trigger login action in gamification
+        this.fire('iron-signal', {name: 'gamification', data: 'login'});
       },
 
       _handleCurrentUserError: function(e, detail) {
