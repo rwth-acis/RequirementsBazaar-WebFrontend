@@ -24,6 +24,7 @@
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../bower_components/gamification-quest-widget/gamification-quest-widget.html">
 <link rel="import" href="../elements/bread-crumb.html">
 <link rel="import" href="../elements/requirements-list.html">
 <link rel="import" href="../elements/req-user.html">
@@ -205,6 +206,14 @@
           [[localize('by')]]
           <req-user user="{{category.leader}}" normal-view no-popover></req-user>
         </div>
+      </div>
+
+      <div class="middle middle-container center layout">
+        <gamification-quest-widget backendurl="http://137.226.58.16:8086/"
+                                   gameid="reqbaz"
+                                   memberid="[[currentUser.userName]]"
+                                   accesstokenkeyname="openidconnect-signin-token">
+        </gamification-quest-widget>
       </div>
 
       <div class="filtering" hidden="[[_editMode]]">

@@ -57,9 +57,16 @@
     "paper-listbox": "PolymerElements/paper-listbox#^1.1.2",
     "iron-scroll-threshold": "PolymerElements/iron-scroll-threshold#^1.0.3",
     "gamification-framework-webComponent": "https://github.com/rwth-acis/Gamification-Visualization-WebComponent.git#ReqBaz",
-    "gamification-action-trigger": "https://github.com/rwth-acis/Gamification-Visualization-WebComponent.git#ReqBazActionTrigger"
+    "gamification-action-trigger": "https://github.com/rwth-acis/Gamification-Visualization-WebComponent.git#ReqBazActionTrigger",
+    "gamification-quest-widget": "https://github.com/rwth-acis/Gamification-Visualization-WebComponent.git#ReqBazQuestWidget"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
+  },
+  "resolutions": {
+    "polymer": "1.9 - 2",
+    "paper-toast": "^1.3.0",
+    "paper-button": "^1.0.14",
+    "webcomponentsjs": "^v1.0.2"
   }
 }
