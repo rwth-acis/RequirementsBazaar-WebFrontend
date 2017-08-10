@@ -234,6 +234,9 @@
       handlePostResponseComment: function() {
         if (this.postResponse) {
           this.refresh();
+
+          // trigger commentRequirement action in gamification
+          this.fire('iron-signal', {name: 'gamification', data: 'commentRequirement'});
         }
       },
 
