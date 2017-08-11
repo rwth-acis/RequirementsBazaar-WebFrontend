@@ -58,7 +58,8 @@
     "iron-scroll-threshold": "PolymerElements/iron-scroll-threshold#^1.0.3",
     "gamification-framework-webComponent": "https://github.com/rwth-acis/Gamification-Visualization-WebComponent.git#ReqBaz",
     "gamification-action-trigger": "https://github.com/rwth-acis/Gamification-Visualization-WebComponent.git#ReqBazActionTrigger",
-    "gamification-quest-widget": "https://github.com/rwth-acis/Gamification-Visualization-WebComponent.git#ReqBazQuestWidget"
+    "gamification-quest-widget": "https://github.com/rwth-acis/Gamification-Visualization-WebComponent.git#ReqBazQuestWidget",
+    "gamification-manager": "https://github.com/rwth-acis/Gamification-Visualization-WebComponent.git#ReqBazManager"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

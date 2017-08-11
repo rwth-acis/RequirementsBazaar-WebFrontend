@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../bower_components/gamification-framework-webComponent/gamification-visualization.html">
+<link rel="import" href="../bower_components/gamification-manager/gamification-manager.html">
 <link rel="import" href="../elements/req-user.html">
 <link rel="import" href="../elements/requirement-card.html">
 <link rel="import" href="shared-styles.html">
@@ -29,6 +30,12 @@
           padding: 0px;
         }
       }
+
+      .manager {
+        clear: both;
+        margin-top: 150px;
+        padding: 10px;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{authorized}}"
@@ -40,6 +47,13 @@
                                 memberid="[[user.userName]]"
                                 accesstokenkeyname="openidconnect-signin-token">
     </gamification-visualization>
+
+    <div class="manager">
+      <gamification-manager backendurl="http://137.226.58.16:8086/"
+                            gameid="reqbaz"
+                            accesstokenkeyname="openidconnect-signin-token">
+      </gamification-manager>
+    </div>
 
   </template>
 
