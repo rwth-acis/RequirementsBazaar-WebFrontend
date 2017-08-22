@@ -1,6 +1,6 @@
 {
   "name": "requirements-bazaar-web-frontend",
-  "version": "1.5.1",
+  "version": "1.5.0",
   "authors": [
     "István Koren",
     "Albi Sema",
@@ -12,7 +12,7 @@
     "polymer": "Polymer/polymer#^1.6.0",
     "time-elements": "^0.6.0",
     "openidconnect-signin": "rwth-acis/openidconnect-signin#update-signin",
-    "activity-tracker": "https://github.com/rwth-acis/activity-tracker.git#gamification",
+    "activity-tracker": "rwth-acis/activity-tracker#~1.2.0",
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2",
     "emoji-selector": "https://github.com/notwaldorf/emoji-selector.git#^1.1.1",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
@@ -65,9 +65,8 @@
     "web-component-tester": "^4.0.0"
   },
   "resolutions": {
-    "polymer": "1.9 - 2",
+    "polymer": "^1.6.0",
     "paper-toast": "^1.3.0",
-    "paper-button": "^1.0.14",
-    "webcomponentsjs": "^v1.0.2"
+    "paper-button": "^1.0.14"
   }
 }
