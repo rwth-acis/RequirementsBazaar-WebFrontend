@@ -78,7 +78,8 @@
          * The id of the requirement to show attachments for.
          */
         requirementId: {
-          type: Number
+          type: Number,
+          observer: '_requirementIdChanged'
         },
         _resourceURL: {
           type: String,
@@ -139,6 +140,12 @@
         }
 
         this.fire('iron-signal', {name: 'resize'});
+      },
+
+      _requirementIdChanged: function(newValue) {
+        if (this.$.imageCollapse.opened) {
+          this.$.imageCollapse.hide();
+        }
       }
 
     });
