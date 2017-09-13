@@ -20,6 +20,9 @@
     <template is="dom-if" if$="[[categoryId]]">
       <span> > <a href$="[[_frontendBasePath]]projects/[[projectId]]/categories/[[categoryId]]">[[category.name]]</a></span>
     </template>
+    <template is="dom-if" if$="[[requirementId]]">
+      <span> > <a href$="[[_frontendBasePath]]projects/[[projectId]]/categories/[[categoryId]]/requirements/[[requirementId]]">[[requirement.name]]</a></span>
+    </template>
 
   </template>
 
@@ -32,17 +35,23 @@
       ],
 
       properties: {
+        projectId: {
+          type: Number
+        },
         project: {
           type: Object
+        },
+        categoryId: {
+          type: Number
         },
         category: {
           type: Object
         },
-        projectId: {
+        requirementId: {
           type: Number
         },
-        categoryId: {
-          type: Number
+        requirement: {
+          type: Object
         }
       }
 
