@@ -126,8 +126,11 @@
       },
 
       _viewChanged: function(view) {
-        // load project
-        this.$.projectRequest.generateRequest();
+        if (view === 'categories') {
+          // load project
+          this.$.projectRequest.generateRequest();
+        }
+
         // Load view import on demand. Show 404 view if fails
         var resolvedViewUrl = this.resolveUrl('view-' + view + '.html');
         this.importHref(resolvedViewUrl, null, this._showView404, true);
