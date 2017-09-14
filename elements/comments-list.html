@@ -72,6 +72,7 @@
     <iron-ajax id="commentsRequest"
                loading="{{loading}}"
                url="{{resourceURL}}"
+               headers="[[authHeader]]"
                last-response="{{comments}}"
                params='{"page":"0", "per_page":"150"}'></iron-ajax>
 

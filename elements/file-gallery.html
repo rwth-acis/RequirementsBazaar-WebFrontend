@@ -33,6 +33,7 @@
     <iron-ajax id="attachmentsRequest"
                loading="{{loading}}"
                url="{{_resourceURL}}"
+               headers="[[authHeader]]"
                last-response="{{attachments}}"
                params='{"page":"0", "per_page":"150"}'></iron-ajax>
 

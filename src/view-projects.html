@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../bower_components/activity-tracker/activity-tracker.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
@@ -126,8 +127,11 @@
       },
 
       _viewChanged: function(view) {
-        // load project
-        this.$.projectRequest.generateRequest();
+        if (view === 'categories') {
+          // load project
+          this.$.projectRequest.generateRequest();
+        }
+
         // Load view import on demand. Show 404 view if fails
         var resolvedViewUrl = this.resolveUrl('view-' + view + '.html');
         this.importHref(resolvedViewUrl, null, this._showView404, true);

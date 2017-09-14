@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-styles/color.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../src/config-behavior.html">
 
 <dom-module id="projects-list">
@@ -72,13 +73,18 @@
 
     </style>
 
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
     <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
 
     <iron-ajax id="projectsLoader"
                loading="{{loading}}"
-               url="[[_apiBaseUrl]]/projects/"
+               url="[[_apiBaseUrl]]/projects"
+               headers="[[authHeader]]"
                last-response="{{projects}}"
-               params$='{"page":"0", "per_page":"150", "sort":"[[sorting]]"}'
+               params="[[_computeProjectsParams(sorting)]]"
                auto></iron-ajax>
 
     <div class="projectsList">
@@ -193,6 +199,14 @@
 
       _calculateBackgroundColor: function(projectName) {
         return hashStringToColor(projectName);
+      },
+
+      _computeProjectsParams: function(sorting) {
+        return {
+          page: 0,
+          per_page: 150,
+          sort: sorting
+        };
       }
 
     });

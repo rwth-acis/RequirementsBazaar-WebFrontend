@@ -38,6 +38,7 @@
                loading="{{loading}}"
                content-type="application/json"
                url="[[_apiBaseUrl]]/requirements/[[requirementId]]"
+               headers="[[authHeader]]"
                last-response="{{requirement}}"
                auto></iron-ajax>
 
