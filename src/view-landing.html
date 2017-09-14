@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
 
@@ -241,12 +242,17 @@
       }
     </style>
 
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <iron-ajax
       id="statisticsLoader"
       loading="{{loading}}"
       url="[[_apiBaseUrl]]/statistics/"
+      headers="[[authHeader]]"
       last-response="{{statistics}}"
       auto></iron-ajax>
 
@@ -255,6 +261,7 @@
       loading="{{loading}}"
       url="[[_apiBaseUrl]]/projects/"
       last-response="{{projects}}"
+      headers="[[authHeader]]"
       params='{"page":"0", "per_page":"3", "sort":"follower"}'
       auto></iron-ajax>
 
