@@ -17,6 +17,7 @@
   "createProject": "Create a Project",
   "pr-desc": "This is the list of all projects.",
   "searchLabel": "Filter the list by project name or description",
+  "filterCategoriesLabel": "Filter the list by category name or description",
   "formTitle": "Title",
   "formDesc": "Description",
   "cancel": "Cancel",

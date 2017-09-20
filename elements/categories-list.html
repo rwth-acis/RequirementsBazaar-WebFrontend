@@ -46,11 +46,11 @@
       url="[[resourceURL]]"
       headers="[[authHeader]]"
       last-response="{{categories}}"
-      params='{"page":"0", "per_page":"150"}'
+      params="[[_computeCategoriesParams(sorting)]]"
       auto></iron-ajax>
 
     <div id="categoriesList">
-      <template is="dom-repeat" items="{{categories}}">
+      <template is="dom-repeat" items="{{categories}}" filter="{{searchFilter(filterValue)}}">
         <a href$="[[_frontendBasePath]]projects/[[projectId]]/categories/[[item.id]]">
           <paper-card heading="[[item.name]]">
             <div class="card-content">[[item.description]]</div>
@@ -87,6 +87,16 @@
         loading: {
           type: Boolean,
           notify: true
+        },
+        filterValue: {
+          type: String,
+          value: ''
+        },
+        /**
+         * The sorting parameter of categories, either `name`, `date`, `requirement` or `follower`.
+         */
+        sorting: {
+          type: String
         }
       },
 
@@ -94,9 +104,32 @@
         return this._apiBaseUrl + '/projects/' + projectId + '/categories/';
       },
 
+      _computeCategoriesParams: function(sorting) {
+        return {
+          page: 0,
+          per_page: 150,
+          sort: sorting
+        };
+      },
+
       refresh: function() {
         this.$.categoriesLoader.generateRequest();
+      },
+
+      // thanks goes to http://jcrowther.io/2015/06/09/polymer-dom-repeat-filtering-and-sorting/ for the great help
+      /**
+       * Returns true either if the filter expression is empty, or if the filter expression is included in
+       * either the project's name or description.
+       *
+       * @param val
+       * @returns {Function}
+       */
+      searchFilter: function (filterValue) {
+        return function (item) {
+          return (item.name && ~item.name.toLowerCase().indexOf(filterValue.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(filterValue.toLowerCase()));
+        };
       }
+
     });
   </script>
 
