@@ -48,7 +48,7 @@
                last-response="{{project}}"></iron-ajax>
 
     <app-drawer id="drawer" align="right">
-      <activity-tracker initial-limit="20" url="https://requirements-bazaar.org/betaactivities" auto-update-interval="90" loading="{{loading}}"></activity-tracker>
+      <activity-tracker initial-limit="20" url="[[_activityTrackerBaseUrl]]" auto-update-interval="90" loading="{{loading}}"></activity-tracker>
     </app-drawer>
 
     <iron-pages
