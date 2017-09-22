@@ -795,6 +795,7 @@
        * @private
        */
       _categoryIdChanged: function(newValue) {
+        this.requirementSearchFilter = '';
         this._requirementsSorting = 'date';
         this._requirementsSortDirection = '-';
         this._requirementsState = 'open';
