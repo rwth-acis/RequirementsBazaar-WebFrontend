@@ -46,7 +46,7 @@
       url="[[resourceURL]]"
       headers="[[authHeader]]"
       last-response="{{categories}}"
-      params="[[_computeCategoriesParams(sorting)]]"
+      params="[[_computeCategoriesParams(sorting, sortDirection)]]"
       auto></iron-ajax>
 
     <div id="categoriesList">
@@ -96,7 +96,14 @@
          * The sorting parameter of categories, either `name`, `date`, `requirement` or `follower`.
          */
         sorting: {
-          type: String
+          type: String,
+          observer: '_sortingChanged'
+        },
+        sortDirection: {
+          type: String,
+          value: '+',
+          notify: true,
+          reflectToAttribute: true
         }
       },
 
@@ -104,11 +111,11 @@
         return this._apiBaseUrl + '/projects/' + projectId + '/categories/';
       },
 
-      _computeCategoriesParams: function(sorting) {
+      _computeCategoriesParams: function(sorting, sortDirection) {
         return {
           page: 0,
           per_page: 150,
-          sort: sorting
+          sort: sortDirection + sorting
         };
       },
 
@@ -128,6 +135,14 @@
         return function (item) {
           return (item.name && ~item.name.toLowerCase().indexOf(filterValue.toLowerCase())) || (item.description && ~item.description.toLowerCase().indexOf(filterValue.toLowerCase()));
         };
+      },
+
+      _sortingChanged: function(newValue) {
+        if (['date', 'requirement', 'follower'].indexOf(newValue) >= 0) {
+          this.sortDirection = '-';
+        } else {
+          this.sortDirection = '+';
+        }
       }
 
     });
