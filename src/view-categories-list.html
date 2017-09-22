@@ -151,7 +151,7 @@
           </paper-listbox>
         </paper-dropdown-menu>
 
-        <paper-input id="searchInput" class="large" label="[[localize('filterCategoriesLabel')]]" value="{{_categoryFilterVal}}">
+        <paper-input id="searchInput" class="large" label="[[localize('filterCategoriesLabel')]]" value="{{_categoryFilter}}">
           <iron-icon icon="search" prefix></iron-icon>
           <paper-icon-button suffix on-tap="_handleClearInputTap"
                              icon="clear" alt="clear" title="clear" tabindex="0">
@@ -163,7 +163,7 @@
     <categories-list id="categoriesList"
                      project-id="[[projectId]]"
                      loading="{{loading}}"
-                     filter-value="{{_categoryFilterVal}}"
+                     filter-value="{{_categoryFilter}}"
                      sorting="[[_categorySorting]]"></categories-list>
 
     <paper-fab on-tap="_handleCreateCategoryTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
@@ -213,7 +213,8 @@
 
       properties: {
         projectId: {
-          type: Number
+          type: Number,
+          observer: '_projectIdChanged'
         },
         project: {
           type: Object
@@ -229,7 +230,7 @@
           type: Boolean,
           value: false
         },
-        _categoryFilterVal: {
+        _categoryFilter: {
           type: String
         },
         _categorySorting: {
@@ -273,6 +274,17 @@
           this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
           this.$.createCategoryDialog.toggleClass('drawer', detail.reserveSpace);
         }
+      },
+
+      /**
+       * Resets the view options to the default values.
+       *
+       * @param newValue
+       * @private
+       */
+      _projectIdChanged: function(newValue) {
+        this._categoryFilter = '';
+        this._categorySorting = 'name';
       },
 
       _handleCreateCategoryTap: function(e) {
@@ -378,7 +390,7 @@
        * Resets the value of the filter input field.
        */
       _handleClearInputTap: function(e) {
-        this._categoryFilterVal = '';
+        this._categoryFilter = '';
       },
 
       _computeEditProjectSaveDisabled: function(editProjectName, editProjectDescription) {
