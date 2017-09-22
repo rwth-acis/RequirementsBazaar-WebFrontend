@@ -84,7 +84,7 @@
                url="[[_apiBaseUrl]]/projects"
                headers="[[authHeader]]"
                last-response="{{projects}}"
-               params="[[_computeProjectsParams(sorting)]]"
+               params="[[_computeProjectsParams(sorting, sortDirection)]]"
                auto></iron-ajax>
 
     <div class="projectsList">
@@ -161,7 +161,14 @@
          * The sorting parameter of projects, either `name`, `date`, `requirement` or `follower`.
          */
         sorting: {
-          type: String
+          type: String,
+          observer: '_sortingChanged'
+        },
+        sortDirection: {
+          type: String,
+          value: '+',
+          notify: true,
+          reflectToAttribute: true
         },
         /**
          * Whether any loading operation is currently active.
@@ -201,11 +208,19 @@
         return hashStringToColor(projectName);
       },
 
-      _computeProjectsParams: function(sorting) {
+      _sortingChanged: function(newValue) {
+        if (['date', 'requirement', 'follower'].indexOf(newValue) >= 0) {
+          this.sortDirection = '-';
+        } else {
+          this.sortDirection = '+';
+        }
+      },
+
+      _computeProjectsParams: function(sorting, sortDirection) {
         return {
           page: 0,
           per_page: 150,
-          sort: sorting
+          sort: sortDirection + sorting
         };
       }
 

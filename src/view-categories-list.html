@@ -24,6 +24,7 @@
 <link rel="import" href="../elements/bread-crumb.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
+<link rel="import" href="reqbaz-icons.html">
 
 <dom-module id="view-categories-list">
   <template>
@@ -35,14 +36,12 @@
       }
 
       paper-dropdown-menu {
-        margin-right: 15px;
-
         --paper-input-container-input: {
           font-size: x-large;
         };
       }
 
-      paper-icon-button {
+      #clearInputButton {
         padding: 0;
         width: 24px;
         height: 24px;
@@ -54,6 +53,16 @@
 
       .toolbar > paper-input {
         @apply(--layout-flex);
+      }
+
+      .toolbarIcons {
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+      }
+
+      .toolbarIcons > paper-menu-button {
+        padding: 0;
+        padding-bottom: 5px;
       }
 
       @media (max-width: 600px) {
@@ -143,7 +152,7 @@
 
       <div class="toolbar">
         <paper-dropdown-menu label="[[localize('sorting')]]">
-          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_categorySorting}}">
+          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_categoriesSorting}}">
             <paper-item value="name">A-Z</paper-item>
             <paper-item value="follower">[[localize('sorting-popularity')]]</paper-item>
             <paper-item value="date">[[localize('sorting-activity')]]</paper-item>
@@ -151,9 +160,19 @@
           </paper-listbox>
         </paper-dropdown-menu>
 
-        <paper-input id="searchInput" class="large" label="[[localize('filterCategoriesLabel')]]" value="{{_categoryFilterVal}}">
+        <div class="toolbarIcons">
+          <paper-menu-button>
+            <paper-icon-button id="sortDirectionMenuIcon" icon="reqbaz:sort-ascending" class="dropdown-trigger"></paper-icon-button>
+            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_categoriesSortDirection}}">
+              <paper-item value="+">Ascending</paper-item>
+              <paper-item value="-">Descending</paper-item>
+            </paper-menu>
+          </paper-menu-button>
+        </div>
+
+        <paper-input id="searchInput" class="large" label="[[localize('filterCategoriesLabel')]]" value="{{_categoriesFilter}}">
           <iron-icon icon="search" prefix></iron-icon>
-          <paper-icon-button suffix on-tap="_handleClearInputTap"
+          <paper-icon-button id="clearInputButton" suffix on-tap="_handleClearInputTap"
                              icon="clear" alt="clear" title="clear" tabindex="0">
           </paper-icon-button>
         </paper-input>
@@ -163,8 +182,9 @@
     <categories-list id="categoriesList"
                      project-id="[[projectId]]"
                      loading="{{loading}}"
-                     filter-value="{{_categoryFilterVal}}"
-                     sorting="[[_categorySorting]]"></categories-list>
+                     filter-value="{{_categoriesFilter}}"
+                     sorting="[[_categoriesSorting]]"
+                     sort-direction="{{_categoriesSortDirection}}"></categories-list>
 
     <paper-fab on-tap="_handleCreateCategoryTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
     <paper-tooltip for="fab" position="left">[[localize('createCategory')]]</paper-tooltip>
@@ -213,7 +233,8 @@
 
       properties: {
         projectId: {
-          type: Number
+          type: Number,
+          observer: '_projectIdChanged'
         },
         project: {
           type: Object
@@ -229,12 +250,16 @@
           type: Boolean,
           value: false
         },
-        _categoryFilterVal: {
+        _categoriesFilter: {
           type: String
         },
-        _categorySorting: {
+        _categoriesSorting: {
           type: String,
           value: 'name'
+        },
+        _categoriesSortDirection: {
+          type: String,
+          observer: '_categoriesSortDirectionChanged'
         },
         _editProjectName: {
           type: String,
@@ -273,6 +298,17 @@
           this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
           this.$.createCategoryDialog.toggleClass('drawer', detail.reserveSpace);
         }
+      },
+
+      /**
+       * Resets the view options to the default values.
+       *
+       * @param newValue
+       * @private
+       */
+      _projectIdChanged: function(newValue) {
+        this._categoriesFilter = '';
+        this._categoriesSorting = 'name';
       },
 
       _handleCreateCategoryTap: function(e) {
@@ -378,7 +414,7 @@
        * Resets the value of the filter input field.
        */
       _handleClearInputTap: function(e) {
-        this._categoryFilterVal = '';
+        this._categoriesFilter = '';
       },
 
       _computeEditProjectSaveDisabled: function(editProjectName, editProjectDescription) {
@@ -455,6 +491,14 @@
           "scopeField": "project",
           "scopeId": projectId
         };
+      },
+
+      _categoriesSortDirectionChanged: function(newValue) {
+        if (newValue === '+') {
+          this.$.sortDirectionMenuIcon.icon = 'reqbaz:sort-ascending';
+        } else {
+          this.$.sortDirectionMenuIcon.icon = 'reqbaz:sort-descending';
+        }
       }
 
     });
