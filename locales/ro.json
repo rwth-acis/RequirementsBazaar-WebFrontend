@@ -17,6 +17,7 @@
   "createProject": "Creaza un Proiect",
   "pr-desc": "Aceasta este sectiunea proiecte.",
   "searchLabel": "Cautati un proiect folosind numele sau descrierea",
+  "filterCategoriesLabel": "Cautati un categorie folosind numele sau descrierea",
   "formTitle": "Titlu",
   "formDesc": "Descriere",
   "cancel": "Anulare",

@@ -17,6 +17,7 @@
   "createProject": "Projekt erstellen",
   "pr-desc": "Hier findet sich die Übersicht aller im Requirements Bazaar vorhandenen Projekte.",
   "searchLabel": "Projekte nach Namen oder Beschreibung filtern",
+  "filterCategoriesLabel": "Kategorien nach Namen oder Beschreibung filtern",
   "formTitle": "Titel",
   "formDesc": "Beschreibung",
   "cancel": "Abbrechen",

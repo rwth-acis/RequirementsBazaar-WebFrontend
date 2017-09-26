@@ -17,10 +17,14 @@
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../elements/categories-list.html">
 <link rel="import" href="../elements/bread-crumb.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
+<link rel="import" href="reqbaz-icons.html">
 
 <dom-module id="view-categories-list">
   <template>
@@ -31,9 +35,43 @@
         padding: 15px;
       }
 
+      paper-dropdown-menu {
+        --paper-input-container-input: {
+          font-size: x-large;
+        };
+      }
+
+      #clearInputButton {
+        padding: 0;
+        width: 24px;
+        height: 24px;
+      }
+
+      .toolbar {
+        @apply(--layout-horizontal);
+      }
+
+      .toolbar > paper-input {
+        @apply(--layout-flex);
+      }
+
+      .toolbarIcons {
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+      }
+
+      .toolbarIcons > paper-menu-button {
+        padding: 0;
+        padding-bottom: 5px;
+      }
+
       @media (max-width: 600px) {
         :host {
           padding: 0px;
+        }
+
+        .toolbar {
+          @apply(--layout-vertical);
         }
       }
     </style>
@@ -45,12 +83,6 @@
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <iron-signals on-iron-signal-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged"></iron-signals>
-
-    <!--<iron-ajax id="projectInfoLoader"
-               content-type="application/json"
-               url="[[_apiBaseUrl]]/projects/[[projectId]]"
-               last-response="{{project}}"
-               auto></iron-ajax>-->
 
     <iron-ajax
       id="postCategoryRequest"
@@ -117,9 +149,42 @@
         <paper-button raised on-tap="_handleSaveEditTap" disabled="[[_editProjectSaveDisabled]]">[[localize('save')]]</paper-button>
 
       </div>
+
+      <div class="toolbar">
+        <paper-dropdown-menu label="[[localize('sorting')]]">
+          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_categoriesSorting}}">
+            <paper-item value="name">A-Z</paper-item>
+            <paper-item value="follower">[[localize('sorting-popularity')]]</paper-item>
+            <paper-item value="date">[[localize('sorting-activity')]]</paper-item>
+            <paper-item value="requirement">[[localize('sorting-requirement')]]</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+
+        <div class="toolbarIcons">
+          <paper-menu-button>
+            <paper-icon-button id="sortDirectionMenuIcon" icon="reqbaz:sort-ascending" class="dropdown-trigger"></paper-icon-button>
+            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_categoriesSortDirection}}">
+              <paper-item value="+">Ascending</paper-item>
+              <paper-item value="-">Descending</paper-item>
+            </paper-menu>
+          </paper-menu-button>
+        </div>
+
+        <paper-input id="searchInput" class="large" label="[[localize('filterCategoriesLabel')]]" value="{{_categoriesFilter}}">
+          <iron-icon icon="search" prefix></iron-icon>
+          <paper-icon-button id="clearInputButton" suffix on-tap="_handleClearInputTap"
+                             icon="clear" alt="clear" title="clear" tabindex="0">
+          </paper-icon-button>
+        </paper-input>
+      </div>
     </paper-material>
 
-    <categories-list id="categoriesList" project-id="[[projectId]]" loading="{{loading}}"></categories-list>
+    <categories-list id="categoriesList"
+                     project-id="[[projectId]]"
+                     loading="{{loading}}"
+                     filter-value="{{_categoriesFilter}}"
+                     sorting="[[_categoriesSorting]]"
+                     sort-direction="{{_categoriesSortDirection}}"></categories-list>
 
     <paper-fab on-tap="_handleCreateCategoryTap" id="fab" icon="add" hidden="[[!authorized]]"></paper-fab>
     <paper-tooltip for="fab" position="left">[[localize('createCategory')]]</paper-tooltip>
@@ -168,7 +233,8 @@
 
       properties: {
         projectId: {
-          type: Number
+          type: Number,
+          observer: '_projectIdChanged'
         },
         project: {
           type: Object
@@ -183,6 +249,17 @@
         _editMode: {
           type: Boolean,
           value: false
+        },
+        _categoriesFilter: {
+          type: String
+        },
+        _categoriesSorting: {
+          type: String,
+          value: 'name'
+        },
+        _categoriesSortDirection: {
+          type: String,
+          observer: '_categoriesSortDirectionChanged'
         },
         _editProjectName: {
           type: String,
@@ -221,6 +298,17 @@
           this.$.fab.toggleAttribute('drawer', detail.reserveSpace);
           this.$.createCategoryDialog.toggleClass('drawer', detail.reserveSpace);
         }
+      },
+
+      /**
+       * Resets the view options to the default values.
+       *
+       * @param newValue
+       * @private
+       */
+      _projectIdChanged: function(newValue) {
+        this._categoriesFilter = '';
+        this._categoriesSorting = 'name';
       },
 
       _handleCreateCategoryTap: function(e) {
@@ -322,6 +410,13 @@
          this.$.newCategoryDescription.required = true;
       },
 
+      /**
+       * Resets the value of the filter input field.
+       */
+      _handleClearInputTap: function(e) {
+        this._categoriesFilter = '';
+      },
+
       _computeEditProjectSaveDisabled: function(editProjectName, editProjectDescription) {
         return (editProjectName == null || editProjectDescription == null || editProjectName.trim() === '' || editProjectDescription.trim() === '');
       },
@@ -396,6 +491,14 @@
           "scopeField": "project",
           "scopeId": projectId
         };
+      },
+
+      _categoriesSortDirectionChanged: function(newValue) {
+        if (newValue === '+') {
+          this.$.sortDirectionMenuIcon.icon = 'reqbaz:sort-ascending';
+        } else {
+          this.$.sortDirectionMenuIcon.icon = 'reqbaz:sort-descending';
+        }
       }
 
     });

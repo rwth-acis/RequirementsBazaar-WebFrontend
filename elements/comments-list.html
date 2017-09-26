@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin-aware.html">
@@ -44,6 +45,15 @@
         margin-left: 40px;
       }
 
+      .flexchild {
+        @apply(--layout-flex);
+      }
+
+      .flex-end-align {
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+
       .actions {
         font-size: 12px;
         color: #90949c;
@@ -72,6 +82,7 @@
     <iron-ajax id="commentsRequest"
                loading="{{loading}}"
                url="{{resourceURL}}"
+               headers="[[authHeader]]"
                last-response="{{comments}}"
                params='{"page":"0", "per_page":"150"}'></iron-ajax>
 
@@ -105,7 +116,10 @@
             <span hidden="[[!isCreator(item.creator.id)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
             <relative-time datetime$="[[item.creationDate]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
           </div>
-          <paper-input class$="replyInput[[item.id]]" attr="{{item.id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
+          <div class="layout horizontal bottom">
+            <paper-input class$="replyInput[[item.id]] flexchild" attr="{{item.id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
+            <paper-icon-button mini icon="send" class$="commentSendButton[[item.id]] flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
+          </div>
         </div>
       </div>
 
@@ -221,10 +235,44 @@
           //clear the paper-input and hide it
           e.currentTarget.value = '';
           e.currentTarget.hidden = true;
+          this.$$('.commentSendButton' + e.model.item.id).hidden = true;
 
           // notify container to resize
           this.fire('iron-signal', {name: 'resize'});
         }
+      },
+
+      /**
+       * Handles tapping the add reply button.
+       */
+      _handleAddCommentTap: function(e) {
+        var text = this.$$('.replyInput' + e.model.item.id).value;
+        var replyTo;
+        if (e.model.item.replyToComment) {
+          replyTo = e.model.item.replyToComment;
+        } else {
+          replyTo = e.model.item.id;
+        }
+        var request = this.$.postCommentRequest;
+        if (text != null && text != '') {
+          request.body = JSON.stringify({
+            "requirementId": this.requirementId,
+            "message": text,
+            "replyToComment": parseInt(replyTo)
+          });
+          request.generateRequest();
+        } else {
+          //show message for empty comment
+          this.$.toast.text = localize('commentNoEmpty');
+          this.$.toast.open();
+        }
+        //clear the paper-input and hide it
+        this.$$('.replyInput' + e.model.item.id).value = '';
+        this.$$('.replyInput' + e.model.item.id).hidden = true;
+        this.$$('.commentSendButton' + e.model.item.id).hidden = true;
+
+        // notify container to resize
+        this.fire('iron-signal', {name: 'resize'});
       },
 
       /**
@@ -322,8 +370,10 @@
        */
       _handleReplyTap: function(e) {
         var replyInput = this.$$('.replyInput' + e.model.item.id);
+        var commentSendButton = this.$$('.commentSendButton' + e.model.item.id);
 
         replyInput.hidden = false;
+        commentSendButton.hidden = false;
         replyInput.focus();
 
         // notify container to resize

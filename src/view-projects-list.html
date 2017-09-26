@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
@@ -23,6 +25,7 @@
 <link rel="import" href="../elements/projects-list.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
+<link rel="import" href="reqbaz-icons.html">
 
 <dom-module id="view-projects-list">
   <template>
@@ -37,14 +40,12 @@
       }
 
       paper-dropdown-menu {
-        margin-right: 15px;
-
         --paper-input-container-input: {
           font-size: x-large;
         };
       }
 
-      paper-icon-button {
+      #clearInputButton {
         padding: 0;
         width: 24px;
         height: 24px;
@@ -56,6 +57,16 @@
 
       .toolbar > paper-input {
         @apply(--layout-flex);
+      }
+
+      .toolbarIcons {
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+      }
+
+      .toolbarIcons > paper-menu-button {
+        padding: 0;
+        padding-bottom: 5px;
       }
 
       @media (max-width: 600px) {
@@ -130,7 +141,7 @@
 
       <div class="toolbar">
         <paper-dropdown-menu label="[[localize('sorting')]]">
-          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectSorting}}">
+          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectsSorting}}">
             <paper-item value="name">A-Z</paper-item>
             <paper-item value="follower">[[localize('sorting-popularity')]]</paper-item>
             <paper-item value="date">[[localize('sorting-activity')]]</paper-item>
@@ -138,18 +149,29 @@
           </paper-listbox>
         </paper-dropdown-menu>
 
+        <div class="toolbarIcons">
+          <paper-menu-button>
+            <paper-icon-button id="sortDirectionMenuIcon" icon="reqbaz:sort-ascending" class="dropdown-trigger"></paper-icon-button>
+            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_projectsSortDirection}}">
+              <paper-item value="+">Ascending</paper-item>
+              <paper-item value="-">Descending</paper-item>
+            </paper-menu>
+          </paper-menu-button>
+        </div>
+
         <paper-input id="searchInput" class="large" label="[[localize('searchLabel')]]" value="{{_projectFilterVal}}">
           <iron-icon icon="search" prefix></iron-icon>
-          <paper-icon-button suffix on-tap="_handleClearInputTap"
+          <paper-icon-button id="clearInputButton" suffix on-tap="_handleClearInputTap"
                              icon="clear" alt="clear" title="clear" tabindex="0">
-          </paper-icon-button>-->
+          </paper-icon-button>
         </paper-input>
       </div>
 
     </paper-material>
 
     <projects-list filter-value="{{_projectFilterVal}}"
-                   sorting="[[_projectSorting]]"
+                   sorting="[[_projectsSorting]]"
+                   sort-direction="{{_projectsSortDirection}}"
                    only-owned-projects="[[_onlyOwnedProjects]]"
                    id="projectsList"
                    loading="{{loading}}"></projects-list>
@@ -200,9 +222,13 @@
         _projectFilterVal: {
           type: String
         },
-        _projectSorting: {
+        _projectsSorting: {
           type: String,
           value: 'name'
+        },
+        _projectsSortDirection: {
+          type: String,
+          observer: '_projectsSortDirectionChanged'
         },
         _newProjectName: {
           type: String,
@@ -324,6 +350,14 @@
       _handlePostResponseError: function(e) {
         this.$.toast.text = this.localize('errorCrePrj');
         this.$.toast.open();
+      },
+
+      _projectsSortDirectionChanged: function(newValue) {
+        if (newValue === '+') {
+          this.$.sortDirectionMenuIcon.icon = 'reqbaz:sort-ascending';
+        } else {
+          this.$.sortDirectionMenuIcon.icon = 'reqbaz:sort-descending';
+        }
       }
 
     });

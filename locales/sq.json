@@ -17,6 +17,7 @@
   "createProject": "Krijo një Projekt",
   "pr-desc": "Kjo është seksioni i projektit.",
   "searchLabel": "Kërko një projekt me emër ose përshkrim",
+  "filterCategoriesLabel": "Kërko një kategori me emër ose përshkrim",
   "formTitle": "Titull",
   "formDesc": "Pershkrim",
   "cancel": "Anullo",
