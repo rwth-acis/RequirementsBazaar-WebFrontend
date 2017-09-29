@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-styles/color.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../src/config-behavior.html">
 
@@ -37,7 +38,7 @@
 
       paper-card {
         width: 100%;
-        height: 250px; /* could be 350px once we have real images */
+        height: 303px; /* 250px + 53 for actions, could be more once we have real project images */
         cursor: pointer;
         border-radius: 3px;
       }
@@ -70,6 +71,25 @@
         left: 0;
         bottom: 16px;
         background: linear-gradient(transparent 120px, white);
+      }
+
+      .numbers {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        height: 42px;
+      }
+
+      .number {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        width: 70px;
+        color: #737373;
+        font-weight: normal;
+      }
+
+      iron-icon {
+        --iron-icon-fill-color: #737373;
+        margin-right: 10px;
       }
 
       iron-scroll-threshold {
@@ -123,6 +143,25 @@
                 <div class="project-header">[[item.name]]</div>
                 <div class="project-description">
                   <p class="project-light">[[item.description]]</p>
+                </div>
+              </div>
+              <div class="card-actions">
+                <div class="numbers">
+                  <div id="number-followers" class="number">
+                    <iron-icon icon="social:people" alt="hey"></iron-icon>
+                    <div>[[item.numberOfFollowers]]</div>
+                  </div>
+                  <paper-tooltip for="number-followers" offset="0">[[localize('followers')]]</paper-tooltip>
+                  <div id="number-categories" class="number">
+                    <iron-icon icon="icons:folder"></iron-icon>
+                    <div>[[item.numberOfCategories]]</div>
+                  </div>
+                  <paper-tooltip for="number-categories" offset="0">[[localize('categories')]]</paper-tooltip>
+                  <div id="number-requirements" class="number">
+                    <iron-icon icon="icons:assignment"></iron-icon>
+                    <div>[[item.numberOfRequirements]]</div>
+                  </div>
+                  <paper-tooltip for="number-requirements" offset="0">[[localize('requirements')]]</paper-tooltip>
                 </div>
               </div>
             </paper-card>
