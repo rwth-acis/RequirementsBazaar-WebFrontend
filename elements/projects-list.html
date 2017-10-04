@@ -147,21 +147,21 @@
               </div>
               <div class="card-actions">
                 <div class="numbers">
-                  <div id="number-followers" class="number">
+                  <div id$="number-followers[[item.id]]" class="number">
                     <iron-icon icon="social:people" alt="hey"></iron-icon>
                     <div>[[item.numberOfFollowers]]</div>
                   </div>
-                  <paper-tooltip for="number-followers" offset="0">[[localize('followers')]]</paper-tooltip>
-                  <div id="number-categories" class="number">
+                  <paper-tooltip for="number-followers[[item.id]]" offset="0">[[localize('followers')]]</paper-tooltip>
+                  <div id$="number-categories[[item.id]]" class="number">
                     <iron-icon icon="icons:folder"></iron-icon>
                     <div>[[item.numberOfCategories]]</div>
                   </div>
-                  <paper-tooltip for="number-categories" offset="0">[[localize('categories')]]</paper-tooltip>
-                  <div id="number-requirements" class="number">
+                  <paper-tooltip for="number-categories[[item.id]]" offset="0">[[localize('categories')]]</paper-tooltip>
+                  <div id$="number-requirements[[item.id]]" class="number">
                     <iron-icon icon="icons:assignment"></iron-icon>
                     <div>[[item.numberOfRequirements]]</div>
                   </div>
-                  <paper-tooltip for="number-requirements" offset="0">[[localize('requirements')]]</paper-tooltip>
+                  <paper-tooltip for="number-requirements[[item.id]]" offset="0">[[localize('requirements')]]</paper-tooltip>
                 </div>
               </div>
             </paper-card>
