@@ -117,12 +117,12 @@
   "sorting": "Sorting",
   "sorting-activity": "Last Activity",
   "sorting-alphabetical": "A-Z",
-  "sorting-comments": "Number of Comments",
+  "sorting-comments": "Comments",
   "sorting-date": "تاریخ ایجاد",
   "sorting-followers": "دنبال کننده ها",
   "sorting-popularity": "Popularity",
-  "sorting-requirements": "Requirements Count",
-  "sorting-votes": "Number of Votes",
+  "sorting-requirements": "Requirements",
+  "sorting-votes": "Votes",
   "votes": "Votes",
   "requirements": "Requirements"
 }
