@@ -118,8 +118,9 @@
   "sorting": "Sorting",
   "sorting-alphabetical": "A-Z",
   "sorting-popularity": "Popularity",
-  "sorting-activity": "Last Activity",
+  "sorting-activity": "Ultima Activitate",
   "sorting-requirement": "Requirements Count",
+  "sorting-date": "Data Creării",
   "votes": "Votes",
   "requirements": "Requirements",
   "about": "Despre"
