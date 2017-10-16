@@ -303,10 +303,8 @@
           // if we have a new sorting parameter, reset the sort direction
           if (this._lastRequestSorting !== sorting) {
             if (['date', 'requirement', 'follower'].indexOf(sorting) >= 0) {
-              this.sortDirection = '-';
               sortDirection = '-';
             } else {
-              this.sortDirection = '+';
               sortDirection = '+';
             }
           }
@@ -314,7 +312,6 @@
           // check if we have a new sorting or state parameter; if yes, reset the list
           if (this._projectsRequestParameters.sort !== (sortDirection + sorting)) {
             this.projects = [];
-            this._projectsRequestCurrentPage = 0;
             projectsRequestCurrentPage = 0;
 
             // scroll to top
@@ -329,6 +326,9 @@
         parameters.per_page = this._projectsRequestPerPage;
         parameters.page = projectsRequestCurrentPage;
         parameters.search = searchFilter;
+
+        this.sortDirection = sortDirection;
+        this._projectsRequestCurrentPage = projectsRequestCurrentPage;
 
         return parameters;
       },

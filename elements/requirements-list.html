@@ -563,7 +563,6 @@
             if ((this._requirementsRequestParameters.search !== searchFilter) ||
                 (this._requirementsRequestParameters.state !== requirementsStateFilter) ||
                 (this._lastRequestCategoryId !== categoryId)) {
-              this._requirementsRequestCurrentPage = 0;
               requirementsRequestCurrentPage = 0;
 
               // scroll to top
@@ -573,10 +572,8 @@
             // if we have a new sorting parameter, reset the sort direction
             if (this._lastRequestSorting !== sorting) {
               if (['date', 'vote', 'comment', 'follower'].indexOf(sorting) >= 0) {
-                this.sortDirection = '-';
                 sortDirection = '-';
               } else {
-                this.sortDirection = '+';
                 sortDirection = '+';
               }
             }
@@ -584,7 +581,6 @@
             // check if we have a new sorting or state parameter; if yes, reset the list
             if ((this._requirementsRequestParameters.sort !== (sortDirection + sorting)) || (this._requirementsRequestParameters.state !== requirementsStateFilter)) {
               this.requirements = [];
-              this._requirementsRequestCurrentPage = 0;
               requirementsRequestCurrentPage = 0;
 
               // scroll to top
@@ -608,6 +604,9 @@
             parameters.state = 'all';
           }
           parameters.search = searchFilter;
+
+          this._requirementsRequestCurrentPage = requirementsRequestCurrentPage;
+          this.sortDirection = sortDirection;
 
           return parameters;
         },
