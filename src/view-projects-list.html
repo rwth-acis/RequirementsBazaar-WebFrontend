@@ -143,9 +143,9 @@
         <paper-dropdown-menu label="[[localize('sorting')]]">
           <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectsSorting}}">
             <paper-item value="name">A-Z</paper-item>
-            <paper-item value="follower">[[localize('sorting-popularity')]]</paper-item>
-            <paper-item value="date">[[localize('sorting-activity')]]</paper-item>
-            <paper-item value="requirement">[[localize('sorting-requirement')]]</paper-item>
+            <paper-item value="date">[[localize('sorting-date')]]</paper-item>
+            <paper-item value="follower">[[localize('sorting-followers')]]</paper-item>
+            <paper-item value="requirement">[[localize('sorting-requirements')]]</paper-item>
           </paper-listbox>
         </paper-dropdown-menu>
 
@@ -169,7 +169,7 @@
 
     </paper-material>
 
-    <projects-list filter-value="{{_projectFilterVal}}"
+    <projects-list search-filter="{{_projectFilterVal}}"
                    sorting="[[_projectsSorting]]"
                    sort-direction="{{_projectsSortDirection}}"
                    only-owned-projects="[[_onlyOwnedProjects]]"
