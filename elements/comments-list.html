@@ -97,7 +97,7 @@
                handle-as="json"
                content-type="application/json"
                method="POST"
-               url="{{_apiBaseUrl}}/comments"
+               url="{{_apiBaseUrl}}comments"
                headers="[[authHeader]]"
                on-response="handlePostResponseComment"
                last-response="{{postResponse}}"
@@ -192,7 +192,7 @@
        * @returns {string}
        */
       _computeResourceURL: function(requirementId) {
-        return this._apiBaseUrl + '/requirements/' + requirementId + '/comments/';
+        return this._apiBaseUrl + 'requirements/' + requirementId + '/comments/';
       },
 
       /**
@@ -325,7 +325,7 @@
       _handleDeleteDialogClosed: function(e) {
         if (e.detail.confirmed) {
           var request = this.$.deleteCommentRequest;
-          request.url = this._apiBaseUrl + "/comments/" + this._currentDeleteId;
+          request.url = this._apiBaseUrl + "comments/" + this._currentDeleteId;
           request.generateRequest();
         }
       },
