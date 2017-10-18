@@ -67,6 +67,10 @@
         text-decoration: underline;
         cursor: pointer;
       }
+
+      .content {
+        word-break: break-all;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{authorized}}"
@@ -110,7 +114,7 @@
       <div class$="[[_computeCommentClasses(item)]]" attr="{{item.id}}">
         <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
         <div class="layout vertical flex">
-          <div inner-h-t-m-l="{{validateUrl(item.message)}}"></div>
+          <div inner-h-t-m-l="{{validateUrl(item.message)}}" class="content"></div>
           <div class="actions">
             <a on-tap="_handleReplyTap" hidden="[[!authorized]]">[[localize('reply')]]</a>
             <span hidden="[[!isCreator(item.creator.id)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
