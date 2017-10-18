@@ -262,7 +262,7 @@
       url="[[_apiBaseUrl]]projects/"
       last-response="{{projects}}"
       headers="[[authHeader]]"
-      params='{"page":"0", "per_page":"3", "sort":"follower"}'
+      params='{"page":"0", "per_page":"3", "sort":"last_activity"}'
       auto></iron-ajax>
 
     <div id="landing">
@@ -311,7 +311,7 @@
         </div>
 
         <div id="activities">
-          <h2>Popular Projects</h2>
+          <h2>[[localize('last-active-projects')]]</h2>
           <div class="projects-list">
             <template is="dom-repeat" items="{{projects}}">
               <div class="wrapper">

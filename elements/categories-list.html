@@ -97,7 +97,7 @@
           value: ''
         },
         /**
-         * The sorting parameter of categories, either `name`, `date`, `requirement` or `follower`.
+         * The sorting parameter of categories, either `name`, `date`, `last_activity`, `requirement` or `follower`.
          */
         sorting: {
           type: String,
@@ -142,7 +142,7 @@
       },
 
       _sortingChanged: function(newValue) {
-        if (['date', 'requirement', 'follower'].indexOf(newValue) >= 0) {
+        if (['date', 'last_activity', 'requirement', 'follower'].indexOf(newValue) >= 0) {
           this.sortDirection = '-';
         } else {
           this.sortDirection = '+';
