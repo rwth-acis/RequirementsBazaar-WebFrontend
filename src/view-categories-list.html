@@ -92,7 +92,7 @@
       id="postCategoryRequest"
       loading="{{loading}}"
       handle-as="json"
-      url="{{_apiBaseUrl}}/categories"
+      url="{{_apiBaseUrl}}categories"
       content-type="application/json"
       method="POST"
       headers="[[authHeader]]"
@@ -109,7 +109,7 @@
       on-error="_handleEditProjectError"></iron-ajax>
 
     <iron-ajax id="projectStatisticsRequest"
-               url="[[_apiBaseUrl]]/statistics"
+               url="[[_apiBaseUrl]]statistics"
                loading="{{loading}}"
                handle-as="json"
                content-type="application/json"
@@ -329,7 +329,7 @@
         var description = this._editProjectDescription;
 
         var request = this.$.editProjectRequest;
-        request.url = this._apiBaseUrl + '/projects/' + this.projectId;
+        request.url = this._apiBaseUrl + 'projects/' + this.projectId;
         request.body = JSON.stringify({
           "id": this.projectId,
           "name": name,
@@ -443,7 +443,7 @@
       deleteProject: function(e) {
         if (e.detail.confirmed) {
           var request = this.$.editProjectRequest;
-          request.url = this._apiBaseUrl + "/projects/" + this.projectId;
+          request.url = this._apiBaseUrl + "projects/" + this.projectId;
           request.method = "DELETE";
           request.generateRequest();
         }
@@ -454,7 +454,7 @@
         var isFollower = this._isUserInArray(followers, this.currentUser);
 
         var request = this.$.editProjectRequest;
-        request.url = this._apiBaseUrl + '/projects/' + this.projectId + '/followers';
+        request.url = this._apiBaseUrl + 'projects/' + this.projectId + '/followers';
 
         if (!isFollower) {
           // follow requirement

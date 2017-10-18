@@ -251,7 +251,7 @@
     <iron-ajax
       id="statisticsLoader"
       loading="{{loading}}"
-      url="[[_apiBaseUrl]]/statistics/"
+      url="[[_apiBaseUrl]]statistics/"
       headers="[[authHeader]]"
       last-response="{{statistics}}"
       auto></iron-ajax>
@@ -259,7 +259,7 @@
     <iron-ajax
       id="projectsRequest"
       loading="{{loading}}"
-      url="[[_apiBaseUrl]]/projects/"
+      url="[[_apiBaseUrl]]projects/"
       last-response="{{projects}}"
       headers="[[authHeader]]"
       params='{"page":"0", "per_page":"3", "sort":"follower"}'
