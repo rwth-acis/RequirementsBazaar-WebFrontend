@@ -65,6 +65,10 @@
         padding-bottom: 5px;
       }
 
+      #project-description {
+        word-break: break-all;
+      }
+
       @media (max-width: 600px) {
         :host {
           padding: 0px;
@@ -134,7 +138,7 @@
 
         <h2>[[project.name]]</h2>
 
-        <div>[[project.description]]</div>
+        <div id="project-description">[[project.description]]</div>
 
       </div>
 
