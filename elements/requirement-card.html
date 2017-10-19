@@ -262,7 +262,7 @@
 
       </div>
 
-      <div class="description inactive" inner-h-t-m-l="{{validateUrl(requirement.description)}}" id="description"></div>
+      <div class="description inactive" inner-h-t-m-l="[[_validateUrlAndReplaceNewLines(requirement.description)]]" id="description"></div>
 
       <div class="comments" id="comments">
 
@@ -480,6 +480,14 @@
           }
           return txt;
         }
+      },
+
+      _replaceNewLines: function(requirementDesc) {
+        return requirementDesc.replace(/(?:\r\n|\r|\n)/g, '<br />');
+      },
+
+      _validateUrlAndReplaceNewLines: function(requirementDesc) {
+        return this._replaceNewLines(this.validateUrl(requirementDesc));
       },
 
       _requirementChanged: function(authorized, requirementChange) {
