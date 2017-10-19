@@ -91,6 +91,7 @@
 
       .flex-horizontal {
         @apply(--layout-horizontal);
+        @apply(--layout-end);
       }
 
       .flexchild {
@@ -122,7 +123,8 @@
       }
 
       #description {
-        word-break: break-all;
+        word-break: break-word;
+        word-wrap: break-word;
       }
     </style>
 
@@ -262,7 +264,7 @@
 
       </div>
 
-      <div class="description inactive" inner-h-t-m-l="{{validateUrl(requirement.description)}}" id="description"></div>
+      <div class="description inactive" inner-h-t-m-l="[[_validateUrlAndReplaceNewLines(requirement.description)]]" id="description"></div>
 
       <div class="comments" id="comments">
 
@@ -271,10 +273,10 @@
           <h4 style="margin:0px;padding:10px 0px 10px 0px;">[[localize('comments')]]</h4>
           <comments-list id="commentsList" loading="{{loading}}" requirement-id="[[requirement.id]]" data-a="[[requirement.id]]"></comments-list>
           <div class="container flex-horizontal" id="[[requirement.id]]" hidden="[[!authorized]]">
-            <paper-input id="commentInput" is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild" on-keydown="_handleCommentEnter">
-              <!--<emoji-selector suffix></emoji-selector>-->
-            </paper-input>
-            <paper-icon-button id="commentSendButton" mini icon="send" class="flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
+            <paper-textarea id="commentInput" label="[[localize('addComment')]]" class="flexchild"
+                            on-input="_handleCommentInput"
+                            on-keydown="_handleCommentEnter"></paper-textarea>
+            <paper-icon-button id="commentSendButton" mini icon="send" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
           </div>
         </iron-collapse>
 
@@ -480,6 +482,14 @@
           }
           return txt;
         }
+      },
+
+      _replaceNewLines: function(requirementDesc) {
+        return requirementDesc.replace(/(?:\r\n|\r|\n)/g, '<br />');
+      },
+
+      _validateUrlAndReplaceNewLines: function(requirementDesc) {
+        return this._replaceNewLines(this.validateUrl(requirementDesc));
       },
 
       _requirementChanged: function(authorized, requirementChange) {
@@ -716,15 +726,12 @@
       },
 
       _handleCommentEnter: function (e) {
-        //TODO: refactor the code
         // keyCode 13 is Enter
         if (e.keyCode === 13) {
           // check if the Enter key was pressed...
-          if (!e.ctrlKey) {
+          if (e.ctrlKey) {
             this._handleAddCommentTap(e);
             e.preventDefault();
-          } else {
-            e.currentTarget.value += "<br/>";
           }
         }
       },

@@ -69,7 +69,8 @@
       }
 
       .content {
-        word-break: break-all;
+        word-break: break-word;
+        word-wrap: break-word;
       }
     </style>
 
@@ -114,15 +115,18 @@
       <div class$="[[_computeCommentClasses(item)]]" attr="{{item.id}}">
         <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
         <div class="layout vertical flex">
-          <div inner-h-t-m-l="{{validateUrl(item.message)}}" class="content"></div>
+          <div inner-h-t-m-l="{{_validateUrlAndReplaceNewLines(item.message)}}" class="content"></div>
           <div class="actions">
             <a on-tap="_handleReplyTap" hidden="[[!authorized]]">[[localize('reply')]]</a>
             <span hidden="[[!isCreator(item.creator.id)]]"> · <a on-tap="_handleDeleteTap">[[localize('delete')]]</a> · </span>
             <relative-time datetime$="[[item.creationDate]]"></relative-time>[[localize('by')]] <req-user user="[[item.creator]]" normal-view></req-user>
           </div>
-          <div class="layout horizontal bottom">
-            <paper-input class$="replyInput[[item.id]] flexchild" attr="{{item.id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>
-            <paper-icon-button mini icon="send" class$="commentSendButton[[item.id]] flex-end-align" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
+          <div class="layout horizontal end">
+            <!--<paper-input class$="replyInput[[item.id]] flexchild" attr="{{item.id}}" label="Reply to comment..." on-keydown="_checkForEnter" hidden></paper-input>-->
+            <paper-textarea label="Reply to comment..." class$="replyInput[[item.id]] flexchild"
+                            attr="{{item.id}}"
+                            on-keydown="_checkForEnter" hidden></paper-textarea>
+            <paper-icon-button mini icon="send" class$="commentSendButton[[item.id]]" on-tap="_handleAddCommentTap" hidden></paper-icon-button>
           </div>
         </div>
       </div>
@@ -216,6 +220,13 @@
        */
       _checkForEnter: function(e) {
         if (e.keyCode === 13) {
+          // check if the Enter key was pressed...
+          if (e.ctrlKey) {
+            this._handleAddCommentTap(e);
+            e.preventDefault();
+          }
+
+          /*
           var text = e.currentTarget.value;
           var replyTo;
           if (e.model.item.replyToComment) {
@@ -243,6 +254,7 @@
 
           // notify container to resize
           this.fire('iron-signal', {name: 'resize'});
+          */
         }
       },
 
@@ -432,6 +444,14 @@
           }
           return txt;
         }
+      },
+
+      _replaceNewLines: function(requirementDesc) {
+        return requirementDesc.replace(/(?:\r\n|\r|\n)/g, '<br />');
+      },
+
+      _validateUrlAndReplaceNewLines: function(requirementDesc) {
+        return this._replaceNewLines(this.validateUrl(requirementDesc));
       },
 
       /**

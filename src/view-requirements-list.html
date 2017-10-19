@@ -304,7 +304,7 @@
                       max-rows="4"
                       on-keydown="_handleEnterCheck"
                       value="{{_newRequirementDescription}}"></paper-textarea>
-      <div class="helper-highlight">Ctrl + Enter for new line</div>
+      <div class="helper-highlight">Ctrl + Enter for submitting</div>
       <vaadin-upload target="[[_fileApiBaseUrl]]"
                      method="POST"
                      timeout="300000"
@@ -766,13 +766,28 @@
       _handleEnterCheck: function(e) {
         if (e.keyCode === 13) {
           if (e.ctrlKey) {
-            if (this.$.newRequirementDescription.focused){
-              this.$.newRequirementDescription.value += '\n';
-            }
-          } else {
             // post requirement
+            e.preventDefault();
             this.$.createRequirementDialog.close();
             this._postRequirement();
+          } else {
+            /*
+            if (this.$.newRequirementDescription.focused) {
+              if (this.$.newRequirementDescription.inputElement.selectionStart) {
+                var cursorPosition = this.$.newRequirementDescription.inputElement.selectionStart;
+                if (cursorPosition === this.$.newRequirementDescription.value.length) {
+                  var newValue = this.$.newRequirementDescription.value.substring(0, cursorPosition)
+                    + '\n' + this.$.newRequirementDescription.value.substring(cursorPosition, this.$.newRequirementDescription.value.length);
+                  this.$.newRequirementDescription.updateValueAndPreserveCaret(newValue);
+                } else {
+
+                }
+                this.$.newRequirementDescription.inputElement.selectionStart += 1;
+              } else {
+                this.$.newRequirementDescription.value += '\n';
+              }
+            }
+            */
           }
         }
       },
