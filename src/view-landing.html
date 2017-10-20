@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../bower_components/twitter-widgets/twitter-widgets.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
 
@@ -132,17 +133,28 @@
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-around-justified);
+        @apply(--layout-start);
         margin-top: 10px;
         margin-bottom: 20px;
       }
 
       #figures {
         width: 100%;
+        text-align: center;
       }
 
       #activities {
         @apply(--layout-vertical);
         width: 100%;
+      }
+
+      #twitter {
+        width: 100%;
+        padding-right: 15px;
+      }
+
+      twitter-widgets iframe {
+        width: 300px !important;
       }
 
       .table {
@@ -164,6 +176,10 @@
         text-align: right;
         padding-right: 10px;
         font-size: xx-large;
+      }
+
+      .tableCell:not(.number) {
+        text-align: left;
       }
 
       #how-it-works > div {
@@ -209,11 +225,7 @@
         padding: 10px 30px 40px 10px;
       }
 
-      @media (max-width: 600px) {
-        #welcome .two-fold {
-          @apply(--layout-vertical);
-        }
-
+      @media (max-width: 840px) {
         #figures-activities {
           @apply(--layout-vertical);
           margin-top: 20px;
@@ -225,6 +237,18 @@
 
         #activities {
           @apply(--layout-center);
+          margin-bottom: 20px;
+        }
+
+        #twitter {
+          @apply(--layout-center);
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 600px) {
+        #welcome .two-fold {
+          @apply(--layout-vertical);
         }
 
         #welcome > h1 {
@@ -286,6 +310,7 @@
       <div id="figures-activities">
 
         <div id="figures">
+          <h2>Figures</h2>
           <div class="table">
             <div class="tableRow">
               <div class="tableCell number">[[statistics.numberOfProjects]]</div>
@@ -326,6 +351,13 @@
               </div>
             </template>
           </div>
+        </div>
+
+        <div id="twitter">
+          <h2>Tweets</h2>
+          <twitter-widgets>
+            <a class="twitter-timeline"  href="https://twitter.com/reqbaz" data-widget-id="920291734998933504">Tweets from @reqbaz</a>
+          </twitter-widgets>
         </div>
 
       </div>
