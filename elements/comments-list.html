@@ -68,6 +68,10 @@
         cursor: pointer;
       }
 
+      .content-wrapper {
+        overflow-y: auto;
+      }
+
       .content {
         word-break: break-word;
         word-wrap: break-word;
@@ -114,7 +118,7 @@
       <!-- Compute the styling classes, add attribute "reply" when it is a reply. -->
       <div class$="[[_computeCommentClasses(item)]]" attr="{{item.id}}">
         <div class="profileImage" style$="[[getProfileStyle(item.creator.profileImage)]]"></div>
-        <div class="layout vertical flex">
+        <div class="layout vertical flex" class="content-wrapper">
           <div inner-h-t-m-l="{{_validateUrlAndReplaceNewLines(item.message)}}" class="content"></div>
           <div class="actions">
             <a on-tap="_handleReplyTap" hidden="[[!authorized]]">[[localize('reply')]]</a>
