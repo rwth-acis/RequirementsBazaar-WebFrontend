@@ -132,16 +132,22 @@
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-around-justified);
+        @apply(--layout-start);
         margin-top: 10px;
         margin-bottom: 20px;
       }
 
       #figures {
         width: 100%;
+        text-align: center;
       }
 
       #activities {
         @apply(--layout-vertical);
+        width: 100%;
+      }
+
+      #twitter {
         width: 100%;
       }
 
@@ -164,6 +170,10 @@
         text-align: right;
         padding-right: 10px;
         font-size: xx-large;
+      }
+
+      .tableCell:not(.number) {
+        text-align: left;
       }
 
       #how-it-works > div {
@@ -286,6 +296,7 @@
       <div id="figures-activities">
 
         <div id="figures">
+          <h2>Figures</h2>
           <div class="table">
             <div class="tableRow">
               <div class="tableCell number">[[statistics.numberOfProjects]]</div>
@@ -325,6 +336,13 @@
                 </a>
               </div>
             </template>
+          </div>
+        </div>
+
+        <div id="twitter">
+          <h2>Tweets</h2>
+          <div>
+
           </div>
         </div>
 
