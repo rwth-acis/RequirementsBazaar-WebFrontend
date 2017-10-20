@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../bower_components/twitter-widgets/twitter-widgets.html">
+<link rel="import" href="../bower_components/count-up/count-up.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
 
@@ -313,23 +314,23 @@
           <h2>Figures</h2>
           <div class="table">
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfProjects]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfProjects]]"></count-up></div>
               <div class="tableCell">[[localize('projects')]]</div>
             </div>
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfCategories]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfCategories]]"></count-up></div>
               <div class="tableCell">[[localize('categories')]]</div>
             </div>
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfRequirements]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfRequirements]]"></count-up></div>
               <div class="tableCell">[[localize('requirements')]]</div>
             </div>
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfComments]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfComments]]"></count-up></div>
               <div class="tableCell">[[localize('comments')]]</div>
             </div>
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfVotes]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfVotes]]"></count-up></div>
               <div class="tableCell">Votes</div>
             </div>
           </div>
