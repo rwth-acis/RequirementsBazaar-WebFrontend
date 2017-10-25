@@ -107,7 +107,7 @@
 
     <iron-ajax id="projectsRequest"
                loading="{{loading}}"
-               url="[[_apiBaseUrl]]/projects"
+               url="[[_apiBaseUrl]]projects"
                headers="[[authHeader]]"
                params="[[_projectsRequestParameters]]"
                on-response="_handleProjectsResponse"
@@ -211,7 +211,7 @@
           value: ''
         },
         /**
-         * The sorting parameter of projects, either `name`, `date`, `requirement` or `follower`.
+         * The sorting parameter of projects, either `name`, `date`, `last_activity`, `requirement` or `follower`.
          */
         sorting: {
           type: String
@@ -302,7 +302,7 @@
 
           // if we have a new sorting parameter, reset the sort direction
           if (this._lastRequestSorting !== sorting) {
-            if (['date', 'requirement', 'follower'].indexOf(sorting) >= 0) {
+            if (['date', 'last_activity', 'requirement', 'follower'].indexOf(sorting) >= 0) {
               sortDirection = '-';
             } else {
               sortDirection = '+';

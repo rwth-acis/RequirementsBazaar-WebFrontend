@@ -134,7 +134,7 @@
       id="currentUserRequest"
       loading="{{loading}}"
       handle-as="json"
-      url="[[_apiBaseUrl]]/users/me"
+      url="[[_apiBaseUrl]]users/me"
       content-type="application/json"
       method="GET"
       headers="[[authHeader]]"
@@ -406,7 +406,7 @@
 
       _handleUserSettingsLeadChange: function(e) {
         var request = this.$.userSettingsRequest;
-        request.url = this._apiBaseUrl + "/users/" + this.currentUser.id;
+        request.url = this._apiBaseUrl + 'users/' + this.currentUser.id;
 
         request.body = JSON.stringify({
           "id": this.currentUser.id,
@@ -418,7 +418,7 @@
 
       _handleUserSettingsFollowChange: function(e) {
         var request = this.$.userSettingsRequest;
-        request.url = this._apiBaseUrl + "/users/" + this.currentUser.id;
+        request.url = this._apiBaseUrl + 'users/' + this.currentUser.id;
 
         request.body = JSON.stringify({
           "id": this.currentUser.id,

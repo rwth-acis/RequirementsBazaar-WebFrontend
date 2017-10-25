@@ -154,7 +154,7 @@
     <iron-ajax id="postCommentRequest"
                loading="{{loading}}"
                handle-as="json"
-               url="{{_apiBaseUrl}}/comments"
+               url="{{_apiBaseUrl}}comments"
                content-type="application/json"
                method="POST"
                headers="[[authHeader]]"
@@ -296,7 +296,7 @@
                   style="min-width:40%; max-width:85%; top:100px; max-height: 80%; overflow:scroll;">
       <h2>[[localize('comments')]]</h2>
       <p style="max-height: 80%;">
-        <comments-list base-href="{{_apiBaseUrl}}"></comments-list>
+        <comments-list></comments-list>
       <div class="container flex-horizontal" hidden="[[!authorized]]">
         <paper-input is="iron-input" on-input="_handleCommentInput" label="[[localize('addComment')]]" class="flexchild comments-input" on-keydown="_handleCommentEnter">
         </paper-input>
@@ -342,7 +342,7 @@
             type: Number
           },
           /**
-           * The sorting parameter of requirements, either `date`, `name`, `vote`, `comment`, `follower` or `realized`.
+           * The sorting parameter of requirements, either `date`, `last_activity`, `name`, `vote`, `comment`, `follower` or `realized`.
            */
           sorting: {
             type: String,
@@ -541,7 +541,7 @@
          * Computes the resource URL for the requirements request.
          */
         _computeResourceURL: function (apiBaseUrl, categoryId) {
-          return apiBaseUrl + '/categories/' + categoryId + '/requirements';
+          return apiBaseUrl + 'categories/' + categoryId + '/requirements';
         },
 
         _searchFilterChanged: function(searchFilter) {
@@ -555,7 +555,7 @@
          * @param requirementsStateFilter {string} the requirement's state, either 'open', 'realized' or 'all'.
          */
         _computeRequirementsRequestParameters: function(apiBaseUrl, categoryId, sorting, sortDirection, requirementsStateFilter, requirementsRequestPerPage, requirementsRequestCurrentPage, searchFilter) {
-          this._resourceUrl = apiBaseUrl + '/categories/' + categoryId + '/requirements';
+          this._resourceUrl = apiBaseUrl + 'categories/' + categoryId + '/requirements';
 
           if (this._requirementsRequestParameters) {
 
@@ -571,7 +571,7 @@
 
             // if we have a new sorting parameter, reset the sort direction
             if (this._lastRequestSorting !== sorting) {
-              if (['date', 'vote', 'comment', 'follower'].indexOf(sorting) >= 0) {
+              if (['date', 'last_activity', 'vote', 'comment', 'follower'].indexOf(sorting) >= 0) {
                 sortDirection = '-';
               } else {
                 sortDirection = '+';
@@ -889,7 +889,7 @@
           if (e.detail.confirmed) {
             var requirement = this.requirementToDelete;
             var request = this.$.deleteRequirementRequest;
-            request.url = this._apiBaseUrl + '/requirements/' + requirement.id;
+            request.url = this._apiBaseUrl + 'requirements/' + requirement.id;
 
             request.generateRequest();
           }
@@ -1029,7 +1029,7 @@
           if (e.detail.confirmed) {
             var commentData = this.commentToDeleteData;
             var request = this.$.deleteCommentRequest;
-            request.url = this._apiBaseUrl + '/comments/' + commentData.comment.id;
+            request.url = this._apiBaseUrl + 'comments/' + commentData.comment.id;
 
             request.generateRequest();
           }

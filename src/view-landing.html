@@ -5,6 +5,8 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../bower_components/twitter-widgets/twitter-widgets.html">
+<link rel="import" href="../bower_components/count-up/count-up.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
 
@@ -132,17 +134,28 @@
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-around-justified);
+        @apply(--layout-start);
         margin-top: 10px;
         margin-bottom: 20px;
       }
 
       #figures {
         width: 100%;
+        text-align: center;
       }
 
       #activities {
         @apply(--layout-vertical);
         width: 100%;
+      }
+
+      #twitter {
+        width: 100%;
+        padding-right: 15px;
+      }
+
+      twitter-widgets iframe {
+        width: 300px !important;
       }
 
       .table {
@@ -164,6 +177,10 @@
         text-align: right;
         padding-right: 10px;
         font-size: xx-large;
+      }
+
+      .tableCell:not(.number) {
+        text-align: left;
       }
 
       #how-it-works > div {
@@ -209,11 +226,7 @@
         padding: 10px 30px 40px 10px;
       }
 
-      @media (max-width: 600px) {
-        #welcome .two-fold {
-          @apply(--layout-vertical);
-        }
-
+      @media (max-width: 840px) {
         #figures-activities {
           @apply(--layout-vertical);
           margin-top: 20px;
@@ -225,6 +238,18 @@
 
         #activities {
           @apply(--layout-center);
+          margin-bottom: 20px;
+        }
+
+        #twitter {
+          @apply(--layout-center);
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 600px) {
+        #welcome .two-fold {
+          @apply(--layout-vertical);
         }
 
         #welcome > h1 {
@@ -251,7 +276,7 @@
     <iron-ajax
       id="statisticsLoader"
       loading="{{loading}}"
-      url="[[_apiBaseUrl]]/statistics/"
+      url="[[_apiBaseUrl]]statistics/"
       headers="[[authHeader]]"
       last-response="{{statistics}}"
       auto></iron-ajax>
@@ -259,10 +284,10 @@
     <iron-ajax
       id="projectsRequest"
       loading="{{loading}}"
-      url="[[_apiBaseUrl]]/projects/"
+      url="[[_apiBaseUrl]]projects/"
       last-response="{{projects}}"
       headers="[[authHeader]]"
-      params='{"page":"0", "per_page":"3", "sort":"follower"}'
+      params='{"page":"0", "per_page":"4", "sort":"last_activity"}'
       auto></iron-ajax>
 
     <div id="landing">
@@ -286,32 +311,33 @@
       <div id="figures-activities">
 
         <div id="figures">
+          <h2>Figures</h2>
           <div class="table">
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfProjects]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfProjects]]"></count-up></div>
               <div class="tableCell">[[localize('projects')]]</div>
             </div>
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfCategories]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfCategories]]"></count-up></div>
               <div class="tableCell">[[localize('categories')]]</div>
             </div>
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfRequirements]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfRequirements]]"></count-up></div>
               <div class="tableCell">[[localize('requirements')]]</div>
             </div>
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfComments]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfComments]]"></count-up></div>
               <div class="tableCell">[[localize('comments')]]</div>
             </div>
             <div class="tableRow">
-              <div class="tableCell number">[[statistics.numberOfVotes]]</div>
+              <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfVotes]]"></count-up></div>
               <div class="tableCell">Votes</div>
             </div>
           </div>
         </div>
 
         <div id="activities">
-          <h2>Popular Projects</h2>
+          <h2>[[localize('last-active-projects')]]</h2>
           <div class="projects-list">
             <template is="dom-repeat" items="{{projects}}">
               <div class="wrapper">
@@ -326,6 +352,13 @@
               </div>
             </template>
           </div>
+        </div>
+
+        <div id="twitter">
+          <h2>Tweets</h2>
+          <twitter-widgets>
+            <a class="twitter-timeline"  href="https://twitter.com/reqbaz" data-widget-id="920291734998933504">Tweets from @reqbaz</a>
+          </twitter-widgets>
         </div>
 
       </div>

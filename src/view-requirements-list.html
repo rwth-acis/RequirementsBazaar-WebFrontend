@@ -55,6 +55,7 @@
       .categoryDescription {
         display: block;
         text-overflow: ellipsis;
+        word-break: break-all;
       }
 
       .helper-highlight {
@@ -142,7 +143,7 @@
     <iron-ajax id="postRequirementRequest"
                loading="{{loading}}"
                handle-as="json"
-               url="{{_apiBaseUrl}}/requirements"
+               url="{{_apiBaseUrl}}requirements"
                content-type="application/json"
                method="POST"
                headers="[[authHeader]]"
@@ -212,6 +213,7 @@
           <paper-dropdown-menu label="[[localize('sorting')]]">
             <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_requirementsSorting}}">
               <paper-item value="name">A-Z</paper-item>
+              <paper-item value="last_activity">[[localize('sorting-activity')]]</paper-item>
               <paper-item value="date">Creation Date</paper-item>
               <paper-item value="comment">[[localize('sorting-comments')]]</paper-item>
               <paper-item value="follower">[[localize('sorting-followers')]]</paper-item>
@@ -272,7 +274,6 @@
     <requirements-list
       id="requirementsList"
       search-filter="[[requirementSearchFilter]]"
-      base-href="https://requirements-bazaar.org/betabazaar"
       project-id="[[projectId]]"
       category-id="[[categoryId]]"
       sorting="{{_requirementsSorting}}"
@@ -303,7 +304,7 @@
                       max-rows="4"
                       on-keydown="_handleEnterCheck"
                       value="{{_newRequirementDescription}}"></paper-textarea>
-      <div class="helper-highlight">Ctrl + Enter for new line</div>
+      <div class="helper-highlight">Ctrl + Enter for submitting</div>
       <vaadin-upload target="[[_fileApiBaseUrl]]"
                      method="POST"
                      timeout="300000"
@@ -485,7 +486,7 @@
         var isFollower = this._isUserInArray(followers, this.currentUser);
 
         var request = this.$.editCategoryRequest;
-        request.url = this._apiBaseUrl + '/categories/' + this.categoryId + '/followers';
+        request.url = this._apiBaseUrl + 'categories/' + this.categoryId + '/followers';
 
         if (!isFollower) {
           // follow requirement
@@ -639,7 +640,7 @@
         var description = this._editCategoryDescription;
 
         var request = this.$.editCategoryRequest;
-        request.url = this._apiBaseUrl + '/categories/' + this.categoryId;
+        request.url = this._apiBaseUrl + 'categories/' + this.categoryId;
         request.body = JSON.stringify({
           "id": this.categoryId,
           "name": name,
@@ -711,7 +712,7 @@
        */
       setAsDefaultCategory: function() {
         var request = this.$.editProjectRequest;
-        request.url = this._apiBaseUrl + "/projects/" + this.projectId;
+        request.url = this._apiBaseUrl + "projects/" + this.projectId;
         request.method = "PUT";
         request.body = JSON.stringify({
           "id": this.projectId,
@@ -748,7 +749,7 @@
       deleteCategory: function(e) {
         if (e.detail.confirmed) {
           var request = this.$.editCategoryRequest;
-          request.url = this._apiBaseUrl + "/categories/" + this.categoryId;
+          request.url = this._apiBaseUrl + "categories/" + this.categoryId;
           request.method = "DELETE";
           request.generateRequest();
         }
@@ -765,13 +766,28 @@
       _handleEnterCheck: function(e) {
         if (e.keyCode === 13) {
           if (e.ctrlKey) {
-            if (this.$.newRequirementDescription.focused){
-              this.$.newRequirementDescription.value += '\n';
-            }
-          } else {
             // post requirement
+            e.preventDefault();
             this.$.createRequirementDialog.close();
             this._postRequirement();
+          } else {
+            /*
+            if (this.$.newRequirementDescription.focused) {
+              if (this.$.newRequirementDescription.inputElement.selectionStart) {
+                var cursorPosition = this.$.newRequirementDescription.inputElement.selectionStart;
+                if (cursorPosition === this.$.newRequirementDescription.value.length) {
+                  var newValue = this.$.newRequirementDescription.value.substring(0, cursorPosition)
+                    + '\n' + this.$.newRequirementDescription.value.substring(cursorPosition, this.$.newRequirementDescription.value.length);
+                  this.$.newRequirementDescription.updateValueAndPreserveCaret(newValue);
+                } else {
+
+                }
+                this.$.newRequirementDescription.inputElement.selectionStart += 1;
+              } else {
+                this.$.newRequirementDescription.value += '\n';
+              }
+            }
+            */
           }
         }
       },

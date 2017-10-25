@@ -43,7 +43,7 @@
     <iron-ajax id="projectRequest"
                loading="{{loading}}"
                content-type="application/json"
-               url="[[_apiBaseUrl]]/projects/[[data.projectId]]"
+               url="[[_apiBaseUrl]]projects/[[data.projectId]]"
                headers="[[authHeader]]"
                last-response="{{project}}"></iron-ajax>
 
