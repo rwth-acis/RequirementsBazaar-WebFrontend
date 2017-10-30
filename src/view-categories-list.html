@@ -489,29 +489,6 @@
         request.generateRequest();
       },
 
-      /**
-       * Checks whether a user is in the users array. Compares the user's id.
-       *
-       * @param usersArray an array of user objects.
-       * @param user a user object.
-       * @returns {boolean} whether the user is in the array or not.
-       * @private
-       */
-      _isUserInArray: function(usersArray, user) {
-        if ((usersArray == null) || (user == null)) {
-          return false;
-        } else {
-          // check if the user's id is in the users array
-          for (var index = 0; index < usersArray.length; ++index) {
-            if (usersArray[index].id === user.id) {
-              return true;
-            }
-          }
-
-          return false;
-        }
-      },
-
       _computeStatisticsParams: function(projectId) {
         return {
           "scopeField": "project",
