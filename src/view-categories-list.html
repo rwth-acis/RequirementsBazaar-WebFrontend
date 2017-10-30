@@ -479,10 +479,10 @@
         request.url = this._apiBaseUrl + 'projects/' + this.projectId + '/followers';
 
         if (!this.project.isFollower) {
-          // follow requirement
+          // follow project
           request.method = 'POST';
         } else {
-          // unfollow requirement
+          // unfollow project
           request.method = 'DELETE';
         }
 
