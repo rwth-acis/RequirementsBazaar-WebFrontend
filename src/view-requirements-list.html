@@ -176,6 +176,13 @@
                on-error="_handleEditProjectError"></iron-ajax>
 
     <paper-material id="categoryToolbar">
+      <div style="position:absolute; top:10px; right:55px;" hidden="[[!authorized]]">
+        <paper-icon-button id="unfollowButton" icon="social:notifications-active" hidden="[[!_followHidden]]" on-tap="_toggleFollowCategory"></paper-icon-button>
+        <paper-icon-button id="followButton" icon="social:notifications-none" hidden="[[_followHidden]]" on-tap="_toggleFollowCategory"></paper-icon-button>
+      </div>
+      <paper-tooltip for="unfollowButton">[[localize('unfollowTap')]]</paper-tooltip>
+      <paper-tooltip for="followButton">[[localize('followTap')]]</paper-tooltip>
+
       <paper-menu-button horizontal-align="right"
                          id="menuCompButton"
                          vertical-align="top"
