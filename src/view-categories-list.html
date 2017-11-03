@@ -125,8 +125,8 @@
         <paper-icon-button id="unfollowButton" icon="social:notifications-active" hidden="[[!_followHidden]]" on-tap="_toggleFollowProject"></paper-icon-button>
         <paper-icon-button id="followButton" icon="social:notifications-none" hidden="[[_followHidden]]" on-tap="_toggleFollowProject"></paper-icon-button>
       </div>
-      <paper-tooltip for="unfollowButton">[[localize('followTap')]]</paper-tooltip>
-      <paper-tooltip for="followButton">[[localize('unfollowTap')]]</paper-tooltip>
+      <paper-tooltip for="unfollowButton">[[localize('unfollowTap')]]</paper-tooltip>
+      <paper-tooltip for="followButton">[[localize('followTap')]]</paper-tooltip>
 
       <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute; top:2px; right:8px;" hidden="[[!authorized]]" on-iron-select="_handleCategoryMenuSelect">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
