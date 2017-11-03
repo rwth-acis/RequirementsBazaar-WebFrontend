@@ -100,6 +100,8 @@
   "unfollowProject": "دنبال نکردن پروژه",
   "confirmationProjectFollow": "اکنون شما دنبال کننده این پروژه هستید",
   "confirmationProjectUnfollow": "شما دنبال کننده این پروژه نیستید",
+  "followTap": "Click to follow.",
+  "unfollowTap": "Click to unfollow.",
   "becomeLeadDeveloper": "توسعه دهنده اصلی شوید",
   "stopLeadDeveloper": "Stop Being Lead Developer",
   "new-projects": "ایجاد پروژه جدید",

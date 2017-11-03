@@ -101,6 +101,8 @@
   "unfollowProject": "Benachrichtigungen deaktivieren",
   "confirmationProjectUnfollow": "Sie folgen diesem Projekt nicht mehr.",
   "confirmationProjectFollow": "Sie folgen diesem Projekt jetzt.",
+  "followTap": "Benachrichtigungen aktivieren.",
+  "unfollowTap": "Benachrichtigungen deaktivieren.",
   "becomeLeadDeveloper": "Hauptentwickler werden",
   "stopLeadDeveloper": "Als Hauptentwickler zurücktreten",
   "new-projects": "Neues Projekt",

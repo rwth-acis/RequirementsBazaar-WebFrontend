@@ -121,11 +121,18 @@
 
     <paper-material elevation="1">
 
+      <div style="position:absolute; top:10px; right:55px;" hidden="[[!authorized]]">
+        <paper-icon-button id="unfollowButton" icon="social:notifications-active" hidden="[[!_followHidden]]" on-tap="_toggleFollowProject"></paper-icon-button>
+        <paper-icon-button id="followButton" icon="social:notifications-none" hidden="[[_followHidden]]" on-tap="_toggleFollowProject"></paper-icon-button>
+      </div>
+      <paper-tooltip for="unfollowButton">[[localize('unfollowTap')]]</paper-tooltip>
+      <paper-tooltip for="followButton">[[localize('followTap')]]</paper-tooltip>
+
       <paper-menu-button horizontal-align="right" vertical-align="top" style="position:absolute; top:2px; right:8px;" hidden="[[!authorized]]" on-iron-select="_handleCategoryMenuSelect">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
         <paper-menu id="categoryInfoMenu" class="dropdown-content">
           <paper-item value="follow" hidden="[[_followHidden]]">[[localize('followProject')]]</paper-item>
-          <paper-item value="unfollow" hidden="[[_unfollowHidden]]">[[localize('unfollowProject')]]</paper-item>
+          <paper-item value="unfollow" hidden="[[!_followHidden]]">[[localize('unfollowProject')]]</paper-item>
           <paper-item value="edit">[[localize('editProject')]]</paper-item>
           <paper-item value="delete">[[localize('deleteProjectTitle')]]</paper-item>
         </paper-menu>
@@ -292,9 +299,6 @@
         },
         _followHidden: {
           type: Boolean
-        },
-        _unfollowHidden: {
-          type: Boolean
         }
       },
 
@@ -324,7 +328,6 @@
 
       _projectChanged: function(newValue) {
         this._followHidden = newValue.isFollower;
-        this._unfollowHidden = !newValue.isFollower;
       },
 
       _handleCreateCategoryTap: function(e) {
@@ -365,7 +368,6 @@
             this.$.toast.text = this.localize('confirmationProjectUnfollow');
             this.$.toast.open();
             this._followHidden = false;
-            this._unfollowHidden = true;
           } else {
             window.location.href = this._frontendBasePath + 'projects';
           }
@@ -375,7 +377,6 @@
             if (e.detail.url.endsWith('followers')) {
               this.$.toast.text = this.localize('confirmationProjectFollow');
               this._followHidden = true;
-              this._unfollowHidden = false;
             } else {
               this.$.toast.text = this.localize('projectEditSuccess');
             }
