@@ -164,6 +164,7 @@
                content-type="application/json"
                headers="[[authHeader]]"
                on-response="_handleEditCategoryResponse"
+               last-response="{{category}}"
                on-error="errorHandler"></iron-ajax>
 
     <iron-ajax id="editProjectRequest"
@@ -175,6 +176,13 @@
                on-error="_handleEditProjectError"></iron-ajax>
 
     <paper-material id="categoryToolbar">
+      <div style="position:absolute; top:10px; right:55px;" hidden="[[!authorized]]">
+        <paper-icon-button id="unfollowButton" icon="social:notifications-active" hidden="[[!_followHidden]]" on-tap="_toggleFollowCategory"></paper-icon-button>
+        <paper-icon-button id="followButton" icon="social:notifications-none" hidden="[[_followHidden]]" on-tap="_toggleFollowCategory"></paper-icon-button>
+      </div>
+      <paper-tooltip for="unfollowButton">[[localize('unfollowTap')]]</paper-tooltip>
+      <paper-tooltip for="followButton">[[localize('followTap')]]</paper-tooltip>
+
       <paper-menu-button horizontal-align="right"
                          id="menuCompButton"
                          vertical-align="top"
@@ -183,7 +191,8 @@
                          hidden="[[!authorized]]">
         <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
         <paper-menu id="categoryInfoMenu" class="dropdown-content">
-          <paper-item value="follow">[[localize('followCategory')]]</paper-item>
+          <paper-item value="follow" hidden="[[_followHidden]]">[[localize('followCategory')]]</paper-item>
+          <paper-item value="unfollow" hidden="[[!_followHidden]]">[[localize('unfollowCategory')]]</paper-item>
           <paper-item value="default">[[localize('setAsDefault')]]</paper-item>
           <paper-item value="edit">[[localize('editCategory')]]</paper-item>
           <paper-item value="delete">[[localize('deleteCategory')]]</paper-item>
@@ -406,7 +415,8 @@
           observer: '_categoryIdChanged'
         },
         category: {
-          type: Object
+          type: Object,
+          observer: '_categoryChanged'
         },
         _editCategoryName: {
           type: String,
@@ -435,6 +445,12 @@
         files: {
           type: Array,
           value: []
+        },
+        /**
+         * Defines whether the follow or unfollow button is shown.
+         */
+        _followHidden: {
+          type: Boolean
         }
       },
 
@@ -463,7 +479,7 @@
         // get value of the paper-item
         var selectedValue = e.detail.item.getAttribute('value');
 
-        if (selectedValue === 'follow') {
+        if ((selectedValue === 'follow') || (selectedValue === 'unfollow')) {
           this._toggleFollowCategory();
         } else if (selectedValue === 'default') {
           this.setAsDefaultCategory();
@@ -481,18 +497,14 @@
        *
        */
       _toggleFollowCategory: function() {
-        var followers = this.category.followers;
-        var user = this.currentUser;
-        var isFollower = this._isUserInArray(followers, this.currentUser);
-
         var request = this.$.editCategoryRequest;
         request.url = this._apiBaseUrl + 'categories/' + this.categoryId + '/followers';
 
-        if (!isFollower) {
-          // follow requirement
+        if (!this.category.isFollower) {
+          // follow category
           request.method = 'POST';
         } else {
-          // unfollow requirement
+          // unfollow category
           request.method = 'DELETE';
         }
 
@@ -665,16 +677,23 @@
        */
       _handleEditCategoryResponse: function(e) {
         if (e.target.method === 'DELETE') {
-          if (e.detail.url.endsWith('/followers')) {
-            this.$.toast.text = this.localize('categoryEditSuccess');
+          if (e.detail.url.endsWith('followers')) {
+            this.$.toast.text = this.localize('confirmationCategoryUnfollow');
+            this.$.toast.open();
+            this._followHidden = false;
           } else {
             window.location.href = this._frontendBasePath + 'projects/' + this.projectId;
           }
         } else {
           // 200 for PUT, 201 for POST
           if ((e.detail.status === 200) || (e.detail.status === 201)) {
-            this.$.requirementsList.refresh();
-            this.$.toast.text = this.localize('categoryEditSuccess');
+            if (e.detail.url.endsWith('followers')) {
+              this.$.toast.text = this.localize('confirmationCategoryFollow');
+              this._followHidden = true;
+            } else {
+              this.$.requirementsList.refresh();
+              this.$.toast.text = this.localize('categoryEditSuccess');
+            }
           } else {
             this.$.toast.text = this.localize('categoryEditError');
             //TODO: reset the project object
@@ -815,6 +834,10 @@
         this._requirementsSorting = 'date';
         this._requirementsSortDirection = '-';
         this._requirementsState = 'open';
+      },
+
+      _categoryChanged: function(newValue) {
+        this._followHidden = newValue.isFollower;
       },
 
       _viewOptionChanged: function(newValue) {
