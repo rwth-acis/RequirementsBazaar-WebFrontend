@@ -1,0 +1,158 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../src/config-behavior.html">
+
+<dom-module id="personalisation-element">
+    <template>
+        <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                    on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                    on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+        <iron-signals on-iron-signal-current-user-changed="_handleUserChangeEvent"></iron-signals>
+
+        <iron-ajax id="putPersonalisationData"
+                   url="[[_personalisationDataUrl]]"
+                   content-type="application/json"
+                   body = "[[putBody]]"
+                   method="PUT"
+                   headers="[[authHeader]]"
+                   on-response="_handlePUTPersonalisationData"
+                   on-error="_personalisationError"></iron-ajax>
+
+        <iron-ajax id="getPersonalisationData"
+                   handle-as="json"
+                   url="[[getUrl]]"
+                   content-type="application/json"
+                   method="GET"
+                   headers="[[authHeader]]"
+                   on-response="_handleGETPersonalisationData"
+                   on-error="_personalisationError"></iron-ajax>
+    </template>
+
+
+
+
+    <script>
+        var LOCALCONSTANT = "LOC";
+        var REMOTECONSTANT = "REM";
+        Polymer({
+            is: 'personalisation-element',
+
+            behaviors: [
+                ConfigBehavior
+            ],
+
+            properties: {
+                keyid: {
+                    type: String,
+                    notify: true,
+                    value: ""
+
+                },
+                keyversion: {
+                    type: String,
+                    notify: true,
+                    value: ""
+                },
+                getUrl: {
+                    type: String,
+                    computed: '_computeGETPersonalisationDataUrl(_personalisationDataUrl,keyid, keyversion)'
+                },
+
+                exchange: {
+                    type: Object,
+                    notify: true,
+                    value:{
+                        data: null,
+                        __personalisationDataStatus: "INIT"
+                    }
+                },
+
+
+            },
+            observers:[
+                '_handleDataChanged(exchange.data)',
+                '_handleAuthorizedChanged(authorized)'
+            ],
+//PUBLIC FUNCTIONS
+
+            //setData: Public function to set the personalisation-data manually
+            setData: function(value){
+                this.exchange.__personalisationDataStatus = LOCALCONSTANT;
+                this.exchange.data = value;
+                this.notifyPath('exchange.data');
+            },
+            //verifyGet: Verifies condition for data change coming from the personalisationElement
+            verifyGet: function(){
+                return (this.exchange.__personalisationDataStatus == REMOTECONSTANT);
+            },
+
+            //_handleDataChanged Observer for exchange.data, creates & sends PUT request
+            _handleDataChanged: function() {
+                console.log('personalisationElement DataChanged Callback');
+                if(this.exchange.__personalisationDataStatus == LOCALCONSTANT && this.isAuthorized()) {
+                    this.debounce('_handleDataChanged', function(){
+                        console.dir(this.exchange);
+                        if(typeof this.keyid != 'undefined' && typeof this.keyversion != 'undefined' && typeof this.exchange.data!= 'undefined' && this.exchange.data != null){
+                            this.$.putPersonalisationData.body = JSON.stringify({
+                                key: this.keyid,
+                                version: this.keyversion,
+                                value: JSON.stringify(this.exchange.data),
+                            });
+                            this.$.putPersonalisationData.generateRequest();
+                        }
+
+                    }, 2000);
+                }
+            },
+
+
+            //_handleAuthorizedChanged: Observer for Auth
+            _handleAuthorizedChanged: function(){
+                console.log('_handleAuthorizedChanged');
+                this.debounce('_handleAuthorizedChanged', function() {
+                if(this.authorized) {
+                    this.$.getPersonalisationData.generateRequest();
+                }
+                }, 300);
+            },
+            /*
+            _handleUserChangeEvent: function() {
+                if(this.isAuthorized()) {
+                    console.log('_handleUserChangeEvent');
+                    this.$.getPersonalisationData.generateRequest();
+                }else{
+                    console.log('_handleUserChangeEvent unauthorized');
+                }
+
+            }, */
+
+            //Callback for Iron-AJAX GET
+            _handleGETPersonalisationData: function(e){
+                console.dir(e.detail.response);
+                if(e.detail.response != null){
+                    this.exchange.__personalisationDataStatus = REMOTECONSTANT;
+                    this.exchange.data = JSON.parse(e.detail.response.value);
+                    this.notifyPath('exchange.data');
+                    this.notifyPath('exchange');
+                }
+
+            },
+
+            _handlePUTPersonalisationData: function(e){
+            },
+
+            _personalisationError: function(e){
+                console.dir(e);
+            },
+
+
+            _computeGETPersonalisationDataUrl: function(_personalisationDataUrl,keyid, keyversion) {
+                return _personalisationDataUrl + keyid + '/' + keyversion;
+            },
+
+        });
+    </script>
+
+</dom-module>

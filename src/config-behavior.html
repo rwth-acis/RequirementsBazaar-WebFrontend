@@ -26,6 +26,10 @@
         type: String,
         value: 'https://requirements-bazaar.org/activities'
       },
+        _personalisationDataUrl: {
+            type: String,
+            value: 'http://localhost:8080/bazaar/personalisation/'
+        },
       _frontendBasePath: {
         type: String,
         value: '/'
@@ -99,19 +103,22 @@
     },
 
     _handleSigninSuccess: function(e) {
-      this.authorized = true;
       this.authHeader = {authorization: "Bearer " + e.detail.access_token};
+      this.authorized = true;
     },
 
     _handleSignedOut: function(e) {
-      this.authorized = false;
       this.authHeader = null;
+        this.authorized = false;
     },
 
     _currentUserChanged: function(newValue) {
       GlobalConfig.currentUser = newValue;
       this.fire('iron-signal', {name: 'current-user-changed', data: newValue});
     },
+      isAuthorized: function(){
+        return this.authorized;
+      },
 
     _handleCurrentUserChanged: function(e, detail) {
       this.currentUser = detail;
