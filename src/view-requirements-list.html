@@ -28,6 +28,7 @@
 <link rel="import" href="../elements/requirements-list.html">
 <link rel="import" href="../elements/req-user.html">
 <link rel="import" href="../elements/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="../elements/personalisation-element.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="reqbaz-icons.html">
@@ -131,6 +132,13 @@
     <openidconnect-signin-aware is-authorized="{{authorized}}"
                                 on-openidconnect-signin-aware-success="_handleSigninSuccess"
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+    <personalisation-element
+            id="personalisationConnector"
+            keyid="REQ_L"
+            keyversion="1"
+            exchange = "{{personalisationData}}"
+    ></personalisation-element>
 
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
@@ -435,6 +443,28 @@
         files: {
           type: Array,
           value: []
+        },
+        personalisationData: {
+          type: Object,
+          notify: true,
+        }
+      },
+      observers: [
+        '_handlePersonalisationDataChangeSET(_requirementsSorting, _requirementsSortDirection, _isSmallLayout)',
+        '_handlePersonalisationDataChangeGET(personalisationData.data)'
+      ],
+      _handlePersonalisationDataChangeSET: function() {
+        this.$.personalisationConnector.setData({
+          s: this._requirementsSorting,
+          d: this._requirementsSortDirection,
+          l: this._isSmallLayout
+        });
+      },
+      _handlePersonalisationDataChangeGET: function() {
+        if(this.$.personalisationConnector.verifyGet()) {
+          this._requirementsSorting = this.personalisationData.data.s;
+          this._requirementsSortDirection = this.personalisationData.data.d;
+          this._isSmallLayout =  this.personalisationData.data.l;
         }
       },
 
