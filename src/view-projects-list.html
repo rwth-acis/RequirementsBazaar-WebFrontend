@@ -23,6 +23,7 @@
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../elements/projects-list.html">
+<link rel="import" href="../elements/personalisation-element.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="reqbaz-icons.html">
@@ -89,6 +90,13 @@
     <iron-signals on-iron-signal-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged"></iron-signals>
 
     <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
+    <personalisation-element
+            id="personalisationConnector"
+            keyid="PROJ_LIST"
+            keyversion="1"
+            exchange = "{{personalisationData}}"
+    ></personalisation-element>
 
     <iron-ajax
       id="followProj"
@@ -249,6 +257,29 @@
         _onlyOwnedProjects: {
           type: Boolean,
           value: false
+        },
+        personalisationData: {
+          type: Object,
+          notify: true,
+        }
+      },
+
+      observers: [
+              '_handlePersonalisationDataChangeSET(_projectsSorting, _projectsSortDirection)',
+              '_handlePersonalisationDataChangeGET(personalisationData.data)'
+      ],
+      _handlePersonalisationDataChangeSET: function() {
+        this.$.personalisationConnector.setData({
+              s: this._projectsSorting,
+              d: this._projectsSortDirection
+        });
+
+
+      },
+      _handlePersonalisationDataChangeGET: function() {
+        if(this.$.personalisationConnector.verifyGet()) {
+          this._projectsSorting = this.personalisationData.data.s;
+          this._projectsSortDirection = this.personalisationData.data.d;
         }
       },
 
