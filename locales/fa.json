@@ -126,7 +126,14 @@
   "sorting-popularity": "Popularity",
   "sorting-requirements": "الزامات",
   "sorting-votes": "آرا",
+
+  "display": "Display",
+  "display-all": "All",
+  "display-following": "Following",
+  "display-own": "Created",
   "votes": "آرا",
+  "display-last": "Last Viewed",
+
   "requirements": "الزامات",
   "about": "درباره"
 }

@@ -127,6 +127,13 @@
   "sorting-popularity": "Popularität",
   "sorting-requirements": "Anforderungen",
   "sorting-votes": "Votes",
+
+  "display": "Filter",
+  "display-all": "Alle",
+  "display-following": "Folgend",
+  "display-own": "Erstellt",
+  "display-last": "Verlauf",
+
   "votes": "Votes",
   "requirements": "Requirements",
   "about": "Über"
