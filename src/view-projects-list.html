@@ -56,6 +56,10 @@
         @apply(--layout-horizontal);
       }
 
+      .toolbar > * {
+          margin: 0px 5px;
+      }
+
       .toolbar > paper-input {
         @apply(--layout-flex);
       }
@@ -94,7 +98,7 @@
     <personalisation-element
             id="personalisationConnector"
             keyid="PROJ_LIST"
-            keyversion="1"
+            keyversion="2"
             exchange = "{{personalisationData}}"
     ></personalisation-element>
 
@@ -140,33 +144,27 @@
                     hidden>[[localize('createProject')]]</paper-button>
 
       <h2>[[localize('projects')]]</h2>
-      <p>[[localize('pr-desc')]]</p>
+        <!--     <p>[[localize('pr-desc')]]</p>
 
-      <div horizontal-align="right" vertical-align="top" hidden="[[!authorized]]" style="position:absolute;right:20px;text-align:center;margin-top: -20px;">
-        <div id="toggleText">[[localize('onlyMyProjects')]]</div>
-        <paper-toggle-button checked="{{_onlyOwnedProjects}}"></paper-toggle-button>
-      </div>
+     <div horizontal-align="right" vertical-align="top" hidden="[[!authorized]]" style="position:absolute;right:20px;text-align:center;margin-top: -20px;">
+           <div id="toggleText">[[localize('onlyMyProjects')]]</div>
+           <paper-toggle-button checked="{{_onlyOwnedProjects}}"></paper-toggle-button>
+         </div> -->
 
       <div class="toolbar">
-        <paper-dropdown-menu label="[[localize('sorting')]]">
-          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectsSorting}}">
-            <paper-item value="name">A-Z</paper-item>
-            <paper-item value="last_activity">[[localize('sorting-activity')]]</paper-item>
-            <paper-item value="date">[[localize('sorting-date')]]</paper-item>
-            <paper-item value="follower">[[localize('sorting-followers')]]</paper-item>
-            <paper-item value="requirement">[[localize('sorting-requirements')]]</paper-item>
-          </paper-listbox>
-        </paper-dropdown-menu>
 
-        <div class="toolbarIcons">
-          <paper-menu-button>
-            <paper-icon-button id="sortDirectionMenuIcon" icon="reqbaz:sort-ascending" class="dropdown-trigger"></paper-icon-button>
-            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_projectsSortDirection}}">
-              <paper-item value="+">Ascending</paper-item>
-              <paper-item value="-">Descending</paper-item>
-            </paper-menu>
-          </paper-menu-button>
-        </div>
+          <paper-dropdown-menu label="[[localize('display')]]" hidden="[[!authorized]]" >
+              <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectFilter}}" >
+                  <!-- TODO: Default Value not shown, bug in localize function https://github.com/PolymerElements/app-localize-behavior/issues/81 -->
+                  <paper-item value="all">[[localize('display-all')]]</paper-item>
+                  <paper-item value="own" >[[localize('display-own')]]</paper-item>
+                  <paper-item value="following">[[localize('display-following')]]</paper-item>
+                  <!-- <paper-item value="last">[[localize('display-last')]]</paper-item> -->
+              </paper-listbox>
+          </paper-dropdown-menu>
+
+
+
 
         <paper-input id="searchInput" class="large" label="[[localize('searchLabel')]]" value="{{_projectFilterVal}}">
           <iron-icon icon="search" prefix></iron-icon>
@@ -174,6 +172,28 @@
                              icon="clear" alt="clear" title="clear" tabindex="0">
           </paper-icon-button>
         </paper-input>
+
+
+          <paper-dropdown-menu label="[[localize('sorting')]]">
+              <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectsSorting}}">
+                  <paper-item value="name">A-Z</paper-item>
+                  <paper-item value="last_activity">[[localize('sorting-activity')]]</paper-item>
+                  <paper-item value="date">[[localize('sorting-date')]]</paper-item>
+                  <paper-item value="follower">[[localize('sorting-followers')]]</paper-item>
+                  <paper-item value="requirement">[[localize('sorting-requirements')]]</paper-item>
+              </paper-listbox>
+          </paper-dropdown-menu>
+
+          <div class="toolbarIcons">
+              <paper-menu-button>
+                  <paper-icon-button id="sortDirectionMenuIcon" icon="reqbaz:sort-ascending" class="dropdown-trigger"></paper-icon-button>
+                  <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{_projectsSortDirection}}">
+                      <paper-item value="+">Ascending</paper-item>
+                      <paper-item value="-">Descending</paper-item>
+                  </paper-menu>
+              </paper-menu-button>
+          </div>
+
       </div>
 
     </paper-material>
@@ -181,6 +201,7 @@
     <projects-list search-filter="{{_projectFilterVal}}"
                    sorting="[[_projectsSorting]]"
                    sort-direction="{{_projectsSortDirection}}"
+                   filter="{{_projectFilter}}"
                    only-owned-projects="[[_onlyOwnedProjects]]"
                    id="projectsList"
                    loading="{{loading}}"></projects-list>
@@ -235,6 +256,10 @@
           type: String,
           value: 'name'
         },
+          _projectFilter: {
+              type: String,
+              value: 'all'
+          },
         _projectsSortDirection: {
           type: String,
           observer: '_projectsSortDirectionChanged'
@@ -243,6 +268,7 @@
           type: String,
           value: ''
         },
+
         _newProjectDescription: {
           type: String,
           value: ''
@@ -265,13 +291,14 @@
       },
 
       observers: [
-              '_handlePersonalisationDataChangeSET(_projectsSorting, _projectsSortDirection)',
+              '_handlePersonalisationDataChangeSET(_projectsSorting, _projectsSortDirection, _projectFilter)',
               '_handlePersonalisationDataChangeGET(personalisationData.data)'
       ],
       _handlePersonalisationDataChangeSET: function() {
         this.$.personalisationConnector.setData({
               s: this._projectsSorting,
-              d: this._projectsSortDirection
+              d: this._projectsSortDirection,
+              f: this._projectFilter
         });
 
 
@@ -280,6 +307,7 @@
         if(this.$.personalisationConnector.verifyGet()) {
           this._projectsSorting = this.personalisationData.data.s;
           this._projectsSortDirection = this.personalisationData.data.d;
+          this._projectFilter = this.personalisationData.data.f;
         }
       },
 

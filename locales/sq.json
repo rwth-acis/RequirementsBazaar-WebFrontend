@@ -127,6 +127,13 @@
   "sorting-popularity": "Popularity",
   "sorting-requirements": "Requirements",
   "sorting-votes": "Votes",
+
+  "display": "Display",
+  "display-all": "All",
+  "display-following": "Following",
+  "display-own": "Created",
+  "display-last": "Last Viewed",
+
   "votes": "Votes",
   "requirements": "Requirements",
   "about": "Rreth"

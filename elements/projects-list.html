@@ -210,6 +210,12 @@
           type: String,
           value: ''
         },
+          /**
+           * The filter parameter of projects, either `all`, `following`, `own`, `last`.
+           */
+        filter: {
+              type: String,
+        },
         /**
          * The sorting parameter of projects, either `name`, `date`, `last_activity`, `requirement` or `follower`.
          */
@@ -238,7 +244,7 @@
         _projectsRequestParameters: {
           type: Object,
           notify: true,
-          computed: '_computeProjectsRequestParameters(sorting, sortDirection, _projectsRequestCurrentPage, searchFilter)'
+          computed: '_computeProjectsRequestParameters(sorting, sortDirection, _projectsRequestCurrentPage, searchFilter, filter)'
         },
         /**
          * Defines how many projects are loaded per page.
@@ -289,7 +295,8 @@
         return hashStringToColor(projectName);
       },
 
-      _computeProjectsRequestParameters: function(sorting, sortDirection, projectsRequestCurrentPage, searchFilter) {
+        _computeProjectsRequestParameters
+            : function(sorting, sortDirection, projectsRequestCurrentPage, searchFilter, filter) {
         if (this._projectsRequestParameters) {
           // if we have a new search string, reset the page to 0
           if (this._projectsRequestParameters.search !== searchFilter) {
@@ -310,7 +317,7 @@
           }
 
           // check if we have a new sorting or state parameter; if yes, reset the list
-          if (this._projectsRequestParameters.sort !== (sortDirection + sorting)) {
+          if (this._projectsRequestParameters.sort !== (sortDirection + sorting) || this._projectsRequestParameters.filter != filter) {
             this.projects = [];
             projectsRequestCurrentPage = 0;
 
@@ -326,6 +333,7 @@
         parameters.per_page = this._projectsRequestPerPage;
         parameters.page = projectsRequestCurrentPage;
         parameters.search = searchFilter;
+        parameters.filters = filter;
 
         this.sortDirection = sortDirection;
         this._projectsRequestCurrentPage = projectsRequestCurrentPage;
