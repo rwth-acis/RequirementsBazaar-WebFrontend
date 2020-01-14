@@ -34,8 +34,8 @@
 
 
     <script>
-        var LOCALCONSTANT = "LOC";
-        var REMOTECONSTANT = "REM";
+        let LOCALCONSTANT = "LOC";
+        let REMOTECONSTANT = "REM";
         Polymer({
             is: 'personalisation-element',
 
@@ -88,12 +88,18 @@
                 return (this.exchange.__personalisationDataStatus == REMOTECONSTANT);
             },
 
+            //force update of local data, returns promise object for callbacks
+            forceUpdate: function(){
+                return this.$.getPersonalisationData.generateRequest().completes;
+            },
+
+//
+
             //_handleDataChanged Observer for exchange.data, creates & sends PUT request
             _handleDataChanged: function() {
                 console.log('personalisationElement DataChanged Callback');
                 if(this.exchange.__personalisationDataStatus == LOCALCONSTANT && this.isAuthorized()) {
                     this.debounce('_handleDataChanged', function(){
-                        console.dir(this.exchange);
                         if(typeof this.keyid != 'undefined' && typeof this.keyversion != 'undefined' && typeof this.exchange.data!= 'undefined' && this.exchange.data != null){
                             this.$.putPersonalisationData.body = JSON.stringify({
                                 key: this.keyid,
@@ -117,20 +123,9 @@
                 }
                 }, 300);
             },
-            /*
-            _handleUserChangeEvent: function() {
-                if(this.isAuthorized()) {
-                    console.log('_handleUserChangeEvent');
-                    this.$.getPersonalisationData.generateRequest();
-                }else{
-                    console.log('_handleUserChangeEvent unauthorized');
-                }
-
-            }, */
 
             //Callback for Iron-AJAX GET
             _handleGETPersonalisationData: function(e){
-                console.dir(e.detail.response);
                 if(e.detail.response != null){
                     this.exchange.__personalisationDataStatus = REMOTECONSTANT;
                     this.exchange.data = JSON.parse(e.detail.response.value);
