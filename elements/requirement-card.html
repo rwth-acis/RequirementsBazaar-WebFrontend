@@ -83,6 +83,7 @@
 
       .requirementTime {
         font-size: small;
+        margin-bottom: 10px;
       }
 
       paper-material > div {
@@ -105,6 +106,14 @@
 
       .editForm {
         display: none;
+      }
+
+      .editTitle {
+        margin: 10px 0 10px 0;
+        font-size: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       paper-button {
@@ -236,9 +245,9 @@
           <req-user user="[[requirement.creator]]" normal-view></req-user>
         </div>
 
-      </div>
+        <div class="line"></div>
 
-      <div class="line"></div>
+      </div>
 
       <div id="contributors" hidden>
         <div>[[localize('creator')]]: <req-user user="[[requirement.creator]]" full-view></req-user></div>
@@ -284,9 +293,17 @@
 
       <div class="editForm" id="edit">
 
-        <paper-input id="editNameInput" class="editName name"></paper-input>
-        <paper-textarea id="editDescriptionInput"></paper-textarea>
-        <paper-button raised on-tap="_handleSaveEditTap">[[localize('save')]]</paper-button>
+        <div class="editTitle">[[localize('editRequirement')]]</div>
+
+        <div class="line"></div>
+
+        <paper-input id="editNameInput"
+                     class="editName name"
+                     value="{{_editRequirementName}}"
+                     char-counter maxlength="50" label="[[localize('formTitle')]]"></paper-input>
+        <paper-textarea id="editDescriptionInput" label="[[localize('formDesc')]]"
+                        value="{{_editRequirementDescription}}"></paper-textarea>
+        <paper-button raised on-tap="_handleSaveEditTap" disabled="[[_saveRequirementDisabled]]">[[localize('save')]]</paper-button>
         <paper-button raised on-tap="_handleCancelEditTap">[[localize('cancel')]]</paper-button>
 
       </div>
@@ -369,7 +386,19 @@
         },
         category: {
           type: Object
-        }
+        },
+        _editRequirementName: {
+          type: String,
+          value: '',
+        },
+        _editRequirementDescription: {
+          type: String,
+          value: '',
+        },
+        _saveRequirementDisabled: {
+          type: Boolean,
+          computed: '_computeSaveRequirementDisabled(_editRequirementName, _editRequirementDescription)'
+        },
       },
 
       behaviors: [
@@ -460,6 +489,18 @@
         if (authorized && (vote === 'UP_VOTE')) {
           return 'colored';
         }
+      },
+
+      /**
+       * Computes whether the save button in the edit requirement dialog is disabled or not. It is enabled if both
+       * input fields contain text.
+       *
+       * @param requirementName
+       * @param requirementDescription
+       * @returns whether the save button is disabled or not.
+       */
+      _computeSaveRequirementDisabled: function(requirementName, requirementDescription) {
+        return (requirementName == null || requirementDescription == null || requirementName.trim() === '' || requirementDescription.trim() === '');
       },
 
       validateUrl: function(requirementDesc) {
