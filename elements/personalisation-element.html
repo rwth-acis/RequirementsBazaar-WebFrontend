@@ -76,7 +76,16 @@
                 '_handleAuthorizedChanged(authorized)'
             ],
 //PUBLIC FUNCTIONS
+            utility: {
+                arrayTransformerUniqueLatestFirst: function(array, item){
+                    array.unshift(item);                                //add new at start
+                    array =  array.filter(function(elem, pos,arr) {     //remove duplicates
+                        return arr.indexOf(elem) == pos;
+                    });
+                    return array.slice(0,10);                           //limit length to 10
 
+                }
+            },
             //setData: Public function to set the personalisation-data manually
             setData: function(value){
                 this.exchange.__personalisationDataStatus = LOCALCONSTANT;
@@ -88,12 +97,65 @@
                 return (this.exchange.__personalisationDataStatus == REMOTECONSTANT);
             },
 
-            //force update of local data, returns promise object for callbacks
-            forceUpdate: function(){
-                return this.$.getPersonalisationData.generateRequest().completes;
+            //Adds item to managedList, second parameter is arrayTransformer function that takes previous array & item as parameter and returns the new array, default is simple Array.push(item)
+            managedListAdd: function(item, arrayTransformer = this.utility.arrayTransformerUniqueLatestFirst){
+
+                //arrayTransformer default value
+                //arrayTransformer = (typeof arrayTransformer != "undefined")? arrayTransformer:(array,item) => {array.push(item); return array;}
+                //get latest array from server
+                let promise = this.managedListGet();
+                promise
+                    .then(
+                        function(data){
+                            this.setData(arrayTransformer(data, item));
+                        }.bind(this)
+                    ).catch(
+                        function(error){
+                            console.log(error);
+                        }
+                );
+                return promise;
+            },
+            //Get Current Value of managedList
+            managedListGet: function(){
+                return new Promise(
+                    function(accept, reject){
+                        if(!this.authorized) reject("Unauthorized");
+                        let request = this.$.getPersonalisationData.generateRequest();
+                        let promise = request.completes;
+                        promise
+                            .then(                                                                  //success getting old data
+                                function(request){
+                                    if(request.hasOwnProperty("__data__") ){
+                                        if(request.__data__.status == 200){
+                                            let data = JSON.parse(request.__data__.response.value);
+                                            if(Array.isArray(data)) {
+                                                accept(data);
+                                            }else{
+                                                reject("Previous data not of type array");                        //Alternative override with accept([]);
+                                            }
+                                        }
+                                    }
+                                reject();
+                                }.bind(this, request)
+                            ).catch(                                                                //Error getting old data
+                            function(request,error){
+                                if(request.hasOwnProperty("__data__") ){
+                                    //no entry found, start with empty array
+                                    if(request.__data__.status == 404){
+                                        accept([]);
+                                    }
+                                }
+                                reject(error);
+                            }.bind(this, request));
+                    }.bind(this)
+                )
+
             },
 
-//
+            managedListDefaultArrayTransformer:function(array, item){
+
+            },
 
             //_handleDataChanged Observer for exchange.data, creates & sends PUT request
             _handleDataChanged: function() {
@@ -132,7 +194,6 @@
                     this.notifyPath('exchange.data');
                     this.notifyPath('exchange');
                 }
-
             },
 
             _handlePUTPersonalisationData: function(e){
@@ -141,7 +202,6 @@
             _personalisationError: function(e){
                 console.dir(e);
             },
-
 
             _computeGETPersonalisationDataUrl: function(_personalisationDataUrl,keyid, keyversion) {
                 return _personalisationDataUrl + keyid + '/' + keyversion;
