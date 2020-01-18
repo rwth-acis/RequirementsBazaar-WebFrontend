@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/requirements-grid/requirements-grid.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
 
@@ -75,9 +76,7 @@
           Tracker Web component that asks the service above to fill its content.</li>
         <li><a href="https://github.com/rwth-acis/requirements-grid" target="_blank">
           https://github.com/rwth-acis/requirements-grid</a>: Yet another Web component. This one can be embedded on
-          3rd-party websites to display a grid of requirements in a specific project and category. You can see an
-          example on the <a href="https://wekit-community.org/ideas/" target="_blank">WEKIT Community website</a> where
-          new ideas for Augmented Reality tools are collected.</li>
+          3rd-party websites to display a grid of requirements in a specific project. You can see at the bottom of this page.</li>
       </ul>
 
       <h2>How to Contribute</h2>
@@ -88,8 +87,13 @@
         our open source repositories, by sending us design proposals, or by volunteering to translate the page to one of
         your native languages. Simply drop us an email at reqbaz@dbis.rwth-aachen.de and tell us about your idea.</p>
 
-
     </paper-material>
+
+    <requirements-grid base-url="https://requirements-bazaar.org/beta/bazaar/"
+                       project-id="1"
+                       page="0"
+                       per-page="4">
+    </requirements-grid>
 
   </template>
 

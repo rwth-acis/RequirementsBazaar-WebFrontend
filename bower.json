@@ -13,6 +13,7 @@
     "time-elements": "^0.6.0",
     "openidconnect-signin": "rwth-acis/openidconnect-signin#update-signin",
     "activity-tracker": "rwth-acis/activity-tracker#~1.2.0",
+    "requirements-grid": "rwth-acis/requirements-grid#~1.5.1",
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^1.2.2",
     "emoji-selector": "https://github.com/notwaldorf/emoji-selector.git#^1.1.1",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
