@@ -99,8 +99,36 @@
     },
 
     _handleSigninSuccess: function(e) {
-      this.authorized = true;
-      this.authHeader = {authorization: "Bearer " + e.detail.access_token};
+      var accessToken = e.detail.access_token;
+      
+      if (!GlobalConfig.authorization) {
+        fetch('https://api.learning-layers.eu/o/oauth2/userinfo', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + accessToken,
+          }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          // we received the sub
+          GlobalConfig.authorization = window.btoa(data.preferred_username + ':' + data.sub);
+          this.authorized = true;
+          var authorization = window.btoa('koren:28518');
+          this.authHeader = {
+            'access-token': accessToken,
+            'Authorization': 'Basic ' + GlobalConfig.authorization,
+            'oidc_provider': 'https://api.learning-layers.eu/o/oauth2',
+          };
+        });
+      } else {
+        this.authorized = true;
+        var authorization = window.btoa('koren:28518');
+        this.authHeader = {
+          'access-token': accessToken,
+          'Authorization': 'Basic ' + GlobalConfig.authorization,
+          'oidc_provider': 'https://api.learning-layers.eu/o/oauth2',
+        };
+      } 
     },
 
     _handleSignedOut: function(e) {
