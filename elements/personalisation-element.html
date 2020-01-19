@@ -34,8 +34,9 @@
 
 
     <script>
-        let LOCALCONSTANT = "LOC";
-        let REMOTECONSTANT = "REM";
+        const LOCALCONSTANT = "LOC";
+        const REMOTECONSTANT = "REM";
+        const INTERNALCONSTANT = "INT";
         Polymer({
             is: 'personalisation-element',
 
@@ -87,27 +88,24 @@
                 }
             },
             //setData: Public function to set the personalisation-data manually
-            setData: function(value){
-                this.exchange.__personalisationDataStatus = LOCALCONSTANT;
+            setData: function(value, status = LOCALCONSTANT){
+                this.exchange.__personalisationDataStatus = status;
                 this.exchange.data = value;
                 this.notifyPath('exchange.data');
             },
             //verifyGet: Verifies condition for data change coming from the personalisationElement
             verifyGet: function(){
-                return (this.exchange.__personalisationDataStatus == REMOTECONSTANT);
+                return (this.exchange.__personalisationDataStatus == REMOTECONSTANT || this.exchange.__personalisationDataStatus == INTERNALCONSTANT);
             },
 
-            //Adds item to managedList, second parameter is arrayTransformer function that takes previous array & item as parameter and returns the new array, default is simple Array.push(item)
+            //Adds item to managedList, second parameter is arrayTransformer function that takes previous array & item as parameter and returns the new array, default is keeping only the latest entry as FIFO with size limited to 10
             managedListAdd: function(item, arrayTransformer = this.utility.arrayTransformerUniqueLatestFirst){
-
-                //arrayTransformer default value
-                //arrayTransformer = (typeof arrayTransformer != "undefined")? arrayTransformer:(array,item) => {array.push(item); return array;}
                 //get latest array from server
                 let promise = this.managedListGet();
                 promise
                     .then(
                         function(data){
-                            this.setData(arrayTransformer(data, item));
+                            this.setData(arrayTransformer(data, item), INTERNALCONSTANT);
                         }.bind(this)
                     ).catch(
                         function(error){
@@ -120,7 +118,7 @@
             managedListGet: function(){
                 return new Promise(
                     function(accept, reject){
-                        if(!this.authorized) reject("Unauthorized");
+                        if(!this.authorized) return reject("Unauthorized");
                         let request = this.$.getPersonalisationData.generateRequest();
                         let promise = request.completes;
                         promise
@@ -130,37 +128,33 @@
                                         if(request.__data__.status == 200){
                                             let data = JSON.parse(request.__data__.response.value);
                                             if(Array.isArray(data)) {
-                                                accept(data);
+                                                return accept(data);
                                             }else{
-                                                reject("Previous data not of type array");                        //Alternative override with accept([]);
+                                                return reject("Previous data not of type array");                        //Alternative override with accept([]);
                                             }
                                         }
                                     }
-                                reject();
+                                return reject();
                                 }.bind(this, request)
                             ).catch(                                                                //Error getting old data
                             function(request,error){
                                 if(request.hasOwnProperty("__data__") ){
                                     //no entry found, start with empty array
                                     if(request.__data__.status == 404){
-                                        accept([]);
+                                        return accept([]);
                                     }
                                 }
-                                reject(error);
+                                return reject(error);
                             }.bind(this, request));
                     }.bind(this)
                 )
 
             },
 
-            managedListDefaultArrayTransformer:function(array, item){
-
-            },
-
             //_handleDataChanged Observer for exchange.data, creates & sends PUT request
             _handleDataChanged: function() {
                 console.log('personalisationElement DataChanged Callback');
-                if(this.exchange.__personalisationDataStatus == LOCALCONSTANT && this.isAuthorized()) {
+                if((this.exchange.__personalisationDataStatus == LOCALCONSTANT || this.exchange.__personalisationDataStatus == INTERNALCONSTANT) && this.isAuthorized()) {
                     this.debounce('_handleDataChanged', function(){
                         if(typeof this.keyid != 'undefined' && typeof this.keyversion != 'undefined' && typeof this.exchange.data!= 'undefined' && this.exchange.data != null){
                             this.$.putPersonalisationData.body = JSON.stringify({
