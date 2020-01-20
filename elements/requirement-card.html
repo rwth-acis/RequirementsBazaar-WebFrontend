@@ -399,6 +399,12 @@
           type: Boolean,
           computed: '_computeSaveRequirementDisabled(_editRequirementName, _editRequirementDescription)'
         },
+        /**
+         * Saves the state of the contributors' panel while editing.
+         */
+        _contributorsHidden: {
+          type: Boolean,
+        },
       },
 
       behaviors: [
@@ -940,6 +946,7 @@
         this.$.requirementBody.style.display = 'none';
         this.$.comments.style.display = 'none';
         this.$.description.style.display = 'none';
+        this._contributorsHidden = this.$.contributors.hidden;
         this.$.contributors.hidden = true;
         // show form elements
         this.$.edit.style.display = 'block';
@@ -992,7 +999,7 @@
         this.$.requirementBody.style.display = 'block';
         this.$.comments.style.display = 'block';
         this.$.description.style.display = 'block';
-        this.$.contributors.hidden = false;
+        this.$.contributors.hidden = this._contributorsHidden;
       }
 
     });
