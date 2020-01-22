@@ -50,6 +50,13 @@
                 keyversion="1"
                 exchange = "{{personalisationData}}">
         </personalisation-element>
+
+        <iron-ajax id="entityOverview"
+                   loading="{{loading}}"
+                   content-type="application/json"
+                   url="[[_apiBaseUrl]]users/me/entities"
+                   headers="[[authHeader]]"
+                   last-response="{{_userEntities}}"></iron-ajax>
         <div class="absoluteWrapper">
             <div class="wrapper">
                 <paper-dropdown-menu label="View" class="viewDropdown">
@@ -62,12 +69,12 @@
                     </paper-listbox>
                 </paper-dropdown-menu>
                     <paper-dropdown-menu label="From" class="originDropdown">
-                        <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectsSorting}}">
-                            <paper-item value="name">All</paper-item>
-                            <paper-item value="last_activity">Following</paper-item>
-                            <paper-item value="date">Created by Me</paper-item>
-                            <paper-item value="follower">Developing</paper-item>
-                            <paper-item value="requirement">[[localize('sorting-requirements')]]</paper-item>
+                        <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_originFilter}}">
+                            <paper-item value="all">All</paper-item>
+                            <paper-item value="created">Created by Me</paper-item>
+                            <paper-item value="following">Following</paper-item>
+                            <paper-item value="developing">Developing</paper-item>
+                          <!--  <paper-item value="requirement">[[localize('sorting-requirements')]]</paper-item> -->
                         </paper-listbox>
                     </paper-dropdown-menu>
             </div>
@@ -110,24 +117,37 @@
                 _originFilter: {
                     type: String,
                     value: 'all',
+                    observer: '_originFilterChanged',
                 },
                 _params:{
                     type: Object,
                     notify: true,
-                    computed: '_computeParams(_originFilter, _typeFilter)',
-                }
+                    computed: '_computeParams(_typeFilter, _userEntities)',
+                },
+                _userEntities: {
+                    type: Object,
+                },
 
 
             },
-            observers:[
+            observers: [
 
             ],
 
+            _originFilterChanged: function(filter) {
+                if(filter == 'all') {
+                    this._userEntities = null;
+                }else{
+                    this.$.entityOverview.params = {
+                        'include': ['projects', 'categories', 'requirements'],
+                        'filters': filter,
+                    };
+                    this.$.entityOverview.generateRequest();
+                }
+            },
 
-
-            _computeParams: function(origin, type) {
+            _computeParams: function(type, _userEntities) {
                 var parameters = {};
-
                 var typeArray = this._typeFiltersToArray(type);
                 Object.assign(parameters,
                     (typeArray != null)?
@@ -135,7 +155,42 @@
                            'combinedFilter': typeArray,
                         }:{}
                 );
+                if(_userEntities != null) {
+                    Object.assign(parameters, {
+                        'additionalObject':
+                            this._userEntitiesToConditions(_userEntities),
+                    });
+                }
                 return parameters;
+            },
+
+
+            _userEntitiesToConditions: function(entities) {
+                var query = '';
+                var initial = true;
+                if(entities.hasOwnProperty('projects')
+                    && Array.isArray(entities.projects)
+                    && entities.projects.length) {
+                        query = '"$.project.id"IN('+entities.projects.join(', ')+')';
+                        initial = false;
+                }
+                if(entities.hasOwnProperty('categories')
+                    && Array.isArray(entities.categories)
+                    && entities.categories.length) {
+                        if(!initial) query = query+'OR';
+                        initial = false;
+                        query = query +
+                            '"$.category.id"IN('+entities.categories.join(', ')+')';
+                }
+                if(entities.hasOwnProperty('requirements')
+                    && Array.isArray(entities.requirements)
+                    && entities.requirements.length) {
+                        if(!initial) query = query+'OR';
+                        initial = false;
+                        query = query +
+                            '"$.requirement.id"IN('+entities.requirements.join(', ')+')';
+                }
+                return query;
             },
             _typeFiltersToArray: function(type) {
                 switch(type) {
