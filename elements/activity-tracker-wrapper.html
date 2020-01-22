@@ -1,0 +1,160 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../elements/personalisation-element.html">
+<link rel="import" href="../bower_components/activity-tracker/activity-tracker.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../src/config-behavior.html">
+
+<dom-module id="activity-tracker-wrapper">
+    <template>
+
+        <style include="shared-styles">
+
+            .wrapper .viewDropdown, .wrapper .originDropdown{
+                width: 50%;
+                float: left;
+
+                --paper-input-container-label: {
+                    font-size: 12px;
+
+                };
+                --paper-input-container-input: {
+                    font-size: 14px;
+                };
+            }
+            .wrapper .originDropdown{
+                float: right;
+                clear-after: bottom;
+            }
+            #tracker{
+                position: absolute;
+                top: 62px;
+                left: 0px;
+                right: 0px;
+                bottom: 0px;
+            }
+            .absoluteWrapper{
+                position: relative;
+                height: 100%;
+                widht: 100%;
+            }
+
+
+
+        </style>
+
+        <openidconnect-signin-aware is-authorized="{{authorized}}" on-openidconnect-signin-aware-success="_handleSigninSuccess" on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+        <personalisation-element
+                id="personalisationConnector"
+                keyid="activity-tracker"
+                keyversion="1"
+                exchange = "{{personalisationData}}">
+        </personalisation-element>
+        <div class="absoluteWrapper">
+            <div class="wrapper">
+                <paper-dropdown-menu label="View" class="viewDropdown">
+                    <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_typeFilter}}">
+                        <paper-item value="all">All</paper-item>
+                        <paper-item value="development">Development</paper-item>
+                        <paper-item value="feedback">Feedback</paper-item>
+                        <paper-item value="follow">Followers</paper-item>
+                        <paper-item value="updates">Updates</paper-item>
+                    </paper-listbox>
+                </paper-dropdown-menu>
+                    <paper-dropdown-menu label="From" class="originDropdown">
+                        <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectsSorting}}">
+                            <paper-item value="name">All</paper-item>
+                            <paper-item value="last_activity">Following</paper-item>
+                            <paper-item value="date">Created by Me</paper-item>
+                            <paper-item value="follower">Developing</paper-item>
+                            <paper-item value="requirement">[[localize('sorting-requirements')]]</paper-item>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+            </div>
+            <activity-tracker id="tracker" request-parameters="[[_params]]"  initial-limit="20" url="[[_activityTrackerBaseUrl]]" auto-update-interval="90" loading="{{loading}}"></activity-tracker>
+        </div>
+
+
+    </template>
+
+
+
+
+    <script>
+        Polymer({
+            is: 'activity-tracker-wrapper',
+
+            behaviors: [
+                ConfigBehavior
+            ],
+
+            properties: {
+                keyid: {
+                    type: String,
+                    notify: true,
+                    value: '',
+
+                },
+                personalisationData: {
+                    type: Object,
+                    notify: true,
+                },
+                loading: {
+                    type: Boolean,
+                    notify: true,
+                },
+                _typeFilter: {
+                    type: String,
+                    value: 'all',
+                },
+                _originFilter: {
+                    type: String,
+                    value: 'all',
+                },
+                _params:{
+                    type: Object,
+                    notify: true,
+                    computed: '_computeParams(_originFilter, _typeFilter)',
+                }
+
+
+            },
+            observers:[
+
+            ],
+
+
+
+            _computeParams: function(origin, type) {
+                var parameters = {};
+
+                var typeArray = this._typeFiltersToArray(type);
+                Object.assign(parameters,
+                    (typeArray != null)?
+                        {
+                           'combinedFilter': typeArray,
+                        }:{}
+                );
+                return parameters;
+            },
+            _typeFiltersToArray: function(type) {
+                switch(type) {
+                    case 'development':
+                        return ['DEVELOP-*', 'UNDEVELOP-*', 'LEADDEVELOP-*', 'UNLEADDEVELOP-*', 'REALIZE-*', 'UNREALIZE-*'];
+                    case 'feedback':
+                        return ['CREATE-COMMENT', 'VOTE-*', 'UNVOTE-*', 'CREATE-REQUIREMENT'];
+                    case 'follow':
+                        return ['FOLLOW-*'];
+                    case 'updates':
+                        return ['CREATE-REQUIREMENT', 'CREATE-CATEGORY', 'UPDATE-*'];
+                    default:
+                    case 'all':
+                        return null;
+                }
+            },
+
+
+        });
+    </script>
+
+</dom-module>
