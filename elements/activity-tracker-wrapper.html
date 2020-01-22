@@ -58,22 +58,22 @@
                    headers="[[authHeader]]"
                    last-response="{{_userEntities}}"></iron-ajax>
         <div class="absoluteWrapper">
-            <div class="wrapper">
-                <paper-dropdown-menu label="View" class="viewDropdown">
+            <div class="wrapper" >
+                <paper-dropdown-menu label="[[localize('view')]]" class="viewDropdown">
                     <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_typeFilter}}">
-                        <paper-item value="all">All</paper-item>
-                        <paper-item value="development">Development</paper-item>
-                        <paper-item value="feedback">Feedback</paper-item>
-                        <paper-item value="follow">Followers</paper-item>
-                        <paper-item value="updates">Updates</paper-item>
+                        <paper-item value="all">[[localize('all')]]</paper-item>
+                        <paper-item value="development">[[localize('development')]]</paper-item>
+                        <paper-item value="feedback">[[localize('feedback')]]</paper-item>
+                        <paper-item value="follow">[[localize('followers')]]</paper-item>
+                        <paper-item value="updates">[[localize('updates')]]</paper-item>
                     </paper-listbox>
                 </paper-dropdown-menu>
-                    <paper-dropdown-menu label="From" class="originDropdown">
+                    <paper-dropdown-menu label="[[localize('from')]]" class="originDropdown">
                         <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_originFilter}}">
-                            <paper-item value="all">All</paper-item>
-                            <paper-item value="created">Created by Me</paper-item>
-                            <paper-item value="following">Following</paper-item>
-                            <paper-item value="developing">Developing</paper-item>
+                            <paper-item value="all">[[localize('all')]]</paper-item>
+                            <paper-item value="created">[[localize('created-by-me')]]</paper-item>
+                            <paper-item value="following">[[localize('following')]]</paper-item>
+                            <paper-item value="developing">[[localize('developing')]]</paper-item>
                           <!--  <paper-item value="requirement">[[localize('sorting-requirements')]]</paper-item> -->
                         </paper-listbox>
                     </paper-dropdown-menu>
