@@ -153,7 +153,6 @@
 
             //_handleDataChanged Observer for exchange.data, creates & sends PUT request
             _handleDataChanged: function() {
-                console.log('personalisationElement DataChanged Callback');
                 if((this.exchange.__personalisationDataStatus == LOCALCONSTANT || this.exchange.__personalisationDataStatus == INTERNALCONSTANT) && this.isAuthorized()) {
                     this.debounce('_handleDataChanged', function(){
                         if(typeof this.keyid != 'undefined' && typeof this.keyversion != 'undefined' && typeof this.exchange.data!= 'undefined' && this.exchange.data != null){
@@ -172,7 +171,6 @@
 
             //_handleAuthorizedChanged: Observer for Auth
             _handleAuthorizedChanged: function(){
-                console.log('_handleAuthorizedChanged');
                 this.debounce('_handleAuthorizedChanged', function() {
                 if(this.authorized) {
                     this.$.getPersonalisationData.generateRequest();
@@ -194,7 +192,7 @@
             },
 
             _personalisationError: function(e){
-                console.dir(e);
+                //console.dir(e);
             },
 
             _computeGETPersonalisationDataUrl: function(_personalisationDataUrl,keyid, keyversion) {
