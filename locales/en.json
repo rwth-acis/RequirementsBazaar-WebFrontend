@@ -127,15 +127,23 @@
   "sorting-popularity": "Popularity",
   "sorting-requirements": "Requirements",
   "sorting-votes": "Votes",
+  "votes": "Votes",
+  "requirements": "Requirements",
+  "about": "About",
+  "development": "Development",
+  "developing": "Developing",
+  "feedback": "Feedback",
+  "updates": "Updates",
+  "created-by-me": "Created By Me",
+  "following": "Following",
+  "view": "View",
+  "from": "From",
 
   "display": "Display",
   "display-all": "All",
   "display-following": "Following",
   "display-own": "Created",
-  "display-last": "Last Viewed",
+  "display-last": "Last Viewed"
 
 
-  "votes": "Votes",
-  "requirements": "Requirements",
-  "about": "About"
 }

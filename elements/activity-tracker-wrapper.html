@@ -1,0 +1,249 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../elements/personalisation-element.html">
+<link rel="import" href="../bower_components/activity-tracker/activity-tracker.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../src/config-behavior.html">
+
+<dom-module id="activity-tracker-wrapper">
+    <template>
+
+        <style include="shared-styles">
+
+            .filters .viewDropdown, .filters .originDropdown{
+                width: 50%;
+                float: left;
+                --paper-input-container-label: {
+                    font-size: 14px;
+                };
+                --paper-input-container-input: {
+                    font-size: 15px;
+                };
+            }
+            .filters .originDropdown{
+                float: right;
+                clear-after: bottom;
+            }
+            #tracker{
+                -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+                -moz-box-flex: 1; /* OLD - Firefox 19- */
+                -webkit-flex: 1; /* Chrome */
+                -ms-flex: 1; /* IE 10 */
+                flex: 1; /* NEW, */
+            }
+
+            .flexWrapper{
+                height: 100%;
+                widht: 100%;
+                display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+                display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+                display: -ms-flexbox; /* TWEENER - IE 10 */
+                display: -webkit-flex; /* NEW - Chrome */
+                display: flex; /* NEW, Spec - Opera 12.1, Firefox 20+ */
+                -ms-flex-direction: column;
+                -moz-flex-direction: column;
+                -webkit-flex-direction: column;
+                flex-direction: column;
+            }
+            .filters{
+
+            }
+
+
+
+        </style>
+
+        <openidconnect-signin-aware is-authorized="{{authorized}}" on-openidconnect-signin-aware-success="_handleSigninSuccess" on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+        <personalisation-element
+                id="personalisationConnector"
+                keyid="activity-tracker"
+                keyversion="1"
+                exchange = "{{personalisationData}}">
+        </personalisation-element>
+
+        <iron-ajax id="entityOverview"
+                   loading="{{loading}}"
+                   content-type="application/json"
+                   url="[[_apiBaseUrl]]users/me/entities"
+                   headers="[[authHeader]]"
+                   last-response="{{_userEntities}}"></iron-ajax>
+        <div class="flexWrapper">
+            <template is="dom-if" if="{{authorized}}">
+                <div class="filters" >
+                    <paper-dropdown-menu label="[[localize('view')]]" class="viewDropdown">
+                        <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_typeFilter}}">
+                            <paper-item value="all">[[localize('all')]]</paper-item>
+                            <paper-item value="development">[[localize('development')]]</paper-item>
+                            <paper-item value="feedback">[[localize('feedback')]]</paper-item>
+                            <paper-item value="follow">[[localize('followers')]]</paper-item>
+                            <paper-item value="updates">[[localize('updates')]]</paper-item>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                        <paper-dropdown-menu label="[[localize('from')]]" class="originDropdown">
+                            <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_originFilter}}">
+                                <paper-item value="all">[[localize('all')]]</paper-item>
+                                <paper-item value="created">[[localize('created-by-me')]]</paper-item>
+                                <paper-item value="following">[[localize('following')]]</paper-item>
+                                <paper-item value="developing">[[localize('developing')]]</paper-item>
+                              <!--  <paper-item value="requirement">[[localize('sorting-requirements')]]</paper-item> -->
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                </div>
+            </template>
+            <activity-tracker id="tracker" request-parameters="[[_params]]"  initial-limit="20" url="[[_activityTrackerBaseUrl]]" auto-update-interval="90" loading="{{loading}}"></activity-tracker>
+        </div>
+
+
+    </template>
+
+
+
+
+    <script>
+        Polymer({
+            is: 'activity-tracker-wrapper',
+
+            behaviors: [
+                ConfigBehavior
+            ],
+
+            properties: {
+                keyid: {
+                    type: String,
+                    notify: true,
+                    value: '',
+
+                },
+                personalisationData: {
+                    type: Object,
+                    notify: true,
+                },
+                loading: {
+                    type: Boolean,
+                    notify: true,
+                },
+                _typeFilter: {
+                    type: String,
+                    value: 'all',
+                },
+                _originFilter: {
+                    type: String,
+                    value: 'all',
+                    observer: '_originFilterChanged',
+                },
+                _params:{
+                    type: Object,
+                    notify: true,
+                    computed: '_computeParams(_typeFilter, _userEntities)',
+                },
+                _userEntities: {
+                    type: Object,
+                },
+
+
+            },
+            observers: [
+                '_handlePersonalisationDataChangeSET(_typeFilter, _originFilter)',
+                '_handlePersonalisationDataChangeGET(personalisationData.data)',
+                '_handleAuthorizedChanged(authorized)',
+            ],
+            _handlePersonalisationDataChangeSET: function() {
+                this.$.personalisationConnector.setData({
+                    t: this._typeFilter,
+                    o: this._originFilter,
+                });
+            },
+            _handlePersonalisationDataChangeGET: function() {
+                if(this.$.personalisationConnector.verifyGet()) {
+                    this._typeFilter = this.personalisationData.data.t;
+                    this._originFilter = this.personalisationData.data.o;
+                }
+            },
+            _handleAuthorizedChanged: function() {
+                this.debounce('_handleAuthorizedChanged', function() {
+                    if(!this.authorized) {
+                        this._typeFilter = 'all';
+                        this._originFilter = 'all';
+                    }
+                }, 300);
+            },
+
+            _originFilterChanged: function(filter) {
+                if(filter == 'all') {
+                    this._userEntities = null;
+                }else{
+                    this.$.entityOverview.params = {
+                        'include': ['projects', 'categories', 'requirements'],
+                        'filters': filter,
+                    };
+                    this.$.entityOverview.generateRequest();
+                }
+            },
+
+            _computeParams: function(type, _userEntities) {
+                var parameters = {};
+                var typeArray = this._typeFiltersToArray(type);
+                Object.assign(parameters,
+                    (typeArray != null)?
+                        {
+                           'combinedFilter': typeArray,
+                        }:{}
+                );
+                if(_userEntities != null) {
+                    Object.assign(parameters, {
+                        'additionalObject':
+                            this._userEntitiesToConditions(_userEntities),
+                    });
+                }
+                return parameters;
+            },
+
+
+            _userEntitiesToConditions: function(entities) {
+                var query = '';
+                var initial = true;
+                if(entities.hasOwnProperty('projects')
+                    && Array.isArray(entities.projects)
+                    && entities.projects.length) {
+                        query = '"$.project.id"IN('+entities.projects.join(', ')+')';
+                        initial = false;
+                }
+                if(entities.hasOwnProperty('categories')
+                    && Array.isArray(entities.categories)
+                    && entities.categories.length) {
+                        if(!initial) query = query+'OR';
+                        initial = false;
+                        query = query +
+                            '"$.category.id"IN('+entities.categories.join(', ')+')';
+                }
+                if(entities.hasOwnProperty('requirements')
+                    && Array.isArray(entities.requirements)
+                    && entities.requirements.length) {
+                        if(!initial) query = query+'OR';
+                        initial = false;
+                        query = query +
+                            '"$.requirement.id"IN('+entities.requirements.join(', ')+')';
+                }
+                return query;
+            },
+            _typeFiltersToArray: function(type) {
+                switch(type) {
+                    case 'development':
+                        return ['DEVELOP-*', 'UNDEVELOP-*', 'LEADDEVELOP-*', 'UNLEADDEVELOP-*', 'REALIZE-*', 'UNREALIZE-*'];
+                    case 'feedback':
+                        return ['CREATE-COMMENT', 'VOTE-*', 'UNVOTE-*', 'CREATE-REQUIREMENT'];
+                    case 'follow':
+                        return ['FOLLOW-*'];
+                    case 'updates':
+                        return ['CREATE-REQUIREMENT', 'CREATE-CATEGORY', 'UPDATE-*'];
+                    default:
+                    case 'all':
+                        return null;
+                }
+            },
+
+
+        });
+    </script>
+
+</dom-module>
