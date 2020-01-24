@@ -165,6 +165,7 @@
               <paper-item value="sq">Albanian</paper-item>
               <paper-item value="de">Deutsch</paper-item>
               <paper-item value="en">English</paper-item>
+              <paper-item value="fr">Français</paper-item>
               <!--<paper-item value="fa">Farsi</paper-item>-->
               <paper-item value="ro">Romanian</paper-item>
             </paper-menu>
@@ -288,8 +289,16 @@
 
       observers: [
         '_routeChanged(route)',
-        '_routeViewChanged(routeData.view)'
+        '_routeViewChanged(routeData.view)',
+        '_authHeaderChanged(authHeader)',
       ],
+
+      _authHeaderChanged: function(authHeader) {
+        this.$.currentUserRequest.generateRequest();
+
+        // deactivate menu entry selection, just in case the login was made from the main menu
+        this.$.mainMenu.selected = null;
+      },
 
       _handleDrawerReserveSpaceChanged: function(e, detail) {
         this.fire('iron-signal', {name: 'drawer-reserve-space-changed', data: detail});
@@ -302,10 +311,6 @@
         // bugfix for only handling the main item's event
         if (e.currentTarget.id === 'openidconnectSignin') {
           this._handleSigninSuccess(e);
-          this.$.currentUserRequest.generateRequest();
-
-          // deactivate menu entry selection, just in case the login was made from the main menu
-          this.$.mainMenu.selected = null;
         }
       },
 

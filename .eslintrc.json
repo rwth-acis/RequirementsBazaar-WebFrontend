@@ -9,7 +9,8 @@
   "rules": {
     "no-var": "off",
     "new-cap": ["error", { "capIsNewExceptions": ["Polymer"] }],
-    "linebreak-style": 0
+    "linebreak-style": 0,
+    "max-len": ["error", { "code": 120 }]
   },
   "globals": {
     "Polymer": true

@@ -16,19 +16,19 @@
     properties: {
       _apiBaseUrl: {
         type: String,
-        value: 'https://requirements-bazaar.org/bazaar/'
+        value: 'https://beta.requirements-bazaar.org/bazaar/'
       },
       _fileApiBaseUrl: {
         type: String,
-        value: 'https://requirements-bazaar.org/fileservice/files/'
+        value: 'https://beta.requirements-bazaar.org/fileservice/files/'
       },
       _activityTrackerBaseUrl: {
         type: String,
-        value: 'https://requirements-bazaar.org/activities'
+        value: 'https://beta.requirements-bazaar.org/activities'
       },
         _personalisationDataUrl: {
             type: String,
-            value: 'http://localhost:8080/bazaar/personalisation/'
+            value: 'https://beta.requirements-bazaar.org/bazaar/personalisation/'
         },
       _frontendBasePath: {
         type: String,
@@ -71,6 +71,7 @@
       this._resourcesToFetch = 4;
       this.loadLanguageResource(this.resolveUrl('../locales/de.json'));
       this.loadLanguageResource(this.resolveUrl('../locales/en.json'));
+      this.loadLanguageResource(this.resolveUrl('../locales/fr.json'));
       //this.loadLanguageResource(this.resolveUrl('../locales/fa.json'));
       this.loadLanguageResource(this.resolveUrl('../locales/ro.json'));
       this.loadLanguageResource(this.resolveUrl('../locales/sq.json'));
@@ -103,8 +104,36 @@
     },
 
     _handleSigninSuccess: function(e) {
-      this.authHeader = {authorization: "Bearer " + e.detail.access_token};
-      this.authorized = true;
+      var accessToken = e.detail.access_token;
+      
+      if (!GlobalConfig.authorization) {
+        fetch('https://api.learning-layers.eu/o/oauth2/userinfo', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + accessToken,
+          }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          // we received the sub
+          GlobalConfig.authorization = window.btoa(data.preferred_username + ':' + data.sub);
+          this.authorized = true;
+          var authorization = window.btoa('koren:28518');
+          this.authHeader = {
+            'access-token': accessToken,
+            'Authorization': 'Basic ' + GlobalConfig.authorization,
+            'oidc_provider': 'https://api.learning-layers.eu/o/oauth2',
+          };
+        });
+      } else {
+        this.authorized = true;
+        var authorization = window.btoa('koren:28518');
+        this.authHeader = {
+          'access-token': accessToken,
+          'Authorization': 'Basic ' + GlobalConfig.authorization,
+          'oidc_provider': 'https://api.learning-layers.eu/o/oauth2',
+        };
+      } 
     },
 
     _handleSignedOut: function(e) {
