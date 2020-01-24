@@ -458,6 +458,12 @@
         personalisationData: {
           type: Object,
           notify: true,
+        },
+        /**
+         * Defines whether the follow or unfollow button is shown.
+         */
+        _followHidden: {
+          type: Boolean
         }
       },
       observers: [
@@ -468,20 +474,14 @@
         this.$.personalisationConnector.setData({
           s: this._requirementsSorting,
           d: this._requirementsSortDirection,
-          l: this._isSmallLayout
+          l: this._isSmallLayout,
         });
       },
       _handlePersonalisationDataChangeGET: function() {
         if(this.$.personalisationConnector.verifyGet()) {
           this._requirementsSorting = this.personalisationData.data.s;
           this._requirementsSortDirection = this.personalisationData.data.d;
-          this._isSmallLayout =  this.personalisationData.data.l;
-        },
- /**
-         * Defines whether the follow or unfollow button is shown.
-         */
-        _followHidden: {
-          type: Boolean
+          this._isSmallLayout = this.personalisationData.data.l;
         }
       },
 
