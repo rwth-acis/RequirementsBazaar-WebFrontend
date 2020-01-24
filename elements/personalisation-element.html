@@ -8,9 +8,7 @@
         <openidconnect-signin-aware is-authorized="{{authorized}}"
                                     on-openidconnect-signin-aware-success="_handleSigninSuccess"
                                     on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
-
-        <iron-signals on-iron-signal-current-user-changed="_handleUserChangeEvent"></iron-signals>
-
+        
         <iron-ajax id="putPersonalisationData"
                    url="[[_personalisationDataUrl]]"
                    content-type="application/json"
