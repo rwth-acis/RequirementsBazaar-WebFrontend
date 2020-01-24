@@ -73,11 +73,17 @@
         padding: 0;
         padding-bottom: 5px;
       }
+      .project-dropdowns{
+          width: 190px;
+      }
 
       @media (max-width: 600px) {
         :host {
           padding: 0px;
         }
+          .project-dropdowns{
+              width: auto;
+          }
 
         .toolbar {
           @apply(--layout-vertical);
@@ -153,7 +159,7 @@
 
       <div class="toolbar">
 
-          <paper-dropdown-menu label="[[localize('display')]]" hidden="[[!authorized]]" >
+          <paper-dropdown-menu label="[[localize('display')]]" hidden="[[!authorized]]" class="project-dropdowns">
               <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectFilter}}" >
                   <!-- TODO: Default Value not shown, bug in localize function https://github.com/PolymerElements/app-localize-behavior/issues/81 -->
                   <paper-item value="all">[[localize('display-all')]]</paper-item>
@@ -174,7 +180,7 @@
         </paper-input>
 
 
-          <paper-dropdown-menu label="[[localize('sorting')]]">
+          <paper-dropdown-menu label="[[localize('sorting')]]" class="project-dropdowns">
               <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectsSorting}}">
                   <paper-item value="name">A-Z</paper-item>
                   <paper-item value="last_activity">[[localize('sorting-activity')]]</paper-item>
