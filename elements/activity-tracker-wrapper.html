@@ -190,10 +190,13 @@
                         }:{}
                 );
                 if(_userEntities != null) {
-                    Object.assign(parameters, {
-                        'additionalObject':
-                            this._userEntitiesToConditions(_userEntities),
-                    });
+                    var additionalObjectCondition = this._userEntitiesToConditions(_userEntities);
+                    if(additionalObjectCondition == '') additionalObjectCondition = '"$.project.id"=-1';
+                    // Workaround to display empty set, TODO Display Error/Disable Option
+                    Object.assign(parameters,
+                        {
+                            'additionalObject': additionalObjectCondition,
+                        });
                 }
                 return parameters;
             },
