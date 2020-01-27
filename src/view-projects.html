@@ -4,7 +4,7 @@
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
-<link rel="import" href="../bower_components/activity-tracker/activity-tracker.html">
+<link rel="import" href="../elements/activity-tracker-wrapper.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 
@@ -48,7 +48,7 @@
                last-response="{{project}}"></iron-ajax>
 
     <app-drawer id="drawer" align="right">
-      <activity-tracker initial-limit="20" url="[[_activityTrackerBaseUrl]]" auto-update-interval="90" loading="{{loading}}"></activity-tracker>
+      <activity-tracker-wrapper loading="{{loading}}"></activity-tracker-wrapper>
     </app-drawer>
 
     <iron-pages

@@ -22,6 +22,7 @@
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../elements/categories-list.html">
 <link rel="import" href="../elements/bread-crumb.html">
+<link rel="import" href="../elements/personalisation-element.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="reqbaz-icons.html">
@@ -87,6 +88,13 @@
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
     <iron-signals on-iron-signal-drawer-reserve-space-changed="_handleDrawerReserveSpaceChanged"></iron-signals>
+
+    <personalisation-element
+            id="personalisationConnector"
+            keyid="CAT_LIST"
+            keyversion="1"
+            exchange = "{{personalisationData}}"
+    ></personalisation-element>
 
     <iron-ajax
       id="postCategoryRequest"
@@ -297,8 +305,29 @@
           type: Boolean,
           computed: '_computeCreateCategoryDisabled(_newCategoryName, _newCategoryDescription)'
         },
+        personalisationData: {
+          type: Object,
+          notify: true,
+        },
         _followHidden: {
           type: Boolean
+        }
+      },
+      observers: [
+        '_handlePersonalisationDataChangeSET(_categoriesSorting, _categoriesSortDirection)',
+        '_handlePersonalisationDataChangeGET(personalisationData.data)'
+      ],
+
+      _handlePersonalisationDataChangeSET: function() {
+        this.$.personalisationConnector.setData({
+          s: this._categoriesSorting,
+          d: this._categoriesSortDirection
+        });
+      },
+      _handlePersonalisationDataChangeGET: function() {
+        if(this.$.personalisationConnector.verifyGet()) {
+          this._categoriesSorting = this.personalisationData.data.s;
+          this._categoriesSortDirection = this.personalisationData.data.d;
         }
       },
 

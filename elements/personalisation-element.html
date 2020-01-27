@@ -1,0 +1,203 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../src/config-behavior.html">
+
+<dom-module id="personalisation-element">
+    <template>
+        <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                    on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                    on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+        
+        <iron-ajax id="putPersonalisationData"
+                   url="[[_personalisationDataUrl]]"
+                   content-type="application/json"
+                   body = "[[putBody]]"
+                   method="PUT"
+                   headers="[[authHeader]]"
+                   on-response="_handlePUTPersonalisationData"
+                   on-error="_personalisationError"></iron-ajax>
+
+        <iron-ajax id="getPersonalisationData"
+                   handle-as="json"
+                   url="[[getUrl]]"
+                   content-type="application/json"
+                   method="GET"
+                   headers="[[authHeader]]"
+                   on-response="_handleGETPersonalisationData"
+                   on-error="_personalisationError"></iron-ajax>
+    </template>
+
+
+
+
+    <script>
+        const LOCALCONSTANT = "LOC";
+        const REMOTECONSTANT = "REM";
+        const INTERNALCONSTANT = "INT";
+        Polymer({
+            is: 'personalisation-element',
+
+            behaviors: [
+                ConfigBehavior
+            ],
+
+            properties: {
+                keyid: {
+                    type: String,
+                    notify: true,
+                    value: ""
+
+                },
+                keyversion: {
+                    type: String,
+                    notify: true,
+                    value: ""
+                },
+                getUrl: {
+                    type: String,
+                    computed: '_computeGETPersonalisationDataUrl(_personalisationDataUrl,keyid, keyversion)'
+                },
+
+                exchange: {
+                    type: Object,
+                    notify: true,
+                    value:{
+                        data: null,
+                        __personalisationDataStatus: "INIT"
+                    }
+                },
+
+
+            },
+            observers:[
+                '_handleDataChanged(exchange.data)',
+                '_handleAuthorizedChanged(authorized)'
+            ],
+//PUBLIC FUNCTIONS
+            utility: {
+                arrayTransformerUniqueLatestFirst: function(array, item){
+                    array.unshift(item);                                //add new at start
+                    array =  array.filter(function(elem, pos,arr) {     //remove duplicates
+                        return arr.indexOf(elem) == pos;
+                    });
+                    return array.slice(0,10);                           //limit length to 10
+
+                }
+            },
+            //setData: Public function to set the personalisation-data manually
+            setData: function(value, status = LOCALCONSTANT){
+                this.exchange.__personalisationDataStatus = status;
+                this.exchange.data = value;
+                this.notifyPath('exchange.data');
+            },
+            //verifyGet: Verifies condition for data change coming from the personalisationElement
+            verifyGet: function(){
+                return (this.exchange.__personalisationDataStatus == REMOTECONSTANT || this.exchange.__personalisationDataStatus == INTERNALCONSTANT);
+            },
+
+            //Adds item to managedList, second parameter is arrayTransformer function that takes previous array & item as parameter and returns the new array, default is keeping only the latest entry as FIFO with size limited to 10
+            managedListAdd: function(item, arrayTransformer = this.utility.arrayTransformerUniqueLatestFirst){
+                //get latest array from server
+                let promise = this.managedListGet();
+                promise
+                    .then(
+                        function(data){
+                            this.setData(arrayTransformer(data, item), INTERNALCONSTANT);
+                        }.bind(this)
+                    ).catch(
+                        function(error){
+                            console.log(error);
+                        }
+                );
+                return promise;
+            },
+            //Get Current Value of managedList
+            managedListGet: function(){
+                return new Promise(
+                    function(accept, reject){
+                        if(!this.authorized) return reject("Unauthorized");
+                        let request = this.$.getPersonalisationData.generateRequest();
+                        let promise = request.completes;
+                        promise
+                            .then(                                                                  //success getting old data
+                                function(request){
+                                    if(request.hasOwnProperty("__data__") ){
+                                        if(request.__data__.status == 200){
+                                            let data = JSON.parse(request.__data__.response.value);
+                                            if(Array.isArray(data)) {
+                                                return accept(data);
+                                            }else{
+                                                return reject("Previous data not of type array");                        //Alternative override with accept([]);
+                                            }
+                                        }
+                                    }
+                                return reject();
+                                }.bind(this, request)
+                            ).catch(                                                                //Error getting old data
+                            function(request,error){
+                                if(request.hasOwnProperty("__data__") ){
+                                    //no entry found, start with empty array
+                                    if(request.__data__.status == 404){
+                                        return accept([]);
+                                    }
+                                }
+                                return reject(error);
+                            }.bind(this, request));
+                    }.bind(this)
+                )
+
+            },
+
+            //_handleDataChanged Observer for exchange.data, creates & sends PUT request
+            _handleDataChanged: function() {
+                if((this.exchange.__personalisationDataStatus == LOCALCONSTANT || this.exchange.__personalisationDataStatus == INTERNALCONSTANT) && this.isAuthorized()) {
+                    this.debounce('_handleDataChanged', function(){
+                        if(typeof this.keyid != 'undefined' && typeof this.keyversion != 'undefined' && typeof this.exchange.data!= 'undefined' && this.exchange.data != null){
+                            this.$.putPersonalisationData.body = JSON.stringify({
+                                key: this.keyid,
+                                version: this.keyversion,
+                                value: JSON.stringify(this.exchange.data),
+                            });
+                            this.$.putPersonalisationData.generateRequest();
+                        }
+
+                    }, 2000);
+                }
+            },
+
+
+            //_handleAuthorizedChanged: Observer for Auth
+            _handleAuthorizedChanged: function(){
+                this.debounce('_handleAuthorizedChanged', function() {
+                if(this.authorized) {
+                    this.$.getPersonalisationData.generateRequest();
+                }
+                }, 300);
+            },
+
+            //Callback for Iron-AJAX GET
+            _handleGETPersonalisationData: function(e){
+                if(e.detail.response != null){
+                    this.exchange.__personalisationDataStatus = REMOTECONSTANT;
+                    this.exchange.data = JSON.parse(e.detail.response.value);
+                    this.notifyPath('exchange.data');
+                    this.notifyPath('exchange');
+                }
+            },
+
+            _handlePUTPersonalisationData: function(e){
+            },
+
+            _personalisationError: function(e){
+                //console.dir(e);
+            },
+
+            _computeGETPersonalisationDataUrl: function(_personalisationDataUrl,keyid, keyversion) {
+                return _personalisationDataUrl + keyid + '/' + keyversion;
+            },
+
+        });
+    </script>
+
+</dom-module>

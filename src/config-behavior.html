@@ -26,6 +26,10 @@
         type: String,
         value: 'https://beta.requirements-bazaar.org/activities'
       },
+        _personalisationDataUrl: {
+            type: String,
+            value: 'https://beta.requirements-bazaar.org/bazaar/personalisation/'
+        },
       _frontendBasePath: {
         type: String,
         value: '/'
@@ -133,14 +137,17 @@
     },
 
     _handleSignedOut: function(e) {
-      this.authorized = false;
       this.authHeader = null;
+        this.authorized = false;
     },
 
     _currentUserChanged: function(newValue) {
       GlobalConfig.currentUser = newValue;
       this.fire('iron-signal', {name: 'current-user-changed', data: newValue});
     },
+      isAuthorized: function(){
+        return this.authorized;
+      },
 
     _handleCurrentUserChanged: function(e, detail) {
       this.currentUser = detail;

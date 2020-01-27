@@ -127,7 +127,20 @@
   "sorting-popularity": "Popularity",
   "sorting-requirements": "Requirements",
   "sorting-votes": "Votes",
+  "display": "Display",
+  "display-all": "All",
+  "display-following": "Following",
+  "display-own": "Created",
+  "display-last": "Last Viewed",
   "votes": "Votes",
   "requirements": "Requirements",
-  "about": "Rreth"
+  "about": "Rreth",
+  "development": "Development",
+  "developing": "Developing",
+  "feedback": "Feedback",
+  "updates": "Updates",
+  "created-by-me": "Created By Me",
+  "following": "Following",
+  "view": "View",
+  "from": "From"
 }
