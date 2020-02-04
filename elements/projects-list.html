@@ -317,7 +317,7 @@
           }
 
           // check if we have a new sorting or state parameter; if yes, reset the list
-          if (this._projectsRequestParameters.sort !== (sortDirection + sorting) || this._projectsRequestParameters.filter != filter) {
+          if (this._projectsRequestParameters.sort !== (sortDirection + sorting) || this._projectsRequestParameters.filters != filter) {
             this.projects = [];
             projectsRequestCurrentPage = 0;
 
