@@ -1,0 +1,107 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../src/config-behavior.html">
+<link rel="import" href="../src/item-list-behavior.html">
+
+<dom-module id="dashboard-requirements">
+  <template>
+    <style include="item-list-styles">
+    </style>
+
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
+    <iron-ajax id="requirementRequest"
+               loading="{{loading}}"
+               url="[[_apiBaseUrl]]requirements"
+               headers="[[authHeader]]"
+               params="[[_requestParameters]]"
+               on-response="_handleResponse"
+               debounce-duration="600"
+               auto></iron-ajax>
+
+    <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
+
+
+
+    <paper-card>
+      <div class="card-header">
+        <span>
+        [[localize('requirements')]]
+        </span>
+
+
+        <paper-dropdown-menu  class="dashboard-dropdowns" no-label-float horizontal-align="left" >
+          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{filter}}" >
+            <paper-item value="created" >[[localize('display-own')]]</paper-item>
+            <paper-item value="following">[[localize('display-following')]]</paper-item>
+            <paper-item value="developing">[[localize('developing')]]</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+
+
+
+
+      </div>
+      <div class="card-content border-top">
+
+        <iron-scroll-threshold id="scrollThreshold" on-lower-threshold="_loadMoreData">
+          <div class="list">
+            <template is="dom-repeat" items="{{items}}" >
+              <a href="[[_frontendBasePath]]projects/[[item.projectId]]/categories/[[item.categories.0.id]]/requirements/[[item.id]]">
+                <paper-item class="item border-bottom">
+                  <paper-item-body two-line>
+                    <div><b>[[item.context.project.name]]</b> [[item.name]]</div>
+                    <div secondary>[[item.description]]</div>
+                  </paper-item-body>
+                </paper-item>
+              </a>
+            </template>
+          </div>
+        </iron-scroll-threshold>
+        <div class="loadMore">
+        <paper-button id="loadMoreButton" raised class="green" on-click="_loadMoreData">[[localize('load-more-requirements')]]</paper-button>
+        </div>
+      </div>
+    </paper-card>
+
+
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'dashboard-requirements',
+
+      behaviors: [
+        ConfigBehavior, ItemListBehaviour
+      ],
+        properties: {
+            filter: {
+                type: String,
+                notify: true,
+                value: 'created',
+            },
+        }
+
+
+    });
+  </script>
+
+</dom-module>

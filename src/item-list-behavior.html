@@ -1,0 +1,218 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<!-- shared styles for all views -->
+
+<dom-module id="item-list-styles">
+    <template>
+        <style>
+            :host {
+                display: block;
+                height: 100%;
+            }
+
+            .list {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .dashboard-dropdowns{
+                float: right;
+            }
+
+            .item {
+                box-sizing: border-box;
+                justify-content: space-between;
+                width: calc(100% - 16px);
+                padding: 0px 16px 0px 0px ;
+                margin: 0px 0px 0px 16px;
+
+            }
+
+            .list a {
+                width: 100%;
+                color: inherit;
+                text-decoration: none;
+            }
+
+            paper-card {
+                @apply --layout-vertical;
+                width: 100%;
+                height: 100%;
+                border-radius: 3px;
+
+
+            }
+
+            .card-header {
+                @apply(--paper-font-headline);
+                @apply(--paper-card-header);
+                @apply --layout-horizontal;
+                @apply --layout-center;
+                justify-content: space-between;
+                height: 50px; /* could be 130px once we have real images */
+                margin: 0px 10px;
+            }
+            .card-content{
+                @apply --layout-flex;
+                overflow-y: auto;
+                padding: 0px;
+            }
+
+
+
+            iron-scroll-threshold {
+                height: 100%;
+                overflow: auto;
+            }
+            .loadMore{
+                display: none;
+                padding: 10px;
+            }
+
+            .border-bottom {
+                border-bottom: 1px solid lightgray;
+            }
+            .border-top {
+                border-top: 1px solid lightgray;
+            }
+
+            @media (max-width: 800px) {
+                :host {
+                    padding: 0px;
+
+                }
+                paper-card {
+                    display: block;
+                }
+                .card-content{
+                    display: block;
+                    flex: none;
+                }
+                .loadMore{
+                    display: flex;
+                    justify-content: center;
+                }
+            }
+
+
+        </style>
+    </template>
+</dom-module>
+
+
+<script>
+    ItemListBehaviour = {
+      properties: {
+          items: {
+              type: Array,
+              value: [],
+              notify: true
+          },
+          /**
+           * Whether any loading operation is currently active.
+           */
+          loading: {
+              type: Boolean,
+              notify: true
+          },
+          /**
+           * The parameters for the request to the projects resource.
+           */
+          _requestParameters: {
+              type: Object,
+              notify: true,
+              computed: '_computeProjectsRequestParameters(_currentPage, filter, itemListAdditionalRequestParameters)'
+          },
+          /**
+           * Defines how many projects are loaded per page.
+           */
+          requestPerPage: {
+              type: Number,
+              notify: true,
+              value: 10
+          },
+          /**
+           * Stores the current page number.
+           */
+          _currentPage: {
+              type: Number,
+              value: 0 // because we get a scroll lower threshold event once the page loads
+          },
+          filter: {
+              type: String,
+              notify: true,
+              value: '',
+          },
+          itemListAdditionalRequestParameters: {
+              type: Object,
+              notify: true,
+              value: {},
+          },
+      },
+
+      refresh: function() {
+          this.$.requirementsRequest.generateRequest();
+      },
+      _computeProjectsRequestParameters:
+          function(currentPage, filter, additionalParameters) {
+              if (this._requestParameters) {
+                  // check if we have a new sorting or state parameter; if yes, reset the list
+                  if (this._requestParameters.filters != filter) {
+                      this.items = [];
+                      currentPage = 0;
+                      // scroll to top
+                      this.$.scrollThreshold.scroll(0, 0);
+                  }
+              }
+
+
+              var parameters = new Object();
+              parameters.sort = '+last_activity';
+              parameters.per_page = this.requestPerPage;
+              parameters.page = currentPage;
+              parameters.filters = filter;
+              Object.assign(parameters, additionalParameters);
+
+              this._currentPage = currentPage;
+
+              return parameters;
+          },
+
+      _loadMoreData: function(e) {
+          if (this.items && (this.items.length > 0)) {
+              this._currentPage++;
+          }
+      },
+
+      _handleResponse: function(e) {
+          var response = e.detail.response;
+          var newItems = [];
+
+          response.forEach(function(item) {
+              // check if the project is already existing in the local model
+              var existing = false;
+              for (var i=0; i<this.items.length; i++) {
+                  if (this.items[i].id === item.id) {
+                      existing = true;
+                      break;
+                  }
+              }
+
+              if (!existing) {
+                  newItems.push(item);
+              }
+          }.bind(this));
+
+          // push the items to the requirements array and notify Polymer
+          var index = this.items.length;
+          this.items.push.apply(this.items, newItems);
+          this.notifySplices('items', [{ index: index, removed: [], addedCount: newItems.length, object: this.items, type: 'splice'}]);
+
+          // if we get back the maximum number of items per page, the likelihood is high that there is another page...
+          if (response.length === this.requestPerPage) {
+              this.$.scrollThreshold.clearTriggers();
+          }else{
+              this.$.loadMoreButton.disabled = true;
+          }
+          //this.$.scrollThreshold.checkScrollThresholds();
+      },
+  };
+</script>

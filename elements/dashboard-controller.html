@@ -1,0 +1,112 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<dom-module id="dashboard-controller">
+    <style include="shared-styles">
+        :host {
+            display: block;
+            min-height: 100%;
+        }
+        #grid{
+            display: grid;
+            grid-template-rows: repeat(4, 1fr);/*repeat(4, calc(100% / 4)); */
+            grid-template-columns: repeat(3, 1fr);/*calc(100% / 3) calc(100% / 3) calc(100% / 3); */
+            min-height: calc(100% - 40px);
+            grid-column-gap: 20px;
+            grid-row-gap: 20px;
+            padding: 20px;
+
+        }
+
+        @media (max-width: 800px) {
+            #grid{
+                display: block;
+
+            }
+            #grid > div {
+                padding-top: 15px;
+            }
+            .hideOnMobile {
+                display: none;
+            }
+
+        }
+    </style>
+    <template>
+        <div id="grid"></div>
+    </template>
+
+
+
+
+    <script>
+        Polymer({
+            is: 'dashboard-controller',
+
+            behaviors: [
+            ],
+
+            properties: {
+                keyid: {
+                    type: String,
+                    notify: true,
+                    value: ""
+
+                },
+                config: {
+                    type: Object,
+                    observer: "loadConfiguration"
+                }
+            },
+            observers:[],
+
+            loadConfiguration: function(config) {
+                this._loadDependencies(config.dependencies).then(function() {
+                    this._setupElements(config.elements);
+                    }.bind(this)
+                );
+            },
+            _loadDependencies: function(elementUriArray) {
+                var loadingArray = [];
+                elementUriArray.forEach(function(element) {
+                    var promise = new Promise(function(accept, reject) {
+                        this.importHref(this.resolveUrl(element), accept, reject, true);
+                    }.bind(this));
+                    loadingArray.push(promise);
+                }.bind(this));
+                var promise = Promise.all(loadingArray).catch(function(error) {
+                    console.log('Error loading dependencies');
+                    console.log(error);
+                });
+                return promise;
+            },
+            _setupElements: function(config) {
+                config.forEach(function(item, index) {
+                    // Create Element
+                    var element = document.createElement(item.type);
+                    for(var key in item.config) {
+                        if(item.config.hasOwnProperty(key)) {
+                            element.setAttribute(key, item.config[key]);
+                        }
+                    }
+                    // Create Wrapper
+                    var wrapper = document.createElement('div');
+                    wrapper.setAttribute('data-config-index', index);
+                    this._setPositionStyles(wrapper, item.position);
+                    // Append
+                    wrapper.appendChild(element);
+                    Polymer.dom(this.$.grid).appendChild(wrapper);
+                }.bind(this));
+            },
+            _setPositionStyles: function(element, position) {
+                Object.assign(element.style, {
+                    'grid-column-start': position.left,
+                    'grid-column-end': 'span '+ position.width,
+                    'grid-row-start': position.top,
+                    'grid-row-end': 'span '+ position.height,
+                });
+            },
+
+
+        });
+    </script>
+
+</dom-module>

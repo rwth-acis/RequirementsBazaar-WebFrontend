@@ -1,0 +1,100 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../elements/dashboard-controller.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../elements/activity-tracker-wrapper.html">
+<link rel="import" href="config-behavior.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="view-dashboard">
+  <style include="shared-styles">
+    :host {
+      display: block;
+    }
+    dashboard-controller {
+      min-height: calc(100vh - 64px);
+      width: 100%;
+      height: 1px; /* workaround to make child inherit 100% min-height */
+    }
+  </style>
+  <template>
+      <dashboard-controller config="{{config}}" loading="{{loading}}"></dashboard-controller>
+      <app-drawer id="drawer" align="right">
+          <activity-tracker-wrapper loading="{{loading}}"></activity-tracker-wrapper>
+      </app-drawer>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'view-dashboard',
+      properties:{
+          loading: {
+              type: Boolean,
+              notify: true
+          },
+        config:{
+          type: Object,
+          value: {
+            dependencies: ["../elements/dashboard-projects.html", "../elements/dashboard-requirements.html", "../elements/dashboard-comments.html", "../elements/dashboard-welcome.html"],
+            elements: [
+                    {
+                        type: "dashboard-welcome",
+                        config: {
+                            class: "hideOnMobile",
+                        },
+                        position: {
+                            top: 1,
+                            height: 1,
+                            left: 1,
+                            width: 1,
+                        },
+                    },
+                    {
+                      type: "dashboard-projects",
+                      config: {
+                      },
+                      position: {
+                        top: 3,
+                        height: 2,
+                        left: 1,
+                        width: 1,
+                      },
+                    },
+                    {
+                      type: "dashboard-requirements",
+                      config: {
+                      },
+                      position: {
+                        top: 1,
+                        height: 2,
+                        left: 2,
+                        width: 2,
+                      },
+                    },
+                    {
+                      type: "dashboard-comments",
+                      config: {
+                      },
+                      position: {
+                        top: 3,
+                        height: 2,
+                        left: 2,
+                        width: 2,
+                      },
+                    },
+
+
+            ],
+          },
+        },
+      },
+        behaviors: [
+            ConfigBehavior
+        ],
+        getRightDrawer: function() {
+            return this.$.drawer;
+        }
+
+    });
+  </script>
+</dom-module>

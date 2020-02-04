@@ -1,0 +1,83 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../src/config-behavior.html">
+<link rel="import" href="../src/item-list-behavior.html">
+
+<dom-module id="dashboard-welcome">
+  <template>
+    <style include="item-list-styles">
+    </style>
+
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+
+    <iron-ajax id="requirementRequest"
+               loading="{{loading}}"
+               url="[[_apiBaseUrl]]requirements"
+               headers="[[authHeader]]"
+               params="[[_requestParameters]]"
+               on-response="_handleResponse"
+               debounce-duration="600"
+               auto></iron-ajax>
+
+    <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
+
+
+
+    <paper-card>
+      <div class="card-header">
+        <span>
+        [[localize('welcome')]] [[currentUser.userName]]
+        </span>
+
+
+
+
+
+      </div>
+      <div class="card-content">
+
+
+      </div>
+    </paper-card>
+
+
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'dashboard-welcome',
+
+      behaviors: [
+        ConfigBehavior
+      ],
+        properties: {
+            filter: {
+                type: String,
+                notify: true,
+                value: 'created',
+            },
+        }
+
+
+    });
+  </script>
+
+</dom-module>
