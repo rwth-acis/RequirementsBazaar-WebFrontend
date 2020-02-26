@@ -13,12 +13,77 @@
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../bower_components/count-up/count-up.html">x
 <link rel="import" href="../src/config-behavior.html">
 <link rel="import" href="../src/item-list-behavior.html">
 
 <dom-module id="dashboard-welcome">
   <template>
     <style include="item-list-styles">
+      .explore paper-button{
+        background-color: #FF8324;
+        color: white;
+        font-weight: bold;
+        margin: 0px;
+        margin-top: 20px;
+        text-align: center;
+        min-width: 100%;
+      }
+      .explore {
+        font-size: 20px;
+        color: inherit;
+        text-decoration: none;
+
+
+      }
+      .card-content{
+        padding: 10px;
+        font-size: 16px;
+      }
+
+
+      #figures-activities {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-around-justified);
+        @apply(--layout-start);
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      #figures {
+        width: 100%;
+        text-align: left;
+      }
+
+      .table {
+        display: table;
+        width: 100%;
+        font-size: medium;
+      }
+
+      .tableRow {
+        display: table-row;
+      }
+
+      .tableCell {
+        display: table-cell;
+        width: 80%;
+      }
+
+      .tableCell.number {
+        text-align: right;
+        padding-right: 10px;
+        font-size:large;
+        font-weight: bold;
+        width: 20%;
+      }
+
+      .tableCell:not(.number) {
+        text-align: left;
+      }
+
+
     </style>
 
     <openidconnect-signin-aware is-authorized="{{authorized}}"
@@ -26,15 +91,18 @@
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
     <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
-    <iron-ajax id="requirementRequest"
-               loading="{{loading}}"
-               url="[[_apiBaseUrl]]requirements"
-               headers="[[authHeader]]"
-               params="[[_requestParameters]]"
-               on-response="_handleResponse"
-               debounce-duration="600"
-               auto></iron-ajax>
+    <iron-ajax
+            id="statisticsLoader"
+            loading="{{loading}}"
+            url="[[_apiBaseUrl]]statistics/[[statisticsParameters]]"
+            headers="[[authHeader]]"
+            method="GET"
+            last-response="{{statistics}}"
+            auto></iron-ajax>
+
+
 
     <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
 
@@ -42,19 +110,79 @@
 
     <paper-card>
       <div class="card-header">
-        <span>
-        [[localize('welcome')]] [[currentUser.userName]]
-        </span>
-
-
+        <template is="dom-if" if="[[!_userFirstLogin(currentUser)]]">
+          <span>
+          [[localize('welcome')]] [[_displayNameIfAvailable(currentUser)]]
+          </span>
+        </template>
+        <template is="dom-if" if="[[_userFirstLogin(currentUser)]]">
+          <span>
+          [[localize('landing-welcome')]]
+          </span>
+        </template>
 
 
 
       </div>
       <div class="card-content">
+        <template is="dom-if" if="[[!_userFirstLogin(currentUser)]]">
+          [[localize('dashboard-introduction')]]
+          <a  class="explore"  href$="[[_frontendBasePath]]projects">
+            <paper-button raised>[[localize('explore-projects')]]</paper-button>
+          </a>
+          <div id="figures-activities">
+            <div id="figures">
+              <template is="dom-if" if="[[_displayStats(statistics)]]">
+                [[localize('dashboard-updates-available')]]
+                <div class="table">
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfProjects)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfProjects]]"></count-up></div>
+                    <div class="tableCell">[[localize('new')]] [[localize('projects')]]</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfCategories)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfCategories]]"></count-up></div>
+                    <div class="tableCell">[[localize('new')]] [[localize('categories')]]</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfRequirements)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfRequirements]]"></count-up></div>
+                    <div class="tableCell">[[localize('new')]] [[localize('requirements')]]</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfComments)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfComments]]"></count-up></div>
+                    <div class="tableCell">[[localize('new')]] [[localize('comments')]]</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfVotes)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfVotes]]"></count-up></div>
+                    <div class="tableCell">[[localize('new')]] [[localize('votes')]]</div>
+                  </div>
+                </template>
+              </div>
+              </template>
+              <template is="dom-if" if="[[!_displayStats(statistics)]]">
+                [[localize('dashboard-no-updates-available')]]
+              </template>
+            </div>
+          </div>
+        </template>
 
+        <template is="dom-if" if="[[_userFirstLogin(currentUser)]]">
+          [[localize('dashboard-text-new-user')]]
+          <a  class="explore"  href$="[[_frontendBasePath]]projects">
+            <paper-button raised>[[localize('explore-projects')]]</paper-button>
+          </a>
+        </template>
 
       </div>
+
     </paper-card>
 
 
@@ -74,8 +202,41 @@
                 notify: true,
                 value: 'created',
             },
+          statistics: {
+              type: Object,
+            notify: true,
+          },
+          statisticsParameters: {
+              type: String,
+              computed: '_convertParameter(currentUser)',
+          }
+        },
+      _convertParameter: function(currentUser) {
+        if(typeof currentUser.lastLoginDate != 'undefined' && currentUser.lastLoginDate != '') {
+          var t = new Date(currentUser.lastLoginDate);
+          return '?since=2019-02-22T18:11:44.000Z';//'+t.toISOString(); //2019-02-22T18:11:44.000Z';
         }
-
+        return '';
+      },
+      _displayCategory: function(category){
+        return category>0;
+      },
+      _displayStats: function(obj) {
+        for (var key in obj) {
+          if (obj.hasOwnProperty(key) && obj[key]>0) {
+            return true;
+          }
+        }
+        return false;
+      },
+      _displayNameIfAvailable: function(user) {
+        if(typeof user.firstName != 'undefined' && user.firstName != '') return user.firstName;
+        return user.userName;
+      },
+      _userFirstLogin: function(user) {
+        if(typeof user.lastLoginDate != 'undefined' && user.lastLoginDate != '') return false;
+        return true;
+      },
 
     });
   </script>

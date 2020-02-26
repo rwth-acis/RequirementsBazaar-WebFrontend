@@ -54,7 +54,12 @@
                 config: {
                     type: Object,
                     observer: "loadConfiguration"
-                }
+                },
+                loading: {
+                    type: Boolean,
+                    notify: true
+                },
+
             },
             observers:[],
 
@@ -65,6 +70,7 @@
                 );
             },
             _loadDependencies: function(elementUriArray) {
+                this.loading = true;
                 var loadingArray = [];
                 elementUriArray.forEach(function(element) {
                     var promise = new Promise(function(accept, reject) {
@@ -76,6 +82,9 @@
                     console.log('Error loading dependencies');
                     console.log(error);
                 });
+                promise.finally(function() {
+                    this.loading = false;
+                })
                 return promise;
             },
             _setupElements: function(config) {
@@ -84,7 +93,7 @@
                     var element = document.createElement(item.type);
                     for(var key in item.config) {
                         if(item.config.hasOwnProperty(key)) {
-                            element.setAttribute(key, item.config[key]);
+                            element.setAttribute(this._camelCasetoDash(key), item.config[key]);
                         }
                     }
                     // Create Wrapper
@@ -104,6 +113,10 @@
                     'grid-row-end': 'span '+ position.height,
                 });
             },
+            _camelCasetoDash: function(str){
+                // Thanks to https://gist.github.com/youssman/745578062609e8acac9f#gistcomment-2304728
+                return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
+            }
 
 
         });

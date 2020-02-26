@@ -12,6 +12,7 @@
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../elements/personalisation-element.html">
 <link rel="import" href="../src/config-behavior.html">
 <link rel="import" href="../src/item-list-behavior.html">
 
@@ -31,7 +32,7 @@
         color: #737373;
         font-weight: normal;
       }
-      @media (max-width: 800px) {
+      @media (max-width: 970px) {
         .numbers{
           display: none;
         }
@@ -43,16 +44,24 @@
                                 on-openidconnect-signin-aware-success="_handleSigninSuccess"
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
-    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"
+                  on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
-    <iron-ajax id="requirementRequest"
+    <personalisation-element
+            id="personalisationConnector"
+            keyid="{{personalisationKey}}"
+            keyversion="{{personalisationVersion}}"
+            exchange = "{{personalisationData}}"
+    ></personalisation-element>
+
+    <iron-ajax id="getRequest"
                loading="{{loading}}"
                url="[[_apiBaseUrl]]projects"
                headers="[[authHeader]]"
                params="[[_requestParameters]]"
                on-response="_handleResponse"
                debounce-duration="600"
-               auto></iron-ajax>
+               ></iron-ajax>
 
     <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
 
@@ -67,8 +76,9 @@
 
         <paper-dropdown-menu  class="dashboard-dropdowns" no-label-float horizontal-align="left" >
           <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{filter}}" >
-            <paper-item value="created" >[[localize('display-own')]]</paper-item>
-            <paper-item value="following">[[localize('display-following')]]</paper-item>
+            <template is="dom-repeat" items="{{ _localizedDropdown(localize) }}" as="item">
+              <paper-item value="[[ item.value ]]">[[ item.label ]]</paper-item>
+            </template>
           </paper-listbox>
         </paper-dropdown-menu>
 
@@ -76,8 +86,7 @@
 
 
       </div>
-      <div class="card-content border-top">
-
+      <div class="card-content border-top" >
         <iron-scroll-threshold id="scrollThreshold" on-lower-threshold="_loadMoreData">
           <div class="list">
             <template is="dom-repeat" items="{{items}}" >
@@ -121,15 +130,28 @@
       is: 'dashboard-projects',
 
       behaviors: [
-        ConfigBehavior, ItemListBehaviour
+        ItemListBehaviour, ConfigBehavior
       ],
-        properties:{
+        properties: {
             filter: {
                 type: String,
                 notify: true,
                 value: 'created',
             },
-        }
+        },
+      observers: [
+        '_handlePersonalisationDataChangeSET(filter)',
+        '_handlePersonalisationDataChangeGET(personalisationData.data)',
+      ],
+      _localizedDropdown: function(localize) {
+        return [{
+          value: 'created',
+          label: [[localize('display-own')]],
+        }, {
+          value: 'following',
+          label: [[localize('display-following')]],
+        }];
+      },
 
 
     });

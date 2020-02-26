@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../elements/personalisation-element.html">
 <!-- shared styles for all views -->
 
 <dom-module id="item-list-styles">
@@ -129,6 +130,7 @@
               notify: true,
               value: 10
           },
+
           /**
            * Stores the current page number.
            */
@@ -146,11 +148,48 @@
               notify: true,
               value: {},
           },
+          personalisationKey: {
+              type: String,
+          },
+          personalisationVersion: {
+              type: String,
+              value: '1',
+          },
+          personalisationData: {
+              type: Object,
+              notify: true,
+          },
       },
+        observers: [
+            '_observeParameterChanges(_requestParameters, authHeader, authorized)',
+        ],
+
+        _handlePersonalisationDataChangeSET: function() {
+          if(typeof this.personalisationKey !='undefined'
+              && this.personalisationKey != ''
+              && typeof this.$.personalisationConnector != 'undefined') {
+            this.$.personalisationConnector.setData(
+                {
+                    f: this.filter,
+                }
+            );
+          }
+        },
+        _handlePersonalisationDataChangeGET: function() {
+            if(this.$.personalisationConnector.verifyGet()) {
+                this.filter = this.personalisationData.data.f;
+            }
+        },
+        _observeParameterChanges: function(p, h, authorized) {
+            if(authorized) {
+                this.$.getRequest.generateRequest();
+            }
+        },
 
       refresh: function() {
-          this.$.requirementsRequest.generateRequest();
+          this.$.getRequest.generateRequest();
       },
+
       _computeProjectsRequestParameters:
           function(currentPage, filter, additionalParameters) {
               if (this._requestParameters) {

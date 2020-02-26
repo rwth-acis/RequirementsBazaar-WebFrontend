@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../elements/dashboard-controller.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../elements/activity-tracker-wrapper.html">
 <link rel="import" href="config-behavior.html">
 <link rel="import" href="shared-styles.html">
@@ -17,6 +18,10 @@
     }
   </style>
   <template>
+      <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                  on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                  on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
       <dashboard-controller config="{{config}}" loading="{{loading}}"></dashboard-controller>
       <app-drawer id="drawer" align="right">
           <activity-tracker-wrapper loading="{{loading}}"></activity-tracker-wrapper>
@@ -35,23 +40,24 @@
         config:{
           type: Object,
           value: {
-            dependencies: ["../elements/dashboard-projects.html", "../elements/dashboard-requirements.html", "../elements/dashboard-comments.html", "../elements/dashboard-welcome.html"],
+            dependencies: ['../elements/dashboard-projects.html', '../elements/dashboard-requirements.html', '../elements/dashboard-comments.html', '../elements/dashboard-welcome.html'],
             elements: [
                     {
-                        type: "dashboard-welcome",
+                        type: 'dashboard-welcome',
                         config: {
-                            class: "hideOnMobile",
+                            class: 'hideOnMobile',
                         },
                         position: {
                             top: 1,
-                            height: 1,
+                            height: 2,
                             left: 1,
                             width: 1,
                         },
                     },
                     {
-                      type: "dashboard-projects",
+                      type: 'dashboard-projects',
                       config: {
+                          'personalisationKey': 'DASH_PROJECTS',
                       },
                       position: {
                         top: 3,
@@ -61,8 +67,9 @@
                       },
                     },
                     {
-                      type: "dashboard-requirements",
+                      type: 'dashboard-requirements',
                       config: {
+                          'personalisationKey': 'DASH_REQUIREMENTS',
                       },
                       position: {
                         top: 1,
@@ -72,8 +79,9 @@
                       },
                     },
                     {
-                      type: "dashboard-comments",
+                      type: 'dashboard-comments',
                       config: {
+                          'personalisationKey': 'DASH_COMMENTS',
                       },
                       position: {
                         top: 3,
@@ -89,12 +97,17 @@
         },
       },
         behaviors: [
-            ConfigBehavior
+            ConfigBehavior,
         ],
+        observers: ['authorizedChanged(authorized)'],
         getRightDrawer: function() {
             return this.$.drawer;
-        }
-
+        },
+        authorizedChanged: function(auth) {
+          this.debounce('_verifyAuth', function() {
+              if(!this.authorized) this.fire('iron-signal', {name: 'goto-landing'});
+          }.bind(this), 1000);
+        },
     });
   </script>
 </dom-module>

@@ -138,16 +138,19 @@
   "following": "Following",
   "view": "View",
   "from": "From",
-
   "display": "Display",
   "display-all": "All",
   "display-following": "Following",
   "display-own": "Created",
-  "display-last": "Last Viewed"
-
-
+  "display-last": "Last Viewed",
+  "dashboard": "Dashboard",
   "answers": "Answers",
   "load-more-comments": "Load More Comments",
   "load-more-requirements": "Load More Requirements",
-  "load-more-projects": "Load More Projects"
+  "load-more-projects": "Load More Projects",
+  "dashboard-introduction": "This is your personalized dashboard.",
+  "dashboard-updates-available": "Updates since your last visit:",
+  "dashboard-no-updates-available": "No Updates since your last login.",
+  "dashboard-text-new-user": "This is your personal dashboard. Start by exploring public projects, follow a project or requirement or leave a comment or vote",
+  "personalizationEnabled": "Enable the interface personalization"
 }

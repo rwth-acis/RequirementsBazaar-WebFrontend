@@ -13,29 +13,48 @@
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../elements/personalisation-element.html">
 <link rel="import" href="../src/config-behavior.html">
 <link rel="import" href="../src/item-list-behavior.html">
 
 <dom-module id="dashboard-comments">
   <template>
     <style include="item-list-styles">
+      .item{
+        padding-top: 5px;
+      }
+      .header{
 
+      }
+      .name{
+        margin-right: 5px;
+      }
     </style>
 
     <openidconnect-signin-aware is-authorized="{{authorized}}"
                                 on-openidconnect-signin-aware-success="_handleSigninSuccess"
                                 on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
-    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+    <personalisation-element
+            id="personalisationConnector"
+            keyid="{{personalisationKey}}"
+            keyversion="{{personalisationVersion}}"
+            exchange = "{{personalisationData}}"
+    ></personalisation-element>
 
-    <iron-ajax id="requirementRequest"
+
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"
+                  on-iron-signal-language-changed="_handleLanguageChanged"
+    ></iron-signals>
+
+    <iron-ajax id="getRequest"
                loading="{{loading}}"
                url="[[_apiBaseUrl]]comments"
                headers="[[authHeader]]"
                params="[[_requestParameters]]"
                on-response="_handleResponse"
                debounce-duration="600"
-               auto></iron-ajax>
+               ></iron-ajax>
 
     <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
 
@@ -50,26 +69,22 @@
 
         <paper-dropdown-menu  class="dashboard-dropdowns" no-label-float horizontal-align="left" >
           <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{filter}}" >
-            <paper-item value="following">[[localize('display-following')]]</paper-item>
-            <paper-item value="developing">[[localize('developing')]]</paper-item>
-            <paper-item value="answers">[[localize('answers')]]</paper-item>
+            <template is="dom-repeat" items="{{ _localizedDropdown(localize) }}" as="item">
+              <paper-item value="[[ item.value ]]">[[ item.label ]]</paper-item>
+            </template>
           </paper-listbox>
         </paper-dropdown-menu>
-
-
-
-
       </div>
-      <div class="card-content border-top">
 
+      <div class="card-content border-top">
         <iron-scroll-threshold id="scrollThreshold" on-lower-threshold="_loadMoreData">
           <div class="list">
             <template is="dom-repeat" items="{{items}}" >
               <a href="[[_frontendBasePath]]projects/[[item.context.project.id]]/categories/[[item.context.category.id]]/requirements/[[item.id]]">
                 <paper-item class="item border-bottom">
                   <paper-item-body two-line>
-                    <div>[[item.context.project.name]] - [[item.context.requirement.name]]</div>
-                    <div secondary><b>[[item.creator.userName]]</b><br>[[item.message]]</div>
+                    <div class="header">[[item._context.project.name]] - [[item._context.requirement.name]]</div>
+                    <div secondary><b class="name">[[item.creator.userName]]</b> [[item.message]]</div>
                   </paper-item-body>
                 </paper-item>
               </a>
@@ -91,14 +106,14 @@
       is: 'dashboard-comments',
 
       behaviors: [
-        ConfigBehavior, ItemListBehaviour
+        ItemListBehaviour, ConfigBehavior
       ],
         properties: {
             itemListAdditionalRequestParameters: {
                 type: Object,
                 notify: true,
                 value: {
-                    "includeContext": true
+                    'embedParents': ['project', 'requirement'],
                 },
             },
             filter: {
@@ -107,7 +122,23 @@
                 value: 'answers',
             },
 
-        }
+        },
+      observers: [
+        '_handlePersonalisationDataChangeSET(filter)',
+        '_handlePersonalisationDataChangeGET(personalisationData.data)',
+      ],
+      _localizedDropdown: function(localize) {
+        return [{
+          value: 'following',
+          label: [[localize('display-following')]],
+        }, {
+          value: 'developing',
+          label: [[localize('developing')]],
+        }, {
+          value: 'answers',
+          label: [[localize('answers')]],
+        }];
+      },
 
 
     });
