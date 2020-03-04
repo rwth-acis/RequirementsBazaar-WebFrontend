@@ -66,7 +66,7 @@
         [[localize('comments')]]
         </span>
 
-
+        <paper-icon-button on-tap="refresh" icon="refresh" class="refreshIcon"></paper-icon-button>
         <paper-dropdown-menu  class="dashboard-dropdowns" no-label-float horizontal-align="left" >
           <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{filter}}" >
             <template is="dom-repeat" items="{{ _localizedDropdown(localize) }}" as="item">

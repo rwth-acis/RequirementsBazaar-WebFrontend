@@ -93,6 +93,13 @@
     <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
     <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
 
+    <personalisation-element
+            id="personalisationConnector"
+            keyid="{{personalisationKey}}"
+            keyversion="{{personalisationVersion}}"
+            exchange = "{{personalisationData}}"
+    ></personalisation-element>
+
     <iron-ajax
             id="statisticsLoader"
             loading="{{loading}}"
@@ -125,7 +132,7 @@
 
       </div>
       <div class="card-content">
-        <template is="dom-if" if="[[!_userFirstLogin(currentUser)]]">
+        <template is="dom-if" if="[[!_userFirstLogin(lastActivityRemote)]]">
           [[localize('dashboard-introduction')]]
           <a  class="explore"  href$="[[_frontendBasePath]]projects">
             <paper-button raised>[[localize('explore-projects')]]</paper-button>
@@ -138,31 +145,31 @@
                 <template is="dom-if" if="[[_displayCategory(statistics.numberOfProjects)]]">
                   <div class="tableRow">
                     <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfProjects]]"></count-up></div>
-                    <div class="tableCell">[[localize('new')]] [[localize('projects')]]</div>
+                    <div class="tableCell">[[localize('new-projects')]]</div>
                   </div>
                 </template>
                 <template is="dom-if" if="[[_displayCategory(statistics.numberOfCategories)]]">
                   <div class="tableRow">
                     <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfCategories]]"></count-up></div>
-                    <div class="tableCell">[[localize('new')]] [[localize('categories')]]</div>
+                    <div class="tableCell">[[localize('new-categories')]]</div>
                   </div>
                 </template>
                 <template is="dom-if" if="[[_displayCategory(statistics.numberOfRequirements)]]">
                   <div class="tableRow">
                     <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfRequirements]]"></count-up></div>
-                    <div class="tableCell">[[localize('new')]] [[localize('requirements')]]</div>
+                    <div class="tableCell">[[localize('new-requirements')]]</div>
                   </div>
                 </template>
                 <template is="dom-if" if="[[_displayCategory(statistics.numberOfComments)]]">
                   <div class="tableRow">
                     <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfComments]]"></count-up></div>
-                    <div class="tableCell">[[localize('new')]] [[localize('comments')]]</div>
+                    <div class="tableCell">[[localize('new-comments')]]</div>
                   </div>
                 </template>
                 <template is="dom-if" if="[[_displayCategory(statistics.numberOfVotes)]]">
                   <div class="tableRow">
                     <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfVotes]]"></count-up></div>
-                    <div class="tableCell">[[localize('new')]] [[localize('votes')]]</div>
+                    <div class="tableCell">[[localize('new-votes')]]</div>
                   </div>
                 </template>
               </div>
@@ -174,7 +181,7 @@
           </div>
         </template>
 
-        <template is="dom-if" if="[[_userFirstLogin(currentUser)]]">
+        <template is="dom-if" if="[[_userFirstLogin(lastActivityRemote)]]">
           [[localize('dashboard-text-new-user')]]
           <a  class="explore"  href$="[[_frontendBasePath]]projects">
             <paper-button raised>[[localize('explore-projects')]]</paper-button>
@@ -192,35 +199,90 @@
   <script>
     Polymer({
       is: 'dashboard-welcome',
-
       behaviors: [
         ConfigBehavior
       ],
-        properties: {
-            filter: {
-                type: String,
-                notify: true,
-                value: 'created',
-            },
-          statistics: {
-              type: Object,
-            notify: true,
-          },
-          statisticsParameters: {
-              type: String,
-              computed: '_convertParameter(currentUser)',
-          }
+      properties: {
+        filter: {
+          type: String,
+          notify: true,
+          value: 'created',
         },
-      _convertParameter: function(currentUser) {
-        if(typeof currentUser.lastLoginDate != 'undefined' && currentUser.lastLoginDate != '') {
-          var t = new Date(currentUser.lastLoginDate);
-          return '?since=2019-02-22T18:11:44.000Z';//'+t.toISOString(); //2019-02-22T18:11:44.000Z';
+        statistics: {
+          type: Object,
+          notify: true,
+        },
+        statisticsParameters: {
+          type: String,
+          computed: '_convertParameter(lastActivityRemote)',
+        },
+        lastActivity: {
+          type: String,
+        },
+        lastActivityRemote: {
+          type: String,
+          value: '',
+        },
+        _lastActivityStatus: {
+          type: String,
+          value: 'INIT'
+        },
+        personalisationVersion: {
+          type: String,
+          value: '1',
+        },
+        personalisationData: {
+          type: Object,
+          notify: true,
+        }
+      },
+      observers: [
+        '_handlePersonalisationDataChangeLocal(lastActivity)',
+        '_handlePersonalisationDataChangeRemote(personalisationData.data)',
+      ],
+      _handlePersonalisationDataChangeLocal: function() {
+          this.$.personalisationConnector.setData({'lastActivity': this.lastActivity});
+      },
+      _handlePersonalisationDataChangeRemote: function() {
+        if(this.$.personalisationConnector.verifyGet()) {
+          this.lastActivityRemote = this.personalisationData.data.lastActivity;
+        }
+      },
+      _convertParameter: function(lastActivityRemote) {
+        if(typeof lastActivityRemote != 'undefined' && lastActivityRemote != '') {
+          return '?since='+lastActivityRemote;
         }
         return '';
       },
-      _displayCategory: function(category){
+
+      //Arms on load & Attaches click-handler that updates lastActivity if armed & arms otherwise
+      attached: function() {
+        this._armActivity();
+        document.getElementById('dashboardView').addEventListener('click', function() {
+          if(this._lastActivityStatus == 'ARMED') {
+            this.debounce('dashboard_welcome_last_activity', function() {
+              this.lastActivity = new Date().toISOString();
+            }, 5000);
+          }else if(this._lastActivityStatus == 'TIMEDOUT') {
+            this._armActivity(500);   //Arm after 0.5 sec
+          }
+        }.bind(this));
+      },
+
+      // Sets waits armAfter ms and then arms "activity-meter" for 5 minutes
+      _armActivity: function(armAfter = 6*1000) {
+        this.async(function() {
+          this._lastActivityStatus='ARMED';
+          this.async(function() {
+            this._lastActivityStatus='TIMEDOUT';
+          }, 5*60*1000);  //Timeout after 5min of inactivity
+        }, armAfter);      //ARM after 6 seconds
+      },
+      _displayCategory: function(category) {
         return category>0;
       },
+
+      /* Returns true if one statistic is > 0 */
       _displayStats: function(obj) {
         for (var key in obj) {
           if (obj.hasOwnProperty(key) && obj[key]>0) {
@@ -229,12 +291,16 @@
         }
         return false;
       },
+
+      // Returns firstName if available, username else
       _displayNameIfAvailable: function(user) {
         if(typeof user.firstName != 'undefined' && user.firstName != '') return user.firstName;
         return user.userName;
       },
-      _userFirstLogin: function(user) {
-        if(typeof user.lastLoginDate != 'undefined' && user.lastLoginDate != '') return false;
+
+      //Checks if lastActivity is saved, if yes,
+      _userFirstLogin: function(lastActivityRemote) {
+        if(typeof lastActivityRemote != 'undefined' && lastActivityRemote != '') return false;
         return true;
       },
 

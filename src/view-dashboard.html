@@ -22,7 +22,7 @@
                                   on-openidconnect-signin-aware-success="_handleSigninSuccess"
                                   on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
 
-      <dashboard-controller config="{{config}}" loading="{{loading}}"></dashboard-controller>
+      <dashboard-controller id="dashboardController" config="{{config}}" loading="{{loading}}"></dashboard-controller>
       <app-drawer id="drawer" align="right">
           <activity-tracker-wrapper loading="{{loading}}"></activity-tracker-wrapper>
       </app-drawer>
@@ -32,12 +32,17 @@
   <script>
     Polymer({
       is: 'view-dashboard',
-      properties:{
+      properties: {
           loading: {
               type: Boolean,
-              notify: true
+              notify: true,
           },
-        config:{
+          view: {
+              type: String,
+              notify: true,
+              observer: '_viewChanged'
+          },
+        config: {
           type: Object,
           value: {
             dependencies: ['../elements/dashboard-projects.html', '../elements/dashboard-requirements.html', '../elements/dashboard-comments.html', '../elements/dashboard-welcome.html'],
@@ -45,7 +50,8 @@
                     {
                         type: 'dashboard-welcome',
                         config: {
-                            class: 'hideOnMobile',
+                            'class': 'hideOnMobile',
+                            'personalisationKey': 'DASH_WELCOME',
                         },
                         position: {
                             top: 1,
@@ -99,14 +105,22 @@
         behaviors: [
             ConfigBehavior,
         ],
-        observers: ['authorizedChanged(authorized)'],
+        observers: ['_authorizedChanged(authorized)'],
         getRightDrawer: function() {
             return this.$.drawer;
         },
-        authorizedChanged: function(auth) {
+
+        _authorizedChanged: function(auth) {
           this.debounce('_verifyAuth', function() {
               if(!this.authorized) this.fire('iron-signal', {name: 'goto-landing'});
           }.bind(this), 1000);
+        },
+        _viewChanged: function(newView, oldView) {
+          if(newView == 'dashboard' && newView != oldView) {
+              this.$.dashboardController.relayMessage('visible', true);
+          }else if(newView != 'dashboard') {
+              this.$.dashboardController.relayMessage('visible', false);
+          }
         },
     });
   </script>

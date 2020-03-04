@@ -61,7 +61,7 @@
         [[localize('requirements')]]
         </span>
 
-
+        <paper-icon-button on-tap="refresh" icon="refresh" class="refreshIcon"></paper-icon-button>
         <paper-dropdown-menu  class="dashboard-dropdowns" no-label-float horizontal-align="left" >
           <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{filter}}" >
             <template is="dom-repeat" items="{{ _localizedDropdown(localize) }}" as="item">
@@ -79,7 +79,7 @@
         <iron-scroll-threshold id="scrollThreshold" on-lower-threshold="_loadMoreData">
           <div class="list">
             <template is="dom-repeat" items="{{items}}" >
-              <a href="[[_frontendBasePath]]projects/[[item.projectId]]/categories/[[item.categories.0.id]]/requirements/[[item.id]]">
+              <a href="[[_frontendBasePath]]projects/[[item.projectId]]/categories/[[item.categories.0.id]]/requirements/[[item.id]]?source=dashboard">
                 <paper-item class="item border-bottom">
                   <paper-item-body two-line>
                     <div><b class="project_name">[[item.context.project.name]]</b> [[item.name]]</div>

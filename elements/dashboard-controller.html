@@ -59,9 +59,23 @@
                     type: Boolean,
                     notify: true
                 },
+                _modules: {
+                    type: Array,
+                    value: [],
+                }
 
             },
             observers:[],
+
+
+            // Relays message to all modules that implement "message" function, internal signaling
+            relayMessage: function(name, payload) {
+                this._modules.forEach(function(module) {
+                    if(typeof module.message == 'function') {
+                        module.message({'name': name, 'payload': payload});
+                    }
+                }.bind(this));
+            },
 
             loadConfiguration: function(config) {
                 this._loadDependencies(config.dependencies).then(function() {
@@ -88,6 +102,8 @@
                 return promise;
             },
             _setupElements: function(config) {
+                Polymer.dom(this.$.grid).innerHTML = '';
+                this._modules = [];
                 config.forEach(function(item, index) {
                     // Create Element
                     var element = document.createElement(item.type);
@@ -102,6 +118,7 @@
                     this._setPositionStyles(wrapper, item.position);
                     // Append
                     wrapper.appendChild(element);
+                    this._modules.push(element);
                     Polymer.dom(this.$.grid).appendChild(wrapper);
                 }.bind(this));
             },
@@ -113,10 +130,10 @@
                     'grid-row-end': 'span '+ position.height,
                 });
             },
-            _camelCasetoDash: function(str){
+            _camelCasetoDash: function(str) {
                 // Thanks to https://gist.github.com/youssman/745578062609e8acac9f#gistcomment-2304728
                 return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
-            }
+            },
 
 
         });

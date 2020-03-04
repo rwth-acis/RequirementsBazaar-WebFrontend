@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-styles/color.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
 <link rel="import" href="../elements/personalisation-element.html">
@@ -73,7 +74,7 @@
             [[localize('projects')]]
         </span>
 
-
+        <paper-icon-button on-tap="refresh" icon="refresh" class="refreshIcon"></paper-icon-button>
         <paper-dropdown-menu  class="dashboard-dropdowns" no-label-float horizontal-align="left" >
           <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{filter}}" >
             <template is="dom-repeat" items="{{ _localizedDropdown(localize) }}" as="item">
@@ -90,7 +91,7 @@
         <iron-scroll-threshold id="scrollThreshold" on-lower-threshold="_loadMoreData">
           <div class="list">
             <template is="dom-repeat" items="{{items}}" >
-              <a href$="[[_frontendBasePath]]projects/[[item.id]]">
+              <a href$="[[_frontendBasePath]]projects/[[item.id]]?source=dashboard">
                 <paper-item class="item border-bottom">
                   [[item.name]]
                   <div class="numbers">

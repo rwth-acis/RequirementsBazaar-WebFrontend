@@ -15,7 +15,11 @@
                 box-sizing: border-box;
             }
             .dashboard-dropdowns{
-                float: right;
+               top: -3px;
+            }
+            .refreshIcon{
+                margin-left: auto;
+                margin-right: 5px;
             }
 
             .item {
@@ -189,6 +193,11 @@
       refresh: function() {
           this.$.getRequest.generateRequest();
       },
+        message: function(message) {
+            if(message.name == 'visible') {
+                if (message.payload == true) this.refresh();
+            }
+        },
 
       _computeProjectsRequestParameters:
           function(currentPage, filter, additionalParameters) {

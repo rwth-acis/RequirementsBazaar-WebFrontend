@@ -158,7 +158,7 @@
           <div main-title on-tap="_gotoLanding">
             <span><img src="../images/reqbaz-logo.svg">Requirements Bazaar</span>
           </div>
-          <a id="dashboardMenuItem" href$="[[_frontendBasePath]]dashboard" hidden$="[[!authorized]]" hidden$="[[hasRightDrawer]]">[[localize('dashboard')]]</a>
+          <a id="dashboardMenuItem" href$="[[_frontendBasePath]]dashboard" hidden$="[[!_authorized]]" hidden$="[[hasRightDrawer]]">[[localize('dashboard')]]</a>
           <a id="aboutMenuItem" href$="[[_frontendBasePath]]about" hidden$="[[hasRightDrawer]]">[[localize('about')]]</a>
           <paper-menu-button id="languageMenuButton">
             <paper-icon-button icon="language" class="dropdown-trigger" alt="menu"></paper-icon-button>
@@ -188,7 +188,7 @@
           <paper-menu-button horizontal-align="right" vertical-align="top" on-iron-select="_handleMainMenuSelect" id="mainMenuButton">
             <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
             <paper-menu id="mainMenu" class="dropdown-content">
-              <paper-item value="dashboard">[[localize('dashboard')]]</paper-item>
+              <paper-item value="dashboard" hidden$="[[!_authorized]]">[[localize('dashboard')]]</paper-item>
               <paper-item value="about" hidden$="[[hasRightDrawer]]">[[localize('about')]]</paper-item>
               <paper-item value="activities" right-drawer-toggle hidden$="[[!hasRightDrawer]]">[[localize('showActivityTracker')]]</paper-item>
               <paper-item value="user" hidden$="[[!_authorized]]">[[localize('userSettings')]]</paper-item>
@@ -215,7 +215,7 @@
         <view-landing name="landing" loading="{{loading}}"></view-landing>
         <view-about name="about"></view-about>
         <view-imprint name="imprint"></view-imprint>
-        <view-dashboard id="dashboardView" loading="{{loading}}" name="dashboard"></view-dashboard>
+        <view-dashboard id="dashboardView" loading="{{loading}}" name="dashboard" view="[[view]]"></view-dashboard>
         <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered" loading="{{loading}}"></view-projects>
         <view-404 name="404"></view-404>
       </iron-pages>
