@@ -8,9 +8,9 @@
         <openidconnect-signin-aware is-authorized="{{authorized}}"
                                     on-openidconnect-signin-aware-success="_handleSigninSuccess"
                                     on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
-        
+
         <iron-ajax id="putPersonalisationData"
-                   url="[[_personalisationDataUrl]]"
+                   url="[[_computedUrl]]"
                    content-type="application/json"
                    body = "[[putBody]]"
                    method="PUT"
@@ -20,7 +20,7 @@
 
         <iron-ajax id="getPersonalisationData"
                    handle-as="json"
-                   url="[[getUrl]]"
+                   url="[[_computedUrl]]"
                    content-type="application/json"
                    method="GET"
                    headers="[[authHeader]]"
@@ -28,13 +28,11 @@
                    on-error="_personalisationError"></iron-ajax>
     </template>
 
-
-
-
     <script>
         const LOCALCONSTANT = "LOC";
         const REMOTECONSTANT = "REM";
         const INTERNALCONSTANT = "INT";
+        const INITCONSTANT = "INIT"
         Polymer({
             is: 'personalisation-element',
 
@@ -54,7 +52,7 @@
                     notify: true,
                     value: ""
                 },
-                getUrl: {
+                _computedUrl: {
                     type: String,
                     computed: '_computeGETPersonalisationDataUrl(_personalisationDataUrl,keyid, keyversion)'
                 },
@@ -64,7 +62,7 @@
                     notify: true,
                     value:{
                         data: null,
-                        __personalisationDataStatus: "INIT"
+                        __personalisationDataStatus: INITCONSTANT
                     }
                 },
 
@@ -85,11 +83,16 @@
 
                 }
             },
+            isEnabled: function(){
+                return (typeof GlobalConfig.currentUser != 'undefined' && GlobalConfig.currentUser.hasOwnProperty('personalizationEnabled') && GlobalConfig.currentUser.personalizationEnabled);
+            },
             //setData: Public function to set the personalisation-data manually
             setData: function(value, status = LOCALCONSTANT){
                 this.exchange.__personalisationDataStatus = status;
-                this.exchange.data = value;
-                this.notifyPath('exchange.data');
+                if(JSON.stringify(this.exchange.data) != JSON.stringify(value)){
+                    this.exchange.data = value;
+                    this.notifyPath('exchange.data');
+                }
             },
             //verifyGet: Verifies condition for data change coming from the personalisationElement
             verifyGet: function(){
@@ -117,6 +120,7 @@
                 return new Promise(
                     function(accept, reject){
                         if(!this.authorized) return reject("Unauthorized");
+                        if(!this.isEnabled()) reject("Disabled");
                         let request = this.$.getPersonalisationData.generateRequest();
                         let promise = request.completes;
                         promise
@@ -130,18 +134,15 @@
                                             }else{
                                                 return reject("Previous data not of type array");                        //Alternative override with accept([]);
                                             }
+                                        }else if(request.__data__.status == 204) {                  //No data found
+                                            return accept([]);
                                         }
+
                                     }
                                 return reject();
                                 }.bind(this, request)
                             ).catch(                                                                //Error getting old data
                             function(request,error){
-                                if(request.hasOwnProperty("__data__") ){
-                                    //no entry found, start with empty array
-                                    if(request.__data__.status == 404){
-                                        return accept([]);
-                                    }
-                                }
                                 return reject(error);
                             }.bind(this, request));
                     }.bind(this)
@@ -151,12 +152,12 @@
 
             //_handleDataChanged Observer for exchange.data, creates & sends PUT request
             _handleDataChanged: function() {
-                if((this.exchange.__personalisationDataStatus == LOCALCONSTANT || this.exchange.__personalisationDataStatus == INTERNALCONSTANT) && this.isAuthorized()) {
-                    this.debounce('_handleDataChanged', function(){
-                        if(typeof this.keyid != 'undefined' && typeof this.keyversion != 'undefined' && typeof this.exchange.data!= 'undefined' && this.exchange.data != null){
+                if((this.exchange.__personalisationDataStatus == LOCALCONSTANT || this.exchange.__personalisationDataStatus == INTERNALCONSTANT) && this.isAuthorized() && this.isEnabled()) {
+                    this.debounce(this._debounceIdent('_handleDataChanged'), function(){
+                        if(typeof this.keyid != 'undefined' && this.keyid != "" && typeof this.keyversion != 'undefined' && typeof this.exchange.data!= 'undefined' && this.exchange.data != null){
                             this.$.putPersonalisationData.body = JSON.stringify({
-                                key: this.keyid,
-                                version: this.keyversion,
+                             //   key: this.keyid,
+                             //   version: this.keyversion,
                                 value: JSON.stringify(this.exchange.data),
                             });
                             this.$.putPersonalisationData.generateRequest();
@@ -169,8 +170,8 @@
 
             //_handleAuthorizedChanged: Observer for Auth
             _handleAuthorizedChanged: function(){
-                this.debounce('_handleAuthorizedChanged', function() {
-                if(this.authorized) {
+                this.debounce(this._debounceIdent('_handleAuthorizedChanged'), function() {
+                if(this.authorized && this.isEnabled()) {
                     this.$.getPersonalisationData.generateRequest();
                 }
                 }, 300);
@@ -178,6 +179,7 @@
 
             //Callback for Iron-AJAX GET
             _handleGETPersonalisationData: function(e){
+                if(e.detail.__data__.status != 200) return
                 if(e.detail.response != null){
                     this.exchange.__personalisationDataStatus = REMOTECONSTANT;
                     this.exchange.data = JSON.parse(e.detail.response.value);
@@ -194,8 +196,13 @@
             },
 
             _computeGETPersonalisationDataUrl: function(_personalisationDataUrl,keyid, keyversion) {
-                return _personalisationDataUrl + keyid + '/' + keyversion;
+
+                return _personalisationDataUrl + keyid + '-' + keyversion;
             },
+
+            _debounceIdent: function(s){
+                return s+"-"+this.keyid+"-"+typeof this.keyversion
+            }
 
         });
     </script>
