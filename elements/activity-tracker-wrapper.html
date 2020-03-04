@@ -72,25 +72,21 @@
                 <div class="filters" >
                     <paper-dropdown-menu label="[[localize('view')]]" class="viewDropdown">
                         <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_typeFilter}}">
-                            <paper-item value="all">[[localize('all')]]</paper-item>
-                            <paper-item value="development">[[localize('development')]]</paper-item>
-                            <paper-item value="feedback">[[localize('feedback')]]</paper-item>
-                            <paper-item value="follow">[[localize('followers')]]</paper-item>
-                            <paper-item value="updates">[[localize('updates')]]</paper-item>
+                            <template is="dom-repeat" items="{{ _localizedTypeDropdown(localize) }}" as="item">
+                                <paper-item value="[[ item.value ]]">[[ item.label ]]</paper-item>
+                            </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
                         <paper-dropdown-menu label="[[localize('from')]]" class="originDropdown">
                             <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_originFilter}}">
-                                <paper-item value="all">[[localize('all')]]</paper-item>
-                                <paper-item value="created">[[localize('created-by-me')]]</paper-item>
-                                <paper-item value="following">[[localize('following')]]</paper-item>
-                                <paper-item value="developing">[[localize('developing')]]</paper-item>
-                              <!--  <paper-item value="requirement">[[localize('sorting-requirements')]]</paper-item> -->
+                                <template is="dom-repeat" items="{{ _localizedOriginDropdown(localize) }}" as="item">
+                                    <paper-item value="[[ item.value ]]">[[ item.label ]]</paper-item>
+                                </template>
                             </paper-listbox>
                         </paper-dropdown-menu>
                 </div>
             </template>
-            <activity-tracker id="tracker" request-parameters="[[_params]]"  initial-limit="20" url="[[_activityTrackerBaseUrl]]" auto-update-interval="90" loading="{{loading}}"></activity-tracker>
+            <activity-tracker id="tracker" request-parameters="[[_params]]"  initial-limit="20" url="[[_activityTrackerBaseUrl]]" auto-update-interval="90" loading="{{loading}}" append-url-parameter="source=activityTracker"></activity-tracker>
         </div>
 
 
@@ -160,12 +156,45 @@
                 }
             },
             _handleAuthorizedChanged: function() {
-                this.debounce('_handleAuthorizedChanged', function() {
+                this.debounce('_handleAuthorizedChanged-activitytracker', function() {
                     if(!this.authorized) {
                         this._typeFilter = 'all';
                         this._originFilter = 'all';
                     }
                 }, 300);
+            },
+            _localizedTypeDropdown: function(localize) {
+                return [{
+                    value: 'all',
+                    label: [[localize('all')]],
+                }, {
+                    value: 'development',
+                    label: [[localize('development')]],
+                }, {
+                    value: 'feedback',
+                    label: [[localize('feedback')]],
+                }, {
+                    value: 'follow',
+                    label: [[localize('following')]],
+                }, {
+                    value: 'updates',
+                    label: [[localize('updates')]],
+                }];
+            },
+            _localizedOriginDropdown: function(localize) {
+                return [{
+                    value: 'all',
+                    label: [[localize('all')]],
+                }, {
+                    value: 'created',
+                    label: [[localize('created-by-me')]],
+                }, {
+                    value: 'following',
+                    label: [[localize('following')]],
+                }, {
+                    value: 'developing',
+                    label: [[localize('developing')]],
+                }];
             },
 
             _originFilterChanged: function(filter) {
