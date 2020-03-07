@@ -1,0 +1,310 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/openidconnect-signin/openidconnect-signin.html">
+<link rel="import" href="../bower_components/count-up/count-up.html">x
+<link rel="import" href="../src/config-behavior.html">
+<link rel="import" href="../src/item-list-behavior.html">
+
+<dom-module id="dashboard-welcome">
+  <template>
+    <style include="item-list-styles">
+      .explore paper-button{
+        background-color: #FF8324;
+        color: white;
+        font-weight: bold;
+        margin: 0px;
+        margin-top: 20px;
+        text-align: center;
+        min-width: 100%;
+      }
+      .explore {
+        font-size: 20px;
+        color: inherit;
+        text-decoration: none;
+
+
+      }
+      .card-content{
+        padding: 10px;
+        font-size: 16px;
+      }
+
+
+      #figures-activities {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-around-justified);
+        @apply(--layout-start);
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      #figures {
+        width: 100%;
+        text-align: left;
+      }
+
+      .table {
+        display: table;
+        width: 100%;
+        font-size: medium;
+      }
+
+      .tableRow {
+        display: table-row;
+      }
+
+      .tableCell {
+        display: table-cell;
+        width: 80%;
+      }
+
+      .tableCell.number {
+        text-align: right;
+        padding-right: 10px;
+        font-size:large;
+        font-weight: bold;
+        width: 20%;
+      }
+
+      .tableCell:not(.number) {
+        text-align: left;
+      }
+
+
+    </style>
+
+    <openidconnect-signin-aware is-authorized="{{authorized}}"
+                                on-openidconnect-signin-aware-success="_handleSigninSuccess"
+                                on-openidconnect-signin-aware-signed-out="_handleSignedOut"></openidconnect-signin-aware>
+
+    <iron-signals on-iron-signal-current-user-changed="_handleCurrentUserChanged"></iron-signals>
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
+
+    <personalisation-element
+            id="personalisationConnector"
+            keyid="{{personalisationKey}}"
+            keyversion="{{personalisationVersion}}"
+            exchange = "{{personalisationData}}"
+    ></personalisation-element>
+
+    <iron-ajax
+            id="statisticsLoader"
+            loading="{{loading}}"
+            url="[[_apiBaseUrl]]statistics/[[statisticsParameters]]"
+            headers="[[authHeader]]"
+            method="GET"
+            last-response="{{statistics}}"
+            auto></iron-ajax>
+
+
+
+    <!-- this element will load more data when the user scrolls down and reached the lower threshold -->
+
+
+
+    <paper-card>
+      <div class="card-header">
+        <template is="dom-if" if="[[!_userFirstLogin(currentUser)]]">
+          <span>
+          [[localize('welcome')]] [[_displayNameIfAvailable(currentUser)]]
+          </span>
+        </template>
+        <template is="dom-if" if="[[_userFirstLogin(currentUser)]]">
+          <span>
+          [[localize('landing-welcome')]]
+          </span>
+        </template>
+
+
+
+      </div>
+      <div class="card-content">
+        <template is="dom-if" if="[[!_userFirstLogin(lastActivityRemote)]]">
+          [[localize('dashboard-introduction')]]
+          <a  class="explore"  href$="[[_frontendBasePath]]projects">
+            <paper-button raised>[[localize('explore-projects')]]</paper-button>
+          </a>
+          <div id="figures-activities">
+            <div id="figures">
+              <template is="dom-if" if="[[_displayStats(statistics)]]">
+                [[localize('dashboard-updates-available')]]
+                <div class="table">
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfProjects)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfProjects]]"></count-up></div>
+                    <div class="tableCell">[[localize('new-projects')]]</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfCategories)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfCategories]]"></count-up></div>
+                    <div class="tableCell">[[localize('new-categories')]]</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfRequirements)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfRequirements]]"></count-up></div>
+                    <div class="tableCell">[[localize('new-requirements')]]</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfComments)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfComments]]"></count-up></div>
+                    <div class="tableCell">[[localize('new-comments')]]</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[_displayCategory(statistics.numberOfVotes)]]">
+                  <div class="tableRow">
+                    <div class="tableCell number"><count-up start-value="0" end-value="[[statistics.numberOfVotes]]"></count-up></div>
+                    <div class="tableCell">[[localize('new-votes')]]</div>
+                  </div>
+                </template>
+              </div>
+              </template>
+              <template is="dom-if" if="[[!_displayStats(statistics)]]">
+                [[localize('dashboard-no-updates-available')]]
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <template is="dom-if" if="[[_userFirstLogin(lastActivityRemote)]]">
+          [[localize('dashboard-text-new-user')]]
+          <a  class="explore"  href$="[[_frontendBasePath]]projects">
+            <paper-button raised>[[localize('explore-projects')]]</paper-button>
+          </a>
+        </template>
+
+      </div>
+
+    </paper-card>
+
+
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'dashboard-welcome',
+      behaviors: [
+        ConfigBehavior
+      ],
+      properties: {
+        filter: {
+          type: String,
+          notify: true,
+          value: 'created',
+        },
+        statistics: {
+          type: Object,
+          notify: true,
+        },
+        statisticsParameters: {
+          type: String,
+          computed: '_convertParameter(lastActivityRemote)',
+        },
+        lastActivity: {
+          type: String,
+        },
+        lastActivityRemote: {
+          type: String,
+          value: '',
+        },
+        _lastActivityStatus: {
+          type: String,
+          value: 'INIT'
+        },
+        personalisationVersion: {
+          type: String,
+          value: '1',
+        },
+        personalisationData: {
+          type: Object,
+          notify: true,
+        }
+      },
+      observers: [
+        '_handlePersonalisationDataChangeLocal(lastActivity)',
+        '_handlePersonalisationDataChangeRemote(personalisationData.data)',
+      ],
+      _handlePersonalisationDataChangeLocal: function() {
+          this.$.personalisationConnector.setData({'lastActivity': this.lastActivity});
+      },
+      _handlePersonalisationDataChangeRemote: function() {
+        if(this.$.personalisationConnector.verifyGet()) {
+          this.lastActivityRemote = this.personalisationData.data.lastActivity;
+        }
+      },
+      _convertParameter: function(lastActivityRemote) {
+        if(typeof lastActivityRemote != 'undefined' && lastActivityRemote != '') {
+          return '?since='+lastActivityRemote;
+        }
+        return '';
+      },
+
+      //Arms on load & Attaches click-handler that updates lastActivity if armed & arms otherwise
+      attached: function() {
+        this._armActivity();
+        document.getElementById('dashboardView').addEventListener('click', function() {
+          if(this._lastActivityStatus == 'ARMED') {
+            this.debounce('dashboard_welcome_last_activity', function() {
+              this.lastActivity = new Date().toISOString();
+            }, 5000);
+          }else if(this._lastActivityStatus == 'TIMEDOUT') {
+            this._armActivity(500);   //Arm after 0.5 sec
+          }
+        }.bind(this));
+      },
+
+      // Sets waits armAfter ms and then arms "activity-meter" for 5 minutes
+      _armActivity: function(armAfter = 6*1000) {
+        this.async(function() {
+          this._lastActivityStatus='ARMED';
+          this.async(function() {
+            this._lastActivityStatus='TIMEDOUT';
+          }, 5*60*1000);  //Timeout after 5min of inactivity
+        }, armAfter);      //ARM after 6 seconds
+      },
+      _displayCategory: function(category) {
+        return category>0;
+      },
+
+      /* Returns true if one statistic is > 0 */
+      _displayStats: function(obj) {
+        for (var key in obj) {
+          if (obj.hasOwnProperty(key) && obj[key]>0) {
+            return true;
+          }
+        }
+        return false;
+      },
+
+      // Returns firstName if available, username else
+      _displayNameIfAvailable: function(user) {
+        if(typeof user.firstName != 'undefined' && user.firstName != '') return user.firstName;
+        return user.userName;
+      },
+
+      //Checks if lastActivity is saved, if yes,
+      _userFirstLogin: function(lastActivityRemote) {
+        if(typeof lastActivityRemote != 'undefined' && lastActivityRemote != '') return false;
+        return true;
+      },
+
+    });
+  </script>
+
+</dom-module>

@@ -162,10 +162,9 @@
           <paper-dropdown-menu label="[[localize('display')]]" hidden="[[!authorized]]" class="project-dropdowns">
               <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_projectFilter}}" >
                   <!-- TODO: Default Value not shown, bug in localize function https://github.com/PolymerElements/app-localize-behavior/issues/81 -->
-                  <paper-item value="all">[[localize('display-all')]]</paper-item>
-                  <paper-item value="created" >[[localize('display-own')]]</paper-item>
-                  <paper-item value="following">[[localize('display-following')]]</paper-item>
-                  <!-- <paper-item value="last">[[localize('display-last')]]</paper-item> -->
+                  <template is="dom-repeat" items="{{ _localizedFilterDropdown(localize) }}" as="item">
+                      <paper-item value="[[ item.value ]]">[[ item.label ]]</paper-item>
+                  </template>
               </paper-listbox>
           </paper-dropdown-menu>
 
@@ -301,14 +300,24 @@
               '_handlePersonalisationDataChangeGET(personalisationData.data)'
       ],
       _handlePersonalisationDataChangeSET: function() {
-        this.$.personalisationConnector.setData({
+          this.$.personalisationConnector.setData({
               s: this._projectsSorting,
               d: this._projectsSortDirection,
               f: this._projectFilter
-        });
-
-
+          });
       },
+       _localizedFilterDropdown: function(localize) {
+           return [{
+               value: 'all',
+               label: [[localize('display-all')]],
+           }, {
+               value: 'created',
+               label: [[localize('display-own')]],
+           }, {
+               value: 'following',
+               label: [[localize('display-following')]],
+           }];
+       },
       _handlePersonalisationDataChangeGET: function() {
         if(this.$.personalisationConnector.verifyGet()) {
           this._projectsSorting = this.personalisationData.data.s;

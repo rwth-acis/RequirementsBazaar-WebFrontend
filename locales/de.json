@@ -127,13 +127,11 @@
   "sorting-popularity": "Popularität",
   "sorting-requirements": "Anforderungen",
   "sorting-votes": "Votes",
-
   "display": "Filter",
   "display-all": "Alle",
   "display-following": "Folgend",
   "display-own": "Erstellt",
   "display-last": "Verlauf",
-
   "votes": "Votes",
   "requirements": "Requirements",
   "about": "Über",
@@ -144,5 +142,20 @@
   "created-by-me": "Erstellt von mir",
   "following": "Folge ich",
   "view": "Ansicht",
-  "from": "Aus"
+  "from": "Aus",
+  "dashboard": "Dashboard",
+  "answers": "Antworten",
+  "load-more-comments": "Mehr Kommentare laden",
+  "load-more-requirements": "Mehr Anforderungen laden",
+  "load-more-projects": "Mehr Projekte laden",
+  "dashboard-introduction": "This is your personalized dashboard.",
+  "dashboard-updates-available": "Updates since your last visit:",
+  "dashboard-no-updates-available": "No Updates since your last login.",
+  "dashboard-text-new-user": "This is your personal dashboard. Start by exploring public projects, follow a project or requirement or leave a comment or vote",
+  "personalizationEnabled": "Benutzeroberfläche Personalisieren",
+  "new-projects":  "Neue Projekte",
+  "new-requirements":  "Neue Anforderungen",
+  "new-votes":  "Neue Votes",
+  "new-comments":  "Neue Comments",
+  "new-categories":  "Neue Kategorien"
 }

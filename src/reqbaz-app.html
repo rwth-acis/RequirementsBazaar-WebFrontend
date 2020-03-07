@@ -108,7 +108,7 @@
       }
 
       @media (max-width: 600px) {
-        #aboutMenuItem, #languageMenuButton, #activitiesToggle, #profileImage, #openidconnectSignin {
+        #aboutMenuItem, #dashboardMenuItem, #languageMenuButton, #activitiesToggle, #profileImage, #openidconnectSignin {
           display: none !important;
         }
 
@@ -118,8 +118,7 @@
       }
     </style>
 
-    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged"></iron-signals>
-
+    <iron-signals on-iron-signal-language-changed="_handleLanguageChanged" on-iron-signal-goto-landing="_gotoLanding"></iron-signals>
     <app-localstorage-document key="language" data="{{language}}">
     </app-localstorage-document>
 
@@ -147,6 +146,7 @@
       handle-as="json"
       content-type="application/json"
       method="PUT"
+      on-response="_handleCurrentUserResponse"
       headers="[[authHeader]]"></iron-ajax>
 
     <app-double-drawer-layout id="doubleDrawerLayout"
@@ -158,6 +158,7 @@
           <div main-title on-tap="_gotoLanding">
             <span><img src="../images/reqbaz-logo.svg">Requirements Bazaar</span>
           </div>
+          <a id="dashboardMenuItem" href$="[[_frontendBasePath]]dashboard" hidden$="[[!_authorized]]" hidden$="[[hasRightDrawer]]">[[localize('dashboard')]]</a>
           <a id="aboutMenuItem" href$="[[_frontendBasePath]]about" hidden$="[[hasRightDrawer]]">[[localize('about')]]</a>
           <paper-menu-button id="languageMenuButton">
             <paper-icon-button icon="language" class="dropdown-trigger" alt="menu"></paper-icon-button>
@@ -187,6 +188,7 @@
           <paper-menu-button horizontal-align="right" vertical-align="top" on-iron-select="_handleMainMenuSelect" id="mainMenuButton">
             <paper-icon-button icon="more-vert" class="dropdown-trigger" alt="menu"></paper-icon-button>
             <paper-menu id="mainMenu" class="dropdown-content">
+              <paper-item value="dashboard" hidden$="[[!_authorized]]">[[localize('dashboard')]]</paper-item>
               <paper-item value="about" hidden$="[[hasRightDrawer]]">[[localize('about')]]</paper-item>
               <paper-item value="activities" right-drawer-toggle hidden$="[[!hasRightDrawer]]">[[localize('showActivityTracker')]]</paper-item>
               <paper-item value="user" hidden$="[[!_authorized]]">[[localize('userSettings')]]</paper-item>
@@ -213,6 +215,7 @@
         <view-landing name="landing" loading="{{loading}}"></view-landing>
         <view-about name="about"></view-about>
         <view-imprint name="imprint"></view-imprint>
+        <view-dashboard id="dashboardView" loading="{{loading}}" name="dashboard" view="[[view]]"></view-dashboard>
         <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered" loading="{{loading}}"></view-projects>
         <view-404 name="404"></view-404>
       </iron-pages>
@@ -230,6 +233,10 @@
       <div>
         [[localize('mailDefaultFollow')]]:
         <paper-toggle-button checked="[[currentUser.emailFollowSubscription]]" on-tap="_handleUserSettingsFollowChange"></paper-toggle-button>
+      </div>
+      <div>
+        [[localize('personalizationEnabled')]]:
+        <paper-toggle-button checked="[[currentUser.personalizationEnabled]]" on-tap="_handleUserSettingsPersonalizationChange"></paper-toggle-button>
       </div>
       <!--<div>-->
       <!--Connect Github Account:-->
@@ -357,6 +364,8 @@
           this.$.languageDialog.open();
         } else if (selectedValue === 'about') {
           window.location.href = this._frontendBasePath + 'about';
+        }else if (selectedValue === 'dashboard') {
+          window.location.href = this._frontendBasePath + 'dashboard';
         }
       },
 
@@ -391,6 +400,9 @@
           // e.target.import is the import document.
           if (view === 'projects') {
             this.$.doubleDrawerLayout.rightDrawer = this.$.projectsView.getRightDrawer();
+            this.hasRightDrawer = true;
+          }else if(view === 'dashboard'){
+            this.$.doubleDrawerLayout.rightDrawer = this.$.dashboardView.getRightDrawer();
             this.hasRightDrawer = true;
           } else {
             // reset layout
@@ -428,6 +440,17 @@
         request.body = JSON.stringify({
           "id": this.currentUser.id,
           "emailFollowSubscription": !(this.currentUser.emailFollowSubscription)
+        });
+
+        request.generateRequest();
+      },
+      _handleUserSettingsPersonalizationChange: function(e) {
+        var request = this.$.userSettingsRequest;
+        request.url = this._apiBaseUrl + 'users/' + this.currentUser.id;
+
+        request.body = JSON.stringify({
+          "id": this.currentUser.id,
+          "personalizationEnabled": !(this.currentUser.personalizationEnabled)
         });
 
         request.generateRequest();

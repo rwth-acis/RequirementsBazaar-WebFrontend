@@ -105,7 +105,7 @@
 
     _handleSigninSuccess: function(e) {
       var accessToken = e.detail.access_token;
-      
+
       if (!GlobalConfig.authorization) {
         fetch('https://api.learning-layers.eu/o/oauth2/userinfo', {
           method: 'GET',
@@ -117,28 +117,28 @@
         .then((data) => {
           // we received the sub
           GlobalConfig.authorization = window.btoa(data.preferred_username + ':' + data.sub);
-          this.authorized = true;
           var authorization = window.btoa('koren:28518');
           this.authHeader = {
             'access-token': accessToken,
             'Authorization': 'Basic ' + GlobalConfig.authorization,
             'oidc_provider': 'https://api.learning-layers.eu/o/oauth2',
           };
+          this.authorized = true;
         });
       } else {
-        this.authorized = true;
         var authorization = window.btoa('koren:28518');
         this.authHeader = {
           'access-token': accessToken,
           'Authorization': 'Basic ' + GlobalConfig.authorization,
           'oidc_provider': 'https://api.learning-layers.eu/o/oauth2',
         };
-      } 
+        this.authorized = true;
+      }
     },
 
     _handleSignedOut: function(e) {
       this.authHeader = null;
-        this.authorized = false;
+      this.authorized = false;
     },
 
     _currentUserChanged: function(newValue) {
