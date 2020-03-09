@@ -65,6 +65,10 @@
                         __personalisationDataStatus: INITCONSTANT
                     }
                 },
+                _readyToUnload: {
+                    type: Boolean,
+                    value: false
+                }
 
 
             },
@@ -163,7 +167,7 @@
                             this.$.putPersonalisationData.generateRequest();
                         }
 
-                    }, 2000);
+                    }, 5000);
                 }
             },
 
@@ -202,8 +206,19 @@
 
             _debounceIdent: function(s){
                 return s+"-"+this.keyid+"-"+typeof this.keyversion
-            }
+            },
+           ready: function(){
+                var callback =  this._beforeUnload.bind(this);
+                window.addEventListener('beforeunload',  callback);
+                window.addEventListener('unload',  callback);
+            },
 
+            _beforeUnload: function(){
+                if(!this._readyToUnload){
+                    this.flushDebouncer(this._debounceIdent('_handleDataChanged'));
+                    this._readyToUnload = true;
+                }
+            }
         });
     </script>
 
