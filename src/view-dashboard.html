@@ -16,6 +16,13 @@
       width: 100%;
       height: 1px; /* workaround to make child inherit 100% min-height */
     }
+    app-drawer[align="right"] {
+        text-align: left;
+    }
+
+    app-drawer activity-tracker {
+        height: 100%;
+    }
   </style>
   <template>
       <openidconnect-signin-aware is-authorized="{{authorized}}"

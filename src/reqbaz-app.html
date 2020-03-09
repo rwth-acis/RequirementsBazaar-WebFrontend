@@ -215,7 +215,7 @@
         <view-landing name="landing" loading="{{loading}}"></view-landing>
         <view-about name="about"></view-about>
         <view-imprint name="imprint"></view-imprint>
-        <view-dashboard id="dashboardView" loading="{{loading}}" name="dashboard" view="[[view]]"></view-dashboard>
+        <view-dashboard id="dashboardView" loading="{{loading}}" on-drawer-registered="_handleDrawerRegistered" name="dashboard" view="[[view]]"></view-dashboard>
         <view-projects id="projectsView" name="projects" route="{{subroute}}" on-drawer-registered="_handleDrawerRegistered" loading="{{loading}}"></view-projects>
         <view-404 name="404"></view-404>
       </iron-pages>
