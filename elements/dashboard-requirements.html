@@ -82,7 +82,7 @@
               <a href="[[_frontendBasePath]]projects/[[item.projectId]]/categories/[[item.categories.0.id]]/requirements/[[item.id]]?source=dashboard">
                 <paper-item class="item border-bottom">
                   <paper-item-body two-line>
-                    <div><b class="project_name">[[item.context.project.name]]</b> [[item.name]]</div>
+                    <div><b class="project_name">[[item._context.project.name]]</b> [[item.name]]</div>
                     <div secondary>[[item.description]]</div>
                   </paper-item-body>
                 </paper-item>
@@ -133,8 +133,11 @@
           value: 'following',
           label: [[localize('display-following')]],
         }, {
-          value: 'developing',
+          value: 'contributed',
           label: [[localize('developing')]],
+        }, {
+          value: 'contributed',
+          label: [[localize('contributed')]],
         }];
       },
 
