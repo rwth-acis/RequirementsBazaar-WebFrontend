@@ -7,13 +7,10 @@
         }
         #grid{
             display: grid;
-            grid-template-rows: repeat(4, 1fr);/*repeat(4, calc(100% / 4)); */
-            grid-template-columns: repeat(3, 1fr);/*calc(100% / 3) calc(100% / 3) calc(100% / 3); */
             min-height: calc(100% - 40px);
             grid-column-gap: 20px;
             grid-row-gap: 20px;
             padding: 20px;
-
         }
 
         @media (max-width: 800px) {
@@ -31,7 +28,7 @@
         }
     </style>
     <template>
-        <div id="grid"></div>
+        <div id="grid" style$={{_gridStyle}}></div>
     </template>
 
 
@@ -62,11 +59,22 @@
                 _modules: {
                     type: Array,
                     value: [],
+                },
+                rows: {
+                    type: Number,
+                    value: 4,
+                },
+                columns: {
+                    type: Number,
+                    value: 3,
+                },
+                _gridStyle: {
+                    type: String,
+                    computed: '_computeGridStyle(rows, columns)',
                 }
 
             },
             observers:[],
-
 
             // Relays message to all modules that implement "message" function, internal signaling
             relayMessage: function(name, payload) {
@@ -76,13 +84,14 @@
                     }
                 }.bind(this));
             },
-
+            // Loads dependencies .then() sets up elements
             loadConfiguration: function(config) {
                 this._loadDependencies(config.dependencies).then(function() {
                     this._setupElements(config.elements);
                     }.bind(this)
                 );
             },
+            // Loads dependencies using importHref, returns promise fulfilled when all dependencies are loaded
             _loadDependencies: function(elementUriArray) {
                 this.loading = true;
                 var loadingArray = [];
@@ -101,6 +110,7 @@
                 })
                 return promise;
             },
+            // Creates wrappers & elements for each element
             _setupElements: function(config) {
                 Polymer.dom(this.$.grid).innerHTML = '';
                 this._modules = [];
@@ -122,6 +132,7 @@
                     Polymer.dom(this.$.grid).appendChild(wrapper);
                 }.bind(this));
             },
+            // Assignes position/size styles for element wrappers
             _setPositionStyles: function(element, position) {
                 Object.assign(element.style, {
                     'grid-column-start': position.left,
@@ -130,10 +141,17 @@
                     'grid-row-end': 'span '+ position.height,
                 });
             },
+            // Support for variable grid-layouts
+            _computeGridStyle: function(rows, columns) {
+                return 'grid-template-rows: repeat('+rows+', 1fr);' +
+                    'grid-template-columns: repeat('+columns+', 1fr);';
+            },
+            // Transform camelCase to dash-case
             _camelCasetoDash: function(str) {
                 // Thanks to https://gist.github.com/youssman/745578062609e8acac9f#gistcomment-2304728
                 return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
             },
+
 
 
         });
