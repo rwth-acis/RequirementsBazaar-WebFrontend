@@ -1,7 +1,7 @@
 import { Project } from '../types/api';
 
 export type State = {
-  projects: {};
+  projects: {[id: number] : Project};
 }
 
 export const state: State = {

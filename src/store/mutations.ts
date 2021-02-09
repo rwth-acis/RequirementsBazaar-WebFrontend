@@ -16,7 +16,9 @@ export type Mutations = {
 export const mutations: MutationTree<State> & Mutations = {
   [MutationType.SetProjects](state, projects) {
     projects.forEach((project) => {
-      state.projects[project.id] = project;
+      if (project.id) {
+        state.projects[project.id] = project;
+      }
     });
     //state.projects = Object.values(projects);
   }
