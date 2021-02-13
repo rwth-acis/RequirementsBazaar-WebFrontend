@@ -28,7 +28,7 @@ export default defineComponent({
     const parameters = computed(() => {return { per_page: 20, sort: '-name', search: searchQuery.value }});
     const projects = computed(() => store.getters.projectsList(parameters.value));
 
-    onMounted(() => store.dispatch(ActionTypes.FetchProjects, parameters.value));
+    store.dispatch(ActionTypes.FetchProjects, parameters.value);
 
     watch(searchQuery, () => store.dispatch(ActionTypes.FetchProjects, parameters.value));
 
