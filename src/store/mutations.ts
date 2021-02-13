@@ -43,7 +43,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetCategory](state, category) {
     if (category.id) {
-      state.projects[category.id] = category;
+      state.categories[category.id] = category;
     }
   },
 

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Landing from './views/Landing.vue';
 import Projects from './views/Projects.vue';
 import Project from './views/Project.vue';
+import Category from './views/Category.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -20,6 +21,11 @@ export const router = createRouter({
       path: "/projects/:projectId",
       name: "project",
       component: Project,
+    },
+    {
+      path: "/projects/:projectId/categories/:categoryId",
+      name: "category",
+      component: Category,
     },
   ],
 });
