@@ -1,0 +1,9 @@
+{
+  "globalComponents": [
+      "./node_modules/primevue/inputtext/InputText.vue", {
+          "InputText": {
+              "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
+          }
+      }
+  ]
+}
