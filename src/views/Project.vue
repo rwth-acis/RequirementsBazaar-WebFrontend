@@ -1,6 +1,11 @@
 <template>
   <h1>This is a project</h1>
   <div>{{ project?.name }}</div>
+  <div v-for="category in categories" :key="category.id">
+    <div>
+      <div><router-link :to="'/projects/' + project.id + '/categories/' + category.id">{{ category.name }}</router-link></div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -16,11 +21,17 @@ export default defineComponent({
   setup: (props) => {
     const store = useStore();
     const route = useRoute();
-    const project = computed(() => store.getters.getProjectById(route.params.projectId));
+    
+    const projectId = Number.parseInt(route.params.projectId.toString(), 10);
 
-    store.dispatch(ActionTypes.FetchProject, route.params.projectId)
+    const project = computed(() => store.getters.getProjectById(projectId));
+    store.dispatch(ActionTypes.FetchProject, projectId)
 
-    return { project, id: route.params.projectId }
+    const parameters = computed(() => {return {query: {per_page: 20, sort: '-name', search: ''}}});
+    const categories = computed(() => store.getters.categoriesList(projectId, parameters.value));
+    store.dispatch(ActionTypes.FetchCategoriesOfProject, {projectId: projectId, query: parameters.value})
+
+    return { project, id: route.params.projectId, categories }
   }
 })
 </script>
