@@ -13,7 +13,7 @@ export const getters: GetterTree<State, State> & Getters = {
     let projects: Project[] = Object.values(state.projects);
 
     if (parameters.sort.substring(1) === 'name') {
-      projects.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
+      projects.sort((a, b) => (a.name && b.name) && (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
     }
 
     projects = projects.filter(project => project.name?.toLowerCase().includes(parameters.search.toLowerCase()));
