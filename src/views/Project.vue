@@ -2,7 +2,7 @@
   <h1>This is project {{ project?.name }}</h1>
   <div v-for="category in categories" :key="category.id">
     <div>
-      <div><router-link :to="'/projects/' + project.id + '/categories/' + category.id">{{ category.name }}</router-link></div>
+      <div><router-link :to="'/projects/' + project?.id + '/categories/' + category?.id">{{ category.name }}</router-link></div>
     </div>
   </div>
 </template>
