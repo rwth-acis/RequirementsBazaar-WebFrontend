@@ -15,16 +15,25 @@ type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
   ): ReturnType<Mutations[K]>;
 }
 
+type ProjectRequestPayload = {
+  page?: number;
+  per_page?: number;
+  search?: string;
+  sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+  filters?: ("all" | "created" | "following" | "contributed")[];
+  ids?: number[];
+}
+
 export type Actions = {
-  [ActionTypes.FetchProjects](context: ActionAugments): void;
+  [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectRequestPayload): void;
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export const actions: ActionTree<State, State> & Actions = {
 
-  async [ActionTypes.FetchProjects]({ commit }) {
-    const response = await bazaarApi.projects.getProjects({ per_page: 20 });
+  async [ActionTypes.FetchProjects]({ commit }, parameters) {
+    const response = await bazaarApi.projects.getProjects(parameters);
     if (response.data && response.status === 200) {
       commit(MutationType.SetProjects, response.data);
     }
