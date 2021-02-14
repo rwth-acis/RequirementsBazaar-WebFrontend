@@ -14,8 +14,8 @@ import { useRoute } from 'vue-router'
 import { ActionTypes } from '../store/actions';
 
 export default defineComponent({
-  name: 'Project',
-  props: {
+    name: 'Project',
+    props: {
   },
   setup: (props) => {
     const store = useStore();
@@ -24,7 +24,7 @@ export default defineComponent({
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
 
     const project = computed(() => store.getters.getProjectById(projectId));
-    store.dispatch(ActionTypes.FetchProject, projectId)
+    store.dispatch(ActionTypes.FetchProject, projectId);
 
     const parameters = computed(() => {return {query: {per_page: 20, sort: '-name', search: ''}}});
     const categories = computed(() => store.getters.categoriesList(projectId, parameters.value));

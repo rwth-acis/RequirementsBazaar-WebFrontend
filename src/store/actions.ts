@@ -9,6 +9,8 @@ export enum ActionTypes {
   FetchProject = 'FETCH_PROJECT',
   FetchCategoriesOfProject = 'FETCH_CATEGORIES',
   FetchCategory = 'FETCH_CATEGORY',
+  FetchRequirementsOfCategory = 'FETCH_REQUIREMENTS',
+  FetchRequirement = 'FETCH_REQUIREMENT',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -39,11 +41,24 @@ type CategoriesRequestParameters = {
   },
 }
 
+type RequirementsRequestParameters = {
+  categoryId: number,
+  query?: {
+    page?: number;
+    per_page?: number;
+    search?: string;
+    state?: "all" | "open" | "realized";
+    sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower" | "realized")[];
+  },
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
-  [ActionTypes.FetchProject](context: ActionAugments, id: number): void;
+  [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
   [ActionTypes.FetchCategoriesOfProject](context: ActionAugments, payload: CategoriesRequestParameters): void;
-  [ActionTypes.FetchCategory](context: ActionAugments, id: number): void;
+  [ActionTypes.FetchCategory](context: ActionAugments, categoryId: number): void;
+  [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
+  [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -57,8 +72,8 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.FetchProject]({ commit }, id) {
-    const response = await bazaarApi.projects.getProject(id);
+  async [ActionTypes.FetchProject]({ commit }, projectId) {
+    const response = await bazaarApi.projects.getProject(projectId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetProject, response.data);
     }
@@ -71,10 +86,24 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.FetchCategory]({ commit }, id) {
-    const response = await bazaarApi.categories.getCategory(id);
+  async [ActionTypes.FetchCategory]({ commit }, categoryId) {
+    const response = await bazaarApi.categories.getCategory(categoryId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetCategory, response.data);
+    }
+  },
+
+  async [ActionTypes.FetchRequirementsOfCategory]({ commit }, parameters) {
+    const response = await bazaarApi.categories.getRequirementsForCategory(parameters.categoryId, parameters.query);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetRequirements, response.data);
+    }
+  },
+
+  async [ActionTypes.FetchRequirement]({ commit }, requirementId) {
+    const response = await bazaarApi.requirements.getRequirement(requirementId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetRequirement, response.data);
     }
   },
 

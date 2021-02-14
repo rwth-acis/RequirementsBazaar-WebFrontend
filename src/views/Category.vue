@@ -12,8 +12,8 @@ import { useRoute } from 'vue-router'
 import { ActionTypes } from '../store/actions';
 
 export default defineComponent({
-  name: 'Category',
-  props: {
+    name: 'Category',
+    props: {
   },
   setup: (props) => {
     const store = useStore();
@@ -22,12 +22,11 @@ export default defineComponent({
     const categoryId = Number.parseInt(route.params.categoryId.toString(), 10);
 
     const category = computed(() => store.getters.getCategoryById(categoryId));
-    store.dispatch(ActionTypes.FetchCategory, categoryId)
+    store.dispatch(ActionTypes.FetchCategory, categoryId);
 
-    // const parameters = computed(() => {return {query: {per_page: 20, sort: '-name', search: ''}}});
-    // const categories = computed(() => store.getters.requirementsList(categoryId, parameters.value));
-    // store.dispatch(ActionTypes.FetchRequirementsOfCategory, {projectId: categoryId, query: parameters.value})
-    const requirements = [];
+    const parameters = computed(() => {return {query: {per_page: 20, sort: '-name', search: ''}}});
+    const requirements = computed(() => store.getters.requirementsList(categoryId, parameters.value));
+    store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value})
 
     return { category, requirements }
   }

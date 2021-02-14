@@ -17,8 +17,8 @@ import { useStore } from 'vuex';
 import { ActionTypes } from '../store/actions';
 
 export default defineComponent({
-  name: 'Projects',
-  props: {
+    name: 'Projects',
+    props: {
   },
   setup: () => {
     const store = useStore();
