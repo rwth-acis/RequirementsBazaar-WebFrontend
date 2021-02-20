@@ -10,15 +10,19 @@
         <div>{{ description }}</div>
     </template>
     <template #footer>
-        <div>{{ numberOfFollowers }}</div>
-        <div>{{ numberOfCategories }}</div>
-        <div>{{ numberOfRequirements }}</div>
+      <div id="footer">
+        <div><div v-html="followersIcon" class="icon"></div> {{ numberOfFollowers }}</div>
+        <div><div v-html="categoriesIcon" class="icon"></div> {{ numberOfCategories }}</div>
+        <div><div v-html="requirementsIcon" class="icon"></div> {{ numberOfRequirements }}</div>
+      </div>
     </template>
   </Card>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+
+import { followersIcon, categoriesIcon, requirementsIcon } from '../assets/reqbaz-icons.js';
 
 export default defineComponent({
   name: 'ProjectCard',
@@ -52,7 +56,7 @@ export default defineComponent({
 
 
 
-    return { hashStringToColor };
+    return { hashStringToColor, followersIcon, categoriesIcon, requirementsIcon };
   },
 
 })
@@ -65,5 +69,28 @@ export default defineComponent({
 
   #header {
     height: 30px;
+  }
+
+  #footer {
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid #e8e8e8;
+    padding: 0 16px;
+    padding-top: 10px;
+    color: #757575;
+  }
+
+  #footer > div {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    fill: #757575;
+    margin-right: 10px;
   }
 </style>
