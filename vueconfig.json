@@ -4,6 +4,11 @@
           "InputText": {
               "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
           }
-      }
+      },
+      "./node_modules/primevue/card/Card.vue", {
+        "InputText": {
+            "moduleName": "./node_modules/primevue/card/Card.vue"
+        }
+    }
   ]
 }

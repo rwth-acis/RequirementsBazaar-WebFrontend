@@ -1,7 +1,7 @@
 <template>
   <h1>This is category {{ category?.name }}</h1>
   <div v-for="requirement in requirements" :key="requirement.id">
-    <div>{{ requirement.name }}</div>
+    <RequirementCard :id="requirement.id"></RequirementCard>
   </div>
 </template>
 
@@ -11,7 +11,10 @@ import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { ActionTypes } from '../store/actions';
 
+import RequirementCard from '../components/RequirementCard.vue';
+
 export default defineComponent({
+  components: { RequirementCard },
     name: 'Category',
     props: {
   },
