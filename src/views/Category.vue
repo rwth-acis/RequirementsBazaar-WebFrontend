@@ -14,9 +14,9 @@ import { ActionTypes } from '../store/actions';
 import RequirementCard from '../components/RequirementCard.vue';
 
 export default defineComponent({
+  name: 'Category',
   components: { RequirementCard },
-    name: 'Category',
-    props: {
+  props: {
   },
   setup: (props) => {
     const store = useStore();

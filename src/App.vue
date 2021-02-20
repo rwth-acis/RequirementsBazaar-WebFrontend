@@ -2,8 +2,10 @@
   <div class="layout-wrapper layout-static layout-static-sidebar-inactive">
     <AppTopbar></AppTopbar>
 
-    <div id="content">
-      <router-view></router-view>
+    <div id="container">
+      <div id="content">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -27,7 +29,14 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
 }
 
+#container {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 #content {
   margin-top: 50px;
+  width: 980px;
 }
 </style>
