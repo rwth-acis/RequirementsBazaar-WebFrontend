@@ -1,8 +1,14 @@
 <template>
   <h1>This is project {{ project?.name }}</h1>
-  <div v-for="category in categories" :key="category.id">
-    <div>
-      <div><router-link :to="'/projects/' + project?.id + '/categories/' + category?.id">{{ category.name }}</router-link></div>
+  <div id="categoriesList">
+    <div v-for="category in categories" :key="category.id" class="categoryCard">
+      <router-link :to="'/projects/' + project?.id + '/categories/' + category?.id">
+        <CategoryCard
+          :id="category.id"
+          :name="category.name"
+          :description="category.description">
+        </CategoryCard>
+      </router-link>
     </div>
   </div>
 </template>
@@ -13,8 +19,13 @@ import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { ActionTypes } from '../store/actions';
 
+import CategoryCard from '../components/CategoryCard.vue';
+
 export default defineComponent({
-    name: 'Project',
+    components: {
+    CategoryCard,
+  },
+  name: 'Project',
     props: {
   },
   setup: (props) => {
@@ -36,4 +47,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+  #categoriesList {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .categoryCard {
+    width: 700px;
+    margin: 10px;
+  }
 </style>
