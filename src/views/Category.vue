@@ -3,8 +3,11 @@
   <div id="description">
     {{ category?.description }}
   </div>
+  <div id="addRequirementPanel">
+    <Button label="Add new Requirement..."></Button>
+  </div>
   <TabView id="tabView">
-    <TabPanel header="Active Requirements">
+    <TabPanel header="Active Ideas">
       <div class="filterPanel">
         <InputText type="text" v-model="searchQuery" placeholder="Search" />
         <Dropdown placeholder="Sort by">
@@ -26,8 +29,8 @@
         </div>
       </div>
     </TabPanel>
-    <TabPanel header="Closed Requirements">
-      This is a list of closed requirements.
+    <TabPanel header="Finished Ideas">
+      This is a list of finished requirements.
     </TabPanel>
   </TabView>
 </template>
@@ -75,11 +78,15 @@ export default defineComponent({
     margin-bottom: 2rem;
   }
 
-  #tabView >>> .p-tabview-nav, #tabView >>> .p-tabview-nav-link {
+  #addRequirementPanel {
+    margin-bottom: 1.5rem;
+  }
+
+  #tabView ::v-deep(.p-tabview-nav), #tabView ::v-deep(.p-tabview-nav-link) {
     background-color: transparent;
   }
 
-  #tabView >>> .p-tabview-panels {
+  #tabView ::v-deep(.p-tabview-panels) {
     background-color: transparent;
   }
 
