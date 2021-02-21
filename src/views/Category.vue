@@ -1,7 +1,14 @@
 <template>
   <h1>This is category {{ category?.name }}</h1>
-  <div v-for="requirement in requirements" :key="requirement.id">
-    <RequirementCard :id="requirement.id"></RequirementCard>
+  <div id="requirementsList">
+    <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
+      <RequirementCard
+        :id="requirement.id"
+        :name="requirement.name"
+        :description="requirement.description"
+        :numberOfComments="requirement.numberOfComments">
+      </RequirementCard>
+    </div>
   </div>
 </template>
 
@@ -37,4 +44,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+  #requirementsList {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .requirementCard {
+    width: 700px;
+    margin: 10px;
+  }
 </style>

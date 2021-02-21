@@ -4,8 +4,9 @@ import { store } from "./store";
 import App from './App.vue';
 
 import PrimeVue from 'primevue/config';
-import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
 import Card from 'primevue/card';
+import InputText from 'primevue/inputtext';
 
 import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -19,7 +20,8 @@ app.use(router);
 app.use(store);
 app.use(PrimeVue);
 
-app.component('InputText', InputText);
+app.component('Button', Button);
 app.component('Card', Card);
+app.component('InputText', InputText);
 
 app.mount('#app');

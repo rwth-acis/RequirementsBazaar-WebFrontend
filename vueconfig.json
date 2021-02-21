@@ -1,14 +1,19 @@
 {
-  "globalComponents": [
-      "./node_modules/primevue/inputtext/InputText.vue", {
-          "InputText": {
-              "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
-          }
-      },
-      "./node_modules/primevue/card/Card.vue", {
-        "InputText": {
+    "globalComponents": [
+        "./node_modules/primevue/button/Button.vue", {
+            "Button": {
+                "moduleName": "./node_modules/primevue/button/Button.vue"
+            }
+        },
+        "./node_modules/primevue/inputtext/InputText.vue", {
+            "InputText": {
+            "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
+            }
+        },
+        "./node_modules/primevue/card/Card.vue", {
+            "InputText": {
             "moduleName": "./node_modules/primevue/card/Card.vue"
+            }
         }
-    }
-  ]
+    ]
 }
