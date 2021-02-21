@@ -5,14 +5,34 @@
                 "moduleName": "./node_modules/primevue/button/Button.vue"
             }
         },
+        "./node_modules/primevue/card/Card.vue", {
+            "InputText": {
+            "moduleName": "./node_modules/primevue/card/Card.vue"
+            }
+        },
+        "./node_modules/primevue/dropdown/Dropdown.vue", {
+            "Dropdown": {
+            "moduleName": "./node_modules/primevue/dropdown/Dropdown.vue"
+            }
+        },
         "./node_modules/primevue/inputtext/InputText.vue", {
             "InputText": {
             "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
             }
         },
-        "./node_modules/primevue/card/Card.vue", {
-            "InputText": {
-            "moduleName": "./node_modules/primevue/card/Card.vue"
+        "./node_modules/primevue/selectbutton/SelectButton.vue", {
+            "SelectButton": {
+            "moduleName": "./node_modules/primevue/selectbutton/SelectButton.vue"
+            }
+        },
+        "./node_modules/primevue/tabpanel/TabPanel.vue", {
+            "TabPanel": {
+            "moduleName": "./node_modules/primevue/tabpanel/TabPanel.vue"
+            }
+        },
+        "./node_modules/primevue/tabview/TabView.vue", {
+            "TabView": {
+            "moduleName": "./node_modules/primevue/tabview/TabView.vue"
             }
         }
     ]
