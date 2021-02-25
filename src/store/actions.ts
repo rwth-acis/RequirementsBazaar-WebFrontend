@@ -3,7 +3,7 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
 import { bazaarApi } from '../api/bazaar';
-import { projects, categories } from '../types/api';
+import { projects, categories, requirements } from '../types/api';
 
 export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
@@ -36,6 +36,11 @@ type RequirementsRequestParameters = {
   query?: categories.GetRequirementsForCategory.RequestQuery,
 }
 
+type CommentsRequestParameters = {
+  requirementId: number,
+  query?: requirements.GetCommentsForRequirement.RequestQuery,
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
@@ -43,7 +48,7 @@ export type Actions = {
   [ActionTypes.FetchCategory](context: ActionAugments, categoryId: number): void;
   [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
-  [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, requirementId: number): void;
+  [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -92,8 +97,8 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.FetchCommentsOfRequirement]({ commit }, requirementId) {
-    const response = await bazaarApi.requirements.getCommentsForRequirement(requirementId);
+  async [ActionTypes.FetchCommentsOfRequirement]({ commit }, parameters) {
+    const response = await bazaarApi.requirements.getCommentsForRequirement(parameters.requirementId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetComments, response.data);
     }
