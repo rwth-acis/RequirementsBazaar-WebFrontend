@@ -22,5 +22,5 @@ npm run dev
 
 ## API Types Generation
 ```
-npx swagger-typescript-api -p https://beta.requirements-bazaar.org/bazaar/swagger.json -o ./src/types -n api.ts
+npx swagger-typescript-api -p https://beta.requirements-bazaar.org/bazaar/swagger.json -o ./src/types -n api.ts --route-types
 ```
