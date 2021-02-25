@@ -1,14 +1,15 @@
 import { GetterTree } from 'vuex'
 import { State } from './state'
-import { Project, Category, Requirement } from '../types/api';
+import { Project, Category, Requirement, Comment } from '../types/api';
 
 export type Getters = {
-  projectsList(state: State): (parameters: any) => Project[]; //TODO: any type
+  projectsList(state: State): (parameters: any) => Project[]; //TODO: any type, replace by types in actions.ts!?
   getProjectById(state: State): (id: number) => Project | undefined;
   categoriesList(state: State): (projectId: number, parameters: any) => Category[];
   getCategoryById(state: State): (id: number) => Category | undefined;
   requirementsList(state: State): (requirementId: number, parameters: any) => Requirement[];
   getRequirementById(state: State): (id: number) => Requirement | undefined;
+  commentsList(state: State): (requirementId: number, parameters: any) => Comment[];
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -60,6 +61,12 @@ export const getters: GetterTree<State, State> & Getters = {
 
   getRequirementById: (state) => (id: number) => {
     return state.requirements[id];
+  },
+
+  commentsList: (state) => (requirementId, parameters) => {
+    let comments: Comment[] = Object.values(state.comments);
+
+    return comments.slice(0, parameters.per_page);
   },
 
 }

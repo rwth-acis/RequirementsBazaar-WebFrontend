@@ -43,6 +43,7 @@ export type Actions = {
   [ActionTypes.FetchCategory](context: ActionAugments, categoryId: number): void;
   [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
+  [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, requirementId: number): void;
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -88,6 +89,13 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.requirements.getRequirement(requirementId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetRequirement, response.data);
+    }
+  },
+
+  async [ActionTypes.FetchCommentsOfRequirement]({ commit }, requirementId) {
+    const response = await bazaarApi.requirements.getCommentsForRequirement(requirementId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetComments, response.data);
     }
   },
 
