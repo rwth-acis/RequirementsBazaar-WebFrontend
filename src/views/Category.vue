@@ -57,7 +57,7 @@ export default defineComponent({
     const category = computed(() => store.getters.getCategoryById(categoryId));
     store.dispatch(ActionTypes.FetchCategory, categoryId);
 
-    const parameters = computed(() => {return {query: {per_page: 20, sort: '-name', search: ''}}});
+    const parameters = computed(() => {return {per_page: 20, sort: '-name', search: ''}});
     const requirements = computed(() => store.getters.requirementsList(categoryId, parameters.value));
     store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value})
 

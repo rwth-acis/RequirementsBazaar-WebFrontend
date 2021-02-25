@@ -16,13 +16,13 @@ export const getters: GetterTree<State, State> & Getters = {
   projectsList: (state) => (parameters) => {
     let projects: Project[] = Object.values(state.projects);
 
-    if (parameters.query.sort.substring(1) === 'name') {
+    if (parameters.sort.substring(1) === 'name') {
       projects.sort((a, b) => (a.name && b.name) && (a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}) > 0) ? 1 : -1);
     }
 
-    projects = projects.filter(project => project.name?.toLowerCase().includes(parameters.query.search.toLowerCase()));
+    projects = projects.filter(project => project.name?.toLowerCase().includes(parameters.search.toLowerCase()));
 
-    return projects.slice(0, parameters.query.per_page);
+    return projects.slice(0, parameters.per_page);
   },
 
   getProjectById: (state) => (id: number) => {
@@ -32,13 +32,13 @@ export const getters: GetterTree<State, State> & Getters = {
   categoriesList: (state) => (projectId, parameters) => {
     let categories: Category[] = Object.values(state.categories).filter(category => (category.projectId === projectId));
 
-    if (parameters.query.sort.substring(1) === 'name') {
+    if (parameters.sort.substring(1) === 'name') {
       categories.sort((a, b) => (a.name && b.name) && (a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}) > 0) ? 1 : -1);
     }
 
-    categories = categories.filter(category => category.name?.toLowerCase().includes(parameters.query.search.toLowerCase()));
+    categories = categories.filter(category => category.name?.toLowerCase().includes(parameters.search.toLowerCase()));
 
-    return categories.slice(0, parameters.query.per_page);
+    return categories.slice(0, parameters.per_page);
   },
 
   getCategoryById: (state) => (id: number) => {
@@ -49,13 +49,13 @@ export const getters: GetterTree<State, State> & Getters = {
     // filter all requirements who have a category object with id equaling the requested categoryId
     let requirements: Requirement[] = Object.values(state.requirements).filter(requirement => (requirement.categories.some(c => c.id === categoryId)));
 
-    if (parameters.query.sort.substring(1) === 'name') {
+    if (parameters.sort.substring(1) === 'name') {
       requirements.sort((a, b) => (a.name && b.name) && (a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}) > 0) ? 1 : -1);
     }
 
-    requirements = requirements.filter(requirement => requirement.name?.toLowerCase().includes(parameters.query.search.toLowerCase()));
+    requirements = requirements.filter(requirement => requirement.name?.toLowerCase().includes(parameters.search.toLowerCase()));
 
-    return requirements.slice(0, parameters.query.per_page);
+    return requirements.slice(0, parameters.per_page);
   },
 
   getRequirementById: (state) => (id: number) => {

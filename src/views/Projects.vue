@@ -37,7 +37,7 @@ export default defineComponent({
     
     const searchQuery = ref('');
 
-    const parameters = computed(() => {return {query: {per_page: 20, sort: '-name', search: searchQuery.value}}});
+    const parameters = computed(() => {return {per_page: 20, sort: '-name', search: searchQuery.value}});
     const projects = computed(() => store.getters.projectsList(parameters.value));
 
     store.dispatch(ActionTypes.FetchProjects, {query: parameters.value});
