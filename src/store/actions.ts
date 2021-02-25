@@ -3,6 +3,7 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
 import { bazaarApi } from '../api/bazaar';
+import { projects, categories } from '../types/api';
 
 export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
@@ -11,6 +12,7 @@ export enum ActionTypes {
   FetchCategory = 'FETCH_CATEGORY',
   FetchRequirementsOfCategory = 'FETCH_REQUIREMENTS',
   FetchRequirement = 'FETCH_REQUIREMENT',
+  FetchCommentsOfRequirement = 'FETCH_COMMENTS',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -21,35 +23,17 @@ type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
 }
 
 type ProjectsRequestParameters = {
-  query?: {
-    page?: number;
-    per_page?: number;
-    search?: string;
-    sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-    filters?: ("all" | "created" | "following" | "contributed")[];
-    ids?: number[];
-  },
+  query?: projects.GetProjects.RequestQuery,
 }
 
 type CategoriesRequestParameters = {
   projectId: number,
-  query?: {
-    page?: number;
-    per_page?: number;
-    search?: string;
-    sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-  },
+  query?: projects.GetCategoriesForProject.RequestQuery,
 }
 
 type RequirementsRequestParameters = {
   categoryId: number,
-  query?: {
-    page?: number;
-    per_page?: number;
-    search?: string;
-    state?: "all" | "open" | "realized";
-    sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower" | "realized")[];
-  },
+  query?: categories.GetRequirementsForCategory.RequestQuery,
 }
 
 export type Actions = {

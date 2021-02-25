@@ -37,7 +37,7 @@ export default defineComponent({
     const project = computed(() => store.getters.getProjectById(projectId));
     store.dispatch(ActionTypes.FetchProject, projectId);
 
-    const parameters = computed(() => {return {query: {per_page: 20, sort: '-name', search: ''}}});
+    const parameters = computed(() => {return {per_page: 20, sort: '-name', search: ''}});
     const categories = computed(() => store.getters.categoriesList(projectId, parameters.value));
     store.dispatch(ActionTypes.FetchCategoriesOfProject, {projectId: projectId, query: parameters.value})
 

@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex'
 import { State } from './state'
-import { Project, Category } from '../types/api';
+import { Project, Category, Requirement } from '../types/api';
 
 export type Getters = {
   projectsList(state: State): (parameters: any) => Project[]; //TODO: any type
