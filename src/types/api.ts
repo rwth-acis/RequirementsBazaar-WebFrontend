@@ -1528,7 +1528,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<Category[], void>({
+      this.request<Requirement[], void>({
         path: `/categories/${categoryId}/requirements`,
         method: "GET",
         query: query,
