@@ -10,7 +10,7 @@
         <Button :label="`${numberOfComments} Comments`" @click="toggleComments"></Button>
         <Button label="Share"></Button>
       </div>
-      <comments-list :requirementId="id" v-if="showComments"></comments-list>
+      <comments-list :requirementId="id" v-if="showComments" id="commentsList"></comments-list>
     </template>
     <!--<template #footer>
       <div id="actionButtons">
@@ -54,6 +54,7 @@ export default defineComponent({
     width: 100%;
     display: flex;
     flex-direction: row;
+    padding-top: 1rem;
   }
 
   button {
@@ -68,5 +69,9 @@ export default defineComponent({
 
   #card ::v-deep(.p-card-content) {
     padding-bottom: 0;
+  }
+
+  #commentsList {
+    padding-top: 1rem;
   }
 </style>

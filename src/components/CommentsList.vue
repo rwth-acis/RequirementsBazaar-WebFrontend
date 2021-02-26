@@ -1,6 +1,8 @@
 <template>
-  <div v-for="comment in comments" :key="comment.id">
-    {{ comment.message }}
+  <div>
+    <div v-for="comment in comments" :key="comment.id">
+      {{ comment.message }}
+    </div>
   </div>
 </template>
 
