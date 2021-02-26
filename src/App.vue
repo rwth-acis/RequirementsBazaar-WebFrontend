@@ -33,10 +33,12 @@ export default defineComponent({
   display: block;
   margin-left: auto;
   margin-right: auto;
+  width: 100%;
+  max-width: 980px;
 }
 
 #content {
   margin-top: 50px;
-  width: 980px;
+  width: 100%;
 }
 </style>
