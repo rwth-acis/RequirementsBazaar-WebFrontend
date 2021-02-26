@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <Card id="card">
     <template #title>
       <div>{{ name }}</div>
     </template>
@@ -7,12 +7,10 @@
       <div>{{ description }}</div>
       <div id="actionButtons">
         <Button label="Vote"></Button>
-        <Button :label="`${numberOfComments} Comments`"></Button>
+        <Button :label="`${numberOfComments} Comments`" @click="toggleComments"></Button>
         <Button label="Share"></Button>
       </div>
-      <div v-for="comment in comments" :key="comment.id">
-        {{ comment.message }}
-      </div>
+      <comments-list :requirementId="id" v-if="showComments"></comments-list>
     </template>
     <!--<template #footer>
       <div id="actionButtons">
@@ -28,8 +26,10 @@
 import { computed, ref, defineComponent } from 'vue'
 import { useStore } from 'vuex';
 import { ActionTypes } from '../store/actions';
+import CommentsList from './CommentsList.vue';
 
 export default defineComponent({
+  components: { CommentsList },
   name: 'RequirementCard',
   props: {
     id: { type: Number, required: true },
@@ -38,15 +38,13 @@ export default defineComponent({
     numberOfComments: { type: Number, required: true },
   },
   setup: (props) => {
-    const store = useStore();
+    const showComments = ref(false);
 
-    const requirementId = props.id;
+    const toggleComments = () => {
+      showComments.value = !showComments.value;
+    }
 
-    const parameters = computed(() => {return {per_page: 20}});
-    const comments = computed(() => store.getters.commentsList(requirementId, parameters.value));
-    store.dispatch(ActionTypes.FetchCommentsOfRequirement, {requirementId, query: parameters.value})
-
-    return { comments }
+    return { showComments, toggleComments }
   }
 })
 </script>
@@ -66,5 +64,9 @@ export default defineComponent({
 
   #actionButtons :first-child {
     margin-left: 0;
+  }
+
+  #card ::v-deep(.p-card-content) {
+    padding-bottom: 0;
   }
 </style>
