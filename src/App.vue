@@ -38,7 +38,7 @@ export default defineComponent({
 }
 
 #content {
-  margin-top: 50px;
+  padding-top: 50px;
   width: 100%;
 }
 </style>
