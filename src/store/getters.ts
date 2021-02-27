@@ -17,13 +17,41 @@ export const getters: GetterTree<State, State> & Getters = {
   projectsList: (state) => (parameters) => {
     let projects: Project[] = Object.values(state.projects);
 
-    if (parameters.sort.substring(1) === 'name') {
-      projects.sort((a, b) => (a.name && b.name) && (a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}) > 0) ? 1 : -1);
+    const sortAscending = parameters.sort.charAt(0) === '+';
+    const sortArgument = parameters.sort.substring(1);
+    // first, sort alphabetically in all cases
+    projects.sort((a, b) => {
+      if (a['name'] && b['name']) {
+        const compare = a['name'].localeCompare(b['name'], undefined, {numeric: true, sensitivity: 'base'});
+        return compare;
+      }
+      return 0;
+    });
+    if ((sortArgument === 'name') && !sortAscending) {
+      projects.reverse();
+    }
+    // then sort according to sort argument
+    if (sortArgument === 'requirement') {
+      projects.sort((a, b) => {
+        if (a.numberOfRequirements !== undefined && b.numberOfRequirements !== undefined) {
+          const compare = (b.numberOfRequirements - a.numberOfRequirements) * (sortAscending ? -1 : 1);
+          return compare;
+        }
+        return 0;
+      });
+    } else if (sortArgument === 'follower') {
+      projects.sort((a, b) => {
+        if (a.numberOfFollowers !== undefined && b.numberOfFollowers !== undefined) {
+          const compare = (b.numberOfFollowers - a.numberOfFollowers) * (sortAscending ? -1 : 1);
+          return compare;
+        }
+        return 0;
+      });
     }
 
     projects = projects.filter(project => project.name?.toLowerCase().includes(parameters.search.toLowerCase()));
 
-    return projects.slice(0, parameters.per_page);
+    return projects;//.slice(0, parameters.per_page);
   },
 
   getProjectById: (state) => (id: number) => {

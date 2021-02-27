@@ -4,20 +4,15 @@
     {{ category?.description }}
   </div>
   <div id="addRequirementPanel">
-    <Button label="Add new Requirement..."></Button>
+    <Button label="Add new Requirement..." />
   </div>
   <TabView id="tabView">
     <TabPanel header="Active Ideas">
-      <div class="filterPanel">
-        <InputText type="text" v-model="searchQuery" placeholder="Search" />
-        <Dropdown placeholder="Sort by">
-        </Dropdown>
-        <SelectButton :options="sortDirectionOptions" dataKey="value">
-          <template #option="slotProps">
-            <i :class="slotProps.option.icon"></i>
-          </template>
-        </SelectButton>
-      </div>
+      <FilterPanel
+        v-model:searchQuery="searchQuery"
+        :sortOptions="sortOptions"
+        v-model:selectedSort="selectedSort">
+      </FilterPanel>
       <div id="requirementsList">
         <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
           <RequirementCard
@@ -41,11 +36,12 @@ import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { ActionTypes } from '../store/actions';
 
+import FilterPanel from '../components/FilterPanel.vue';
 import RequirementCard from '../components/RequirementCard.vue';
 
 export default defineComponent({
   name: 'Category',
-  components: { RequirementCard },
+  components: { FilterPanel, RequirementCard },
   props: {
   },
   setup: (props) => {
@@ -63,12 +59,16 @@ export default defineComponent({
 
     const searchQuery = ref('');
 
-    const sortDirectionOptions = [
-      {icon: 'pi pi-sort-amount-down-alt', value: 'down'},
-      {icon: 'pi pi-sort-amount-up', value: 'up'},
-    ]
+    const selectedSort = ref('name');
+    const sortOptions = [
+      {name: 'Alphabetically', value: 'name'},
+      {name: 'Activity', value: 'last_activity'},
+      {name: 'Creation Date', value: 'date'},
+      {name: 'Number of Requirements', value: 'requirement'},
+      {name: 'Number of Followers', value: 'follower'},
+    ];
 
-    return { category, requirements, searchQuery, sortDirectionOptions }
+    return { category, requirements, searchQuery, sortOptions, selectedSort }
   }
 })
 </script>
@@ -88,22 +88,6 @@ export default defineComponent({
 
   #tabView ::v-deep(.p-tabview-panels) {
     background-color: transparent;
-  }
-
-  .filterPanel {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 1.5rem;
-  }
-
-  .filterPanel > * {
-    margin-left: .5rem;
-    height: 31px;
-  }
-
-  .filterPanel :first-child {
-    flex: 1;
-    margin-left: 0;
   }
 
   #requirementsList {

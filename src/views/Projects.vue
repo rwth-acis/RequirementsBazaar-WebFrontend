@@ -1,9 +1,16 @@
 <template>
-  <h1>Projects List</h1>
-  <span class="p-input-icon-left">
-    <i class="pi pi-search" />
-    <InputText type="text" v-model="searchQuery" placeholder="Search" />
-  </span>
+  <h1>Explore Projects</h1>
+  Take a look at the public projects on Requirements Bazaar.
+  <h2>Featured Projects</h2>
+
+  Contact us to get featured!
+  <h2>All Projects</h2>
+  <FilterPanel
+    v-model:searchQuery="searchQuery"
+    :sortOptions="sortOptions"
+    v-model:selectedSort="selectedSort"
+    v-model:sortAscending="sortAscending">
+  </FilterPanel>
   <div id="grid">
     <div v-for="project in projects" :key="project.id" class="projectCard">
       <router-link :to="'/projects/' + project.id">
@@ -25,28 +32,42 @@ import { computed, ref, watch, defineComponent, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { ActionTypes } from '../store/actions';
 
+import FilterPanel from '../components/FilterPanel.vue';
 import ProjectCard from '../components/ProjectCard.vue';
 
 export default defineComponent({
   name: 'Projects',
-  components: { ProjectCard },
+  components: { FilterPanel, ProjectCard },
   props: {
   },
   setup: () => {
     const store = useStore();
     
     const searchQuery = ref('');
+    const selectedSort = ref('name');
+    const sortOptions = [
+      {name: 'Alphabetically', value: 'name'},
+      {name: 'Activity', value: 'last_activity'},
+      {name: 'Creation Date', value: 'date'},
+      {name: 'Number of Requirements', value: 'requirement'},
+      {name: 'Number of Followers', value: 'follower'},
+    ];
+    const sortAscending = ref(true);
 
-    const parameters = computed(() => {return {per_page: 20, sort: '-name', search: searchQuery.value}});
+    const sort = computed(() => `${sortAscending.value ? '+' : '-'}${selectedSort.value}`);
+    const parameters = computed(() => {return {per_page: 20, sort: sort.value, search: searchQuery.value}});
     const projects = computed(() => store.getters.projectsList(parameters.value));
 
     store.dispatch(ActionTypes.FetchProjects, {query: parameters.value});
 
-    watch(searchQuery, () => store.dispatch(ActionTypes.FetchProjects, parameters.value));
+    watch(parameters, () => store.dispatch(ActionTypes.FetchProjects, {query: parameters.value}));
 
     return {
       projects,
-      searchQuery
+      searchQuery,
+      selectedSort,
+      sortOptions,
+      sortAscending,
     };
   }
 })

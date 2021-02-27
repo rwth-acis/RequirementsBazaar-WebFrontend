@@ -6,11 +6,11 @@
     <template #content>
       <div>{{ description }}</div>
       <div id="actionButtons">
-        <Button label="Vote"></Button>
-        <Button :label="`${numberOfComments} Comments`" @click="toggleComments"></Button>
-        <Button label="Share"></Button>
+        <Button label="Vote" class="p-button-outlined"></Button>
+        <Button :label="`${numberOfComments} Comments`" @click="toggleComments" class="p-button-outlined"></Button>
+        <Button label="Share" class="p-button-outlined"></Button>
       </div>
-      <comments-list :requirementId="id" v-if="showComments" id="commentsList"></comments-list>
+      <comments-list :requirementId="id" v-if="showComments" class="commentsList"></comments-list>
     </template>
     <!--<template #footer>
       <div id="actionButtons">
@@ -71,7 +71,7 @@ export default defineComponent({
     padding-bottom: 0;
   }
 
-  #commentsList {
+  .commentsList {
     padding-top: 1rem;
   }
 </style>
