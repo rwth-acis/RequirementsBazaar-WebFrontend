@@ -34,7 +34,10 @@ import { computed, defineComponent, ref, watch } from 'vue';
 export default defineComponent({
   name: 'Category',
   props: {
-    searchQuery: String,
+    searchQuery: {
+      type: String,
+      default: '',
+    },
     selectedSort: String,
     sortOptions: Object,
     sortAscending: Boolean,
