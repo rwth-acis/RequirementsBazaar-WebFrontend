@@ -10,6 +10,7 @@
       </InputText>
       <i class="clearButton pi pi-times" v-show="searchQuery.length > 0" @click="onClearClick()" />
     </span>
+    <span>Sorting:</span>
     <Dropdown
       id="sortOptionsDropdown"
       :options="sortOptions"
@@ -65,6 +66,7 @@ export default defineComponent({
   .filterPanel {
     display: flex;
     flex-direction: row;
+    align-items: center;
     margin-bottom: 1.5rem;
   }
 
@@ -80,9 +82,10 @@ export default defineComponent({
     height: 17px;
   }
 
-  .filterPanel :first-child {
+  .filterPanel > :first-child {
     flex: 1;
     margin-left: 0;
+    margin-right: 0.5rem;
   }
 
   .filterPanel input {
