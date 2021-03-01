@@ -55,6 +55,8 @@ export default defineComponent({
       {icon: 'pi pi-sort-amount-up', value: false},
     ]
     watch(sortAscendingInternal, () => context.emit('update:sortAscending', sortAscendingInternal.value));
+    // could also be done using toRefs, cf. https://v3.vuejs.org/guide/composition-api-introduction.html#reacting-to-changes-with-watch
+    watch(() => props.sortAscending, (newValue) => {sortAscendingInternal.value = newValue});
 
     const selectedSortInternal = ref(props.selectedSort);
     return { selectedSortInternal, sortAscendingInternal, sortDirectionOptions, onClearClick }

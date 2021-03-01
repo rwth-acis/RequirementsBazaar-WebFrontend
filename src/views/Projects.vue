@@ -81,6 +81,10 @@ export default defineComponent({
     const parameters = computed(() => {return {page: page.value, per_page: perPage.value, sort: sort.value, search: searchQuery.value}});
     const projects = computed(() => store.getters.projectsList(parameters.value));
     store.dispatch(ActionTypes.FetchProjects, {query: parameters.value});
+    watch(selectedSort, () => {
+      //sortAscending.value = !['last_activity', 'date', 'requirement', 'follower'].includes(selectedSort.value);
+      sortAscending.value = selectedSort.value === 'name';
+    });
     watch(parameters, () => store.dispatch(ActionTypes.FetchProjects, {query: parameters.value}));
 
     return {
