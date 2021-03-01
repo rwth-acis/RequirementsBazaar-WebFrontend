@@ -1,5 +1,8 @@
 <template>
   <h1>This is project {{ project?.name }}</h1>
+  <div id="description">
+    {{ project?.description }}
+  </div>
   <div id="categoriesList">
     <div v-for="category in categories" :key="category.id" class="categoryCard">
       <router-link :to="'/projects/' + project?.id + '/categories/' + category?.id">
@@ -26,7 +29,7 @@ export default defineComponent({
     CategoryCard,
   },
   name: 'Project',
-    props: {
+  props: {
   },
   setup: (props) => {
     const store = useStore();
@@ -47,6 +50,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+  #description {
+    margin-bottom: 2rem;
+  }
+
   #categoriesList {
     width: 100%;
     justify-content: center;
