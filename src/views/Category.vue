@@ -11,7 +11,8 @@
       <FilterPanel
         v-model:searchQuery="searchQuery"
         :sortOptions="sortOptions"
-        v-model:selectedSort="selectedSort">
+        v-model:selectedSort="selectedSort"
+        v-model:sortAscending="sortAscending">
       </FilterPanel>
       <div id="requirementsList">
         <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
@@ -19,6 +20,7 @@
             :id="requirement.id"
             :name="requirement.name"
             :description="requirement.description"
+            :upVotes="requirement.upVotes"
             :numberOfComments="requirement.numberOfComments">
           </RequirementCard>
         </div>
@@ -31,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { ActionTypes } from '../store/actions';
@@ -49,26 +51,33 @@ export default defineComponent({
     const route = useRoute();
     
     const categoryId = Number.parseInt(route.params.categoryId.toString(), 10);
-
     const category = computed(() => store.getters.getCategoryById(categoryId));
     store.dispatch(ActionTypes.FetchCategory, categoryId);
 
-    const parameters = computed(() => {return {per_page: 20, sort: '-name', search: ''}});
-    const requirements = computed(() => store.getters.requirementsList(categoryId, parameters.value));
-    store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value})
-
     const searchQuery = ref('');
-
     const selectedSort = ref('name');
     const sortOptions = [
       {name: 'Alphabetically', value: 'name'},
-      {name: 'Activity', value: 'last_activity'},
+      {name: 'Last Activity', value: 'last_activity'},
       {name: 'Creation Date', value: 'date'},
-      {name: 'Number of Requirements', value: 'requirement'},
+      {name: 'Number of Comments', value: 'comment'},
       {name: 'Number of Followers', value: 'follower'},
+      {name: 'Number of Votes', value: 'vote'},
     ];
+    const sortAscending = ref(true);
+    const page = ref(0);
+    const perPage = ref(20);
 
-    return { category, requirements, searchQuery, sortOptions, selectedSort }
+    const sort = computed(() => `${sortAscending.value ? '+' : '-'}${selectedSort.value}`);
+    const parameters = computed(() => {return {page: page.value, per_page: perPage.value, sort: sort.value, search: searchQuery.value}});
+    const requirements = computed(() => store.getters.requirementsList(categoryId, parameters.value));
+    store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value});
+    watch(selectedSort, () => {
+      sortAscending.value = selectedSort.value === 'name';
+    });
+    watch(parameters, () => store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value}));
+
+    return { category, requirements, searchQuery, sortOptions, selectedSort, sortAscending }
   }
 })
 </script>

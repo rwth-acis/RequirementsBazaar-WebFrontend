@@ -6,7 +6,7 @@
     <template #content>
       <div>{{ description }}</div>
       <div id="actionButtons">
-        <Button label="Vote" class="p-button-outlined"></Button>
+        <Button :label="`${upVotes} Votes`" class="p-button-outlined"></Button>
         <Button :label="`${numberOfComments} Comments`" @click="toggleComments" class="p-button-outlined"></Button>
         <Button label="Share" class="p-button-outlined"></Button>
       </div>
@@ -35,6 +35,7 @@ export default defineComponent({
     id: { type: Number, required: true },
     name: { type: String, required: true },
     description: { type: String, required: true },
+    upVotes: { type: Number, required: true },
     numberOfComments: { type: Number, required: true },
   },
   setup: (props) => {

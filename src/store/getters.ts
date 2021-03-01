@@ -78,6 +78,46 @@ export const getters: GetterTree<State, State> & Getters = {
     // filter all requirements who have a category object with id equaling the requested categoryId
     let requirements: Requirement[] = Object.values(state.requirements).filter(requirement => (requirement.categories.some(c => c.id === categoryId)));
 
+    const sortAscending = parameters.sort.charAt(0) === '+';
+    const sortArgument = parameters.sort.substring(1);
+    // first, sort alphabetically in all cases
+    requirements.sort((a, b) => {
+      if (a['name'] && b['name']) {
+        const compare = a['name'].localeCompare(b['name'], undefined, {numeric: true, sensitivity: 'base'});
+        return compare;
+      }
+      return 0;
+    });
+    if ((sortArgument === 'name') && !sortAscending) {
+      requirements.reverse();
+    }
+    // then sort according to sort argument
+    if (sortArgument === 'comment') {
+      requirements.sort((a, b) => {
+        if (a.numberOfComments !== undefined && b.numberOfComments !== undefined) {
+          const compare = (b.numberOfComments - a.numberOfComments) * (sortAscending ? -1 : 1);
+          return compare;
+        }
+        return 0;
+      });
+    } else if (sortArgument === 'follower') {
+      requirements.sort((a, b) => {
+        if (a.numberOfFollowers !== undefined && b.numberOfFollowers !== undefined) {
+          const compare = (b.numberOfFollowers - a.numberOfFollowers) * (sortAscending ? -1 : 1);
+          return compare;
+        }
+        return 0;
+      });
+    } else if (sortArgument === 'vote') {
+      requirements.sort((a, b) => {
+        if (a.upVotes !== undefined && b.upVotes !== undefined) {
+          const compare = (b.upVotes - a.upVotes) * (sortAscending ? -1 : 1);
+          return compare;
+        }
+        return 0;
+      });
+    }
+
     if (parameters.sort.substring(1) === 'name') {
       requirements.sort((a, b) => (a.name && b.name) && (a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}) > 0) ? 1 : -1);
     }
