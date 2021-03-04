@@ -15,7 +15,6 @@ export type Getters = {
 const numericalSortFunction = (property, sortAscending) => (a, b) => {
   if (a[property] !== undefined && b[property] !== undefined) {
     const compare = (a[property] - b[property]) * (sortAscending ? 1 : -1);
-    debugger
     return compare;
   }
   return 0;
