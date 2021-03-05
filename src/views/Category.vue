@@ -6,30 +6,23 @@
   <div id="addRequirementPanel">
     <Button label="Add new Requirement..." />
   </div>
-  <TabView id="tabView">
-    <TabPanel header="Active Ideas">
-      <FilterPanel
-        v-model:searchQuery="searchQuery"
-        :sortOptions="sortOptions"
-        v-model:selectedSort="selectedSort"
-        v-model:sortAscending="sortAscending">
-      </FilterPanel>
-      <div id="requirementsList">
-        <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
-          <RequirementCard
-            :id="requirement.id"
-            :name="requirement.name"
-            :description="requirement.description"
-            :upVotes="requirement.upVotes"
-            :numberOfComments="requirement.numberOfComments">
-          </RequirementCard>
-        </div>
-      </div>
-    </TabPanel>
-    <TabPanel header="Finished Ideas">
-      This is a list of finished requirements.
-    </TabPanel>
-  </TabView>
+  <FilterPanel
+    v-model:searchQuery="searchQuery"
+    :sortOptions="sortOptions"
+    v-model:selectedSort="selectedSort"
+    v-model:sortAscending="sortAscending">
+  </FilterPanel>
+  <div id="requirementsList">
+    <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
+      <RequirementCard
+        :id="requirement.id"
+        :name="requirement.name"
+        :description="requirement.description"
+        :upVotes="requirement.upVotes"
+        :numberOfComments="requirement.numberOfComments">
+      </RequirementCard>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -67,7 +60,6 @@ export default defineComponent({
     const sortAscending = ref(true);
     const page = ref(0);
     const perPage = ref(20);
-
     const sort = computed(() => `${sortAscending.value ? '+' : '-'}${selectedSort.value}`);
     const parameters = computed(() => {return {page: page.value, per_page: perPage.value, sort: sort.value, search: searchQuery.value}});
     const requirements = computed(() => store.getters.requirementsList(categoryId, parameters.value));
@@ -89,14 +81,6 @@ export default defineComponent({
 
   #addRequirementPanel {
     margin-bottom: 1.5rem;
-  }
-
-  #tabView ::v-deep(.p-tabview-nav), #tabView ::v-deep(.p-tabview-nav-link) {
-    background-color: transparent;
-  }
-
-  #tabView ::v-deep(.p-tabview-panels) {
-    background-color: transparent;
   }
 
   #requirementsList {

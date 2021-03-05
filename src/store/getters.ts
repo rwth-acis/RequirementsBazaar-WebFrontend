@@ -75,8 +75,33 @@ export const getters: GetterTree<State, State> & Getters = {
   categoriesList: (state) => (projectId, parameters) => {
     let categories: Category[] = Object.values(state.categories).filter(category => (category.projectId === projectId));
 
-    if (parameters.sort.substring(1) === 'name') {
-      categories.sort((a, b) => (a.name && b.name) && (a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}) > 0) ? 1 : -1);
+    const sortAscending = parameters.sort.charAt(0) === '+';
+    const sortArgument = parameters.sort.substring(1);
+    // first, sort alphabetically in all cases
+    categories.sort((a, b) => {
+      if (a['name'] && b['name']) {
+        const compare = a['name'].localeCompare(b['name'], undefined, {numeric: true, sensitivity: 'base'});
+        return compare;
+      }
+      return 0;
+    });
+    if ((sortArgument === 'name') && !sortAscending) {
+      categories.reverse();
+    }
+    // then sort according to sort argument
+    switch(sortArgument) {
+      case 'last_activity':
+        categories.sort(lexicographicalSortFunction('lastUpdatedDate', sortAscending));
+        break;
+      case 'date':
+        categories.sort(lexicographicalSortFunction('creationDate', sortAscending));
+        break;
+      case 'requirement':
+        categories.sort(numericalSortFunction('numberOfRequirements', sortAscending));
+        break;
+      case 'follower':
+        categories.sort(numericalSortFunction('numberOfFollowers', sortAscending));
+        break;
     }
 
     categories = categories.filter(category => category.name?.toLowerCase().includes(parameters.search.toLowerCase()));
