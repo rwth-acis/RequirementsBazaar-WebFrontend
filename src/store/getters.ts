@@ -157,7 +157,7 @@ export const getters: GetterTree<State, State> & Getters = {
   },
 
   commentsList: (state) => (requirementId, parameters) => {
-    let comments: Comment[] = Object.values(state.comments);
+    let comments: Comment[] = Object.values(state.comments).filter(comment => (comment.requirementId === requirementId));
 
     return comments.slice(0, parameters.per_page);
   },
