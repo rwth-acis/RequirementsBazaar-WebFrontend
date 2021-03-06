@@ -17,7 +17,9 @@
             <CategoryCard
               :id="category.id"
               :name="category.name"
-              :description="category.description">
+              :description="category.description"
+              :numberOfFollowers="category.numberOfFollowers"
+              :numberOfRequirements="category.numberOfRequirements">
             </CategoryCard>
           </router-link>
         </div>

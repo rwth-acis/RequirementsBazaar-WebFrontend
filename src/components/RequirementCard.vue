@@ -58,7 +58,7 @@ export default defineComponent({
     padding-top: 1rem;
   }
 
-  button {
+  #actionButtons > * {
     display: flex;
     flex: 1;
     margin-left: .5rem;
