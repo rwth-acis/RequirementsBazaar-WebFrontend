@@ -165,6 +165,8 @@ export const getters: GetterTree<State, State> & Getters = {
   activitiesList: (state) => (parameters) => {
     let activities: Activity[] = Object.values(state.activities);
 
+    activities.sort(numericalSortFunction('id', false));
+
     return activities.slice(0, parameters.limit);
   },
 

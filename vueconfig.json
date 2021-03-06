@@ -1,5 +1,10 @@
 {
     "globalComponents": [
+        "./node_modules/primevue/avatar/Avatar.vue", {
+            "Avatar": {
+                "moduleName": "./node_modules/primevue/avatar/Avatar.vue"
+            }
+        },
         "./node_modules/primevue/button/Button.vue", {
             "Button": {
                 "moduleName": "./node_modules/primevue/button/Button.vue"

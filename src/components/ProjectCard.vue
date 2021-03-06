@@ -54,8 +54,6 @@ export default defineComponent({
       )}`.substr(-2)}`;
     }
 
-
-
     return { hashStringToColor, followersIcon, categoriesIcon, requirementsIcon };
   },
 

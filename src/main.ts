@@ -4,6 +4,7 @@ import { store } from "./store";
 import App from './App.vue';
 
 import PrimeVue from 'primevue/config';
+import Avatar from 'primevue/avatar';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Dropdown from 'primevue/dropdown';
@@ -24,6 +25,7 @@ app.use(router);
 app.use(store);
 app.use(PrimeVue);
 
+app.component('Avatar', Avatar);
 app.component('Button', Button);
 app.component('Card', Card);
 app.component('Dropdown', Dropdown);
