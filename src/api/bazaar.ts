@@ -1,4 +1,4 @@
-import { RequestParams, Api } from '../types/api';
+import { Api } from '../types/api';
 
 export const bazaarApi = new Api({
   baseUrl: 'https://beta.requirements-bazaar.org/bazaar',

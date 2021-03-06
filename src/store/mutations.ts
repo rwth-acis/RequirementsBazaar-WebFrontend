@@ -2,6 +2,7 @@ import { MutationTree } from 'vuex'
 import { State } from './state'
 
 import { Project, Category, Requirement, Comment } from '../types/api';
+import { Activity } from '../types/activities-api';
 
 export enum MutationType {
   SetProjects = 'SET_PROJECTS',
@@ -11,6 +12,7 @@ export enum MutationType {
   SetRequirements = 'SET_REQUIREMENTS',
   SetRequirement = 'SET_REQUIREMENT',
   SetComments = 'SET_COMMENT',
+  SetActivities = 'SET_ACTIVITIES',
 }
 
 export type Mutations = {
@@ -21,6 +23,7 @@ export type Mutations = {
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
   [MutationType.SetComments](state: State, comments: Comment[]): void;
+  [MutationType.SetActivities](state: State, activities: Activity[]): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -71,6 +74,14 @@ export const mutations: MutationTree<State> & Mutations = {
     comments.forEach((comment) => {
       if (comment.id) {
         state.comments[comment.id] = comment;
+      }
+    });
+  },
+
+  [MutationType.SetActivities](state, activities) {
+    activities.forEach((activity) => {
+      if (activity.id) {
+        state.activities[activity.id] = activity;
       }
     });
   },

@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, defineComponent } from 'vue'
+import { computed, ref, defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { ActionTypes } from '../store/actions';
 import CommentsList from './CommentsList.vue';

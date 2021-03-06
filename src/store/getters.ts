@@ -1,6 +1,7 @@
 import { GetterTree } from 'vuex'
 import { State } from './state'
 import { Project, Category, Requirement, Comment } from '../types/api';
+import { Activity } from '../types/activities-api';
 
 export type Getters = {
   projectsList(state: State): (parameters: any) => Project[]; //TODO: any type, replace by types in actions.ts!?
@@ -10,6 +11,7 @@ export type Getters = {
   requirementsList(state: State): (requirementId: number, parameters: any) => Requirement[];
   getRequirementById(state: State): (id: number) => Requirement | undefined;
   commentsList(state: State): (requirementId: number, parameters: any) => Comment[];
+  activitiesList(state: State): (parameters: any) => Activity[];
 }
 
 const numericalSortFunction = (property, sortAscending) => (a, b) => {
@@ -162,6 +164,12 @@ export const getters: GetterTree<State, State> & Getters = {
     let comments: Comment[] = Object.values(state.comments);
 
     return comments.slice(0, parameters.per_page);
+  },
+
+  activitiesList: (state) => (parameters) => {
+    let activities: Activity[] = Object.values(state.activities);
+
+    return activities.slice(0, parameters.limit);
   },
 
 }

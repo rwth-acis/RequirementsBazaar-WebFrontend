@@ -4,6 +4,7 @@ import { State } from './state';
 
 import { bazaarApi } from '../api/bazaar';
 import { projects, categories, requirements } from '../types/api';
+import { activitiesApi } from '../api/activities';
 
 export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
@@ -13,6 +14,7 @@ export enum ActionTypes {
   FetchRequirementsOfCategory = 'FETCH_REQUIREMENTS',
   FetchRequirement = 'FETCH_REQUIREMENT',
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
+  FetchActivities = 'FETCH_ACTIVITIES',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -23,22 +25,40 @@ type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
 }
 
 type ProjectsRequestParameters = {
-  query?: projects.GetProjects.RequestQuery,
+  query?: projects.GetProjects.RequestQuery;
 }
 
 type CategoriesRequestParameters = {
-  projectId: number,
-  query?: projects.GetCategoriesForProject.RequestQuery,
+  projectId: number;
+  query?: projects.GetCategoriesForProject.RequestQuery;
 }
 
 type RequirementsRequestParameters = {
-  categoryId: number,
-  query?: categories.GetRequirementsForCategory.RequestQuery,
+  categoryId: number;
+  query?: categories.GetRequirementsForCategory.RequestQuery;
 }
 
 type CommentsRequestParameters = {
-  requirementId: number,
-  query?: requirements.GetCommentsForRequirement.RequestQuery,
+  requirementId: number;
+  query?: requirements.GetCommentsForRequirement.RequestQuery;
+}
+
+type ActivitiesRequestParameters = {
+  query?: {
+    before?: number;
+    after?: number;
+    limit?: number;
+    fillChildElements?: "true" | "false";
+    search?: string;
+    activityAction?: string[];
+    origin?: string[];
+    dataType?: string[];
+    dataUrl?: string[];
+    parentDataType?: string[];
+    parentDataUrl?: string[];
+    userUrl?: string[];
+    combinedFilter?: string[];
+  }
 }
 
 export type Actions = {
@@ -49,6 +69,7 @@ export type Actions = {
   [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
+  [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -101,6 +122,13 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.requirements.getCommentsForRequirement(parameters.requirementId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetComments, response.data);
+    }
+  },
+
+  async [ActionTypes.FetchActivities]({ commit }, parameters) {
+    const response = await activitiesApi.getActivities(parameters.query);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetActivities, response.data);
     }
   },
 

@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { ref, defineComponent } from 'vue';
 
 import { followersIcon, categoriesIcon, requirementsIcon } from '../assets/reqbaz-icons.js';
 
