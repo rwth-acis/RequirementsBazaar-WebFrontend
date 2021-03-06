@@ -7,6 +7,9 @@
         <div id="content">
           <router-view></router-view>
         </div>
+        <footer>
+          <router-link to="/about">About</router-link> <router-link to="/developer">Developer</router-link> <router-link to="/privacy">Privacy</router-link>
+        </footer>
       </div>
       <div id="activityTrackerPlaceholder"></div>
       <ActivityTracker class="activityTracker"></ActivityTracker>
@@ -40,6 +43,7 @@ export default defineComponent({
   flex-direction: row;
   height: 100vh;
   padding-top: 50px;
+  margin-left: 1rem;
 }
 
 #container {
@@ -64,5 +68,11 @@ export default defineComponent({
   position: fixed;
   right: 0;
   width: 250px;
+}
+
+footer {
+  margin-top: 3rem;
+  padding-bottom: 4rem;
+  width: 100%;
 }
 </style>

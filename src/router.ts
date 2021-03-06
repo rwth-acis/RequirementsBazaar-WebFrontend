@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Landing from './views/Landing.vue';
+import Privacy from './views/Privacy.vue';
+import About from './views/About.vue';
+import Developer from './views/Developer.vue';
 import Projects from './views/Projects.vue';
 import Project from './views/Project.vue';
 import Category from './views/Category.vue';
@@ -11,6 +14,21 @@ export const router = createRouter({
       path: "/",
       name: "landing",
       component: Landing,
+    },
+    {
+      path: "/privacy",
+      name: "privacy",
+      component: Privacy,
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: About,
+    },
+    {
+      path: "/developer",
+      name: "developer",
+      component: Developer,
     },
     {
       path: "/projects",
