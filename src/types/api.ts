@@ -38,7 +38,6 @@ export interface User {
   userName: string;
   firstName?: string;
   lastName?: string;
-  admin?: boolean;
   las2peerId: string;
   profileImage?: string;
   emailLeadSubscription?: boolean;
@@ -102,15 +101,6 @@ export interface Category {
   isFollower?: boolean;
 }
 
-export interface CategoryContributors {
-  leader?: User;
-  requirementCreator?: User[];
-  leadDeveloper?: User[];
-  developers?: User[];
-  commentCreator?: User[];
-  attachmentCreator?: User[];
-}
-
 export interface Comment {
   /** @format int32 */
   id?: number;
@@ -138,10 +128,11 @@ export interface Comment {
 }
 
 export interface EntityContext {
+  user?: User;
   project?: Project;
+  categories?: Category[];
   requirement?: Requirement;
   comment?: Comment;
-  category?: Category[];
 }
 
 export interface Project {
@@ -212,10 +203,19 @@ export interface Requirement {
   /** @format int32 */
   downVotes?: number;
   userVoted?: "UP_VOTE" | "DOWN_VOTE" | "NO_VOTE";
-  _context?: EntityContext;
   isFollower?: boolean;
   isDeveloper?: boolean;
   isContributor?: boolean;
+  _context?: EntityContext;
+}
+
+export interface CategoryContributors {
+  leader?: User;
+  requirementCreator?: User[];
+  leadDeveloper?: User[];
+  developers?: User[];
+  commentCreator?: User[];
+  attachmentCreator?: User[];
 }
 
 export interface PersonalisationData {
@@ -245,6 +245,8 @@ export interface ProjectContributors {
 }
 
 export interface RequirementContributors {
+  /** @format int32 */
+  id?: number;
   creator?: User;
   leadDeveloper?: User;
   developers?: User[];
@@ -257,9 +259,25 @@ export interface EntityOverview {
   categories?: number[];
   requirements?: number[];
   comments?: number[];
+  attachments?: number[];
 }
 
 export namespace attachments {
+  /**
+   * No description
+   * @tags attachments
+   * @name CreateAttachment
+   * @summary This method allows to create a new attachment.
+   * @request POST:/attachments
+   * @secure
+   */
+  export namespace CreateAttachment {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = Attachment;
+    export type RequestHeaders = {};
+    export type ResponseBody = Attachment;
+  }
   /**
    * No description
    * @tags attachments
@@ -287,21 +305,6 @@ export namespace attachments {
     export type RequestParams = { attachmentId: number };
     export type RequestQuery = {};
     export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Attachment;
-  }
-  /**
-   * No description
-   * @tags attachments
-   * @name CreateAttachment
-   * @summary This method allows to create a new attachment.
-   * @request POST:/attachments
-   * @secure
-   */
-  export namespace CreateAttachment {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = Attachment;
     export type RequestHeaders = {};
     export type ResponseBody = Attachment;
   }
@@ -362,49 +365,13 @@ export namespace categories {
   /**
    * No description
    * @tags categories
-   * @name GetRequirementsForCategory
-   * @summary This method returns the list of requirements for a specific category.
-   * @request GET:/categories/{categoryId}/requirements
+   * @name CreateCategory
+   * @summary This method allows to create a new category under a given a project.
+   * @request POST:/categories
    * @secure
    */
-  export namespace GetRequirementsForCategory {
-    export type RequestParams = { categoryId: number };
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      state?: "all" | "open" | "realized";
-      sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower" | "realized")[];
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Category[];
-  }
-  /**
-   * No description
-   * @tags categories
-   * @name GetCategory
-   * @summary This method allows to retrieve a certain category.
-   * @request GET:/categories/{categoryId}
-   * @secure
-   */
-  export namespace GetCategory {
-    export type RequestParams = { categoryId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Category;
-  }
-  /**
-   * No description
-   * @tags categories
-   * @name UpdateCategory
-   * @summary This method allows to update a certain category.
-   * @request PUT:/categories/{categoryId}
-   * @secure
-   */
-  export namespace UpdateCategory {
-    export type RequestParams = { categoryId: number };
+  export namespace CreateCategory {
+    export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = Category;
     export type RequestHeaders = {};
@@ -413,17 +380,17 @@ export namespace categories {
   /**
    * No description
    * @tags categories
-   * @name DeleteCategory
-   * @summary This method deletes a specific category.
-   * @request DELETE:/categories/{categoryId}
+   * @name GetStatisticsForCategory
+   * @summary This method allows to retrieve statistics for one category.
+   * @request GET:/categories/{categoryId}/statistics
    * @secure
    */
-  export namespace DeleteCategory {
+  export namespace GetStatisticsForCategory {
     export type RequestParams = { categoryId: number };
-    export type RequestQuery = {};
+    export type RequestQuery = { since?: string };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = Category;
+    export type ResponseBody = Statistic;
   }
   /**
    * No description
@@ -473,6 +440,73 @@ export namespace categories {
   /**
    * No description
    * @tags categories
+   * @name GetRequirementsForCategory
+   * @summary This method returns the list of requirements for a specific category.
+   * @request GET:/categories/{categoryId}/requirements
+   * @secure
+   */
+  export namespace GetRequirementsForCategory {
+    export type RequestParams = { categoryId: number };
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      state?: "all" | "open" | "realized";
+      sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement[];
+  }
+  /**
+   * No description
+   * @tags categories
+   * @name GetCategory
+   * @summary This method allows to retrieve a certain category.
+   * @request GET:/categories/{categoryId}
+   * @secure
+   */
+  export namespace GetCategory {
+    export type RequestParams = { categoryId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Category;
+  }
+  /**
+   * No description
+   * @tags categories
+   * @name UpdateCategory
+   * @summary This method allows to update a certain category.
+   * @request PUT:/categories/{categoryId}
+   * @secure
+   */
+  export namespace UpdateCategory {
+    export type RequestParams = { categoryId: number };
+    export type RequestQuery = {};
+    export type RequestBody = Category;
+    export type RequestHeaders = {};
+    export type ResponseBody = Category;
+  }
+  /**
+   * No description
+   * @tags categories
+   * @name DeleteCategory
+   * @summary This method deletes a specific category.
+   * @request DELETE:/categories/{categoryId}
+   * @secure
+   */
+  export namespace DeleteCategory {
+    export type RequestParams = { categoryId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Category;
+  }
+  /**
+   * No description
+   * @tags categories
    * @name GetContributorsForCategory
    * @summary This method returns the list of contributors for a specific category.
    * @request GET:/categories/{categoryId}/contributors
@@ -484,36 +518,6 @@ export namespace categories {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = CategoryContributors;
-  }
-  /**
-   * No description
-   * @tags categories
-   * @name CreateCategory
-   * @summary This method allows to create a new category under a given a project.
-   * @request POST:/categories
-   * @secure
-   */
-  export namespace CreateCategory {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = Category;
-    export type RequestHeaders = {};
-    export type ResponseBody = Category;
-  }
-  /**
-   * No description
-   * @tags categories
-   * @name GetStatisticsForCategory
-   * @summary This method allows to retrieve statistics for one category.
-   * @request GET:/categories/{categoryId}/statistics
-   * @secure
-   */
-  export namespace GetStatisticsForCategory {
-    export type RequestParams = { categoryId: number };
-    export type RequestQuery = { since?: string };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Statistic;
   }
 }
 
@@ -563,6 +567,7 @@ export namespace comments {
       per_page?: number;
       search?: string;
       sort?: ("name" | "date")[];
+      sortDirection?: "ASC" | "DESC";
       filters: ("created" | "following" | "replies")[];
       embedParents: ("project" | "requirement")[];
     };
@@ -624,47 +629,6 @@ export namespace projects {
   /**
    * No description
    * @tags projects
-   * @name GetCategoriesForProject
-   * @summary This method returns the list of categories under a given project.
-   * @request GET:/projects/{projectId}/categories
-   * @secure
-   */
-  export namespace GetCategoriesForProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Category[];
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name GetRequirementsForProject
-   * @summary This method returns the list of requirements for a specific project.
-   * @request GET:/projects/{projectId}/requirements
-   * @secure
-   */
-  export namespace GetRequirementsForProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      state?: "all" | "open" | "realized";
-      sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower" | "realized")[];
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement[];
-  }
-  /**
-   * No description
-   * @tags projects
    * @name GetProjects
    * @summary This method returns the list of projects on the server.
    * @request GET:/projects
@@ -677,6 +641,7 @@ export namespace projects {
       per_page?: number;
       search?: string;
       sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
       filters?: ("all" | "created" | "following")[];
       ids?: number[];
     };
@@ -702,32 +667,17 @@ export namespace projects {
   /**
    * No description
    * @tags projects
-   * @name GetProject
-   * @summary This method allows to retrieve a certain project.
-   * @request GET:/projects/{projectId}
+   * @name GetStatisticsForProject
+   * @summary This method allows to retrieve statistics for one project.
+   * @request GET:/projects/{projectId}/statistics
    * @secure
    */
-  export namespace GetProject {
+  export namespace GetStatisticsForProject {
     export type RequestParams = { projectId: number };
-    export type RequestQuery = {};
+    export type RequestQuery = { since?: string };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = Project;
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name UpdateProject
-   * @summary This method allows to update a certain project.
-   * @request PUT:/projects/{projectId}
-   * @secure
-   */
-  export namespace UpdateProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {};
-    export type RequestBody = Project;
-    export type RequestHeaders = {};
-    export type ResponseBody = Project;
+    export type ResponseBody = Statistic;
   }
   /**
    * No description
@@ -777,6 +727,79 @@ export namespace projects {
   /**
    * No description
    * @tags projects
+   * @name GetCategoriesForProject
+   * @summary This method returns the list of categories under a given project.
+   * @request GET:/projects/{projectId}/categories
+   * @secure
+   */
+  export namespace GetCategoriesForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Category[];
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name GetRequirementsForProject
+   * @summary This method returns the list of requirements for a specific project.
+   * @request GET:/projects/{projectId}/requirements
+   * @secure
+   */
+  export namespace GetRequirementsForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      state?: "all" | "open" | "realized";
+      sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement[];
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name GetProject
+   * @summary This method allows to retrieve a certain project.
+   * @request GET:/projects/{projectId}
+   * @secure
+   */
+  export namespace GetProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Project;
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name UpdateProject
+   * @summary This method allows to update a certain project.
+   * @request PUT:/projects/{projectId}
+   * @secure
+   */
+  export namespace UpdateProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = Project;
+    export type RequestHeaders = {};
+    export type ResponseBody = Project;
+  }
+  /**
+   * No description
+   * @tags projects
    * @name GetContributorsForProject
    * @summary This method returns the list of contributors for a specific project.
    * @request GET:/projects/{projectId}/contributors
@@ -789,24 +812,137 @@ export namespace projects {
     export type RequestHeaders = {};
     export type ResponseBody = ProjectContributors;
   }
+}
+
+export namespace requirements {
   /**
    * No description
-   * @tags projects
-   * @name GetStatisticsForProject
-   * @summary This method allows to retrieve statistics for one project.
-   * @request GET:/projects/{projectId}/statistics
+   * @tags requirements
+   * @name GetRequirements
+   * @summary This method returns the list of requirements on the server.
+   * @request GET:/requirements
    * @secure
    */
-  export namespace GetStatisticsForProject {
-    export type RequestParams = { projectId: number };
+  export namespace GetRequirements {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+      filters: ("created" | "following")[];
+      embedParents: "project"[];
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement[];
+  }
+  /**
+   * No description
+   * @tags requirements
+   * @name CreateRequirement
+   * @summary This method allows to create a new requirement.
+   * @request POST:/requirements
+   * @secure
+   */
+  export namespace CreateRequirement {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = Requirement;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement;
+  }
+  /**
+   * No description
+   * @tags requirements
+   * @name GetStatisticsForRequirement
+   * @summary This method allows to retrieve statistics for one requirement.
+   * @request GET:/requirements/{requirementId}/statistics
+   * @secure
+   */
+  export namespace GetStatisticsForRequirement {
+    export type RequestParams = { requirementId: number };
     export type RequestQuery = { since?: string };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = Statistic;
   }
-}
-
-export namespace requirements {
+  /**
+   * No description
+   * @tags requirements
+   * @name GetFollowersForRequirement
+   * @summary This method returns the list of followers for a specific requirement.
+   * @request GET:/requirements/{requirementId}/followers
+   * @secure
+   */
+  export namespace GetFollowersForRequirement {
+    export type RequestParams = { requirementId: number };
+    export type RequestQuery = { page?: number; per_page?: number };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = User[];
+  }
+  /**
+   * No description
+   * @tags requirements
+   * @name FollowRequirement
+   * @summary This method add the current user to the followers list of a given requirement.
+   * @request POST:/requirements/{requirementId}/followers
+   * @secure
+   */
+  export namespace FollowRequirement {
+    export type RequestParams = { requirementId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement;
+  }
+  /**
+   * No description
+   * @tags requirements
+   * @name UnfollowRequirement
+   * @summary This method removes the current user from a followers list of a given requirement.
+   * @request DELETE:/requirements/{requirementId}/followers
+   * @secure
+   */
+  export namespace UnfollowRequirement {
+    export type RequestParams = { requirementId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement;
+  }
+  /**
+   * No description
+   * @tags requirements
+   * @name Vote
+   * @summary This method creates a vote for the given requirement in the name of the current user.
+   * @request POST:/requirements/{requirementId}/votes
+   * @secure
+   */
+  export namespace Vote {
+    export type RequestParams = { requirementId: number };
+    export type RequestQuery = { direction?: "up" | "down" };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement;
+  }
+  /**
+   * No description
+   * @tags requirements
+   * @name Unvote
+   * @summary This method removes the vote of the given requirement made by the current user.
+   * @request DELETE:/requirements/{requirementId}/votes
+   * @secure
+   */
+  export namespace Unvote {
+    export type RequestParams = { requirementId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement;
+  }
   /**
    * No description
    * @tags requirements
@@ -836,43 +972,6 @@ export namespace requirements {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = Attachment[];
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name GetRequirements
-   * @summary This method returns the list of requirements on the server.
-   * @request GET:/requirements
-   * @secure
-   */
-  export namespace GetRequirements {
-    export type RequestParams = {};
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-      filters: ("created" | "following")[];
-      embedParents: "project"[];
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement[];
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name CreateRequirement
-   * @summary This method allows to create a new requirement.
-   * @request POST:/requirements
-   * @secure
-   */
-  export namespace CreateRequirement {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = Requirement;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement;
   }
   /**
    * No description
@@ -997,81 +1096,6 @@ export namespace requirements {
   /**
    * No description
    * @tags requirements
-   * @name GetFollowersForRequirement
-   * @summary This method returns the list of followers for a specific requirement.
-   * @request GET:/requirements/{requirementId}/followers
-   * @secure
-   */
-  export namespace GetFollowersForRequirement {
-    export type RequestParams = { requirementId: number };
-    export type RequestQuery = { page?: number; per_page?: number };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = User[];
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name FollowRequirement
-   * @summary This method add the current user to the followers list of a given requirement.
-   * @request POST:/requirements/{requirementId}/followers
-   * @secure
-   */
-  export namespace FollowRequirement {
-    export type RequestParams = { requirementId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement;
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name UnfollowRequirement
-   * @summary This method removes the current user from a followers list of a given requirement.
-   * @request DELETE:/requirements/{requirementId}/followers
-   * @secure
-   */
-  export namespace UnfollowRequirement {
-    export type RequestParams = { requirementId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement;
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name Vote
-   * @summary This method creates a vote for the given requirement in the name of the current user.
-   * @request POST:/requirements/{requirementId}/votes
-   * @secure
-   */
-  export namespace Vote {
-    export type RequestParams = { requirementId: number };
-    export type RequestQuery = { direction?: "up" | "down" };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement;
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name Unvote
-   * @summary This method removes the vote of the given requirement made by the current user.
-   * @request DELETE:/requirements/{requirementId}/votes
-   * @secure
-   */
-  export namespace Unvote {
-    export type RequestParams = { requirementId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement;
-  }
-  /**
-   * No description
-   * @tags requirements
    * @name Realize
    * @summary This method set the realized field to now for a given requirement.
    * @request POST:/requirements/{requirementId}/realized
@@ -1113,21 +1137,6 @@ export namespace requirements {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = RequirementContributors;
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name GetStatisticsForRequirement
-   * @summary This method allows to retrieve statistics for one requirement.
-   * @request GET:/requirements/{requirementId}/statistics
-   * @secure
-   */
-  export namespace GetStatisticsForRequirement {
-    export type RequestParams = { requirementId: number };
-    export type RequestQuery = { since?: string };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Statistic;
   }
 }
 
@@ -1191,6 +1200,7 @@ export namespace users {
       search?: string;
       include: ("projects" | "categories" | "requirements")[];
       sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
       filters?: ("created" | "following" | "developing")[];
     };
     export type RequestBody = never;
@@ -1212,7 +1222,7 @@ export interface FullRequestParams extends Omit<RequestInit, "body"> {
   /** query params */
   query?: QueryParamsType;
   /** format of response (i.e. response.json() -> format: "json") */
-  format?: keyof Omit<Body, "body" | "bodyUsed">;
+  format?: ResponseFormat;
   /** request body */
   body?: unknown;
   /** base url */
@@ -1226,7 +1236,7 @@ export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" 
 export interface ApiConfig<SecurityDataType = unknown> {
   baseUrl?: string;
   baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
-  securityWorker?: (securityData: SecurityDataType) => RequestParams | void;
+  securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestParams | void> | RequestParams | void;
 }
 
 export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
@@ -1244,8 +1254,8 @@ export enum ContentType {
 
 export class HttpClient<SecurityDataType = unknown> {
   public baseUrl: string = "/bazaar/";
-  private securityData: SecurityDataType = null as any;
-  private securityWorker: null | ApiConfig<SecurityDataType>["securityWorker"] = null;
+  private securityData: SecurityDataType | null = null;
+  private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
   private abortControllers = new Map<CancelToken, AbortController>();
 
   private baseApiParams: RequestParams = {
@@ -1259,7 +1269,7 @@ export class HttpClient<SecurityDataType = unknown> {
     Object.assign(this, apiConfig);
   }
 
-  public setSecurityData = (data: SecurityDataType) => {
+  public setSecurityData = (data: SecurityDataType | null) => {
     this.securityData = data;
   };
 
@@ -1337,7 +1347,7 @@ export class HttpClient<SecurityDataType = unknown> {
     }
   };
 
-  public request = <T = any, E = any>({
+  public request = async <T = any, E = any>({
     body,
     secure,
     path,
@@ -1348,7 +1358,7 @@ export class HttpClient<SecurityDataType = unknown> {
     cancelToken,
     ...params
   }: FullRequestParams): Promise<HttpResponse<T, E>> => {
-    const secureParams = (secure && this.securityWorker && this.securityWorker(this.securityData)) || {};
+    const secureParams = (secure && this.securityWorker && (await this.securityWorker(this.securityData))) || {};
     const requestParams = this.mergeRequestParams(params, secureParams);
     const queryString = query && this.toQueryString(query);
     const payloadFormatter = this.contentFormatters[type || ContentType.Json];
@@ -1392,12 +1402,36 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Requirements Bazaar
- * @version 0.6
+ * @version 0.9.0
+ * @license Apache2 (http://requirements-bazaar.org/license)
+ * @termsOfService http://requirements-bazaar.org
  * @baseUrl /bazaar/
+ * @contact Requirements Bazaar Dev Team <info@requirements-bazaar.org> (http://requirements-bazaar.org)
+ *
  * Requirements Bazaar project
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   attachments = {
+    /**
+     * No description
+     *
+     * @tags attachments
+     * @name CreateAttachment
+     * @summary This method allows to create a new attachment.
+     * @request POST:/attachments
+     * @secure
+     */
+    createAttachment: (body: Attachment, params: RequestParams = {}) =>
+      this.request<Attachment, void>({
+        path: `/attachments`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
     /**
      * No description
      *
@@ -1430,26 +1464,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/attachments/${attachmentId}`,
         method: "DELETE",
         secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags attachments
-     * @name CreateAttachment
-     * @summary This method allows to create a new attachment.
-     * @request POST:/attachments
-     * @secure
-     */
-    createAttachment: (body: Attachment, params: RequestParams = {}) =>
-      this.request<Attachment, void>({
-        path: `/attachments`,
-        method: "POST",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -1512,6 +1526,104 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags categories
+     * @name CreateCategory
+     * @summary This method allows to create a new category under a given a project.
+     * @request POST:/categories
+     * @secure
+     */
+    createCategory: (body: Category, params: RequestParams = {}) =>
+      this.request<Category, void>({
+        path: `/categories`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags categories
+     * @name GetStatisticsForCategory
+     * @summary This method allows to retrieve statistics for one category.
+     * @request GET:/categories/{categoryId}/statistics
+     * @secure
+     */
+    getStatisticsForCategory: (categoryId: number, query?: { since?: string }, params: RequestParams = {}) =>
+      this.request<Statistic, void>({
+        path: `/categories/${categoryId}/statistics`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags categories
+     * @name GetFollowersForCategory
+     * @summary This method returns the list of followers for a specific category.
+     * @request GET:/categories/{categoryId}/followers
+     * @secure
+     */
+    getFollowersForCategory: (
+      categoryId: number,
+      query?: { page?: number; per_page?: number },
+      params: RequestParams = {},
+    ) =>
+      this.request<User[], void>({
+        path: `/categories/${categoryId}/followers`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags categories
+     * @name FollowCategory
+     * @summary This method add the current user to the followers list of a given category.
+     * @request POST:/categories/{categoryId}/followers
+     * @secure
+     */
+    followCategory: (categoryId: number, params: RequestParams = {}) =>
+      this.request<Category, void>({
+        path: `/categories/${categoryId}/followers`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags categories
+     * @name UnfollowCategory
+     * @summary This method removes the current user from a followers list of a given category.
+     * @request DELETE:/categories/{categoryId}/followers
+     * @secure
+     */
+    unfollowCategory: (categoryId: number, params: RequestParams = {}) =>
+      this.request<Category, void>({
+        path: `/categories/${categoryId}/followers`,
+        method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags categories
      * @name GetRequirementsForCategory
      * @summary This method returns the list of requirements for a specific category.
      * @request GET:/categories/{categoryId}/requirements
@@ -1524,7 +1636,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         per_page?: number;
         search?: string;
         state?: "all" | "open" | "realized";
-        sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower" | "realized")[];
+        sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
       },
       params: RequestParams = {},
     ) =>
@@ -1597,65 +1710,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags categories
-     * @name GetFollowersForCategory
-     * @summary This method returns the list of followers for a specific category.
-     * @request GET:/categories/{categoryId}/followers
-     * @secure
-     */
-    getFollowersForCategory: (
-      categoryId: number,
-      query?: { page?: number; per_page?: number },
-      params: RequestParams = {},
-    ) =>
-      this.request<User[], void>({
-        path: `/categories/${categoryId}/followers`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags categories
-     * @name FollowCategory
-     * @summary This method add the current user to the followers list of a given category.
-     * @request POST:/categories/{categoryId}/followers
-     * @secure
-     */
-    followCategory: (categoryId: number, params: RequestParams = {}) =>
-      this.request<Category, void>({
-        path: `/categories/${categoryId}/followers`,
-        method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags categories
-     * @name UnfollowCategory
-     * @summary This method removes the current user from a followers list of a given category.
-     * @request DELETE:/categories/{categoryId}/followers
-     * @secure
-     */
-    unfollowCategory: (categoryId: number, params: RequestParams = {}) =>
-      this.request<Category, void>({
-        path: `/categories/${categoryId}/followers`,
-        method: "DELETE",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags categories
      * @name GetContributorsForCategory
      * @summary This method returns the list of contributors for a specific category.
      * @request GET:/categories/{categoryId}/contributors
@@ -1665,45 +1719,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<CategoryContributors, void>({
         path: `/categories/${categoryId}/contributors`,
         method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags categories
-     * @name CreateCategory
-     * @summary This method allows to create a new category under a given a project.
-     * @request POST:/categories
-     * @secure
-     */
-    createCategory: (body: Category, params: RequestParams = {}) =>
-      this.request<Category, void>({
-        path: `/categories`,
-        method: "POST",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags categories
-     * @name GetStatisticsForCategory
-     * @summary This method allows to retrieve statistics for one category.
-     * @request GET:/categories/{categoryId}/statistics
-     * @secure
-     */
-    getStatisticsForCategory: (categoryId: number, query?: { since?: string }, params: RequestParams = {}) =>
-      this.request<Statistic, void>({
-        path: `/categories/${categoryId}/statistics`,
-        method: "GET",
-        query: query,
         secure: true,
         format: "json",
         ...params,
@@ -1761,6 +1776,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         per_page?: number;
         search?: string;
         sort?: ("name" | "date")[];
+        sortDirection?: "ASC" | "DESC";
         filters: ("created" | "following" | "replies")[];
         embedParents: ("project" | "requirement")[];
       },
@@ -1838,63 +1854,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
-     * @name GetCategoriesForProject
-     * @summary This method returns the list of categories under a given project.
-     * @request GET:/projects/{projectId}/categories
-     * @secure
-     */
-    getCategoriesForProject: (
-      projectId: number,
-      query?: {
-        page?: number;
-        per_page?: number;
-        search?: string;
-        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Category[], void>({
-        path: `/projects/${projectId}/categories`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name GetRequirementsForProject
-     * @summary This method returns the list of requirements for a specific project.
-     * @request GET:/projects/{projectId}/requirements
-     * @secure
-     */
-    getRequirementsForProject: (
-      projectId: number,
-      query?: {
-        page?: number;
-        per_page?: number;
-        search?: string;
-        state?: "all" | "open" | "realized";
-        sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower" | "realized")[];
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Requirement[], void>({
-        path: `/projects/${projectId}/requirements`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
      * @name GetProjects
      * @summary This method returns the list of projects on the server.
      * @request GET:/projects
@@ -1906,6 +1865,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         per_page?: number;
         search?: string;
         sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
         filters?: ("all" | "created" | "following")[];
         ids?: number[];
       },
@@ -1944,36 +1904,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
-     * @name GetProject
-     * @summary This method allows to retrieve a certain project.
-     * @request GET:/projects/{projectId}
+     * @name GetStatisticsForProject
+     * @summary This method allows to retrieve statistics for one project.
+     * @request GET:/projects/{projectId}/statistics
      * @secure
      */
-    getProject: (projectId: number, params: RequestParams = {}) =>
-      this.request<Project, void>({
-        path: `/projects/${projectId}`,
+    getStatisticsForProject: (projectId: number, query?: { since?: string }, params: RequestParams = {}) =>
+      this.request<Statistic, void>({
+        path: `/projects/${projectId}/statistics`,
         method: "GET",
+        query: query,
         secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name UpdateProject
-     * @summary This method allows to update a certain project.
-     * @request PUT:/projects/{projectId}
-     * @secure
-     */
-    updateProject: (projectId: number, body: Project, params: RequestParams = {}) =>
-      this.request<Project, void>({
-        path: `/projects/${projectId}`,
-        method: "PUT",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2041,6 +1982,103 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
+     * @name GetCategoriesForProject
+     * @summary This method returns the list of categories under a given project.
+     * @request GET:/projects/{projectId}/categories
+     * @secure
+     */
+    getCategoriesForProject: (
+      projectId: number,
+      query?: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Category[], void>({
+        path: `/projects/${projectId}/categories`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name GetRequirementsForProject
+     * @summary This method returns the list of requirements for a specific project.
+     * @request GET:/projects/{projectId}/requirements
+     * @secure
+     */
+    getRequirementsForProject: (
+      projectId: number,
+      query?: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        state?: "all" | "open" | "realized";
+        sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Requirement[], void>({
+        path: `/projects/${projectId}/requirements`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name GetProject
+     * @summary This method allows to retrieve a certain project.
+     * @request GET:/projects/{projectId}
+     * @secure
+     */
+    getProject: (projectId: number, params: RequestParams = {}) =>
+      this.request<Project, void>({
+        path: `/projects/${projectId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name UpdateProject
+     * @summary This method allows to update a certain project.
+     * @request PUT:/projects/{projectId}
+     * @secure
+     */
+    updateProject: (projectId: number, body: Project, params: RequestParams = {}) =>
+      this.request<Project, void>({
+        path: `/projects/${projectId}`,
+        method: "PUT",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
      * @name GetContributorsForProject
      * @summary This method returns the list of contributors for a specific project.
      * @request GET:/projects/{projectId}/contributors
@@ -2054,27 +2092,173 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         format: "json",
         ...params,
       }),
-
+  };
+  requirements = {
     /**
      * No description
      *
-     * @tags projects
-     * @name GetStatisticsForProject
-     * @summary This method allows to retrieve statistics for one project.
-     * @request GET:/projects/{projectId}/statistics
+     * @tags requirements
+     * @name GetRequirements
+     * @summary This method returns the list of requirements on the server.
+     * @request GET:/requirements
      * @secure
      */
-    getStatisticsForProject: (projectId: number, query?: { since?: string }, params: RequestParams = {}) =>
-      this.request<Statistic, void>({
-        path: `/projects/${projectId}/statistics`,
+    getRequirements: (
+      query: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
+        filters: ("created" | "following")[];
+        embedParents: "project"[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Requirement[], void>({
+        path: `/requirements`,
         method: "GET",
         query: query,
         secure: true,
         format: "json",
         ...params,
       }),
-  };
-  requirements = {
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name CreateRequirement
+     * @summary This method allows to create a new requirement.
+     * @request POST:/requirements
+     * @secure
+     */
+    createRequirement: (body: Requirement, params: RequestParams = {}) =>
+      this.request<Requirement, void>({
+        path: `/requirements`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name GetStatisticsForRequirement
+     * @summary This method allows to retrieve statistics for one requirement.
+     * @request GET:/requirements/{requirementId}/statistics
+     * @secure
+     */
+    getStatisticsForRequirement: (requirementId: number, query?: { since?: string }, params: RequestParams = {}) =>
+      this.request<Statistic, void>({
+        path: `/requirements/${requirementId}/statistics`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name GetFollowersForRequirement
+     * @summary This method returns the list of followers for a specific requirement.
+     * @request GET:/requirements/{requirementId}/followers
+     * @secure
+     */
+    getFollowersForRequirement: (
+      requirementId: number,
+      query?: { page?: number; per_page?: number },
+      params: RequestParams = {},
+    ) =>
+      this.request<User[], void>({
+        path: `/requirements/${requirementId}/followers`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name FollowRequirement
+     * @summary This method add the current user to the followers list of a given requirement.
+     * @request POST:/requirements/{requirementId}/followers
+     * @secure
+     */
+    followRequirement: (requirementId: number, params: RequestParams = {}) =>
+      this.request<Requirement, void>({
+        path: `/requirements/${requirementId}/followers`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name UnfollowRequirement
+     * @summary This method removes the current user from a followers list of a given requirement.
+     * @request DELETE:/requirements/{requirementId}/followers
+     * @secure
+     */
+    unfollowRequirement: (requirementId: number, params: RequestParams = {}) =>
+      this.request<Requirement, void>({
+        path: `/requirements/${requirementId}/followers`,
+        method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name Vote
+     * @summary This method creates a vote for the given requirement in the name of the current user.
+     * @request POST:/requirements/{requirementId}/votes
+     * @secure
+     */
+    vote: (requirementId: number, query?: { direction?: "up" | "down" }, params: RequestParams = {}) =>
+      this.request<Requirement, void>({
+        path: `/requirements/${requirementId}/votes`,
+        method: "POST",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name Unvote
+     * @summary This method removes the vote of the given requirement made by the current user.
+     * @request DELETE:/requirements/{requirementId}/votes
+     * @secure
+     */
+    unvote: (requirementId: number, params: RequestParams = {}) =>
+      this.request<Requirement, void>({
+        path: `/requirements/${requirementId}/votes`,
+        method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
     /**
      * No description
      *
@@ -2117,55 +2301,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "GET",
         query: query,
         secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name GetRequirements
-     * @summary This method returns the list of requirements on the server.
-     * @request GET:/requirements
-     * @secure
-     */
-    getRequirements: (
-      query: {
-        page?: number;
-        per_page?: number;
-        search?: string;
-        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-        filters: ("created" | "following")[];
-        embedParents: "project"[];
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Requirement[], void>({
-        path: `/requirements`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name CreateRequirement
-     * @summary This method allows to create a new requirement.
-     * @request POST:/requirements
-     * @secure
-     */
-    createRequirement: (body: Requirement, params: RequestParams = {}) =>
-      this.request<Requirement, void>({
-        path: `/requirements`,
-        method: "POST",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2325,102 +2460,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags requirements
-     * @name GetFollowersForRequirement
-     * @summary This method returns the list of followers for a specific requirement.
-     * @request GET:/requirements/{requirementId}/followers
-     * @secure
-     */
-    getFollowersForRequirement: (
-      requirementId: number,
-      query?: { page?: number; per_page?: number },
-      params: RequestParams = {},
-    ) =>
-      this.request<User[], void>({
-        path: `/requirements/${requirementId}/followers`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name FollowRequirement
-     * @summary This method add the current user to the followers list of a given requirement.
-     * @request POST:/requirements/{requirementId}/followers
-     * @secure
-     */
-    followRequirement: (requirementId: number, params: RequestParams = {}) =>
-      this.request<Requirement, void>({
-        path: `/requirements/${requirementId}/followers`,
-        method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name UnfollowRequirement
-     * @summary This method removes the current user from a followers list of a given requirement.
-     * @request DELETE:/requirements/{requirementId}/followers
-     * @secure
-     */
-    unfollowRequirement: (requirementId: number, params: RequestParams = {}) =>
-      this.request<Requirement, void>({
-        path: `/requirements/${requirementId}/followers`,
-        method: "DELETE",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name Vote
-     * @summary This method creates a vote for the given requirement in the name of the current user.
-     * @request POST:/requirements/{requirementId}/votes
-     * @secure
-     */
-    vote: (requirementId: number, query?: { direction?: "up" | "down" }, params: RequestParams = {}) =>
-      this.request<Requirement, void>({
-        path: `/requirements/${requirementId}/votes`,
-        method: "POST",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name Unvote
-     * @summary This method removes the vote of the given requirement made by the current user.
-     * @request DELETE:/requirements/{requirementId}/votes
-     * @secure
-     */
-    unvote: (requirementId: number, params: RequestParams = {}) =>
-      this.request<Requirement, void>({
-        path: `/requirements/${requirementId}/votes`,
-        method: "DELETE",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
      * @name Realize
      * @summary This method set the realized field to now for a given requirement.
      * @request POST:/requirements/{requirementId}/realized
@@ -2466,25 +2505,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<RequirementContributors, void>({
         path: `/requirements/${requirementId}/contributors`,
         method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name GetStatisticsForRequirement
-     * @summary This method allows to retrieve statistics for one requirement.
-     * @request GET:/requirements/{requirementId}/statistics
-     * @secure
-     */
-    getStatisticsForRequirement: (requirementId: number, query?: { since?: string }, params: RequestParams = {}) =>
-      this.request<Statistic, void>({
-        path: `/requirements/${requirementId}/statistics`,
-        method: "GET",
-        query: query,
         secure: true,
         format: "json",
         ...params,
@@ -2561,6 +2581,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string;
         include: ("projects" | "categories" | "requirements")[];
         sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
         filters?: ("created" | "following" | "developing")[];
       },
       params: RequestParams = {},

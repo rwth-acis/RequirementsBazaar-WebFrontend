@@ -60,8 +60,8 @@ export default defineComponent({
     const sortAscending = ref(true);
     const page = ref(0);
     const perPage = ref(20);
-    const sort = computed(() => `${sortAscending.value ? '+' : '-'}${selectedSort.value}`);
-    const parameters = computed(() => {return {page: page.value, per_page: perPage.value, sort: sort.value, search: searchQuery.value}});
+    const sortDirection = computed(() => sortAscending.value ? 'ASC' : 'DESC');
+    const parameters = computed(() => {return {page: page.value, per_page: perPage.value, sort: selectedSort.value, sortDirection: sortDirection.value, search: searchQuery.value}});
     const requirements = computed(() => store.getters.requirementsList(categoryId, parameters.value));
     store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value});
     watch(selectedSort, () => {

@@ -35,9 +35,7 @@ export const getters: GetterTree<State, State> & Getters = {
   projectsList: (state) => (parameters) => {
     let projects: Project[] = Object.values(state.projects);
 
-    const sortAscending = parameters.sort.charAt(0) === '+';
-    const sortArgument = parameters.sort.substring(1);
-
+    const sortAscending = parameters.sortDirection === 'ASC';
     // first, sort alphabetically in all cases
     projects.sort((a, b) => {
       if (a['name'] && b['name']) {
@@ -46,11 +44,11 @@ export const getters: GetterTree<State, State> & Getters = {
       }
       return 0;
     });
-    if ((sortArgument === 'name') && !sortAscending) {
+    if ((parameters.sort === 'name') && !sortAscending) {
       projects.reverse();
     }
     // then sort according to sort argument
-    switch(sortArgument) {
+    switch(parameters.sort) {
       case 'last_activity':
         projects.sort(lexicographicalSortFunction('lastUpdatedDate', sortAscending));
         break;
@@ -77,8 +75,7 @@ export const getters: GetterTree<State, State> & Getters = {
   categoriesList: (state) => (projectId, parameters) => {
     let categories: Category[] = Object.values(state.categories).filter(category => (category.projectId === projectId));
 
-    const sortAscending = parameters.sort.charAt(0) === '+';
-    const sortArgument = parameters.sort.substring(1);
+    const sortAscending = parameters.sortDirection === 'ASC';
     // first, sort alphabetically in all cases
     categories.sort((a, b) => {
       if (a['name'] && b['name']) {
@@ -87,11 +84,11 @@ export const getters: GetterTree<State, State> & Getters = {
       }
       return 0;
     });
-    if ((sortArgument === 'name') && !sortAscending) {
+    if ((parameters.sort === 'name') && !sortAscending) {
       categories.reverse();
     }
     // then sort according to sort argument
-    switch(sortArgument) {
+    switch(parameters.sort) {
       case 'last_activity':
         categories.sort(lexicographicalSortFunction('lastUpdatedDate', sortAscending));
         break;
@@ -119,8 +116,7 @@ export const getters: GetterTree<State, State> & Getters = {
     // filter all requirements who have a category object with id equaling the requested categoryId
     let requirements: Requirement[] = Object.values(state.requirements).filter(requirement => (requirement.categories.some(c => c.id === categoryId)));
 
-    const sortAscending = parameters.sort.charAt(0) === '+';
-    const sortArgument = parameters.sort.substring(1);
+    const sortAscending = parameters.sortDirection === 'ASC';
     // first, sort alphabetically in all cases
     requirements.sort((a, b) => {
       if (a['name'] && b['name']) {
@@ -129,11 +125,11 @@ export const getters: GetterTree<State, State> & Getters = {
       }
       return 0;
     });
-    if ((sortArgument === 'name') && !sortAscending) {
+    if ((parameters.sort === 'name') && !sortAscending) {
       requirements.reverse();
     }
     // then sort according to sort argument
-    switch(sortArgument) {
+    switch(parameters.sort) {
       case 'last_activity':
         requirements.sort(lexicographicalSortFunction('lastUpdatedDate', sortAscending));
         break;
