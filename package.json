@@ -12,10 +12,12 @@
     "primeicons": "^4.1.0",
     "primevue": "^3.3.4",
     "vue": "^3.0.7",
+    "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.4",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
+    "@intlify/vite-plugin-vue-i18n": "^2.0.2",
     "@types/node": "^14.14.31",
     "@vitejs/plugin-vue": "^1.1.5",
     "@vue/compiler-sfc": "^3.0.7",

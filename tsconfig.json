@@ -15,7 +15,8 @@
     "noImplicitAny": false,
     "types": [
       "vite/client",
-      "node"
+      "node",
+      "@intlify/vite-plugin-vue-i18n/client"
     ],
     "paths": {
       "@/*": [
