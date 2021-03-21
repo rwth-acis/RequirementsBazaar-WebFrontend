@@ -72,7 +72,7 @@ export type Actions = {
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
 }
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+//bazaarApi.setSecurityData('hi');
 
 export const actions: ActionTree<State, State> & Actions = {
 

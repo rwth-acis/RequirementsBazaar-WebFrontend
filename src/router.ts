@@ -6,6 +6,11 @@ import Developer from './views/Developer.vue';
 import Projects from './views/Projects.vue';
 import Project from './views/Project.vue';
 import Category from './views/Category.vue';
+import OidcCallback from './views/oidc/OidcCallback.vue';
+import OidcPopupCallback from './views/oidc/OidcPopupCallback.vue'
+import OidcCallbackError from './views/oidc/OidcCallbackError.vue'
+import { vuexOidcCreateRouterMiddleware } from 'vuex-oidc';
+import { store } from './store';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -14,6 +19,21 @@ export const router = createRouter({
       path: "/",
       name: "landing",
       component: Landing,
+    },
+    {
+      path: '/oidc-callback',
+      name: 'oidcCallback',
+      component: OidcCallback,
+    },
+    {
+      path: '/oidc-popup-callback', // Needs to match popupRedirectUri in you oidcSettings
+      name: 'oidcPopupCallback',
+      component: OidcPopupCallback
+    },
+    {
+      path: '/oidc-callback-error', // Needs to match redirect_uri in you oidcSettings
+      name: 'oidcCallbackError',
+      component: OidcCallbackError,
     },
     {
       path: "/privacy",
@@ -48,6 +68,7 @@ export const router = createRouter({
   ],
 });
 
+router.beforeEach(vuexOidcCreateRouterMiddleware(store, 'oidcStore'))
 router.beforeEach((to, from, next) => {
   console.log({to, from});
   next();

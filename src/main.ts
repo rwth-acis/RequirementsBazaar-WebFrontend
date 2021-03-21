@@ -4,6 +4,8 @@ import { store } from "./store";
 import { createI18n } from 'vue-i18n'
 import App from './App.vue';
 
+import messages from '@intlify/vite-plugin-vue-i18n/messages';
+
 import PrimeVue from 'primevue/config';
 import Avatar from 'primevue/avatar';
 import Button from 'primevue/button';
@@ -13,8 +15,6 @@ import InputText from 'primevue/inputtext';
 import SelectButton from 'primevue/selectbutton';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
-
-import messages from '@intlify/vite-plugin-vue-i18n/messages';
 
 import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.min.css';

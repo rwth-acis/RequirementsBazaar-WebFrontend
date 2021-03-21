@@ -7,20 +7,37 @@
 			<select v-model="locale">
 				<option v-for="locale in availableLocales" :key="`locale-${locale}`" :value="locale">{{ locale }}</option>
 			</select>
+			<Button v-if="oidcIsAuthenticated" label="Logout" @click="signOut" />
+			<Button v-else label="Sign in" @click="authenticateOidcPopup" />
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+import { mapGetters, mapActions } from 'vuex';
 import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'AppTopbar',
 	setup: () => {
     const { locale, availableLocales } = useI18n({ useScope: 'global' });
-    return { locale, availableLocales }
-  }
+    return { locale, availableLocales };
+  },
+	computed: {
+    ...mapGetters('oidcStore', [
+      'oidcIsAuthenticated'
+    ]),
+  },
+	methods: {
+    ...mapActions('oidcStore', [
+      'authenticateOidcPopup',
+      'removeOidcUser'
+    ]),
+		signOut: function () {
+      this.removeOidcUser();
+    },
+	},
 })
 </script>
 
