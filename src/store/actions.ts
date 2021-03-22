@@ -15,6 +15,8 @@ export enum ActionTypes {
   FetchRequirement = 'FETCH_REQUIREMENT',
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
   FetchActivities = 'FETCH_ACTIVITIES',
+
+  CreateRequirement = 'CREATE_REQUIREMENT',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -69,6 +71,8 @@ export type Actions = {
   [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
+  [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
+
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
 }
 
@@ -122,6 +126,13 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.requirements.getCommentsForRequirement(parameters.requirementId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetComments, response.data);
+    }
+  },
+
+  async [ActionTypes.CreateRequirement]({ commit }, requirement) {
+    const response = await bazaarApi.requirements.createRequirement(requirement);
+    if (response.data && response.status === 201) {
+      commit(MutationType.SetRequirement, response.data);
     }
   },
 

@@ -5,6 +5,7 @@
   </div>
   <div id="addRequirementPanel">
     <Button label="Add new Requirement..." />
+    <RequirementEditor v-if="category" :projectId="category?.projectId" :categoryId="category?.id"></RequirementEditor>
   </div>
   <FilterPanel
     v-model:searchQuery="searchQuery"
@@ -33,10 +34,11 @@ import { ActionTypes } from '../store/actions';
 
 import FilterPanel from '../components/FilterPanel.vue';
 import RequirementCard from '../components/RequirementCard.vue';
+import RequirementEditor from '../components/RequirementEditor.vue';
 
 export default defineComponent({
   name: 'Category',
-  components: { FilterPanel, RequirementCard },
+  components: { FilterPanel, RequirementCard, RequirementEditor },
   props: {
   },
   setup: (props) => {
@@ -48,7 +50,7 @@ export default defineComponent({
     store.dispatch(ActionTypes.FetchCategory, categoryId);
 
     const searchQuery = ref('');
-    const selectedSort = ref('name');
+    const selectedSort = ref('date');
     const sortOptions = [
       {name: 'Alphabetically', value: 'name'},
       {name: 'Last Activity', value: 'last_activity'},
@@ -57,7 +59,7 @@ export default defineComponent({
       {name: 'Number of Followers', value: 'follower'},
       {name: 'Number of Votes', value: 'vote'},
     ];
-    const sortAscending = ref(true);
+    const sortAscending = ref(false);
     const page = ref(0);
     const perPage = ref(20);
     const sortDirection = computed(() => sortAscending.value ? 'ASC' : 'DESC');

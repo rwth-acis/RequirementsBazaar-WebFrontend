@@ -23,6 +23,7 @@ export type Mutations = {
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
   [MutationType.SetComments](state: State, comments: Comment[]): void;
+
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
 };
 

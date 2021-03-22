@@ -77,8 +77,8 @@ export interface Statistic {
 export interface Category {
   /** @format int32 */
   id?: number;
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
 
   /**
    * @format int32

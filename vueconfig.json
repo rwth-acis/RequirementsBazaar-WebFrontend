@@ -20,6 +20,11 @@
             "moduleName": "./node_modules/primevue/dropdown/Dropdown.vue"
             }
         },
+        "./node_modules/primevue/editor/Editor.vue", {
+            "Editor": {
+            "moduleName": "./node_modules/primevue/editor/Editor.vue"
+            }
+        },
         "./node_modules/primevue/inputtext/InputText.vue", {
             "InputText": {
             "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
