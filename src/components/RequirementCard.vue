@@ -6,7 +6,7 @@
     <template #content>
       <div>{{ description }}</div>
       <div id="actionButtons">
-        <Button :label="`${upVotes} Votes`" class="p-button-outlined"></Button>
+        <Button :label="`${upVotes} Votes`" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
         <Button :label="`${numberOfComments} Comments`" @click="toggleComments" class="p-button-outlined"></Button>
         <Button label="Share" class="p-button-outlined"></Button>
       </div>
@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, defineComponent } from 'vue';
-import { useStore } from 'vuex';
+import { computed, ref, toRefs, defineComponent } from 'vue';
+import { useStore, mapGetters } from 'vuex';
 import { ActionTypes } from '../store/actions';
 import CommentsList from './CommentsList.vue';
 
@@ -37,16 +37,31 @@ export default defineComponent({
     description: { type: String, required: true },
     upVotes: { type: Number, required: true },
     numberOfComments: { type: Number, required: true },
+    userVoted: { type: String, required: true },
   },
   setup: (props) => {
+    const { id, userVoted } = toRefs(props)
+    const store = useStore();
     const showComments = ref(false);
 
     const toggleComments = () => {
       showComments.value = !showComments.value;
     }
 
-    return { showComments, toggleComments }
-  }
+    const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
+    const voted = computed(() => oidcIsAuthenticated.value && (userVoted.value === 'UP_VOTE'));
+
+    const toggleVote = () => {
+      const parameters = {
+        requirementId: id.value,
+        userVoted: userVoted.value === 'NO_VOTE' ? 'UP_VOTE' : 'NO_VOTE',
+      };
+      
+      store.dispatch(ActionTypes.VoteRequirement, parameters);
+    };
+
+    return { voted, showComments, toggleComments, toggleVote }
+  },
 })
 </script>
 

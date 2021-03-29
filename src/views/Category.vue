@@ -20,7 +20,8 @@
         :name="requirement.name"
         :description="requirement.description"
         :upVotes="requirement.upVotes"
-        :numberOfComments="requirement.numberOfComments">
+        :numberOfComments="requirement.numberOfComments"
+        :userVoted="requirement.userVoted">
       </RequirementCard>
     </div>
   </div>

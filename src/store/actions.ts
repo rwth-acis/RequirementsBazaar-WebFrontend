@@ -17,6 +17,7 @@ export enum ActionTypes {
   FetchActivities = 'FETCH_ACTIVITIES',
 
   CreateRequirement = 'CREATE_REQUIREMENT',
+  VoteRequirement = 'VOTE_REQUIREMENT',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -63,6 +64,11 @@ type ActivitiesRequestParameters = {
   }
 }
 
+type VoteRequirementParameters = {
+  requirementId: number;
+  vote: string;
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
@@ -72,11 +78,10 @@ export type Actions = {
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
+  [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
 
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
 }
-
-//bazaarApi.setSecurityData('hi');
 
 export const actions: ActionTree<State, State> & Actions = {
 
@@ -132,6 +137,18 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.CreateRequirement]({ commit }, requirement) {
     const response = await bazaarApi.requirements.createRequirement(requirement);
     if (response.data && response.status === 201) {
+      commit(MutationType.SetRequirement, response.data);
+    }
+  },
+
+  async [ActionTypes.VoteRequirement]({ commit }, parameters) {
+    let response: Requirement = undefined;
+    if (parameters.userVoted === 'UP_VOTE') {
+      response = await bazaarApi.requirements.vote(parameters.requirementId, {direction: 'up'});
+    } else {
+      response = await bazaarApi.requirements.unvote(parameters.requirementId);
+    }
+    if (response.data && ((response.status === 200) || (response.status === 201))) {
       commit(MutationType.SetRequirement, response.data);
     }
   },
