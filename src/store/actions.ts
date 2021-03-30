@@ -3,7 +3,7 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
 import { bazaarApi } from '../api/bazaar';
-import { projects, categories, requirements } from '../types/api';
+import { projects, categories, requirements, Requirement, HttpResponse } from '../types/api';
 import { activitiesApi } from '../api/activities';
 
 export enum ActionTypes {
@@ -66,7 +66,7 @@ type ActivitiesRequestParameters = {
 
 type VoteRequirementParameters = {
   requirementId: number;
-  vote: string;
+  userVoted: string;
 }
 
 export type Actions = {
@@ -142,7 +142,8 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   async [ActionTypes.VoteRequirement]({ commit }, parameters) {
-    let response: Requirement = undefined;
+    commit(MutationType.SetRequirementVote, {requirementId: parameters.requirementId, userVoted: parameters.userVoted});
+    let response : HttpResponse<Requirement, void>;
     if (parameters.userVoted === 'UP_VOTE') {
       response = await bazaarApi.requirements.vote(parameters.requirementId, {direction: 'up'});
     } else {

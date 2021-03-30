@@ -11,6 +11,7 @@ export enum MutationType {
   SetCategory = 'SET_CATEGORY',
   SetRequirements = 'SET_REQUIREMENTS',
   SetRequirement = 'SET_REQUIREMENT',
+  SetRequirementVote = 'SET_REQUIREMENT_VOTE',
   SetComments = 'SET_COMMENT',
   SetActivities = 'SET_ACTIVITIES',
 }
@@ -22,6 +23,7 @@ export type Mutations = {
   [MutationType.SetCategory](state: State, category: Category): void;
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
+  [MutationType.SetRequirementVote](state: State, {requirementId: number, userVoted: string}): void;
   [MutationType.SetComments](state: State, comments: Comment[]): void;
 
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
@@ -68,6 +70,16 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationType.SetRequirement](state, requirement) {
     if (requirement.id) {
       state.requirements[requirement.id] = requirement;
+    }
+  },
+
+  [MutationType.SetRequirementVote](state, {requirementId, userVoted}) {
+    let requirement = state.requirements[requirementId]
+    requirement.userVoted = userVoted;
+    if (userVoted === 'UP_VOTE') {
+      (requirement.upVotes !== undefined) ? ++requirement.upVotes : 1;
+    } else {
+      (requirement.upVotes !== undefined) ? requirement.upVotes-- : 0;
     }
   },
 
