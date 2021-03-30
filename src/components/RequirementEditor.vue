@@ -6,7 +6,6 @@
         <span class="ql-formats">
           <button class="ql-bold"></button>
           <button class="ql-italic"></button>
-          <button class="ql-underline"></button>
         </span>
       </template>
     </Editor>
@@ -20,6 +19,8 @@ import { useStore } from 'vuex';
 import { ActionTypes } from '../store/actions';
 import { Requirement } from '../types/api';
 
+import TurndownService from 'turndown';
+
 export default defineComponent({
   name: 'RequirementEditor',
   props: {
@@ -32,23 +33,19 @@ export default defineComponent({
 
     const name = ref('name');
     const description = ref('description');
+    
+    const turndownService = new TurndownService();
 
     const createRequirement = () => {
-
       const requirement: Requirement = {
         name: name.value,
-        description: description.value,
+        description: turndownService.turndown(description.value),
         categories: [{id: categoryId}],
         projectId: projectId,
       };
       
       store.dispatch(ActionTypes.CreateRequirement, requirement);
-
     };
-
-    // const parameters = computed(() => {return {per_page: 20}});
-    // const comments = computed(() => store.getters.commentsList(requirementId, parameters.value));
-    // store.dispatch(ActionTypes.FetchCommentsOfRequirement, {requirementId, query: parameters.value})
 
     return { name, description, createRequirement };
   }

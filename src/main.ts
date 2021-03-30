@@ -6,6 +6,8 @@ import App from './App.vue';
 
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
 
+import VueMarkdownIt from 'vue3-markdown-it';
+
 import PrimeVue from 'primevue/config';
 import Avatar from 'primevue/avatar';
 import Button from 'primevue/button';
@@ -35,6 +37,7 @@ app.use(router);
 app.use(store);
 app.use(PrimeVue);
 app.use(i18n);
+app.use(VueMarkdownIt);
 
 app.component('Avatar', Avatar);
 app.component('Button', Button);
