@@ -3,6 +3,8 @@
     <div v-for="comment in comments" :key="comment.id">
       {{ comment.message }}
     </div>
+    <InputText type="text" v-model="message" />
+    <Button label="Save" @click="createComment" />
   </div>
 </template>
 
@@ -10,6 +12,7 @@
 import { computed, ref, defineComponent } from 'vue'
 import { useStore } from 'vuex';
 import { ActionTypes } from '../store/actions';
+import { Comment } from '../types/api';
 
 export default defineComponent({
   name: 'RequirementCard',
@@ -23,7 +26,17 @@ export default defineComponent({
     const comments = computed(() => store.getters.commentsList(requirementId, parameters.value));
     store.dispatch(ActionTypes.FetchCommentsOfRequirement, {requirementId, query: parameters.value})
 
-    return { comments };
+    const message = ref('');
+    const createComment = () => {
+      const comment: Comment = {
+        message: message.value,
+        requirementId,
+      };
+      
+      store.dispatch(ActionTypes.CreateComment, comment);
+    };
+
+    return { comments, message, createComment };
   }
 })
 </script>

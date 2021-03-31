@@ -3,7 +3,7 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
 import { bazaarApi } from '../api/bazaar';
-import { projects, categories, requirements, Requirement, HttpResponse } from '../types/api';
+import { projects, categories, requirements, Requirement, Comment, HttpResponse } from '../types/api';
 import { activitiesApi } from '../api/activities';
 
 export enum ActionTypes {
@@ -14,10 +14,11 @@ export enum ActionTypes {
   FetchRequirementsOfCategory = 'FETCH_REQUIREMENTS',
   FetchRequirement = 'FETCH_REQUIREMENT',
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
-  FetchActivities = 'FETCH_ACTIVITIES',
-
   CreateRequirement = 'CREATE_REQUIREMENT',
   VoteRequirement = 'VOTE_REQUIREMENT',
+  CreateComment = 'CREATE_COMMENT',
+  
+  FetchActivities = 'FETCH_ACTIVITIES',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -79,6 +80,7 @@ export type Actions = {
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
   [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
+  [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
 
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
 }
@@ -151,6 +153,13 @@ export const actions: ActionTree<State, State> & Actions = {
     }
     if (response.data && ((response.status === 200) || (response.status === 201))) {
       commit(MutationType.SetRequirement, response.data);
+    }
+  },
+
+  async [ActionTypes.CreateComment]({ commit }, comment) {
+    const response = await bazaarApi.comments.createComment(comment);
+    if (response.data && response.status === 201) {
+      commit(MutationType.SetComment, response.data);
     }
   },
 
