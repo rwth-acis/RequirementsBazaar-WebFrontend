@@ -21,7 +21,9 @@
         :description="requirement.description"
         :upVotes="requirement.upVotes"
         :numberOfComments="requirement.numberOfComments"
-        :userVoted="requirement.userVoted">
+        :userVoted="requirement.userVoted"
+        :creator="requirement.creator"
+        :creationDate="requirement.creationDate">
       </RequirementCard>
     </div>
   </div>

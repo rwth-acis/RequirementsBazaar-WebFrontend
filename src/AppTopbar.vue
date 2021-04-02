@@ -14,14 +14,18 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, watch, getCurrentInstance } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'AppTopbar',
-	setup: () => {
+	setup: (props, context) => {
     const { locale, availableLocales } = useI18n({ useScope: 'global' });
+		const app = getCurrentInstance();
+		watch(locale, (newLocale) => {
+    	app?.appContext.config.globalProperties.$dayjs.locale(newLocale);
+		});
     return { locale, availableLocales };
   },
 	computed: {

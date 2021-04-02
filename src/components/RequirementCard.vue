@@ -2,6 +2,7 @@
   <Card id="card">
     <template #title>
       <div>{{ name }}</div>
+      <div class="lastupdate"><span :title="$dayjs(creationDate).format('LLL')">{{ $dayjs(creationDate).fromNow() }}</span> {{t('by')}} {{ creator?.userName }}</div>
     </template>
     <template #content>
       <div><vue3-markdown-it :source="description" /></div>
@@ -25,6 +26,7 @@
 <script lang="ts">
 import { computed, ref, toRefs, defineComponent } from 'vue';
 import { useStore, mapGetters } from 'vuex';
+import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 import CommentsList from './CommentsList.vue';
 
@@ -34,13 +36,16 @@ export default defineComponent({
   props: {
     id: { type: Number, required: true },
     name: { type: String, required: true },
+    creator: { type: Object, required: true },
+    creationDate: { type: String, required: true },
     description: { type: String, required: true },
     upVotes: { type: Number, required: true },
     numberOfComments: { type: Number, required: true },
     userVoted: { type: String, required: true },
   },
   setup: (props) => {
-    const { id, userVoted } = toRefs(props)
+    const { id, userVoted } = toRefs(props);
+    const { t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const showComments = ref(false);
 
@@ -60,7 +65,7 @@ export default defineComponent({
       store.dispatch(ActionTypes.VoteRequirement, parameters);
     };
 
-    return { voted, showComments, toggleComments, toggleVote }
+    return { voted, showComments, toggleComments, toggleVote, t };
   },
 })
 </script>
@@ -84,7 +89,14 @@ export default defineComponent({
   }
 
   #card ::v-deep(.p-card-content) {
-    padding-bottom: 0;
+    padding: 0;
+  }
+
+  .lastupdate {
+    padding-top: 0.25em;
+    font-weight: normal;
+    font-size: 0.6em;
+    color: #5d5d5d;
   }
 
   .commentsList {

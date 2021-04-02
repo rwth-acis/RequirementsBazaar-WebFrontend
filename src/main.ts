@@ -7,6 +7,15 @@ import App from './App.vue';
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
 
 import VueMarkdownIt from 'vue3-markdown-it';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/de';
+import 'dayjs/locale/en';
+import 'dayjs/locale/fa';
+import 'dayjs/locale/fr';
+import 'dayjs/locale/ro';
+import 'dayjs/locale/sq';
 
 import PrimeVue from 'primevue/config';
 import Avatar from 'primevue/avatar';
@@ -33,11 +42,15 @@ const i18n = createI18n({
   messages
 });
 
+dayjs.extend(localizedFormat);
+dayjs.extend(relativeTime);
+
 app.use(router);
 app.use(store);
 app.use(PrimeVue);
 app.use(i18n);
 app.use(VueMarkdownIt);
+app.config.globalProperties.$dayjs = dayjs;
 
 app.component('Avatar', Avatar);
 app.component('Button', Button);
