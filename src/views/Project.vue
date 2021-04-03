@@ -103,7 +103,8 @@ export default defineComponent({
   }
 
   .categoryCard {
-    width: 700px;
+    width: 100%;
+    max-width: 700px;
     margin: 10px;
   }
 </style>

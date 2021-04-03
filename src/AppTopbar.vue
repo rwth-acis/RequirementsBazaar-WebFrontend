@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-topbar">
 		<router-link class="p-link layout-menu-button" to="/">
-			<img src="/reqbaz-logo.svg"> Requirements Bazaar
+			<div class="title"><img src="/reqbaz-logo.svg"> Requirements Bazaar</div>
 		</router-link>
 		<div class="layout-topbar-icons">
 			<select v-model="locale">
@@ -49,6 +49,13 @@ export default defineComponent({
 	img {
     width: 29px;
     height: 29px;
-    margin-right: 5px;
+    margin-right: 0.3em;
+	}
+
+	.title {
+		display: flex;
+		font-family: 'Ubuntu Condensed', sans-serif;
+		font-size: 1.5em;
+		align-items: centered;
 	}
 </style>

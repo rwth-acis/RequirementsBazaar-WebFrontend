@@ -1,5 +1,5 @@
 <template>
-  <h1>Explore Projects</h1>
+  <h1>{{ t('explore-projects') }}</h1>
   Take a look at the public projects on Requirements Bazaar.
   <h2>Featured Projects</h2>
 
@@ -30,6 +30,7 @@
 
 <script lang="ts">
 import { computed, ref, watch, defineComponent, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { ActionTypes } from '../store/actions';
 
@@ -44,7 +45,8 @@ export default defineComponent({
   },
   setup: () => {
     const store = useStore();
-    
+    const { t } = useI18n({ useScope: 'global' });
+
     const searchQuery = ref('');
     const selectedSort = ref('name');
     const sortOptions = [
@@ -88,6 +90,7 @@ export default defineComponent({
     watch(parameters, () => store.dispatch(ActionTypes.FetchProjects, {query: parameters.value}));
 
     return {
+      t,
       projects,
       searchQuery,
       selectedSort,
