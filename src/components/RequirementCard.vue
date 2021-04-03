@@ -6,20 +6,18 @@
     </template>
     <template #content>
       <div><vue3-markdown-it :source="description" /></div>
+      <div id="figures">
+        <div id="votes">{{ upVotes }} {{ t('votes') }}</div>
+        <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
+        <div id="comments" @click="toggleCommentsPanel">{{ numberOfComments }} {{ t('comments')}}</div>
+      </div>
       <div id="actionButtons">
-        <Button :label="`${upVotes} Votes`" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
-        <Button :label="`${numberOfComments} Comments`" @click="toggleComments" class="p-button-outlined"></Button>
+        <Button label="Vote" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
+        <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
         <Button label="Share" class="p-button-outlined"></Button>
       </div>
       <comments-list :requirementId="id" v-if="showComments" class="commentsList"></comments-list>
     </template>
-    <!--<template #footer>
-      <div id="actionButtons">
-        <Button label="Vote"></Button>
-        <Button :label="`${numberOfComments} Comments`"></Button>
-        <Button label="Share"></Button>
-      </div>
-    </template>-->
   </Card>
 </template>
 
@@ -41,6 +39,7 @@ export default defineComponent({
     description: { type: String, required: true },
     upVotes: { type: Number, required: true },
     numberOfComments: { type: Number, required: true },
+    numberOfFollowers: { type: Number, required: true },
     userVoted: { type: String, required: true },
   },
   setup: (props) => {
@@ -49,7 +48,7 @@ export default defineComponent({
     const store = useStore();
     const showComments = ref(false);
 
-    const toggleComments = () => {
+    const toggleCommentsPanel = () => {
       showComments.value = !showComments.value;
     }
 
@@ -65,12 +64,45 @@ export default defineComponent({
       store.dispatch(ActionTypes.VoteRequirement, parameters);
     };
 
-    return { voted, showComments, toggleComments, toggleVote, t };
+    return { voted, showComments, toggleCommentsPanel, toggleVote, t };
   },
 })
 </script>
 
 <style scoped>
+  #card ::v-deep(.p-card-content) {
+    padding: 0;
+  }
+
+  .lastupdate {
+    padding-top: 0.25em;
+    font-weight: normal;
+    font-size: 0.6em;
+    color: #5d5d5d;
+  }
+
+  #figures {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-top: 0.5em;
+    font-weight: bold;
+  }
+
+  #followers {
+    flex: 1;
+    text-align: center;
+  }
+
+  #comments {
+    text-align: end;
+  }
+
+  #comments:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
   #actionButtons {
     width: 100%;
     display: flex;
@@ -82,21 +114,11 @@ export default defineComponent({
     display: flex;
     flex: 1;
     margin-left: .5rem;
+    font-weight: bold;
   }
 
   #actionButtons :first-child {
     margin-left: 0;
-  }
-
-  #card ::v-deep(.p-card-content) {
-    padding: 0;
-  }
-
-  .lastupdate {
-    padding-top: 0.25em;
-    font-weight: normal;
-    font-size: 0.6em;
-    color: #5d5d5d;
   }
 
   .commentsList {

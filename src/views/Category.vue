@@ -21,6 +21,7 @@
         :description="requirement.description"
         :upVotes="requirement.upVotes"
         :numberOfComments="requirement.numberOfComments"
+        :numberOfFollowers="requirement.numberOfFollowers"
         :userVoted="requirement.userVoted"
         :creator="requirement.creator"
         :creationDate="requirement.creationDate">
