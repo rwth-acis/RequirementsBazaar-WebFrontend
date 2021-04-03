@@ -130,7 +130,7 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   async [ActionTypes.FetchCommentsOfRequirement]({ commit }, parameters) {
-    const response = await bazaarApi.requirements.getCommentsForRequirement(parameters.requirementId);
+    const response = await bazaarApi.requirements.getCommentsForRequirement(parameters.requirementId, parameters.query);
     if (response.data && response.status === 200) {
       commit(MutationType.SetComments, response.data);
     }
