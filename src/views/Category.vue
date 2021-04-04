@@ -4,8 +4,8 @@
     {{ category?.description }}
   </div>
   <div id="addRequirementPanel">
-    <Button label="Add new Requirement..." />
-    <RequirementEditor v-if="category" :projectId="category?.projectId" :categoryId="category?.id"></RequirementEditor>
+    <Button label="Add new Requirement..." @click="toggleAddRequirement" />
+    <RequirementEditor v-if="showAddRequirement" :projectId="category?.projectId" :categoryId="category?.id"></RequirementEditor>
   </div>
   <FilterPanel
     v-model:searchQuery="searchQuery"
@@ -75,7 +75,12 @@ export default defineComponent({
     });
     watch(parameters, () => store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value}));
 
-    return { category, requirements, searchQuery, sortOptions, selectedSort, sortAscending }
+    const showAddRequirement = ref(false);
+    const toggleAddRequirement = () => {
+      showAddRequirement.value = !showAddRequirement.value;
+    }
+
+    return { category, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement }
   }
 })
 </script>

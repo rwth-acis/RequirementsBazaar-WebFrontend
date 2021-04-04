@@ -14,6 +14,8 @@ export enum MutationType {
   SetRequirementVote = 'SET_REQUIREMENT_VOTE',
   SetComments = 'SET_COMMENTS',
   SetComment = 'SET_COMMENT',
+  RemoveComment = 'REMOVE_COMMENT',
+
   SetActivities = 'SET_ACTIVITIES',
 }
 
@@ -27,6 +29,7 @@ export type Mutations = {
   [MutationType.SetRequirementVote](state: State, {requirementId: number, userVoted: string}): void;
   [MutationType.SetComments](state: State, comments: Comment[]): void;
   [MutationType.SetComment](state: State, comment: Comment): void;
+  [MutationType.RemoveComment](state: State, commentId: number): void;
 
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
 };
@@ -97,6 +100,10 @@ export const mutations: MutationTree<State> & Mutations = {
     if (comment.id) {
       state.comments[comment.id] = comment;
     }
+  },
+
+  [MutationType.RemoveComment](state, commentId) {
+    delete state.comments[commentId];
   },
 
   [MutationType.SetActivities](state, activities) {

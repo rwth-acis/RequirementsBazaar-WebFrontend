@@ -122,6 +122,6 @@ export default defineComponent({
   }
 
   .commentsList {
-    padding-top: 1rem;
+    padding-top: 1.5rem;
   }
 </style>

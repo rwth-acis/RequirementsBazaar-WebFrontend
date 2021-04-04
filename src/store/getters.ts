@@ -157,7 +157,21 @@ export const getters: GetterTree<State, State> & Getters = {
   },
 
   commentsList: (state) => (requirementId, parameters) => {
-    let comments: Comment[] = Object.values(state.comments).filter(comment => (comment.requirementId === requirementId));
+    let commentsOriginal: Comment[] = Object.values(state.comments).filter(comment => (comment.requirementId === requirementId));
+    let comments : Comment[] = [];
+
+    // order according to replyToComment
+    commentsOriginal.forEach(comment => {
+      if (comment.replyToComment) {
+        const replyTo = comment.replyToComment;
+        const replyComment = comments.find(element => (element.id === replyTo));
+        if (replyComment) {
+          comments.splice((comments.indexOf(replyComment) + 1), 0, comment);
+        }
+      } else {
+        comments.push(comment);
+      }
+    });
 
     return comments.slice(0, parameters.per_page);
   },

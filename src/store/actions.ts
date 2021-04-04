@@ -17,6 +17,7 @@ export enum ActionTypes {
   CreateRequirement = 'CREATE_REQUIREMENT',
   VoteRequirement = 'VOTE_REQUIREMENT',
   CreateComment = 'CREATE_COMMENT',
+  DeleteComment = 'DELETE_COMMENT',
   
   FetchActivities = 'FETCH_ACTIVITIES',
 }
@@ -81,6 +82,7 @@ export type Actions = {
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
   [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
+  [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
 
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
 }
@@ -160,6 +162,13 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.comments.createComment(comment);
     if (response.data && response.status === 201) {
       commit(MutationType.SetComment, response.data);
+    }
+  },
+
+  async [ActionTypes.DeleteComment]({ commit }, commentId) {
+    const response = await bazaarApi.comments.deleteComment(commentId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.RemoveComment, commentId);
     }
   },
 

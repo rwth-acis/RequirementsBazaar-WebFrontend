@@ -12,37 +12,47 @@
         },
         "./node_modules/primevue/card/Card.vue", {
             "InputText": {
-            "moduleName": "./node_modules/primevue/card/Card.vue"
+                "moduleName": "./node_modules/primevue/card/Card.vue"
+            }
+        },
+        "./node_modules/primevue/confirmpopup/ConfirmPopup.vue", {
+            "InputText": {
+                "moduleName": "./node_modules/primevue/confirmpopup/ConfirmPopup.vue"
             }
         },
         "./node_modules/primevue/dropdown/Dropdown.vue", {
             "Dropdown": {
-            "moduleName": "./node_modules/primevue/dropdown/Dropdown.vue"
+                "moduleName": "./node_modules/primevue/dropdown/Dropdown.vue"
             }
         },
         "./node_modules/primevue/editor/Editor.vue", {
             "Editor": {
-            "moduleName": "./node_modules/primevue/editor/Editor.vue"
+                "moduleName": "./node_modules/primevue/editor/Editor.vue"
             }
         },
         "./node_modules/primevue/inputtext/InputText.vue", {
             "InputText": {
-            "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
+                "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
             }
         },
         "./node_modules/primevue/selectbutton/SelectButton.vue", {
             "SelectButton": {
-            "moduleName": "./node_modules/primevue/selectbutton/SelectButton.vue"
+                "moduleName": "./node_modules/primevue/selectbutton/SelectButton.vue"
+            }
+        },
+        "./node_modules/primevue/skeleton/Skeleton.vue", {
+            "Skeleton": {
+                "moduleName": "./node_modules/primevue/skeleton/Skeleton.vue"
             }
         },
         "./node_modules/primevue/tabpanel/TabPanel.vue", {
             "TabPanel": {
-            "moduleName": "./node_modules/primevue/tabpanel/TabPanel.vue"
+                "moduleName": "./node_modules/primevue/tabpanel/TabPanel.vue"
             }
         },
         "./node_modules/primevue/tabview/TabView.vue", {
             "TabView": {
-            "moduleName": "./node_modules/primevue/tabview/TabView.vue"
+                "moduleName": "./node_modules/primevue/tabview/TabView.vue"
             }
         }
     ]

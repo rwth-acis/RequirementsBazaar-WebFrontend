@@ -21,10 +21,13 @@ import PrimeVue from 'primevue/config';
 import Avatar from 'primevue/avatar';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
+import ConfirmationService from 'primevue/confirmationservice';
+import ConfirmPopup from 'primevue/confirmpopup';
 import Dropdown from 'primevue/dropdown';
 import Editor from 'primevue/editor';
 import InputText from 'primevue/inputtext';
 import SelectButton from 'primevue/selectbutton';
+import Skeleton from 'primevue/skeleton';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
@@ -52,13 +55,16 @@ app.use(i18n);
 app.use(VueMarkdownIt);
 app.config.globalProperties.$dayjs = dayjs;
 
+app.use(ConfirmationService);
 app.component('Avatar', Avatar);
 app.component('Button', Button);
 app.component('Card', Card);
+app.component('ConfirmPopup', ConfirmPopup);
 app.component('Dropdown', Dropdown);
 app.component('Editor', Editor);
 app.component('InputText', InputText);
 app.component('SelectButton', SelectButton);
+app.component('Skeleton', Skeleton);
 app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
 
