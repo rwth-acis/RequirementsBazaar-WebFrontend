@@ -1,4 +1,5 @@
 <template>
+  <ScrollTop />
   <h1>This is category {{ category?.name }}</h1>
   <div id="description">
     {{ category?.description }}
