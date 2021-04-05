@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { State } from './state'
+import { State, LocalComment } from './state'
 
 import { Project, Category, Requirement, Comment } from '../types/api';
 import { Activity } from '../types/activities-api';
@@ -14,6 +14,7 @@ export enum MutationType {
   SetRequirementVote = 'SET_REQUIREMENT_VOTE',
   SetComments = 'SET_COMMENTS',
   SetComment = 'SET_COMMENT',
+  SetCommentShowReplyTo = 'SET_COMMENT_SHOW_REPLY_TO',
   RemoveComment = 'REMOVE_COMMENT',
 
   SetActivities = 'SET_ACTIVITIES',
@@ -27,8 +28,9 @@ export type Mutations = {
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
   [MutationType.SetRequirementVote](state: State, {requirementId: number, userVoted: string}): void;
-  [MutationType.SetComments](state: State, comments: Comment[]): void;
-  [MutationType.SetComment](state: State, comment: Comment): void;
+  [MutationType.SetComments](state: State, comments: LocalComment[]): void;
+  [MutationType.SetComment](state: State, comment: LocalComment): void;
+  [MutationType.SetCommentShowReplyTo](state: State, {comment: LocalComment, showReplyTo: boolean}): void;
   [MutationType.RemoveComment](state: State, commentId: number): void;
 
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
@@ -99,6 +101,12 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationType.SetComment](state, comment) {
     if (comment.id) {
       state.comments[comment.id] = comment;
+    }
+  },
+
+  [MutationType.SetCommentShowReplyTo](state, {comment, showReplyTo}) {
+    if (comment.id) {
+      state.comments[comment.id].showReplyTo = showReplyTo;
     }
   },
 

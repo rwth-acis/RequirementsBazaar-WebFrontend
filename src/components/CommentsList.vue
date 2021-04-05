@@ -2,23 +2,27 @@
   <div>
     <ConfirmPopup></ConfirmPopup>
     <div>
-      <div v-for="comment in comments" :key="comment.id" class="comment">
-        <div class="p-d-flex p-mb-3" :class="{ reply: comment.replyToComment }">
+      <div v-for="comment in comments" :key="comment.id" class="comment p-mb-3">
+        <div class="p-d-flex p-mb-1" :class="{ reply: comment.replyToComment }">
             <Skeleton shape="circle" size="2.5rem" class="p-mr-2"></Skeleton>
             <div>
                 <div>{{ comment.message }}</div>
                 <div class="info">
                   <span v-if="oidcIsAuthenticated">
-                    <span class="action">Reply</span> ·
+                    <span class="action" @click="toggleReply($event, comment)">Reply</span> ·
                     <span v-if="oidcUser.preferred_username === comment.creator.userName"><span class="action" @click="deleteComment($event, comment.id)">Delete</span> · </span>
                   </span>
                   <span :title="$dayjs(comment.creationDate).format('LLL')">{{ $dayjs(comment.creationDate).fromNow() }}</span>{{ t('by') }}{{ comment.creator.userName }}
                 </div>
             </div>
         </div>
+        <div class="p-pb-1 addComment reply" v-if="comment.showReplyTo">
+          <InputText type="text" :placeholder="t('addComment')" class="input"/>
+          <Button label="Save" @click="createComment($event, comment.id)" />
+        </div>
       </div>
     </div>
-    <div id="addComment">
+    <div class="addComment">
       <InputText type="text" v-model="message" :placeholder="t('addComment')" class="input" ref="input"/>
       <Button label="Save" @click="createComment" />
     </div>
@@ -30,7 +34,9 @@ import { computed, ref, defineComponent, onMounted, getCurrentInstance } from 'v
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
+import { MutationType } from '../store/mutations';
 import { Comment } from '../types/api';
+import { LocalComment } from '../store/state';
 
 export default defineComponent({
   name: 'RequirementCard',
@@ -59,14 +65,34 @@ export default defineComponent({
     store.dispatch(ActionTypes.FetchCommentsOfRequirement, {requirementId, query: parameters.value})
 
     const message = ref('');
-    const createComment = () => {
-      const comment: Comment = {
-        message: message.value,
-        requirementId,
-      };
+    const createComment = (event, replyToComment) => {
+      let comment: Comment;
+
+      if (replyToComment) {
+        const replyMessage = event.currentTarget.previousSibling.value;
+        // only reply to top-level comments
+        const replyParent = comments.value.find(comment => comment.id === replyToComment);
+        const realReplyToComment = replyParent.replyToComment ? replyParent.replyToComment : replyToComment;
+        debugger;
+        comment = {
+          message: replyMessage,
+          requirementId,
+          replyToComment: realReplyToComment,
+        };
+      } else {
+        comment = {
+          message: message.value,
+          requirementId,
+        };
+      }
       
       store.dispatch(ActionTypes.CreateComment, comment);
     };
+
+    const toggleReply = (event, comment: LocalComment) => {
+      const showReplyTo = comment.showReplyTo ? false : true;
+      store.commit(MutationType.SetCommentShowReplyTo, {comment, showReplyTo});
+    }
 
     const deleteComment = (event, commentId) => {
       app?.appContext.config.globalProperties.$confirm.require({
@@ -84,7 +110,7 @@ export default defineComponent({
       });
     };
 
-    return { t, comments, oidcIsAuthenticated, oidcUser, message, createComment, deleteComment, input, selectInput };
+    return { t, comments, oidcIsAuthenticated, oidcUser, message, createComment, toggleReply, deleteComment, input, selectInput };
   }
 })
 </script>
@@ -95,15 +121,15 @@ export default defineComponent({
   }
 
   .reply {
-    margin-left: 3rem;
+    padding-left: 3rem;
   }
 
-  #addComment {
+  .addComment {
     width: 100%;
     display: flex;
   }
 
-  #addComment > .input {
+  .addComment > .input {
     flex: 1;
     margin-right: 0.5em;
   }
