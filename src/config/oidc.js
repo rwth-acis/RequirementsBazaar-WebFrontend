@@ -4,5 +4,7 @@ export const oidcSettings = {
   redirectUri: 'http://localhost:3000/oidc-callback',
   popupRedirectUri: "http://localhost:3000/oidc-popup-callback",
   responseType: 'id_token token',
-  scope: 'openid email profile'
+  scope: 'openid email profile',
+  automaticSilentRenew: true,
+  automaticSilentSignin: true, 
 };
