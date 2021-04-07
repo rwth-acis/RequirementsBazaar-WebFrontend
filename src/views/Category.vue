@@ -25,7 +25,8 @@
         :numberOfFollowers="requirement.numberOfFollowers"
         :userVoted="requirement.userVoted"
         :creator="requirement.creator"
-        :creationDate="requirement.creationDate">
+        :creationDate="requirement.creationDate"
+        :realized="requirement.realized">
       </RequirementCard>
     </div>
   </div>

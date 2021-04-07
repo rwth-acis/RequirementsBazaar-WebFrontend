@@ -14,7 +14,9 @@
       <div id="actionButtons">
         <Button label="Vote" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
         <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
-        <Button label="Share" class="p-button-outlined"></Button>
+        <!--<Button label="Share" class="p-button-outlined"></Button>-->
+        <Button type="button" class="p-button-outlined" label="More..." @click="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
+        <Menu id="overlay_menu" ref="menu" :model="menuItems" :popup="true" />
       </div>
       <comments-list :requirementId="id" v-if="showComments" class="commentsList"></comments-list>
     </template>
@@ -22,8 +24,8 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, toRefs, defineComponent } from 'vue';
-import { useStore, mapGetters } from 'vuex';
+import { computed, ref, toRefs, defineComponent, watch } from 'vue';
+import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 import CommentsList from './CommentsList.vue';
@@ -41,9 +43,10 @@ export default defineComponent({
     numberOfComments: { type: Number, required: true },
     numberOfFollowers: { type: Number, required: true },
     userVoted: { type: String, required: true },
+    realized: { type: String, required: false },
   },
   setup: (props) => {
-    const { id, userVoted } = toRefs(props);
+    const { id, userVoted, realized } = toRefs(props);
     const { t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const showComments = ref(false);
@@ -64,7 +67,50 @@ export default defineComponent({
       store.dispatch(ActionTypes.VoteRequirement, parameters);
     };
 
-    return { voted, showComments, toggleCommentsPanel, toggleVote, t };
+    const menu = ref(null);
+    const toggleMenu = (event) => {
+      (menu as any).value.toggle(event);
+    }
+
+    const menuItems = ref();
+    watch(
+      () => realized?.value,
+      (realized) => {
+        menuItems.value = [
+          {
+            label: t('editRequirement'),
+            icon: 'pi pi-pencil',
+            command: () => {
+              debugger;
+            }
+          },
+          {
+            label: t('followRequirement'),
+            icon: 'pi pi-bell',
+            url: 'https://vuejs.org/'
+          },
+          {
+            label: t('developRequirement'),
+            icon: 'pi pi-file',
+            command: () => {
+              debugger;
+            }
+          },
+          {
+            label: realized ? t('markAsUndone') : t('markAsDone'),
+            icon: 'pi pi-check',
+            command: () => {
+              store.dispatch(ActionTypes.RealizeRequirement, {requirementId: id.value, realized: realized ? false : true});
+            }
+          }
+        ];   
+      },
+      {
+        immediate: true
+      }
+    )
+
+    return { voted, showComments, toggleCommentsPanel, toggleVote, t, toggleMenu, menu, menuItems };
   },
 })
 </script>

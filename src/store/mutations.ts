@@ -12,6 +12,7 @@ export enum MutationType {
   SetRequirements = 'SET_REQUIREMENTS',
   SetRequirement = 'SET_REQUIREMENT',
   SetRequirementVote = 'SET_REQUIREMENT_VOTE',
+  SetRequirementRealized = 'SET_REQUIREMENT_REALIZED',
   SetComments = 'SET_COMMENTS',
   SetComment = 'SET_COMMENT',
   SetCommentShowReplyTo = 'SET_COMMENT_SHOW_REPLY_TO',
@@ -28,6 +29,7 @@ export type Mutations = {
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
   [MutationType.SetRequirementVote](state: State, {requirementId: number, userVoted: string}): void;
+  [MutationType.SetRequirementRealized](state: State, {requirementId: number, realizedDate: string}): void;
   [MutationType.SetComments](state: State, comments: LocalComment[]): void;
   [MutationType.SetComment](state: State, comment: LocalComment): void;
   [MutationType.SetCommentShowReplyTo](state: State, {comment: LocalComment, showReplyTo: boolean}): void;
@@ -81,13 +83,18 @@ export const mutations: MutationTree<State> & Mutations = {
   },
 
   [MutationType.SetRequirementVote](state, {requirementId, userVoted}) {
-    let requirement = state.requirements[requirementId]
+    const requirement = state.requirements[requirementId]
     requirement.userVoted = userVoted;
     if (userVoted === 'UP_VOTE') {
       (requirement.upVotes !== undefined) ? ++requirement.upVotes : 1;
     } else {
       (requirement.upVotes !== undefined) ? requirement.upVotes-- : 0;
     }
+  },
+
+  [MutationType.SetRequirementRealized](state, {requirementId, realizedDate}) {
+    const requirement = state.requirements[requirementId];
+    requirement.realized = realizedDate;
   },
 
   [MutationType.SetComments](state, comments) {

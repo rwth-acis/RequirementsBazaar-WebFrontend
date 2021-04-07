@@ -16,6 +16,7 @@ export enum ActionTypes {
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
   CreateRequirement = 'CREATE_REQUIREMENT',
   VoteRequirement = 'VOTE_REQUIREMENT',
+  RealizeRequirement = 'REALIZE_REQUIREMENT',
   CreateComment = 'CREATE_COMMENT',
   DeleteComment = 'DELETE_COMMENT',
   
@@ -71,6 +72,11 @@ type VoteRequirementParameters = {
   userVoted: string;
 }
 
+type RealizeRequirementParameters = {
+  requirementId: number;
+  realized: boolean;
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
@@ -81,6 +87,7 @@ export type Actions = {
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
   [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
+  [ActionTypes.RealizeRequirement](context: ActionAugments, payload: RealizeRequirementParameters): void;
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
 
@@ -146,12 +153,26 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   async [ActionTypes.VoteRequirement]({ commit }, parameters) {
-    commit(MutationType.SetRequirementVote, {requirementId: parameters.requirementId, userVoted: parameters.userVoted});
+    commit(MutationType.SetRequirementVote, parameters);
     let response : HttpResponse<Requirement, void>;
     if (parameters.userVoted === 'UP_VOTE') {
       response = await bazaarApi.requirements.vote(parameters.requirementId, {direction: 'up'});
     } else {
       response = await bazaarApi.requirements.unvote(parameters.requirementId);
+    }
+    if (response.data && ((response.status === 200) || (response.status === 201))) {
+      commit(MutationType.SetRequirement, response.data);
+    }
+  },
+
+  async [ActionTypes.RealizeRequirement]({ commit }, parameters) {
+    const realizedDate = parameters.realized ? new Date().toISOString() : null;
+    commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realizedDate: realizedDate});
+    let response : HttpResponse<Requirement, void>;
+    if (parameters.realized) {
+      response = await bazaarApi.requirements.realize(parameters.requirementId);
+    } else {
+      response = await bazaarApi.requirements.unrealize(parameters.requirementId);
     }
     if (response.data && ((response.status === 200) || (response.status === 201))) {
       commit(MutationType.SetRequirement, response.data);

@@ -35,6 +35,11 @@
                 "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
             }
         },
+        "./node_modules/primevue/menu/Menu.vue", {
+            "Menu": {
+                "moduleName": "./node_modules/primevue/menu/Menu.vue"
+            }
+        },
         "./node_modules/primevue/scrolltop/ScrollTop.vue", {
             "ScrollTop": {
                 "moduleName": "./node_modules/primevue/scrolltop/ScrollTop.vue"
