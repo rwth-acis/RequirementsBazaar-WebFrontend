@@ -1,4 +1,4 @@
-import { RequestParams, Api } from '../types/api';
+import { RequestParams, Api } from '../types/bazaar-api';
 import { User } from 'oidc-client';
 
 const getRequestHeaders = (user: User | null | undefined): RequestParams => {

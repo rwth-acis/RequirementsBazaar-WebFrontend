@@ -17,7 +17,7 @@
 import { computed, ref, defineComponent } from 'vue'
 import { useStore } from 'vuex';
 import { ActionTypes } from '../store/actions';
-import { Requirement } from '../types/api';
+import { Requirement } from '../types/bazaar-api';
 
 import TurndownService from 'turndown';
 

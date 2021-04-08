@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex'
 import { State } from './state'
-import { Project, Category, Requirement, Comment } from '../types/api';
+import { Project, Category, Requirement, Comment } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export type Getters = {

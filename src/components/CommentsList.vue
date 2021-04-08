@@ -35,7 +35,7 @@ import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 import { MutationType } from '../store/mutations';
-import { Comment } from '../types/api';
+import { Comment } from '../types/bazaar-api';
 import { LocalComment } from '../store/state';
 
 export default defineComponent({

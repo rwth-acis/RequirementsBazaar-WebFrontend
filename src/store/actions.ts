@@ -3,7 +3,7 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
 import { bazaarApi } from '../api/bazaar';
-import { projects, categories, requirements, Requirement, Comment, HttpResponse } from '../types/api';
+import { Projects, Categories, Requirements, Requirement, Comment, HttpResponse } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
 
 export enum ActionTypes {
@@ -31,22 +31,22 @@ type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
 }
 
 type ProjectsRequestParameters = {
-  query?: projects.GetProjects.RequestQuery;
+  query?: Projects.GetProjects.RequestQuery;
 }
 
 type CategoriesRequestParameters = {
   projectId: number;
-  query?: projects.GetCategoriesForProject.RequestQuery;
+  query?: Projects.GetCategoriesForProject.RequestQuery;
 }
 
 type RequirementsRequestParameters = {
   categoryId: number;
-  query?: categories.GetRequirementsForCategory.RequestQuery;
+  query?: Categories.GetRequirementsForCategory.RequestQuery;
 }
 
 type CommentsRequestParameters = {
   requirementId: number;
-  query?: requirements.GetCommentsForRequirement.RequestQuery;
+  query?: Requirements.GetCommentsForRequirement.RequestQuery;
 }
 
 type ActivitiesRequestParameters = {
@@ -154,12 +154,13 @@ export const actions: ActionTree<State, State> & Actions = {
 
   async [ActionTypes.VoteRequirement]({ commit }, parameters) {
     commit(MutationType.SetRequirementVote, parameters);
-    let response : HttpResponse<Requirement, void>;
+    let response : HttpResponse<any, void | Requirement>;
     if (parameters.userVoted === 'UP_VOTE') {
       response = await bazaarApi.requirements.vote(parameters.requirementId, {direction: 'up'});
     } else {
       response = await bazaarApi.requirements.unvote(parameters.requirementId);
     }
+    debugger;
     if (response.data && ((response.status === 200) || (response.status === 201))) {
       commit(MutationType.SetRequirement, response.data);
     }

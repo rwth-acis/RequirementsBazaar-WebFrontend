@@ -1,8 +1,9 @@
-import { Project, Category, Requirement, Comment } from '../types/api';
+import { Project, Category, Requirement, Comment } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export interface LocalComment extends Comment {
   showReplyTo?: boolean;
+  draftMessage?: String;
 }
 
 export type State = {
