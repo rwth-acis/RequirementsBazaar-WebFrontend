@@ -49,7 +49,7 @@ export default defineComponent({
   },
   setup: (props) => {
     const { id, userVoted, isFollower, isDeveloper, realized } = toRefs(props);
-    const { t } = useI18n({ useScope: 'global' });
+    const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const showComments = ref(false);
 
@@ -77,8 +77,8 @@ export default defineComponent({
     const menuItems = ref();
     // watch multiple props
     watch(
-      [isFollower, isDeveloper, realized],
-      ([isFollower, isDeveloper, realized]) => {
+      [locale, isFollower, isDeveloper, realized],
+      ([_, isFollower, isDeveloper, realized]) => {
         menuItems.value = [
           {
             label: t('editRequirement'),
