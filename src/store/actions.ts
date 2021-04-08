@@ -17,6 +17,7 @@ export enum ActionTypes {
   CreateRequirement = 'CREATE_REQUIREMENT',
   VoteRequirement = 'VOTE_REQUIREMENT',
   RealizeRequirement = 'REALIZE_REQUIREMENT',
+  DevelopRequirement = 'DEVELOP_REQUIREMENT',
   CreateComment = 'CREATE_COMMENT',
   DeleteComment = 'DELETE_COMMENT',
   
@@ -77,6 +78,11 @@ type RealizeRequirementParameters = {
   realized: boolean;
 }
 
+type DevelopRequirementParameters = {
+  requirementId: number;
+  isDeveloper: boolean;
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
@@ -88,6 +94,7 @@ export type Actions = {
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
   [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
   [ActionTypes.RealizeRequirement](context: ActionAugments, payload: RealizeRequirementParameters): void;
+  [ActionTypes.DevelopRequirement](context: ActionAugments, payload: DevelopRequirementParameters): void;
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
 
@@ -152,7 +159,8 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.VoteRequirement]({ commit }, parameters) {
+  async [ActionTypes.VoteRequirement]({ commit, getters }, parameters) {
+    const userVotedCached = getters.getRequirementById(parameters.requirementId).userVoted;
     commit(MutationType.SetRequirementVote, parameters);
     let response : HttpResponse<any, void | Requirement>;
     if (parameters.userVoted === 'UP_VOTE') {
@@ -160,15 +168,18 @@ export const actions: ActionTree<State, State> & Actions = {
     } else {
       response = await bazaarApi.requirements.unvote(parameters.requirementId);
     }
-    debugger;
     if (response.data && ((response.status === 200) || (response.status === 201))) {
       commit(MutationType.SetRequirement, response.data);
+    } else {
+      // reset local commit
+      commit(MutationType.SetRequirementVote, {requirementId: parameters.requirementId, userVoted: userVotedCached});
     }
   },
 
-  async [ActionTypes.RealizeRequirement]({ commit }, parameters) {
+  async [ActionTypes.RealizeRequirement]({ commit, getters }, parameters) {
+    const realizedCached = getters.getRequirementById(parameters.requirementId).realized;
     const realizedDate = parameters.realized ? new Date().toISOString() : null;
-    commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realizedDate: realizedDate});
+    commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realized: realizedDate});
     let response : HttpResponse<Requirement, void>;
     if (parameters.realized) {
       response = await bazaarApi.requirements.realize(parameters.requirementId);
@@ -177,6 +188,25 @@ export const actions: ActionTree<State, State> & Actions = {
     }
     if (response.data && ((response.status === 200) || (response.status === 201))) {
       commit(MutationType.SetRequirement, response.data);
+    } else {
+      // reset local commit
+      commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realized: realizedCached});
+    }
+  },
+
+  async [ActionTypes.DevelopRequirement]({ commit }, parameters) {
+    commit(MutationType.SetRequirementIsDeveloper, {requirementId: parameters.requirementId, isDeveloper: parameters.isDeveloper});
+    let response : HttpResponse<Requirement, void>;
+    if (parameters.isDeveloper) {
+      response = await bazaarApi.requirements.developRequirement(parameters.requirementId);
+    } else {
+      response = await bazaarApi.requirements.undevelopRequirement(parameters.requirementId);
+    }
+    if (response.data && ((response.status === 200) || (response.status === 201))) {
+      commit(MutationType.SetRequirement, response.data);
+    } else {
+      // reset local commit
+      commit(MutationType.SetRequirementIsDeveloper, {requirementId: parameters.requirementId, isDeveloper: !parameters.isDeveloper});
     }
   },
 

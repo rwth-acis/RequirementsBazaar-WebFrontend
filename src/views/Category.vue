@@ -26,7 +26,8 @@
         :userVoted="requirement.userVoted"
         :creator="requirement.creator"
         :creationDate="requirement.creationDate"
-        :realized="requirement.realized">
+        :realized="requirement.realized"
+        :isDeveloper="requirement.isDeveloper">
       </RequirementCard>
     </div>
   </div>

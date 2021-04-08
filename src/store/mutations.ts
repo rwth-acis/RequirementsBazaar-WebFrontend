@@ -13,6 +13,7 @@ export enum MutationType {
   SetRequirement = 'SET_REQUIREMENT',
   SetRequirementVote = 'SET_REQUIREMENT_VOTE',
   SetRequirementRealized = 'SET_REQUIREMENT_REALIZED',
+  SetRequirementIsDeveloper = 'SET_REQUIREMENT_ISDEVELOPER',
   SetComments = 'SET_COMMENTS',
   SetComment = 'SET_COMMENT',
   SetCommentShowReplyTo = 'SET_COMMENT_SHOW_REPLY_TO',
@@ -29,7 +30,8 @@ export type Mutations = {
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
   [MutationType.SetRequirementVote](state: State, {requirementId: number, userVoted: string}): void;
-  [MutationType.SetRequirementRealized](state: State, {requirementId: number, realizedDate: string}): void;
+  [MutationType.SetRequirementRealized](state: State, {requirementId: number, realized: string}): void;
+  [MutationType.SetRequirementIsDeveloper](state: State, {requirementId: number, isDeveloper: boolean}): void;
   [MutationType.SetComments](state: State, comments: LocalComment[]): void;
   [MutationType.SetComment](state: State, comment: LocalComment): void;
   [MutationType.SetCommentShowReplyTo](state: State, {comment: LocalComment, showReplyTo: boolean}): void;
@@ -92,9 +94,14 @@ export const mutations: MutationTree<State> & Mutations = {
     }
   },
 
-  [MutationType.SetRequirementRealized](state, {requirementId, realizedDate}) {
+  [MutationType.SetRequirementRealized](state, {requirementId, realized}) {
     const requirement = state.requirements[requirementId];
-    requirement.realized = realizedDate;
+    requirement.realized = realized;
+  },
+
+  [MutationType.SetRequirementIsDeveloper](state, {requirementId, isDeveloper}) {
+    const requirement = state.requirements[requirementId];
+    requirement.isDeveloper = isDeveloper;
   },
 
   [MutationType.SetComments](state, comments) {

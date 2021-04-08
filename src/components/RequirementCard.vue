@@ -44,9 +44,10 @@ export default defineComponent({
     numberOfFollowers: { type: Number, required: true },
     userVoted: { type: String, required: true },
     realized: { type: String, required: false },
+    isDeveloper: { type: Boolean, required: true },
   },
   setup: (props) => {
-    const { id, userVoted, realized } = toRefs(props);
+    const { id, userVoted, realized, isDeveloper } = toRefs(props);
     const { t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const showComments = ref(false);
@@ -73,9 +74,10 @@ export default defineComponent({
     }
 
     const menuItems = ref();
+    // watch multiple props
     watch(
-      () => realized?.value,
-      (realized) => {
+      [realized, isDeveloper],
+      ([realized, isDeveloper]) => {
         menuItems.value = [
           {
             label: t('editRequirement'),
@@ -90,10 +92,10 @@ export default defineComponent({
             url: 'https://vuejs.org/'
           },
           {
-            label: t('developRequirement'),
+            label: isDeveloper ? t('undevelopRequirement') : t('developRequirement'),
             icon: 'pi pi-file',
             command: () => {
-              debugger;
+              store.dispatch(ActionTypes.DevelopRequirement, {requirementId: id.value, isDeveloper: isDeveloper ? false : true});
             }
           },
           {
