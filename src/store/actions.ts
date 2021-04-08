@@ -16,8 +16,9 @@ export enum ActionTypes {
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
   CreateRequirement = 'CREATE_REQUIREMENT',
   VoteRequirement = 'VOTE_REQUIREMENT',
-  RealizeRequirement = 'REALIZE_REQUIREMENT',
+  FollowRequirement = 'FOLLOW_REQUIREMENT',
   DevelopRequirement = 'DEVELOP_REQUIREMENT',
+  RealizeRequirement = 'REALIZE_REQUIREMENT',
   CreateComment = 'CREATE_COMMENT',
   DeleteComment = 'DELETE_COMMENT',
   
@@ -73,14 +74,19 @@ type VoteRequirementParameters = {
   userVoted: string;
 }
 
-type RealizeRequirementParameters = {
+type FollowRequirementParameters = {
   requirementId: number;
-  realized: boolean;
+  isFollower: boolean;
 }
 
 type DevelopRequirementParameters = {
   requirementId: number;
   isDeveloper: boolean;
+}
+
+type RealizeRequirementParameters = {
+  requirementId: number;
+  realized: boolean;
 }
 
 export type Actions = {
@@ -93,8 +99,9 @@ export type Actions = {
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
   [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
-  [ActionTypes.RealizeRequirement](context: ActionAugments, payload: RealizeRequirementParameters): void;
+  [ActionTypes.FollowRequirement](context: ActionAugments, payload: FollowRequirementParameters): void;
   [ActionTypes.DevelopRequirement](context: ActionAugments, payload: DevelopRequirementParameters): void;
+  [ActionTypes.RealizeRequirement](context: ActionAugments, payload: RealizeRequirementParameters): void;
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
 
@@ -176,21 +183,19 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.RealizeRequirement]({ commit, getters }, parameters) {
-    const realizedCached = getters.getRequirementById(parameters.requirementId).realized;
-    const realizedDate = parameters.realized ? new Date().toISOString() : null;
-    commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realized: realizedDate});
+  async [ActionTypes.FollowRequirement]({ commit }, parameters) {
+    commit(MutationType.SetRequirementIsFollower, {requirementId: parameters.requirementId, isFollower: parameters.isFollower});
     let response : HttpResponse<Requirement, void>;
-    if (parameters.realized) {
-      response = await bazaarApi.requirements.realize(parameters.requirementId);
+    if (parameters.isFollower) {
+      response = await bazaarApi.requirements.followRequirement(parameters.requirementId);
     } else {
-      response = await bazaarApi.requirements.unrealize(parameters.requirementId);
+      response = await bazaarApi.requirements.unfollowRequirement(parameters.requirementId);
     }
     if (response.data && ((response.status === 200) || (response.status === 201))) {
       commit(MutationType.SetRequirement, response.data);
     } else {
       // reset local commit
-      commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realized: realizedCached});
+      commit(MutationType.SetRequirementIsFollower, {requirementId: parameters.requirementId, isFollower: !parameters.isFollower});
     }
   },
 
@@ -207,6 +212,24 @@ export const actions: ActionTree<State, State> & Actions = {
     } else {
       // reset local commit
       commit(MutationType.SetRequirementIsDeveloper, {requirementId: parameters.requirementId, isDeveloper: !parameters.isDeveloper});
+    }
+  },
+  
+  async [ActionTypes.RealizeRequirement]({ commit, getters }, parameters) {
+    const realizedCached = getters.getRequirementById(parameters.requirementId).realized;
+    const realizedDate = parameters.realized ? new Date().toISOString() : null;
+    commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realized: realizedDate});
+    let response : HttpResponse<Requirement, void>;
+    if (parameters.realized) {
+      response = await bazaarApi.requirements.realize(parameters.requirementId);
+    } else {
+      response = await bazaarApi.requirements.unrealize(parameters.requirementId);
+    }
+    if (response.data && ((response.status === 200) || (response.status === 201))) {
+      commit(MutationType.SetRequirement, response.data);
+    } else {
+      // reset local commit
+      commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realized: realizedCached});
     }
   },
 
