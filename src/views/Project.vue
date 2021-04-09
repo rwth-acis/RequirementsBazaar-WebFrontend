@@ -3,6 +3,9 @@
   <div id="description">
     {{ project?.description }}
   </div>
+  <div id="actionButtons">
+    <Button :label="project.isFollower ? t('unfollowProject') : t('followProject')" :class="{ 'p-button-outlined': !project.isFollower }" @click="followClick"></Button>
+  </div>
   <TabView id="tabView">
     <TabPanel header="Overview">
       <FilterPanel
@@ -35,6 +38,7 @@
 import { computed, defineComponent, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 
 import FilterPanel from '../components/FilterPanel.vue';
@@ -51,6 +55,7 @@ export default defineComponent({
   setup: (props) => {
     const store = useStore();
     const route = useRoute();
+    const { t } = useI18n({ useScope: 'global' });
     
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
     const project = computed(() => store.getters.getProjectById(projectId));
@@ -77,7 +82,11 @@ export default defineComponent({
     });
     watch(parameters, () => store.dispatch(ActionTypes.FetchCategoriesOfProject, {projectId: projectId, query: parameters.value}));
 
-    return { project, categories, searchQuery, selectedSort, sortOptions, sortAscending }
+    const followClick = () => {
+      store.dispatch(ActionTypes.FollowProject, {id: projectId, isFollower: project.value.isFollower ? false : true});
+    };
+
+    return { t, project, followClick, categories, searchQuery, selectedSort, sortOptions, sortAscending }
   }
 })
 </script>

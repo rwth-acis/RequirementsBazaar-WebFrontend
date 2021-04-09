@@ -91,7 +91,7 @@ export default defineComponent({
             label: isFollower ? t('unfollowRequirement') : t('followRequirement'),
             icon: 'pi pi-bell',
             command: () => {
-              store.dispatch(ActionTypes.FollowRequirement, {requirementId: id.value, isFollower: isFollower ? false : true});
+              store.dispatch(ActionTypes.FollowRequirement, {id: id.value, isFollower: isFollower ? false : true});
             }
           },
           {

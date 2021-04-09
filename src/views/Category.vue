@@ -4,6 +4,9 @@
   <div id="description">
     {{ category?.description }}
   </div>
+  <div id="actionButtons">
+    <Button :label="category?.isFollower ? t('unfollowCategory') : t('followCategory')" :class="{ 'p-button-outlined': !category?.isFollower }" @click="followClick"></Button>
+  </div>
   <div id="addRequirementPanel">
     <Button label="Add new Requirement..." @click="toggleAddRequirement" />
     <RequirementEditor v-if="showAddRequirement" :projectId="category?.projectId" :categoryId="category?.id"></RequirementEditor>
@@ -37,7 +40,8 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue';
 import { useStore } from 'vuex';
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 
 import FilterPanel from '../components/FilterPanel.vue';
@@ -52,6 +56,7 @@ export default defineComponent({
   setup: (props) => {
     const store = useStore();
     const route = useRoute();
+    const { t } = useI18n({ useScope: 'global' });
     
     const categoryId = Number.parseInt(route.params.categoryId.toString(), 10);
     const category = computed(() => store.getters.getCategoryById(categoryId));
@@ -84,7 +89,11 @@ export default defineComponent({
       showAddRequirement.value = !showAddRequirement.value;
     }
 
-    return { category, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement }
+    const followClick = () => {
+      store.dispatch(ActionTypes.FollowCategory, {id: categoryId, isFollower: category.value.isFollower ? false : true});
+    };
+
+    return { t, category, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement, followClick }
   }
 })
 </script>

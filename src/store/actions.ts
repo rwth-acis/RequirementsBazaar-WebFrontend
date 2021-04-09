@@ -3,14 +3,16 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
 import { bazaarApi } from '../api/bazaar';
-import { Projects, Categories, Requirements, Requirement, Comment, HttpResponse } from '../types/bazaar-api';
+import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
 
 export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
   FetchProject = 'FETCH_PROJECT',
+  FollowProject = 'FOLLOW_PROJECT',
   FetchCategoriesOfProject = 'FETCH_CATEGORIES',
   FetchCategory = 'FETCH_CATEGORY',
+  FollowCategory = 'FOLLOW_CATEGORY',
   FetchRequirementsOfCategory = 'FETCH_REQUIREMENTS',
   FetchRequirement = 'FETCH_REQUIREMENT',
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
@@ -74,8 +76,8 @@ type VoteRequirementParameters = {
   userVoted: string;
 }
 
-type FollowRequirementParameters = {
-  requirementId: number;
+type FollowResourceParameters = {
+  id: number;
   isFollower: boolean;
 }
 
@@ -92,14 +94,16 @@ type RealizeRequirementParameters = {
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
+  [ActionTypes.FollowProject](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.FetchCategoriesOfProject](context: ActionAugments, payload: CategoriesRequestParameters): void;
   [ActionTypes.FetchCategory](context: ActionAugments, categoryId: number): void;
+  [ActionTypes.FollowCategory](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
   [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
-  [ActionTypes.FollowRequirement](context: ActionAugments, payload: FollowRequirementParameters): void;
+  [ActionTypes.FollowRequirement](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.DevelopRequirement](context: ActionAugments, payload: DevelopRequirementParameters): void;
   [ActionTypes.RealizeRequirement](context: ActionAugments, payload: RealizeRequirementParameters): void;
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
@@ -124,6 +128,22 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
+  async [ActionTypes.FollowProject]({ commit }, parameters) {
+    commit(MutationType.SetProjectIsFollower, {projectId: parameters.id, isFollower: parameters.isFollower});
+    let response : HttpResponse<Project, void>;
+    if (parameters.isFollower) {
+      response = await bazaarApi.projects.followProject(parameters.id);
+    } else {
+      response = await bazaarApi.projects.unfollowProject(parameters.id);
+    }
+    if (response.data && ((response.status === 200) || (response.status === 201))) {
+      commit(MutationType.SetProject, response.data);
+    } else {
+      // reset local commit
+      commit(MutationType.SetProjectIsFollower, {projectId: parameters.id, isFollower: !parameters.isFollower});
+    }
+  },
+
   async [ActionTypes.FetchCategoriesOfProject]({ commit }, parameters) {
     const response = await bazaarApi.projects.getCategoriesForProject(parameters.projectId, parameters.query);
     if (response.data && response.status === 200) {
@@ -135,6 +155,22 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.categories.getCategory(categoryId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetCategory, response.data);
+    }
+  },
+
+  async [ActionTypes.FollowCategory]({ commit }, parameters) {
+    commit(MutationType.SetCategoryIsFollower, {categoryId: parameters.id, isFollower: parameters.isFollower});
+    let response : HttpResponse<Category, void>;
+    if (parameters.isFollower) {
+      response = await bazaarApi.categories.followCategory(parameters.id);
+    } else {
+      response = await bazaarApi.categories.unfollowCategory(parameters.id);
+    }
+    if (response.data && ((response.status === 200) || (response.status === 201))) {
+      commit(MutationType.SetCategory, response.data);
+    } else {
+      // reset local commit
+      commit(MutationType.SetCategoryIsFollower, {categoryId: parameters.id, isFollower: !parameters.isFollower});
     }
   },
 
@@ -184,18 +220,18 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   async [ActionTypes.FollowRequirement]({ commit }, parameters) {
-    commit(MutationType.SetRequirementIsFollower, {requirementId: parameters.requirementId, isFollower: parameters.isFollower});
+    commit(MutationType.SetRequirementIsFollower, {requirementId: parameters.id, isFollower: parameters.isFollower});
     let response : HttpResponse<Requirement, void>;
     if (parameters.isFollower) {
-      response = await bazaarApi.requirements.followRequirement(parameters.requirementId);
+      response = await bazaarApi.requirements.followRequirement(parameters.id);
     } else {
-      response = await bazaarApi.requirements.unfollowRequirement(parameters.requirementId);
+      response = await bazaarApi.requirements.unfollowRequirement(parameters.id);
     }
     if (response.data && ((response.status === 200) || (response.status === 201))) {
       commit(MutationType.SetRequirement, response.data);
     } else {
       // reset local commit
-      commit(MutationType.SetRequirementIsFollower, {requirementId: parameters.requirementId, isFollower: !parameters.isFollower});
+      commit(MutationType.SetRequirementIsFollower, {requirementId: parameters.id, isFollower: !parameters.isFollower});
     }
   },
 

@@ -7,8 +7,10 @@ import { Activity } from '../types/activities-api';
 export enum MutationType {
   SetProjects = 'SET_PROJECTS',
   SetProject = 'SET_PROJECT',
+  SetProjectIsFollower = 'SET_PROJECT_IS_FOLLOWER',
   SetCategories = 'SET_CATEGORIES',
   SetCategory = 'SET_CATEGORY',
+  SetCategoryIsFollower = 'SET_CATEGORY_IS_FOLLOWER',
   SetRequirements = 'SET_REQUIREMENTS',
   SetRequirement = 'SET_REQUIREMENT',
   SetRequirementVote = 'SET_REQUIREMENT_VOTE',
@@ -26,8 +28,10 @@ export enum MutationType {
 export type Mutations = {
   [MutationType.SetProjects](state: State, projects: Project[]): void;
   [MutationType.SetProject](state: State, project: Project): void;
+  [MutationType.SetProjectIsFollower](state: State, {projectId: number, isFollower: boolean}): void;
   [MutationType.SetCategories](state: State, categories: Category[]): void;
   [MutationType.SetCategory](state: State, category: Category): void;
+  [MutationType.SetCategoryIsFollower](state: State, {categoryId: number, isFollower: boolean}): void;
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
   [MutationType.SetRequirementVote](state: State, {requirementId: number, userVoted: string}): void;
@@ -58,6 +62,11 @@ export const mutations: MutationTree<State> & Mutations = {
     }
   },
 
+  [MutationType.SetProjectIsFollower](state, {projectId, isFollower}) {
+    const project = state.projects[projectId];
+    project.isFollower = isFollower;
+  },
+
   [MutationType.SetCategories](state, categories) {
     categories.forEach((category) => {
       if (category.id) {
@@ -70,6 +79,11 @@ export const mutations: MutationTree<State> & Mutations = {
     if (category.id) {
       state.categories[category.id] = category;
     }
+  },
+
+  [MutationType.SetCategoryIsFollower](state, {categoryId, isFollower}) {
+    const category = state.categories[categoryId];
+    category.isFollower = isFollower;
   },
 
   [MutationType.SetRequirements](state, requirements) {
