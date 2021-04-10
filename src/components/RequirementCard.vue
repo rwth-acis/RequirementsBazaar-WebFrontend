@@ -15,10 +15,11 @@
         <div id="groupedButtons">
           <Button label="Vote" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
           <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
-          <Button label="Share" class="p-button-outlined"></Button>
+          <Button label="Share" class="p-button-outlined" @click="toggleShareMenu"></Button>
+          <Menu ref="shareMenu" :model="shareMenuItems" :popup="true" />
         </div>
         <Button type="button" class="p-button-outlined" label="..." @click="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
-        <Menu id="overlay_menu" ref="menu" :model="menuItems" :popup="true" />
+        <Menu ref="menu" :model="menuItems" :popup="true" />
       </div>
       <comments-list :requirementId="id" v-if="showComments" class="commentsList"></comments-list>
     </template>
@@ -77,7 +78,7 @@ export default defineComponent({
     const menu = ref(null);
     const toggleMenu = (event) => {
       (menu as any).value.toggle(event);
-    }
+    };
 
     const confirmDelete = () => {
       confirm.require({
@@ -143,7 +144,42 @@ export default defineComponent({
       }
     )
 
-    return { voted, showComments, toggleCommentsPanel, toggleVote, t, toggleMenu, menu, menuItems };
+    const shareMenu = ref(null);
+    const toggleShareMenu = (event) => {
+      (shareMenu as any).value.toggle(event);
+    };
+    const shareMenuItems = ref([
+      {
+        label: 'Facebook',
+        icon: 'pi pi-facebook',
+        command: () => {
+          console.log('Sharing to Facebook...');
+        },
+      },
+      {
+        label: 'GitHub',
+        icon: 'pi pi-github',
+        command: () => {
+          console.log('Sharing to GitHub...');
+        },
+      },
+      {
+        label: 'Twitter',
+        icon: 'pi pi-twitter',
+        command: () => {
+          console.log('Sharing to Twitter...');
+        },
+      },
+      {
+        label: 'Copy to clipboard',
+        icon: 'pi pi-copy',
+        command: () => {
+          console.log('Copying to clipboard...');
+        },
+      },
+    ]);
+
+    return { voted, showComments, toggleCommentsPanel, toggleVote, t, toggleMenu, menu, menuItems, shareMenu, shareMenuItems, toggleShareMenu };
   },
 })
 </script>
