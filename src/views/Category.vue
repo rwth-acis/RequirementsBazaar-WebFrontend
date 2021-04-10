@@ -1,6 +1,6 @@
 <template>
   <ScrollTop />
-  <h1>This is category {{ category?.name }}</h1>
+  <h1>{{ category?.name }}</h1>
   <div id="description">
     {{ category?.description }}
   </div>

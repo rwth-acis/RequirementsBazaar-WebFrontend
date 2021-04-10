@@ -9,8 +9,8 @@
                 <div>{{ comment.message }}</div>
                 <div class="info">
                   <span v-if="oidcIsAuthenticated">
-                    <span class="action" @click="toggleReply($event, comment)">Reply</span> ·
-                    <span v-if="oidcUser.preferred_username === comment.creator.userName"><span class="action" @click="deleteComment($event, comment.id)">Delete</span> · </span>
+                    <span class="action" @click="toggleReply($event, comment)">{{ t('reply') }}</span> ·
+                    <span v-if="oidcUser.preferred_username === comment.creator.userName"><span class="action" @click="deleteComment($event, comment.id)">{{ t('delete') }}</span> · </span>
                   </span>
                   <span :title="$dayjs(comment.creationDate).format('LLL')">{{ $dayjs(comment.creationDate).fromNow() }}</span>{{ t('by') }}{{ comment.creator.userName }}
                 </div>
