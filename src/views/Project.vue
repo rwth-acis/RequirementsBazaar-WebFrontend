@@ -41,7 +41,7 @@ import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
-import { useConfirm } from "primevue/useconfirm";
+import { useConfirm } from 'primevue/useconfirm';
 
 import FilterPanel from '../components/FilterPanel.vue';
 import CategoryCard from '../components/CategoryCard.vue';

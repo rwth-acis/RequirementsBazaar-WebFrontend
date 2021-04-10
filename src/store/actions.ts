@@ -21,6 +21,7 @@ export enum ActionTypes {
   FollowRequirement = 'FOLLOW_REQUIREMENT',
   DevelopRequirement = 'DEVELOP_REQUIREMENT',
   RealizeRequirement = 'REALIZE_REQUIREMENT',
+  DeleteRequirement = 'DELETE_REQUIREMENT',
   CreateComment = 'CREATE_COMMENT',
   DeleteComment = 'DELETE_COMMENT',
   
@@ -106,6 +107,7 @@ export type Actions = {
   [ActionTypes.FollowRequirement](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.DevelopRequirement](context: ActionAugments, payload: DevelopRequirementParameters): void;
   [ActionTypes.RealizeRequirement](context: ActionAugments, payload: RealizeRequirementParameters): void;
+  [ActionTypes.DeleteRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
 
@@ -266,6 +268,13 @@ export const actions: ActionTree<State, State> & Actions = {
     } else {
       // reset local commit
       commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realized: realizedCached});
+    }
+  },
+
+  async [ActionTypes.DeleteRequirement]({ commit }, requirementId) {
+    const response = await bazaarApi.requirements.deleteRequirement(requirementId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.RemoveRequirement, requirementId);
     }
   },
 

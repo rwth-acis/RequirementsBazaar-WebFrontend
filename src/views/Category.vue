@@ -18,6 +18,7 @@
     v-model:sortAscending="sortAscending">
   </FilterPanel>
   <div id="requirementsList">
+    <ConfirmDialog></ConfirmDialog>
     <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
       <RequirementCard
         :id="requirement.id"

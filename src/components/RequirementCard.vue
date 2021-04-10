@@ -12,10 +12,12 @@
         <div id="comments" @click="toggleCommentsPanel">{{ numberOfComments }} {{ t('comments')}}</div>
       </div>
       <div id="actionButtons">
-        <Button label="Vote" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
-        <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
-        <!--<Button label="Share" class="p-button-outlined"></Button>-->
-        <Button type="button" class="p-button-outlined" label="More..." @click="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
+        <div id="groupedButtons">
+          <Button label="Vote" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
+          <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
+          <Button label="Share" class="p-button-outlined"></Button>
+        </div>
+        <Button type="button" class="p-button-outlined" label="..." @click="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
         <Menu id="overlay_menu" ref="menu" :model="menuItems" :popup="true" />
       </div>
       <comments-list :requirementId="id" v-if="showComments" class="commentsList"></comments-list>
@@ -28,6 +30,7 @@ import { computed, ref, toRefs, defineComponent, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
+import { useConfirm } from "primevue/useconfirm";
 import CommentsList from './CommentsList.vue';
 
 export default defineComponent({
@@ -51,6 +54,8 @@ export default defineComponent({
     const { id, userVoted, isFollower, isDeveloper, realized } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
+    const confirm = useConfirm();
+
     const showComments = ref(false);
 
     const toggleCommentsPanel = () => {
@@ -72,6 +77,22 @@ export default defineComponent({
     const menu = ref(null);
     const toggleMenu = (event) => {
       (menu as any).value.toggle(event);
+    }
+
+    const confirmDelete = () => {
+      confirm.require({
+        header: t('deleteRequirement'),
+        message: t('deleteRequirementDesc'),
+        icon: 'pi pi-info-circle',
+        acceptClass: 'p-button-danger',
+        accept: () => {
+          console.log(`deleted requirement ${id.value}`);
+          // store.dispatch(ActionTypes.DeleteRequirement, id.value);
+        },
+        reject: () => {
+          console.log('not deleted');
+        }
+      });
     }
 
     const menuItems = ref();
@@ -106,6 +127,13 @@ export default defineComponent({
             icon: 'pi pi-check',
             command: () => {
               store.dispatch(ActionTypes.RealizeRequirement, {requirementId: id.value, realized: realized ? false : true});
+            }
+          },
+          {
+            label: t('deleteRequirement'),
+            icon: 'pi pi-times',
+            command: () => {
+              confirmDelete();
             }
           }
         ];   
@@ -161,15 +189,16 @@ export default defineComponent({
     padding-top: 1rem;
   }
 
-  #actionButtons > * {
+  #groupedButtons {
     display: flex;
     flex: 1;
-    margin-left: .5rem;
-    font-weight: bold;
   }
 
-  #actionButtons :first-child {
-    margin-left: 0;
+  #groupedButtons > * {
+    display: flex;
+    flex: 1;
+    margin-right: .5rem;
+    font-weight: bold;
   }
 
   .commentsList {
