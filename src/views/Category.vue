@@ -4,36 +4,43 @@
   <div id="description">
     {{ category?.description }}
   </div>
-  <div id="actionButtons">
-    <Button :label="category?.isFollower ? t('unfollowCategory') : t('followCategory')" :class="{ 'p-button-outlined': !category?.isFollower }" @click="followClick"></Button>
-  </div>
   <div id="addRequirementPanel">
     <Button label="Add new Requirement..." @click="toggleAddRequirement" />
     <RequirementEditor v-if="showAddRequirement" :projectId="category?.projectId" :categoryId="category?.id"></RequirementEditor>
   </div>
-  <FilterPanel
-    v-model:searchQuery="searchQuery"
-    :sortOptions="sortOptions"
-    v-model:selectedSort="selectedSort"
-    v-model:sortAscending="sortAscending">
-  </FilterPanel>
-  <div id="requirementsList">
-    <ConfirmDialog></ConfirmDialog>
-    <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
-      <RequirementCard
-        :id="requirement.id"
-        :name="requirement.name"
-        :description="requirement.description"
-        :upVotes="requirement.upVotes"
-        :numberOfComments="requirement.numberOfComments"
-        :numberOfFollowers="requirement.numberOfFollowers"
-        :userVoted="requirement.userVoted"
-        :creator="requirement.creator"
-        :creationDate="requirement.creationDate"
-        :isFollower="requirement.isFollower"
-        :isDeveloper="requirement.isDeveloper"
-        :realized="requirement.realized">
-      </RequirementCard>
+  <div id="menuBar">
+    <TabMenu id="tabMenu" :model="tabItems" />
+    <div id="actionButtons">
+      <Button icon="pi pi-bell" :label="category?.isFollower ? t('unfollowCategory') : t('followCategory')" class="p-button-sm" :class="{ 'p-button-outlined': !category?.isFollower }" @click="followClick"></Button>
+      <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu"></Button>
+      <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
+    </div>
+  </div>
+  <div id="content">
+    <FilterPanel
+      v-model:searchQuery="searchQuery"
+      :sortOptions="sortOptions"
+      v-model:selectedSort="selectedSort"
+      v-model:sortAscending="sortAscending">
+    </FilterPanel>
+    <div id="requirementsList">
+      <ConfirmDialog></ConfirmDialog>
+      <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
+        <RequirementCard
+          :id="requirement.id"
+          :name="requirement.name"
+          :description="requirement.description"
+          :upVotes="requirement.upVotes"
+          :numberOfComments="requirement.numberOfComments"
+          :numberOfFollowers="requirement.numberOfFollowers"
+          :userVoted="requirement.userVoted"
+          :creator="requirement.creator"
+          :creationDate="requirement.creationDate"
+          :isFollower="requirement.isFollower"
+          :isDeveloper="requirement.isDeveloper"
+          :realized="requirement.realized">
+        </RequirementCard>
+      </div>
     </div>
   </div>
 </template>
@@ -43,6 +50,7 @@ import { computed, defineComponent, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useConfirm } from 'primevue/useconfirm';
 import { ActionTypes } from '../store/actions';
 
 import FilterPanel from '../components/FilterPanel.vue';
@@ -58,6 +66,7 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     const { t } = useI18n({ useScope: 'global' });
+    const confirm = useConfirm();
     
     const categoryId = Number.parseInt(route.params.categoryId.toString(), 10);
     const category = computed(() => store.getters.getCategoryById(categoryId));
@@ -94,7 +103,54 @@ export default defineComponent({
       store.dispatch(ActionTypes.FollowCategory, {id: categoryId, isFollower: category.value.isFollower ? false : true});
     };
 
-    return { t, category, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement, followClick }
+    const tabItems = ref([
+      {
+        label: 'Active Requirements',
+        to: `/projects/`,
+      },
+      {
+        label: 'Completed Requirements',
+        to: `/projects/`,
+      },
+    ]);
+
+    const confirmDelete = () => {
+      confirm.require({
+        header: t('deleteCategory'),
+        message: t('deleteCompDesc'),
+        icon: 'pi pi-info-circle',
+        acceptClass: 'p-button-danger',
+        accept: () => {
+          console.log('deleted');
+        },
+        reject: () => {
+          console.log('not deleted');
+        }
+      });
+    }
+
+    const moreMenu = ref(null);
+    const toggleMoreMenu = (event) => {
+      (moreMenu as any).value.toggle(event);
+    };
+    const moreItems = ref([
+      {
+        label: t('editCategory'),
+        icon: 'pi pi-pencil',
+        command: () => {
+          console.log('edit category');
+        }
+      },
+      {
+        label: t('deleteCategory'),
+        icon: 'pi pi-times',
+        command: () => {
+          confirmDelete();
+        }
+      },
+    ]);
+
+    return { t, category, tabItems, moreMenu, toggleMoreMenu, moreItems, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement, followClick }
   }
 })
 </script>
@@ -106,6 +162,37 @@ export default defineComponent({
 
   #addRequirementPanel {
     margin-bottom: 1.5rem;
+  }
+
+  #menuBar {
+    width: 100%;
+    display: flex;
+  }
+
+  #menuBar #tabMenu {
+    flex: 1;
+  }
+
+  #actionButtons {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  #actionButtons > * {
+    margin-left: 0.3rem;
+  }
+
+  #tabMenu ::v-deep(.p-tabmenu-nav), #tabMenu ::v-deep(.p-menuitem-link) {
+    background-color: transparent;
+  }
+
+  #tabMenu ::v-deep(.p-tabmenuitem) {
+    background-color: transparent;
+  }
+
+  #content {
+    padding: 1rem;
   }
 
   #requirementsList {
