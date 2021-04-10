@@ -83,8 +83,8 @@ export default defineComponent({
     const selectedSort = ref('name');
     const sortOptions = [
       {name: 'Alphabetically', value: 'name'},
-      {name: 'Last Activity', value: 'last_activity'},
-      {name: 'Creation Date', value: 'date'},
+      {name: t('sorting-activity'), value: 'last_activity'},
+      {name: t('sorting-date'), value: 'date'},
       {name: 'Number of Requirements', value: 'requirement'},
       {name: 'Number of Followers', value: 'follower'},
     ];

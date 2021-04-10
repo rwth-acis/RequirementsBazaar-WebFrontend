@@ -10,7 +10,7 @@
       </InputText>
       <i class="clearButton pi pi-times" v-show="searchQuery.length > 0" @click="onClearClick()" />
     </span>
-    <span>Sorting:</span>
+    <span>{{ t('sorting') }}:</span>
     <Dropdown
       id="sortOptionsDropdown"
       :options="sortOptions"
@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'Category',
@@ -46,6 +47,8 @@ export default defineComponent({
   },
   emits: ['update:searchQuery', 'update:selectedSort', 'update:sortAscending'],
   setup(props, context) {
+    const { t } = useI18n({ useScope: 'global' });
+
     const onClearClick = () => {
       context.emit('update:searchQuery', '');
     }
@@ -60,7 +63,7 @@ export default defineComponent({
     watch(() => props.sortAscending, (newValue) => {sortAscendingInternal.value = newValue});
 
     const selectedSortInternal = ref(props.selectedSort);
-    return { selectedSortInternal, sortAscendingInternal, sortDirectionOptions, onClearClick }
+    return { t, selectedSortInternal, sortAscendingInternal, sortDirectionOptions, onClearClick }
   }
 })
 </script>
