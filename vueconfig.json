@@ -15,8 +15,13 @@
                 "moduleName": "./node_modules/primevue/card/Card.vue"
             }
         },
+        "./node_modules/primevue/confirmdialog/ConfirmDialog.vue", {
+            "ConfirmDialog": {
+                "moduleName": "./node_modules/primevue/confirmdialog/ConfirmDialog.vue"
+            }
+        },
         "./node_modules/primevue/confirmpopup/ConfirmPopup.vue", {
-            "InputText": {
+            "ConfirmPopup": {
                 "moduleName": "./node_modules/primevue/confirmpopup/ConfirmPopup.vue"
             }
         },

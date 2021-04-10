@@ -1,12 +1,13 @@
 <template>
-  <h1>This is project {{ project?.name }}</h1>
+  <h1>{{ project?.name }}</h1>
   <div id="description">
     {{ project?.description }}
   </div>
+  <ConfirmDialog></ConfirmDialog>
   <div id="menuBar">
     <TabMenu id="tabMenu" :model="tabItems" />
     <div id="actionButtons">
-      <Button :label="project?.isFollower ? t('unfollowProject') : t('followProject')" class="p-button-sm" :class="{ 'p-button-outlined': !project?.isFollower }" @click="followClick"></Button>
+      <Button icon="pi pi-bell" :label="project?.isFollower ? t('unfollowProject') : t('followProject')" class="p-button-sm" :class="{ 'p-button-outlined': !project?.isFollower }" @click="followClick"></Button>
       <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
     </div>
@@ -40,6 +41,7 @@ import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
+import { useConfirm } from "primevue/useconfirm";
 
 import FilterPanel from '../components/FilterPanel.vue';
 import CategoryCard from '../components/CategoryCard.vue';
@@ -56,6 +58,7 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     const { t } = useI18n({ useScope: 'global' });
+    const confirm = useConfirm();
     
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
     const project = computed(() => store.getters.getProjectById(projectId));
@@ -69,6 +72,10 @@ export default defineComponent({
       {
         label: 'All Categories',
         to: `/projects/${projectId}/all`
+      },
+      {
+        label: 'Members',
+        to: `/projects/${projectId}/members`
       },
     ]);
 
@@ -97,6 +104,21 @@ export default defineComponent({
       store.dispatch(ActionTypes.FollowProject, {id: projectId, isFollower: project.value.isFollower ? false : true});
     };
 
+    const confirmDelete = () => {
+      confirm.require({
+        header: t('deleteProjectTitle'),
+        message: t('deleteProjectDesc'),
+        icon: 'pi pi-info-circle',
+        acceptClass: 'p-button-danger',
+        accept: () => {
+          console.log('deleted');
+        },
+        reject: () => {
+          console.log('not deleted');
+        }
+      });
+    }
+
     const moreItems = ref([
       {
         label: t('editProject'),
@@ -108,6 +130,7 @@ export default defineComponent({
         label: t('deleteProjectTitle'),
         icon: 'pi pi-times',
         command: () => {
+          confirmDelete();
         }
       },
     ]);
