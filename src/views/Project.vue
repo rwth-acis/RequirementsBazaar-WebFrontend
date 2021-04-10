@@ -3,35 +3,35 @@
   <div id="description">
     {{ project?.description }}
   </div>
-  <div id="actionButtons">
-    <Button :label="project.isFollower ? t('unfollowProject') : t('followProject')" :class="{ 'p-button-outlined': !project.isFollower }" @click="followClick"></Button>
+  <div id="menuBar">
+    <TabMenu id="tabMenu" :model="tabItems" />
+    <div id="actionButtons">
+      <Button :label="project?.isFollower ? t('unfollowProject') : t('followProject')" class="p-button-sm" :class="{ 'p-button-outlined': !project?.isFollower }" @click="followClick"></Button>
+      <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu"></Button>
+      <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
+    </div>
   </div>
-  <TabView id="tabView">
-    <TabPanel header="Overview">
-      <FilterPanel
-        v-model:searchQuery="searchQuery"
-        :sortOptions="sortOptions"
-        v-model:selectedSort="selectedSort"
-        v-model:sortAscending="sortAscending">
-      </FilterPanel>
-      <div id="categoriesList">
-        <div v-for="category in categories" :key="category.id" class="categoryCard">
-          <router-link :to="'/projects/' + project?.id + '/categories/' + category?.id">
-            <CategoryCard
-              :id="category.id"
-              :name="category.name"
-              :description="category.description"
-              :numberOfFollowers="category.numberOfFollowers"
-              :numberOfRequirements="category.numberOfRequirements">
-            </CategoryCard>
-          </router-link>
-        </div>
+  <div id="content">
+  <FilterPanel
+      v-model:searchQuery="searchQuery"
+      :sortOptions="sortOptions"
+      v-model:selectedSort="selectedSort"
+      v-model:sortAscending="sortAscending">
+    </FilterPanel>
+    <div id="categoriesList">
+      <div v-for="category in categories" :key="category.id" class="categoryCard">
+        <router-link :to="'/projects/' + project?.id + '/categories/' + category?.id">
+          <CategoryCard
+            :id="category.id"
+            :name="category.name"
+            :description="category.description"
+            :numberOfFollowers="category.numberOfFollowers"
+            :numberOfRequirements="category.numberOfRequirements">
+          </CategoryCard>
+        </router-link>
       </div>
-    </TabPanel>
-    <TabPanel header="All Categories">
-      This is a list of all categories.
-    </TabPanel>
-  </TabView>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -61,6 +61,17 @@ export default defineComponent({
     const project = computed(() => store.getters.getProjectById(projectId));
     store.dispatch(ActionTypes.FetchProject, projectId);
 
+    const tabItems = ref([
+      {
+        label: 'Overview',
+        to: `/projects/${projectId}`
+      },
+      {
+        label: 'All Categories',
+        to: `/projects/${projectId}/all`
+      },
+    ]);
+
     const searchQuery = ref('');
     const selectedSort = ref('name');
     const sortOptions = [
@@ -86,7 +97,27 @@ export default defineComponent({
       store.dispatch(ActionTypes.FollowProject, {id: projectId, isFollower: project.value.isFollower ? false : true});
     };
 
-    return { t, project, followClick, categories, searchQuery, selectedSort, sortOptions, sortAscending }
+    const moreItems = ref([
+      {
+        label: t('editProject'),
+        icon: 'pi pi-pencil',
+        command: () => {
+        }
+      },
+      {
+        label: t('deleteProjectTitle'),
+        icon: 'pi pi-times',
+        command: () => {
+        }
+      },
+    ]);
+
+    const moreMenu = ref(null);
+    const toggleMoreMenu = (event) => {
+      (moreMenu as any).value.toggle(event);
+    };
+
+    return { t, tabItems, moreItems, moreMenu, toggleMoreMenu, project, followClick, categories, searchQuery, selectedSort, sortOptions, sortAscending }
   }
 })
 </script>
@@ -96,12 +127,35 @@ export default defineComponent({
     margin-bottom: 2rem;
   }
 
-  #tabView ::v-deep(.p-tabview-nav), #tabView ::v-deep(.p-tabview-nav-link) {
+  #menuBar {
+    width: 100%;
+    display: flex;
+  }
+
+  #menuBar #tabMenu {
+    flex: 1;
+  }
+
+  #actionButtons {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  #actionButtons > * {
+    margin-left: 0.3rem;
+  }
+
+  #tabMenu ::v-deep(.p-tabmenu-nav), #tabMenu ::v-deep(.p-menuitem-link) {
     background-color: transparent;
   }
 
-  #tabView ::v-deep(.p-tabview-panels) {
+  #tabMenu ::v-deep(.p-tabmenuitem) {
     background-color: transparent;
+  }
+
+  #content {
+    padding: 1rem;
   }
 
   #categoriesList {

@@ -55,6 +55,11 @@
                 "moduleName": "./node_modules/primevue/skeleton/Skeleton.vue"
             }
         },
+        "./node_modules/primevue/tabmenu/TabMenu.vue", {
+            "TabMenu": {
+                "moduleName": "./node_modules/primevue/tabmenu/TabMenu.vue"
+            }
+        },
         "./node_modules/primevue/tabpanel/TabPanel.vue", {
             "TabPanel": {
                 "moduleName": "./node_modules/primevue/tabpanel/TabPanel.vue"

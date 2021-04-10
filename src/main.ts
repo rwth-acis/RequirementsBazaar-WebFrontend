@@ -30,6 +30,7 @@ import Menu from 'primevue/menu';
 import ScrollTop from 'primevue/scrolltop';
 import SelectButton from 'primevue/selectbutton';
 import Skeleton from 'primevue/skeleton';
+import TabMenu from 'primevue/tabmenu';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
@@ -69,6 +70,7 @@ app.component('Menu', Menu);
 app.component('ScrollTop', ScrollTop);
 app.component('SelectButton', SelectButton);
 app.component('Skeleton', Skeleton);
+app.component('TabMenu', TabMenu);
 app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
 
