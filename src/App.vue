@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import AppTopbar from './AppTopbar.vue';
+import AppTopbar from './components/AppTopbar.vue';
 import ActivityTracker from './components/ActivityTracker.vue';
 
 export default defineComponent({

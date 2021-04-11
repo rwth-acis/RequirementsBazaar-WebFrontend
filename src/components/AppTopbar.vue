@@ -7,7 +7,7 @@
 			<select v-model="locale">
 				<option v-for="locale in availableLocales" :key="`locale-${locale}`" :value="locale">{{ locale }}</option>
 			</select>
-			<Button v-if="oidcIsAuthenticated" label="Logout" @click="signOut" />
+			<Button v-if="oidcIsAuthenticated" label="Logout" @click="removeOidcUser" />
 			<Button v-else label="Sign in" @click="authenticateOidcPopup" />
 		</div>
 	</div>
@@ -15,33 +15,26 @@
 
 <script lang="ts">
 import { computed, defineComponent, watch, getCurrentInstance } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'AppTopbar',
 	setup: (props, context) => {
     const { locale, availableLocales } = useI18n({ useScope: 'global' });
+		const store = useStore();
 		const app = getCurrentInstance();
+
 		watch(locale, (newLocale) => {
     	app?.appContext.config.globalProperties.$dayjs.locale(newLocale);
 		});
-    return { locale, availableLocales };
+
+		const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
+		const authenticateOidcPopup = () => store.dispatch('oidcStore/authenticateOidcPopup');
+		const removeOidcUser = () => store.dispatch('oidcStore/removeOidcUser');
+
+    return { locale, availableLocales, oidcIsAuthenticated, authenticateOidcPopup, removeOidcUser };
   },
-	computed: {
-    ...mapGetters('oidcStore', [
-      'oidcIsAuthenticated'
-    ]),
-  },
-	methods: {
-    ...mapActions('oidcStore', [
-      'authenticateOidcPopup',
-      'removeOidcUser'
-    ]),
-		signOut: function () {
-      this.removeOidcUser();
-    },
-	},
 })
 </script>
 
