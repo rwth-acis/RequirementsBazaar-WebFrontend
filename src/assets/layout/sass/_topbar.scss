@@ -1,7 +1,7 @@
 .layout-topbar {
   position: fixed;
   height: 50px;
-  padding: 1em 2em 0em 2em;
+  padding: 0.6em 2em 0em 2em;
   color: #ffffff;
   z-index: 999;
   right: 0;
@@ -11,13 +11,13 @@
 
   .layout-topbar-icons {
       float: right;
-      display: block;
+      /*display: block;*/
       animation-duration: .5s;
 
       button {
           position: relative;
           color: $topbarItemColor;
-          margin-left: 20px;
+          /*margin-left: 20px;*/
           display: inline-block;
           text-decoration: none;
           transition: color $transitionDuration;

@@ -21,6 +21,7 @@ import 'dayjs/locale/sq';
 
 import PrimeVue from 'primevue/config';
 import Avatar from 'primevue/avatar';
+import BadgeDirective from 'primevue/badgedirective';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import ConfirmationService from 'primevue/confirmationservice';
@@ -30,6 +31,7 @@ import Dropdown from 'primevue/dropdown';
 import Editor from 'primevue/editor';
 import InputText from 'primevue/inputtext';
 import Menu from 'primevue/menu';
+import OverlayPanel from 'primevue/overlaypanel';
 import ScrollTop from 'primevue/scrolltop';
 import SelectButton from 'primevue/selectbutton';
 import Skeleton from 'primevue/skeleton';
@@ -61,6 +63,8 @@ app.use(i18n);
 app.use(VueMarkdownIt);
 app.config.globalProperties.$dayjs = dayjs;
 
+app.directive('badge', BadgeDirective);
+
 app.use(ConfirmationService);
 app.component('Avatar', Avatar);
 app.component('Button', Button);
@@ -71,6 +75,7 @@ app.component('Dropdown', Dropdown);
 app.component('Editor', Editor);
 app.component('InputText', InputText);
 app.component('Menu', Menu);
+app.component('OverlayPanel', OverlayPanel);
 app.component('ScrollTop', ScrollTop);
 app.component('SelectButton', SelectButton);
 app.component('Skeleton', Skeleton);

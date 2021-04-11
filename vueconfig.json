@@ -45,6 +45,11 @@
                 "moduleName": "./node_modules/primevue/menu/Menu.vue"
             }
         },
+        "./node_modules/primevue/overlaypanel/OverlayPanel.vue", {
+            "OverlayPanel": {
+                "moduleName": "./node_modules/primevue/overlaypanel/OverlayPanel.vue"
+            }
+        },
         "./node_modules/primevue/scrolltop/ScrollTop.vue", {
             "ScrollTop": {
                 "moduleName": "./node_modules/primevue/scrolltop/ScrollTop.vue"
