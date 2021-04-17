@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-wrapper layout-static layout-static-sidebar-inactive">
+  <div class="layout-wrapper layout-static layout-static-sidebar-inactive" :class="{'dir-rtl': isRtl}">
     <AppTopbar></AppTopbar>
 
     <div id="layout" :class="{ 'p-mr-3': !activityTrackerVisible }">
@@ -18,9 +18,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import AppTopbar from './components/AppTopbar.vue';
 import ActivityTracker from './components/ActivityTracker.vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'App',
@@ -29,13 +30,24 @@ export default defineComponent({
     ActivityTracker
   },
   setup: () => {
+    const { locale } = useI18n({ useScope: 'global' });
+    const isRtl = ref(false);
+    watch(locale, (newLocale) => {
+      isRtl.value = (newLocale === 'fa') ? true : false;
+		});
+
     const activityTrackerVisible = ref(false);
-    return { activityTrackerVisible };
+
+    return { activityTrackerVisible, isRtl };
   }
 })
 </script>
 
 <style scoped>
+.dir-rtl {
+  direction: rtl !important;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
