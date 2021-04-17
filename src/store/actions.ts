@@ -209,7 +209,7 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SetRequirementVote, parameters);
     let response : HttpResponse<any, void | Requirement>;
     if (parameters.userVoted === 'UP_VOTE') {
-      response = await bazaarApi.requirements.vote(parameters.requirementId, {direction: 'up'});
+      response = await bazaarApi.requirements.vote(parameters.requirementId, JSON.stringify({direction: 'up'}));
     } else {
       response = await bazaarApi.requirements.unvote(parameters.requirementId);
     }

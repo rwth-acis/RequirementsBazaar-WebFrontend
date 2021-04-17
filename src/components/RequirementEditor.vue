@@ -40,7 +40,7 @@ export default defineComponent({
       const requirement: Requirement = {
         name: name.value,
         description: turndownService.turndown(description.value),
-        categories: [{id: categoryId}],
+        categories: [categoryId],
         projectId: projectId,
       };
       

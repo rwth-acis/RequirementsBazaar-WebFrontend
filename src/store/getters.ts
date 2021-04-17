@@ -114,7 +114,7 @@ export const getters: GetterTree<State, State> & Getters = {
 
   requirementsList: (state) => (categoryId, parameters) => {
     // filter all requirements who have a category object with id equaling the requested categoryId
-    let requirements: Requirement[] = Object.values(state.requirements).filter(requirement => (requirement.categories.some(c => c.id === categoryId)));
+    let requirements: Requirement[] = Object.values(state.requirements).filter(requirement => (requirement.categories.some(c => c === categoryId)));
 
     const sortAscending = parameters.sortDirection === 'ASC';
     // first, sort alphabetically in all cases

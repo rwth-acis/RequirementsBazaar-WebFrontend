@@ -66,7 +66,10 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetProjectIsFollower](state, {projectId, isFollower}) {
     const project = state.projects[projectId];
-    project.isFollower = isFollower;
+    if (!project.userContext) {
+      project.userContext = {};
+    }
+    project.userContext.isFollower = isFollower;
   },
 
   [MutationType.SetCategories](state, categories) {
@@ -85,7 +88,10 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetCategoryIsFollower](state, {categoryId, isFollower}) {
     const category = state.categories[categoryId];
-    category.isFollower = isFollower;
+    if (!category.userContext) {
+      category.userContext = {};
+    }
+    category.userContext.isFollower = isFollower;
   },
 
   [MutationType.SetRequirements](state, requirements) {
@@ -104,7 +110,10 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetRequirementVote](state, {requirementId, userVoted}) {
     const requirement = state.requirements[requirementId]
-    requirement.userVoted = userVoted;
+    if (!requirement.userContext) {
+      requirement.userContext = {};
+    }
+    requirement.userContext.userVoted = userVoted;
     if (userVoted === 'UP_VOTE') {
       (requirement.upVotes !== undefined) ? ++requirement.upVotes : 1;
     } else {
@@ -114,12 +123,18 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetRequirementIsFollower](state, {requirementId, isFollower}) {
     const requirement = state.requirements[requirementId];
-    requirement.isFollower = isFollower;
+    if (!requirement.userContext) {
+      requirement.userContext = {};
+    }
+    requirement.userContext.isFollower = isFollower;
   },
 
   [MutationType.SetRequirementIsDeveloper](state, {requirementId, isDeveloper}) {
     const requirement = state.requirements[requirementId];
-    requirement.isDeveloper = isDeveloper;
+    if (!requirement.userContext) {
+      requirement.userContext = {};
+    }
+    requirement.userContext.isDeveloper = isDeveloper;
   },
 
   [MutationType.SetRequirementRealized](state, {requirementId, realized}) {
