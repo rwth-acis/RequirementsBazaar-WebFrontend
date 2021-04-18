@@ -3,6 +3,21 @@
   <div id="description">
     {{ project?.description }}
   </div>
+  <div id="addCategoryPanel">
+    <Button
+      label="Add new Category..."
+      v-if="!showAddCategory"
+      @click="toggleAddCategory" />
+    <div class="categoryEditorContainer">
+      <CategoryEditor
+        class="categoryEditor"
+        v-if="showAddCategory"
+        :projectId="projectId"
+        @cancel="editorCanceled"
+        @save="editorSaved">
+      </CategoryEditor>
+    </div>
+  </div>
   <ConfirmDialog></ConfirmDialog>
   <div id="menuBar">
     <TabMenu id="tabMenu" :model="tabItems" />
@@ -45,11 +60,13 @@ import { ActionTypes } from '../store/actions';
 
 import FilterPanel from '../components/FilterPanel.vue';
 import CategoryCard from '../components/CategoryCard.vue';
+import CategoryEditor from '../components/CategoryEditor.vue';
 
 export default defineComponent({
   components: {
     FilterPanel,
     CategoryCard,
+    CategoryEditor,
   },
   name: 'Project',
   props: {
@@ -140,7 +157,20 @@ export default defineComponent({
       (moreMenu as any).value.toggle(event);
     };
 
-    return { t, tabItems, moreItems, moreMenu, toggleMoreMenu, project, followClick, categories, searchQuery, selectedSort, sortOptions, sortAscending }
+    const showAddCategory = ref(false);
+    const toggleAddCategory = () => {
+      showAddCategory.value = !showAddCategory.value;
+    }
+
+    const editorCanceled = () => {
+      toggleAddCategory();
+    }
+
+    const editorSaved = () => {
+      toggleAddCategory();
+    }
+
+    return { t, showAddCategory, toggleAddCategory, editorCanceled, editorSaved, projectId, tabItems, moreItems, moreMenu, toggleMoreMenu, project, followClick, categories, searchQuery, selectedSort, sortOptions, sortAscending }
   }
 })
 </script>
@@ -148,6 +178,22 @@ export default defineComponent({
 <style scoped>
   #description {
     margin-bottom: 2rem;
+  }
+
+  #addCategoryPanel {
+    margin-bottom: 1.5rem;
+  }
+
+  .categoryEditorContainer {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .categoryEditor {
+    width: 100%;
+    max-width: 700px;
   }
 
   #menuBar {

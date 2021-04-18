@@ -13,6 +13,7 @@ export enum ActionTypes {
   FetchCategoriesOfProject = 'FETCH_CATEGORIES',
   FetchCategory = 'FETCH_CATEGORY',
   FollowCategory = 'FOLLOW_CATEGORY',
+  CreateCategory = 'CREATE_CATEGORY',
   FetchRequirementsOfCategory = 'FETCH_REQUIREMENTS',
   FetchRequirement = 'FETCH_REQUIREMENT',
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
@@ -99,6 +100,7 @@ export type Actions = {
   [ActionTypes.FetchCategoriesOfProject](context: ActionAugments, payload: CategoriesRequestParameters): void;
   [ActionTypes.FetchCategory](context: ActionAugments, categoryId: number): void;
   [ActionTypes.FollowCategory](context: ActionAugments, payload: FollowResourceParameters): void;
+  [ActionTypes.CreateCategory](context: ActionAugments, payload: Category): void;
   [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
@@ -173,6 +175,13 @@ export const actions: ActionTree<State, State> & Actions = {
     } else {
       // reset local commit
       commit(MutationType.SetCategoryIsFollower, {categoryId: parameters.id, isFollower: !parameters.isFollower});
+    }
+  },
+
+  async [ActionTypes.CreateCategory]({ commit }, category) {
+    const response = await bazaarApi.categories.createCategory(category);
+    if (response.data && response.status === 201) {
+      commit(MutationType.SetCategory, response.data);
     }
   },
 
