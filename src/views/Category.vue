@@ -33,11 +33,11 @@
           :upVotes="requirement.upVotes"
           :numberOfComments="requirement.numberOfComments"
           :numberOfFollowers="requirement.numberOfFollowers"
-          :userVoted="requirement.userVoted"
           :creator="requirement.creator"
           :creationDate="requirement.creationDate"
-          :isFollower="requirement.isFollower"
-          :isDeveloper="requirement.isDeveloper"
+          :userVoted="requirement.userContext.userVoted"
+          :isFollower="requirement.userContext.isFollower"
+          :isDeveloper="requirement.userContext.isDeveloper"
           :realized="requirement.realized">
         </RequirementCard>
       </div>

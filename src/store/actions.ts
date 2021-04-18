@@ -205,11 +205,12 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   async [ActionTypes.VoteRequirement]({ commit, getters }, parameters) {
-    const userVotedCached = getters.getRequirementById(parameters.requirementId).userVoted;
+    debugger
+    const userVotedCached = getters.getRequirementById(parameters.requirementId).userContext.userVoted;
     commit(MutationType.SetRequirementVote, parameters);
     let response : HttpResponse<any, void | Requirement>;
     if (parameters.userVoted === 'UP_VOTE') {
-      response = await bazaarApi.requirements.vote(parameters.requirementId, JSON.stringify({direction: 'up'}));
+      response = await bazaarApi.requirements.vote(parameters.requirementId, 'up');
     } else {
       response = await bazaarApi.requirements.unvote(parameters.requirementId);
     }
