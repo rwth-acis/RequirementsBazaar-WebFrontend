@@ -13,7 +13,7 @@
   <div id="menuBar">
     <TabMenu id="tabMenu" :model="tabItems" />
     <div id="actionButtons">
-      <Button icon="pi pi-bell" :label="category?.isFollower ? t('unfollowCategory') : t('followCategory')" class="p-button-sm" :class="{ 'p-button-outlined': !category?.isFollower }" @click="followClick"></Button>
+      <Button icon="pi pi-bell" :label="category?.userContext?.isFollower ? t('unfollowCategory') : t('followCategory')" class="p-button-sm" :class="{ 'p-button-outlined': !category?.userContext?.isFollower }" @click="followClick"></Button>
       <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
     </div>
@@ -102,7 +102,7 @@ export default defineComponent({
     }
 
     const followClick = () => {
-      store.dispatch(ActionTypes.FollowCategory, {id: categoryId, isFollower: category.value.isFollower ? false : true});
+      store.dispatch(ActionTypes.FollowCategory, {id: categoryId, isFollower: category.value.userContext.isFollower ? false : true});
     };
 
     const tabItems = ref([
