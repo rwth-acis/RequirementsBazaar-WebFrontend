@@ -22,6 +22,7 @@
     <SelectButton
       :options="sortDirectionOptions"
       optionValue="value"
+      class="selectButton"
       v-model="sortAscendingInternal">
       <template #option="slotProps">
         <i :class="slotProps.option.icon"></i>
@@ -100,5 +101,9 @@ export default defineComponent({
 
   #sortOptionsDropdown {
     flex: 0.35;
+  }
+
+  .selectButton {
+    direction: ltr;
   }
 </style>

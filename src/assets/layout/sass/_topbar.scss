@@ -10,7 +10,7 @@
   transition: left $transitionDuration;
 
   .layout-topbar-icons {
-      float: right;
+      float: inline-end;
       /*display: block;*/
       animation-duration: .5s;
 

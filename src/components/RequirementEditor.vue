@@ -19,7 +19,7 @@
         <small v-if="(v$.description.$invalid && submitted)" class="p-error">{{v$.description.required.$message.replace('Value', 'Description')}}</small>
       </div>
       <div class="footer p-dialog-footer">
-        <Button :label="t('cancel')" @click="cancel" class="p-button-outlined p-mr-2" />
+        <Button :label="t('cancel')" @click="cancel" class="p-button-outlined p-ml-2 p-mr-2" />
         <Button type="submit" :label="t('save')" />
       </div>
     </form>
@@ -99,6 +99,6 @@ export default defineComponent({
 
 <style scoped>
   .footer {
-    text-align: right;
+    text-align: end;
   }
 </style>
