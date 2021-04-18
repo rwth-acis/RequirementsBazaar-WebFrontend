@@ -5,9 +5,19 @@
     {{ category?.description }}
   </div>
   <div id="addRequirementPanel">
-    <Button label="Add new Requirement..." @click="toggleAddRequirement" />
+    <Button
+      label="Add new Requirement..."
+      v-if="!showAddRequirement"
+      @click="toggleAddRequirement" />
     <div class="requirementEditorContainer">
-      <RequirementEditor class="requirementEditor" v-if="showAddRequirement" :projectId="category?.projectId" :categoryId="category?.id"></RequirementEditor>
+      <RequirementEditor
+        class="requirementEditor"
+        v-if="showAddRequirement"
+        :projectId="category?.projectId"
+        :categoryId="category?.id"
+        @cancel="editorCanceled"
+        @save="editorSaved">
+      </RequirementEditor>
     </div>
   </div>
   <div id="menuBar">
@@ -152,7 +162,15 @@ export default defineComponent({
       },
     ]);
 
-    return { t, category, tabItems, moreMenu, toggleMoreMenu, moreItems, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement, followClick }
+    const editorCanceled = () => {
+      toggleAddRequirement();
+    }
+
+    const editorSaved = () => {
+      toggleAddRequirement();
+    }
+
+    return { t, category, tabItems, moreMenu, toggleMoreMenu, moreItems, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement, followClick, editorCanceled, editorSaved }
   }
 })
 </script>

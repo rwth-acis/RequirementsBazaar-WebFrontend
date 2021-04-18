@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@appnest/masonry-layout": "^2.0.8",
+    "@vuelidate/core": "^2.0.0-alpha.16",
+    "@vuelidate/validators": "^2.0.0-alpha.13",
     "dayjs": "^1.10.4",
     "oidc-client": "^1.11.5",
     "primeflex": "^2.0.0",

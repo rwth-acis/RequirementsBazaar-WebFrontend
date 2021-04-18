@@ -205,7 +205,6 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   async [ActionTypes.VoteRequirement]({ commit, getters }, parameters) {
-    debugger
     const userVotedCached = getters.getRequirementById(parameters.requirementId).userContext.userVoted;
     commit(MutationType.SetRequirementVote, parameters);
     let response : HttpResponse<any, void | Requirement>;
