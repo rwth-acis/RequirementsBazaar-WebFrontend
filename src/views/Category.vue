@@ -6,7 +6,9 @@
   </div>
   <div id="addRequirementPanel">
     <Button label="Add new Requirement..." @click="toggleAddRequirement" />
-    <RequirementEditor v-if="showAddRequirement" :projectId="category?.projectId" :categoryId="category?.id"></RequirementEditor>
+    <div class="requirementEditorContainer">
+      <RequirementEditor class="requirementEditor" v-if="showAddRequirement" :projectId="category?.projectId" :categoryId="category?.id"></RequirementEditor>
+    </div>
   </div>
   <div id="menuBar">
     <TabMenu id="tabMenu" :model="tabItems" />
@@ -162,6 +164,18 @@ export default defineComponent({
 
   #addRequirementPanel {
     margin-bottom: 1.5rem;
+  }
+
+  .requirementEditorContainer {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .requirementEditor {
+    width: 100%;
+    max-width: 700px;
   }
 
   #menuBar {
