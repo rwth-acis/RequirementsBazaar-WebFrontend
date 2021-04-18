@@ -1,6 +1,20 @@
 <template>
   <h1>{{ t('explore-projects') }}</h1>
   Take a look at the public projects on Requirements Bazaar.
+  <div id="addProjectPanel">
+    <Button
+      label="Add new Project..."
+      v-if="!showAddProject"
+      @click="toggleAddProject" />
+    <div class="projectEditorContainer">
+      <ProjectEditor
+        class="projectEditor"
+        v-if="showAddProject"
+        @cancel="editorCanceled"
+        @save="editorSaved">
+      </ProjectEditor>
+    </div>
+  </div>
   <h2>Featured Projects</h2>
 
   Contact us to get featured!
@@ -37,10 +51,11 @@ import { ActionTypes } from '../store/actions';
 import '@appnest/masonry-layout';
 import FilterPanel from '../components/FilterPanel.vue';
 import ProjectCard from '../components/ProjectCard.vue';
+import ProjectEditor from '../components/ProjectEditor.vue';
 
 export default defineComponent({
   name: 'Projects',
-  components: { FilterPanel, ProjectCard },
+  components: { FilterPanel, ProjectCard, ProjectEditor },
   props: {
   },
   setup: () => {
@@ -89,8 +104,25 @@ export default defineComponent({
     });
     watch(parameters, () => store.dispatch(ActionTypes.FetchProjects, {query: parameters.value}));
 
+    const showAddProject = ref(false);
+    const toggleAddProject = () => {
+      showAddProject.value = !showAddProject.value;
+    }
+
+    const editorCanceled = () => {
+      toggleAddProject();
+    }
+
+    const editorSaved = () => {
+      toggleAddProject();
+    }
+
     return {
       t,
+      showAddProject,
+      toggleAddProject,
+      editorCanceled,
+      editorSaved,
       projects,
       searchQuery,
       selectedSort,
@@ -102,4 +134,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
+  #addProjectPanel {
+    margin-bottom: 1.5rem;
+  }
+
+  .projectEditorContainer {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .projectEditor {
+    width: 100%;
+    max-width: 700px;
+  }
 </style>

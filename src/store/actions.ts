@@ -10,6 +10,7 @@ export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
   FetchProject = 'FETCH_PROJECT',
   FollowProject = 'FOLLOW_PROJECT',
+  CreateProject = 'CREATE_PROJECT',
   FetchCategoriesOfProject = 'FETCH_CATEGORIES',
   FetchCategory = 'FETCH_CATEGORY',
   FollowCategory = 'FOLLOW_CATEGORY',
@@ -97,6 +98,7 @@ export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
   [ActionTypes.FollowProject](context: ActionAugments, payload: FollowResourceParameters): void;
+  [ActionTypes.CreateProject](context: ActionAugments, payload: Project): void;
   [ActionTypes.FetchCategoriesOfProject](context: ActionAugments, payload: CategoriesRequestParameters): void;
   [ActionTypes.FetchCategory](context: ActionAugments, categoryId: number): void;
   [ActionTypes.FollowCategory](context: ActionAugments, payload: FollowResourceParameters): void;
@@ -145,6 +147,13 @@ export const actions: ActionTree<State, State> & Actions = {
     } else {
       // reset local commit
       commit(MutationType.SetProjectIsFollower, {projectId: parameters.id, isFollower: !parameters.isFollower});
+    }
+  },
+
+  async [ActionTypes.CreateProject]({ commit }, project) {
+    const response = await bazaarApi.projects.createProject(project);
+    if (response.data && response.status === 201) {
+      commit(MutationType.SetProject, response.data);
     }
   },
 
