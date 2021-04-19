@@ -7,7 +7,7 @@
       <div>{{ name }}</div>
     </template>
     <template #content>
-        <div>{{ description }}</div>
+        <div><vue3-markdown-it :source="description" /></div>
     </template>
     <template #footer>
       <div id="footer">

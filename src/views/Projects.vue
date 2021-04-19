@@ -26,7 +26,7 @@
     v-model:sortAscending="sortAscending">
   </FilterPanel>
   <masonry-layout maxcolwidth="400" gap="15" cols="auto">
-    <div v-for="project in projects" :key="project.id" class="projectCard">
+    <div v-for="project in projects" :key="project.id">
       <router-link :to="'/projects/' + project.id">
         <ProjectCard
           :id="project.id"

@@ -34,25 +34,41 @@ import { ActionTypes } from '../store/actions';
 import { Project } from '../types/bazaar-api';
 import { required, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
+import MarkdownIt from 'markdown-it';
 
 import TurndownService from 'turndown';
 
 export default defineComponent({
   name: 'ProjectEditor',
   props: {
+    name: {
+      type: String,
+      default: '',
+    },
+    description: {
+      type: String,
+      default: '',
+    },
+    projectId: {
+      type: Number,
+      required: false,
+    },
     onCancel: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
     onSave: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
   },
   emits: ['cancel', 'save'],
-  setup: (_, { emit }) => {
+  setup: ({ name, description, projectId }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
 
     const submitted = ref(false);
 
+    const markdown = new MarkdownIt();
+    const renderedHTML = markdown.render(description);
+
     const state = reactive({
-      name: '',
-      description: '',
+      name,
+      description: renderedHTML,
     });
     const rules = {
       name: { required, maxLengthValue: maxLength(50) },
@@ -84,10 +100,21 @@ export default defineComponent({
           return;
       }
 
-      createProject();
+      const project: Project = {
+        name: state.name,
+        description: turndownService.turndown(state.description),
+      };
+
+      if (!projectId) {
+        store.dispatch(ActionTypes.CreateProject, project);
+      } else {
+        project.id = projectId;
+        store.dispatch(ActionTypes.UpdateProject, { id: projectId, project });
+      }
+      emit('save');
     }
 
-    return { t, submitted, state, v$, cancel, handleSubmit };
+    return { t, submitted, state, v$, cancel, handleSubmit, turndownService };
   }
 })
 </script>

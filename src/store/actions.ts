@@ -11,6 +11,7 @@ export enum ActionTypes {
   FetchProject = 'FETCH_PROJECT',
   FollowProject = 'FOLLOW_PROJECT',
   CreateProject = 'CREATE_PROJECT',
+  UpdateProject = 'UPDATE_PROJECT',
   FetchCategoriesOfProject = 'FETCH_CATEGORIES',
   FetchCategory = 'FETCH_CATEGORY',
   FollowCategory = 'FOLLOW_CATEGORY',
@@ -153,6 +154,13 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.CreateProject]({ commit }, project) {
     const response = await bazaarApi.projects.createProject(project);
     if (response.data && response.status === 201) {
+      commit(MutationType.SetProject, response.data);
+    }
+  },
+
+  async [ActionTypes.UpdateProject]({ commit }, parameters) {
+    const response = await bazaarApi.projects.updateProject(parameters.id, parameters.project);
+    if (response.data && response.status === 200) {
       commit(MutationType.SetProject, response.data);
     }
   },

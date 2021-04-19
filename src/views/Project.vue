@@ -1,8 +1,17 @@
 <template>
   <h1>{{ project?.name }}</h1>
   <div id="description">
-    {{ project?.description }}
+    <vue3-markdown-it :source="project?.description" />
   </div>
+  <Dialog :header="t('editProject')" v-model:visible="displayProjectEditor" :style="{width: '50vw'}" :modal="true">
+    <ProjectEditor
+      :name="project?.name"
+      :description="project?.description"
+      :projectId="projectId"
+      @cancel="projectEditorCanceled"
+      @save="projectEditorSaved">
+    </ProjectEditor>
+  </Dialog>
   <div id="addCategoryPanel">
     <Button
       label="Add new Category..."
@@ -57,15 +66,18 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n';
 import { useConfirm } from 'primevue/useconfirm';
 import { ActionTypes } from '../store/actions';
+import { Project } from '../types/bazaar-api';
 
 import FilterPanel from '../components/FilterPanel.vue';
 import CategoryCard from '../components/CategoryCard.vue';
+import ProjectEditor from '../components/ProjectEditor.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
 
 export default defineComponent({
   components: {
     FilterPanel,
     CategoryCard,
+    ProjectEditor,
     CategoryEditor,
   },
   name: 'Project',
@@ -90,11 +102,27 @@ export default defineComponent({
         label: 'All Categories',
         to: `/projects/${projectId}/all`
       },
-      {
-        label: 'Members',
-        to: `/projects/${projectId}/members`
-      },
     ]);
+
+    const projectEditorName = ref('');
+    const projectEditorDescription = ref('');
+
+    watch(project, () => {
+
+      projectEditorName.value = project.value.name;
+      projectEditorDescription.value = project.value.description;
+
+      //const role = project.value.userContext?.projectRole;
+      //if (['ProjectAdmin', 'SystemAdmin'].includes(role)) {
+      if (project.value.userContext?.projectRole === 'ProjectAdmin') {
+        tabItems.value.push(
+          {
+            label: 'Members',
+            to: `/projects/${projectId}/members`
+          }
+        )
+      }
+    });
 
     const searchQuery = ref('');
     const selectedSort = ref('name');
@@ -136,11 +164,20 @@ export default defineComponent({
       });
     }
 
+    const displayProjectEditor = ref(false);
+    const projectEditorCanceled = () => {
+      displayProjectEditor.value = false;
+    }
+    const projectEditorSaved = () => {
+      displayProjectEditor.value = false;
+    }
+
     const moreItems = ref([
       {
         label: t('editProject'),
         icon: 'pi pi-pencil',
         command: () => {
+          displayProjectEditor.value = true;
         }
       },
       {
@@ -170,7 +207,28 @@ export default defineComponent({
       toggleAddCategory();
     }
 
-    return { t, showAddCategory, toggleAddCategory, editorCanceled, editorSaved, projectId, tabItems, moreItems, moreMenu, toggleMoreMenu, project, followClick, categories, searchQuery, selectedSort, sortOptions, sortAscending }
+    return {
+      t,
+      showAddCategory,
+      toggleAddCategory,
+      projectId,
+      tabItems,
+      moreItems,
+      moreMenu,
+      toggleMoreMenu,
+      project,
+      followClick,
+      categories,
+      searchQuery,
+      selectedSort,
+      sortOptions,
+      sortAscending,
+      editorCanceled,
+      editorSaved,
+      displayProjectEditor,
+      projectEditorCanceled,
+      projectEditorSaved,
+    }
   }
 })
 </script>

@@ -25,6 +25,11 @@
                 "moduleName": "./node_modules/primevue/confirmpopup/ConfirmPopup.vue"
             }
         },
+        "./node_modules/primevue/dialog/Dialog.vue", {
+            "Dialog": {
+                "moduleName": "./node_modules/primevue/dialog/Dialog.vue"
+            }
+        },
         "./node_modules/primevue/dropdown/Dropdown.vue", {
             "Dropdown": {
                 "moduleName": "./node_modules/primevue/dropdown/Dropdown.vue"
