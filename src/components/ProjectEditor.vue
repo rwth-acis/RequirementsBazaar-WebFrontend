@@ -1,5 +1,5 @@
 <template>
-  <div class="p-fluid p-p-3">
+  <div class="p-fluid">
     <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
       <div class="p-field">
         <label for="name">{{ t('formTitle') }}</label>
@@ -18,7 +18,7 @@
         </Editor>
         <small v-if="(v$.description.$invalid && submitted)" class="p-error">{{v$.description.required.$message.replace('Value', 'Description')}}</small>
       </div>
-      <div class="footer p-dialog-footer">
+      <div class="footer">
         <Button :label="t('cancel')" @click="cancel" class="p-button-outlined p-ml-2 p-mr-2" />
         <Button type="submit" :label="t('save')" />
       </div>
@@ -122,5 +122,9 @@ export default defineComponent({
 <style scoped>
   .footer {
     text-align: end;
+  }
+
+  .footer ::v-deep(.p-button) {
+    width: auto;
   }
 </style>
