@@ -78,7 +78,7 @@ export const router = createRouter({
       component: Project,
     },
     {
-      path: "/projects/:projectId/categories/:categoryId",
+      path: "/projects/:projectId/categories/:categoryId/:done?",
       name: "category",
       component: Category,
     },

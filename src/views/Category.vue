@@ -29,29 +29,34 @@
     </div>
   </div>
   <div id="content">
-    <FilterPanel
-      v-model:searchQuery="searchQuery"
-      :sortOptions="sortOptions"
-      v-model:selectedSort="selectedSort"
-      v-model:sortAscending="sortAscending">
-    </FilterPanel>
-    <div id="requirementsList">
-      <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
-        <RequirementCard
-          :id="requirement.id"
-          :name="requirement.name"
-          :description="requirement.description"
-          :upVotes="requirement.upVotes"
-          :numberOfComments="requirement.numberOfComments"
-          :numberOfFollowers="requirement.numberOfFollowers"
-          :creator="requirement.creator"
-          :creationDate="requirement.creationDate"
-          :userVoted="requirement.userContext.userVoted"
-          :isFollower="requirement.userContext.isFollower"
-          :isDeveloper="requirement.userContext.isDeveloper"
-          :realized="requirement.realized">
-        </RequirementCard>
+    <div v-show="!done">
+      <FilterPanel
+        v-model:searchQuery="searchQuery"
+        :sortOptions="sortOptions"
+        v-model:selectedSort="selectedSort"
+        v-model:sortAscending="sortAscending">
+      </FilterPanel>
+      <div id="requirementsList">
+        <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
+          <RequirementCard
+            :id="requirement.id"
+            :name="requirement.name"
+            :description="requirement.description"
+            :upVotes="requirement.upVotes"
+            :numberOfComments="requirement.numberOfComments"
+            :numberOfFollowers="requirement.numberOfFollowers"
+            :creator="requirement.creator"
+            :creationDate="requirement.creationDate"
+            :userVoted="requirement.userContext.userVoted"
+            :isFollower="requirement.userContext.isFollower"
+            :isDeveloper="requirement.userContext.isDeveloper"
+            :realized="requirement.realized">
+          </RequirementCard>
+        </div>
       </div>
+    </div>
+    <div v-show="done">
+      Nothing to see here.
     </div>
   </div>
 </template>
@@ -80,6 +85,9 @@ export default defineComponent({
     const confirm = useConfirm();
     
     const categoryId = Number.parseInt(route.params.categoryId.toString(), 10);
+    const projectId = Number.parseInt(route.params.projectId.toString(), 10);
+    const done = computed(() => route.params.done ? true : false);
+
     const category = computed(() => store.getters.getCategoryById(categoryId));
     store.dispatch(ActionTypes.FetchCategory, categoryId);
 
@@ -117,11 +125,11 @@ export default defineComponent({
     const tabItems = ref([
       {
         label: 'Active Requirements',
-        to: `/projects/`,
+        to: `/projects/${projectId}/categories/${categoryId}`,
       },
       {
         label: 'Completed Requirements',
-        to: `/projects/`,
+        to: `/projects/${projectId}/categories/${categoryId}/done`,
       },
     ]);
 
@@ -170,7 +178,7 @@ export default defineComponent({
       toggleAddRequirement();
     }
 
-    return { t, category, tabItems, moreMenu, toggleMoreMenu, moreItems, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement, followClick, editorCanceled, editorSaved }
+    return { t, category, done, tabItems, moreMenu, toggleMoreMenu, moreItems, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement, followClick, editorCanceled, editorSaved }
   }
 })
 </script>
