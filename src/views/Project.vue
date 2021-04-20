@@ -27,7 +27,6 @@
       </CategoryEditor>
     </div>
   </div>
-  <ConfirmDialog></ConfirmDialog>
   <div id="menuBar">
     <TabMenu id="tabMenu" :model="tabItems" />
     <div id="actionButtons">
@@ -66,7 +65,6 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n';
 import { useConfirm } from 'primevue/useconfirm';
 import { ActionTypes } from '../store/actions';
-import { Project } from '../types/bazaar-api';
 
 import FilterPanel from '../components/FilterPanel.vue';
 import CategoryCard from '../components/CategoryCard.vue';
@@ -155,6 +153,7 @@ export default defineComponent({
         message: t('deleteProjectDesc'),
         icon: 'pi pi-info-circle',
         acceptClass: 'p-button-danger',
+        group: 'dialog',
         accept: () => {
           console.log('deleted');
         },

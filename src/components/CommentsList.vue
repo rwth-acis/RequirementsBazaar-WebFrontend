@@ -1,6 +1,5 @@
 <template>
   <div>
-    <ConfirmPopup></ConfirmPopup>
     <div>
       <div v-for="comment in comments" :key="comment.id" class="comment p-mb-3">
         <div class="p-d-flex p-mb-1" :class="{ reply: comment.replyToComment }">
@@ -30,9 +29,10 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, defineComponent, onMounted, getCurrentInstance } from 'vue'
+import { computed, ref, defineComponent, onMounted } from 'vue'
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
+import { useConfirm } from "primevue/useconfirm";
 import { ActionTypes } from '../store/actions';
 import { MutationType } from '../store/mutations';
 import { Comment } from '../types/bazaar-api';
@@ -44,9 +44,9 @@ export default defineComponent({
     requirementId: { type: Number, required: true },
   },
   setup: ({ requirementId }) => {
-    const app = getCurrentInstance();
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
+    const confirm = useConfirm();
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const oidcUser = computed(() => store.getters['oidcStore/oidcUser']);
 
@@ -95,18 +95,18 @@ export default defineComponent({
     }
 
     const deleteComment = (event, commentId) => {
-      app?.appContext.config.globalProperties.$confirm.require({
-          target: event.currentTarget,
-          message: `${t('delCommTitle')}?`,
-          icon: 'pi pi-exclamation-triangle',
-          acceptClass: 'p-button-danger',
-          accept: () => {
-              //callback to execute when user confirms the action
-              store.dispatch(ActionTypes.DeleteComment, commentId);
-          },
-          reject: () => {
-              //callback to execute when user rejects the action
-          }
+      confirm.require({
+        target: event.currentTarget,
+        message: `${t('delCommTitle')}?`,
+        icon: 'pi pi-exclamation-triangle',
+        acceptClass: 'p-button-danger',
+        group: 'popup',
+        accept: () => {
+          store.dispatch(ActionTypes.DeleteComment, commentId);
+        },
+        reject: () => {
+          // do nothing
+        }
       });
     };
 

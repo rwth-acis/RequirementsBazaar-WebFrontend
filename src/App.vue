@@ -1,11 +1,12 @@
 <template>
   <div class="layout-wrapper layout-static layout-static-sidebar-inactive" :class="{'dir-rtl': isRtl}">
     <AppTopbar></AppTopbar>
-
     <div id="layout" :class="{ 'p-mr-3': !activityTrackerVisible }">
       <div id="container">
         <div id="content">
           <router-view></router-view>
+          <ConfirmDialog group="dialog"></ConfirmDialog>
+          <ConfirmPopup group="popup"></ConfirmPopup>
         </div>
         <footer>
           <router-link to="/about">About</router-link> <router-link to="/developer">Developer</router-link> <router-link to="/privacy">Privacy</router-link>
