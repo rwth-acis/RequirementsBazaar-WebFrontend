@@ -27,7 +27,7 @@ export enum ActionTypes {
   DeleteRequirement = 'DELETE_REQUIREMENT',
   CreateComment = 'CREATE_COMMENT',
   DeleteComment = 'DELETE_COMMENT',
-  
+
   FetchActivities = 'FETCH_ACTIVITIES',
 }
 
@@ -235,7 +235,7 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SetRequirementVote, parameters);
     let response : HttpResponse<any, void | Requirement>;
     if (parameters.userVoted === 'UP_VOTE') {
-      response = await bazaarApi.requirements.vote(parameters.requirementId, 'up');
+      response = await bazaarApi.requirements.vote(parameters.requirementId, { direction: 'up' });
     } else {
       response = await bazaarApi.requirements.unvote(parameters.requirementId);
     }
@@ -278,7 +278,7 @@ export const actions: ActionTree<State, State> & Actions = {
       commit(MutationType.SetRequirementIsDeveloper, {requirementId: parameters.requirementId, isDeveloper: !parameters.isDeveloper});
     }
   },
-  
+
   async [ActionTypes.RealizeRequirement]({ commit, getters }, parameters) {
     const realizedCached = getters.getRequirementById(parameters.requirementId).realized;
     const realizedDate = parameters.realized ? new Date().toISOString() : null;
