@@ -5,7 +5,7 @@
       <div class="lastupdate"><span :title="$dayjs(creationDate).format('LLL')">{{ $dayjs(creationDate).fromNow() }}</span> {{t('by')}} {{ creator?.userName }}</div>
     </template>
     <template #content>
-      <div><vue3-markdown-it :source="description" /></div>
+      <vue3-markdown-it :source="description" class="p-mt-3 p-mb-3" />
       <div id="figures">
         <div id="votes">{{ upVotes }} {{ t('votes') }}</div>
         <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
