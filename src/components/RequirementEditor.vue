@@ -14,6 +14,9 @@
               <button class="ql-bold"></button>
               <button class="ql-italic"></button>
             </span>
+            <span class="ql-formats">
+              <button class="ql-clean"></button>
+            </span>
           </template>
         </Editor>
         <small v-if="(v$.description.$invalid && submitted)" class="p-error">{{v$.description.required.$message.replace('Value', 'Description')}}</small>

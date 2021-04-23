@@ -1,5 +1,5 @@
 <template>
-  <div class="p-fluid p-p-3">
+  <div class="p-fluid">
     <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
       <div class="p-field">
         <label for="name">{{ t('formTitle') }}</label>
@@ -14,11 +14,14 @@
               <button class="ql-bold"></button>
               <button class="ql-italic"></button>
             </span>
+            <span class="ql-formats">
+              <button class="ql-clean"></button>
+            </span>
           </template>
         </Editor>
         <small v-if="(v$.description.$invalid && submitted)" class="p-error">{{v$.description.required.$message.replace('Value', 'Description')}}</small>
       </div>
-      <div class="footer p-dialog-footer">
+      <div class="footer">
         <Button :label="t('cancel')" @click="cancel" class="p-button-outlined p-ml-2 p-mr-2" />
         <Button type="submit" :label="t('save')" />
       </div>
@@ -34,26 +37,44 @@ import { ActionTypes } from '../store/actions';
 import { Category } from '../types/bazaar-api';
 import { required, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-
+import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
 
 export default defineComponent({
   name: 'CategoryEditor',
   props: {
-    projectId: { type: Number, required: true },
+    name: {
+      type: String,
+      default: '',
+    },
+    description: {
+      type: String,
+      default: '',
+    },
+    categoryId: {
+      type: Number,
+      required: false,
+    },
+    projectId: {
+      type: Number,
+      required: true
+    },
     onCancel: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
     onSave: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
   },
   emits: ['cancel', 'save'],
-  setup: ({ projectId }, { emit }) => {
+  setup: ({ name, description, categoryId, projectId }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
 
     const submitted = ref(false);
 
+    const markdown = new MarkdownIt();
+    const renderedHTML = markdown.render(description);
+
     const state = reactive({
-      name: '',
-      description: '',
+      name,
+      description: renderedHTML,
     });
     const rules = {
       name: { required, maxLengthValue: maxLength(50) },
@@ -62,18 +83,6 @@ export default defineComponent({
     const v$ = useVuelidate(rules, state);
     
     const turndownService = new TurndownService();
-
-    const createCategory = () => {
-      const category: Category = {
-        name: state.name,
-        description: turndownService.turndown(state.description),
-        projectId: projectId,
-      };
-      
-      store.dispatch(ActionTypes.CreateCategory, category);
-
-      emit('save');
-    };
 
     const cancel = () => {
       emit('cancel');
@@ -86,10 +95,22 @@ export default defineComponent({
           return;
       }
 
-      createCategory();
+      const category: Category = {
+        name: state.name,
+        description: turndownService.turndown(state.description),
+        projectId: projectId,
+      };
+
+      if (!categoryId) {
+        store.dispatch(ActionTypes.CreateCategory, category);
+      } else {
+        category.id = categoryId;
+        store.dispatch(ActionTypes.UpdateCategory, { id: categoryId, category });
+      }
+      emit('save');
     }
 
-    return { t, submitted, state, v$, cancel, handleSubmit };
+    return { t, submitted, state, v$, cancel, handleSubmit, turndownService };
   }
 })
 </script>
@@ -97,5 +118,9 @@ export default defineComponent({
 <style scoped>
   .footer {
     text-align: end;
+  }
+
+  .footer ::v-deep(.p-button) {
+    width: auto;
   }
 </style>

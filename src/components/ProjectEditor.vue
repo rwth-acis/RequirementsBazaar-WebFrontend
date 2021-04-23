@@ -14,6 +14,9 @@
               <button class="ql-bold"></button>
               <button class="ql-italic"></button>
             </span>
+            <span class="ql-formats">
+              <button class="ql-clean"></button>
+            </span>
           </template>
         </Editor>
         <small v-if="(v$.description.$invalid && submitted)" class="p-error">{{v$.description.required.$message.replace('Value', 'Description')}}</small>
@@ -35,7 +38,6 @@ import { Project } from '../types/bazaar-api';
 import { required, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import MarkdownIt from 'markdown-it';
-
 import TurndownService from 'turndown';
 
 export default defineComponent({
@@ -77,17 +79,6 @@ export default defineComponent({
     const v$ = useVuelidate(rules, state);
     
     const turndownService = new TurndownService();
-
-    const createProject = () => {
-      const project: Project = {
-        name: state.name,
-        description: turndownService.turndown(state.description),
-      };
-      
-      store.dispatch(ActionTypes.CreateProject, project);
-
-      emit('save');
-    };
 
     const cancel = () => {
       emit('cancel');

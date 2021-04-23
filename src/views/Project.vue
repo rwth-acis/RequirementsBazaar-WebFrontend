@@ -7,7 +7,7 @@
     <ProjectEditor
       :name="project?.name"
       :description="project?.description"
-      :projectId="projectId"
+      :projectId="project?.id"
       @cancel="projectEditorCanceled"
       @save="projectEditorSaved">
     </ProjectEditor>
@@ -21,7 +21,7 @@
       <CategoryEditor
         class="categoryEditor"
         v-if="showAddCategory"
-        :projectId="projectId"
+        :projectId="project?.id"
         @cancel="editorCanceled"
         @save="editorSaved">
       </CategoryEditor>
@@ -210,7 +210,6 @@ export default defineComponent({
       t,
       showAddCategory,
       toggleAddCategory,
-      projectId,
       tabItems,
       moreItems,
       moreMenu,

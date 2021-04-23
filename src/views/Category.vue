@@ -2,8 +2,18 @@
   <ScrollTop />
   <h1>{{ category?.name }}</h1>
   <div id="description">
-    {{ category?.description }}
+    <vue3-markdown-it :source="category?.description" />
   </div>
+  <Dialog :header="t('editCategory')" v-model:visible="displayCategoryEditor" :style="{width: '50vw'}" :modal="true">
+    <CategoryEditor
+      :name="category?.name"
+      :description="category?.description"
+      :categoryId="category?.id"
+      :projectId="category?.projectId"
+      @cancel="categoryEditorCanceled"
+      @save="categoryEditorSaved">
+    </CategoryEditor>
+  </Dialog>
   <div id="addRequirementPanel">
     <Button
       label="Add new Requirement..."
@@ -71,11 +81,12 @@ import { ActionTypes } from '../store/actions';
 
 import FilterPanel from '../components/FilterPanel.vue';
 import RequirementCard from '../components/RequirementCard.vue';
+import CategoryEditor from '../components/CategoryEditor.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
 
 export default defineComponent({
   name: 'Category',
-  components: { FilterPanel, RequirementCard, RequirementEditor },
+  components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor },
   props: {
   },
   setup: (props) => {
@@ -149,6 +160,14 @@ export default defineComponent({
       });
     }
 
+    const displayCategoryEditor = ref(false);
+    const categoryEditorCanceled = () => {
+      displayCategoryEditor.value = false;
+    }
+    const categoryEditorSaved = () => {
+      displayCategoryEditor.value = false;
+    }
+
     const moreMenu = ref(null);
     const toggleMoreMenu = (event) => {
       (moreMenu as any).value.toggle(event);
@@ -158,7 +177,7 @@ export default defineComponent({
         label: t('editCategory'),
         icon: 'pi pi-pencil',
         command: () => {
-          console.log('edit category');
+          displayCategoryEditor.value = true;
         }
       },
       {
@@ -178,7 +197,28 @@ export default defineComponent({
       toggleAddRequirement();
     }
 
-    return { t, category, done, tabItems, moreMenu, toggleMoreMenu, moreItems, requirements, searchQuery, sortOptions, selectedSort, sortAscending, showAddRequirement, toggleAddRequirement, followClick, editorCanceled, editorSaved }
+    return {
+      t,
+      category,
+      done,
+      tabItems,
+      moreMenu,
+      toggleMoreMenu,
+      moreItems,
+      requirements,
+      searchQuery,
+      sortOptions,
+      selectedSort,
+      sortAscending,
+      showAddRequirement,
+      toggleAddRequirement,
+      followClick,
+      editorCanceled,
+      editorSaved,
+      displayCategoryEditor,
+      categoryEditorCanceled,
+      categoryEditorSaved,
+    }
   }
 })
 </script>

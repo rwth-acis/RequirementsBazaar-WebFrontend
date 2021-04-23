@@ -4,7 +4,7 @@
       <div>{{ name }}</div>
     </template>
     <template #content>
-      <div>{{ description }}</div>
+      <vue3-markdown-it :source="description" />
     </template>
     <template #footer>
       <div id="footer">
@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { defineComponent } from 'vue'
 
 import { followersIcon, requirementsIcon } from '../assets/reqbaz-icons.js';
 

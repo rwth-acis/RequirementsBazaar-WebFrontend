@@ -106,17 +106,10 @@ export interface Category {
 }
 
 export interface UserContext {
-  /** The role the user has within the project. Only returned when requesting project resources. */
-  userRole?: "ProjectMember" | "ProjectManager" | "ProjectAdmin";
-
-  /** Only returned when requesting requirement resources. */
+  projectRole?: "ProjectMember" | "ProjectManager" | "ProjectAdmin";
   userVoted?: "UP_VOTE" | "DOWN_VOTE" | "NO_VOTE";
-  isFollower: boolean;
-
-  /** Only returned when requesting requirement resources. */
+  isFollower?: boolean;
   isDeveloper?: boolean;
-
-  /** Only returned when requesting requirement resources. */
   isContributor?: boolean;
 }
 
@@ -266,8 +259,8 @@ export interface ProjectMember {
   /** @format int32 */
   userId: number;
   role: "ProjectMember" | "ProjectManager" | "ProjectAdmin";
-  userName?: string;
   userProfileImage?: string;
+  userName?: string;
 }
 
 export interface ProjectContributors {
@@ -278,10 +271,6 @@ export interface ProjectContributors {
   developers?: User[];
   commentCreator?: User[];
   attachmentCreator?: User[];
-}
-
-export interface Direction {
-  direction?: "up" | "down";
 }
 
 export interface RequirementContributors {
@@ -420,21 +409,6 @@ export namespace Categories {
   /**
    * No description
    * @tags categories
-   * @name UpdateCategory
-   * @summary This method allows to update a certain category.
-   * @request PUT:/categories
-   * @secure
-   */
-  export namespace UpdateCategory {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = Category;
-    export type RequestHeaders = {};
-    export type ResponseBody = Category;
-  }
-  /**
-   * No description
-   * @tags categories
    * @name GetStatisticsForCategory
    * @summary This method allows to retrieve statistics for one category.
    * @request GET:/categories/{categoryId}/statistics
@@ -526,6 +500,21 @@ export namespace Categories {
     export type RequestParams = { categoryId: number };
     export type RequestQuery = {};
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Category;
+  }
+  /**
+   * No description
+   * @tags categories
+   * @name UpdateCategory
+   * @summary This method allows to update a certain category.
+   * @request PUT:/categories/{categoryId}
+   * @secure
+   */
+  export namespace UpdateCategory {
+    export type RequestParams = { categoryId: number };
+    export type RequestQuery = {};
+    export type RequestBody = Category;
     export type RequestHeaders = {};
     export type ResponseBody = Category;
   }
@@ -737,21 +726,6 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
-   * @name UpdateProject
-   * @summary This method allows to update a certain project.
-   * @request PUT:/projects
-   * @secure
-   */
-  export namespace UpdateProject {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = Project;
-    export type RequestHeaders = {};
-    export type ResponseBody = Project;
-  }
-  /**
-   * No description
-   * @tags projects
    * @name GetStatisticsForProject
    * @summary This method allows to retrieve statistics for one project.
    * @request GET:/projects/{projectId}/statistics
@@ -812,6 +786,27 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
+   * @name GetCategoriesForProject
+   * @summary This method returns the list of categories under a given project.
+   * @request GET:/projects/{projectId}/categories
+   * @secure
+   */
+  export namespace GetCategoriesForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Category[];
+  }
+  /**
+   * No description
+   * @tags projects
    * @name GetRequirementsForProject
    * @summary This method returns the list of requirements for a specific project.
    * @request GET:/projects/{projectId}/requirements
@@ -834,27 +829,6 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
-   * @name GetCategoriesForProject
-   * @summary This method returns the list of categories under a given project.
-   * @request GET:/projects/{projectId}/categories
-   * @secure
-   */
-  export namespace GetCategoriesForProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-      sortDirection?: "ASC" | "DESC";
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Category[];
-  }
-  /**
-   * No description
-   * @tags projects
    * @name GetProject
    * @summary This method allows to retrieve a certain project.
    * @request GET:/projects/{projectId}
@@ -864,6 +838,21 @@ export namespace Projects {
     export type RequestParams = { projectId: number };
     export type RequestQuery = {};
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Project;
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name UpdateProject
+   * @summary This method allows to update a certain project.
+   * @request PUT:/projects/{projectId}
+   * @secure
+   */
+  export namespace UpdateProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = Project;
     export type RequestHeaders = {};
     export type ResponseBody = Project;
   }
@@ -907,6 +896,44 @@ export namespace Projects {
 }
 
 export namespace Requirements {
+  /**
+   * No description
+   * @tags requirements
+   * @name GetRequirements
+   * @summary This method returns the list of requirements on the server.
+   * @request GET:/requirements
+   * @secure
+   */
+  export namespace GetRequirements {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+      filters: ("created" | "following")[];
+      embedParents: "project"[];
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement[];
+  }
+  /**
+   * No description
+   * @tags requirements
+   * @name CreateRequirement
+   * @summary This method allows to create a new requirement.
+   * @request POST:/requirements
+   * @secure
+   */
+  export namespace CreateRequirement {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = Requirement;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement;
+  }
   /**
    * No description
    * @tags requirements
@@ -978,7 +1005,7 @@ export namespace Requirements {
   export namespace Vote {
     export type RequestParams = { requirementId: number };
     export type RequestQuery = {};
-    export type RequestBody = Direction;
+    export type RequestBody = string;
     export type RequestHeaders = {};
     export type ResponseBody = any;
   }
@@ -994,59 +1021,6 @@ export namespace Requirements {
     export type RequestParams = { requirementId: number };
     export type RequestQuery = {};
     export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement;
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name GetRequirements
-   * @summary This method returns the list of requirements on the server.
-   * @request GET:/requirements
-   * @secure
-   */
-  export namespace GetRequirements {
-    export type RequestParams = {};
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-      sortDirection?: "ASC" | "DESC";
-      filters: ("created" | "following")[];
-      embedParents: "project"[];
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement[];
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name CreateRequirement
-   * @summary This method allows to create a new requirement.
-   * @request POST:/requirements
-   * @secure
-   */
-  export namespace CreateRequirement {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = Requirement;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement;
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name UpdateRequirement
-   * @summary This method updates a requirement.
-   * @request PUT:/requirements
-   * @secure
-   */
-  export namespace UpdateRequirement {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = Requirement;
     export type RequestHeaders = {};
     export type ResponseBody = Requirement;
   }
@@ -1092,6 +1066,21 @@ export namespace Requirements {
     export type RequestParams = { requirementId: number };
     export type RequestQuery = {};
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement;
+  }
+  /**
+   * No description
+   * @tags requirements
+   * @name UpdateRequirement
+   * @summary This method updates a specific requirement.
+   * @request PUT:/requirements/{requirementId}
+   * @secure
+   */
+  export namespace UpdateRequirement {
+    export type RequestParams = { requirementId: number };
+    export type RequestQuery = {};
+    export type RequestBody = Requirement;
     export type RequestHeaders = {};
     export type ResponseBody = Requirement;
   }
@@ -1659,26 +1648,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags categories
-     * @name UpdateCategory
-     * @summary This method allows to update a certain category.
-     * @request PUT:/categories
-     * @secure
-     */
-    updateCategory: (body: Category, params: RequestParams = {}) =>
-      this.request<Category, void>({
-        path: `/categories`,
-        method: "PUT",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags categories
      * @name GetStatisticsForCategory
      * @summary This method allows to retrieve statistics for one category.
      * @request GET:/categories/{categoryId}/statistics
@@ -1797,6 +1766,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/categories/${categoryId}`,
         method: "GET",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags categories
+     * @name UpdateCategory
+     * @summary This method allows to update a certain category.
+     * @request PUT:/categories/{categoryId}
+     * @secure
+     */
+    updateCategory: (categoryId: number, body: Category, params: RequestParams = {}) =>
+      this.request<Category, void>({
+        path: `/categories/${categoryId}`,
+        method: "PUT",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2055,26 +2044,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
-     * @name UpdateProject
-     * @summary This method allows to update a certain project.
-     * @request PUT:/projects
-     * @secure
-     */
-    updateProject: (body: Project, params: RequestParams = {}) =>
-      this.request<Project, void>({
-        path: `/projects`,
-        method: "PUT",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
      * @name GetStatisticsForProject
      * @summary This method allows to retrieve statistics for one project.
      * @request GET:/projects/{projectId}/statistics
@@ -2153,6 +2122,35 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
+     * @name GetCategoriesForProject
+     * @summary This method returns the list of categories under a given project.
+     * @request GET:/projects/{projectId}/categories
+     * @secure
+     */
+    getCategoriesForProject: (
+      projectId: number,
+      query?: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Category[], void>({
+        path: `/projects/${projectId}/categories`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
      * @name GetRequirementsForProject
      * @summary This method returns the list of requirements for a specific project.
      * @request GET:/projects/{projectId}/requirements
@@ -2183,35 +2181,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
-     * @name GetCategoriesForProject
-     * @summary This method returns the list of categories under a given project.
-     * @request GET:/projects/{projectId}/categories
-     * @secure
-     */
-    getCategoriesForProject: (
-      projectId: number,
-      query?: {
-        page?: number;
-        per_page?: number;
-        search?: string;
-        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-        sortDirection?: "ASC" | "DESC";
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Category[], void>({
-        path: `/projects/${projectId}/categories`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
      * @name GetProject
      * @summary This method allows to retrieve a certain project.
      * @request GET:/projects/{projectId}
@@ -2222,6 +2191,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/projects/${projectId}`,
         method: "GET",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name UpdateProject
+     * @summary This method allows to update a certain project.
+     * @request PUT:/projects/{projectId}
+     * @secure
+     */
+    updateProject: (projectId: number, body: Project, params: RequestParams = {}) =>
+      this.request<Project, void>({
+        path: `/projects/${projectId}`,
+        method: "PUT",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2275,6 +2264,56 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
   };
   requirements = {
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name GetRequirements
+     * @summary This method returns the list of requirements on the server.
+     * @request GET:/requirements
+     * @secure
+     */
+    getRequirements: (
+      query: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
+        filters: ("created" | "following")[];
+        embedParents: "project"[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Requirement[], void>({
+        path: `/requirements`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name CreateRequirement
+     * @summary This method allows to create a new requirement.
+     * @request POST:/requirements
+     * @secure
+     */
+    createRequirement: (body: Requirement, params: RequestParams = {}) =>
+      this.request<Requirement, void>({
+        path: `/requirements`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
     /**
      * No description
      *
@@ -2362,8 +2401,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/requirements/{requirementId}/votes
      * @secure
      */
-    vote: (requirementId: number, body: Direction, params: RequestParams = {}) =>
-      this.request<any, void>({
+    vote: (requirementId: number, body: string, params: RequestParams = {}) =>
+      this.request<any, Requirement | void>({
         path: `/requirements/${requirementId}/votes`,
         method: "POST",
         body: body,
@@ -2386,76 +2425,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/requirements/${requirementId}/votes`,
         method: "DELETE",
         secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name GetRequirements
-     * @summary This method returns the list of requirements on the server.
-     * @request GET:/requirements
-     * @secure
-     */
-    getRequirements: (
-      query: {
-        page?: number;
-        per_page?: number;
-        search?: string;
-        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-        sortDirection?: "ASC" | "DESC";
-        filters: ("created" | "following")[];
-        embedParents: "project"[];
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Requirement[], void>({
-        path: `/requirements`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name CreateRequirement
-     * @summary This method allows to create a new requirement.
-     * @request POST:/requirements
-     * @secure
-     */
-    createRequirement: (body: Requirement, params: RequestParams = {}) =>
-      this.request<Requirement, void>({
-        path: `/requirements`,
-        method: "POST",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name UpdateRequirement
-     * @summary This method updates a requirement.
-     * @request PUT:/requirements
-     * @secure
-     */
-    updateRequirement: (body: Requirement, params: RequestParams = {}) =>
-      this.request<Requirement, void>({
-        path: `/requirements`,
-        method: "PUT",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2520,6 +2489,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/requirements/${requirementId}`,
         method: "GET",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name UpdateRequirement
+     * @summary This method updates a specific requirement.
+     * @request PUT:/requirements/{requirementId}
+     * @secure
+     */
+    updateRequirement: (requirementId: number, body: Requirement, params: RequestParams = {}) =>
+      this.request<Requirement, void>({
+        path: `/requirements/${requirementId}`,
+        method: "PUT",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
