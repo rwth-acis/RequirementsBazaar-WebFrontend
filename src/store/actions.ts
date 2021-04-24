@@ -21,6 +21,7 @@ export enum ActionTypes {
   FetchRequirement = 'FETCH_REQUIREMENT',
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
   CreateRequirement = 'CREATE_REQUIREMENT',
+  UpdateRequirement = 'UPDATE_REQUIREMENT',
   VoteRequirement = 'VOTE_REQUIREMENT',
   FollowRequirement = 'FOLLOW_REQUIREMENT',
   DevelopRequirement = 'DEVELOP_REQUIREMENT',
@@ -51,6 +52,11 @@ type UpdateProjectParameters = {
 type UpdateCategoryParameters = {
   id: number,
   category: Category,
+}
+
+type UpdateRequirementParameters = {
+  id: number,
+  requirement: Requirement,
 }
 
 type CategoriesRequestParameters = {
@@ -121,6 +127,7 @@ export type Actions = {
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
+  [ActionTypes.UpdateRequirement](context: ActionAugments, payload: UpdateRequirementParameters): void;
   [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
   [ActionTypes.FollowRequirement](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.DevelopRequirement](context: ActionAugments, payload: DevelopRequirementParameters): void;
@@ -246,6 +253,13 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.CreateRequirement]({ commit }, requirement) {
     const response = await bazaarApi.requirements.createRequirement(requirement);
     if (response.data && response.status === 201) {
+      commit(MutationType.SetRequirement, response.data);
+    }
+  },
+
+  async [ActionTypes.UpdateRequirement]({ commit }, parameters) {
+    const response = await bazaarApi.requirements.updateRequirement(parameters.id, parameters.requirement);
+    if (response.data && response.status === 200) {
       commit(MutationType.SetRequirement, response.data);
     }
   },

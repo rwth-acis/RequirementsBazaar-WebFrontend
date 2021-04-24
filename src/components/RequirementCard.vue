@@ -2,9 +2,25 @@
   <Card id="card">
     <template #title>
       <div>{{ name }}</div>
-      <div class="lastupdate"><span :title="$dayjs(creationDate).format('LLL')">{{ $dayjs(creationDate).fromNow() }}</span> {{t('by')}} {{ creator?.userName }}</div>
+      <div class="lastupdate">
+        <span :title="$dayjs(creationDate).format('LLL')">{{ $dayjs(creationDate).fromNow() }}</span>
+        {{t('by')}} {{ creator?.userName }}
+        <!--<i class="pi pi-pencil" style="fontSize: 0.7rem" v-if="creationDate !== lastActivity" :title="`initially created on ${$dayjs(lastActivity).format('LLL')}`"></i>-->
+      </div>
     </template>
     <template #content>
+      <Dialog :header="t('editCategory')" v-model:visible="displayRequirementEditor" :style="{width: '50vw'}" :modal="true">
+        <RequirementEditor
+          class="requirementEditor"
+          :requirementId="id"
+          :projectId="projectId"
+          :categories="categories"
+          :name="name"
+          :description="description"
+          @cancel="requirementEditorCanceled"
+          @save="requirementEditorSaved">
+        </RequirementEditor>
+      </Dialog>
       <vue3-markdown-it :source="description" class="p-mt-3 p-mb-3" />
       <div id="figures">
         <div id="votes">{{ upVotes }} {{ t('votes') }}</div>
@@ -27,21 +43,26 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, toRefs, defineComponent, watch } from 'vue';
+import { computed, ref, toRefs, defineComponent, watch, PropType } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 import { useConfirm } from "primevue/useconfirm";
 import CommentsList from './CommentsList.vue';
 
+import RequirementEditor from '../components/RequirementEditor.vue';
+
 export default defineComponent({
-  components: { CommentsList },
+  components: { CommentsList, RequirementEditor },
   name: 'RequirementCard',
   props: {
     id: { type: Number, required: true },
+    projectId: { type: Number, required: true },
+    categories: { type: Array as PropType<Array<number>>, required: true },
     name: { type: String, required: true },
     creator: { type: Object, required: true },
     creationDate: { type: String, required: true },
+    lastActivity: { type: String, required: true },
     description: { type: String, required: true },
     upVotes: { type: Number, required: true },
     numberOfComments: { type: Number, required: true },
@@ -96,19 +117,20 @@ export default defineComponent({
       });
     }
 
+    const displayRequirementEditor = ref(false);
+    const requirementEditorCanceled = () => {
+      displayRequirementEditor.value = false;
+    }
+    const requirementEditorSaved = () => {
+      displayRequirementEditor.value = false;
+    }
+
     const menuItems = ref();
     // watch multiple props
     watch(
       [locale, isFollower, isDeveloper, realized],
       ([_, isFollower, isDeveloper, realized]) => {
         menuItems.value = [
-          {
-            label: t('editRequirement'),
-            icon: 'pi pi-pencil',
-            command: () => {
-              debugger;
-            }
-          },
           {
             label: isFollower ? t('unfollowRequirement') : t('followRequirement'),
             icon: 'pi pi-bell',
@@ -128,6 +150,13 @@ export default defineComponent({
             icon: 'pi pi-check',
             command: () => {
               store.dispatch(ActionTypes.RealizeRequirement, {requirementId: id.value, realized: realized ? false : true});
+            }
+          },
+          {
+            label: t('editRequirement'),
+            icon: 'pi pi-pencil',
+            command: () => {
+              displayRequirementEditor.value = true;
             }
           },
           {
@@ -179,7 +208,22 @@ export default defineComponent({
       },
     ]);
 
-    return { voted, showComments, toggleCommentsPanel, toggleVote, t, toggleMenu, menu, menuItems, shareMenu, shareMenuItems, toggleShareMenu };
+    return {
+      voted,
+      showComments,
+      toggleCommentsPanel,
+      toggleVote,
+      t,
+      toggleMenu,
+      menu,
+      menuItems,
+      shareMenu,
+      shareMenuItems,
+      toggleShareMenu,
+      displayRequirementEditor,
+      requirementEditorCanceled,
+      requirementEditorSaved,
+    };
   },
 })
 </script>

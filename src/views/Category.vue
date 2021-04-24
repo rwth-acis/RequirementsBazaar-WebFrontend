@@ -24,7 +24,7 @@
         class="requirementEditor"
         v-if="showAddRequirement"
         :projectId="category?.projectId"
-        :categoryId="category?.id"
+        :categories="[category?.id]"
         @cancel="editorCanceled"
         @save="editorSaved">
       </RequirementEditor>
@@ -50,6 +50,8 @@
         <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
           <RequirementCard
             :id="requirement.id"
+            :projectId="requirement.projectId"
+            :categories="requirement.categories"
             :name="requirement.name"
             :description="requirement.description"
             :upVotes="requirement.upVotes"
@@ -57,6 +59,7 @@
             :numberOfFollowers="requirement.numberOfFollowers"
             :creator="requirement.creator"
             :creationDate="requirement.creationDate"
+            :lastActivity="requirement.lastActivity"
             :userVoted="requirement.userContext.userVoted"
             :isFollower="requirement.userContext.isFollower"
             :isDeveloper="requirement.userContext.isDeveloper"

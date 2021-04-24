@@ -98,7 +98,7 @@ export default defineComponent({
       const category: Category = {
         name: state.name,
         description: turndownService.turndown(state.description),
-        projectId: projectId,
+        projectId,
       };
 
       if (!categoryId) {
