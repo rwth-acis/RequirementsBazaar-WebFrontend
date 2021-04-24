@@ -107,9 +107,9 @@ export default defineComponent({
         message: t('deleteRequirementDesc'),
         icon: 'pi pi-info-circle',
         acceptClass: 'p-button-danger',
+        group: 'dialog',
         accept: () => {
-          console.log(`deleted requirement ${id.value}`);
-          // store.dispatch(ActionTypes.DeleteRequirement, id.value);
+          store.dispatch(ActionTypes.DeleteRequirement, id.value);
         },
         reject: () => {
           console.log('not deleted');
