@@ -1,5 +1,12 @@
 <template>
   <div>
+    <Dialog :header="t('editComment')" v-model:visible="displayCommentEditor" :style="{width: '50vw'}" :modal="true">
+      <InputText type="text" v-model="editedCommentMessage" class="input" autofocus />
+      <template #footer>
+        <Button :label="t('cancel')" icon="pi pi-times" @click="commentEditorCanceled" class="p-button-text"/>
+        <Button :label="t('save')" icon="pi pi-check" @click="commentEditorSaved" />
+      </template>
+    </Dialog>
     <div>
       <div v-for="comment in comments" :key="comment.id" class="comment p-mb-3">
         <div class="p-d-flex p-mb-1" :class="{ reply: comment.replyToComment }">
@@ -9,7 +16,10 @@
                 <div class="info">
                   <span v-if="oidcIsAuthenticated">
                     <span class="action" @click="toggleReply($event, comment)">{{ t('reply') }}</span> ·
-                    <span v-if="oidcUser.preferred_username === comment.creator.userName"><span class="action" @click="deleteComment($event, comment.id)">{{ t('delete') }}</span> · </span>
+                    <span v-if="oidcUser.preferred_username === comment.creator.userName">
+                      <!--<span class="action" @click="editComment(comment)">{{ t('edit') }}</span> · -->
+                      <span class="action" @click="deleteComment($event, comment.id)">{{ t('delete') }}</span> ·
+                    </span>
                   </span>
                   <span :title="$dayjs(comment.creationDate).format('LLL')">{{ $dayjs(comment.creationDate).fromNow() }}</span>{{ t('by') }}{{ comment.creator.userName }}
                 </div>
@@ -110,7 +120,44 @@ export default defineComponent({
       });
     };
 
-    return { t, comments, oidcIsAuthenticated, oidcUser, message, createComment, toggleReply, deleteComment, input, selectInput };
+    const displayCommentEditor = ref(false);
+    const editedCommentMessage = ref('');
+    let editedComment: Comment;
+    const editComment = (comment: Comment) => {
+      editedComment = comment;
+      editedCommentMessage.value = comment.message;
+      displayCommentEditor.value = true;
+    };
+    const commentEditorSaved = () => {
+      displayCommentEditor.value = false;
+      if (editedComment && editedComment.id) {
+        const comment: Comment = {
+          id: editedComment.id,
+          message: editedCommentMessage.value,
+        };
+      }
+    }
+    const commentEditorCanceled = () => {
+      displayCommentEditor.value = false;
+    }
+
+    return {
+      t,
+      comments,
+      oidcIsAuthenticated,
+      oidcUser,
+      message,
+      createComment,
+      toggleReply,
+      editComment,
+      deleteComment,
+      input,
+      selectInput,
+      displayCommentEditor,
+      commentEditorCanceled,
+      editedCommentMessage,
+      commentEditorSaved,
+    };
   }
 })
 </script>
@@ -122,6 +169,10 @@ export default defineComponent({
 
   .reply {
     padding-left: 3rem;
+  }
+
+  .input {
+    width: 100%;
   }
 
   .addComment {
