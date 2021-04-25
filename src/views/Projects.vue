@@ -46,6 +46,7 @@
 import { computed, ref, watch, defineComponent, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useConfirm } from "primevue/useconfirm";
 import { ActionTypes } from '../store/actions';
 
 import '@appnest/masonry-layout';
@@ -61,6 +62,8 @@ export default defineComponent({
   setup: () => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
+    const confirm = useConfirm();
+    const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
 
     const searchQuery = ref('');
     const selectedSort = ref('name');
@@ -106,7 +109,18 @@ export default defineComponent({
 
     const showAddProject = ref(false);
     const toggleAddProject = () => {
-      showAddProject.value = !showAddProject.value;
+      if (oidcIsAuthenticated.value) {
+        showAddProject.value = !showAddProject.value;
+      } else {
+        confirm.require({
+          group: 'dialog',
+          message: 'You need to sign in to create a project.',
+          header: 'Login',
+          icon: 'pi pi-info-circle',
+          rejectClass: 'p-sr-only',
+          acceptLabel: 'OK',
+        });
+      }
     }
 
     const editorCanceled = () => {

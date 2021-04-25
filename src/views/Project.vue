@@ -31,7 +31,7 @@
     <TabMenu id="tabMenu" :model="tabItems" />
     <div id="actionButtons">
       <Button icon="pi pi-bell" :label="project?.userContext?.isFollower ? t('unfollowProject') : t('followProject')" class="p-button-sm" :class="{ 'p-button-outlined': !project?.userContext?.isFollower }" @click="followClick"></Button>
-      <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu"></Button>
+      <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
     </div>
   </div>
@@ -85,6 +85,7 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     const { t } = useI18n({ useScope: 'global' });
+    const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const confirm = useConfirm();
     
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
@@ -93,13 +94,14 @@ export default defineComponent({
 
     const tabItems = ref([
       {
-        label: 'Overview',
+        label: 'All Categories', // was: 'Overview'
         to: `/projects/${projectId}`
       },
+      /*
       {
         label: 'All Categories',
         to: `/projects/${projectId}/all`
-      },
+      },*/
     ]);
 
     const projectEditorName = ref('');
@@ -144,7 +146,18 @@ export default defineComponent({
     watch(parameters, () => store.dispatch(ActionTypes.FetchCategoriesOfProject, {projectId: projectId, query: parameters.value}));
 
     const followClick = () => {
-      store.dispatch(ActionTypes.FollowProject, {id: projectId, isFollower: project.value.userContext.isFollower ? false : true});
+      if (oidcIsAuthenticated.value) {
+        store.dispatch(ActionTypes.FollowProject, {id: projectId, isFollower: project.value.userContext.isFollower ? false : true});
+      } else {
+        confirm.require({
+          group: 'dialog',
+          message: 'You need to sign in to follow a project.',
+          header: 'Login',
+          icon: 'pi pi-info-circle',
+          rejectClass: 'p-sr-only',
+          acceptLabel: 'OK',
+        });
+      }
     };
 
     const confirmDelete = () => {
@@ -179,13 +192,13 @@ export default defineComponent({
           displayProjectEditor.value = true;
         }
       },
-      {
+      /*{
         label: t('deleteProjectTitle'),
         icon: 'pi pi-times',
         command: () => {
           confirmDelete();
         }
-      },
+      },*/
     ]);
 
     const moreMenu = ref(null);
@@ -195,7 +208,18 @@ export default defineComponent({
 
     const showAddCategory = ref(false);
     const toggleAddCategory = () => {
-      showAddCategory.value = !showAddCategory.value;
+      if (oidcIsAuthenticated.value) {
+        showAddCategory.value = !showAddCategory.value;
+      } else {
+        confirm.require({
+          group: 'dialog',
+          message: 'You need to sign in to create a category.',
+          header: 'Login',
+          icon: 'pi pi-info-circle',
+          rejectClass: 'p-sr-only',
+          acceptLabel: 'OK',
+        });
+      }
     }
 
     const editorCanceled = () => {
@@ -208,6 +232,7 @@ export default defineComponent({
 
     return {
       t,
+      oidcIsAuthenticated,
       showAddCategory,
       toggleAddCategory,
       tabItems,

@@ -34,7 +34,7 @@
           <Button label="Share" class="p-button-outlined" @click="toggleShareMenu"></Button>
           <Menu ref="shareMenu" :model="shareMenuItems" :popup="true" />
         </div>
-        <Button type="button" class="p-button-outlined" label="..." @click="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
+        <Button v-if="oidcIsAuthenticated" type="button" class="p-button-outlined moreButton" label="..." @click="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
         <Menu ref="menu" :model="menuItems" :popup="true" />
       </div>
       <comments-list :requirementId="id" v-if="showComments" class="commentsList"></comments-list>
@@ -87,13 +87,27 @@ export default defineComponent({
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const voted = computed(() => oidcIsAuthenticated.value && (userVoted.value === 'UP_VOTE'));
 
+    const alertLogin = (message: string) => {
+      confirm.require({
+          group: 'dialog',
+          message: message,
+          header: 'Login',
+          icon: 'pi pi-info-circle',
+          rejectClass: 'p-sr-only',
+          acceptLabel: 'OK',
+        });
+    }
+
     const toggleVote = () => {
-      const parameters = {
-        requirementId: id.value,
-        userVoted: userVoted.value === 'NO_VOTE' ? 'UP_VOTE' : 'NO_VOTE',
-      };
-      
-      store.dispatch(ActionTypes.VoteRequirement, parameters);
+      if (oidcIsAuthenticated.value) {
+        const parameters = {
+          requirementId: id.value,
+          userVoted: userVoted.value === 'NO_VOTE' ? 'UP_VOTE' : 'NO_VOTE',
+        };
+        store.dispatch(ActionTypes.VoteRequirement, parameters);
+      } else {
+        alertLogin('You need to sign in to vote for a requirement.');
+      }
     };
 
     const menu = ref(null);
@@ -204,12 +218,14 @@ export default defineComponent({
         icon: 'pi pi-copy',
         command: () => {
           console.log('Copying to clipboard...');
+          navigator.clipboard.writeText('');
         },
       },
     ]);
 
     return {
       voted,
+      oidcIsAuthenticated,
       showComments,
       toggleCommentsPanel,
       toggleVote,
@@ -277,8 +293,16 @@ export default defineComponent({
   #groupedButtons > * {
     display: flex;
     flex: 1;
-    margin-right: .5rem;
+    margin-inline-end: .5rem;
     font-weight: bold;
+  }
+
+  #groupedButtons :last-child {
+    margin-inline-end: 0;
+  }
+
+  .moreButton {
+    margin-inline-start: .5rem;
   }
 
   .commentsList {

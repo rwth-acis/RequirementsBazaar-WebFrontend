@@ -34,7 +34,7 @@
     <TabMenu id="tabMenu" :model="tabItems" />
     <div id="actionButtons">
       <Button icon="pi pi-bell" :label="category?.userContext?.isFollower ? t('unfollowCategory') : t('followCategory')" class="p-button-sm" :class="{ 'p-button-outlined': !category?.userContext?.isFollower }" @click="followClick"></Button>
-      <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu"></Button>
+      <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
     </div>
   </div>
@@ -96,6 +96,7 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     const { t } = useI18n({ useScope: 'global' });
+    const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const confirm = useConfirm();
     
     const categoryId = Number.parseInt(route.params.categoryId.toString(), 10);
@@ -129,11 +130,33 @@ export default defineComponent({
 
     const showAddRequirement = ref(false);
     const toggleAddRequirement = () => {
-      showAddRequirement.value = !showAddRequirement.value;
+      if (oidcIsAuthenticated.value) {
+        showAddRequirement.value = !showAddRequirement.value;
+      } else {
+        confirm.require({
+          group: 'dialog',
+          message: 'You need to sign in to create a requirement.',
+          header: 'Login',
+          icon: 'pi pi-info-circle',
+          rejectClass: 'p-sr-only',
+          acceptLabel: 'OK',
+        });
+      }
     }
 
     const followClick = () => {
-      store.dispatch(ActionTypes.FollowCategory, {id: categoryId, isFollower: category.value.userContext.isFollower ? false : true});
+      if (oidcIsAuthenticated.value) {
+        store.dispatch(ActionTypes.FollowCategory, {id: categoryId, isFollower: category.value.userContext.isFollower ? false : true});
+      } else {
+        confirm.require({
+          group: 'dialog',
+          message: 'You need to sign in to follow a category.',
+          header: 'Login',
+          icon: 'pi pi-info-circle',
+          rejectClass: 'p-sr-only',
+          acceptLabel: 'OK',
+        });
+      }
     };
 
     const tabItems = ref([
@@ -202,6 +225,7 @@ export default defineComponent({
 
     return {
       t,
+      oidcIsAuthenticated,
       category,
       done,
       tabItems,

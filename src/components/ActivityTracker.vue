@@ -23,7 +23,7 @@ export default defineComponent({
   setup: (props, context) => {
     const store = useStore();
 
-    const parameters = computed(() => {return {limit: 40}});
+    const parameters = computed(() => {return {limit: 10}});
     const activities = computed(() => store.getters.activitiesList(parameters.value));
     store.dispatch(ActionTypes.FetchActivities, {query: parameters.value});
 

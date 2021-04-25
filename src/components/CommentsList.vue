@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div class="addComment">
+    <div class="addComment" v-if="oidcIsAuthenticated">
       <InputText type="text" v-model="message" :placeholder="t('addComment')" class="input" ref="input"/>
       <Button label="Save" @click="createComment" />
     </div>
@@ -163,10 +163,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .comment:last-child {
-    padding-bottom: 1rem;
-  }
-
   .reply {
     padding-left: 3rem;
   }
