@@ -30,7 +30,7 @@
   <div id="menuBar">
     <TabMenu id="tabMenu" :model="tabItems" />
     <div id="actionButtons">
-      <Button icon="pi pi-bell" :label="project?.userContext?.isFollower ? t('unfollowProject') : t('followProject')" class="p-button-sm" :class="{ 'p-button-outlined': !project?.userContext?.isFollower }" @click="followClick"></Button>
+      <Button icon="pi pi-bell" :label="oidcIsAuthenticated && project?.userContext?.isFollower ? t('unfollowProject') : t('followProject')" class="p-button-sm" :class="{ 'p-button-outlined': !(oidcIsAuthenticated && project?.userContext?.isFollower) }" @click="followClick"></Button>
       <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
     </div>
@@ -92,6 +92,8 @@ export default defineComponent({
     const project = computed(() => store.getters.getProjectById(projectId));
     store.dispatch(ActionTypes.FetchProject, projectId);
 
+    watch(oidcIsAuthenticated, () => store.dispatch(ActionTypes.FetchProject, projectId));
+
     const tabItems = ref([
       {
         label: 'All Categories', // was: 'Overview'
@@ -107,20 +109,26 @@ export default defineComponent({
     const projectEditorName = ref('');
     const projectEditorDescription = ref('');
 
-    watch(project, () => {
+    watch([project, oidcIsAuthenticated], () => {
 
       projectEditorName.value = project.value.name;
       projectEditorDescription.value = project.value.description;
 
       //const role = project.value.userContext?.projectRole;
       //if (['ProjectAdmin', 'SystemAdmin'].includes(role)) {
-      if (project.value.userContext?.projectRole === 'ProjectAdmin') {
-        tabItems.value.push(
-          {
-            label: 'Members',
-            to: `/projects/${projectId}/members`
-          }
-        )
+      const membersItemId = tabItems.value.findIndex(item => item.label === 'Members');
+      if (!oidcIsAuthenticated.value && membersItemId > -1) {
+        tabItems.value.splice(membersItemId, 1);
+      }
+      if (oidcIsAuthenticated.value && project.value.userContext?.projectRole === 'ProjectAdmin') {
+        if (membersItemId === -1) {
+          tabItems.value.push(
+            {
+              label: 'Members',
+              to: `/projects/${projectId}/members`
+            }
+          )
+        }
       }
     });
 
