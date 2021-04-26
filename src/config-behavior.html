@@ -101,9 +101,9 @@
 
     _handleSigninSuccess: function(e) {
       var accessToken = e.detail.access_token;
-      
+
       if (!GlobalConfig.authorization) {
-        fetch('https://api.learning-layers.eu/o/oauth2/userinfo', {
+        fetch('https://api.learning-layers.eu/auth/realms/main/protocol/openid-connect/userinfo', {
           method: 'GET',
           headers: {
             'Authorization': 'Bearer ' + accessToken,
@@ -129,7 +129,7 @@
           'Authorization': 'Basic ' + GlobalConfig.authorization,
           'oidc_provider': 'https://api.learning-layers.eu/o/oauth2',
         };
-      } 
+      }
     },
 
     _handleSignedOut: function(e) {
