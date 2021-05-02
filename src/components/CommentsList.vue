@@ -27,7 +27,7 @@
         </div>
         <div class="p-pb-1 addComment reply" v-if="comment.showReplyTo">
           <InputText type="text" :placeholder="t('addComment')" class="input"/>
-          <Button label="Save" @click="createComment($event, comment.id)" />
+          <Button label="Save" @click="createComment($event, comment)" />
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@ export default defineComponent({
       (input as any).value.$el.focus();
     };
 
-    const parameters = computed(() => {return {per_page: 150}});
+    const parameters = computed(() => {return {per_page: 150, sort: 'date', sortDirection: 'ASC'}});
     const comments = computed(() => store.getters.commentsList(requirementId, parameters.value));
     store.dispatch(ActionTypes.FetchCommentsOfRequirement, {requirementId, query: parameters.value})
 
@@ -81,14 +81,15 @@ export default defineComponent({
       if (replyToComment) {
         const replyMessage = event.currentTarget.previousSibling.value;
         // only reply to top-level comments
-        const replyParent = comments.value.find(comment => comment.id === replyToComment);
-        const realReplyToComment = replyParent.replyToComment ? replyParent.replyToComment : replyToComment;
-        debugger;
+        const replyParent = comments.value.find(comment => comment.id === replyToComment.id);
+        const realReplyToComment = replyParent.replyToComment ? replyParent.replyToComment : replyToComment.id;
         comment = {
           message: replyMessage,
           requirementId,
           replyToComment: realReplyToComment,
         };
+        // deactivate reply input box
+        store.commit(MutationType.SetCommentShowReplyTo, {commentId: replyToComment.id, showReplyTo: false});
       } else {
         comment = {
           message: message.value,
@@ -101,7 +102,7 @@ export default defineComponent({
 
     const toggleReply = (event, comment: LocalComment) => {
       const showReplyTo = comment.showReplyTo ? false : true;
-      store.commit(MutationType.SetCommentShowReplyTo, {comment, showReplyTo});
+      store.commit(MutationType.SetCommentShowReplyTo, {commentId: comment.id, showReplyTo});
     }
 
     const deleteComment = (event, commentId) => {

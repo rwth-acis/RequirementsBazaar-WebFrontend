@@ -42,7 +42,7 @@ export type Mutations = {
   [MutationType.RemoveRequirement](state: State, requirementId: number): void;
   [MutationType.SetComments](state: State, comments: LocalComment[]): void;
   [MutationType.SetComment](state: State, comment: LocalComment): void;
-  [MutationType.SetCommentShowReplyTo](state: State, {comment: LocalComment, showReplyTo: boolean}): void;
+  [MutationType.SetCommentShowReplyTo](state: State, {commentId: number, showReplyTo: boolean}): void;
   [MutationType.RemoveComment](state: State, commentId: number): void;
 
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
@@ -160,9 +160,9 @@ export const mutations: MutationTree<State> & Mutations = {
     }
   },
 
-  [MutationType.SetCommentShowReplyTo](state, {comment, showReplyTo}) {
-    if (comment.id) {
-      state.comments[comment.id].showReplyTo = showReplyTo;
+  [MutationType.SetCommentShowReplyTo](state, {commentId, showReplyTo}) {
+    if (commentId) {
+      state.comments[commentId].showReplyTo = showReplyTo;
     }
   },
 
