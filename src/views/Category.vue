@@ -61,8 +61,8 @@
             :creationDate="requirement.creationDate"
             :lastActivity="requirement.lastActivity"
             :userVoted="requirement.userContext.userVoted"
-            :isFollower="requirement.userContext.isFollower"
-            :isDeveloper="requirement.userContext.isDeveloper"
+            :isFollower="requirement.userContext.isFollower ? true : false"
+            :isDeveloper="requirement.userContext.isDeveloper ? true : false"
             :realized="requirement.realized">
           </RequirementCard>
         </div>

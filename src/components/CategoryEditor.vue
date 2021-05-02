@@ -105,7 +105,7 @@ export default defineComponent({
         store.dispatch(ActionTypes.CreateCategory, category);
       } else {
         category.id = categoryId;
-        store.dispatch(ActionTypes.UpdateCategory, { id: categoryId, category });
+        store.dispatch(ActionTypes.UpdateCategory, category);
       }
       emit('save');
     }

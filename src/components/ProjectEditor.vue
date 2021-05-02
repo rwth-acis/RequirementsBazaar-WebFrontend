@@ -100,7 +100,7 @@ export default defineComponent({
         store.dispatch(ActionTypes.CreateProject, project);
       } else {
         project.id = projectId;
-        store.dispatch(ActionTypes.UpdateProject, { id: projectId, project });
+        store.dispatch(ActionTypes.UpdateProject, project);
       }
       emit('save');
     }

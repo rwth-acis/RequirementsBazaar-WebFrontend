@@ -67,7 +67,7 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationType.SetProjectIsFollower](state, {projectId, isFollower}) {
     const project = state.projects[projectId];
     if (!project.userContext) {
-      project.userContext = {};
+      project.userContext = {isFollower};
     }
     project.userContext.isFollower = isFollower;
   },
@@ -89,7 +89,7 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationType.SetCategoryIsFollower](state, {categoryId, isFollower}) {
     const category = state.categories[categoryId];
     if (!category.userContext) {
-      category.userContext = {};
+      category.userContext = {isFollower};
     }
     category.userContext.isFollower = isFollower;
   },
@@ -111,7 +111,7 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationType.SetRequirementVote](state, {requirementId, userVoted}) {
     const requirement = state.requirements[requirementId]
     if (!requirement.userContext) {
-      requirement.userContext = {};
+      requirement.userContext = {isFollower: false};
     }
     requirement.userContext.userVoted = userVoted;
     if (userVoted === 'UP_VOTE') {
@@ -124,7 +124,7 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationType.SetRequirementIsFollower](state, {requirementId, isFollower}) {
     const requirement = state.requirements[requirementId];
     if (!requirement.userContext) {
-      requirement.userContext = {};
+      requirement.userContext = {isFollower};
     }
     requirement.userContext.isFollower = isFollower;
   },
@@ -132,7 +132,7 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationType.SetRequirementIsDeveloper](state, {requirementId, isDeveloper}) {
     const requirement = state.requirements[requirementId];
     if (!requirement.userContext) {
-      requirement.userContext = {};
+      requirement.userContext = {isFollower: false};
     }
     requirement.userContext.isDeveloper = isDeveloper;
   },

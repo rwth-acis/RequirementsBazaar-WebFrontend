@@ -106,10 +106,17 @@ export interface Category {
 }
 
 export interface UserContext {
-  projectRole?: "ProjectMember" | "ProjectManager" | "ProjectAdmin";
+  /** The role the user has within the project. Only returned when requesting project resources. */
+  userRole?: "ProjectMember" | "ProjectManager" | "ProjectAdmin";
+
+  /** Only returned when requesting requirement resources. */
   userVoted?: "UP_VOTE" | "DOWN_VOTE" | "NO_VOTE";
-  isFollower?: boolean;
+  isFollower: boolean;
+
+  /** Only returned when requesting requirement resources. */
   isDeveloper?: boolean;
+
+  /** Only returned when requesting requirement resources. */
   isContributor?: boolean;
 }
 
@@ -273,6 +280,10 @@ export interface ProjectContributors {
   attachmentCreator?: User[];
 }
 
+export interface Direction {
+  direction?: "up" | "down";
+}
+
 export interface RequirementContributors {
   /** @format int32 */
   id?: number;
@@ -409,6 +420,21 @@ export namespace Categories {
   /**
    * No description
    * @tags categories
+   * @name UpdateCategory
+   * @summary This method allows to update a certain category.
+   * @request PUT:/categories
+   * @secure
+   */
+  export namespace UpdateCategory {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = Category;
+    export type RequestHeaders = {};
+    export type ResponseBody = Category;
+  }
+  /**
+   * No description
+   * @tags categories
    * @name GetStatisticsForCategory
    * @summary This method allows to retrieve statistics for one category.
    * @request GET:/categories/{categoryId}/statistics
@@ -500,21 +526,6 @@ export namespace Categories {
     export type RequestParams = { categoryId: number };
     export type RequestQuery = {};
     export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Category;
-  }
-  /**
-   * No description
-   * @tags categories
-   * @name UpdateCategory
-   * @summary This method allows to update a certain category.
-   * @request PUT:/categories/{categoryId}
-   * @secure
-   */
-  export namespace UpdateCategory {
-    export type RequestParams = { categoryId: number };
-    export type RequestQuery = {};
-    export type RequestBody = Category;
     export type RequestHeaders = {};
     export type ResponseBody = Category;
   }
@@ -726,6 +737,21 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
+   * @name UpdateProject
+   * @summary This method allows to update a certain project.
+   * @request PUT:/projects
+   * @secure
+   */
+  export namespace UpdateProject {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = Project;
+    export type RequestHeaders = {};
+    export type ResponseBody = Project;
+  }
+  /**
+   * No description
+   * @tags projects
    * @name GetStatisticsForProject
    * @summary This method allows to retrieve statistics for one project.
    * @request GET:/projects/{projectId}/statistics
@@ -844,21 +870,6 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
-   * @name UpdateProject
-   * @summary This method allows to update a certain project.
-   * @request PUT:/projects/{projectId}
-   * @secure
-   */
-  export namespace UpdateProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {};
-    export type RequestBody = Project;
-    export type RequestHeaders = {};
-    export type ResponseBody = Project;
-  }
-  /**
-   * No description
-   * @tags projects
    * @name GetContributorsForProject
    * @summary This method returns the list of contributors for a specific project.
    * @request GET:/projects/{projectId}/contributors
@@ -937,6 +948,21 @@ export namespace Requirements {
   /**
    * No description
    * @tags requirements
+   * @name UpdateRequirement
+   * @summary This method updates a requirement.
+   * @request PUT:/requirements
+   * @secure
+   */
+  export namespace UpdateRequirement {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = Requirement;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement;
+  }
+  /**
+   * No description
+   * @tags requirements
    * @name GetStatisticsForRequirement
    * @summary This method allows to retrieve statistics for one requirement.
    * @request GET:/requirements/{requirementId}/statistics
@@ -1005,7 +1031,7 @@ export namespace Requirements {
   export namespace Vote {
     export type RequestParams = { requirementId: number };
     export type RequestQuery = {};
-    export type RequestBody = string;
+    export type RequestBody = Direction;
     export type RequestHeaders = {};
     export type ResponseBody = any;
   }
@@ -1066,21 +1092,6 @@ export namespace Requirements {
     export type RequestParams = { requirementId: number };
     export type RequestQuery = {};
     export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement;
-  }
-  /**
-   * No description
-   * @tags requirements
-   * @name UpdateRequirement
-   * @summary This method updates a specific requirement.
-   * @request PUT:/requirements/{requirementId}
-   * @secure
-   */
-  export namespace UpdateRequirement {
-    export type RequestParams = { requirementId: number };
-    export type RequestQuery = {};
-    export type RequestBody = Requirement;
     export type RequestHeaders = {};
     export type ResponseBody = Requirement;
   }
@@ -1648,6 +1659,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags categories
+     * @name UpdateCategory
+     * @summary This method allows to update a certain category.
+     * @request PUT:/categories
+     * @secure
+     */
+    updateCategory: (body: Category, params: RequestParams = {}) =>
+      this.request<Category, void>({
+        path: `/categories`,
+        method: "PUT",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags categories
      * @name GetStatisticsForCategory
      * @summary This method allows to retrieve statistics for one category.
      * @request GET:/categories/{categoryId}/statistics
@@ -1766,26 +1797,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/categories/${categoryId}`,
         method: "GET",
         secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags categories
-     * @name UpdateCategory
-     * @summary This method allows to update a certain category.
-     * @request PUT:/categories/{categoryId}
-     * @secure
-     */
-    updateCategory: (categoryId: number, body: Category, params: RequestParams = {}) =>
-      this.request<Category, void>({
-        path: `/categories/${categoryId}`,
-        method: "PUT",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2044,6 +2055,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
+     * @name UpdateProject
+     * @summary This method allows to update a certain project.
+     * @request PUT:/projects
+     * @secure
+     */
+    updateProject: (body: Project, params: RequestParams = {}) =>
+      this.request<Project, void>({
+        path: `/projects`,
+        method: "PUT",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
      * @name GetStatisticsForProject
      * @summary This method allows to retrieve statistics for one project.
      * @request GET:/projects/{projectId}/statistics
@@ -2199,26 +2230,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
-     * @name UpdateProject
-     * @summary This method allows to update a certain project.
-     * @request PUT:/projects/{projectId}
-     * @secure
-     */
-    updateProject: (projectId: number, body: Project, params: RequestParams = {}) =>
-      this.request<Project, void>({
-        path: `/projects/${projectId}`,
-        method: "PUT",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
      * @name GetContributorsForProject
      * @summary This method returns the list of contributors for a specific project.
      * @request GET:/projects/{projectId}/contributors
@@ -2318,6 +2329,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags requirements
+     * @name UpdateRequirement
+     * @summary This method updates a requirement.
+     * @request PUT:/requirements
+     * @secure
+     */
+    updateRequirement: (body: Requirement, params: RequestParams = {}) =>
+      this.request<Requirement, void>({
+        path: `/requirements`,
+        method: "PUT",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
      * @name GetStatisticsForRequirement
      * @summary This method allows to retrieve statistics for one requirement.
      * @request GET:/requirements/{requirementId}/statistics
@@ -2401,8 +2432,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/requirements/{requirementId}/votes
      * @secure
      */
-    vote: (requirementId: number, body: string, params: RequestParams = {}) =>
-      this.request<any, Requirement | void>({
+    vote: (requirementId: number, body: Direction, params: RequestParams = {}) =>
+      this.request<any, void>({
         path: `/requirements/${requirementId}/votes`,
         method: "POST",
         body: body,
@@ -2489,26 +2520,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/requirements/${requirementId}`,
         method: "GET",
         secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
-     * @name UpdateRequirement
-     * @summary This method updates a specific requirement.
-     * @request PUT:/requirements/{requirementId}
-     * @secure
-     */
-    updateRequirement: (requirementId: number, body: Requirement, params: RequestParams = {}) =>
-      this.request<Requirement, void>({
-        path: `/requirements/${requirementId}`,
-        method: "PUT",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),

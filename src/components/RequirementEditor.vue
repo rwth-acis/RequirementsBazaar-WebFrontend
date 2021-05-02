@@ -110,7 +110,7 @@ export default defineComponent({
         store.dispatch(ActionTypes.CreateRequirement, requirement);
       } else {
         requirement.id = requirementId;
-        store.dispatch(ActionTypes.UpdateRequirement, { id: requirementId, requirement });
+        store.dispatch(ActionTypes.UpdateRequirement, requirement);
       }
       emit('save');
     }

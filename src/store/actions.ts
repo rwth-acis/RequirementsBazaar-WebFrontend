@@ -44,21 +44,6 @@ type ProjectsRequestParameters = {
   query?: Projects.GetProjects.RequestQuery;
 }
 
-type UpdateProjectParameters = {
-  id: number,
-  project: Project,
-}
-
-type UpdateCategoryParameters = {
-  id: number,
-  category: Category,
-}
-
-type UpdateRequirementParameters = {
-  id: number,
-  requirement: Requirement,
-}
-
 type CategoriesRequestParameters = {
   projectId: number;
   query?: Projects.GetCategoriesForProject.RequestQuery;
@@ -117,17 +102,17 @@ export type Actions = {
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
   [ActionTypes.FollowProject](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.CreateProject](context: ActionAugments, payload: Project): void;
-  [ActionTypes.UpdateProject](context: ActionAugments, payload: UpdateProjectParameters): void;
+  [ActionTypes.UpdateProject](context: ActionAugments, payload: Project): void;
   [ActionTypes.FetchCategoriesOfProject](context: ActionAugments, payload: CategoriesRequestParameters): void;
   [ActionTypes.FetchCategory](context: ActionAugments, categoryId: number): void;
   [ActionTypes.FollowCategory](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.CreateCategory](context: ActionAugments, payload: Category): void;
-  [ActionTypes.UpdateCategory](context: ActionAugments, payload: UpdateCategoryParameters): void;
+  [ActionTypes.UpdateCategory](context: ActionAugments, payload: Category): void;
   [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
-  [ActionTypes.UpdateRequirement](context: ActionAugments, payload: UpdateRequirementParameters): void;
+  [ActionTypes.UpdateRequirement](context: ActionAugments, payload: Requirement): void;
   [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
   [ActionTypes.FollowRequirement](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.DevelopRequirement](context: ActionAugments, payload: DevelopRequirementParameters): void;
@@ -178,8 +163,8 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.UpdateProject]({ commit }, parameters) {
-    const response = await bazaarApi.projects.updateProject(parameters.id, parameters.project);
+  async [ActionTypes.UpdateProject]({ commit }, project) {
+    const response = await bazaarApi.projects.updateProject(project);
     if (response.data && response.status === 200) {
       commit(MutationType.SetProject, response.data);
     }
@@ -222,8 +207,8 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.UpdateCategory]({ commit }, parameters) {
-    const response = await bazaarApi.categories.updateCategory(parameters.id, parameters.category);
+  async [ActionTypes.UpdateCategory]({ commit }, category) {
+    const response = await bazaarApi.categories.updateCategory(category);
     if (response.data && response.status === 200) {
       commit(MutationType.SetCategory, response.data);
     }
@@ -257,8 +242,8 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.UpdateRequirement]({ commit }, parameters) {
-    const response = await bazaarApi.requirements.updateRequirement(parameters.id, parameters.requirement);
+  async [ActionTypes.UpdateRequirement]({ commit }, requirement) {
+    const response = await bazaarApi.requirements.updateRequirement(requirement);
     if (response.data && response.status === 200) {
       commit(MutationType.SetRequirement, response.data);
     }
@@ -269,13 +254,11 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SetRequirementVote, parameters);
     let response : HttpResponse<any, void | Requirement>;
     if (parameters.userVoted === 'UP_VOTE') {
-      response = await bazaarApi.requirements.vote(parameters.requirementId, "{ direction: 'up' }");
+      response = await bazaarApi.requirements.vote(parameters.requirementId, { direction: 'up' });
     } else {
       response = await bazaarApi.requirements.unvote(parameters.requirementId);
     }
-    if (response.data && ((response.status === 200) || (response.status === 201))) {
-      commit(MutationType.SetRequirement, response.data);
-    } else {
+    if (!response.ok) {
       // reset local commit
       commit(MutationType.SetRequirementVote, {requirementId: parameters.requirementId, userVoted: userVotedCached});
     }
