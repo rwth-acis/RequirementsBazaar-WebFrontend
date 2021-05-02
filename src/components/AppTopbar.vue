@@ -52,7 +52,7 @@ export default defineComponent({
 			{name: 'فارسی', code: 'fa'},
 			{name: 'Français', code: 'fr'},
 			{name: 'Italiano', code: 'it'},
-			{name: 'Norwegian', code: 'nb'},
+			{name: 'Norsk Bokmål', code: 'nb'},
 			{name: 'Română', code: 'ro'},
 			{name: 'Shqip', code: 'sq'},
 		]);
