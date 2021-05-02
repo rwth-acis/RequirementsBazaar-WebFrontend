@@ -4,9 +4,7 @@
 			<div class="title"><img src="/reqbaz-logo.svg"> Requirements Bazaar</div>
 		</router-link>
 		<div class="layout-topbar-icons">
-			<select v-model="locale">
-				<option v-for="locale in availableLocales" :key="`locale-${locale}`" :value="locale">{{ locale }}</option>
-			</select>
+			<Dropdown v-model="locale" :options="availableLocaleNames" optionLabel="name" optionValue="code"/>
 			<i class="pi pi-bell" style="fontSize: 1.5rem" @click="toggleActivityOverlay"></i>
 			<Button v-if="oidcIsAuthenticated" label="Logout" @click="removeOidcUser" />
 			<Button v-else label="Sign in" @click="authenticateOidcPopup" />
@@ -48,7 +46,18 @@ export default defineComponent({
 			activityOverlay.value.toggle(event);
 		}
 
-    return { locale, availableLocales, oidcIsAuthenticated, authenticateOidcPopup, removeOidcUser, activityOverlay, toggleActivityOverlay };
+		const availableLocaleNames = ref([
+			{name: 'Deutsch', code: 'de'},
+			{name: 'English', code: 'en'},
+			{name: 'فارسی', code: 'fa'},
+			{name: 'Français', code: 'fr'},
+			{name: 'Italiano', code: 'it'},
+			{name: 'Norwegian', code: 'nb'},
+			{name: 'Română', code: 'ro'},
+			{name: 'Shqip', code: 'sq'},
+		]);
+
+    return { locale, availableLocaleNames, oidcIsAuthenticated, authenticateOidcPopup, removeOidcUser, activityOverlay, toggleActivityOverlay };
   },
 })
 </script>
