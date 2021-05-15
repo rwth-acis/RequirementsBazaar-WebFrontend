@@ -77,8 +77,9 @@ export default defineComponent({
 	}
 
 	.layout-topbar-icons {
-		display: flex;
+		/*display: flex;
 		align-items: center;
+		*/
 	}
 
 	.layout-topbar-icons > * {
