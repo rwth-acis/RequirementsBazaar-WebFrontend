@@ -4,7 +4,7 @@
   <div id="description">
     <vue3-markdown-it :source="category?.description" />
   </div>
-  <Dialog :header="t('editCategory')" v-model:visible="displayCategoryEditor" :style="{width: '50vw'}" :modal="true">
+  <Dialog :header="t('editCategory')" v-model:visible="displayCategoryEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
     <CategoryEditor
       :name="category?.name"
       :description="category?.description"

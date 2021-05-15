@@ -9,7 +9,7 @@
       </div>
     </template>
     <template #content>
-      <Dialog :header="t('editCategory')" v-model:visible="displayRequirementEditor" :style="{width: '50vw'}" :modal="true">
+      <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
         <RequirementEditor
           class="requirementEditor"
           :requirementId="id"

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Dialog :header="t('editComment')" v-model:visible="displayCommentEditor" :style="{width: '50vw'}" :modal="true">
+    <Dialog :header="t('editComment')" v-model:visible="displayCommentEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
       <InputText type="text" v-model="editedCommentMessage" class="input" autofocus />
       <template #footer>
         <Button :label="t('cancel')" icon="pi pi-times" @click="commentEditorCanceled" class="p-button-text"/>
