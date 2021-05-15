@@ -5,7 +5,7 @@
 		</router-link>
 		<div class="layout-topbar-icons">
 			<Dropdown v-model="locale" :options="availableLocaleNames" optionLabel="name" optionValue="code"/>
-			<i class="pi pi-bell" style="fontSize: 1.5rem" @click="toggleActivityOverlay"></i>
+			<i class="pi pi-bell" @click="toggleActivityOverlay"></i>
 			<Button v-if="oidcIsAuthenticated" label="Logout" @click="removeOidcUser" />
 			<Button v-else label="Sign in" @click="authenticateOidcPopup" />
 
@@ -77,9 +77,7 @@ export default defineComponent({
 	}
 
 	.layout-topbar-icons {
-		/*display: flex;
-		align-items: center;
-		*/
+		align-items: top;
 	}
 
 	.layout-topbar-icons > * {
@@ -88,6 +86,9 @@ export default defineComponent({
 
 	i {
 		cursor: pointer;
+		font-size: 1.5rem;
+		position: relative;
+		top: 0.2rem;
 	}
 
 	.activityTracker {
