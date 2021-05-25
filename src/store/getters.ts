@@ -10,7 +10,7 @@ export type Getters = {
   getCategoryById(state: State): (id: number) => Category | undefined;
   requirementsList(state: State): (requirementId: number, parameters: any) => Requirement[];
   getRequirementById(state: State): (id: number) => Requirement | undefined;
-  commentsList(state: State): (requirementId: number, parameters: any) => Comment[];
+  commentsList(state: State): (requirementId: number) => Comment[];
   activitiesList(state: State): (parameters: any) => Activity[];
 }
 
@@ -156,7 +156,7 @@ export const getters: GetterTree<State, State> & Getters = {
     return state.requirements[id];
   },
 
-  commentsList: (state) => (requirementId, parameters) => {
+  commentsList: (state) => (requirementId) => {
     let commentsOriginal: Comment[] = Object.values(state.comments).filter(comment => (comment.requirementId === requirementId));
     let comments : Comment[] = [];
 
@@ -173,7 +173,7 @@ export const getters: GetterTree<State, State> & Getters = {
       }
     });
 
-    return comments.slice(0, parameters.per_page);
+    return comments;
   },
 
   activitiesList: (state) => (parameters) => {

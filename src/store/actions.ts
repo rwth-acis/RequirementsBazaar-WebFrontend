@@ -28,6 +28,7 @@ export enum ActionTypes {
   RealizeRequirement = 'REALIZE_REQUIREMENT',
   DeleteRequirement = 'DELETE_REQUIREMENT',
   CreateComment = 'CREATE_COMMENT',
+  UpdateComment = 'UPDATE_COMMENT',
   DeleteComment = 'DELETE_COMMENT',
 
   FetchActivities = 'FETCH_ACTIVITIES',
@@ -52,11 +53,6 @@ type CategoriesRequestParameters = {
 type RequirementsRequestParameters = {
   categoryId: number;
   query?: Categories.GetRequirementsForCategory.RequestQuery;
-}
-
-type CommentsRequestParameters = {
-  requirementId: number;
-  query?: Requirements.GetCommentsForRequirement.RequestQuery;
 }
 
 type ActivitiesRequestParameters = {
@@ -110,7 +106,7 @@ export type Actions = {
   [ActionTypes.UpdateCategory](context: ActionAugments, payload: Category): void;
   [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
-  [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, payload: CommentsRequestParameters): void;
+  [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.CreateRequirement](context: ActionAugments, payload: Requirement): void;
   [ActionTypes.UpdateRequirement](context: ActionAugments, payload: Requirement): void;
   [ActionTypes.VoteRequirement](context: ActionAugments, payload: VoteRequirementParameters): void;
@@ -119,6 +115,7 @@ export type Actions = {
   [ActionTypes.RealizeRequirement](context: ActionAugments, payload: RealizeRequirementParameters): void;
   [ActionTypes.DeleteRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
+  [ActionTypes.UpdateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
 
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
@@ -228,8 +225,8 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.FetchCommentsOfRequirement]({ commit }, parameters) {
-    const response = await bazaarApi.requirements.getCommentsForRequirement(parameters.requirementId, parameters.query);
+  async [ActionTypes.FetchCommentsOfRequirement]({ commit }, requirementId) {
+    const response = await bazaarApi.requirements.getCommentsForRequirement(requirementId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetComments, response.data);
     }
@@ -324,6 +321,13 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.CreateComment]({ commit }, comment) {
     const response = await bazaarApi.comments.createComment(comment);
     if (response.data && response.status === 201) {
+      commit(MutationType.SetComment, response.data);
+    }
+  },
+
+  async [ActionTypes.UpdateComment]({ commit }, comment) {
+    const response = await bazaarApi.comments.updateComment(comment);
+    if (response.data && response.status === 200) {
       commit(MutationType.SetComment, response.data);
     }
   },
