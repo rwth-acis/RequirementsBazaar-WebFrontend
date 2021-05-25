@@ -1,6 +1,6 @@
 <template>
   <div class="filterPanel">
-    <span class="p-input-icon-left p-input-icon-right">
+    <span class="p-input-icon-left p-input-icon-right searchContainer">
       <i class="pi pi-search" />
       <InputText
         type="text"
@@ -10,24 +10,26 @@
       </InputText>
       <i class="clearButton pi pi-times" v-show="searchQuery.length > 0" @click="onClearClick()" />
     </span>
-    <span>{{ t('sorting') }}:</span>
-    <Dropdown
-      id="sortOptionsDropdown"
-      :options="sortOptions"
-      optionLabel="name"
-      optionValue="value"
-      v-model="selectedSortInternal"
-      @change="$emit('update:selectedSort', $event.value)">
-    </Dropdown>
-    <SelectButton
-      :options="sortDirectionOptions"
-      optionValue="value"
-      class="selectButton"
-      v-model="sortAscendingInternal">
-      <template #option="slotProps">
-        <i :class="slotProps.option.icon"></i>
-      </template>
-    </SelectButton>
+    <span class="wrapContainer">
+      <span>{{ t('sorting') }}:</span>
+      <Dropdown
+        id="sortOptionsDropdown"
+        :options="sortOptions"
+        optionLabel="name"
+        optionValue="value"
+        v-model="selectedSortInternal"
+        @change="$emit('update:selectedSort', $event.value)">
+      </Dropdown>
+      <SelectButton
+        :options="sortDirectionOptions"
+        optionValue="value"
+        class="selectButton"
+        v-model="sortAscendingInternal">
+        <template #option="slotProps">
+          <i :class="slotProps.option.icon"></i>
+        </template>
+      </SelectButton>
+    </span>
   </div>
 </template>
 
@@ -73,26 +75,33 @@ export default defineComponent({
   .filterPanel {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 0.5rem;
     margin-bottom: 1.5rem;
+    justify-content: flex-end;
   }
 
   .clearButton {
     padding-right: 0.2rem;
   }
 
-  .filterPanel > * {
-    margin-left: .5rem;
+  .searchContainer {
+    min-width: 150px;
   }
 
+  .wrapContainer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
   .filterPanel ::v-deep(.p-button > .pi) {
     height: 17px;
   }
 
   .filterPanel > :first-child {
     flex: 1;
-    margin-left: 0;
-    margin-right: 0.5rem;
+    margin-inline-start: 0;
   }
 
   .filterPanel input {
