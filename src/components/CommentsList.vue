@@ -12,16 +12,17 @@
         <div class="p-d-flex p-mb-1" :class="{ reply: comment.replyToComment }">
             <Skeleton shape="circle" size="2.5rem" class="p-mr-2"></Skeleton>
             <div>
-                <div>{{ comment.message }}</div>
+                <div>{{ comment.deleted ? t('deletedCommented') : comment.message }}</div>
                 <div class="info">
-                  <span v-if="oidcIsAuthenticated">
+                  <span v-if="oidcIsAuthenticated && !comment.deleted">
                     <span class="action" @click="toggleReply($event, comment)">{{ t('reply') }}</span> ·
                     <span v-if="oidcUser.preferred_username === comment.creator.userName">
-                      <!--<span class="action" @click="editComment(comment)">{{ t('edit') }}</span> · -->
+                      <span class="action" @click="editComment(comment)">{{ t('edit') }}</span> ·
                       <span class="action" @click="deleteComment($event, comment.id)">{{ t('delete') }}</span> ·
                     </span>
                   </span>
-                  <span :title="$dayjs(comment.creationDate).format('LLL')">{{ $dayjs(comment.creationDate).fromNow() }}</span>{{ t('by') }}{{ comment.creator.userName }}
+                  <span :title="$dayjs(comment.creationDate).format('LLL')">{{ $dayjs(comment.creationDate).fromNow() }}</span>
+                  <span v-if="!comment.deleted">{{ t('by') }}{{ comment.creator.userName }}</span>
                 </div>
             </div>
         </div>
@@ -70,9 +71,8 @@ export default defineComponent({
       (input as any).value.$el.focus();
     };
 
-    const parameters = computed(() => {return {per_page: 150, sort: 'date', sortDirection: 'ASC'}});
-    const comments = computed(() => store.getters.commentsList(requirementId, parameters.value));
-    store.dispatch(ActionTypes.FetchCommentsOfRequirement, {requirementId, query: parameters.value})
+    const comments = computed(() => store.getters.commentsList(requirementId));
+    store.dispatch(ActionTypes.FetchCommentsOfRequirement, requirementId )
 
     const message = ref('');
     const createComment = (event, replyToComment) => {
@@ -136,6 +136,7 @@ export default defineComponent({
           id: editedComment.id,
           message: editedCommentMessage.value,
         };
+        store.dispatch(ActionTypes.UpdateComment, comment);
       }
     }
     const commentEditorCanceled = () => {

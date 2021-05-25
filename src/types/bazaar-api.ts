@@ -143,6 +143,7 @@ export interface Comment {
 
   /** @format date-time */
   lastUpdatedDate?: string;
+  deleted?: boolean;
   _context?: EntityContext;
 }
 
@@ -292,6 +293,12 @@ export interface RequirementContributors {
   developers?: User[];
   commentCreator?: User[];
   attachmentCreator?: User[];
+}
+
+export interface Dashboard {
+  projects: Project[];
+  categories: Category[];
+  requirements: Requirement[];
 }
 
 export interface EntityOverview {
@@ -630,6 +637,21 @@ export namespace Comments {
     export type RequestHeaders = {};
     export type ResponseBody = Comment;
   }
+  /**
+   * No description
+   * @tags comments
+   * @name UpdateComment
+   * @summary This method modifies a specific comment.
+   * @request PUT:/comments
+   * @secure
+   */
+  export namespace UpdateComment {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = Comment;
+    export type RequestHeaders = {};
+    export type ResponseBody = Comment;
+  }
 }
 
 export namespace Feedback {
@@ -870,6 +892,21 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
+   * @name DeleteProject
+   * @summary This method deletes a specific project.
+   * @request DELETE:/projects/{projectId}
+   * @secure
+   */
+  export namespace DeleteProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags projects
    * @name GetContributorsForProject
    * @summary This method returns the list of contributors for a specific project.
    * @request GET:/projects/{projectId}/contributors
@@ -1060,7 +1097,7 @@ export namespace Requirements {
    */
   export namespace GetCommentsForRequirement {
     export type RequestParams = { requirementId: number };
-    export type RequestQuery = { page?: number; per_page?: number };
+    export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = Comment[];
@@ -1292,6 +1329,21 @@ export namespace Users {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = User;
+  }
+  /**
+   * No description
+   * @tags users
+   * @name GetUserDashboard
+   * @summary This method allows to retrieve the current users individual dashboard.
+   * @request GET:/users/me/dashboard
+   * @secure
+   */
+  export namespace GetUserDashboard {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Dashboard;
   }
   /**
    * No description
@@ -1923,6 +1975,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         format: "json",
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags comments
+     * @name UpdateComment
+     * @summary This method modifies a specific comment.
+     * @request PUT:/comments
+     * @secure
+     */
+    updateComment: (body: Comment, params: RequestParams = {}) =>
+      this.request<Comment, void>({
+        path: `/comments`,
+        method: "PUT",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
   };
   feedback = {
     /**
@@ -2230,6 +2302,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
+     * @name DeleteProject
+     * @summary This method deletes a specific project.
+     * @request DELETE:/projects/{projectId}
+     * @secure
+     */
+    deleteProject: (projectId: number, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/projects/${projectId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
      * @name GetContributorsForProject
      * @summary This method returns the list of contributors for a specific project.
      * @request GET:/projects/{projectId}/contributors
@@ -2469,15 +2558,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/requirements/{requirementId}/comments
      * @secure
      */
-    getCommentsForRequirement: (
-      requirementId: number,
-      query?: { page?: number; per_page?: number },
-      params: RequestParams = {},
-    ) =>
+    getCommentsForRequirement: (requirementId: number, params: RequestParams = {}) =>
       this.request<Comment[], void>({
         path: `/requirements/${requirementId}/comments`,
         method: "GET",
-        query: query,
         secure: true,
         format: "json",
         ...params,
@@ -2761,6 +2845,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getActiveUser: (params: RequestParams = {}) =>
       this.request<User, void>({
         path: `/users/me`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags users
+     * @name GetUserDashboard
+     * @summary This method allows to retrieve the current users individual dashboard.
+     * @request GET:/users/me/dashboard
+     * @secure
+     */
+    getUserDashboard: (params: RequestParams = {}) =>
+      this.request<Dashboard, void>({
+        path: `/users/me/dashboard`,
         method: "GET",
         secure: true,
         format: "json",
