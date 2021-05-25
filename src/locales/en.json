@@ -24,6 +24,7 @@
   "cancel": "Cancel",
   "save": "Save",
   "delete": "Delete",
+  "edit": "Edit",
   "deleteProjectTitle": "Delete Project",
   "deleteProjectDesc": "This action can't be undone! Are you sure that you want to permanently delete this project?",
   "editProject": "Edit Project",
