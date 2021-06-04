@@ -21,6 +21,24 @@
         </Editor>
         <small v-if="(v$.description.$invalid && submitted)" class="p-error">{{v$.description.required.$message.replace('Value', 'Description')}}</small>
       </div>
+      <div class="p-field">
+        <Accordion>
+          <AccordionTab header="Attachments">
+            <FileUpload url="https://requirements-bazaar.org/fileservice/files/"
+                        :customUpload="true"
+                        @uploader="uploadAttachment"
+                        :showUploadButton="false"
+                        :auto="true"
+                        :multiple="true"
+                        accept="image/*"
+                        :maxFileSize="1000000">
+              <template #empty>
+                <p>Drag and drop files to here to upload.</p>
+              </template>
+            </FileUpload>
+          </AccordionTab>
+        </Accordion>
+      </div>
       <div class="footer">
         <Button :label="t('cancel')" @click="cancel" class="p-button-outlined p-ml-2 p-mr-2" />
         <Button type="submit" :label="t('save')" />
@@ -115,7 +133,11 @@ export default defineComponent({
       emit('save');
     }
 
-    return { t, submitted, state, v$, cancel, handleSubmit, turndownService };
+    const uploadAttachment = (event) => {
+      store.dispatch(ActionTypes.UploadAttachment, event.files[0]);
+    }
+
+    return { t, submitted, state, v$, cancel, handleSubmit, turndownService, uploadAttachment };
   }
 })
 </script>

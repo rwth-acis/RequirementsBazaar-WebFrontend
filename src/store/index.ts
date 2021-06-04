@@ -14,6 +14,7 @@ import { Getters, getters } from './getters';
 
 import { oidcSettings } from '../config/oidc';
 import { bazaarApi } from '../api/bazaar';
+import { fileserviceApi } from '../api/fileservice';
 
 const debug = process.env.NODE_ENV !== 'production';
 
@@ -41,6 +42,7 @@ export const store = createStore<State>({
         userLoaded: (user) => {
           console.log('OIDC user is loaded:', user);
           bazaarApi.setSecurityData(user);
+          fileserviceApi.setSecurityData(user);
         },
         userUnloaded: () => console.log('OIDC user is unloaded'),
         accessTokenExpiring: () => console.log('Access token will expire'),

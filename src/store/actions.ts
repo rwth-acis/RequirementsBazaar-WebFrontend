@@ -5,6 +5,7 @@ import { State } from './state';
 import { bazaarApi } from '../api/bazaar';
 import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
+import { fileserviceApi } from '../api/fileservice';
 
 export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
@@ -32,6 +33,8 @@ export enum ActionTypes {
   DeleteComment = 'DELETE_COMMENT',
 
   FetchActivities = 'FETCH_ACTIVITIES',
+
+  UploadAttachment = 'UPLOAD_ATTACHMENT',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -343,6 +346,13 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await activitiesApi.getActivities(parameters.query);
     if (response.data && response.status === 200) {
       commit(MutationType.SetActivities, response.data);
+    }
+  },
+
+  async [ActionTypes.UploadAttachment]({ commit }, file) {
+    const response = await fileserviceApi.files.postFile({filecontent: file});
+    if (response.status === 201) {
+      //commit(MutationType.SetComment, response.data);
     }
   },
 

@@ -1,5 +1,15 @@
 {
     "globalComponents": [
+        "./node_modules/primevue/accordion/Accordion.vue", {
+            "Accordion": {
+                "moduleName": "./node_modules/primevue/accordion/Accordion.vue"
+            }
+        },
+        "./node_modules/primevue/accordion/AccordionTab.vue", {
+            "AccordionTab": {
+                "moduleName": "./node_modules/primevue/accordiontab/AccordionTab.vue"
+            }
+        },
         "./node_modules/primevue/avatar/Avatar.vue", {
             "Avatar": {
                 "moduleName": "./node_modules/primevue/avatar/Avatar.vue"
@@ -38,6 +48,11 @@
         "./node_modules/primevue/editor/Editor.vue", {
             "Editor": {
                 "moduleName": "./node_modules/primevue/editor/Editor.vue"
+            }
+        },
+        "./node_modules/primevue/fileupload/FileUpload.vue", {
+            "FileUpload": {
+                "moduleName": "./node_modules/primevue/fileupload/FileUpload.vue"
             }
         },
         "./node_modules/primevue/inputtext/InputText.vue", {
