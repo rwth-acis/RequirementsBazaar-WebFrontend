@@ -32,6 +32,8 @@
           :id="project.id"
           :name="project.name"
           :description="project.description"
+          :creationDate="project.creationDate"
+          :lastActivity="project.lastActivity"
           :numberOfCategories="project.numberOfCategories"
           :numberOfFollowers="project.numberOfFollowers"
           :numberOfRequirements="project.numberOfRequirements">

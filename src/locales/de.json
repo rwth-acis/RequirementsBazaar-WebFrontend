@@ -130,5 +130,8 @@
     "votes": "Votes",
     "requirements": "Requirements",
     "about": "Über",
-    "edit": "Bearbeiten"
+    "edit": "Bearbeiten",
+    "dashboard-projects": "Updates  in verfolgten Projekten",
+    "dashboard-categories": "Updates  in verfolgten Kategorien",
+    "dashboard-requirements": "Updates  in verfolgten Anforderungen"
 }

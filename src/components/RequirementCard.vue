@@ -27,7 +27,7 @@
         <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
         <div id="comments" @click="toggleCommentsPanel">{{ numberOfComments }} {{ t('comments')}}</div>
       </div>
-      <div id="actionButtons">
+      <div id="actionButtons" v-if="!brief">
         <div id="groupedButtons">
           <Button label="Vote" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
           <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
@@ -71,6 +71,7 @@ export default defineComponent({
     isFollower: { type: Boolean, required: true },
     isDeveloper: { type: Boolean, required: true },
     realized: { type: String, required: false },
+    brief: { type: Boolean, required: false, default: false },
   },
   setup: (props) => {
     const { id, userVoted, isFollower, isDeveloper, realized } = toRefs(props);
@@ -180,7 +181,7 @@ export default defineComponent({
               confirmDelete();
             }
           }
-        ];   
+        ];
       },
       {
         immediate: true
@@ -247,13 +248,6 @@ export default defineComponent({
 <style scoped>
   #card ::v-deep(.p-card-content) {
     padding: 0;
-  }
-
-  .lastupdate {
-    padding-top: 0.25em;
-    font-weight: normal;
-    font-size: 0.6em;
-    color: #5d5d5d;
   }
 
   #figures {
