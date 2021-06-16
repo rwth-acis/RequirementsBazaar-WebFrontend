@@ -3,7 +3,7 @@
     <template #title>
       <div>{{ name }}</div>
       <div class="lastupdate">
-        <span :title="$dayjs(creationDate).format('LLL')">{{ $dayjs(creationDate).fromNow() }}</span>
+        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
       </div>
     </template>
     <template #content>
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, toRefs } from 'vue'
 import { useI18n } from 'vue-i18n';
 
 import { followersIcon, requirementsIcon } from '../assets/reqbaz-icons.js';
@@ -35,10 +35,15 @@ export default defineComponent({
     numberOfRequirements: { type: Number, required: true },
     numberOfFollowers: { type: Number, required: true },
   },
-  setup: () => {
+  setup: (props, context) => {
     const { locale, t } = useI18n({ useScope: 'global' });
+    const { lastActivity, creationDate } = toRefs(props);
+
+    const activityDate = computed(() => lastActivity.value || creationDate.value);
+
     return {
       t,
+      activityDate,
       followersIcon,
       requirementsIcon
     };

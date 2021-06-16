@@ -3,7 +3,7 @@
     <template #title>
       <div>{{ name }}</div>
       <div class="lastupdate">
-        <span :title="$dayjs(creationDate).format('LLL')">{{ $dayjs(creationDate).fromNow() }}</span>
+        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
         {{t('by')}} {{ creator?.userName }}
         <!--<i class="pi pi-pencil" style="fontSize: 0.7rem" v-if="creationDate !== lastActivity" :title="`initially created on ${$dayjs(lastActivity).format('LLL')}`"></i>-->
       </div>
@@ -74,7 +74,7 @@ export default defineComponent({
     brief: { type: Boolean, required: false, default: false },
   },
   setup: (props) => {
-    const { id, userVoted, isFollower, isDeveloper, realized } = toRefs(props);
+    const { id, userVoted, isFollower, isDeveloper, realized, lastActivity, creationDate } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const confirm = useConfirm();
@@ -87,6 +87,8 @@ export default defineComponent({
 
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const voted = computed(() => oidcIsAuthenticated.value && (userVoted.value === 'UP_VOTE'));
+
+    const activityDate = computed(() => lastActivity.value || creationDate.value);
 
     const alertLogin = (message: string) => {
       confirm.require({
@@ -226,6 +228,7 @@ export default defineComponent({
 
     return {
       voted,
+      activityDate,
       oidcIsAuthenticated,
       showComments,
       toggleCommentsPanel,

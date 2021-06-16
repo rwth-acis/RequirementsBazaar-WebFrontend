@@ -131,7 +131,7 @@
   "votes": "Votes",
   "requirements": "Requirements",
   "about": "About",
-  "dashboard-projects": "Activities in projects you follow",
-  "dashboard-categories": "Activities in categories you follow",
-  "dashboard-requirements": "Activities in requirements you follow"
+  "dashboard-projects": "Recent activities in projects you follow",
+  "dashboard-categories": "Recent activities in categories you follow",
+  "dashboard-requirements": "Recent activities in requirements you follow"
 }

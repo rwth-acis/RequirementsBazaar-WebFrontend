@@ -131,7 +131,7 @@
     "requirements": "Requirements",
     "about": "Über",
     "edit": "Bearbeiten",
-    "dashboard-projects": "Updates  in verfolgten Projekten",
-    "dashboard-categories": "Updates  in verfolgten Kategorien",
-    "dashboard-requirements": "Updates  in verfolgten Anforderungen"
+    "dashboard-projects": "Letzte Änderungen in verfolgten Projekten",
+    "dashboard-categories": "Letzte Änderungen in verfolgten Kategorien",
+    "dashboard-requirements": "Letzte Änderungen in verfolgten Anforderungen"
 }

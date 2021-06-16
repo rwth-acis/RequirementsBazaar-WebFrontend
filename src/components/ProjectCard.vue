@@ -6,7 +6,7 @@
     <template #title>
       <div>{{ name }}</div>
       <div class="lastupdate">
-        <span :title="$dayjs(creationDate).format('LLL')">{{ $dayjs(creationDate).fromNow() }}</span>
+        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
       </div>
     </template>
     <template #content>
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
+import { computed, ref, defineComponent, toRefs} from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { followersIcon, categoriesIcon, requirementsIcon } from '../assets/reqbaz-icons.js';
@@ -42,6 +42,10 @@ export default defineComponent({
   },
   setup: (props, context) => {
     const { locale, t } = useI18n({ useScope: 'global' });
+    const { lastActivity, creationDate } = toRefs(props);
+
+    const activityDate = computed(() => lastActivity.value || creationDate.value);
+
 
     // thanks to https://stackoverflow.com/questions/11120840/hash-string-into-rgb-color/16533568#16533568
     const djb2: (str: string) => number = function(str: string) {
@@ -64,6 +68,7 @@ export default defineComponent({
     return {
       t,
       hashStringToColor,
+      activityDate,
       followersIcon,
       categoriesIcon,
       requirementsIcon
