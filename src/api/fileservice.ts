@@ -8,7 +8,6 @@ const getRequestHeaders = (user: User | null | undefined): RequestParams => {
   return {
     credentials: 'same-origin',
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': `Basic ${window.btoa(`${user.profile.preferred_username}:${user.profile.sub}`)}`,
       'access_token': user.access_token,
       'oidc_provider': 'https://api.learning-layers.eu/o/oauth2',

@@ -352,7 +352,7 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.UploadAttachment]({ commit }, file) {
     const response = await fileserviceApi.files.postFile({filecontent: file});
     if (response.status === 201) {
-      //commit(MutationType.SetComment, response.data);
+      // store in temporary requirement of categoryID
     }
   },
 

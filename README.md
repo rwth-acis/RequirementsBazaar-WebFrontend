@@ -27,4 +27,5 @@ current generated API is already checked into the repository in the `/src/types`
 ```
 npx swagger-typescript-api -p https://beta.requirements-bazaar.org/bazaar/swagger.json -o ./src/types -n bazaar-api.ts --route-types
 npx swagger-typescript-api -p https://beta.requirements-bazaar.org/activities/swagger.json -o ./src/types -n activities-api.ts --route-types
+npx swagger-typescript-api -p https://beta.requirements-bazaar.org/fileservice/swagger.json -o ./src/types -n fileservice-api.ts --route-types
 ```
