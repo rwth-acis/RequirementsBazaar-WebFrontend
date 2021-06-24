@@ -5,7 +5,7 @@ import { State } from './state';
 import { bazaarApi } from '../api/bazaar';
 import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
-import { fileserviceApi } from '../api/fileservice';
+import { filesApi } from '../api/files';
 
 export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
@@ -350,7 +350,7 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   async [ActionTypes.UploadAttachment]({ commit }, file) {
-    const response = await fileserviceApi.files.postFile({filecontent: file});
+    const response = await filesApi.postFile({filecontent: file});
     if (response.status === 201) {
       // store in temporary requirement of categoryID
     }

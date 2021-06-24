@@ -1,4 +1,4 @@
-import { RequestParams, Api } from '../types/fileservice-api';
+import { RequestParams, Api } from '../types/files-api';
 import { User } from 'oidc-client';
 
 const getRequestHeaders = (user: User | null | undefined): RequestParams => {
@@ -17,7 +17,7 @@ const getRequestHeaders = (user: User | null | undefined): RequestParams => {
   };
 };
 
-export const fileserviceApi = new Api({
-  baseUrl: 'https://beta.requirements-bazaar.org/fileservice',
+export const filesApi = new Api({
+  baseUrl: 'https://beta.requirements-bazaar.org/files',
   securityWorker: getRequestHeaders,
 });

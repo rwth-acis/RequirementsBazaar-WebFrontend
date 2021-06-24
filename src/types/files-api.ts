@@ -26,12 +26,12 @@ export namespace Download {
   }
 }
 
-export namespace Files {
+export namespace Paths {
   /**
    * No description
    * @tags files
    * @name GetFile
-   * @request GET:/files/{paths}
+   * @request GET:/{paths}
    * @secure
    */
   export namespace GetFile {
@@ -41,11 +41,14 @@ export namespace Files {
     export type RequestHeaders = {};
     export type ResponseBody = any;
   }
+}
+
+export namespace Identifier {
   /**
    * No description
    * @tags files
    * @name DeleteFile
-   * @request DELETE:/files/{identifier}
+   * @request DELETE:/{identifier}
    * @secure
    */
   export namespace DeleteFile {
@@ -54,46 +57,6 @@ export namespace Files {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags files
-   * @name PostFile
-   * @request POST:/files
-   * @secure
-   */
-  export namespace PostFile {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = {
-      identifier?: string;
-      filecontent?: File;
-      sharewithgroup?: string;
-      description?: string;
-      excludefromindex?: string;
-    };
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags files
-   * @name PutFile
-   * @request PUT:/files
-   * @secure
-   */
-  export namespace PutFile {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = {
-      identifier?: string;
-      filecontent?: File;
-      sharewithgroup?: string;
-      description?: string;
-      excludefromindex?: string;
-    };
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
   }
 }
 
@@ -176,7 +139,7 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = "/fileservice/";
+  public baseUrl: string = "/files/";
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
   private abortControllers = new Map<CancelToken, AbortController>();
@@ -330,14 +293,62 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title las2peer File Service
- * @version 1.0
+ * @version 2.0
  * @license ACIS License (BSD3) (https://github.com/rwth-acis/las2peer-FileService/blob/master/LICENSE)
- * @baseUrl /fileservice/
+ * @baseUrl /files/
  * @contact ACIS Group <cuje@dbis.rwth-aachen.de> (https://las2peer.org/)
  *
  * A las2peer file service for demonstration purposes.
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags files
+   * @name PostFile
+   * @request POST:/
+   * @secure
+   */
+  postFile = (
+    data: { filecontent?: File; sharewithgroup?: string; description?: string; excludefromindex?: string },
+    params: RequestParams = {},
+  ) =>
+    this.request<string, void>({
+      path: `/`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.FormData,
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags files
+   * @name PutFile
+   * @request PUT:/
+   * @secure
+   */
+  putFile = (
+    data: {
+      identifier?: string;
+      filecontent?: File;
+      sharewithgroup?: string;
+      description?: string;
+      excludefromindex?: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<void, void>({
+      path: `/`,
+      method: "PUT",
+      body: data,
+      secure: true,
+      type: ContentType.FormData,
+      ...params,
+    });
+
   download = {
     /**
      * No description
@@ -355,90 +366,37 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
-  files = {
+  paths = {
     /**
      * No description
      *
      * @tags files
      * @name GetFile
-     * @request GET:/files/{paths}
+     * @request GET:/{paths}
      * @secure
      */
     getFile: (paths: string[], params: RequestParams = {}) =>
       this.request<any, void>({
-        path: `/files/${paths}`,
+        path: `/${paths}`,
         method: "GET",
         secure: true,
         ...params,
       }),
-
+  };
+  identifier = {
     /**
      * No description
      *
      * @tags files
      * @name DeleteFile
-     * @request DELETE:/files/{identifier}
+     * @request DELETE:/{identifier}
      * @secure
      */
     deleteFile: (identifier: string, params: RequestParams = {}) =>
       this.request<any, void>({
-        path: `/files/${identifier}`,
+        path: `/${identifier}`,
         method: "DELETE",
         secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags files
-     * @name PostFile
-     * @request POST:/files
-     * @secure
-     */
-    postFile: (
-      data: {
-        identifier?: string;
-        filecontent?: File;
-        sharewithgroup?: string;
-        description?: string;
-        excludefromindex?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, void>({
-        path: `/files`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.FormData,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags files
-     * @name PutFile
-     * @request PUT:/files
-     * @secure
-     */
-    putFile: (
-      data: {
-        identifier?: string;
-        filecontent?: File;
-        sharewithgroup?: string;
-        description?: string;
-        excludefromindex?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, void>({
-        path: `/files`,
-        method: "PUT",
-        body: data,
-        secure: true,
-        type: ContentType.FormData,
         ...params,
       }),
   };
