@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { State, LocalComment } from './state'
 
-import { Project, Category, Requirement, Comment } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, Attachment } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export enum MutationType {
@@ -18,6 +18,10 @@ export enum MutationType {
   SetRequirementIsDeveloper = 'SET_REQUIREMENT_ISDEVELOPER',
   SetRequirementRealized = 'SET_REQUIREMENT_REALIZED',
   RemoveRequirement = 'REMOVE_REQUIREMENT',
+  SetDraftRequirement = 'SET_DRAFTREQUIREMENT',
+  SetDraftRequirementName = 'SET_DRAFTREQUIREMENT_NAME',
+  SetDraftRequirementDescription = 'SET_DRAFTREQUIREMENT_DESCRIPTION',
+  DraftRequirementAddAttachment = 'DRAFTREQUIREMENT_ADD_ATTACHMENT',
   SetComments = 'SET_COMMENTS',
   SetComment = 'SET_COMMENT',
   SetCommentShowReplyTo = 'SET_COMMENT_SHOW_REPLY_TO',
@@ -40,6 +44,9 @@ export type Mutations = {
   [MutationType.SetRequirementIsDeveloper](state: State, {requirementId: number, isDeveloper: boolean}): void;
   [MutationType.SetRequirementRealized](state: State, {requirementId: number, realized: string}): void;
   [MutationType.RemoveRequirement](state: State, requirementId: number): void;
+  [MutationType.SetDraftRequirement](state: State, requirement: Requirement): void;
+  [MutationType.SetDraftRequirementName](state: State, {requirement: Requirement, name: string}): void;
+  [MutationType.DraftRequirementAddAttachment](state: State, {requirement: Requirement, attachment: Attachment}): void;
   [MutationType.SetComments](state: State, comments: LocalComment[]): void;
   [MutationType.SetComment](state: State, comment: LocalComment): void;
   [MutationType.SetCommentShowReplyTo](state: State, {commentId: number, showReplyTo: boolean}): void;
@@ -144,6 +151,36 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.RemoveRequirement](state, requirementId) {
     delete state.requirements[requirementId];
+  },
+
+  [MutationType.SetDraftRequirement](state, requirement) {
+    const requirementIndex = state.draftRequirements.findIndex(element => (requirement.id ? (element.id === requirement.id) : (element.categories[0] === requirement.categories[0])));
+    if (requirementIndex === -1) {
+      state.draftRequirements.push(requirement);
+    } else {
+      state.draftRequirements[requirementIndex] = requirement;
+    }
+  },
+
+  [MutationType.SetDraftRequirementName](state, {requirement, name}) {
+    const requirementIndex = state.draftRequirements.findIndex(element => (requirement.id ? (element.id === requirement.id) : (element.categories[0] === requirement.categories[0])));
+    if (requirementIndex > -1) {
+      state.draftRequirements[requirementIndex].name = name;
+    }
+  },
+
+  [MutationType.SetDraftRequirementDescription](state, {requirement, description}) {
+    const requirementIndex = state.draftRequirements.findIndex(element => (requirement.id ? (element.id === requirement.id) : (element.categories[0] === requirement.categories[0])));
+    if (requirementIndex > -1) {
+      state.draftRequirements[requirementIndex].description = description;
+    }
+  },
+
+  [MutationType.DraftRequirementAddAttachment](state, {requirement, attachment}) {
+    const requirementIndex = state.draftRequirements.findIndex(element => (requirement.id ? (element.id === requirement.id) : (element.categories[0] === requirement.categories[0])));
+    if (requirementIndex > -1) {
+      state.draftRequirements[requirementIndex].attachments?.push(attachment);
+    }
   },
 
   [MutationType.SetComments](state, comments) {

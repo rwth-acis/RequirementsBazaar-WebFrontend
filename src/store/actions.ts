@@ -1,9 +1,9 @@
-import { ActionContext, ActionTree } from 'vuex';
+import { Action, ActionContext, ActionTree } from 'vuex';
 import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
 import { bazaarApi } from '../api/bazaar';
-import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse } from '../types/bazaar-api';
+import { Projects, Categories, Project, Category, Requirement, Comment, HttpResponse, Attachment } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
 import { filesApi } from '../api/files';
 
@@ -96,6 +96,11 @@ type RealizeRequirementParameters = {
   realized: boolean;
 }
 
+type UploadAttachmentParameters = {
+  draftRequirement: Requirement,
+  file: File,
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
@@ -122,6 +127,8 @@ export type Actions = {
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
 
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
+
+  [ActionTypes.UploadAttachment](context: ActionAugments, payload: UploadAttachmentParameters): void;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -349,10 +356,18 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
-  async [ActionTypes.UploadAttachment]({ commit }, file) {
+  async [ActionTypes.UploadAttachment]({ commit }, {draftRequirement, file}) {
     const response = await filesApi.postFile({filecontent: file});
+    const identifier = await response.text();
     if (response.status === 201) {
-      // store in temporary requirement of categoryID
+      // store in draft requirement of categoryID
+      const attachment: Attachment = {
+        name: file.name,
+        mimeType: file.type,
+        identifier: identifier,
+        fileUrl: `${filesApi.baseUrl}/${identifier}`,
+      };
+      commit(MutationType.DraftRequirementAddAttachment, {requirement: draftRequirement, attachment});
     }
   },
 

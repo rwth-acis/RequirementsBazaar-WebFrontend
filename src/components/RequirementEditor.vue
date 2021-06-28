@@ -48,10 +48,11 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, PropType, reactive } from 'vue'
+import { computed, ref, defineComponent, PropType, reactive } from 'vue'
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
+import { MutationType } from '../store/mutations';
 import { Requirement } from '../types/bazaar-api';
 import { required, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
@@ -110,6 +111,15 @@ export default defineComponent({
       emit('cancel');
     }
 
+    const draft: Requirement = {
+      attachments: [],
+      description,
+      projectId,
+      categories,
+    }
+    store.commit(MutationType.SetDraftRequirement, draft);
+    const draftRequirement = computed(() => store.getters.getDraftRequirementByCategoryId(categories[0]));
+
     const handleSubmit = (isFormValid) => {
       submitted.value = true;
 
@@ -117,24 +127,20 @@ export default defineComponent({
           return;
       }
 
-      const requirement: Requirement = {
-        name: state.name,
-        description: turndownService.turndown(state.description),
-        projectId,
-        categories,
-      };
+      store.commit(MutationType.SetDraftRequirementName, {requirement: draftRequirement.value, name: state.name});
+      store.commit(MutationType.SetDraftRequirementDescription, {requirement: draftRequirement.value, description: turndownService.turndown(state.description)});
 
       if (!requirementId) {
-        store.dispatch(ActionTypes.CreateRequirement, requirement);
+        store.dispatch(ActionTypes.CreateRequirement, draftRequirement.value);
       } else {
-        requirement.id = requirementId;
-        store.dispatch(ActionTypes.UpdateRequirement, requirement);
+        draftRequirement.value.id = requirementId;
+        store.dispatch(ActionTypes.UpdateRequirement, draftRequirement.value);
       }
       emit('save');
     }
 
     const uploadAttachment = (event) => {
-      store.dispatch(ActionTypes.UploadAttachment, event.files[0]);
+      store.dispatch(ActionTypes.UploadAttachment, { draftRequirement: draftRequirement.value, file: event.files[0] });
     }
 
     return { t, submitted, state, v$, cancel, handleSubmit, turndownService, uploadAttachment };

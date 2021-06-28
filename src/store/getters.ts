@@ -10,6 +10,7 @@ export type Getters = {
   getCategoryById(state: State): (id: number) => Category | undefined;
   requirementsList(state: State): (requirementId: number, parameters: any) => Requirement[];
   getRequirementById(state: State): (id: number) => Requirement | undefined;
+  getDraftRequirementByCategoryId(state: State): (categoryId: number) => Requirement | undefined;
   commentsList(state: State): (requirementId: number) => Comment[];
   activitiesList(state: State): (parameters: any) => Activity[];
 }
@@ -152,8 +153,12 @@ export const getters: GetterTree<State, State> & Getters = {
     return requirements.slice(0, parameters.per_page);
   },
 
-  getRequirementById: (state) => (id: number) => {
+  getRequirementById: (state) => (id) => {
     return state.requirements[id];
+  },
+
+  getDraftRequirementByCategoryId: (state) => (categoryId) => {
+    return state.draftRequirements.find(element => element.categories.includes(categoryId));
   },
 
   commentsList: (state) => (requirementId) => {
