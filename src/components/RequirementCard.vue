@@ -22,6 +22,16 @@
         </RequirementEditor>
       </Dialog>
       <vue3-markdown-it :source="description" class="p-mt-3 p-mb-3" />
+      <Galleria :value="images" :numVisible="5" thumbnailsPosition="top" containerStyle="max-width: 672px; margin-bottom: 1rem">
+        <template #item="slotProps">
+          <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" style="width: 100%; display: block;" />
+        </template>
+        <!--
+        <template #thumbnail="slotProps">
+          <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt" style="width: 100%; display: block;" />
+        </template>
+        -->
+      </Galleria>
       <div id="figures">
         <div id="votes">{{ upVotes }} {{ t('votes') }}</div>
         <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
@@ -51,6 +61,7 @@ import { useConfirm } from "primevue/useconfirm";
 import CommentsList from './CommentsList.vue';
 
 import RequirementEditor from '../components/RequirementEditor.vue';
+import { Attachment } from '@/types/bazaar-api';
 
 export default defineComponent({
   components: { CommentsList, RequirementEditor },
@@ -71,6 +82,7 @@ export default defineComponent({
     isFollower: { type: Boolean, required: true },
     isDeveloper: { type: Boolean, required: true },
     realized: { type: String, required: false },
+    attachments: { type: Array as PropType<Array<Attachment>>, required: false },
   },
   setup: (props) => {
     const { id, userVoted, isFollower, isDeveloper, realized } = toRefs(props);
@@ -96,6 +108,16 @@ export default defineComponent({
           rejectClass: 'p-sr-only',
           acceptLabel: 'OK',
         });
+    }
+
+    let images: any = [];
+    if (props.attachments) {
+      props.attachments.forEach(attachment => images.push({
+        'itemImageSrc': attachment.fileUrl,
+        'thumbnailImageSrc': attachment.fileUrl,
+        'alt': attachment.name,
+        'title': attachment.name,
+      }));
     }
 
     const toggleVote = () => {
@@ -239,6 +261,7 @@ export default defineComponent({
       displayRequirementEditor,
       requirementEditorCanceled,
       requirementEditorSaved,
+      images,
     };
   },
 })

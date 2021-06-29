@@ -55,6 +55,11 @@
                 "moduleName": "./node_modules/primevue/fileupload/FileUpload.vue"
             }
         },
+        "./node_modules/primevue/galleria/Galleria.vue", {
+            "Galleria": {
+                "moduleName": "./node_modules/primevue/galleria/Galleria.vue"
+            }
+        },
         "./node_modules/primevue/inputtext/InputText.vue", {
             "InputText": {
                 "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
