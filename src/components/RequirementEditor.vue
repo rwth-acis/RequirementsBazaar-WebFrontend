@@ -117,6 +117,9 @@ export default defineComponent({
       projectId,
       categories,
     }
+    if (requirementId) {
+      draft.id = requirementId;
+    }
     store.commit(MutationType.SetDraftRequirement, draft);
     const draftRequirement = computed(() => store.getters.getDraftRequirementByCategoryId(categories[0]));
 
@@ -133,7 +136,6 @@ export default defineComponent({
       if (!requirementId) {
         store.dispatch(ActionTypes.CreateRequirement, draftRequirement.value);
       } else {
-        draftRequirement.value.id = requirementId;
         store.dispatch(ActionTypes.UpdateRequirement, draftRequirement.value);
       }
       emit('save');
