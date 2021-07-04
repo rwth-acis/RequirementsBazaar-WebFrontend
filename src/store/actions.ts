@@ -35,6 +35,7 @@ export enum ActionTypes {
   FetchActivities = 'FETCH_ACTIVITIES',
 
   UploadAttachment = 'UPLOAD_ATTACHMENT',
+  DeleteAttachment = 'DELETE_ATTACHMENT',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -101,6 +102,11 @@ type UploadAttachmentParameters = {
   file: File,
 }
 
+type DeleteAttachmentParameters = {
+  draftRequirement: Requirement,
+  attachment: Attachment,
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
@@ -129,6 +135,7 @@ export type Actions = {
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
 
   [ActionTypes.UploadAttachment](context: ActionAugments, payload: UploadAttachmentParameters): void;
+  [ActionTypes.DeleteAttachment](context: ActionAugments, payload: DeleteAttachmentParameters): void;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -243,13 +250,37 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   async [ActionTypes.CreateRequirement]({ commit }, requirement) {
+    commit(MutationType.DraftRequirementCleanAttachments, requirement);
+
+    debugger;
+
     const response = await bazaarApi.requirements.createRequirement(requirement);
     if (response.data && response.status === 201) {
       commit(MutationType.SetRequirement, response.data);
     }
   },
 
-  async [ActionTypes.UpdateRequirement]({ commit }, requirement) {
+  async [ActionTypes.UpdateRequirement]({ commit, getters }, requirement) {
+    // check if attachments need to be deleted
+    const oldAttachments = getters.getRequirementById(requirement.id).attachments;
+    if (oldAttachments !== undefined) {
+      const deletedAttachments: Attachment[] = oldAttachments.filter(oldAttachment => requirement.attachments?.every(attachment => attachment.id === oldAttachment));
+      await deletedAttachments.forEach(async attachment => {
+        if (attachment.id !== undefined) {
+          await bazaarApi.attachments.deleteAttachment(attachment.id);
+          await filesApi.identifier.deleteFile(attachment.identifier);
+        }
+      });
+    }
+    commit(MutationType.DraftRequirementCleanAttachments, requirement);
+
+    requirement.attachments?.forEach(async attachment => {
+      const newAttachment: any = {...attachment};
+      delete newAttachment.draftFile;
+      newAttachment.requirementId = requirement.id;
+      await bazaarApi.attachments.createAttachment(newAttachment);
+    });
+
     const response = await bazaarApi.requirements.updateRequirement(requirement);
     if (response.data && response.status === 200) {
       commit(MutationType.SetRequirement, response.data);
@@ -367,8 +398,16 @@ export const actions: ActionTree<State, State> & Actions = {
         identifier: identifier,
         fileUrl: `${filesApi.baseUrl}/${identifier}`,
       };
-      commit(MutationType.DraftRequirementAddAttachment, {requirement: draftRequirement, attachment});
+      commit(MutationType.DraftRequirementAddAttachment, {requirement: draftRequirement, attachment, file});
     }
   },
+
+  async [ActionTypes.DeleteAttachment]({ commit }, { draftRequirement, attachment }) {
+    const response = await filesApi.identifier.deleteFile(attachment.identifier);
+    if (response.status === 200) {
+      console.log('deleted attachment');
+      commit(MutationType.DraftRequirementRemoveAttachment, {requirement: draftRequirement, attachment});
+    }
+  }
 
 }

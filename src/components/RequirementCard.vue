@@ -17,6 +17,7 @@
           :categories="categories"
           :name="name"
           :description="description"
+          :attachments="attachments"
           @cancel="requirementEditorCanceled"
           @save="requirementEditorSaved">
         </RequirementEditor>
@@ -26,11 +27,9 @@
         <template #item="slotProps">
           <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" style="width: 100%; display: block;" />
         </template>
-        <!--
         <template #thumbnail="slotProps">
-          <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt" style="width: 100%; display: block;" />
+          <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt" style="height: 50px; display: block;" />
         </template>
-        -->
       </Galleria>
       <div id="figures">
         <div id="votes">{{ upVotes }} {{ t('votes') }}</div>

@@ -22,6 +22,8 @@ export enum MutationType {
   SetDraftRequirementName = 'SET_DRAFTREQUIREMENT_NAME',
   SetDraftRequirementDescription = 'SET_DRAFTREQUIREMENT_DESCRIPTION',
   DraftRequirementAddAttachment = 'DRAFTREQUIREMENT_ADD_ATTACHMENT',
+  DraftRequirementRemoveAttachment = 'DRAFTREQUIREMENT_REMOVE_ATTACHMENT',
+  DraftRequirementCleanAttachments = 'DRAFTREQUIREMENT_CLEAN_ATTACHMENTS',
   SetComments = 'SET_COMMENTS',
   SetComment = 'SET_COMMENT',
   SetCommentShowReplyTo = 'SET_COMMENT_SHOW_REPLY_TO',
@@ -46,7 +48,9 @@ export type Mutations = {
   [MutationType.RemoveRequirement](state: State, requirementId: number): void;
   [MutationType.SetDraftRequirement](state: State, requirement: Requirement): void;
   [MutationType.SetDraftRequirementName](state: State, {requirement: Requirement, name: string}): void;
-  [MutationType.DraftRequirementAddAttachment](state: State, {requirement: Requirement, attachment: Attachment}): void;
+  [MutationType.DraftRequirementAddAttachment](state: State, {requirement: Requirement, attachment: Attachment, file: File}): void;
+  [MutationType.DraftRequirementRemoveAttachment](state: State, {requirement: Requirement, attachment: Attachment}): void;
+  [MutationType.DraftRequirementCleanAttachments](state: State, requirement: Requirement): void;
   [MutationType.SetComments](state: State, comments: LocalComment[]): void;
   [MutationType.SetComment](state: State, comment: LocalComment): void;
   [MutationType.SetCommentShowReplyTo](state: State, {commentId: number, showReplyTo: boolean}): void;
@@ -176,11 +180,30 @@ export const mutations: MutationTree<State> & Mutations = {
     }
   },
 
-  [MutationType.DraftRequirementAddAttachment](state, {requirement, attachment}) {
+  [MutationType.DraftRequirementAddAttachment](state, {requirement, attachment, file}) {
     const requirementIndex = state.draftRequirements.findIndex(element => (requirement.id ? (element.id === requirement.id) : (element.categories[0] === requirement.categories[0])));
+    attachment.draftFile = file;
     if (requirementIndex > -1) {
       state.draftRequirements[requirementIndex].attachments?.push(attachment);
     }
+  },
+
+  [MutationType.DraftRequirementRemoveAttachment](state, {requirement, attachment}) {
+    const requirementIndex = state.draftRequirements.findIndex(element => (requirement.id ? (element.id === requirement.id) : (element.categories[0] === requirement.categories[0])));
+    if (requirementIndex > -1) {
+      if (state.draftRequirements[requirementIndex].attachments) {
+        const attachmentIndex = state.draftRequirements[requirementIndex].attachments?.indexOf(attachment);
+        if (attachmentIndex !== undefined) {
+          state.draftRequirements[requirementIndex].attachments?.splice(attachmentIndex, 1);
+        }
+      }
+    }
+  },
+
+  [MutationType.DraftRequirementCleanAttachments](state, requirement) {
+    requirement.attachments?.forEach(attachment => {
+      delete (attachment as any).draftFile;
+    });
   },
 
   [MutationType.SetComments](state, comments) {

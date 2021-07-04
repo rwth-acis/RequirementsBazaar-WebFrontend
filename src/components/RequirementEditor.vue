@@ -27,6 +27,7 @@
             <FileUpload url="https://requirements-bazaar.org/fileservice/files/"
                         :customUpload="true"
                         @uploader="uploadAttachment"
+                        @remove="removeUploadedAttachment"
                         :showUploadButton="false"
                         :auto="true"
                         :multiple="true"
@@ -36,6 +37,18 @@
                 <p>Drag and drop files to here to upload.</p>
               </template>
             </FileUpload>
+            <div v-if="filteredDraftAttachments.length > 0">
+              <h3>Current Attachments</h3>
+               <div class="p-fileupload-row" v-for="file of filteredDraftAttachments" :key="file.identifier">
+                <div>
+                  <img role="presentation" :alt="file.name" :src="file.fileUrl" :width="50" />
+                </div>
+                <div class="p-fileupload-filename">{{file.name}}</div>
+                <div>
+                  <Button icon="pi pi-times" @click="removeAttachment(file)" />
+                </div>
+              </div>
+            </div>
           </AccordionTab>
         </Accordion>
       </div>
@@ -58,6 +71,8 @@ import { required, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
+import { Attachment } from '@/types/bazaar-api';
+import { debug } from 'console';
 
 export default defineComponent({
   name: 'RequirementEditor',
@@ -80,13 +95,18 @@ export default defineComponent({
     },
     requirementId: {
       type: Number,
-      required: false
+      required: false,
+    },
+    attachments: {
+      type: Array as PropType<Array<Attachment>>,
+      default: [],
+      required: false,
     },
     onCancel: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
     onSave: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
   },
   emits: ['cancel', 'save'],
-  setup: ({ name, description, projectId, categories, requirementId }, { emit }) => {
+  setup: ({ name, description, projectId, categories, requirementId, attachments }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
 
@@ -111,17 +131,22 @@ export default defineComponent({
       emit('cancel');
     }
 
+    // clone attachments object otherwise we manipulate the requirement's attachments object
+    const draftAttachments = [...attachments];
+
     const draft: Requirement = {
-      attachments: [],
+      attachments: draftAttachments,
       description,
       projectId,
       categories,
-    }
+    };
     if (requirementId) {
       draft.id = requirementId;
     }
     store.commit(MutationType.SetDraftRequirement, draft);
     const draftRequirement = computed(() => store.getters.getDraftRequirementByCategoryId(categories[0]));
+
+    const filteredDraftAttachments = computed(() => draftRequirement.value.attachments.filter(attachment => attachment.draftFile === undefined));
 
     const handleSubmit = (isFormValid) => {
       submitted.value = true;
@@ -142,10 +167,26 @@ export default defineComponent({
     }
 
     const uploadAttachment = (event) => {
-      store.dispatch(ActionTypes.UploadAttachment, { draftRequirement: draftRequirement.value, file: event.files[0] });
+      event.files.forEach(file => {
+        const fileAlreadyUploaded : boolean = draftRequirement.value.attachments.some(attachment => attachment.draftFile === file);
+        if (!fileAlreadyUploaded) {
+          store.dispatch(ActionTypes.UploadAttachment, { draftRequirement: draftRequirement.value, file });
+        }
+      });
     }
 
-    return { t, submitted, state, v$, cancel, handleSubmit, turndownService, uploadAttachment };
+    const removeUploadedAttachment = (event) => {
+      // remove from server
+      const attachment = draftRequirement.value.attachments.find(attachment => attachment.draftFile === event.files[0]);
+      store.dispatch(ActionTypes.DeleteAttachment, {draftRequirement: draftRequirement.value, attachment});
+      return true;
+    }
+
+    const removeAttachment = (attachment) => {
+      store.commit(MutationType.DraftRequirementRemoveAttachment, {requirement: draftRequirement.value, attachment});
+    }
+
+    return { t, submitted, state, v$, cancel, handleSubmit, turndownService, draftRequirement, filteredDraftAttachments, uploadAttachment, removeUploadedAttachment, removeAttachment };
   }
 })
 </script>
