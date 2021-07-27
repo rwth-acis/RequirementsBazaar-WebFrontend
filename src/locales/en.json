@@ -133,5 +133,6 @@
   "about": "About",
   "dashboard-projects": "Recent activities in projects you follow",
   "dashboard-categories": "Recent activities in categories you follow",
-  "dashboard-requirements": "Recent activities in requirements you follow"
+  "dashboard-requirements": "Recent activities in requirements you follow",
+  "home-welcome": "Welcome to your Requirements Bazaar dashboard"
 }

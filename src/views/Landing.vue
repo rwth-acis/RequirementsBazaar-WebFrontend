@@ -10,33 +10,22 @@
   <router-link to="/projects">
     <Button :label="t('explore-projects')" />
   </router-link>
-
-  <Dashboard v-if="oidcIsAuthenticated"></Dashboard>
-
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 
-import Dashboard from '../components/DashboardList.vue';
 
 export default defineComponent({
   name: 'Landing',
-  components: {
-    Dashboard,
-  },
   props: {
   },
   setup: () => {
     const { t } = useI18n({ useScope: 'global' });
-    const store = useStore();
-    const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
 
     return {
       t,
-      oidcIsAuthenticated,
     };
   }
 })
