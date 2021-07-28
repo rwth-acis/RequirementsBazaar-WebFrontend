@@ -13,9 +13,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'Landing',
@@ -23,6 +24,15 @@ export default defineComponent({
   },
   setup: () => {
     const { t } = useI18n({ useScope: 'global' });
+    const store = useStore();
+    const router = useRouter()
+
+    const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
+    watch(oidcIsAuthenticated, (newValue) => {
+      if (newValue) {
+        router.push('/home');
+      }
+    });
 
     return {
       t,
