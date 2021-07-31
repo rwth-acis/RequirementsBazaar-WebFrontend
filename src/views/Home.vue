@@ -1,7 +1,7 @@
 <template>
   <h1>{{ t('home-greeting') }} {{ oidcUser.given_name }}!</h1>
 
-  <p>This is your personal dashboard with every update you need.</p>
+  <p>{{ t('home-description') }}</p>
 
   <Dashboard v-if="oidcIsAuthenticated"></Dashboard>
 
