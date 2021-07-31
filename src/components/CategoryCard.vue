@@ -79,4 +79,11 @@ export default defineComponent({
     fill: #757575;
     margin-right: 10px;
   }
+
+  .lastupdate {
+    padding-top: 0.25em;
+    font-weight: normal;
+    font-size: 0.6em;
+    color: #5d5d5d;
+  }
 </style>

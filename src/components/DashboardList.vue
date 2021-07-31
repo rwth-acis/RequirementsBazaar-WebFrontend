@@ -81,8 +81,6 @@ export default defineComponent({
     CategoryCard,
     RequirementCard,
   },
-  props: {
-  },
   setup: () => {
     const { t } = useI18n({ useScope: 'global' });
     const store = useStore();

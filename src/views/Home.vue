@@ -1,5 +1,7 @@
 <template>
-  <h1>{{ t('home-welcome') }}</h1>
+  <h1>{{ t('home-greeting') }} {{ oidcUser.given_name }}!</h1>
+
+  <p>This is your personal dashboard with every update you need.</p>
 
   <Dashboard v-if="oidcIsAuthenticated"></Dashboard>
 
@@ -23,10 +25,12 @@ export default defineComponent({
     const { t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
+    const oidcUser = computed(() => store.getters['oidcStore/oidcUser']);
 
     return {
       t,
       oidcIsAuthenticated,
+      oidcUser,
     };
   }
 })

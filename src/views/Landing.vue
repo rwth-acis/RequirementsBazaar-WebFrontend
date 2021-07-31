@@ -5,7 +5,7 @@
     For production usage (even if it's just a test project) please go to the main instance on <a href="https://requirements-bazaar.org">https://requirements-bazaar.org</a> (without the "beta" in the URL).
     <br />
     <br />
-    NEXT DATA RESET (current grace period): MAY 31, 2021
+    NEXT DATA RESET (current grace period): August 31, 2021
   </h2>
   <router-link to="/projects">
     <Button :label="t('explore-projects')" />
