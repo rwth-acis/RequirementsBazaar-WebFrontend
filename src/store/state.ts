@@ -1,4 +1,4 @@
-import { Project, Category, Requirement, Comment } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, Dashboard } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export interface LocalComment extends Comment {
@@ -12,6 +12,7 @@ export type State = {
   requirements: {[id: number]: Requirement};
   comments: {[id: number]: LocalComment};
   activities: {[id: number]: Activity};
+  dashboard: Dashboard;
 }
 
 export const state: State = {
@@ -20,4 +21,9 @@ export const state: State = {
   requirements: {},
   comments: {},
   activities: {},
+  dashboard: {
+    projects: [],
+    categories: [],
+    requirements: [],
+  },
 };

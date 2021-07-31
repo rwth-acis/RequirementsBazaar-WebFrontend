@@ -5,6 +5,9 @@
     </template>
     <template #title>
       <div>{{ name }}</div>
+      <div class="lastupdate">
+        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
+      </div>
     </template>
     <template #content>
         <vue3-markdown-it :source="description" />
@@ -20,7 +23,8 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
+import { computed, ref, defineComponent, toRefs} from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { followersIcon, categoriesIcon, requirementsIcon } from '../assets/reqbaz-icons.js';
 
@@ -30,11 +34,18 @@ export default defineComponent({
     id: { type: Number, required: true },
     name: { type: String, required: true },
     description: { type: String, required: true },
+    creationDate: { type: String, required: true },
+    lastActivity: { type: String, required: true },
     numberOfCategories: { type: Number, required: true },
     numberOfRequirements: { type: Number, required: true },
     numberOfFollowers: { type: Number, required: true },
   },
   setup: (props, context) => {
+    const { locale, t } = useI18n({ useScope: 'global' });
+    const { lastActivity, creationDate } = toRefs(props);
+
+    const activityDate = computed(() => lastActivity.value || creationDate.value);
+
 
     // thanks to https://stackoverflow.com/questions/11120840/hash-string-into-rgb-color/16533568#16533568
     const djb2: (str: string) => number = function(str: string) {
@@ -54,7 +65,14 @@ export default defineComponent({
       )}`.substr(-2)}`;
     }
 
-    return { hashStringToColor, followersIcon, categoriesIcon, requirementsIcon };
+    return {
+      t,
+      hashStringToColor,
+      activityDate,
+      followersIcon,
+      categoriesIcon,
+      requirementsIcon
+    };
   },
 
 })
@@ -90,5 +108,12 @@ export default defineComponent({
     height: 24px;
     fill: #757575;
     margin-right: 10px;
+  }
+
+  .lastupdate {
+    padding-top: 0.25em;
+    font-weight: normal;
+    font-size: 0.6em;
+    color: #5d5d5d;
   }
 </style>

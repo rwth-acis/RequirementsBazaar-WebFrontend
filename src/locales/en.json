@@ -130,5 +130,10 @@
   "sorting-votes": "Votes",
   "votes": "Votes",
   "requirements": "Requirements",
-  "about": "About"
+  "about": "About",
+  "dashboard-projects": "Recent activities in projects you follow",
+  "dashboard-categories": "Recent activities in categories you follow",
+  "dashboard-requirements": "Recent activities in requirements you follow",
+  "home-greeting": "Hi",
+  "home-description": "This is your personal dashboard with every update you need."
 }

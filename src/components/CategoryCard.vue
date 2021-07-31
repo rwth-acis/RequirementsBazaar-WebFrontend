@@ -2,6 +2,9 @@
   <Card id="card">
     <template #title>
       <div>{{ name }}</div>
+      <div class="lastupdate">
+        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
+      </div>
     </template>
     <template #content>
       <vue3-markdown-it :source="description" />
@@ -16,7 +19,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, toRefs } from 'vue'
+import { useI18n } from 'vue-i18n';
 
 import { followersIcon, requirementsIcon } from '../assets/reqbaz-icons.js';
 
@@ -26,11 +30,23 @@ export default defineComponent({
     id: { type: Number, required: true },
     name: { type: String, required: true },
     description: { type: String, required: true },
+    creationDate: { type: String, required: true },
+    lastActivity: { type: String, required: true },
     numberOfRequirements: { type: Number, required: true },
     numberOfFollowers: { type: Number, required: true },
   },
-  setup: () => {
-    return { followersIcon, requirementsIcon };
+  setup: (props, context) => {
+    const { locale, t } = useI18n({ useScope: 'global' });
+    const { lastActivity, creationDate } = toRefs(props);
+
+    const activityDate = computed(() => lastActivity.value || creationDate.value);
+
+    return {
+      t,
+      activityDate,
+      followersIcon,
+      requirementsIcon
+    };
   },
 
 })
@@ -62,5 +78,12 @@ export default defineComponent({
     height: 24px;
     fill: #757575;
     margin-right: 10px;
+  }
+
+  .lastupdate {
+    padding-top: 0.25em;
+    font-weight: normal;
+    font-size: 0.6em;
+    color: #5d5d5d;
   }
 </style>

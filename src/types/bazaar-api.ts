@@ -103,6 +103,7 @@ export interface Category {
   /** @format int32 */
   numberOfFollowers?: number;
   userContext?: UserContext;
+  additionalProperties?: Record<string, object>;
 }
 
 export interface UserContext {
@@ -184,6 +185,7 @@ export interface Project {
   /** @format int32 */
   numberOfFollowers?: number;
   userContext?: UserContext;
+  additionalProperties?: Record<string, object>;
 }
 
 export interface Requirement {
@@ -204,6 +206,7 @@ export interface Requirement {
   leadDeveloper?: User;
   categories: number[];
   attachments?: Attachment[];
+  tags?: Tag[];
 
   /** @format date-time */
   creationDate?: string;
@@ -229,7 +232,15 @@ export interface Requirement {
   /** @format int32 */
   downVotes?: number;
   userContext?: UserContext;
+  additionalProperties?: Record<string, object>;
   _context?: EntityContext;
+}
+
+export interface Tag {
+  /** @format int32 */
+  id?: number;
+  name: string;
+  colour: string;
 }
 
 export interface CategoryContributors {
@@ -702,6 +713,36 @@ export namespace Projects {
     export type RequestBody = ProjectMember[];
     export type RequestHeaders = {};
     export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name GetTagsForProject
+   * @summary This method returns the list of tags under a given project.
+   * @request GET:/projects/{projectId}/tags
+   * @secure
+   */
+  export namespace GetTagsForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Tag[];
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name CreateTag
+   * @summary This method adds a new tag to a given project.
+   * @request POST:/projects/{projectId}/tags
+   * @secure
+   */
+  export namespace CreateTag {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = Tag;
+    export type RequestHeaders = {};
+    export type ResponseBody = Tag;
   }
   /**
    * No description
@@ -1434,15 +1475,18 @@ export class HttpClient<SecurityDataType = unknown> {
     this.securityData = data;
   };
 
-  private addQueryParam(query: QueryParamsType, key: string) {
-    const value = query[key];
+  private encodeQueryParam(key: string, value: any) {
     const encodedKey = encodeURIComponent(key);
     return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
   }
 
+  private addQueryParam(query: QueryParamsType, key: string) {
+    return this.encodeQueryParam(key, query[key]);
+  }
+
   private addArrayQueryParam(query: QueryParamsType, key: string) {
     const value = query[key];
-    return `${value.map(this.addQueryParam).join("&")}`;
+    return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
   }
 
   protected toQueryString(rawQuery?: QueryParamsType): string {
@@ -1462,9 +1506,17 @@ export class HttpClient<SecurityDataType = unknown> {
     [ContentType.Json]: (input: any) =>
       input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
     [ContentType.FormData]: (input: any) =>
-      Object.keys(input || {}).reduce((data, key) => {
-        data.append(key, input[key]);
-        return data;
+      Object.keys(input || {}).reduce((formData, key) => {
+        const property = input[key];
+        formData.append(
+          key,
+          property instanceof Blob
+            ? property
+            : typeof property === "object" && property !== null
+            ? JSON.stringify(property)
+            : `${property}`,
+        );
+        return formData;
       }, new FormData()),
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
   };
@@ -1536,8 +1588,8 @@ export class HttpClient<SecurityDataType = unknown> {
       body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
     }).then(async (response) => {
       const r = response as HttpResponse<T, E>;
-      r.data = (null as unknown) as T;
-      r.error = (null as unknown) as E;
+      r.data = null as unknown as T;
+      r.error = null as unknown as E;
 
       const data = !responseFormat
         ? r
@@ -2053,6 +2105,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: body,
         secure: true,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name GetTagsForProject
+     * @summary This method returns the list of tags under a given project.
+     * @request GET:/projects/{projectId}/tags
+     * @secure
+     */
+    getTagsForProject: (projectId: number, params: RequestParams = {}) =>
+      this.request<Tag[], void>({
+        path: `/projects/${projectId}/tags`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name CreateTag
+     * @summary This method adds a new tag to a given project.
+     * @request POST:/projects/{projectId}/tags
+     * @secure
+     */
+    createTag: (projectId: number, body: Tag, params: RequestParams = {}) =>
+      this.request<Tag, void>({
+        path: `/projects/${projectId}/tags`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

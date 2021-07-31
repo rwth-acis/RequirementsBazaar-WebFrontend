@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { State, LocalComment } from './state'
 
-import { Project, Category, Requirement, Comment } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, Dashboard } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export enum MutationType {
@@ -22,6 +22,7 @@ export enum MutationType {
   SetComment = 'SET_COMMENT',
   SetCommentShowReplyTo = 'SET_COMMENT_SHOW_REPLY_TO',
   RemoveComment = 'REMOVE_COMMENT',
+  SetDashboard = 'SET_DASHBOARD',
 
   SetActivities = 'SET_ACTIVITIES',
 }
@@ -44,6 +45,8 @@ export type Mutations = {
   [MutationType.SetComment](state: State, comment: LocalComment): void;
   [MutationType.SetCommentShowReplyTo](state: State, {commentId: number, showReplyTo: boolean}): void;
   [MutationType.RemoveComment](state: State, commentId: number): void;
+  [MutationType.SetDashboard](state: State, dashboard: Dashboard): void;
+
 
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
 };
@@ -168,6 +171,10 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.RemoveComment](state, commentId) {
     delete state.comments[commentId];
+  },
+
+  [MutationType.SetDashboard](state, dashboard) {
+    state.dashboard = dashboard;
   },
 
   [MutationType.SetActivities](state, activities) {
