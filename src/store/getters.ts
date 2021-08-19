@@ -68,7 +68,7 @@ export const getters: GetterTree<State, State> & Getters = {
     return projects;//.slice(0, parameters.per_page);
   },
 
-  getProjectById: (state) => (id: number) => {
+  getProjectById: (state) => (id: number): Project => {
     return state.projects[id];
   },
 

@@ -3,7 +3,7 @@
     <template #title>
       <div>{{ name }}</div>
       <div class="lastupdate">
-        <span :title="$dayjs(creationDate).format('LLL')">{{ $dayjs(creationDate).fromNow() }}</span>
+        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
         {{t('by')}} {{ creator?.userName }}
         <!--<i class="pi pi-pencil" style="fontSize: 0.7rem" v-if="creationDate !== lastActivity" :title="`initially created on ${$dayjs(lastActivity).format('LLL')}`"></i>-->
       </div>
@@ -27,7 +27,7 @@
         <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
         <div id="comments" @click="toggleCommentsPanel">{{ numberOfComments }} {{ t('comments')}}</div>
       </div>
-      <div id="actionButtons">
+      <div id="actionButtons" v-if="!brief">
         <div id="groupedButtons">
           <Button label="Vote" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
           <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
@@ -71,9 +71,10 @@ export default defineComponent({
     isFollower: { type: Boolean, required: true },
     isDeveloper: { type: Boolean, required: true },
     realized: { type: String, required: false },
+    brief: { type: Boolean, required: false, default: false },
   },
   setup: (props) => {
-    const { id, userVoted, isFollower, isDeveloper, realized } = toRefs(props);
+    const { id, userVoted, isFollower, isDeveloper, realized, lastActivity, creationDate } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const confirm = useConfirm();
@@ -86,6 +87,8 @@ export default defineComponent({
 
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const voted = computed(() => oidcIsAuthenticated.value && (userVoted.value === 'UP_VOTE'));
+
+    const activityDate = computed(() => lastActivity.value || creationDate.value);
 
     const alertLogin = (message: string) => {
       confirm.require({
@@ -180,7 +183,7 @@ export default defineComponent({
               confirmDelete();
             }
           }
-        ];   
+        ];
       },
       {
         immediate: true
@@ -225,6 +228,7 @@ export default defineComponent({
 
     return {
       voted,
+      activityDate,
       oidcIsAuthenticated,
       showComments,
       toggleCommentsPanel,

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Landing from './views/Landing.vue';
+import Home from './views/Home.vue';
 import Privacy from './views/Privacy.vue';
 import About from './views/About.vue';
 import Developer from './views/Developer.vue';
@@ -26,6 +27,11 @@ export const router = createRouter({
       path: "/",
       name: "landing",
       component: Landing,
+    },
+    {
+      path: "/home",
+      name: "Home",
+      component: Home,
     },
     {
       path: '/oidc-callback',
