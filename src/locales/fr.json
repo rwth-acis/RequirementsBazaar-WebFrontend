@@ -81,8 +81,8 @@
     "fdbUnfollowReq": "Vous ne suivez plus cette exigence.",
     "fdbDevelopReq": "Vous êtes désormais développeur pour cette exigence.",
     "fdbUndevelopReq": "Vous n'êtes plus développeur pour cette exigence.",
-    "mailDefaultLeader": "Obtenez des courriels à propos des exigences que vous menez",
-    "mailDefaultFollow": "Obtenez des courriels à propos des exigences que vous suivez",
+    "mailDefaultLeader": "Recevez des notifications par e-mail à propos des exigences que vous menez",
+    "mailDefaultFollow": "Recevez des e-mails à propos des exigences que vous suivez",
     "srchReq": "Rechercher une exigence",
     "developers": "Développeurs",
     "followers": "Followers",
@@ -129,5 +129,6 @@
     "sorting-votes": "Votes",
     "votes": "Votes",
     "requirements": "Exigences",
-    "about": "À propos"
+    "about": "À propos",
+    "edit": "Modifier"
 }
