@@ -1,5 +1,11 @@
 <template>
+
   <h1>Developer</h1>
+
+  <p>
+    <i>Please note, that this resource is currently only available in English. We are sorry for any inconveniences!
+    </i>
+  </p>
 
   <p>Requirements Bazaar consists of a Java-based backend and an HTML5 frontend. The backend is driven by the
     peer-to-peer platform <a href="https://las2peer.org" target="_blank">las2peer</a> which is part of our research.
