@@ -2,12 +2,13 @@
 
   <h1>About</h1>
 
-  <p>
+  <p class="p-mb-3">
     <i>Please note, that this resource is currently only available in English. We are sorry for any inconveniences!
     </i>
   </p>
 
-  <p>Requirements Bazaar is a Web-based tool for continuous innovation through stakeholder participation. It builds
+  <p>Requirements Bazaar is a web-based tool for continuous innovation through stakeholder participation. It is a
+    research prototype built at RWTH Aachen University which is open for the general public. It builds
     on the principles of social requirements engineering, which allows communities to express, discuss and
     prioritize their requirements and trace their realization in a way known from social networking.</p>
 

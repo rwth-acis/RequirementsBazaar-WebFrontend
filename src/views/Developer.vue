@@ -2,7 +2,7 @@
 
   <h1>Developer</h1>
 
-  <p>
+  <p class="p-mb-3">
     <i>Please note, that this resource is currently only available in English. We are sorry for any inconveniences!
     </i>
   </p>
