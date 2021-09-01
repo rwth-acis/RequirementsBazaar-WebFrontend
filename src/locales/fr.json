@@ -130,5 +130,10 @@
     "votes": "Votes",
     "requirements": "Exigences",
     "about": "À propos",
-    "edit": "Modifier"
+    "edit": "Modifier",
+    "home-description": "Voici votre tableau de bord personnel avec toutes les informations dont vous avez besoin.",
+    "home-greeting": "Bonjour",
+    "dashboard-requirements": "Activité récente des exigences que vous suivez",
+    "dashboard-categories": "Activité récente des catégories que vous suivez",
+    "dashboard-projects": "Activité récente des projets que vous suivez"
 }
