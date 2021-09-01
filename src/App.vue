@@ -9,7 +9,7 @@
           <ConfirmPopup group="popup"></ConfirmPopup>
         </div>
         <footer>
-          <router-link to="/about">About</router-link> <router-link to="/developer">Developer</router-link> <router-link to="/privacy">Privacy</router-link>
+          <router-link to="/about">About</router-link> &middot; <router-link to="/developer">Developer</router-link> &middot; <a href="https://rwth-aachen.de/disclaimer" target="_blank">Privacy Policy</a>
         </footer>
       </div>
       <div id="activityTrackerPlaceholder" v-if="activityTrackerVisible"></div>
