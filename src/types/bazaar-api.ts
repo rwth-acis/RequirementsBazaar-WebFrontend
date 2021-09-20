@@ -717,6 +717,36 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
+   * @name GetTagsForProject
+   * @summary This method returns the list of tags under a given project.
+   * @request GET:/projects/{projectId}/tags
+   * @secure
+   */
+  export namespace GetTagsForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Tag[];
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name CreateTag
+   * @summary This method adds a new tag to a given project.
+   * @request POST:/projects/{projectId}/tags
+   * @secure
+   */
+  export namespace CreateTag {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = Tag;
+    export type RequestHeaders = {};
+    export type ResponseBody = Tag;
+  }
+  /**
+   * No description
+   * @tags projects
    * @name RemoveMember
    * @summary This method allows to remove a project member.
    * @request DELETE:/projects/{projectId}/members/{memberId}
@@ -2105,6 +2135,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: body,
         secure: true,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name GetTagsForProject
+     * @summary This method returns the list of tags under a given project.
+     * @request GET:/projects/{projectId}/tags
+     * @secure
+     */
+    getTagsForProject: (projectId: number, params: RequestParams = {}) =>
+      this.request<Tag[], void>({
+        path: `/projects/${projectId}/tags`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name CreateTag
+     * @summary This method adds a new tag to a given project.
+     * @request POST:/projects/{projectId}/tags
+     * @secure
+     */
+    createTag: (projectId: number, body: Tag, params: RequestParams = {}) =>
+      this.request<Tag, void>({
+        path: `/projects/${projectId}/tags`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

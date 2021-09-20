@@ -30,6 +30,7 @@ export enum ActionTypes {
   CreateComment = 'CREATE_COMMENT',
   UpdateComment = 'UPDATE_COMMENT',
   DeleteComment = 'DELETE_COMMENT',
+  FetchDashboard = 'FETCH_DASHBOARD',
 
   FetchActivities = 'FETCH_ACTIVITIES',
 }
@@ -117,6 +118,7 @@ export type Actions = {
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.UpdateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
+  [ActionTypes.FetchDashboard](context: ActionAugments): void;
 
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
 }
@@ -336,6 +338,13 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.comments.deleteComment(commentId);
     if (response.data && response.status === 200) {
       commit(MutationType.RemoveComment, commentId);
+    }
+  },
+
+  async [ActionTypes.FetchDashboard]({ commit }) {
+    const response = await bazaarApi.users.getUserDashboard();
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetDashboard, response.data);
     }
   },
 

@@ -67,6 +67,8 @@
             :id="category.id"
             :name="category.name"
             :description="category.description"
+            :creationDate="category.creationDate"
+            :lastActivity="category.lastActivity"
             :numberOfFollowers="category.numberOfFollowers"
             :numberOfRequirements="category.numberOfRequirements">
           </CategoryCard>
@@ -105,7 +107,7 @@ export default defineComponent({
     const { t } = useI18n({ useScope: 'global' });
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const confirm = useConfirm();
-    
+
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
     const project = computed(() => store.getters.getProjectById(projectId));
     store.dispatch(ActionTypes.FetchProject, projectId);

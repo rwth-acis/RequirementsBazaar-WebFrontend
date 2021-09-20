@@ -20,5 +20,6 @@ const getRequestHeaders = (user: User | null | undefined): RequestParams => {
 
 export const bazaarApi = new Api({
   baseUrl: 'https://beta.requirements-bazaar.org/bazaar',
+  //baseUrl: 'http://localhost:8080/bazaar',
   securityWorker: getRequestHeaders,
 });
