@@ -103,6 +103,7 @@ export interface Category {
   /** @format int32 */
   numberOfFollowers?: number;
   userContext?: UserContext;
+  additionalProperties?: Record<string, object>;
 }
 
 export interface UserContext {
@@ -184,6 +185,7 @@ export interface Project {
   /** @format int32 */
   numberOfFollowers?: number;
   userContext?: UserContext;
+  additionalProperties?: Record<string, object>;
 }
 
 export interface Requirement {
@@ -204,6 +206,7 @@ export interface Requirement {
   leadDeveloper?: User;
   categories: number[];
   attachments?: Attachment[];
+  tags?: Tag[];
 
   /** @format date-time */
   creationDate?: string;
@@ -229,7 +232,15 @@ export interface Requirement {
   /** @format int32 */
   downVotes?: number;
   userContext?: UserContext;
+  additionalProperties?: Record<string, object>;
   _context?: EntityContext;
+}
+
+export interface Tag {
+  /** @format int32 */
+  id?: number;
+  name: string;
+  colour: string;
 }
 
 export interface CategoryContributors {
@@ -721,6 +732,49 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
+   * @name GetCategoriesForProject
+   * @summary This method returns the list of categories under a given project.
+   * @request GET:/projects/{projectId}/categories
+   * @secure
+   */
+  export namespace GetCategoriesForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Category[];
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name GetRequirementsForProject
+   * @summary This method returns the list of requirements for a specific project.
+   * @request GET:/projects/{projectId}/requirements
+   * @secure
+   */
+  export namespace GetRequirementsForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      state?: "all" | "open" | "realized";
+      sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement[];
+  }
+  /**
+   * No description
+   * @tags projects
    * @name GetProjects
    * @summary This method returns the list of projects on the server.
    * @request GET:/projects
@@ -774,17 +828,32 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
-   * @name GetStatisticsForProject
-   * @summary This method allows to retrieve statistics for one project.
-   * @request GET:/projects/{projectId}/statistics
+   * @name GetProject
+   * @summary This method allows to retrieve a certain project.
+   * @request GET:/projects/{projectId}
    * @secure
    */
-  export namespace GetStatisticsForProject {
+  export namespace GetProject {
     export type RequestParams = { projectId: number };
-    export type RequestQuery = { since?: string };
+    export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = Statistic;
+    export type ResponseBody = Project;
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name DeleteProject
+   * @summary This method deletes a specific project.
+   * @request DELETE:/projects/{projectId}
+   * @secure
+   */
+  export namespace DeleteProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
   }
   /**
    * No description
@@ -834,79 +903,6 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
-   * @name GetCategoriesForProject
-   * @summary This method returns the list of categories under a given project.
-   * @request GET:/projects/{projectId}/categories
-   * @secure
-   */
-  export namespace GetCategoriesForProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-      sortDirection?: "ASC" | "DESC";
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Category[];
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name GetRequirementsForProject
-   * @summary This method returns the list of requirements for a specific project.
-   * @request GET:/projects/{projectId}/requirements
-   * @secure
-   */
-  export namespace GetRequirementsForProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      state?: "all" | "open" | "realized";
-      sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
-      sortDirection?: "ASC" | "DESC";
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement[];
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name GetProject
-   * @summary This method allows to retrieve a certain project.
-   * @request GET:/projects/{projectId}
-   * @secure
-   */
-  export namespace GetProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Project;
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name DeleteProject
-   * @summary This method deletes a specific project.
-   * @request DELETE:/projects/{projectId}
-   * @secure
-   */
-  export namespace DeleteProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags projects
    * @name GetContributorsForProject
    * @summary This method returns the list of contributors for a specific project.
    * @request GET:/projects/{projectId}/contributors
@@ -940,6 +936,51 @@ export namespace Projects {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = Feedback[];
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name GetTagsForProject
+   * @summary This method returns the list of tags under a given project.
+   * @request GET:/projects/{projectId}/tags
+   * @secure
+   */
+  export namespace GetTagsForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Tag[];
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name CreateTag
+   * @summary This method adds a new tag to a given project.
+   * @request POST:/projects/{projectId}/tags
+   * @secure
+   */
+  export namespace CreateTag {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = Tag;
+    export type RequestHeaders = {};
+    export type ResponseBody = Tag;
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name GetStatisticsForProject
+   * @summary This method allows to retrieve statistics for one project.
+   * @request GET:/projects/{projectId}/statistics
+   * @secure
+   */
+  export namespace GetStatisticsForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = { since?: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Statistic;
   }
 }
 
@@ -1434,15 +1475,18 @@ export class HttpClient<SecurityDataType = unknown> {
     this.securityData = data;
   };
 
-  private addQueryParam(query: QueryParamsType, key: string) {
-    const value = query[key];
+  private encodeQueryParam(key: string, value: any) {
     const encodedKey = encodeURIComponent(key);
     return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
   }
 
+  private addQueryParam(query: QueryParamsType, key: string) {
+    return this.encodeQueryParam(key, query[key]);
+  }
+
   private addArrayQueryParam(query: QueryParamsType, key: string) {
     const value = query[key];
-    return `${value.map(this.addQueryParam).join("&")}`;
+    return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
   }
 
   protected toQueryString(rawQuery?: QueryParamsType): string {
@@ -1462,9 +1506,17 @@ export class HttpClient<SecurityDataType = unknown> {
     [ContentType.Json]: (input: any) =>
       input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
     [ContentType.FormData]: (input: any) =>
-      Object.keys(input || {}).reduce((data, key) => {
-        data.append(key, input[key]);
-        return data;
+      Object.keys(input || {}).reduce((formData, key) => {
+        const property = input[key];
+        formData.append(
+          key,
+          property instanceof Blob
+            ? property
+            : typeof property === "object" && property !== null
+            ? JSON.stringify(property)
+            : `${property}`,
+        );
+        return formData;
       }, new FormData()),
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
   };
@@ -1536,8 +1588,8 @@ export class HttpClient<SecurityDataType = unknown> {
       body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
     }).then(async (response) => {
       const r = response as HttpResponse<T, E>;
-      r.data = (null as unknown) as T;
-      r.error = (null as unknown) as E;
+      r.data = null as unknown as T;
+      r.error = null as unknown as E;
 
       const data = !responseFormat
         ? r
@@ -2077,6 +2129,65 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
+     * @name GetCategoriesForProject
+     * @summary This method returns the list of categories under a given project.
+     * @request GET:/projects/{projectId}/categories
+     * @secure
+     */
+    getCategoriesForProject: (
+      projectId: number,
+      query?: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Category[], void>({
+        path: `/projects/${projectId}/categories`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name GetRequirementsForProject
+     * @summary This method returns the list of requirements for a specific project.
+     * @request GET:/projects/{projectId}/requirements
+     * @secure
+     */
+    getRequirementsForProject: (
+      projectId: number,
+      query?: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        state?: "all" | "open" | "realized";
+        sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Requirement[], void>({
+        path: `/projects/${projectId}/requirements`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
      * @name GetProjects
      * @summary This method returns the list of projects on the server.
      * @request GET:/projects
@@ -2147,18 +2258,34 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
-     * @name GetStatisticsForProject
-     * @summary This method allows to retrieve statistics for one project.
-     * @request GET:/projects/{projectId}/statistics
+     * @name GetProject
+     * @summary This method allows to retrieve a certain project.
+     * @request GET:/projects/{projectId}
      * @secure
      */
-    getStatisticsForProject: (projectId: number, query?: { since?: string }, params: RequestParams = {}) =>
-      this.request<Statistic, void>({
-        path: `/projects/${projectId}/statistics`,
+    getProject: (projectId: number, params: RequestParams = {}) =>
+      this.request<Project, void>({
+        path: `/projects/${projectId}`,
         method: "GET",
-        query: query,
         secure: true,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name DeleteProject
+     * @summary This method deletes a specific project.
+     * @request DELETE:/projects/{projectId}
+     * @secure
+     */
+    deleteProject: (projectId: number, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/projects/${projectId}`,
+        method: "DELETE",
+        secure: true,
         ...params,
       }),
 
@@ -2225,100 +2352,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
-     * @name GetCategoriesForProject
-     * @summary This method returns the list of categories under a given project.
-     * @request GET:/projects/{projectId}/categories
-     * @secure
-     */
-    getCategoriesForProject: (
-      projectId: number,
-      query?: {
-        page?: number;
-        per_page?: number;
-        search?: string;
-        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-        sortDirection?: "ASC" | "DESC";
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Category[], void>({
-        path: `/projects/${projectId}/categories`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name GetRequirementsForProject
-     * @summary This method returns the list of requirements for a specific project.
-     * @request GET:/projects/{projectId}/requirements
-     * @secure
-     */
-    getRequirementsForProject: (
-      projectId: number,
-      query?: {
-        page?: number;
-        per_page?: number;
-        search?: string;
-        state?: "all" | "open" | "realized";
-        sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
-        sortDirection?: "ASC" | "DESC";
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Requirement[], void>({
-        path: `/projects/${projectId}/requirements`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name GetProject
-     * @summary This method allows to retrieve a certain project.
-     * @request GET:/projects/{projectId}
-     * @secure
-     */
-    getProject: (projectId: number, params: RequestParams = {}) =>
-      this.request<Project, void>({
-        path: `/projects/${projectId}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name DeleteProject
-     * @summary This method deletes a specific project.
-     * @request DELETE:/projects/{projectId}
-     * @secure
-     */
-    deleteProject: (projectId: number, params: RequestParams = {}) =>
-      this.request<void, void>({
-        path: `/projects/${projectId}`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
      * @name GetContributorsForProject
      * @summary This method returns the list of contributors for a specific project.
      * @request GET:/projects/{projectId}/contributors
@@ -2356,6 +2389,63 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<Feedback[], void>({
         path: `/projects/${projectId}/feedbacks`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name GetTagsForProject
+     * @summary This method returns the list of tags under a given project.
+     * @request GET:/projects/{projectId}/tags
+     * @secure
+     */
+    getTagsForProject: (projectId: number, params: RequestParams = {}) =>
+      this.request<Tag[], void>({
+        path: `/projects/${projectId}/tags`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name CreateTag
+     * @summary This method adds a new tag to a given project.
+     * @request POST:/projects/{projectId}/tags
+     * @secure
+     */
+    createTag: (projectId: number, body: Tag, params: RequestParams = {}) =>
+      this.request<Tag, void>({
+        path: `/projects/${projectId}/tags`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name GetStatisticsForProject
+     * @summary This method allows to retrieve statistics for one project.
+     * @request GET:/projects/{projectId}/statistics
+     * @secure
+     */
+    getStatisticsForProject: (projectId: number, query?: { since?: string }, params: RequestParams = {}) =>
+      this.request<Statistic, void>({
+        path: `/projects/${projectId}/statistics`,
         method: "GET",
         query: query,
         secure: true,

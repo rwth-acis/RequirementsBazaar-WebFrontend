@@ -39,6 +39,7 @@ import Skeleton from 'primevue/skeleton';
 import TabMenu from 'primevue/tabmenu';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import Timeline from 'primevue/timeline';
 
 import 'primevue/resources/themes/saga-green/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -84,5 +85,6 @@ app.component('Skeleton', Skeleton);
 app.component('TabMenu', TabMenu);
 app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
+app.component('Timeline', Timeline);
 
 app.mount('#app');
