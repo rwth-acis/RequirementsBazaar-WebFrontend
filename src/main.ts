@@ -21,6 +21,7 @@ import 'dayjs/locale/sq';
 
 import PrimeVue from 'primevue/config';
 import Avatar from 'primevue/avatar';
+import AutoComplete from 'primevue/autocomplete';
 import BadgeDirective from 'primevue/badgedirective';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -68,6 +69,7 @@ app.directive('badge', BadgeDirective);
 
 app.use(ConfirmationService);
 app.component('Avatar', Avatar);
+app.component('AutoComplete', AutoComplete);
 app.component('Button', Button);
 app.component('Card', Card);
 app.component('ConfirmDialog', ConfirmDialog);
