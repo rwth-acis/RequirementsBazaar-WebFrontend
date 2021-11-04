@@ -99,6 +99,13 @@ export default defineComponent({
       }
     });
 
+    // Reset page when searchQuery is modified so we get the expected results.
+    // In case there are many matching result page will be increased while the user scrolls as usual.
+    watch(searchQuery, () => {
+      page.value = 0;
+      console.log('resetted page');
+    });
+
     const sortDirection = computed(() => sortAscending.value ? 'ASC' : 'DESC');
     const parameters = computed(() => {return {page: page.value, per_page: perPage.value, sort: selectedSort.value, sortDirection: sortDirection.value, search: searchQuery.value}});
     const projects = computed(() => store.getters.projectsList(parameters.value));
