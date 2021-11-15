@@ -1,53 +1,30 @@
-Requirements Bazaar Web Frontend
-================================
+# Requirements Bazaar Frontend
+This is the Vue3 based implementation of the Requirements Bazaar Frontend.
 
-This repository contains the Web interface of the Requirements Bazaar. The project aims to offer users and developers of
-any kind of applications, tools or services a platform on which they can collaborate and cooparate. This Web application
-is built as a single-page application using Web Components with the Polymer 1.0 library.
+- Vue 3
+- Vuex 4
+- Vue Router 4
+- PrimeVue 3
+- Vite 2
+- Typescript
+- SASS
 
-
-Develop
-----------
-To start developing on the project. Make sure you have a running Requirements Bazaar service, which comes with demo
-data, otherwise you won’t be able to see much. Then check out this project and then run following commands.
-
-Make sure node.js is installed, you need it for the development process.
-```
-node --version && npm --version
-```
-Install polymer-cli and bower
-```
-npm install --global polymer-cli bower
-```
-Navigate to project folder and install dependencies and bower components with
+## Set up Development Environment
+Install dependencies:
 ```
 npm install
-bower install
+```
+We use [Vite](https://vitejs.dev/) for frontend tooling.
+To start the development server, use:
+```
+npm run dev
 ```
 
-Start locally in browser
-```
-polymer serve
-```
-
-Build / Deploy
-----------
-If you are not interested in developing the project, you can just build it. In order to build the project, run
-```
-polymer build
-```
-In the `build` folder you will find two built versions: `bundled` for serving over HTTP/2 and `unbundled` for serving
-to traditional HTTP clients.
-
-
-License
--------
+## API Types Generation
+The following commands have to be executed only after the backend API has been updated. Normally, the
+current generated API is already checked into the repository in the `/src/types` folder.
 
 ```
-The Requirements Bazaar Web Frontend is licensed under the MIT License. However, it is based on the Polymer Starter Kit
-from Google, thus you find both licenses in the `LICENSE.md`file.
-
-Copyright 2017 Advanced Community Information Systems (ACIS) Group, Chair of Computer Science 5 (Databases & Information
-Systems), RWTH Aachen University, Germany
-
+npx swagger-typescript-api -p https://beta.requirements-bazaar.org/bazaar/swagger.json -o ./src/types -n bazaar-api.ts --route-types
+npx swagger-typescript-api -p https://beta.requirements-bazaar.org/activities/swagger.json -o ./src/types -n activities-api.ts --route-types
 ```

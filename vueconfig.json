@@ -1,0 +1,89 @@
+{
+    "globalComponents": [
+        "./node_modules/primevue/avatar/Avatar.vue", {
+            "Avatar": {
+                "moduleName": "./node_modules/primevue/avatar/Avatar.vue"
+            }
+        },
+        "./node_modules/primevue/button/Button.vue", {
+            "Button": {
+                "moduleName": "./node_modules/primevue/button/Button.vue"
+            }
+        },
+        "./node_modules/primevue/card/Card.vue", {
+            "Card": {
+                "moduleName": "./node_modules/primevue/card/Card.vue"
+            }
+        },
+        "./node_modules/primevue/confirmdialog/ConfirmDialog.vue", {
+            "ConfirmDialog": {
+                "moduleName": "./node_modules/primevue/confirmdialog/ConfirmDialog.vue"
+            }
+        },
+        "./node_modules/primevue/confirmpopup/ConfirmPopup.vue", {
+            "ConfirmPopup": {
+                "moduleName": "./node_modules/primevue/confirmpopup/ConfirmPopup.vue"
+            }
+        },
+        "./node_modules/primevue/dialog/Dialog.vue", {
+            "Dialog": {
+                "moduleName": "./node_modules/primevue/dialog/Dialog.vue"
+            }
+        },
+        "./node_modules/primevue/dropdown/Dropdown.vue", {
+            "Dropdown": {
+                "moduleName": "./node_modules/primevue/dropdown/Dropdown.vue"
+            }
+        },
+        "./node_modules/primevue/editor/Editor.vue", {
+            "Editor": {
+                "moduleName": "./node_modules/primevue/editor/Editor.vue"
+            }
+        },
+        "./node_modules/primevue/inputtext/InputText.vue", {
+            "InputText": {
+                "moduleName": "./node_modules/primevue/inputtext/InputText.vue"
+            }
+        },
+        "./node_modules/primevue/menu/Menu.vue", {
+            "Menu": {
+                "moduleName": "./node_modules/primevue/menu/Menu.vue"
+            }
+        },
+        "./node_modules/primevue/overlaypanel/OverlayPanel.vue", {
+            "OverlayPanel": {
+                "moduleName": "./node_modules/primevue/overlaypanel/OverlayPanel.vue"
+            }
+        },
+        "./node_modules/primevue/scrolltop/ScrollTop.vue", {
+            "ScrollTop": {
+                "moduleName": "./node_modules/primevue/scrolltop/ScrollTop.vue"
+            }
+        },
+        "./node_modules/primevue/selectbutton/SelectButton.vue", {
+            "SelectButton": {
+                "moduleName": "./node_modules/primevue/selectbutton/SelectButton.vue"
+            }
+        },
+        "./node_modules/primevue/skeleton/Skeleton.vue", {
+            "Skeleton": {
+                "moduleName": "./node_modules/primevue/skeleton/Skeleton.vue"
+            }
+        },
+        "./node_modules/primevue/tabmenu/TabMenu.vue", {
+            "TabMenu": {
+                "moduleName": "./node_modules/primevue/tabmenu/TabMenu.vue"
+            }
+        },
+        "./node_modules/primevue/tabpanel/TabPanel.vue", {
+            "TabPanel": {
+                "moduleName": "./node_modules/primevue/tabpanel/TabPanel.vue"
+            }
+        },
+        "./node_modules/primevue/tabview/TabView.vue", {
+            "TabView": {
+                "moduleName": "./node_modules/primevue/tabview/TabView.vue"
+            }
+        }
+    ]
+}
