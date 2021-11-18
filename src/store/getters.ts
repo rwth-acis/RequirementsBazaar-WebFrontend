@@ -63,8 +63,6 @@ export const getters: GetterTree<State, State> & Getters = {
         break;
     }
 
-    projects = projects.filter(project => project.name?.toLowerCase().includes(parameters.search.toLowerCase()));
-
     return projects;//.slice(0, parameters.per_page);
   },
 

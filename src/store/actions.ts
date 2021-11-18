@@ -8,6 +8,7 @@ import { activitiesApi } from '../api/activities';
 
 export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
+  SearchProjects = 'SEARCH_PROJECTS',
   FetchProject = 'FETCH_PROJECT',
   FollowProject = 'FOLLOW_PROJECT',
   CreateProject = 'CREATE_PROJECT',
@@ -96,6 +97,7 @@ type RealizeRequirementParameters = {
 
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
+  [ActionTypes.SearchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
   [ActionTypes.FollowProject](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.CreateProject](context: ActionAugments, payload: Project): void;
@@ -125,10 +127,22 @@ export type Actions = {
 
 export const actions: ActionTree<State, State> & Actions = {
 
+  /**
+   * Fetches the projects according to the given 'parameters' and merges them with the existing projects.
+   * (Uses the 'SetProjects' Mutation)
+   */
   async [ActionTypes.FetchProjects]({ commit }, parameters) {
     const response = await bazaarApi.projects.getProjects(parameters.query);
     if (response.data && response.status === 200) {
       commit(MutationType.SetProjects, response.data);
+    }
+  },
+
+  async [ActionTypes.SearchProjects]({ commit }, parameters) {
+    const response = await bazaarApi.projects.getProjects(parameters.query);
+    if (response.data && response.status === 200) {
+      // Difference to FetchProjects: We REPLACE the existing list of projects
+      commit(MutationType.ReplaceProjects, response.data);
     }
   },
 

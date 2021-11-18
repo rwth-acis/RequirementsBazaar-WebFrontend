@@ -6,6 +6,7 @@ import { Activity } from '../types/activities-api';
 
 export enum MutationType {
   SetProjects = 'SET_PROJECTS',
+  ReplaceProjects = 'REPLACE_PROJECTS',
   SetProject = 'SET_PROJECT',
   SetProjectIsFollower = 'SET_PROJECT_IS_FOLLOWER',
   SetCategories = 'SET_CATEGORIES',
@@ -29,6 +30,7 @@ export enum MutationType {
 
 export type Mutations = {
   [MutationType.SetProjects](state: State, projects: Project[]): void;
+  [MutationType.ReplaceProjects](state: State, project: Project[]): void;
   [MutationType.SetProject](state: State, project: Project): void;
   [MutationType.SetProjectIsFollower](state: State, {projectId: number, isFollower: boolean}): void;
   [MutationType.SetCategories](state: State, categories: Category[]): void;
@@ -53,7 +55,25 @@ export type Mutations = {
 
 export const mutations: MutationTree<State> & Mutations = {
 
+  /**
+   * Updates each of the projects or adds them to the list if they not exist.
+   *
+   * This DOES NOT replace the list of projects.
+   */
   [MutationType.SetProjects](state, projects) {
+    projects.forEach((project) => {
+      if (project.id) {
+        state.projects[project.id] = project;
+      }
+    });
+  },
+
+  /**
+   * Replaces the list of projects with the given ones.
+   */
+  [MutationType.ReplaceProjects](state, projects) {
+    // clear before
+    state.projects = {};
     projects.forEach((project) => {
       if (project.id) {
         state.projects[project.id] = project;
