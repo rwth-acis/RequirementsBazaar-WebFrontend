@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 14
       - run: npm ci
-      - run: npm run build --if-present
+      - run: npm run build-beta --if-present
       - name: Create zip bundle
         run: zip -r dist.zip dist/
       - name: Create Release
@@ -33,7 +33,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            This is a pre-release.
+            This is a pre-release. It is configured to be deployed in the beta environment of Requirements Bazaar.
           draft: false
           prerelease: true
       - name: Upload Release Asset
