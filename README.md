@@ -20,6 +20,25 @@ To start the development server, use:
 npm run dev
 ```
 
+## Build
+
+There are multiple commands to build the frontend for different environments.
+To build for the *beta environment*, use:
+```
+npm run build-beta
+```
+
+To build for the *production environment*, use:
+```
+npm run build-prod
+```
+
+If you want to deploy your own instance of the Requirements Bazaar, provide an environment configuration `.env.my-environment` and use:
+```
+npm run build -- --mode my-environment
+```
+
+
 ## API Types Generation
 The following commands have to be executed only after the backend API has been updated. Normally, the
 current generated API is already checked into the repository in the `/src/types` folder.

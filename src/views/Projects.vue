@@ -89,6 +89,9 @@ export default defineComponent({
           //const isSentinelVisible = intersection.isIntersecting;
           if (firstLoadComplete && intersection.isIntersecting) {
             page.value += 1;
+
+            // trigger a fetch of the next page
+            store.dispatch(ActionTypes.FetchProjects, {query: parameters.value});
           } else {
             firstLoadComplete = true;
           }
@@ -107,7 +110,19 @@ export default defineComponent({
       //sortAscending.value = !['last_activity', 'date', 'requirement', 'follower'].includes(selectedSort.value);
       sortAscending.value = selectedSort.value === 'name';
     });
-    watch(parameters, () => store.dispatch(ActionTypes.FetchProjects, {query: parameters.value}));
+
+    // watch sort params and trigger a 'FetchProjects' action if changed
+    const sortParams = computed(() => {return {sort: selectedSort.value, sortDirection: sortDirection.value}});
+    watch(sortParams, () => store.dispatch(ActionTypes.FetchProjects, {query: parameters.value}));
+
+    // use the ActionTypes.SearchProject for search if searchQuery modified
+    // Reset page when searchQuery is modified so we get the expected results.
+    // In case there are many matching result page will be increased while the user scrolls as usual.
+    watch(searchQuery, () => {
+      page.value = 0;
+
+      store.dispatch(ActionTypes.SearchProjects, {query: parameters.value});
+    });
 
     const showAddProject = ref(false);
     const toggleAddProject = () => {
