@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 14
       - run: npm ci
-      - run: npm run build --if-present
+      - run: npm run build-prod --if-present
       - name: Create zip bundle
         run: zip -r dist.zip dist/
       - name: Create Release
@@ -34,6 +34,8 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             This is the ${{ steps.get_version.outputs.version }} release. For changes please check the [Changelog](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/blob/develop/CHANGELOG.md).
+
+            This build is configured to be deployed in the production environment of Requirements Bazaar. Check the [README](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/blob/main/README.md) if you want to build and deploy your own version.
           draft: false
           prerelease: false
       - name: Upload Release Asset
