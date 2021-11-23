@@ -1,7 +1,7 @@
 <template>
     <div class="card" v-if="members">
         <DataTable :value="members" rowGroupMode="subheader" groupRowsBy="role"
-            sortMode="single" sortField="name" :sortOrder="1" scrollable scrollHeight="800px">
+            sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
             <Column field="userName" header="User">
                 <template #body="slotProps">
                     <!-- Shows a default icon if profile image loading fails (currently always the case!) -->
@@ -92,7 +92,7 @@ export default defineComponent({
 
     const removeMember = (member: ProjectMember) => {
 
-        // TODO run action
+        store.dispatch(ActionTypes.RemoveProjectMember, {projectId: projectId, userId: member.userId});
 
         showRemoveMemberDialog.value = false;
     };

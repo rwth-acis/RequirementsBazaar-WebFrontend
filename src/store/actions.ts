@@ -33,6 +33,7 @@ export enum ActionTypes {
   DeleteComment = 'DELETE_COMMENT',
 
   FetchProjectMembers = "FETCH_PROJECT_MEMBERS",
+  RemoveProjectMember = "REMOVE_PROJECT_MEMBER",
 
   FetchDashboard = 'FETCH_DASHBOARD',
 
@@ -98,6 +99,11 @@ type RealizeRequirementParameters = {
   realized: boolean;
 }
 
+type RemoveProjectMemberParameters = {
+  projectId: number;
+  userId: number;
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.SearchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
@@ -125,6 +131,7 @@ export type Actions = {
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
 
   [ActionTypes.FetchProjectMembers](context: ActionAugments, projectId: number): void;
+  [ActionTypes.RemoveProjectMember](context: ActionAugments, parameters: RemoveProjectMemberParameters): void;
 
   [ActionTypes.FetchDashboard](context: ActionAugments): void;
 
@@ -366,6 +373,14 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.projects.getMembers(projectId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetProjectMembers, {projectId: projectId, members: response.data});
+    }
+  },
+
+  async [ActionTypes.RemoveProjectMember]({ commit }, parameters) {
+    // TODO Add paging
+    const response = await bazaarApi.projects.removeMember(parameters.projectId, parameters.userId);
+    if (response.status === 204 || response.status === 200) {
+      commit(MutationType.RemoveProjectMember, {projectId: parameters.projectId, userId: parameters.userId});
     }
   },
 
