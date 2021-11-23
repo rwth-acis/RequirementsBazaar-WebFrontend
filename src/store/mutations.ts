@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { State, LocalComment } from './state'
 
-import { Project, Category, Requirement, Comment, Dashboard } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, Dashboard, ProjectMember } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export enum MutationType {
@@ -23,6 +23,9 @@ export enum MutationType {
   SetComment = 'SET_COMMENT',
   SetCommentShowReplyTo = 'SET_COMMENT_SHOW_REPLY_TO',
   RemoveComment = 'REMOVE_COMMENT',
+
+  SetProjectMembers = 'SET_PROJECT_MEMBERS',
+
   SetDashboard = 'SET_DASHBOARD',
 
   SetActivities = 'SET_ACTIVITIES',
@@ -47,6 +50,8 @@ export type Mutations = {
   [MutationType.SetComment](state: State, comment: LocalComment): void;
   [MutationType.SetCommentShowReplyTo](state: State, {commentId: number, showReplyTo: boolean}): void;
   [MutationType.RemoveComment](state: State, commentId: number): void;
+  [MutationType.SetProjectMembers](state: State, {projectId: number, members: any }): void;
+
   [MutationType.SetDashboard](state: State, dashboard: Dashboard): void;
 
 
@@ -191,6 +196,17 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.RemoveComment](state, commentId) {
     delete state.comments[commentId];
+  },
+
+  [MutationType.SetProjectMembers](state, {projectId, members}) {
+    if (!state.projectMembers[projectId]) {
+      state.projectMembers[projectId] = {};
+    }
+    members.forEach((member) => {
+      if (member.id) {
+        state.projectMembers[projectId][member.id] = member;
+      }
+    });
   },
 
   [MutationType.SetDashboard](state, dashboard) {

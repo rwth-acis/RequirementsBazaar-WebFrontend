@@ -40,6 +40,8 @@ import Skeleton from 'primevue/skeleton';
 import TabMenu from 'primevue/tabmenu';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 
 import 'primevue/resources/themes/saga-green/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -86,5 +88,7 @@ app.component('Skeleton', Skeleton);
 app.component('TabMenu', TabMenu);
 app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
+app.component('DataTable', DataTable);
+app.component('Column', Column);
 
 app.mount('#app');

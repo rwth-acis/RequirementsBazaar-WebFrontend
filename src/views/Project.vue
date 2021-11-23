@@ -60,7 +60,8 @@
       </div>
     </div>
     <div v-show="!showCategories">
-      <h3>Project Managers</h3>
+      <ProjectMembersList v-if="project" :projectId="project.id" />
+      <div>---</div>
       <span class="p-fluid">
         <AutoComplete :multiple="true" /><!-- v-model="selectedCountries" :suggestions="filteredCountries" @complete="searchCountry($event)" field="name" />-->
       </span>
@@ -84,6 +85,7 @@ import FilterPanel from '../components/FilterPanel.vue';
 import CategoryCard from '../components/CategoryCard.vue';
 import ProjectEditor from '../components/ProjectEditor.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
+import ProjectMembersList from '../components/ProjectMembersList.vue';
 
 export default defineComponent({
   components: {
@@ -91,6 +93,7 @@ export default defineComponent({
     CategoryCard,
     ProjectEditor,
     CategoryEditor,
+    ProjectMembersList
   },
   name: 'Project',
   props: {

@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex'
 import { State } from './state'
-import { Project, Category, Requirement, Comment } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, ProjectMember } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export type Getters = {
@@ -11,6 +11,7 @@ export type Getters = {
   requirementsList(state: State): (requirementId: number, parameters: any) => Requirement[];
   getRequirementById(state: State): (id: number) => Requirement | undefined;
   commentsList(state: State): (requirementId: number) => Comment[];
+  getProjectMembers(state: State): (projectId: number) => ProjectMember[];
   activitiesList(state: State): (parameters: any) => Activity[];
 }
 
@@ -108,6 +109,12 @@ export const getters: GetterTree<State, State> & Getters = {
 
   getCategoryById: (state) => (id: number) => {
     return state.categories[id];
+  },
+
+  getProjectMembers: (state) => (projectId) => {
+    let members: ProjectMember[] = Object.values(state.projectMembers[projectId] ?? {});
+
+    return members;
   },
 
   requirementsList: (state) => (categoryId, parameters) => {
