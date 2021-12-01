@@ -61,14 +61,6 @@
     </div>
     <div v-show="!showCategories">
       <ProjectMembersList v-if="project" :projectId="project.id" />
-      <div>---</div>
-      <span class="p-fluid">
-        <AutoComplete :multiple="true" /><!-- v-model="selectedCountries" :suggestions="filteredCountries" @complete="searchCountry($event)" field="name" />-->
-      </span>
-      <h3>Project Members</h3>
-      <span class="p-fluid">
-        <AutoComplete :multiple="true" /><!-- v-model="selectedCountries" :suggestions="filteredCountries" @complete="searchCountry($event)" field="name" />-->
-      </span>
     </div>
   </div>
 </template>

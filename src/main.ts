@@ -42,6 +42,8 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import Toolbar from 'primevue/toolbar';
+import ProgressBar from 'primevue/progressbar';
 
 import 'primevue/resources/themes/saga-green/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -90,5 +92,7 @@ app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
 app.component('DataTable', DataTable);
 app.component('Column', Column);
+app.component('Toolbar', Toolbar);
+app.component("ProgressBar", ProgressBar);
 
 app.mount('#app');

@@ -2,7 +2,7 @@ import { ActionContext, ActionTree } from 'vuex';
 import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
-import { bazaarApi } from '../api/bazaar';
+import { bazaarApi, ProjectMemberRole } from '../api/bazaar';
 import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
 
@@ -33,6 +33,7 @@ export enum ActionTypes {
   DeleteComment = 'DELETE_COMMENT',
 
   FetchProjectMembers = "FETCH_PROJECT_MEMBERS",
+  UpdateProjectMemberRole = "UPDATE_PROJECT_MEMBER_ROLE",
   RemoveProjectMember = "REMOVE_PROJECT_MEMBER",
 
   FetchDashboard = 'FETCH_DASHBOARD',
@@ -99,6 +100,12 @@ type RealizeRequirementParameters = {
   realized: boolean;
 }
 
+type UpdateProjectMemberRoleParameters = {
+  projectId: number;
+  userId: number;
+  role: ProjectMemberRole;
+}
+
 type RemoveProjectMemberParameters = {
   projectId: number;
   userId: number;
@@ -131,6 +138,7 @@ export type Actions = {
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
 
   [ActionTypes.FetchProjectMembers](context: ActionAugments, projectId: number): void;
+  [ActionTypes.UpdateProjectMemberRole](context: ActionAugments, parameters: UpdateProjectMemberRoleParameters): void;
   [ActionTypes.RemoveProjectMember](context: ActionAugments, parameters: RemoveProjectMemberParameters): void;
 
   [ActionTypes.FetchDashboard](context: ActionAugments): void;
@@ -373,6 +381,25 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.projects.getMembers(projectId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetProjectMembers, {projectId: projectId, members: response.data});
+    }
+  },
+
+  async [ActionTypes.UpdateProjectMemberRole]({ commit, dispatch }, parameters) {
+    // TODO Add paging
+    const memberUpdates = [
+      {
+        userId: parameters.userId,
+        role: parameters.role
+      }
+    ];
+    const response = await bazaarApi.projects.updateMembership(parameters.projectId, memberUpdates);
+    if (response.status === 204 || response.status === 200) {
+      // We do not have all information about the user available here to simply add them
+      // Workaround: Fetch fresh list of members
+
+      dispatch(ActionTypes.FetchProjectMembers, parameters.projectId);
+
+      //commit(MutationType.UpdateProjectMemberRole, {projectId: parameters.projectId, userId: parameters.userId});
     }
   },
 

@@ -1,5 +1,9 @@
 <template>
     <div class="card" v-if="members">
+        <div>
+            <Button label="Add Member" icon="pi pi-plus" class="p-button-success p-my-3" @click="openNewMemberDialog" />
+        </div>
+
         <DataTable :value="members" rowGroupMode="subheader" groupRowsBy="role"
             sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
             <Column field="userName" header="User">
@@ -34,12 +38,45 @@
         </DataTable>
     </div>
 
+    <Dialog v-model:visible="showAddMemberDialog" :style="{width: '450px'}" header="Add Member" :modal="true" class="p-fluid">
+        <div class="p-field">
+            <label for="name">Username</label>
+            <AutoComplete id="name" required="true" v-model="selectedUser" :suggestions="userSuggestions"  @complete="searchUser($event)"
+                field="userName" forceSelection :class="{'p-invalid': memberSubmitted && !userNameInput}" placeholder="Choose a user name"  />
+            <small class="p-error" v-if="memberSubmitted && !product.name">Username is required.</small>
+        </div>
+
+        <div class="p-field">
+            <label for="inventoryStatus" class="p-mb-3">Role</label>
+            <Dropdown id="inventoryStatus" v-model="memberToAdd.role" :options="assignableRoles" placeholder="Select a Role">
+                <template #value="slotProps">
+                    <div v-if="slotProps.value && slotProps.value.value">
+                        <span :class="'product-badge status-' +slotProps.value.value">{{slotProps.value.label}}</span>
+                    </div>
+                    <div v-else-if="slotProps.value && !slotProps.value.value">
+                        <span :class="'product-badge status-' +slotProps.value.toLowerCase()">{{slotProps.value}}</span>
+                    </div>
+                    <span v-else>
+                        {{slotProps.placeholder}}
+                    </span>
+                </template>
+            </Dropdown>
+        </div>
+
+        <template #footer>
+            <ProgressBar mode="indeterminate" class="mb-3" v-if="inProgress" />
+            <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showAddMemberDialog = false" />
+            <Button label="Save" icon="pi pi-check" class="p-button-text" @click="submitMember" />
+        </template>
+    </Dialog>
+
     <Dialog v-model:visible="showRemoveMemberDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
         <div class="confirmation-content">
             <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
             <span v-if="memberToRemove">Are you sure you want to remove member <b>{{memberToRemove.userName}}</b> from the project?</span>
         </div>
         <template #footer>
+            <ProgressBar mode="indeterminate" class="mb-3" v-if="inProgress" />
             <Button label="No" icon="pi pi-times" class="p-button-text" @click="showRemoveMemberDialog = false"/>
             <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="removeMember(memberToRemove)" />
         </template>
@@ -47,11 +84,12 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, defineComponent, onMounted } from 'vue'
+import { computed, ref, defineComponent, onMounted, watch } from 'vue'
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
-import { ProjectMember } from '../types/bazaar-api';
+import { ProjectMember, User } from '../types/bazaar-api';
+import { bazaarApi, ProjectMemberRole } from '../api/bazaar';
 
 export default defineComponent({
   name: 'ProjectMembersList',
@@ -69,6 +107,8 @@ export default defineComponent({
       console.log("mounted");
     });
 
+    const inProgress = ref(false);
+
     const members = computed(() => store.getters.getProjectMembers(projectId));
     store.dispatch(ActionTypes.FetchProjectMembers, projectId);
 
@@ -80,7 +120,7 @@ export default defineComponent({
         showDefaultUserIcon.value = showDefaultUserIcon.value;
     };
 
-    const assignableRoles = ["ProjectMember", "ProjectAdmin", "ProjectManager"];
+    const assignableRoles = ["ProjectMember", "ProjectManager", "ProjectAdmin"];
 
     const memberToRemove = ref();
     const showRemoveMemberDialog = ref(false);
@@ -91,10 +131,46 @@ export default defineComponent({
     };
 
     const removeMember = (member: ProjectMember) => {
+        inProgress.value = true;
+        store.dispatch(ActionTypes.RemoveProjectMember, {projectId: projectId, userId: member.userId})
+            .then(() => {
+                showRemoveMemberDialog.value = false;
+                inProgress.value = false;
+            });
+    };
 
-        store.dispatch(ActionTypes.RemoveProjectMember, {projectId: projectId, userId: member.userId});
+    const showAddMemberDialog = ref(false);
+    const memberSubmitted = ref(false);
+    const memberToAdd = ref<ProjectMember>({
+            userId: -1,
+            role: "ProjectMember" // default
+    });
+    const openNewMemberDialog = () => {
+        memberToAdd.value = {
+            userId: -1,
+            role: "ProjectMember" // default
+        };
+        memberSubmitted.value = false;
+        showAddMemberDialog.value = true;
+    };
 
-        showRemoveMemberDialog.value = false;
+    const userNameInput = ref('');
+    const userSuggestions = ref<User[]>();
+    const selectedUser = ref<User>();
+
+    const searchUser = (event) => {
+        bazaarApi.users.searchUser({search: event.query, per_page: 10})
+            .then(response => response.data)
+            .then(users => userSuggestions.value = users);
+    };
+
+    const submitMember = () => {
+        inProgress.value = true;
+        store.dispatch(ActionTypes.UpdateProjectMemberRole, {projectId: projectId, userId: selectedUser.value!.id, role: memberToAdd.value.role})
+            .then(() => {
+                showAddMemberDialog.value = false;
+                inProgress.value = false;
+            });
     };
 
     return {
@@ -104,11 +180,21 @@ export default defineComponent({
       members,
       assignableRoles,
       showRemoveMemberDialog,
+      showAddMemberDialog,
       confirmRemoveMember,
       removeMember,
       memberToRemove,
+      openNewMemberDialog,
+      memberToAdd,
+      memberSubmitted,
       handleUserImageError,
-      showDefaultUserIcon
+      showDefaultUserIcon,
+      submitMember,
+      userNameInput,
+      userSuggestions,
+      selectedUser,
+      searchUser,
+      inProgress,
     };
   }
 })
