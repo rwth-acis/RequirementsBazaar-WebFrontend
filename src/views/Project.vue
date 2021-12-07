@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <div v-show="!showCategories">
+    <div v-if="!showCategories">
       <ProjectMembersList v-if="project" :projectId="project.id" />
     </div>
   </div>
