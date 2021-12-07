@@ -17,5 +17,10 @@ export default defineConfig({
     vueI18n({
       include: path.resolve(__dirname, './src/locales/**')
     })
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'), // enables us to use import @/components etc. instead of using relative paths like ./../components
+    }
+  }
 })
