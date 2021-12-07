@@ -3,7 +3,7 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
 import { bazaarApi, ProjectMemberRole } from '../api/bazaar';
-import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse } from '../types/bazaar-api';
+import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse, ProjectMember } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
 
 export enum ActionTypes {
@@ -104,6 +104,7 @@ type UpdateProjectMemberRoleParameters = {
   projectId: number;
   userId: number;
   role: ProjectMemberRole;
+  memberId: number; // when user is already member and we want to change the role
 }
 
 type RemoveProjectMemberParameters = {
@@ -389,7 +390,8 @@ export const actions: ActionTree<State, State> & Actions = {
     const memberUpdates = [
       {
         userId: parameters.userId,
-        role: parameters.role
+        role: parameters.role,
+        id: parameters.memberId, // can be undefined for new members
       }
     ];
     const response = await bazaarApi.projects.updateMembership(parameters.projectId, memberUpdates);

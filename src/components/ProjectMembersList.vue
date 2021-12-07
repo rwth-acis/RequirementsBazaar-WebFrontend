@@ -27,7 +27,7 @@
             </Column>
             <Column :exportable="false">
                 <template #body="slotProps">
-                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editProduct(slotProps.data)" />
+                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="openEditMemberDialog(slotProps.data)" />
                     <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="confirmRemoveMember(slotProps.data)" />
                 </template>
             </Column>
@@ -67,6 +67,35 @@
             <ProgressBar mode="indeterminate" class="mb-3" v-if="inProgress" />
             <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showAddMemberDialog = false" />
             <Button label="Save" icon="pi pi-check" class="p-button-text" @click="submitMember" />
+        </template>
+    </Dialog>
+
+    <Dialog v-model:visible="showEditMemberDialog" :style="{width: '450px'}" header="Edit Member" :modal="true" class="p-fluid">
+        <div class="p-field">
+            <label for="name">Username: </label> <b>{{memberToEdit.userName}}</b>
+        </div>
+
+        <div class="p-field">
+            <label for="inventoryStatus" class="p-mb-3">Role</label>
+            <Dropdown id="inventoryStatus" v-model="memberToEdit.role" :options="assignableRoles" placeholder="Select a Role">
+                <template #value="slotProps">
+                    <div v-if="slotProps.value && slotProps.value.value">
+                        <span :class="'product-badge status-' +slotProps.value.value">{{slotProps.value.label}}</span>
+                    </div>
+                    <div v-else-if="slotProps.value && !slotProps.value.value">
+                        <span :class="'product-badge status-' +slotProps.value.toLowerCase()">{{slotProps.value}}</span>
+                    </div>
+                    <span v-else>
+                        {{slotProps.placeholder}}
+                    </span>
+                </template>
+            </Dropdown>
+        </div>
+
+        <template #footer>
+            <ProgressBar mode="indeterminate" class="mb-3" v-if="inProgress" />
+            <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showEditMemberDialog = false" />
+            <Button label="Save" icon="pi pi-check" class="p-button-text" @click="submitUpdatedMember" />
         </template>
     </Dialog>
 
@@ -173,6 +202,33 @@ export default defineComponent({
             });
     };
 
+    const showEditMemberDialog = ref(false);
+    const memberToEdit = ref<ProjectMember>();
+
+    const openEditMemberDialog = (member: ProjectMember) => {
+        // IMPORTANT: clone here so we do not modify a Vuex state object!
+        memberToEdit.value = {
+            userId: member.userId,
+            role: member.role,
+            id: member.id,
+        };
+        showEditMemberDialog.value = true;
+    };
+
+    const submitUpdatedMember = () => {
+        inProgress.value = true;
+        store.dispatch(ActionTypes.UpdateProjectMemberRole, {
+            projectId: projectId,
+            userId: memberToEdit.value!.userId,
+            role: memberToEdit.value!.role,
+            memberId: memberToEdit.value?.id,
+        })
+            .then(() => {
+                showEditMemberDialog.value = false;
+                inProgress.value = false;
+            });
+    };
+
     return {
       t,
       oidcIsAuthenticated,
@@ -195,6 +251,10 @@ export default defineComponent({
       selectedUser,
       searchUser,
       inProgress,
+      openEditMemberDialog,
+      memberToEdit,
+      showEditMemberDialog,
+      submitUpdatedMember
     };
   }
 })

@@ -207,9 +207,9 @@ export const mutations: MutationTree<State> & Mutations = {
   },
 
   [MutationType.SetProjectMembers](state, {projectId, members}) {
-    if (!state.projectMembers[projectId]) {
-      state.projectMembers[projectId] = {};
-    }
+    // reset first
+    state.projectMembers[projectId] = {}
+
     members.forEach((member) => {
       if (member.id) {
         state.projectMembers[projectId][member.id] = member;
