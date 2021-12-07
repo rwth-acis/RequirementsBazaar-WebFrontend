@@ -7,6 +7,7 @@ import Developer from './views/Developer.vue';
 import Projects from './views/Projects.vue';
 import Project from './views/Project.vue';
 import Category from './views/Category.vue';
+import Requirement from './views/Requirement.vue';
 import OidcCallback from './views/oidc/OidcCallback.vue';
 import OidcPopupCallback from './views/oidc/OidcPopupCallback.vue'
 import OidcCallbackError from './views/oidc/OidcCallbackError.vue'
@@ -88,8 +89,24 @@ export const router = createRouter({
       name: "category",
       component: Category,
     },
+    {
+      path: "/projects/:projectId/requirements/:requirementId",
+      name: "requirement",
+      component: Requirement,
+    },
   ],
 });
+
+export const routePathToProject = (projectId: string | number) => {
+  return `/projects/${projectId}`;
+};
+
+/**
+ * Returns the *route path* to the given requirment (no absolute URL!).
+ */
+export const routePathToRequirement = (projectId: string | number, requirementId: string | number) => {
+  return `/projects/${projectId}/requirements/${requirementId}`;
+};
 
 router.beforeEach(vuexOidcCreateRouterMiddleware(store, 'oidcStore'))
 router.beforeEach((to, from, next) => {

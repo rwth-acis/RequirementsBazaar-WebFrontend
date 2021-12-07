@@ -50,6 +50,8 @@ import { ActionTypes } from '../store/actions';
 import { useConfirm } from "primevue/useconfirm";
 import CommentsList from './CommentsList.vue';
 
+import { routePathToRequirement } from '@/router';
+
 import RequirementEditor from '../components/RequirementEditor.vue';
 
 export default defineComponent({
@@ -74,7 +76,7 @@ export default defineComponent({
     brief: { type: Boolean, required: false, default: false },
   },
   setup: (props) => {
-    const { id, userVoted, isFollower, isDeveloper, realized, lastActivity, creationDate } = toRefs(props);
+    const { id, userVoted, isFollower, isDeveloper, realized, lastActivity, creationDate, categories, projectId } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const confirm = useConfirm();
@@ -190,6 +192,11 @@ export default defineComponent({
       }
     )
 
+    const createShareableRequirementLink = () => {
+      const path = routePathToRequirement(projectId.value, id.value);
+      return window.location.origin + path;
+    }
+
     const shareMenu = ref(null);
     const toggleShareMenu = (event) => {
       (shareMenu as any).value.toggle(event);
@@ -221,7 +228,7 @@ export default defineComponent({
         icon: 'pi pi-copy',
         command: () => {
           console.log('Copying to clipboard...');
-          navigator.clipboard.writeText('');
+          navigator.clipboard.writeText(createShareableRequirementLink());
         },
       },
     ]);
