@@ -22,6 +22,5 @@ export type ProjectMemberRole = "ProjectMember" | "ProjectManager" | "ProjectAdm
 
 export const bazaarApi = new Api({
   baseUrl: `${import.meta.env.VITE_BAZAAR_API_URL}`,
-  //baseUrl: 'http://localhost:8080/bazaar',
   securityWorker: getRequestHeaders,
 });
