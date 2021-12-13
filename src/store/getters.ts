@@ -1,5 +1,5 @@
 import { GetterTree } from 'vuex'
-import { State } from './state'
+import { State, UnhandledError } from './state'
 import { Project, Category, Requirement, Comment } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
@@ -12,6 +12,7 @@ export type Getters = {
   getRequirementById(state: State): (id: number) => Requirement | undefined;
   commentsList(state: State): (requirementId: number) => Comment[];
   activitiesList(state: State): (parameters: any) => Activity[];
+  unhandledErrors(state: State): (parameters: any) => UnhandledError[];
 }
 
 const numericalSortFunction = (property, sortAscending) => (a, b) => {
@@ -180,6 +181,11 @@ export const getters: GetterTree<State, State> & Getters = {
     activities.sort(numericalSortFunction('id', false));
 
     return activities.slice(0, parameters.limit);
+  },
+
+  unhandledErrors: (state: State) => (parameters: any) => {
+
+    return state.unhandledErrors;
   },
 
 }
