@@ -100,6 +100,7 @@
     </Dialog>
 
     <Dialog v-model:visible="showRemoveMemberDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
+        <Message v-if="warnRemoveActiveUser" severity="warn">You'll remove yourself from the project!</Message>
         <div class="confirmation-content">
             <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
             <span v-if="memberToRemove">Are you sure you want to remove member <b>{{memberToRemove.userName}}</b> from the project?</span>
@@ -136,6 +137,10 @@ export default defineComponent({
       console.log("mounted");
     });
 
+    const activeUser = ref<User>();
+    // TODO Ensure this is already loaded when accessing this property!
+    bazaarApi.users.getActiveUser().then(resp => activeUser.value = resp.data);
+
     const inProgress = ref(false);
 
     const members = computed(() => store.getters.getProjectMembers(projectId));
@@ -154,8 +159,11 @@ export default defineComponent({
     const memberToRemove = ref();
     const showRemoveMemberDialog = ref(false);
 
+    const warnRemoveActiveUser = computed(() => activeUser.value && activeUser.value.id === memberToRemove.value.userId)
+
     const confirmRemoveMember = (member: ProjectMember) => {
         memberToRemove.value = member;
+
         showRemoveMemberDialog.value = true;
     };
 
@@ -238,6 +246,7 @@ export default defineComponent({
       showRemoveMemberDialog,
       showAddMemberDialog,
       confirmRemoveMember,
+      warnRemoveActiveUser,
       removeMember,
       memberToRemove,
       openNewMemberDialog,
