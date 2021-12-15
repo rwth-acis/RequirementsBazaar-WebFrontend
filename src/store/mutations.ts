@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { State, LocalComment } from './state'
+import { State, LocalComment, UnhandledError } from './state'
 
 import { Project, Category, Requirement, Comment, Dashboard, ProjectMember } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
@@ -30,6 +30,8 @@ export enum MutationType {
   SetDashboard = 'SET_DASHBOARD',
 
   SetActivities = 'SET_ACTIVITIES',
+
+  _AddUnhandledError = 'ADD_UNHANDLED_ERROR',
 }
 
 type RemoveProjectMemberParameters = {
@@ -64,6 +66,8 @@ export type Mutations = {
 
 
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
+
+  [MutationType._AddUnhandledError](state: State, error: UnhandledError): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -241,4 +245,7 @@ export const mutations: MutationTree<State> & Mutations = {
     });
   },
 
+  [MutationType._AddUnhandledError](state, error) {
+    state.unhandledErrors.push(error);
+  },
 }

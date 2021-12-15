@@ -6,6 +6,13 @@ export interface LocalComment extends Comment {
   draftMessage?: String;
 }
 
+export interface UnhandledError {
+  message: string;
+  source: string;
+  details: string;
+  timestamp: number;
+}
+
 export type State = {
   projects: {[id: number]: Project};
   projectMembers: {
@@ -16,6 +23,7 @@ export type State = {
   comments: {[id: number]: LocalComment};
   activities: {[id: number]: Activity};
   dashboard: Dashboard;
+  unhandledErrors: UnhandledError[];
 }
 
 export const state: State = {
@@ -30,4 +38,5 @@ export const state: State = {
     categories: [],
     requirements: [],
   },
+  unhandledErrors: [],
 };

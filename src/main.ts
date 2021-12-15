@@ -51,6 +51,7 @@ import 'primevue/resources/primevue.min.css';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import './assets/layout/layout.scss';
+import ErrorHandler from './service/ErrorHandler';
 
 const app = createApp(App);
 const i18n = createI18n({
@@ -69,6 +70,32 @@ app.use(PrimeVue);
 app.use(i18n);
 app.use(VueMarkdownIt);
 app.config.globalProperties.$dayjs = dayjs;
+
+app.config.errorHandler = (err, vm, info) => {
+  console.log('[DEBUG] Vue error handler called: ');
+  console.log(err);
+  ErrorHandler.onError(err);
+}
+
+/**
+ * Catch unhandler errors from Promises and process by ErrorHandler.
+ *
+ * Error handler might detect e.g., a Bazaar API error response and show
+ * a (localized) useful message to the user.
+ */
+ window.addEventListener('unhandledrejection', event => {
+  if (event.reason) {
+    if (event.reason.ignoreUnhandledRejection) {
+      console.log('unhandledrejection seems to be already handled')
+      event.preventDefault();
+    }
+    const handled = ErrorHandler.onError(event.reason);
+    if (handled) {
+      console.log('handled unhandledrejection event by ErrorHandler')
+      event.preventDefault();
+    }
+  }
+});
 
 app.directive('badge', BadgeDirective);
 
