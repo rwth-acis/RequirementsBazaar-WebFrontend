@@ -2,8 +2,8 @@ import { ActionContext, ActionTree } from 'vuex';
 import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
-import { bazaarApi } from '../api/bazaar';
-import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse } from '../types/bazaar-api';
+import { bazaarApi, ProjectMemberRole } from '../api/bazaar';
+import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse, ProjectMember } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
 
 export enum ActionTypes {
@@ -31,6 +31,11 @@ export enum ActionTypes {
   CreateComment = 'CREATE_COMMENT',
   UpdateComment = 'UPDATE_COMMENT',
   DeleteComment = 'DELETE_COMMENT',
+
+  FetchProjectMembers = "FETCH_PROJECT_MEMBERS",
+  UpdateProjectMemberRole = "UPDATE_PROJECT_MEMBER_ROLE",
+  RemoveProjectMember = "REMOVE_PROJECT_MEMBER",
+
   FetchDashboard = 'FETCH_DASHBOARD',
 
   FetchActivities = 'FETCH_ACTIVITIES',
@@ -95,6 +100,18 @@ type RealizeRequirementParameters = {
   realized: boolean;
 }
 
+type UpdateProjectMemberRoleParameters = {
+  projectId: number;
+  userId: number;
+  role: ProjectMemberRole;
+  memberId: number; // when user is already member and we want to change the role
+}
+
+type RemoveProjectMemberParameters = {
+  projectId: number;
+  userId: number;
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.SearchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
@@ -120,6 +137,11 @@ export type Actions = {
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.UpdateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
+
+  [ActionTypes.FetchProjectMembers](context: ActionAugments, projectId: number): void;
+  [ActionTypes.UpdateProjectMemberRole](context: ActionAugments, parameters: UpdateProjectMemberRoleParameters): void;
+  [ActionTypes.RemoveProjectMember](context: ActionAugments, parameters: RemoveProjectMemberParameters): void;
+
   [ActionTypes.FetchDashboard](context: ActionAugments): void;
 
   [ActionTypes.FetchActivities](context: ActionAugments, payload: ActivitiesRequestParameters): void;
@@ -352,6 +374,42 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.comments.deleteComment(commentId);
     if (response.data && response.status === 200) {
       commit(MutationType.RemoveComment, commentId);
+    }
+  },
+
+  async [ActionTypes.FetchProjectMembers]({ commit }, projectId) {
+    // TODO Add paging
+    const response = await bazaarApi.projects.getMembers(projectId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetProjectMembers, {projectId: projectId, members: response.data});
+    }
+  },
+
+  async [ActionTypes.UpdateProjectMemberRole]({ commit, dispatch }, parameters) {
+    // TODO Add paging
+    const memberUpdates = [
+      {
+        userId: parameters.userId,
+        role: parameters.role,
+        id: parameters.memberId, // can be undefined for new members
+      }
+    ];
+    const response = await bazaarApi.projects.updateMembership(parameters.projectId, memberUpdates);
+    if (response.status === 204 || response.status === 200) {
+      // We do not have all information about the user available here to simply add them
+      // Workaround: Fetch fresh list of members
+
+      dispatch(ActionTypes.FetchProjectMembers, parameters.projectId);
+
+      //commit(MutationType.UpdateProjectMemberRole, {projectId: parameters.projectId, userId: parameters.userId});
+    }
+  },
+
+  async [ActionTypes.RemoveProjectMember]({ commit }, parameters) {
+    // TODO Add paging
+    const response = await bazaarApi.projects.removeMember(parameters.projectId, parameters.userId);
+    if (response.status === 204 || response.status === 200) {
+      commit(MutationType.RemoveProjectMember, {projectId: parameters.projectId, userId: parameters.userId});
     }
   },
 

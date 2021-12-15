@@ -5,6 +5,11 @@
                 "moduleName": "./node_modules/primevue/avatar/Avatar.vue"
             }
         },
+        "./node_modules/primevue/autocomplete/AutoComplete.vue", {
+            "AutoComplete": {
+                "moduleName": "./node_modules/primevue/autocomplete/AutoComplete.vue"
+            }
+        },
         "./node_modules/primevue/button/Button.vue", {
             "Button": {
                 "moduleName": "./node_modules/primevue/button/Button.vue"

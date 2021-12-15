@@ -70,7 +70,7 @@ export const router = createRouter({
       component: Projects,
     },
     {
-      path: "/projects/:projectId",
+      path: "/projects/:projectId/:members?",
       name: "project",
       component: Project,
     },
@@ -79,11 +79,12 @@ export const router = createRouter({
       name: "project-all",
       component: Project,
     },
-    {
+/*    {
       path: "/projects/:projectId/members",
       name: "project-members",
       component: Project,
     },
+*/
     {
       path: "/projects/:projectId/categories/:categoryId/:done?",
       name: "category",
