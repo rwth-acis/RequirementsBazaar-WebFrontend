@@ -1,5 +1,5 @@
 import { GetterTree } from 'vuex'
-import { State UnhandledError } from './state'
+import { State, UnhandledError } from './state'
 import { Project, Category, Requirement, Comment, ProjectMember } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
