@@ -21,6 +21,7 @@ import 'dayjs/locale/sq';
 
 import PrimeVue from 'primevue/config';
 import Avatar from 'primevue/avatar';
+import AutoComplete from 'primevue/autocomplete';
 import BadgeDirective from 'primevue/badgedirective';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -39,6 +40,10 @@ import Skeleton from 'primevue/skeleton';
 import TabMenu from 'primevue/tabmenu';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Toolbar from 'primevue/toolbar';
+import ProgressBar from 'primevue/progressbar';
 import Message from 'primevue/message';
 
 import 'primevue/resources/themes/saga-green/theme.css';
@@ -96,6 +101,7 @@ app.directive('badge', BadgeDirective);
 
 app.use(ConfirmationService);
 app.component('Avatar', Avatar);
+app.component('AutoComplete', AutoComplete);
 app.component('Button', Button);
 app.component('Card', Card);
 app.component('ConfirmDialog', ConfirmDialog);
@@ -112,6 +118,10 @@ app.component('Skeleton', Skeleton);
 app.component('TabMenu', TabMenu);
 app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
+app.component('DataTable', DataTable);
+app.component('Column', Column);
+app.component('Toolbar', Toolbar);
+app.component("ProgressBar", ProgressBar);
 app.component('Message', Message);
 
 app.mount('#app');
