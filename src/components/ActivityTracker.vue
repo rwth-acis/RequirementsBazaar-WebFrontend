@@ -1,7 +1,8 @@
 <template>
   <div class="activitiesList">
     <div v-for="activity in activities" :key="activity.id" class="activity">
-      <Avatar :image="activity.user.profileImage" shape="circle" size="large" class="profileImage"/>
+      <UserAvatar :imageUrl="activity.user.profileImage" :userName="activity.user.userName" class="profileImage" />
+
       <div class="activityText">
         {{ activity.user.userName }}
         {{ actionWordings[activity.activityAction] }}
@@ -15,8 +16,10 @@
 import { computed, defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { ActionTypes } from '../store/actions';
+import UserAvatar from './UserAvatar.vue';
 
 export default defineComponent({
+  components: { UserAvatar },
   name: 'ActivityTracker',
   props: {
   },
@@ -87,7 +90,7 @@ export default defineComponent({
   }
 
   .profileImage {
-    margin: auto 0;
+    margin: auto 5px;
   }
 
   .activity ::v-deep(.p-avatar > img) {
