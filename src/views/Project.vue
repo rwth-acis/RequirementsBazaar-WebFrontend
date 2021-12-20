@@ -1,13 +1,29 @@
 <template>
   <h1>{{ project?.name }}</h1>
+  <Button icon="pi pi-tag" label="Join Development on GitHub" class="p-button-sm p-button-outlined"  @click="joinDevelopment" v-if="showButtonJoinDevelopment()"></Button>
   <div id="description">
     <vue3-markdown-it :source="project?.description" />
   </div>
+  <div id="timeline">
+    <h2>Development Timeline</h2>
+    <Timeline :value="timelineEvents" layout="horizontal" align="bottom">
+        <template #marker="slotProps">
+          <span class="custom-marker">
+            <i :class="slotProps.item.status"></i>
+          </span>
+        </template>
+        <template #content="slotProps">
+          {{slotProps.item.label}}
+        </template>
+    </Timeline>
+    </div>
+
   <Dialog :header="t('editProject')" v-model:visible="displayProjectEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
     <ProjectEditor
       :name="project?.name"
       :description="project?.description"
       :projectId="project?.id"
+      :additionalProperties="project?.additionalProperties"
       @cancel="projectEditorCanceled"
       @save="projectEditorSaved">
     </ProjectEditor>
@@ -30,6 +46,8 @@
   <div id="menuBar">
     <TabMenu id="tabMenu" :model="tabItems" />
     <div id="actionButtons">
+      <Button icon="pi pi-tag" label="New Release Available" class="p-button-sm p-button-outlined" v-if="showButtonNewRelease()" @click="newReleaseAvailable"></Button>
+      <Button icon="pi pi-github" label="Connect to GitHub" class="p-button-sm p-button-outlined" v-if="oidcIsAuthenticated" @click="connectToGithub"></Button>
       <Button icon="pi pi-bell" :label="oidcIsAuthenticated && project?.userContext?.isFollower ? t('unfollowProject') : t('followProject')" class="p-button-sm" :class="{ 'p-button-outlined': !(oidcIsAuthenticated && project?.userContext?.isFollower) }" @click="followClick"></Button>
       <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
@@ -102,6 +120,75 @@ export default defineComponent({
     store.dispatch(ActionTypes.FetchProject, projectId);
     const showCategories = computed(() => route.params.members ? false : true);
 
+    // read values for the timeline
+    const hook_id_value = project.value?.additionalProperties?.hook_id;
+    const release_value = project.value?.additionalProperties?.release; //url
+    const pull_request_status = project.value?.additionalProperties?.pull_request; //status
+    const pull_request_url = project.value?.additionalProperties?.pull_request_url; //url
+    // ****** Functions to update the timeline icons *****
+    // Project exported & hook received
+    function timelineStatusGithub(){
+      let statusLabelGithub = "pi pi-circle-off";
+      if(hook_id_value !== undefined){
+        statusLabelGithub = "pi pi-check-circle";
+      }
+      return statusLabelGithub;
+    }
+    // Pull Request opened
+    function timelineStatusPullRequest(){
+      let statusLabelPullRequest = "pi pi-circle-off";
+      if(pull_request_status == "opened"){
+        statusLabelPullRequest = "pi pi-check-circle";
+      }
+      return statusLabelPullRequest;
+    }
+    function timelineStatusRelease(){
+      let statusLabelRelease = "pi pi-circle-off";
+      if(release_value !== undefined){
+        statusLabelRelease = "pi pi-check-circle";
+      }
+      return statusLabelRelease;
+    }
+
+    //Timeline events
+    const timelineEvents = ref([
+      {label: 'Development Started',        status: timelineStatusGithub()},
+      {label: 'Development in Progress',    status: timelineStatusPullRequest()},
+      {label: 'Released',                   status: timelineStatusRelease()},
+      ]);
+
+    // Show button "new release"
+    function showButtonNewRelease(){
+      let buttonNewRelease = false;
+      if(release_value !== undefined)
+        buttonNewRelease = true;
+      return buttonNewRelease;
+    };
+
+    // Show button "join development"
+    function showButtonJoinDevelopment(){
+      let buttonJoinDevelopment = false;
+      if(pull_request_url != undefined)
+        buttonJoinDevelopment = true;
+      return buttonJoinDevelopment;
+    }
+
+    // Redirect to github pull requests
+    const joinDevelopment = () => {
+      confirm.require({
+        header: 'Join Development on GitHub',
+        message: 'You will be redirected to GitHub',
+        icon: 'pi pi-external-link',
+        group: 'dialog',
+            accept: () => {
+            window.open(pull_request_url);
+            },
+            reject: () => {
+            console.log('not redirected');
+            }
+      })
+    };
+
     watch(oidcIsAuthenticated, () => store.dispatch(ActionTypes.FetchProject, projectId));
 
     const tabItems = ref([
@@ -167,9 +254,60 @@ export default defineComponent({
     });
     watch(parameters, () => store.dispatch(ActionTypes.FetchCategoriesOfProject, {projectId: projectId, query: parameters.value}));
 
-    const followClick = () => {
-      if (oidcIsAuthenticated.value) {
-        store.dispatch(ActionTypes.FollowProject, {id: projectId, isFollower: project.value.userContext.isFollower ? false : true});
+    // Alerts
+    const alertMessage = (message: string) => {
+      confirm.require({
+          group: 'dialog',
+          message: message,
+          header: 'Ops!',
+          icon: 'pi pi-info-circle',
+          rejectClass: 'p-sr-only',
+          acceptLabel: 'OK',
+        });
+    }
+  // Button connect to github
+    const connectToGithub = () => {
+      const baseUrl = "https://beta.requirements-bazaar.org/bazaar";
+      const projectName = projectEditorName.value.replace(/\s/g, '');
+      const githubBaseUrl = project.value.additionalProperties.github_url;
+      if(hook_id_value == undefined){
+          confirm.require({
+          header: 'Redirect to Github (Hint: Copy Webhook and Secret)',
+          message: 'Webhook: '+baseUrl+'/webhook/'+projectId+'/github '+ 'Secret: '+ projectName,
+          icon: 'pi pi-external-link',
+          group: 'dialog',
+            accept: () => {
+            window.open(githubBaseUrl+"/settings/hooks/new");
+            },
+            reject: () => {
+            console.log('not redirected');
+            }
+          });
+      } else{
+        alertMessage('This Project is already connected to GitHub.');
+      }
+
+    };
+    // Button new release
+    const newReleaseAvailable = () => {
+      const releaseUrl = project.value.additionalProperties.release;
+      confirm.require({
+          header: 'Redirect to External Link',
+          message: 'You will be redirected to the latest release',
+          icon: 'pi pi-external-link',
+          group: 'dialog',
+            accept: () => {
+            window.open(releaseUrl);
+            },
+            reject: () => {
+            console.log('not redirected');
+            }
+          });
+    };
+
+    function followClick() {
+      if(oidcIsAuthenticated.value) {
+        store.dispatch(ActionTypes.FollowProject, { id: projectId, isFollower: project.value.userContext.isFollower? false:true });
       } else {
         confirm.require({
           group: 'dialog',
@@ -180,7 +318,7 @@ export default defineComponent({
           acceptLabel: 'OK',
         });
       }
-    };
+    }
 
     const confirmDelete = () => {
       confirm.require({
@@ -274,6 +412,13 @@ export default defineComponent({
       projectEditorCanceled,
       projectEditorSaved,
       showCategories,
+      connectToGithub,
+      timelineEvents,
+      newReleaseAvailable,
+      showButtonNewRelease,
+      showButtonJoinDevelopment,
+      joinDevelopment,
+      alertMessage,
     }
   }
 })
@@ -282,6 +427,10 @@ export default defineComponent({
 <style scoped>
   #description {
     margin-bottom: 2rem;
+
+  }
+  #timeline {
+    margin-bottom: 1rem;
   }
 
   #addCategoryPanel {
@@ -343,4 +492,17 @@ export default defineComponent({
     max-width: 700px;
     margin: 10px;
   }
+
+  /*Timeline*/
+  .custom-marker {
+    display: flex;
+    width: 2rem;
+    height: 1rem;
+    align-items: center;
+    justify-content: center;
+    color: green;
+    border-radius: 50%;
+    z-index: 1;
+}
+
 </style>
