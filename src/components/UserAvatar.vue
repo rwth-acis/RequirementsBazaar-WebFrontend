@@ -12,12 +12,13 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'UserAvatar',
   props: {
-      imageUrl: { type: String, required: true },
-      userName: { type: String, required: true },
+      imageUrl: { type: String, required: false },
+      userName: { type: String, default: 'anonymous' },
       size: { type: String, default: 'large' },
   },
-  setup: () => {
-    const showDefaultIcon = ref(false);
+  setup: (props) => {
+    // show default icon if no image URL is given (e.g., in case of a deleted user)
+    const showDefaultIcon = ref(props.imageUrl === undefined);
 
     const handleImageError = () => {
         showDefaultIcon.value = true;
