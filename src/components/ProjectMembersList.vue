@@ -8,15 +8,8 @@
             sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
             <Column field="userName" header="User">
                 <template #body="slotProps">
-                    <!-- Shows a default icon if profile image loading fails (currently always the case!) -->
-                    <i v-if="showDefaultUserIcon[slotProps.data.userId] === true"
-                        class="pi pi-user p-pr-3" style="fontSize: 1rem; vertical-align: middle;"></i>
-                    <img v-else
-                        :alt="slotProps.data.userName"
-                        :src="slotProps.data.userProfileImage"
-                        @error="handleUserImageError(slotProps.data.userId)"
-                        width="32" style="vertical-align: middle" class="p-pr-3" />
-                    <span class="image-text">{{slotProps.data.userName}}</span>
+                    <UserAvatar :imageUrl="slotProps.data.userProfileImage" :userName="slotProps.data.userName" size="small" />
+                    <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
                 </template>
             </Column>
             <Column field="userId" header="User ID"></Column>
@@ -121,11 +114,14 @@ import { ActionTypes } from '../store/actions';
 import { ProjectMember, User } from '../types/bazaar-api';
 import { bazaarApi, ProjectMemberRole } from '../api/bazaar';
 
+import UserAvatar from './UserAvatar.vue';
+
 export default defineComponent({
   name: 'ProjectMembersList',
   props: {
     projectId: { type: Number, required: true },
   },
+  components: { UserAvatar },
   setup: ({ projectId }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
