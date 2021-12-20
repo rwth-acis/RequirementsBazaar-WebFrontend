@@ -21,6 +21,7 @@ import 'dayjs/locale/sq';
 
 import PrimeVue from 'primevue/config';
 import Avatar from 'primevue/avatar';
+import AutoComplete from 'primevue/autocomplete';
 import BadgeDirective from 'primevue/badgedirective';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -39,12 +40,18 @@ import Skeleton from 'primevue/skeleton';
 import TabMenu from 'primevue/tabmenu';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Toolbar from 'primevue/toolbar';
+import ProgressBar from 'primevue/progressbar';
+import Message from 'primevue/message';
 
 import 'primevue/resources/themes/saga-green/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import './assets/layout/layout.scss';
+import ErrorHandler from './service/ErrorHandler';
 
 const app = createApp(App);
 const i18n = createI18n({
@@ -64,10 +71,37 @@ app.use(i18n);
 app.use(VueMarkdownIt);
 app.config.globalProperties.$dayjs = dayjs;
 
+app.config.errorHandler = (err, vm, info) => {
+  console.log('[DEBUG] Vue error handler called: ');
+  console.log(err);
+  ErrorHandler.onError(err);
+}
+
+/**
+ * Catch unhandler errors from Promises and process by ErrorHandler.
+ *
+ * Error handler might detect e.g., a Bazaar API error response and show
+ * a (localized) useful message to the user.
+ */
+ window.addEventListener('unhandledrejection', event => {
+  if (event.reason) {
+    if (event.reason.ignoreUnhandledRejection) {
+      console.log('unhandledrejection seems to be already handled')
+      event.preventDefault();
+    }
+    const handled = ErrorHandler.onError(event.reason);
+    if (handled) {
+      console.log('handled unhandledrejection event by ErrorHandler')
+      event.preventDefault();
+    }
+  }
+});
+
 app.directive('badge', BadgeDirective);
 
 app.use(ConfirmationService);
 app.component('Avatar', Avatar);
+app.component('AutoComplete', AutoComplete);
 app.component('Button', Button);
 app.component('Card', Card);
 app.component('ConfirmDialog', ConfirmDialog);
@@ -84,5 +118,10 @@ app.component('Skeleton', Skeleton);
 app.component('TabMenu', TabMenu);
 app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
+app.component('DataTable', DataTable);
+app.component('Column', Column);
+app.component('Toolbar', Toolbar);
+app.component("ProgressBar", ProgressBar);
+app.component('Message', Message);
 
 app.mount('#app');

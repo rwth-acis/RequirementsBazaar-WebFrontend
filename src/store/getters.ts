@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex'
-import { State } from './state'
-import { Project, Category, Requirement, Comment } from '../types/bazaar-api';
+import { State, UnhandledError } from './state'
+import { Project, Category, Requirement, Comment, ProjectMember } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export type Getters = {
@@ -11,7 +11,9 @@ export type Getters = {
   requirementsList(state: State): (requirementId: number, parameters: any) => Requirement[];
   getRequirementById(state: State): (id: number) => Requirement | undefined;
   commentsList(state: State): (requirementId: number) => Comment[];
+  getProjectMembers(state: State): (projectId: number) => ProjectMember[];
   activitiesList(state: State): (parameters: any) => Activity[];
+  unhandledErrors(state: State): (parameters: any) => UnhandledError[];
 }
 
 const numericalSortFunction = (property, sortAscending) => (a, b) => {
@@ -110,6 +112,12 @@ export const getters: GetterTree<State, State> & Getters = {
     return state.categories[id];
   },
 
+  getProjectMembers: (state) => (projectId) => {
+    let members: ProjectMember[] = Object.values(state.projectMembers[projectId] ?? {});
+
+    return members;
+  },
+
   requirementsList: (state) => (categoryId, parameters) => {
     // filter all requirements who have a category object with id equaling the requested categoryId
     let requirements: Requirement[] = Object.values(state.requirements).filter(requirement => (requirement.categories.some(c => c === categoryId)));
@@ -180,6 +188,11 @@ export const getters: GetterTree<State, State> & Getters = {
     activities.sort(numericalSortFunction('id', false));
 
     return activities.slice(0, parameters.limit);
+  },
+
+  unhandledErrors: (state: State) => (parameters: any) => {
+
+    return state.unhandledErrors;
   },
 
 }

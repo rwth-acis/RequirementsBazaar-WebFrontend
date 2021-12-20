@@ -10,12 +10,37 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
+-
+
+## [2.0.3] - 2021-12-20
+
+### Added
+
+- Project member management (add members, remove members, and change their role) [#143](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/143)
+- Share a link to a single requirement [#144](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/144)
+- Show unhandled API or frontend error messages to the user [#148](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/148)
+
+### Changed
+
+- Typo on landing page [#149](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/issues/149)
+- Link correct activity tracker in production [#151](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/issues/151)
+- Show default user icon if user profile image cannot be loaded, instead of 404 error. Also, actual profile images of comment creators will be displayed for requirement comments instead of a loading placeholder [#154](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/154)
+
+
+## [2.0.2] - 2021-12-20
+
+### Changed
+
+- Hotfix: A wrong header name (access_token) prevented new users from the using the Requirements Bazaar in any way because registration was not possible.
+  [#141](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/141)
+
+
 ## [2.0.1] - 2021-11-18
 
 ### Changed
 
-- Fixed project search which did not showed projects not loaded on the current page
-  [#125](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/128)
+- Fixed project search which did not show projects not loaded on the current page
+  [#128](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/128)
 
 ## [2.0.0-rc.1]
 

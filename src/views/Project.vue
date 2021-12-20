@@ -36,32 +36,37 @@
     </div>
   </div>
   <div id="content">
-  <FilterPanel
-      v-model:searchQuery="searchQuery"
-      :sortOptions="sortOptions"
-      v-model:selectedSort="selectedSort"
-      v-model:sortAscending="sortAscending">
-    </FilterPanel>
-    <div id="categoriesList">
-      <div v-for="category in categories" :key="category.id" class="categoryCard">
-        <router-link :to="'/projects/' + project?.id + '/categories/' + category?.id">
-          <CategoryCard
-            :id="category.id"
-            :name="category.name"
-            :description="category.description"
-            :creationDate="category.creationDate"
-            :lastActivity="category.lastActivity"
-            :numberOfFollowers="category.numberOfFollowers"
-            :numberOfRequirements="category.numberOfRequirements">
-          </CategoryCard>
-        </router-link>
+    <div v-show="showCategories">
+      <FilterPanel
+        v-model:searchQuery="searchQuery"
+        :sortOptions="sortOptions"
+        v-model:selectedSort="selectedSort"
+        v-model:sortAscending="sortAscending">
+      </FilterPanel>
+      <div id="categoriesList">
+        <div v-for="category in categories" :key="category.id" class="categoryCard">
+          <router-link :to="'/projects/' + project?.id + '/categories/' + category?.id">
+            <CategoryCard
+              :id="category.id"
+              :name="category.name"
+              :description="category.description"
+              :creationDate="category.creationDate"
+              :lastActivity="category.lastActivity"
+              :numberOfFollowers="category.numberOfFollowers"
+              :numberOfRequirements="category.numberOfRequirements">
+            </CategoryCard>
+          </router-link>
+        </div>
       </div>
+    </div>
+    <div v-if="!showCategories">
+      <ProjectMembersList v-if="project" :projectId="project.id" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from 'vue';
+import { computed, defineComponent, Ref, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n';
@@ -72,6 +77,7 @@ import FilterPanel from '../components/FilterPanel.vue';
 import CategoryCard from '../components/CategoryCard.vue';
 import ProjectEditor from '../components/ProjectEditor.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
+import ProjectMembersList from '../components/ProjectMembersList.vue';
 
 export default defineComponent({
   components: {
@@ -79,6 +85,7 @@ export default defineComponent({
     CategoryCard,
     ProjectEditor,
     CategoryEditor,
+    ProjectMembersList
   },
   name: 'Project',
   props: {
@@ -93,6 +100,7 @@ export default defineComponent({
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
     const project = computed(() => store.getters.getProjectById(projectId));
     store.dispatch(ActionTypes.FetchProject, projectId);
+    const showCategories = computed(() => route.params.members ? false : true);
 
     watch(oidcIsAuthenticated, () => store.dispatch(ActionTypes.FetchProject, projectId));
 
@@ -101,6 +109,10 @@ export default defineComponent({
         label: 'All Categories', // was: 'Overview'
         to: `/projects/${projectId}`
       },
+      {
+        label: 'Members',
+        to: `/projects/${projectId}/members`
+      }
       /*
       {
         label: 'All Categories',
@@ -129,7 +141,7 @@ export default defineComponent({
               label: 'Members',
               to: `/projects/${projectId}/members`
             }
-          )
+          );
         }
       }
     });
@@ -261,6 +273,7 @@ export default defineComponent({
       displayProjectEditor,
       projectEditorCanceled,
       projectEditorSaved,
+      showCategories,
     }
   }
 })

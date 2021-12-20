@@ -4,6 +4,7 @@
     <div id="layout" :class="{ 'p-mr-3': !activityTrackerVisible }">
       <div id="container">
         <div id="content">
+          <GlobalErrorMessage></GlobalErrorMessage>
           <router-view></router-view>
           <ConfirmDialog group="dialog"></ConfirmDialog>
           <ConfirmPopup group="popup"></ConfirmPopup>
@@ -22,13 +23,15 @@
 import { defineComponent, ref, watch } from 'vue'
 import AppTopbar from './components/AppTopbar.vue';
 import ActivityTracker from './components/ActivityTracker.vue';
+import GlobalErrorMessage from './components/GlobalErrorMessage.vue';
 import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'App',
   components: {
     AppTopbar,
-    ActivityTracker
+    ActivityTracker,
+    GlobalErrorMessage
   },
   setup: () => {
     const { locale } = useI18n({ useScope: 'global' });

@@ -20,6 +20,13 @@ To start the development server, use:
 npm run dev
 ```
 
+## Local Backend
+
+To use a local Requirements Bazaar backend during development use:
+```
+npm run dev-local-api
+```
+
 ## Build
 
 There are multiple commands to build the frontend for different environments.
