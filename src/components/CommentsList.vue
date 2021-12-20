@@ -10,8 +10,9 @@
     <div>
       <div v-for="comment in comments" :key="comment.id" class="comment p-mb-3">
         <div class="p-d-flex p-mb-1" :class="{ reply: comment.replyToComment }">
-            <Skeleton shape="circle" size="2.5rem" class="p-mr-2"></Skeleton>
-            <div>
+            <!-- NOTE: creator attribute may be null (e.g., when comment was deleted) -->
+            <UserAvatar :imageUrl="comment.creator?.profileImage" :userName="comment.creator?.userName" size="small" />
+            <div class="p-pl-2">
                 <div>{{ comment.deleted ? t('deletedCommented') : comment.message }}</div>
                 <div class="info">
                   <span v-if="oidcIsAuthenticated && !comment.deleted">
@@ -48,12 +49,14 @@ import { ActionTypes } from '../store/actions';
 import { MutationType } from '../store/mutations';
 import { Comment } from '../types/bazaar-api';
 import { LocalComment } from '../store/state';
+import UserAvatar from './UserAvatar.vue';
 
 export default defineComponent({
   name: 'RequirementCard',
   props: {
     requirementId: { type: Number, required: true },
   },
+  components: { UserAvatar },
   setup: ({ requirementId }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
@@ -96,7 +99,7 @@ export default defineComponent({
           requirementId,
         };
       }
-      
+
       store.dispatch(ActionTypes.CreateComment, comment);
     };
 
