@@ -10,6 +10,10 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
+-
+
+## [2.0.3] - 2021-12-20
+
 ### Added
 
 - Project member management (add members, remove members, and change their role) [#143](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/143)
@@ -20,6 +24,7 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 - Typo on landing page [#149](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/issues/149)
 - Link correct activity tracker in production [#151](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/issues/151)
+- Show default user icon if user profile image cannot be loaded, instead of 404 error. Also, actual profile images of comment creators will be displayed for requirement comments instead of a loading placeholder [#154](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/154)
 
 
 ## [2.0.2] - 2021-12-20
