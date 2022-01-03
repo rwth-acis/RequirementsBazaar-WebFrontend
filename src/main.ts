@@ -45,6 +45,7 @@ import Column from 'primevue/column';
 import Toolbar from 'primevue/toolbar';
 import ProgressBar from 'primevue/progressbar';
 import Message from 'primevue/message';
+import Timeline from 'primevue/timeline';
 
 import 'primevue/resources/themes/saga-green/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -123,5 +124,6 @@ app.component('Column', Column);
 app.component('Toolbar', Toolbar);
 app.component("ProgressBar", ProgressBar);
 app.component('Message', Message);
+app.component('Timeline', Timeline);
 
 app.mount('#app');

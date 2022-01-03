@@ -63,7 +63,8 @@
             :userVoted="requirement.userContext.userVoted"
             :isFollower="requirement.userContext.isFollower ? true : false"
             :isDeveloper="requirement.userContext.isDeveloper ? true : false"
-            :realized="requirement.realized">
+            :realized="requirement.realized"
+            :additionalProperties="requirement.additionalProperties">
           </RequirementCard>
         </div>
       </div>
