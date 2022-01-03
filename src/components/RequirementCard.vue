@@ -335,11 +335,7 @@ export default defineComponent({
           const githubBaseUrl = project.value.additionalProperties.github_url;
           const requirementTitle = name.value.replace(/\s/g, '+');
           const requirementDescription = description.value.replace(/\s/g, '+');
-          const requirementProject = projectId.value;
-          const requirementId = id.value;
-          const requirementCategory = categories.value[0];
-          const bazaarBaseUrl = "https://requirements-bazaar.org";
-          const bazaarRequirementUrl = bazaarBaseUrl+"/projects/"+requirementProject+"/categories/"+requirementCategory+"/requirements/"+requirementId;
+          const bazaarRequirementUrl = createShareableRequirementLink()
           if(additionalPropertiesValue == undefined){
             confirm.require({
               header: 'Share to GitHub',
