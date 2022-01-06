@@ -10,7 +10,14 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
--
+### Added
+
+- Timeline for Requirements that shows development progress from a connected GitHub repository
+  [#156](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/156). Includes:
+  - A project can be connected to a GitHub repository
+  - Requirements can be "shared" on GitHub, which prepares a pre-filled issue in the linked repository that references the requirement
+  - Closing a GitHub issue linked to a requirement also changes the development status of the requirement
+  - A new release in GitHub is mentioned on the Requirements Bazaar project page
 
 ## [2.0.3] - 2021-12-20
 
