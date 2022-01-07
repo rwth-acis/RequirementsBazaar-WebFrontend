@@ -121,15 +121,15 @@ export default defineComponent({
     const showCategories = computed(() => route.params.members ? false : true);
 
     // read values for the timeline
-    const hook_id_value = project.value?.additionalProperties?.hook_id;
-    const release_value = project.value?.additionalProperties?.release; //url
-    const pull_request_status = project.value?.additionalProperties?.pull_request; //status
-    const pull_request_url = project.value?.additionalProperties?.pull_request_url; //url
+    const hook_id_value = computed(() => project.value?.additionalProperties?.hook_id);
+    const release_value = computed(() => project.value?.additionalProperties?.release); //url
+    const pull_request_status = computed(() => project.value?.additionalProperties?.pull_request); //status
+    const pull_request_url = computed(() => project.value?.additionalProperties?.pull_request_url); //url
     // ****** Functions to update the timeline icons *****
     // Project exported & hook received
     function timelineStatusGithub(){
       let statusLabelGithub = "pi pi-circle-off";
-      if(hook_id_value !== undefined){
+      if(hook_id_value.value !== undefined){
         statusLabelGithub = "pi pi-check-circle";
       }
       return statusLabelGithub;
@@ -137,14 +137,14 @@ export default defineComponent({
     // Pull Request opened
     function timelineStatusPullRequest(){
       let statusLabelPullRequest = "pi pi-circle-off";
-      if(pull_request_status == "opened"){
+      if(pull_request_status.value == "opened"){
         statusLabelPullRequest = "pi pi-check-circle";
       }
       return statusLabelPullRequest;
     }
     function timelineStatusRelease(){
       let statusLabelRelease = "pi pi-circle-off";
-      if(release_value !== undefined){
+      if(release_value.value !== undefined){
         statusLabelRelease = "pi pi-check-circle";
       }
       return statusLabelRelease;
@@ -160,7 +160,7 @@ export default defineComponent({
     // Show button "new release"
     function showButtonNewRelease(){
       let buttonNewRelease = false;
-      if(release_value !== undefined)
+      if(release_value.value !== undefined)
         buttonNewRelease = true;
       return buttonNewRelease;
     };
@@ -168,7 +168,7 @@ export default defineComponent({
     // Show button "join development"
     function showButtonJoinDevelopment(){
       let buttonJoinDevelopment = false;
-      if(pull_request_url != undefined)
+      if(pull_request_url.value != undefined)
         buttonJoinDevelopment = true;
       return buttonJoinDevelopment;
     }
@@ -181,7 +181,7 @@ export default defineComponent({
         icon: 'pi pi-external-link',
         group: 'dialog',
             accept: () => {
-            window.open(pull_request_url);
+            window.open(pull_request_url.value);
             },
             reject: () => {
             console.log('not redirected');
@@ -270,7 +270,7 @@ export default defineComponent({
       const baseUrl = "https://beta.requirements-bazaar.org/bazaar";
       const projectName = projectEditorName.value.replace(/\s/g, '');
       const githubBaseUrl = project.value.additionalProperties.github_url;
-      if(hook_id_value == undefined){
+      if(hook_id_value.value == undefined){
           confirm.require({
           header: 'Redirect to Github (Hint: Copy Webhook and Secret)',
           message: 'Webhook: '+baseUrl+'/webhook/'+projectId+'/github '+ 'Secret: '+ projectName,
