@@ -47,7 +47,8 @@
     <TabMenu id="tabMenu" :model="tabItems" />
     <div id="actionButtons">
       <Button icon="pi pi-tag" label="New Release Available" class="p-button-sm p-button-outlined" v-if="showButtonNewRelease()" @click="newReleaseAvailable"></Button>
-      <Button icon="pi pi-github" label="Connect to GitHub" class="p-button-sm p-button-outlined" v-if="oidcIsAuthenticated" @click="connectToGithub"></Button>
+      <Button icon="pi pi-github" label="Connect to GitHub" class="p-button-sm p-button-outlined" v-if="oidcIsAuthenticated && !connectedToGitHub" @click="connectToGithub"></Button>
+      <Button icon="pi pi-github" label="Show on GitHub" class="p-button-sm p-button-outlined" v-if="connectedToGitHub" @click="redirectToGitHubRepository()"></Button>
       <Button icon="pi pi-bell" :label="oidcIsAuthenticated && project?.userContext?.isFollower ? t('unfollowProject') : t('followProject')" class="p-button-sm" :class="{ 'p-button-outlined': !(oidcIsAuthenticated && project?.userContext?.isFollower) }" @click="followClick"></Button>
       <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
@@ -122,6 +123,7 @@ export default defineComponent({
 
     // read values for the timeline
     const hook_id_value = computed(() => project.value?.additionalProperties?.hook_id);
+    const repository_url = computed(() => project.value?.additionalProperties?.github_url);
     const release_value = computed(() => project.value?.additionalProperties?.release); //url
     const pull_request_status = computed(() => project.value?.additionalProperties?.pull_request); //status
     const pull_request_url = computed(() => project.value?.additionalProperties?.pull_request_url); //url
@@ -185,6 +187,22 @@ export default defineComponent({
             },
             reject: () => {
             console.log('not redirected');
+            }
+      })
+    };
+
+    // Redirect to github repository
+    const redirectToGitHubRepository = () => {
+      confirm.require({
+        header: 'See this project on GitHub',
+        message: 'You will be redirected to GitHub',
+        icon: 'pi pi-external-link',
+        group: 'dialog',
+            accept: () => {
+              window.open(repository_url.value);
+            },
+            reject: () => {
+              console.log('not redirected');
             }
       })
     };
@@ -265,12 +283,15 @@ export default defineComponent({
           acceptLabel: 'OK',
         });
     }
-  // Button connect to github
+
+    const connectedToGitHub = computed(() => hook_id_value.value != undefined)
+
+    // Button connect to github
     const connectToGithub = () => {
       const baseUrl = "https://beta.requirements-bazaar.org/bazaar";
       const projectName = projectEditorName.value.replace(/\s/g, '');
       const githubBaseUrl = project.value.additionalProperties.github_url;
-      if(hook_id_value.value == undefined){
+      if(!connectedToGitHub.value){
           confirm.require({
           header: 'Redirect to Github (Hint: Copy Webhook and Secret)',
           message: 'Webhook: '+baseUrl+'/webhook/'+projectId+'/github '+ 'Secret: '+ projectName,
@@ -417,6 +438,8 @@ export default defineComponent({
       newReleaseAvailable,
       showButtonNewRelease,
       showButtonJoinDevelopment,
+      redirectToGitHubRepository,
+      connectedToGitHub,
       joinDevelopment,
       alertMessage,
     }
