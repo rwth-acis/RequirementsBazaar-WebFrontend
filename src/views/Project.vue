@@ -91,6 +91,9 @@
             <i class="pi pi-github" />
             <InputText id="repositoryUrl" type="text" v-model="updatedRepositoryUrl" placeholder="https://github.com/{account}/{repository}" />
             <label for="repositoryUrl">GitHub URL</label>
+            <p v-if="repositoryUrlError" style="color: red">
+              {{repositoryUrlError}}
+            </p>
         </span>
 
         <template #footer>
@@ -308,6 +311,7 @@ export default defineComponent({
 
     const showAddRepositoryDialog = ref(false);
     const updatedRepositoryUrl = ref('');
+    const repositoryUrlError = ref();
 
     // Button connect to github
     const connectToGithub = () => {
@@ -338,7 +342,20 @@ export default defineComponent({
       }
     };
 
+    const isGitHubRepositoryUrlValid = (url: string) => {
+      if (url === undefined || url === '') {
+        return false;
+      }
+      return url.startsWith('https://github.com/');
+    }
+
     const updateRepositoryUrl = () => {
+      if (!isGitHubRepositoryUrlValid(updatedRepositoryUrl.value)) {
+        repositoryUrlError.value = 'Please enter a valid GitHub repository URL';
+        return;
+      }
+
+      repositoryUrlError.value = undefined;
       inProgress.value = true;
 
       const projectUpdate = {
@@ -501,7 +518,8 @@ export default defineComponent({
       updatedRepositoryUrl,
       showAddRepositoryDialog,
       updateRepositoryUrl,
-      inProgress
+      inProgress,
+      repositoryUrlError
     }
   }
 })
