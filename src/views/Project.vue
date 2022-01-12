@@ -82,6 +82,23 @@
       <ProjectMembersList v-if="project" :projectId="project.id" />
     </div>
   </div>
+
+  <Dialog v-model:visible="showAddRepositoryDialog" :style="{width: '450px'}" header="Link GitHub repository" :modal="true" class="p-fluid">
+        <p class="p-mb-2">
+          To get started, first, paste the base URL of a GitHub Repository that should be connected to this project.
+        </p>
+        <span class="p-input-icon-left">
+            <i class="pi pi-github" />
+            <InputText id="repositoryUrl" type="text" v-model="updatedRepositoryUrl" placeholder="https://github.com/{account}/{repository}" />
+            <label for="repositoryUrl">GitHub URL</label>
+        </span>
+
+        <template #footer>
+            <ProgressBar mode="indeterminate" class="p-mb-3" v-if="inProgress" />
+            <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showAddRepositoryDialog = false" />
+            <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateRepositoryUrl()" />
+        </template>
+    </Dialog>
 </template>
 
 <script lang="ts">
@@ -97,6 +114,7 @@ import CategoryCard from '../components/CategoryCard.vue';
 import ProjectEditor from '../components/ProjectEditor.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
 import ProjectMembersList from '../components/ProjectMembersList.vue';
+import { Project } from '@/types/bazaar-api';
 
 export default defineComponent({
   components: {
@@ -286,29 +304,67 @@ export default defineComponent({
 
     const connectedToGitHub = computed(() => hook_id_value.value != undefined)
 
+    const inProgress = ref(false);
+
+    const showAddRepositoryDialog = ref(false);
+    const updatedRepositoryUrl = ref('');
+
     // Button connect to github
     const connectToGithub = () => {
       const baseUrl = "https://beta.requirements-bazaar.org/bazaar";
       const projectName = projectEditorName.value.replace(/\s/g, '');
-      const githubBaseUrl = project.value.additionalProperties.github_url;
       if(!connectedToGitHub.value){
+          console.log("url:" + repository_url.value)
+          if (repository_url.value === undefined || repository_url.value === '') {
+            showAddRepositoryDialog.value =  true;
+            // wait until URL is set -> then continue the create webhook flow
+            return;
+          }
+
           confirm.require({
-          header: 'Redirect to Github (Hint: Copy Webhook and Secret)',
-          message: 'Webhook: '+baseUrl+'/webhook/'+projectId+'/github '+ 'Secret: '+ projectName,
-          icon: 'pi pi-external-link',
-          group: 'dialog',
-            accept: () => {
-            window.open(githubBaseUrl+"/settings/hooks/new");
-            },
-            reject: () => {
-            console.log('not redirected');
-            }
+            header: 'Redirect to Github (Hint: Copy Webhook and Secret)',
+            message: 'Webhook: '+baseUrl+'/webhook/'+projectId+'/github '+ 'Secret: '+ projectName,
+            icon: 'pi pi-external-link',
+            group: 'dialog',
+              accept: () => {
+              window.open(repository_url.value + "/settings/hooks/new");
+              },
+              reject: () => {
+              console.log('not redirected');
+              }
           });
       } else{
         alertMessage('This Project is already connected to GitHub.');
       }
-
     };
+
+    const updateRepositoryUrl = () => {
+      inProgress.value = true;
+
+      const projectUpdate = {
+        id: project.value.id,
+        name: project.value.name,
+        description: project.value.description,
+        additionalProperties: JSON.parse(JSON.stringify(project.value.additionalProperties)),
+      };
+      if (!projectUpdate.additionalProperties) {
+        projectUpdate.additionalProperties = {
+          'github_url': updatedRepositoryUrl.value
+        }
+      } else {
+        projectUpdate.additionalProperties.github_url = updatedRepositoryUrl.value
+      }
+
+      store.dispatch(ActionTypes.UpdateProject, projectUpdate).then(() => {
+        console.log('DONE');
+        inProgress.value = false;
+        showAddRepositoryDialog.value = false;
+
+        // start normal connect to GitHub flow
+        connectToGithub();
+      });
+    }
+
     // Button new release
     const newReleaseAvailable = () => {
       const releaseUrl = project.value.additionalProperties.release;
@@ -442,6 +498,10 @@ export default defineComponent({
       connectedToGitHub,
       joinDevelopment,
       alertMessage,
+      updatedRepositoryUrl,
+      showAddRepositoryDialog,
+      updateRepositoryUrl,
+      inProgress
     }
   }
 })
