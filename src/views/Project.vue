@@ -102,6 +102,25 @@
             <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateRepositoryUrl()" />
         </template>
     </Dialog>
+
+    <Dialog v-model:visible="showConfigureWebhookDilog" :style="{width: '800px'}" header="Configure GitHub Webhook" :modal="true" class="p-fluid">
+        <p class="p-mb-2">
+          Now, you need to configure a webhook for the GitHub repository that should be connected to this project.
+        </p>
+        <p>
+          Please go to <a :href="githubWebhookSettingsURL" target="_blank" rel="noreferrer">{{githubWebhookSettingsURL}}</a> and configure the following values:
+        </p>
+        <ul>
+          <li><b>Payload URL</b>: {{webhookEndpointURL}}</li>
+          <li><b>Content-type</b>: <i>application/json</i></li>
+          <li><b>Secret</b>: {{webhookSecret}}</li>
+        </ul>
+
+        <template #footer>
+            <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showConfigureWebhookDilog = false" />
+            <Button label="Done" icon="pi pi-check" class="p-button-text" @click="showConfigureWebhookDilog = false" />
+        </template>
+    </Dialog>
 </template>
 
 <script lang="ts">
@@ -313,10 +332,13 @@ export default defineComponent({
     const updatedRepositoryUrl = ref('');
     const repositoryUrlError = ref();
 
+    const showConfigureWebhookDilog = ref(false);
+    const githubWebhookSettingsURL = computed(() => repository_url.value + "/settings/hooks/new");
+    const webhookEndpointURL = computed(() => `${import.meta.env.VITE_BAZAAR_API_URL}/webhook/${projectId}/github`);
+    const webhookSecret = computed(() => project.value.name.replace(/\s/g, ''));
+
     // Button connect to github
     const connectToGithub = () => {
-      const baseUrl = "https://beta.requirements-bazaar.org/bazaar";
-      const projectName = projectEditorName.value.replace(/\s/g, '');
       if(!connectedToGitHub.value){
           console.log("url:" + repository_url.value)
           if (repository_url.value === undefined || repository_url.value === '') {
@@ -325,18 +347,7 @@ export default defineComponent({
             return;
           }
 
-          confirm.require({
-            header: 'Redirect to Github (Hint: Copy Webhook and Secret)',
-            message: 'Webhook: '+baseUrl+'/webhook/'+projectId+'/github '+ 'Secret: '+ projectName,
-            icon: 'pi pi-external-link',
-            group: 'dialog',
-              accept: () => {
-              window.open(repository_url.value + "/settings/hooks/new");
-              },
-              reject: () => {
-              console.log('not redirected');
-              }
-          });
+          showConfigureWebhookDilog.value = true;
       } else{
         alertMessage('This Project is already connected to GitHub.');
       }
@@ -519,7 +530,11 @@ export default defineComponent({
       showAddRepositoryDialog,
       updateRepositoryUrl,
       inProgress,
-      repositoryUrlError
+      repositoryUrlError,
+      showConfigureWebhookDilog,
+      githubWebhookSettingsURL,
+      webhookEndpointURL,
+      webhookSecret,
     }
   }
 })
