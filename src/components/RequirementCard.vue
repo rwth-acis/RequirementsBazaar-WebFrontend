@@ -125,7 +125,7 @@ export default defineComponent({
     // get issue's additionalProperties Descriptors & Values
     const additionalPropertiesValue = additionalProperties.value;
 
-    if(additionalPropertiesValue === undefined){
+    if(additionalPropertiesValue === undefined || additionalPropertiesValue === null){
       var issueNumberValue = undefined;
       var issueStatusValue = undefined;
       var issueUrlValue = undefined;
