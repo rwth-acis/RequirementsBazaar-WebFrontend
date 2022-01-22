@@ -108,7 +108,9 @@
           Now, you need to configure a webhook for the GitHub repository that should be connected to this project.
         </p>
         <p>
-          Please go to <a :href="githubWebhookSettingsURL" target="_blank" rel="noreferrer">{{githubWebhookSettingsURL}}</a> and configure the following values:
+          Please go to
+          <a :href="githubWebhookSettingsURL" target="_blank" rel="noreferrer" @click="webhookSettingsOpened = true">{{githubWebhookSettingsURL}}</a>
+          and configure the following values:
         </p>
         <ul>
           <li><b>Payload URL</b>: {{webhookEndpointURL}}</li>
@@ -118,7 +120,8 @@
 
         <template #footer>
             <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showConfigureWebhookDilog = false" />
-            <Button label="Done" icon="pi pi-check" class="p-button-text" @click="showConfigureWebhookDilog = false" />
+            <Button v-if="!webhookSettingsOpened" label="Go to GitHub Settings" icon="pi pi-check" class="p-button-text" @click="openWebhookSettings()" />
+            <Button v-else label="Done" icon="pi pi-check" class="p-button-text" @click="showConfigureWebhookDilog = false" />
         </template>
     </Dialog>
 </template>
@@ -336,6 +339,12 @@ export default defineComponent({
     const githubWebhookSettingsURL = computed(() => repository_url.value + "/settings/hooks/new");
     const webhookEndpointURL = computed(() => `${import.meta.env.VITE_BAZAAR_API_URL}/webhook/${projectId}/github`);
     const webhookSecret = computed(() => project.value.name.replace(/\s/g, ''));
+    const webhookSettingsOpened = ref(false);
+
+    const openWebhookSettings = () => {
+      window.open(githubWebhookSettingsURL.value);
+      webhookSettingsOpened.value = true;
+    };
 
     // Button connect to github
     const connectToGithub = () => {
@@ -347,6 +356,8 @@ export default defineComponent({
             return;
           }
 
+          // reset the state of the 'go to webhook settings' button
+          webhookSettingsOpened.value = false;
           showConfigureWebhookDilog.value = true;
       } else{
         alertMessage('This Project is already connected to GitHub.');
@@ -535,6 +546,8 @@ export default defineComponent({
       githubWebhookSettingsURL,
       webhookEndpointURL,
       webhookSecret,
+      webhookSettingsOpened,
+      openWebhookSettings,
     }
   }
 })
