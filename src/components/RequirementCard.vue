@@ -1,14 +1,30 @@
 <template>
   <Card id="card">
     <template #title>
-      <div>{{ name }}</div>
+      <div>{{ name }}
+        <Button icon="pi pi-link" label="See this Requirement on GitHub" class="p-button-outlined" @click="checkRequirementOnGitHub" v-if="showButtonGitHub()"></Button>
+      </div>
       <div class="lastupdate">
         <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
         {{t('by')}} {{ creator?.userName }}
         <!--<i class="pi pi-pencil" style="fontSize: 0.7rem" v-if="creationDate !== lastActivity" :title="`initially created on ${$dayjs(lastActivity).format('LLL')}`"></i>-->
       </div>
     </template>
+
     <template #content>
+    <vue3-markdown-it :source="description" class="p-mt-3 p-mb-3" />
+    <!-- Timeline -->
+    <h2>Development Timeline</h2>
+    <Timeline :value="timelineEvents" layout="horizontal" align="bottom">
+        <template #marker="slotProps">
+          <span class="custom-marker">
+            <i :class="slotProps.item.status"></i>
+          </span>
+        </template>
+        <template #content="slotProps">
+          {{slotProps.item.label}}
+        </template>
+    </Timeline>
       <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
         <RequirementEditor
           class="requirementEditor"
@@ -21,7 +37,6 @@
           @save="requirementEditorSaved">
         </RequirementEditor>
       </Dialog>
-      <vue3-markdown-it :source="description" class="p-mt-3 p-mb-3" />
       <div id="figures">
         <div id="votes">{{ upVotes }} {{ t('votes') }}</div>
         <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
@@ -49,10 +64,12 @@ import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 import { useConfirm } from "primevue/useconfirm";
 import CommentsList from './CommentsList.vue';
+import { useRoute } from 'vue-router';
 
 import { routePathToRequirement } from '@/router';
 
 import RequirementEditor from '../components/RequirementEditor.vue';
+import { getEnabledCategories } from 'trace_events';
 
 export default defineComponent({
   components: { CommentsList, RequirementEditor },
@@ -74,12 +91,15 @@ export default defineComponent({
     isDeveloper: { type: Boolean, required: true },
     realized: { type: String, required: false },
     brief: { type: Boolean, required: false, default: false },
+    additionalProperties: {type: Object, required: false},
   },
+
   setup: (props) => {
-    const { id, userVoted, isFollower, isDeveloper, realized, lastActivity, creationDate, categories, projectId } = toRefs(props);
+    const { id,projectId, userVoted, isFollower, isDeveloper, realized, lastActivity, creationDate, name, description, categories, additionalProperties } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const confirm = useConfirm();
+    const route = useRoute();
 
     const showComments = ref(false);
 
@@ -92,6 +112,78 @@ export default defineComponent({
 
     const activityDate = computed(() => lastActivity.value || creationDate.value);
 
+    const project = computed(() => store.getters.getProjectById(projectId.value));
+    store.dispatch(ActionTypes.FetchProject, projectId.value);
+
+    //get github_url from project's additionalProperties
+    const github_url = computed(() => {
+      if (project.value && project.value.additionalProperties && project.value.additionalProperties.github_url ) {
+        return project.value.additionalProperties.github_url
+      }
+    });
+
+    // get issue's additionalProperties Descriptors & Values
+    const additionalPropertiesValue = additionalProperties.value;
+
+    if(additionalPropertiesValue === undefined || additionalPropertiesValue === null){
+      var issueNumberValue = undefined;
+      var issueStatusValue = undefined;
+      var issueUrlValue = undefined;
+
+    }else{
+          const issueNumberDescriptor = Object.getOwnPropertyDescriptor(additionalProperties.value, 'issue_number');
+          issueNumberValue = issueNumberDescriptor?.value;
+          const issueStatusDescriptor = Object.getOwnPropertyDescriptor(additionalProperties.value, 'issue_status');
+          issueStatusValue = issueStatusDescriptor?.value;
+          const issueUrlDescriptor = Object.getOwnPropertyDescriptor(additionalProperties.value, 'issue_url');
+          issueUrlValue = issueUrlDescriptor?.value;
+    }
+
+    // **** Functions to update the timeline icons *****
+    // Requirement exported
+    function timelineIssueNumber(){
+      let timelineIssueNumberIcon = "pi pi-circle-off";
+      if(issueNumberValue !== undefined){
+        timelineIssueNumberIcon = "pi pi-check-circle";
+      }
+      return timelineIssueNumberIcon;
+    };
+    // Requirement opened or closed
+    function timelineIssueStatus(){
+      let timelineIssueStatusIcon = "pi pi-circle-off";
+      if(issueStatusValue !== undefined){
+        (issueStatusValue == "closed")
+          ? timelineIssueStatusIcon = 'pi pi-check-circle'
+          : (issueStatusValue == "opened")
+            ? timelineIssueStatusIcon = 'pi pi-circle-off'
+            : null;
+      }
+      return timelineIssueStatusIcon;
+    };
+    // Requirement Url (Development in Progress)
+    function timelineIssueUrl(){
+      let timelineIssueUrlIcon = "pi pi-circle-off";
+      if(issueUrlValue != undefined){
+        timelineIssueUrlIcon = "pi pi-check-circle";
+      }
+      return timelineIssueUrlIcon;
+    };
+
+    //Timeline events
+    const timelineEvents = ref([
+      {label: 'Requirement Exported',    status: timelineIssueNumber()},
+      {label: 'Development in Progress', status: timelineIssueUrl()},
+      {label: 'Closed',                  status: timelineIssueStatus()},
+      ]);
+
+    // show button "check it on github"
+    function showButtonGitHub(){
+      let buttonCheckOnGitHub = false;
+      if(issueUrlValue != undefined)
+        buttonCheckOnGitHub = true;
+      return buttonCheckOnGitHub;
+    }
+
     const alertLogin = (message: string) => {
       confirm.require({
           group: 'dialog',
@@ -101,6 +193,17 @@ export default defineComponent({
           rejectClass: 'p-sr-only',
           acceptLabel: 'OK',
         });
+    }
+
+    const alertShareGitHub = (message: string) => {
+      confirm.require({
+          group: 'dialog',
+          message: message,
+          header: 'Ops',
+          icon: 'pi pi-info-circle',
+          rejectClass: 'p-sr-only',
+          acceptLabel: 'OK',
+      });
     }
 
     const toggleVote = () => {
@@ -113,6 +216,22 @@ export default defineComponent({
       } else {
         alertLogin('You need to sign in to vote for a requirement.');
       }
+    };
+
+    // Redirect to github "see requirement btn"
+    const checkRequirementOnGitHub = () => {
+      confirm.require({
+        header: 'See this requirement on GitHub',
+        message: 'You will be redirected to GitHub',
+        icon: 'pi pi-external-link',
+        group: 'dialog',
+            accept: () => {
+            window.open(issueUrlValue);
+            },
+            reject: () => {
+            console.log('not redirected');
+            }
+      })
     };
 
     const menu = ref(null);
@@ -213,7 +332,26 @@ export default defineComponent({
         label: 'GitHub',
         icon: 'pi pi-github',
         command: () => {
-          console.log('Sharing to GitHub...');
+          const githubBaseUrl = project.value.additionalProperties.github_url;
+          const requirementTitle = name.value.replace(/\s/g, '+');
+          const requirementDescription = description.value.replace(/\s/g, '+');
+          const bazaarRequirementUrl = createShareableRequirementLink()
+          if(additionalPropertiesValue == undefined){
+            confirm.require({
+              header: 'Share to GitHub',
+              message: 'You will be redirected to GitHub',
+              icon: 'pi pi-external-link',
+              group: 'dialog',
+                accept: () => {
+            window.open(githubBaseUrl+"/issues/new?"+"title="+requirementTitle+"&body="+requirementDescription+" -> _**See+requirement+in+Bazaar:**_ "+bazaarRequirementUrl);
+            },
+                reject: () => {
+            console.log('not redirected');
+            }
+          });
+          }else{
+            alertShareGitHub('This Requirement is already on GitHub.')
+          }
         },
       },
       {
@@ -250,6 +388,9 @@ export default defineComponent({
       displayRequirementEditor,
       requirementEditorCanceled,
       requirementEditorSaved,
+      timelineEvents,
+      checkRequirementOnGitHub,
+      showButtonGitHub,
     };
   },
 })
@@ -258,6 +399,10 @@ export default defineComponent({
 <style scoped>
   #card ::v-deep(.p-card-content) {
     padding: 0;
+  }
+
+  #timeline {
+    margin-bottom: 1rem;
   }
 
   .lastupdate {
@@ -318,5 +463,17 @@ export default defineComponent({
 
   .commentsList {
     padding-top: 1.5rem;
+  }
+
+    /*Timeline*/
+  .custom-marker {
+    display: flex;
+    width: 2rem;
+    height: 1rem;
+    align-items: center;
+    justify-content: center;
+    color: green;
+    border-radius: 50%;
+    z-index: 1;
   }
 </style>

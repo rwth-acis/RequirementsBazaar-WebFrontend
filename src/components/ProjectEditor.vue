@@ -21,6 +21,11 @@
         </Editor>
         <small v-if="(v$.description.$invalid && submitted)" class="p-error">{{v$.description.required.$message.replace('Value', 'Description')}}</small>
       </div>
+      <div class="p-field"> <!--  new field for repository -->
+        <label for="repository">{{ t('Repository') }}</label> 
+        <InputText id="repository" type="text" v-model="state.additionalProperties.github_url" v-if="state.additionalProperties"/>
+        <!-- <small v-if="(v$.repository.$invalid && submitted)" class="p-error">{{v$.repository.required.$message.replace('Value', 'Repository')}}</small> -->
+      </div>
       <div class="footer">
         <Button :label="t('cancel')" @click="cancel" class="p-button-outlined p-ml-2 p-mr-2" />
         <Button type="submit" :label="t('save')" />
@@ -55,11 +60,15 @@ export default defineComponent({
       type: Number,
       required: false,
     },
+    additionalProperties:{
+      type: Object,
+      required: false,
+    },
     onCancel: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
     onSave: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
   },
   emits: ['cancel', 'save'],
-  setup: ({ name, description, projectId }, { emit }) => {
+  setup: ({ name, description, projectId, additionalProperties }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
 
@@ -71,6 +80,7 @@ export default defineComponent({
     const state = reactive({
       name,
       description: renderedHTML,
+      additionalProperties: additionalProperties ? additionalProperties : new Map(),
     });
     const rules = {
       name: { required, maxLengthValue: maxLength(50) },
@@ -94,6 +104,7 @@ export default defineComponent({
       const project: Project = {
         name: state.name,
         description: turndownService.turndown(state.description),
+        additionalProperties: state.additionalProperties,
       };
 
       if (!projectId) {
