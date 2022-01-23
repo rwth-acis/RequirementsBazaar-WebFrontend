@@ -8,7 +8,7 @@
         </div>
 
         <div>
-          <Button icon="pi pi-link" label="See this Requirement on GitHub" class="p-button-outlined" @click="checkRequirementOnGitHub" v-if="showButtonGitHub()"></Button>
+          <Button icon="pi pi-github" label="See on GitHub" class="p-button-outlined" @click="checkRequirementOnGitHub" v-if="showButtonGitHub()"></Button>
         </div>
       </div>
       <div class="lastupdate">
