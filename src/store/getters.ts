@@ -8,7 +8,7 @@ export type Getters = {
   getProjectById(state: State): (id: number) => Project | undefined;
   categoriesList(state: State): (projectId: number, parameters: any) => Category[];
   getCategoryById(state: State): (id: number) => Category | undefined;
-  requirementsList(state: State): (requirementId: number, parameters: any) => Requirement[];
+  requirementsList(state: State): (requirementId: number, parameters: any, realized: Boolean) => Requirement[];
   getRequirementById(state: State): (id: number) => Requirement | undefined;
   commentsList(state: State): (requirementId: number) => Comment[];
   getProjectMembers(state: State): (projectId: number) => ProjectMember[];
@@ -118,9 +118,10 @@ export const getters: GetterTree<State, State> & Getters = {
     return members;
   },
 
-  requirementsList: (state) => (categoryId, parameters) => {
+  requirementsList: (state) => (categoryId, parameters, realized) => {
     // filter all requirements who have a category object with id equaling the requested categoryId
-    let requirements: Requirement[] = Object.values(state.requirements).filter(requirement => (requirement.categories.some(c => c === categoryId)));
+    let requirements: Requirement[] = Object.values(state.requirements).filter(requirement => (requirement.categories.some(c => c === categoryId)))
+        .filter(requirement => realized === undefined ? true : (realized === (requirement.realized != undefined)));
 
     const sortAscending = parameters.sortDirection === 'ASC';
     // first, sort alphabetically in all cases

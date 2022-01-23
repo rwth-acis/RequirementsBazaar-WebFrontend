@@ -39,15 +39,18 @@
     </div>
   </div>
   <div id="content">
-    <div v-show="!done">
+    <div>
       <FilterPanel
         v-model:searchQuery="searchQuery"
         :sortOptions="sortOptions"
         v-model:selectedSort="selectedSort"
         v-model:sortAscending="sortAscending">
       </FilterPanel>
-      <div id="requirementsList">
-        <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
+      <div class="requirementsList" v-show="!done">
+        <div v-if="activeRequirements.length === 0">
+          Nothing to see here.
+        </div>
+        <div v-for="requirement in activeRequirements" :key="requirement.id" class="requirementCard">
           <RequirementCard
             :id="requirement.id"
             :projectId="requirement.projectId"
@@ -68,9 +71,31 @@
           </RequirementCard>
         </div>
       </div>
-    </div>
-    <div v-show="done">
-      Nothing to see here.
+      <div class="requirementsList" v-show="done">
+        <div v-if="realizedRequirements.length === 0">
+          Nothing to see here.
+        </div>
+        <div v-for="requirement in realizedRequirements" :key="requirement.id" class="requirementCard">
+          <RequirementCard
+            :id="requirement.id"
+            :projectId="requirement.projectId"
+            :categories="requirement.categories"
+            :name="requirement.name"
+            :description="requirement.description"
+            :upVotes="requirement.upVotes"
+            :numberOfComments="requirement.numberOfComments"
+            :numberOfFollowers="requirement.numberOfFollowers"
+            :creator="requirement.creator"
+            :creationDate="requirement.creationDate"
+            :lastActivity="requirement.lastActivity"
+            :userVoted="requirement.userContext.userVoted"
+            :isFollower="requirement.userContext.isFollower ? true : false"
+            :isDeveloper="requirement.userContext.isDeveloper ? true : false"
+            :realized="requirement.realized"
+            :additionalProperties="requirement.additionalProperties">
+          </RequirementCard>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -99,7 +124,7 @@ export default defineComponent({
     const { t } = useI18n({ useScope: 'global' });
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const confirm = useConfirm();
-    
+
     const categoryId = Number.parseInt(route.params.categoryId.toString(), 10);
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
     const done = computed(() => route.params.done ? true : false);
@@ -122,7 +147,10 @@ export default defineComponent({
     const perPage = ref(20);
     const sortDirection = computed(() => sortAscending.value ? 'ASC' : 'DESC');
     const parameters = computed(() => {return {page: page.value, per_page: perPage.value, sort: selectedSort.value, sortDirection: sortDirection.value, search: searchQuery.value}});
-    const requirements = computed(() => store.getters.requirementsList(categoryId, parameters.value));
+
+    const activeRequirements = computed(() => store.getters.requirementsList(categoryId, parameters.value, false));
+    const realizedRequirements = computed(() => store.getters.requirementsList(categoryId, parameters.value, true));
+
     store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value});
     watch(selectedSort, () => {
       sortAscending.value = selectedSort.value === 'name';
@@ -233,7 +261,8 @@ export default defineComponent({
       moreMenu,
       toggleMoreMenu,
       moreItems,
-      requirements,
+      activeRequirements,
+      realizedRequirements,
       searchQuery,
       sortOptions,
       selectedSort,
@@ -303,7 +332,7 @@ export default defineComponent({
     padding: 1rem;
   }
 
-  #requirementsList {
+  .requirementsList {
     display: flex;
     flex-flow: column;
     align-items: center;
