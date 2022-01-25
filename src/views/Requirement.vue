@@ -1,5 +1,13 @@
 <template>
   <ScrollTop />
+  <ProjectBreadcrumbNav v-if="project && parentCategory && requirement"
+    :projectId="project.id"
+    :projectName="project.name"
+    :categoryId="parentCategory.id"
+    :categoryName="parentCategory.name"
+    :requirementId="requirement.id"
+    :requirementName="requirement.name"
+    class="p-mt-3" />
   <h1>{{ project?.name }}</h1>
   <div id="description">
     <vue3-markdown-it :source="project?.description" />
@@ -45,10 +53,11 @@ import { useConfirm } from 'primevue/useconfirm';
 import { ActionTypes } from '@/store/actions';
 import { routePathToProject } from '@/router';
 import RequirementCard from '@/components/RequirementCard.vue';
+import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
 export default defineComponent({
   name: 'Requirement',
-  components: { RequirementCard },
+  components: { RequirementCard, ProjectBreadcrumbNav },
   props: {
   },
   setup: (props) => {
@@ -63,8 +72,28 @@ export default defineComponent({
     const requirement = computed(() => store.getters.getRequirementById(requirementId));
     const project = computed(() => store.getters.getProjectById(projectId));
 
+    const parentCategoryId = computed(() => {
+      if (requirement.value) {
+        return requirement.value.categories[0];
+      } else {
+        return undefined;
+      }
+    });
+    const parentCategory = computed(() => {
+      if (parentCategoryId.value) {
+        return store.getters.getCategoryById(parentCategoryId.value);
+      } else {
+        return undefined;
+      }
+    });
+
     store.dispatch(ActionTypes.FetchRequirement, requirementId);
     store.dispatch(ActionTypes.FetchProject, projectId);
+
+    watch(parentCategoryId, () => {
+      console.log('fetching category');
+      store.dispatch(ActionTypes.FetchCategory, parentCategoryId.value);
+    });
 
     const { push } = useRouter();
 
@@ -76,6 +105,7 @@ export default defineComponent({
       t,
       oidcIsAuthenticated,
       project,
+      parentCategory,
       requirement,
       showMoreRequirements,
     }

@@ -1,5 +1,11 @@
 <template>
   <ScrollTop />
+  <ProjectBreadcrumbNav v-if="category && project"
+    :projectId="category.projectId"
+    :projectName="project.name"
+    :categoryId="category.id"
+    :categoryName="category.name"
+    class="p-mt-3" />
   <h1>{{ category?.name }}</h1>
   <div id="description">
     <vue3-markdown-it :source="category?.description" />
@@ -112,11 +118,13 @@ import FilterPanel from '../components/FilterPanel.vue';
 import RequirementCard from '../components/RequirementCard.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
+import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
+
 import { Requirement } from '@/types/bazaar-api';
 
 export default defineComponent({
   name: 'Category',
-  components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor },
+  components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor, ProjectBreadcrumbNav },
   props: {
   },
   setup: (props) => {
@@ -131,7 +139,10 @@ export default defineComponent({
     const done = computed(() => route.params.done ? true : false);
 
     const category = computed(() => store.getters.getCategoryById(categoryId));
+    const project = computed(() => store.getters.getProjectById(projectId));
+
     store.dispatch(ActionTypes.FetchCategory, categoryId);
+    store.dispatch(ActionTypes.FetchProject, projectId);
 
     const searchQuery = ref('');
     const selectedSort = ref('date');
@@ -318,6 +329,7 @@ export default defineComponent({
     return {
       t,
       oidcIsAuthenticated,
+      project,
       category,
       done,
       tabItems,

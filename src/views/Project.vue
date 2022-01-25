@@ -1,4 +1,8 @@
 <template>
+  <ProjectBreadcrumbNav v-if="project"
+    :projectId="project.id"
+    :projectName="project.name"
+    class="p-mt-3" />
   <h1>{{ project?.name }}</h1>
   <Button icon="pi pi-tag" label="Join Development on GitHub" class="p-button-sm p-button-outlined"  @click="joinDevelopment" v-if="showButtonJoinDevelopment()"></Button>
   <div id="description">
@@ -139,6 +143,8 @@ import CategoryCard from '../components/CategoryCard.vue';
 import ProjectEditor from '../components/ProjectEditor.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
 import ProjectMembersList from '../components/ProjectMembersList.vue';
+import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
+
 import { Project } from '@/types/bazaar-api';
 
 export default defineComponent({
@@ -147,7 +153,8 @@ export default defineComponent({
     CategoryCard,
     ProjectEditor,
     CategoryEditor,
-    ProjectMembersList
+    ProjectMembersList,
+    ProjectBreadcrumbNav,
   },
   name: 'Project',
   props: {
