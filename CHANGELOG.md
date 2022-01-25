@@ -10,6 +10,11 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
+### Added
+
+- Breadcrumb controls for project internal navigation (between project, categories, and requirement pages).[#171](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/171)
+- Navigate to requirement details page when clicking on title [#170](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/issues/170)
+
 ### Changed
 
 - Show active and completed requirements in the designated tabs. Also, added a 'done' label to realized requirements [#164](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/164)
