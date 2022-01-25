@@ -10,6 +10,10 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
+### Changed
+
+- Show active and completed requirements in the designated tabs. Also, added a 'done' label to realized requirements [#164](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/164)
+
 
 ## [2.1.0] - 2022-01-22
 
