@@ -31,7 +31,7 @@
     </div>
   </div>
   <div id="menuBar">
-    <TabMenu id="tabMenu" :model="tabItems" />
+    <TabMenu id="tabMenu" :model="tabItems" @click="forceUpdateRequirementsList()" />
     <div id="actionButtons">
       <Button icon="pi pi-bell" :label="category?.userContext?.isFollower ? t('unfollowCategory') : t('followCategory')" class="p-button-sm" :class="{ 'p-button-outlined': !category?.userContext?.isFollower }" @click="followClick"></Button>
       <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
@@ -39,15 +39,43 @@
     </div>
   </div>
   <div id="content">
-    <div v-show="!done">
+    <div>
       <FilterPanel
         v-model:searchQuery="searchQuery"
         :sortOptions="sortOptions"
         v-model:selectedSort="selectedSort"
         v-model:sortAscending="sortAscending">
       </FilterPanel>
-      <div id="requirementsList">
-        <div v-for="requirement in requirements" :key="requirement.id" class="requirementCard">
+      <div class="requirementsList" v-show="!done">
+        <div v-if="activeRequirements.length === 0">
+          Nothing to see here.
+        </div>
+        <div v-for="requirement in activeRequirements" :key="requirement.id" class="requirementCard">
+          <RequirementCard
+            :id="requirement.id"
+            :projectId="requirement.projectId"
+            :categories="requirement.categories"
+            :name="requirement.name"
+            :description="requirement.description"
+            :upVotes="requirement.upVotes"
+            :numberOfComments="requirement.numberOfComments"
+            :numberOfFollowers="requirement.numberOfFollowers"
+            :creator="requirement.creator"
+            :creationDate="requirement.creationDate"
+            :lastActivity="requirement.lastActivity"
+            :userVoted="requirement.userContext.userVoted"
+            :isFollower="requirement.userContext.isFollower ? true : false"
+            :isDeveloper="requirement.userContext.isDeveloper ? true : false"
+            :realized="requirement.realized"
+            :additionalProperties="requirement.additionalProperties">
+          </RequirementCard>
+        </div>
+      </div>
+      <div class="requirementsList" v-show="done">
+        <div v-if="realizedRequirements.length === 0">
+          Nothing to see here.
+        </div>
+        <div v-for="requirement in realizedRequirements" :key="requirement.id" class="requirementCard">
           <RequirementCard
             :id="requirement.id"
             :projectId="requirement.projectId"
@@ -69,9 +97,6 @@
         </div>
       </div>
     </div>
-    <div v-show="done">
-      Nothing to see here.
-    </div>
   </div>
 </template>
 
@@ -87,6 +112,7 @@ import FilterPanel from '../components/FilterPanel.vue';
 import RequirementCard from '../components/RequirementCard.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
+import { Requirement } from '@/types/bazaar-api';
 
 export default defineComponent({
   name: 'Category',
@@ -99,7 +125,7 @@ export default defineComponent({
     const { t } = useI18n({ useScope: 'global' });
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const confirm = useConfirm();
-    
+
     const categoryId = Number.parseInt(route.params.categoryId.toString(), 10);
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
     const done = computed(() => route.params.done ? true : false);
@@ -122,12 +148,77 @@ export default defineComponent({
     const perPage = ref(20);
     const sortDirection = computed(() => sortAscending.value ? 'ASC' : 'DESC');
     const parameters = computed(() => {return {page: page.value, per_page: perPage.value, sort: selectedSort.value, sortDirection: sortDirection.value, search: searchQuery.value}});
-    const requirements = computed(() => store.getters.requirementsList(categoryId, parameters.value));
+
+    const activeRequirements = ref<Requirement[]>([]);
+    const realizedRequirements = ref<Requirement[]>([]);
+    // set to true when changing 'done' status, so requirement stays in the same tab until user reloads/switches tabs
+    const updatingActiveRequirementsListEnabled = ref(true);
+    const updatingRealizedRequirementsListEnabled = ref(true);
+    const activeRequirementsFromStore = computed(() => store.getters.requirementsList(categoryId, parameters.value, false));
+    const realizedRequirementsFromStore = computed(() => store.getters.requirementsList(categoryId, parameters.value, true));
+
+    const forceUpdateRequirementsList = () => {
+      console.log('forceUpdateRequirementsList:');
+      updatingActiveRequirementsListEnabled.value = true;
+      updatingRealizedRequirementsListEnabled.value = true;
+
+      store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value});
+    };
+
+
+    /*
+     * Takes a requirement (which we maybe got from a store update) and replaces the existing requirement in the same list (active/realized).
+     * With this, maybe overcomplicated update function, we achive a nice UX when changing the 'done' state of a requirement.
+     * The requirement will stay in the same list for the moment and is only flagged with a 'done' label. Only when the page is reload, or the user
+     * switches the tabs the lists are completely updated.
+     */
+    const replaceRequirementInCurrentListHelper = (requirement: Requirement) => {
+      const indexInActiveList = activeRequirements.value.findIndex(e => e.id === requirement.id);
+      if (indexInActiveList !== -1) {
+        activeRequirements.value[indexInActiveList] = requirement;
+      } else {
+        const indexInRealizedList = realizedRequirements.value.findIndex(e => e.id === requirement.id);
+        if (indexInRealizedList !== -1) {
+          realizedRequirements.value[indexInRealizedList] = requirement;
+        } else {
+          // append new requirment to the correct list
+          if (requirement.realized) {
+            realizedRequirements.value.push(requirement);
+          } else {
+            activeRequirements.value.push(requirement);
+          }
+        }
+      }
+    };
+
+    watch(activeRequirementsFromStore, () => {
+      if (updatingActiveRequirementsListEnabled.value) {
+        activeRequirements.value = activeRequirementsFromStore.value;
+        updatingActiveRequirementsListEnabled.value = false; // pause again until next 'hard' update reason
+      } else {
+        // instead of replacing the whole list, we update the individual requirements if ID matches ('soft' update)
+        activeRequirementsFromStore.value.forEach(replaceRequirementInCurrentListHelper);
+      }
+    });
+    watch(realizedRequirementsFromStore, () => {
+      if (updatingRealizedRequirementsListEnabled.value) {
+        realizedRequirements.value = realizedRequirementsFromStore.value;
+        updatingRealizedRequirementsListEnabled.value = false; // pause again until next 'hard' update reason
+      } else {
+        // instead of replacing the whole list, we update the individual requirements if ID matches ('soft' update)
+        realizedRequirementsFromStore.value.forEach(replaceRequirementInCurrentListHelper);
+      }
+    });
+
     store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value});
+
     watch(selectedSort, () => {
       sortAscending.value = selectedSort.value === 'name';
     });
-    watch(parameters, () => store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value}));
+    watch(parameters, () => {
+       // if parameters change we should do a 'hard' update of the list (put done requirements in the correct tabs)
+       forceUpdateRequirementsList();
+    });
 
     const showAddRequirement = ref(false);
     const toggleAddRequirement = () => {
@@ -233,7 +324,9 @@ export default defineComponent({
       moreMenu,
       toggleMoreMenu,
       moreItems,
-      requirements,
+      activeRequirements,
+      realizedRequirements,
+      forceUpdateRequirementsList,
       searchQuery,
       sortOptions,
       selectedSort,
@@ -303,7 +396,7 @@ export default defineComponent({
     padding: 1rem;
   }
 
-  #requirementsList {
+  .requirementsList {
     display: flex;
     flex-flow: column;
     align-items: center;

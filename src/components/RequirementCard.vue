@@ -1,8 +1,15 @@
 <template>
   <Card id="card">
     <template #title>
-      <div>{{ name }}
-        <Button icon="pi pi-link" label="See this Requirement on GitHub" class="p-button-outlined" @click="checkRequirementOnGitHub" v-if="showButtonGitHub()"></Button>
+      <div class="p-d-flex p-jc-between p-ai-center">
+        <div class="p-d-flex p-jc-start p-ai-center">
+          <Badge v-if="realized" value="Done" class="p-mr-2"></Badge>
+          <div>{{ name }}</div>
+        </div>
+
+        <div>
+          <Button icon="pi pi-github" label="See on GitHub" class="p-button-outlined" @click="checkRequirementOnGitHub" v-if="showButtonGitHub()"></Button>
+        </div>
       </div>
       <div class="lastupdate">
         <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
