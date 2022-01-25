@@ -4,7 +4,9 @@
       <div class="p-d-flex p-jc-between p-ai-center">
         <div class="p-d-flex p-jc-start p-ai-center">
           <Badge v-if="realized" value="Done" class="p-mr-2"></Badge>
-          <div>{{ name }}</div>
+          <router-link :to="'/projects/' + projectId + '/requirements/' + id">
+            <div class="title">{{ name }}</div>
+          </router-link>
         </div>
 
         <div>
@@ -379,6 +381,8 @@ export default defineComponent({
     ]);
 
     return {
+      id,
+      projectId,
       voted,
       activityDate,
       oidcIsAuthenticated,
@@ -462,6 +466,11 @@ export default defineComponent({
 
   #groupedButtons :last-child {
     margin-inline-end: 0;
+  }
+
+  .title {
+    /* normize color which'd be added by router link ->*/
+    color: #495057;
   }
 
   .moreButton {
