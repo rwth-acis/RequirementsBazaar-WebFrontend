@@ -80,16 +80,16 @@ function getActivityTargetUrl(activity) {
   const entityUrl = activity.dataFrontendUrl;
 
   /*
-  * We need some replacing here because old URLs int he activity database (end even new ones??)
-  * have the outdated format link the following URL:
+  * We need some replacing here because old URLs in the activity database (end even new ones?)
+  * have an outdated link format, like the following URL:
   *     https://beta.requirements-bazaar.org/projects/110/categories/317/requirements/843
-  * while the new URL we use for requirement links is:
+  * while the new URLs we use for requirement links have the following format:
   *     https://beta.requirements-bazaar.org/projects/110/requirements/843
   */
   const oldRequirementLinksRegex = /\/categories\/(\S)+\/requirements\//gm;
   let targetUrl = entityUrl.replace(oldRequirementLinksRegex, '/requirements/');
 
-  // replace the beat link with the more dynamic current origin URL (enables better debugging experience because localhost is used)
+  // replace the beat link with the more dynamic current origin URL (enables better debugging experience when localhost is used)
   targetUrl = targetUrl.replace('https://beta.requirements-bazaar.org', window.location.origin);
 
   return targetUrl;
