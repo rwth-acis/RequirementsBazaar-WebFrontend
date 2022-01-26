@@ -1,6 +1,6 @@
 <template>
   <div class="activitiesList">
-    <div v-for="activity in activities" :key="activity.id" class="activity">
+    <div v-for="activity in activities" :key="activity.id" class="activity" @click="onActivityClick(activity)">
       <UserAvatar :imageUrl="activity.user.profileImage" :userName="activity.user.userName" class="profileImage" />
 
       <div class="activityText">
@@ -60,10 +60,40 @@ export default defineComponent({
       }
     }
 
-    return { activities, actionWordings, getTypeWording };
+    /**
+     * Handles a click on an activity item.
+     *
+     * This methd will open the target entity of the specific activity in a new tab (e.g., project, category, requirement)
+     */
+    const onActivityClick = (activity) => {
+      const targetUrl = getActivityTargetUrl(activity);
+
+      window.open(targetUrl);
+    };
+
+    return { activities, actionWordings, getTypeWording, onActivityClick };
   },
 
 })
+
+function getActivityTargetUrl(activity) {
+  const entityUrl = activity.dataFrontendUrl;
+
+  /*
+  * We need some replacing here because old URLs in the activity database (end even new ones?)
+  * have an outdated link format, like the following URL:
+  *     https://beta.requirements-bazaar.org/projects/110/categories/317/requirements/843
+  * while the new URLs we use for requirement links have the following format:
+  *     https://beta.requirements-bazaar.org/projects/110/requirements/843
+  */
+  const oldRequirementLinksRegex = /\/categories\/(\S)+\/requirements\//gm;
+  let targetUrl = entityUrl.replace(oldRequirementLinksRegex, '/requirements/');
+
+  // replace the beat link with the more dynamic current origin URL (enables better debugging experience when localhost is used)
+  targetUrl = targetUrl.replace('https://beta.requirements-bazaar.org', window.location.origin);
+
+  return targetUrl;
+}
 </script>
 
 <style scoped>
