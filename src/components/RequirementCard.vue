@@ -19,20 +19,22 @@
     <template #content>
     <vue3-markdown-it :source="description" class="p-mt-3 p-mb-3" />
     <!-- Timeline -->
-    <div class="p-d-flex p-jc-start p-ai-center">
-      <h2>Development Timeline</h2>
-      <a v-if="issue_url" :href="issue_url" target="_blank" rel="noreferrer" class="p-ml-2"><i class="pi pi-github"></i> View on GitHub</a>
+    <div v-if="issue_url">
+      <div class="p-d-flex p-jc-start p-ai-center">
+        <h2>Development Timeline</h2>
+        <a v-if="issue_url" :href="issue_url" target="_blank" rel="noreferrer" class="p-ml-2"><i class="pi pi-github"></i> View on GitHub</a>
+      </div>
+      <Timeline :value="timelineEvents" layout="horizontal" align="bottom">
+          <template #marker="slotProps">
+            <span class="custom-marker">
+              <i :class="slotProps.item.status"></i>
+            </span>
+          </template>
+          <template #content="slotProps">
+            {{slotProps.item.label}}
+          </template>
+      </Timeline>
     </div>
-    <Timeline :value="timelineEvents" layout="horizontal" align="bottom">
-        <template #marker="slotProps">
-          <span class="custom-marker">
-            <i :class="slotProps.item.status"></i>
-          </span>
-        </template>
-        <template #content="slotProps">
-          {{slotProps.item.label}}
-        </template>
-    </Timeline>
       <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
         <RequirementEditor
           class="requirementEditor"
