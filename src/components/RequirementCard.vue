@@ -251,11 +251,34 @@ export default defineComponent({
       displayRequirementEditor.value = false;
     }
 
+    const createGitHubIssueForRequirement = () => {
+      const githubBaseUrl = project.value.additionalProperties.github_url;
+      const requirementTitle = name.value.replace(/\s/g, '+');
+      const requirementDescription = description.value.replace(/\s/g, '+');
+      const bazaarRequirementUrl = createShareableRequirementLink()
+      if(additionalPropertiesValue == undefined){
+        confirm.require({
+          header: 'Create Issue for Requirement',
+          message: 'You will be redirected to GitHub',
+          icon: 'pi pi-external-link',
+          group: 'dialog',
+            accept: () => {
+        window.open(githubBaseUrl+"/issues/new?"+"title="+requirementTitle+"&body="+requirementDescription+" -> _**See+requirement+in+Bazaar:**_ "+bazaarRequirementUrl);
+        },
+            reject: () => {
+        console.log('not redirected');
+        }
+      });
+      }else{
+        alertShareGitHub('This Requirement is already on GitHub.')
+      }
+    };
+
     const menuItems = ref();
     // watch multiple props
     watch(
-      [locale, isFollower, isDeveloper, realized],
-      ([_, isFollower, isDeveloper, realized]) => {
+      [locale, isFollower, isDeveloper, realized, issue_url, github_url],
+      ([_, isFollower, isDeveloper, realized, issue_url, github_url]) => {
         menuItems.value = [
           {
             label: isFollower ? t('unfollowRequirement') : t('followRequirement'),
@@ -283,6 +306,18 @@ export default defineComponent({
             icon: 'pi pi-pencil',
             command: () => {
               displayRequirementEditor.value = true;
+            }
+          },
+          {
+            label: issue_url ? t('viewOnGitHub') : t('createGithubIssue'),
+            icon: 'pi pi-github',
+            disabled: github_url === undefined,
+            command: () => {
+              if (issue_url) {
+                window.open(issue_url)
+              } else {
+                createGitHubIssueForRequirement();
+              }
             }
           },
           {
@@ -320,26 +355,7 @@ export default defineComponent({
         label: 'GitHub',
         icon: 'pi pi-github',
         command: () => {
-          const githubBaseUrl = project.value.additionalProperties.github_url;
-          const requirementTitle = name.value.replace(/\s/g, '+');
-          const requirementDescription = description.value.replace(/\s/g, '+');
-          const bazaarRequirementUrl = createShareableRequirementLink()
-          if(additionalPropertiesValue == undefined){
-            confirm.require({
-              header: 'Share to GitHub',
-              message: 'You will be redirected to GitHub',
-              icon: 'pi pi-external-link',
-              group: 'dialog',
-                accept: () => {
-            window.open(githubBaseUrl+"/issues/new?"+"title="+requirementTitle+"&body="+requirementDescription+" -> _**See+requirement+in+Bazaar:**_ "+bazaarRequirementUrl);
-            },
-                reject: () => {
-            console.log('not redirected');
-            }
-          });
-          }else{
-            alertShareGitHub('This Requirement is already on GitHub.')
-          }
+          createGitHubIssueForRequirement();
         },
       },
       {
