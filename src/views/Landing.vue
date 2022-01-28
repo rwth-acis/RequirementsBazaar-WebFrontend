@@ -30,7 +30,7 @@
           <Autocounter v-if="statistics?.numberOfProjects" class="value"
             :startAmount='0'
             :endAmount="statistics?.numberOfProjects"
-            :duration='1'
+            :duration='1.0'
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
@@ -40,7 +40,7 @@
           <Autocounter v-if="statistics?.numberOfRequirements" class="value"
             :startAmount='0'
             :endAmount="statistics?.numberOfRequirements"
-            :duration='1'
+            :duration='1.4'
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
@@ -50,7 +50,7 @@
           <Autocounter v-if="statistics?.numberOfComments" class="value"
             :startAmount='0'
             :endAmount="statistics?.numberOfComments"
-            :duration='1.5'
+            :duration='1.8'
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
