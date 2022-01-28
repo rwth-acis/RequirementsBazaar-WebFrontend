@@ -24,17 +24,36 @@
 
   <section class="p-py-3">
     <h2>Requirements Bazaar in Numbers</h2>
+
     <div class="p-grid">
         <div class="p-col statistics-item">
-          <span class="value">{{statistics?.numberOfProjects ?? '...'}}</span>
+          <Autocounter v-if="statistics?.numberOfProjects" class="value"
+            :startAmount='0'
+            :endAmount="statistics?.numberOfProjects"
+            :duration='1'
+            separator=','
+            :autoinit='true' />
+          <span v-else class="value">...</span>
           <p class="label">Projects</p>
         </div>
         <div class="p-col statistics-item">
-          <span class="value">{{statistics?.numberOfRequirements ?? '...'}}</span>
+          <Autocounter v-if="statistics?.numberOfRequirements" class="value"
+            :startAmount='0'
+            :endAmount="statistics?.numberOfRequirements"
+            :duration='1'
+            separator=','
+            :autoinit='true' />
+          <span v-else class="value">...</span>
           <p class="label">Requirements</p>
         </div>
         <div class="p-col statistics-item">
-          <span class="value">{{statistics?.numberOfComments ?? '...'}}</span>
+          <Autocounter v-if="statistics?.numberOfComments" class="value"
+            :startAmount='0'
+            :endAmount="statistics?.numberOfComments"
+            :duration='1.5'
+            separator=','
+            :autoinit='true' />
+          <span v-else class="value">...</span>
           <p class="label">Comments</p>
         </div>
     </div>
