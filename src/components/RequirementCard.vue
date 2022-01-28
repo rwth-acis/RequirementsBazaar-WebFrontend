@@ -347,20 +347,15 @@ export default defineComponent({
       {
         label: 'Facebook',
         icon: 'pi pi-facebook',
+        disabled: true,
         command: () => {
           console.log('Sharing to Facebook...');
         },
       },
       {
-        label: 'GitHub',
-        icon: 'pi pi-github',
-        command: () => {
-          createGitHubIssueForRequirement();
-        },
-      },
-      {
         label: 'Twitter',
         icon: 'pi pi-twitter',
+        disabled: true,
         command: () => {
           console.log('Sharing to Twitter...');
         },
