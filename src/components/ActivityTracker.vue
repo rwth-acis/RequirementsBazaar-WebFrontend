@@ -3,10 +3,15 @@
     <div v-for="activity in activities" :key="activity.id" class="activity" @click="onActivityClick(activity)">
       <UserAvatar :imageUrl="activity.user.profileImage" :userName="activity.user.userName" class="profileImage" />
 
-      <div class="activityText">
-        {{ activity.user.userName }}
-        {{ actionWordings[activity.activityAction] }}
-        {{ getTypeWording(activity) }}
+      <div class="activityBody p-ml-1">
+        <div class="activityText">
+          {{ activity.user.userName }}
+          {{ actionWordings[activity.activityAction] }}
+          {{ getTypeWording(activity) }}
+        </div>
+        <div class="activityDate p-mt-1">
+          <span :title="$dayjs(activity.creationDate).format('LLL')">{{ $dayjs(activity.creationDate).fromNow() }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -108,15 +113,25 @@ function getActivityTargetUrl(activity) {
     display: flex;
     flex-direction: row;
     align-content: center;
-    height: 60px;
     border-bottom: 1px solid lightgrey;
     align-content: flex-end;
   }
 
-  .activityText {
+  .activityBody {
     flex: 1;
+    margin: 5px 10px;
+  }
+
+  .activityText {
     font-size: 0.95rem;
-    margin: auto 0.2rem;
+  }
+
+  .activityDate {
+    font-weight: normal;
+    font-size: 0.75em;
+    color: #5d5d5d;
+    text-align: right;
+    padding-right: 5px;
   }
 
   .profileImage {
