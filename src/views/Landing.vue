@@ -22,6 +22,24 @@
     </div>
   </div>
 
+  <section class="p-py-3">
+    <h2>Requirements Bazaar in Numbers</h2>
+    <div class="p-grid">
+        <div class="p-col statistics-item">
+          <span class="value">{{statistics?.numberOfProjects ?? '...'}}</span>
+          <p class="label">Projects</p>
+        </div>
+        <div class="p-col statistics-item">
+          <span class="value">{{statistics?.numberOfRequirements ?? '...'}}</span>
+          <p class="label">Requirements</p>
+        </div>
+        <div class="p-col statistics-item">
+          <span class="value">{{statistics?.numberOfComments ?? '...'}}</span>
+          <p class="label">Comments</p>
+        </div>
+    </div>
+  </section>
+
   <h2>{{ t('landing-how-it-works') }}</h2>
   <div class="description">
     <div>{{ t('landing-step-1') }}</div>
@@ -40,10 +58,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue';
+import { defineComponent, computed, watch, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
+
+
+import { bazaarApi } from '../api/bazaar';
 
 export default defineComponent({
   name: 'Landing',
@@ -61,8 +82,12 @@ export default defineComponent({
       }
     });
 
+    const statistics = ref();
+    bazaarApi.statistics.getStatistics().then(response => statistics.value = response.data);
+
     return {
       t,
+      statistics,
     };
   }
 })
@@ -72,5 +97,19 @@ export default defineComponent({
   .description {
     font-size: 15pt;
     margin-bottom: 20px;
+  }
+
+  .statistics-item {
+    text-align: center;
+  }
+
+  .statistics-item .label {
+    font-size: 2em;
+  }
+
+  .statistics-item .value {
+    font-size: 4em;
+    font-weight: bold;
+    color: #4CAF50;
   }
 </style>
