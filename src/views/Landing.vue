@@ -30,7 +30,7 @@
           <Autocounter v-if="statistics?.numberOfProjects" class="value"
             :startAmount='0'
             :endAmount="statistics?.numberOfProjects"
-            :duration='1.0'
+            :duration='0.8'
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
@@ -40,7 +40,7 @@
           <Autocounter v-if="statistics?.numberOfRequirements" class="value"
             :startAmount='0'
             :endAmount="statistics?.numberOfRequirements"
-            :duration='1.4'
+            :duration='0.9'
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
@@ -50,11 +50,22 @@
           <Autocounter v-if="statistics?.numberOfComments" class="value"
             :startAmount='0'
             :endAmount="statistics?.numberOfComments"
-            :duration='1.8'
+            :duration='1.0'
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
           <p class="label">Comments</p>
+        </div>
+        <div class="p-col statistics-item">
+          <Autocounter v-if="userStatistics?.numberOfActiveUsers" class="value"
+            :startAmount='0'
+            :endAmount="userStatistics?.numberOfActiveUsers"
+            :duration='1.1'
+            separator=','
+            :autoinit='true' />
+          <span v-else class="value">...</span>
+          <p class="label">Active Users</p>
+          <p>(in the last year)</p>
         </div>
     </div>
   </section>
@@ -139,9 +150,17 @@ export default defineComponent({
     const statistics = ref();
     bazaarApi.statistics.getStatistics().then(response => statistics.value = response.data);
 
+    const userStatistics = ref();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear( oneYearAgo.getFullYear() - 1 );
+    bazaarApi.userStatistics.getUserStatistics({
+      start: oneYearAgo.toISOString(),
+    }).then(response => userStatistics.value = response.data);
+
     return {
       t,
       statistics,
+      userStatistics,
     };
   }
 })
