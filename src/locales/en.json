@@ -69,6 +69,8 @@
     "developRequirement": "Develop Requirement",
     "undevelopRequirement": "Undevelop Requirement",
     "editRequirement": "Edit Requirement",
+    "viewOnGitHub": "View on Github",
+    "createGithubIssue": "Create GitHub Issue",
     "creator": "Creator",
     "leadDeveloper": "Lead Developer",
     "comments": "Comments",
