@@ -10,15 +10,24 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
+## [2.2.0] - 2022-01-29
+
 ### Added
 
 - Breadcrumb controls for project internal navigation (between project, categories, and requirement pages).[#171](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/171)
 - Navigate to requirement details page when clicking on title [#170](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/issues/170)
+- Display a date label for each item in the activity tracker [#181](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/issues/181)
 
 ### Changed
 
 - Show active and completed requirements in the designated tabs. Also, added a 'done' label to realized requirements [#164](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/164)
+- Inline link to GitHub issue instead of oversized button [#180](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/180)
+- Show development timeline only for requirements with linked issue [#179](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/issues/179)
+- Disable development timeline in project overview [#175](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/issues/175)
+- Add menu items on requirement card to create and view GitHub issue [#180](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/180)
 
+### Removed
+- Remove GitHub option from share button and disable Twitter and Facebook options [#180](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/180)
 
 ## [2.1.0] - 2022-01-22
 
