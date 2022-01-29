@@ -1,10 +1,14 @@
 <template>
+  <ProjectBreadcrumbNav v-if="project"
+    :projectId="project.id"
+    :projectName="project.name"
+    class="p-mt-3" />
   <h1>{{ project?.name }}</h1>
   <Button icon="pi pi-tag" label="Join Development on GitHub" class="p-button-sm p-button-outlined"  @click="joinDevelopment" v-if="showButtonJoinDevelopment()"></Button>
   <div id="description">
     <vue3-markdown-it :source="project?.description" />
   </div>
-  <div id="timeline">
+  <div id="timeline" v-if="timelineEnabled">
     <h2>Development Timeline</h2>
     <Timeline :value="timelineEvents" layout="horizontal" align="bottom">
         <template #marker="slotProps">
@@ -16,7 +20,7 @@
           {{slotProps.item.label}}
         </template>
     </Timeline>
-    </div>
+  </div>
 
   <Dialog :header="t('editProject')" v-model:visible="displayProjectEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
     <ProjectEditor
@@ -139,6 +143,8 @@ import CategoryCard from '../components/CategoryCard.vue';
 import ProjectEditor from '../components/ProjectEditor.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
 import ProjectMembersList from '../components/ProjectMembersList.vue';
+import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
+
 import { Project } from '@/types/bazaar-api';
 
 export default defineComponent({
@@ -147,7 +153,8 @@ export default defineComponent({
     CategoryCard,
     ProjectEditor,
     CategoryEditor,
-    ProjectMembersList
+    ProjectMembersList,
+    ProjectBreadcrumbNav,
   },
   name: 'Project',
   props: {
@@ -170,6 +177,12 @@ export default defineComponent({
     const release_value = computed(() => project.value?.additionalProperties?.release); //url
     const pull_request_status = computed(() => project.value?.additionalProperties?.pull_request); //status
     const pull_request_url = computed(() => project.value?.additionalProperties?.pull_request_url); //url
+
+    /*
+     * Temporary disable the timeline for projects until we have better semantics for it.
+     */
+    const timelineEnabled = ref(false);
+
     // ****** Functions to update the timeline icons *****
     // Project exported & hook received
     function timelineStatusGithub(){
@@ -548,6 +561,7 @@ export default defineComponent({
       webhookSecret,
       webhookSettingsOpened,
       openWebhookSettings,
+      timelineEnabled,
     }
   }
 })

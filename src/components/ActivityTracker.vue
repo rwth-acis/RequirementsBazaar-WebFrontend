@@ -1,13 +1,21 @@
 <template>
   <div class="activitiesList">
-    <div v-for="activity in activities" :key="activity.id" class="activity">
+    <a v-for="activity in activities" :key="activity.id" class="activity" :href="getActivityTargetUrl(activity)" target="_blank" rel="noreferrer">
       <UserAvatar :imageUrl="activity.user.profileImage" :userName="activity.user.userName" class="profileImage" />
 
-      <div class="activityText">
-        {{ activity.user.userName }}
-        {{ actionWordings[activity.activityAction] }}
-        {{ getTypeWording(activity) }}
+      <div class="activityBody p-ml-1">
+        <div class="activityText">
+          {{ activity.user.userName }}
+          {{ actionWordings[activity.activityAction] }}
+          {{ getTypeWording(activity) }}
+        </div>
+        <div class="activityDate p-mt-1">
+          <span :title="$dayjs(activity.creationDate).format('LLL')">{{ $dayjs(activity.creationDate).fromNow() }}</span>
+        </div>
       </div>
+    </a>
+    <div >
+
     </div>
   </div>
 </template>
@@ -60,7 +68,29 @@ export default defineComponent({
       }
     }
 
-    return { activities, actionWordings, getTypeWording };
+    /**
+     * Returns an URL to the target entity of the specific activity (e.g., project, category, requirement)
+     */
+    const getActivityTargetUrl = (activity) => {
+      const entityUrl = activity.dataFrontendUrl;
+
+      /*
+      * We need some replacing here because old URLs in the activity database (end even new ones?)
+      * have an outdated link format, like the following URL:
+      *     https://beta.requirements-bazaar.org/projects/110/categories/317/requirements/843
+      * while the new URLs we use for requirement links have the following format:
+      *     https://beta.requirements-bazaar.org/projects/110/requirements/843
+      */
+      const oldRequirementLinksRegex = /\/categories\/(\S)+\/requirements\//gm;
+      let targetUrl = entityUrl.replace(oldRequirementLinksRegex, '/requirements/');
+
+      // replace the beat link with the more dynamic current origin URL (enables better debugging experience when localhost is used)
+      targetUrl = targetUrl.replace('https://beta.requirements-bazaar.org', window.location.origin);
+
+      return targetUrl;
+    };
+
+    return { activities, actionWordings, getTypeWording, getActivityTargetUrl };
   },
 
 })
@@ -78,15 +108,27 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     align-content: center;
-    height: 60px;
     border-bottom: 1px solid lightgrey;
     align-content: flex-end;
+    color: #495057; /* overrides color forced by <a> tag */
+    padding: 5px 10px;
+  }
+
+  .activityBody {
+    flex: 1;
+
   }
 
   .activityText {
-    flex: 1;
     font-size: 0.95rem;
-    margin: auto 0.2rem;
+  }
+
+  .activityDate {
+    font-weight: normal;
+    font-size: 0.75em;
+    color: #5d5d5d;
+    text-align: right;
+    padding-right: 5px;
   }
 
   .profileImage {

@@ -4,11 +4,9 @@
       <div class="p-d-flex p-jc-between p-ai-center">
         <div class="p-d-flex p-jc-start p-ai-center">
           <Badge v-if="realized" value="Done" class="p-mr-2"></Badge>
-          <div>{{ name }}</div>
-        </div>
-
-        <div>
-          <Button icon="pi pi-github" label="See on GitHub" class="p-button-outlined" @click="checkRequirementOnGitHub" v-if="showButtonGitHub()"></Button>
+          <router-link :to="'/projects/' + projectId + '/requirements/' + id">
+            <div class="title">{{ name }}</div>
+          </router-link>
         </div>
       </div>
       <div class="lastupdate">
@@ -21,17 +19,22 @@
     <template #content>
     <vue3-markdown-it :source="description" class="p-mt-3 p-mb-3" />
     <!-- Timeline -->
-    <h2>Development Timeline</h2>
-    <Timeline :value="timelineEvents" layout="horizontal" align="bottom">
-        <template #marker="slotProps">
-          <span class="custom-marker">
-            <i :class="slotProps.item.status"></i>
-          </span>
-        </template>
-        <template #content="slotProps">
-          {{slotProps.item.label}}
-        </template>
-    </Timeline>
+    <div v-if="issue_url">
+      <div class="p-d-flex p-jc-start p-ai-center">
+        <h2>Development Timeline</h2>
+        <a v-if="issue_url" :href="issue_url" target="_blank" rel="noreferrer" class="p-ml-2"><i class="pi pi-github"></i> View on GitHub</a>
+      </div>
+      <Timeline :value="timelineEvents" layout="horizontal" align="bottom">
+          <template #marker="slotProps">
+            <span class="custom-marker">
+              <i :class="slotProps.item.status"></i>
+            </span>
+          </template>
+          <template #content="slotProps">
+            {{slotProps.item.label}}
+          </template>
+      </Timeline>
+    </div>
       <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
         <RequirementEditor
           class="requirementEditor"
@@ -128,6 +131,11 @@ export default defineComponent({
         return project.value.additionalProperties.github_url
       }
     });
+    const issue_url = computed(() => {
+      if (additionalProperties.value && additionalProperties.value.issue_url ) {
+        return additionalProperties.value.issue_url
+      }
+    });
 
     // get issue's additionalProperties Descriptors & Values
     const additionalPropertiesValue = additionalProperties.value;
@@ -135,15 +143,12 @@ export default defineComponent({
     if(additionalPropertiesValue === undefined || additionalPropertiesValue === null){
       var issueNumberValue = undefined;
       var issueStatusValue = undefined;
-      var issueUrlValue = undefined;
 
     }else{
           const issueNumberDescriptor = Object.getOwnPropertyDescriptor(additionalProperties.value, 'issue_number');
           issueNumberValue = issueNumberDescriptor?.value;
           const issueStatusDescriptor = Object.getOwnPropertyDescriptor(additionalProperties.value, 'issue_status');
           issueStatusValue = issueStatusDescriptor?.value;
-          const issueUrlDescriptor = Object.getOwnPropertyDescriptor(additionalProperties.value, 'issue_url');
-          issueUrlValue = issueUrlDescriptor?.value;
     }
 
     // **** Functions to update the timeline icons *****
@@ -170,7 +175,7 @@ export default defineComponent({
     // Requirement Url (Development in Progress)
     function timelineIssueUrl(){
       let timelineIssueUrlIcon = "pi pi-circle-off";
-      if(issueUrlValue != undefined){
+      if(issue_url.value != undefined){
         timelineIssueUrlIcon = "pi pi-check-circle";
       }
       return timelineIssueUrlIcon;
@@ -182,14 +187,6 @@ export default defineComponent({
       {label: 'Development in Progress', status: timelineIssueUrl()},
       {label: 'Closed',                  status: timelineIssueStatus()},
       ]);
-
-    // show button "check it on github"
-    function showButtonGitHub(){
-      let buttonCheckOnGitHub = false;
-      if(issueUrlValue != undefined)
-        buttonCheckOnGitHub = true;
-      return buttonCheckOnGitHub;
-    }
 
     const alertLogin = (message: string) => {
       confirm.require({
@@ -225,22 +222,6 @@ export default defineComponent({
       }
     };
 
-    // Redirect to github "see requirement btn"
-    const checkRequirementOnGitHub = () => {
-      confirm.require({
-        header: 'See this requirement on GitHub',
-        message: 'You will be redirected to GitHub',
-        icon: 'pi pi-external-link',
-        group: 'dialog',
-            accept: () => {
-            window.open(issueUrlValue);
-            },
-            reject: () => {
-            console.log('not redirected');
-            }
-      })
-    };
-
     const menu = ref(null);
     const toggleMenu = (event) => {
       (menu as any).value.toggle(event);
@@ -270,11 +251,34 @@ export default defineComponent({
       displayRequirementEditor.value = false;
     }
 
+    const createGitHubIssueForRequirement = () => {
+      const githubBaseUrl = project.value.additionalProperties.github_url;
+      const requirementTitle = name.value.replace(/\s/g, '+');
+      const requirementDescription = description.value.replace(/\s/g, '+');
+      const bazaarRequirementUrl = createShareableRequirementLink()
+      if(additionalPropertiesValue == undefined){
+        confirm.require({
+          header: 'Create Issue for Requirement',
+          message: 'You will be redirected to GitHub',
+          icon: 'pi pi-external-link',
+          group: 'dialog',
+            accept: () => {
+        window.open(githubBaseUrl+"/issues/new?"+"title="+requirementTitle+"&body="+requirementDescription+" -> _**See+requirement+in+Bazaar:**_ "+bazaarRequirementUrl);
+        },
+            reject: () => {
+        console.log('not redirected');
+        }
+      });
+      }else{
+        alertShareGitHub('This Requirement is already on GitHub.')
+      }
+    };
+
     const menuItems = ref();
     // watch multiple props
     watch(
-      [locale, isFollower, isDeveloper, realized],
-      ([_, isFollower, isDeveloper, realized]) => {
+      [locale, isFollower, isDeveloper, realized, issue_url, github_url],
+      ([_, isFollower, isDeveloper, realized, issue_url, github_url]) => {
         menuItems.value = [
           {
             label: isFollower ? t('unfollowRequirement') : t('followRequirement'),
@@ -305,6 +309,18 @@ export default defineComponent({
             }
           },
           {
+            label: issue_url ? t('viewOnGitHub') : t('createGithubIssue'),
+            icon: 'pi pi-github',
+            disabled: github_url === undefined,
+            command: () => {
+              if (issue_url) {
+                window.open(issue_url)
+              } else {
+                createGitHubIssueForRequirement();
+              }
+            }
+          },
+          {
             label: t('deleteRequirement'),
             icon: 'pi pi-times',
             command: () => {
@@ -331,39 +347,15 @@ export default defineComponent({
       {
         label: 'Facebook',
         icon: 'pi pi-facebook',
+        disabled: true,
         command: () => {
           console.log('Sharing to Facebook...');
         },
       },
       {
-        label: 'GitHub',
-        icon: 'pi pi-github',
-        command: () => {
-          const githubBaseUrl = project.value.additionalProperties.github_url;
-          const requirementTitle = name.value.replace(/\s/g, '+');
-          const requirementDescription = description.value.replace(/\s/g, '+');
-          const bazaarRequirementUrl = createShareableRequirementLink()
-          if(additionalPropertiesValue == undefined){
-            confirm.require({
-              header: 'Share to GitHub',
-              message: 'You will be redirected to GitHub',
-              icon: 'pi pi-external-link',
-              group: 'dialog',
-                accept: () => {
-            window.open(githubBaseUrl+"/issues/new?"+"title="+requirementTitle+"&body="+requirementDescription+" -> _**See+requirement+in+Bazaar:**_ "+bazaarRequirementUrl);
-            },
-                reject: () => {
-            console.log('not redirected');
-            }
-          });
-          }else{
-            alertShareGitHub('This Requirement is already on GitHub.')
-          }
-        },
-      },
-      {
         label: 'Twitter',
         icon: 'pi pi-twitter',
+        disabled: true,
         command: () => {
           console.log('Sharing to Twitter...');
         },
@@ -379,6 +371,8 @@ export default defineComponent({
     ]);
 
     return {
+      id,
+      projectId,
       voted,
       activityDate,
       oidcIsAuthenticated,
@@ -396,8 +390,7 @@ export default defineComponent({
       requirementEditorCanceled,
       requirementEditorSaved,
       timelineEvents,
-      checkRequirementOnGitHub,
-      showButtonGitHub,
+      issue_url,
     };
   },
 })
@@ -462,6 +455,11 @@ export default defineComponent({
 
   #groupedButtons :last-child {
     margin-inline-end: 0;
+  }
+
+  .title {
+    /* normize color which'd be added by router link ->*/
+    color: #495057;
   }
 
   .moreButton {
