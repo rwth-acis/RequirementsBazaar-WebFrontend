@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  <section class="p-py-3">
+  <section style="text-align: center; " class="p-py-3">
     <h2>Requirements Bazaar in Numbers</h2>
 
     <div class="p-grid">
@@ -55,6 +55,41 @@
             :autoinit='true' />
           <span v-else class="value">...</span>
           <p class="label">Comments</p>
+        </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="text-align: center; font-size: 2.5em;">Features</h2>
+    <div class="p-grid">
+
+        <div class="p-col feature">
+          <div class="feature-icon">
+            <img src="feature-icons/discuss.png" />
+          </div>
+          <h5 class="title" style="text-align: center;">Discuss with Users</h5>
+          <p class="body">Discuss new ideas, and innovate together with your end-users.</p>
+        </div>
+
+        <div class="p-col feature">
+          <div class="feature-icon">
+            <img src="feature-icons/vote.png" />
+          </div>
+          <h5 class="title">Vote for Requirements</h5>
+          <p class="body">
+            Let users vote for requirements to help developers prioritizing the right features.
+          </p>
+        </div>
+
+        <div class="p-col feature">
+          <div class="feature-icon">
+            <img src="feature-icons/github.png" />
+          </div>
+          <h5 class="title">Link to GitHub</h5>
+          <p class="body">
+            Link your project to a GitHub repository to keep requirements engineering and
+            development in sync.
+          </p>
         </div>
     </div>
   </section>
@@ -130,5 +165,28 @@ export default defineComponent({
     font-size: 4em;
     font-weight: bold;
     color: #4CAF50;
+  }
+
+  .feature {
+    text-align: center;
+  }
+
+  .feature .title {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  .feature .body {
+    text-align: center;
+  }
+
+  .feature-icon {
+    width: 95px;
+    margin: auto;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
   }
 </style>
