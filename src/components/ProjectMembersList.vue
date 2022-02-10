@@ -1,7 +1,7 @@
 <template>
     <div class="card" v-if="members">
         <div>
-            <Button label="Add Member" icon="pi pi-plus" class="p-button-success p-my-3" @click="openNewMemberDialog" />
+            <Button :label="t('projectDetails-addMember')" icon="pi pi-plus" class="p-button-success p-my-3" @click="openNewMemberDialog" />
         </div>
 
         <DataTable :value="members" rowGroupMode="subheader" groupRowsBy="role"
@@ -31,17 +31,17 @@
         </DataTable>
     </div>
 
-    <Dialog v-model:visible="showAddMemberDialog" :style="{width: '450px'}" header="Add Member" :modal="true" class="p-fluid">
+    <Dialog v-model:visible="showAddMemberDialog" :style="{width: '450px'}" :header="t('projectDetails-addMember')" :modal="true" class="p-fluid">
         <div class="p-field">
-            <label for="name">Username</label>
+            <label for="name">{{ t('username') }}</label>
             <AutoComplete id="name" required="true" v-model="selectedUser" :suggestions="userSuggestions"  @complete="searchUser($event)"
-                field="userName" forceSelection :class="{'p-invalid': memberSubmitted && !userNameInput}" placeholder="Choose a user name"  />
-            <small class="p-error" v-if="memberSubmitted && !product.name">Username is required.</small>
+                field="userName" forceSelection :class="{'p-invalid': memberSubmitted && !userNameInput}" :placeholder="t('projectDetails-chooseUserName')"  />
+            <small class="p-error" v-if="memberSubmitted && !product.name">{{ t('projectDetails-userNameIsRequired') }}</small>
         </div>
 
         <div class="p-field">
-            <label for="inventoryStatus" class="p-mb-3">Role</label>
-            <Dropdown id="inventoryStatus" v-model="memberToAdd.role" :options="assignableRoles" placeholder="Select a Role">
+            <label for="inventoryStatus" class="p-mb-3">{{ t('role') }}</label>
+            <Dropdown id="inventoryStatus" v-model="memberToAdd.role" :options="assignableRoles" :placeholder="t('projectDetails-selectRole')">
                 <template #value="slotProps">
                     <div v-if="slotProps.value && slotProps.value.value">
                         <span :class="'product-badge status-' +slotProps.value.value">{{slotProps.value.label}}</span>
@@ -65,11 +65,11 @@
 
     <Dialog v-model:visible="showEditMemberDialog" :style="{width: '450px'}" header="Edit Member" :modal="true" class="p-fluid">
         <div class="p-field">
-            <label for="name">Username: </label> <b>{{memberToEdit.userName}}</b>
+            <label for="name">{{ t('username') }}: </label> <b>{{memberToEdit.userName}}</b>
         </div>
 
         <div class="p-field">
-            <label for="inventoryStatus" class="p-mb-3">Role</label>
+            <label for="inventoryStatus" class="p-mb-3">{{ t('role' )}}</label>
             <Dropdown id="inventoryStatus" v-model="memberToEdit.role" :options="assignableRoles" placeholder="Select a Role">
                 <template #value="slotProps">
                     <div v-if="slotProps.value && slotProps.value.value">
@@ -87,21 +87,21 @@
 
         <template #footer>
             <ProgressBar mode="indeterminate" class="mb-3" v-if="inProgress" />
-            <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showEditMemberDialog = false" />
-            <Button label="Save" icon="pi pi-check" class="p-button-text" @click="submitUpdatedMember" />
+            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-text" @click="showEditMemberDialog = false" />
+            <Button :label="t('save')" icon="pi pi-check" class="p-button-text" @click="submitUpdatedMember" />
         </template>
     </Dialog>
 
     <Dialog v-model:visible="showRemoveMemberDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
-        <Message v-if="warnRemoveActiveUser" severity="warn">You'll remove yourself from the project!</Message>
+        <Message v-if="warnRemoveActiveUser" severity="warn">{{ t('projectDetails-warningRemoveYourself') }}</Message>
         <div class="confirmation-content">
             <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
-            <span v-if="memberToRemove">Are you sure you want to remove member <b>{{memberToRemove.userName}}</b> from the project?</span>
+            <span v-if="memberToRemove">{{ t('projectDetails-areYouSureYouWantToRemove') }} <b>{{memberToRemove.userName}}</b> {{ t('projectDetails-fromTheProject') }}</span>
         </div>
         <template #footer>
             <ProgressBar mode="indeterminate" class="mb-3" v-if="inProgress" />
-            <Button label="No" icon="pi pi-times" class="p-button-text" @click="showRemoveMemberDialog = false"/>
-            <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="removeMember(memberToRemove)" />
+            <Button :label="t('no')" icon="pi pi-times" class="p-button-text" @click="showRemoveMemberDialog = false"/>
+            <Button :label="t('yes')" icon="pi pi-check" class="p-button-text" @click="removeMember(memberToRemove)" />
         </template>
     </Dialog>
 </template>

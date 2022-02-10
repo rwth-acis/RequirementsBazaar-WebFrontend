@@ -21,8 +21,8 @@
     <!-- Timeline -->
     <div v-if="issue_url">
       <div class="p-d-flex p-jc-start p-ai-center">
-        <h2>Development Timeline</h2>
-        <a v-if="issue_url" :href="issue_url" target="_blank" rel="noreferrer" class="p-ml-2"><i class="pi pi-github"></i> View on GitHub</a>
+        <h2>{{ t('devTimeline-title') }}</h2>
+        <a v-if="issue_url" :href="issue_url" target="_blank" rel="noreferrer" class="p-ml-2"><i class="pi pi-github"></i> {{ t('viewOnGitHub') }}</a>
       </div>
       <Timeline :value="timelineEvents" layout="horizontal" align="bottom">
           <template #marker="slotProps">
@@ -54,9 +54,9 @@
       </div>
       <div id="actionButtons" v-if="!brief">
         <div id="groupedButtons">
-          <Button label="Vote" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
+          <Button :label="t('vote')" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
           <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
-          <Button label="Share" class="p-button-outlined" @click="toggleShareMenu"></Button>
+          <Button :label="t('share')" class="p-button-outlined" @click="toggleShareMenu"></Button>
           <Menu ref="shareMenu" :model="shareMenuItems" :popup="true" />
         </div>
         <Button v-if="oidcIsAuthenticated" type="button" class="p-button-outlined moreButton" label="..." @click="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
@@ -183,9 +183,9 @@ export default defineComponent({
 
     //Timeline events
     const timelineEvents = ref([
-      {label: 'Requirement Exported',    status: timelineIssueNumber()},
-      {label: 'Development in Progress', status: timelineIssueUrl()},
-      {label: 'Closed',                  status: timelineIssueStatus()},
+      {label: t('devTimeline-requirementExported'), status: timelineIssueNumber()},
+      {label: t('devTimeline-inProgress'), status: timelineIssueUrl()},
+      {label: t('devTimeline-closed'), status: timelineIssueStatus()},
       ]);
 
     const alertLogin = (message: string) => {
@@ -218,7 +218,7 @@ export default defineComponent({
         };
         store.dispatch(ActionTypes.VoteRequirement, parameters);
       } else {
-        alertLogin('You need to sign in to vote for a requirement.');
+        alertLogin(t('signInToVoteRequirement'));
       }
     };
 
@@ -258,8 +258,8 @@ export default defineComponent({
       const bazaarRequirementUrl = createShareableRequirementLink()
       if(additionalPropertiesValue == undefined){
         confirm.require({
-          header: 'Create Issue for Requirement',
-          message: 'You will be redirected to GitHub',
+          header: t('createIssueDialogHeader'),
+          message: t('createIssueDialogMessage'),
           icon: 'pi pi-external-link',
           group: 'dialog',
             accept: () => {
@@ -270,7 +270,7 @@ export default defineComponent({
         }
       });
       }else{
-        alertShareGitHub('This Requirement is already on GitHub.')
+        alertShareGitHub(t('requirementAlreadyOnGitHub'))
       }
     };
 
@@ -361,10 +361,9 @@ export default defineComponent({
         },
       },
       {
-        label: 'Copy to clipboard',
+        label: t('copyToClipboard'),
         icon: 'pi pi-copy',
         command: () => {
-          console.log('Copying to clipboard...');
           navigator.clipboard.writeText(createShareableRequirementLink());
         },
       },
