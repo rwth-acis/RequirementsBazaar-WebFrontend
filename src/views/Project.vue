@@ -295,7 +295,7 @@ export default defineComponent({
       if (!oidcIsAuthenticated.value && membersItemId > -1) {
         tabItems.value.splice(membersItemId, 1);
       }
-      if (oidcIsAuthenticated.value && project.value.userContext?.projectRole === 'ProjectAdmin') {
+      if (oidcIsAuthenticated.value) {
         if (membersItemId === -1) {
           tabItems.value.push(
             {
