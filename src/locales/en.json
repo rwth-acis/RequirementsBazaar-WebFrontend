@@ -32,7 +32,9 @@
     "projects-signInToCreateProjectMessage": "You need to sign in to create a project.",
 
     "signInToCreateCategory": "You need to sign in to create a category.",
+    "signInToCreateRequirement": "You need to sign in to create a requirement.",
     "signInToFollowProject": "You need to sign in to follow a project.",
+    "signInToFollowCategory": "You need to sign in to follow a category.",
 
     "linkRepository-dialogHeader": "Link GitHub repository",
     "linkRepository-pasteUrlInstruction": "To get started, first, paste the base URL of a GitHub Repository that should be connected to this project.",
@@ -54,6 +56,15 @@
     "projectDetails-members": "Members",
     "projectDetails-allCategories": "All Categories",
 
+    "categoryDetails-activeRequirements": "Active Requirements",
+    "categoryDetails-completedRequirements": "Completed Requirements",
+    "categoryDetails-nothingToSeeHere": "Nothing to see here.",
+    "categoryDetails-addRequirement": "Add new Requirement...",
+
+    "requirementDetails-requirementNotFound": "Requirement not found...",
+    "requirementDetails-showMoreRequirements": "Show more Requirements",
+
+    "publicProjects": "Public Projects",
     "last-active-projects": "Last Active Projects",
     "lp-mot": "Listen to your users",
     "project": "Project",
@@ -172,12 +183,12 @@
     "sorting": "Sorting",
     "sorting-activity": "Last Activity",
     "sorting-alphabetical": "Alphabetically",
-    "sorting-comments": "Comments",
+    "sorting-comments": "Number of Comments",
     "sorting-date": "Creation Date",
     "sorting-followers": "Number of Followers",
     "sorting-popularity": "Popularity",
     "sorting-requirements": "Number of Requirements",
-    "sorting-votes": "Votes",
+    "sorting-votes": "Number of Votes",
 
     "votes": "Votes",
     "requirements": "Requirements",

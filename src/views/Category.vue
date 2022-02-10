@@ -22,7 +22,7 @@
   </Dialog>
   <div id="addRequirementPanel">
     <Button
-      label="Add new Requirement..."
+      :label="t('categoryDetails-addRequirement')"
       v-if="!showAddRequirement"
       @click="toggleAddRequirement" />
     <div class="requirementEditorContainer">
@@ -54,7 +54,7 @@
       </FilterPanel>
       <div class="requirementsList" v-show="!done">
         <div v-if="activeRequirements.length === 0">
-          Nothing to see here.
+          {{ t('categoryDetails-nothingToSeeHere') }}
         </div>
         <div v-for="requirement in activeRequirements" :key="requirement.id" class="requirementCard">
           <RequirementCard
@@ -79,7 +79,7 @@
       </div>
       <div class="requirementsList" v-show="done">
         <div v-if="realizedRequirements.length === 0">
-          Nothing to see here.
+          {{ t('categoryDetails-nothingToSeeHere') }}
         </div>
         <div v-for="requirement in realizedRequirements" :key="requirement.id" class="requirementCard">
           <RequirementCard
@@ -147,12 +147,12 @@ export default defineComponent({
     const searchQuery = ref('');
     const selectedSort = ref('date');
     const sortOptions = [
-      {name: 'Alphabetically', value: 'name'},
-      {name: 'Last Activity', value: 'last_activity'},
-      {name: 'Creation Date', value: 'date'},
-      {name: 'Number of Comments', value: 'comment'},
-      {name: 'Number of Followers', value: 'follower'},
-      {name: 'Number of Votes', value: 'vote'},
+      {name: t('sorting-alphabetical'), value: 'name'},
+      {name: t('sorting-activity'), value: 'last_activity'},
+      {name: t('sorting-date'), value: 'date'},
+      {name: t('sorting-comments'), value: 'comment'},
+      {name: t('sorting-followers'), value: 'follower'},
+      {name: t('sorting-votes'), value: 'vote'},
     ];
     const sortAscending = ref(false);
     const page = ref(0);
@@ -238,7 +238,7 @@ export default defineComponent({
       } else {
         confirm.require({
           group: 'dialog',
-          message: 'You need to sign in to create a requirement.',
+          message: t('signInToCreateRequirement'),
           header: 'Login',
           icon: 'pi pi-info-circle',
           rejectClass: 'p-sr-only',
@@ -253,7 +253,7 @@ export default defineComponent({
       } else {
         confirm.require({
           group: 'dialog',
-          message: 'You need to sign in to follow a category.',
+          message: t('signInToFollowCategory'),
           header: 'Login',
           icon: 'pi pi-info-circle',
           rejectClass: 'p-sr-only',
@@ -264,11 +264,11 @@ export default defineComponent({
 
     const tabItems = ref([
       {
-        label: 'Active Requirements',
+        label: t('categoryDetails-activeRequirements'),
         to: `/projects/${projectId}/categories/${categoryId}`,
       },
       {
-        label: 'Completed Requirements',
+        label: t('categoryDetails-completedRequirements'),
         to: `/projects/${projectId}/categories/${categoryId}/done`,
       },
     ]);
