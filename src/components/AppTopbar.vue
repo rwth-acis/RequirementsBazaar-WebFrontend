@@ -6,8 +6,8 @@
 		<div class="layout-topbar-icons">
 			<Dropdown v-model="locale" :options="availableLocaleNames" optionLabel="name" optionValue="code"/>
 			<i class="pi pi-bell" @click="toggleActivityOverlay"></i>
-			<Button v-if="oidcIsAuthenticated" label="Logout" @click="removeOidcUser" />
-			<Button v-else label="Sign in" @click="authenticateOidcPopup" />
+			<Button v-if="oidcIsAuthenticated" :label="t('logout')" @click="removeOidcUser" />
+			<Button v-else :label="t('signIn')" @click="authenticateOidcPopup" />
 
 			<OverlayPanel class="activityOverlay" ref="activityOverlay" appendTo="body" :showCloseIcon="false" style="width: 278px; height: 500px;">
         <ActivityTracker class="activityTracker"></ActivityTracker>
@@ -29,7 +29,7 @@ export default defineComponent({
     ActivityTracker
   },
 	setup: (props, context) => {
-    const { locale, availableLocales } = useI18n({ useScope: 'global' });
+    const { t, locale, availableLocales } = useI18n({ useScope: 'global' });
 		const store = useStore();
 		const app = getCurrentInstance();
 
@@ -57,7 +57,7 @@ export default defineComponent({
 			{name: 'Shqip', code: 'sq'},
 		]);
 
-    return { locale, availableLocaleNames, oidcIsAuthenticated, authenticateOidcPopup, removeOidcUser, activityOverlay, toggleActivityOverlay };
+    return { t, locale, availableLocaleNames, oidcIsAuthenticated, authenticateOidcPopup, removeOidcUser, activityOverlay, toggleActivityOverlay };
   },
 })
 </script>

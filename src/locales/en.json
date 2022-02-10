@@ -181,7 +181,13 @@
 
     "votes": "Votes",
     "requirements": "Requirements",
+
     "about": "About",
+    "developer": "Developer",
+    "privacyPolicy": "Privacy Policy",
+    "logout": "Logout",
+    "signIn": "Sign in",
+
     "dashboard-projects": "Recent activities in projects you follow",
     "dashboard-categories": "Recent activities in categories you follow",
     "dashboard-requirements": "Recent activities in requirements you follow",
