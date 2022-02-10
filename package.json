@@ -1,6 +1,6 @@
 {
   "name": "reqbaz",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "scripts": {
     "dev": "vite",
     "dev-local-api": "vite --mode dev-local-api",
@@ -25,6 +25,7 @@
     "vue": "^3.0.7",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.4",
+    "vue3-autocounter": "^1.0.6",
     "vue3-markdown-it": "^1.0.7",
     "vuex": "^4.0.0",
     "vuex-oidc": "^3.10.2"
