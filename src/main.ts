@@ -7,6 +7,8 @@ import App from './App.vue';
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
 
 import VueMarkdownIt from 'vue3-markdown-it';
+import Vue3Autocounter from 'vue3-autocounter';
+
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -129,5 +131,7 @@ app.component('Toolbar', Toolbar);
 app.component("ProgressBar", ProgressBar);
 app.component('Message', Message);
 app.component('Timeline', Timeline);
+
+app.component('Autocounter', Vue3Autocounter);
 
 app.mount('#app');

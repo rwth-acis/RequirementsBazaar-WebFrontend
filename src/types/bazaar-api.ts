@@ -29,52 +29,6 @@ export interface Statistic {
   numberOfVotes?: number;
 }
 
-export interface Attachment {
-  /** @format int32 */
-  id?: number;
-  name: string;
-  description?: string;
-  mimeType: string;
-  identifier: string;
-  fileUrl: string;
-
-  /**
-   * @format int32
-   * @min 0
-   */
-  requirementId?: number;
-  creator?: User;
-
-  /** @format date-time */
-  creationDate?: string;
-
-  /** @format date-time */
-  lastUpdatedDate?: string;
-}
-
-export interface User {
-  /** @format int32 */
-  id?: number;
-  userName: string;
-  firstName?: string;
-  lastName?: string;
-  las2peerId: string;
-  profileImage?: string;
-  emailLeadSubscription?: boolean;
-  emailFollowSubscription?: boolean;
-  personalizationEnabled?: boolean;
-
-  /** @format date-time */
-  creationDate?: string;
-
-  /** @format date-time */
-  lastUpdatedDate?: string;
-
-  /** @format date-time */
-  lastLoginDate?: string;
-  email?: string;
-}
-
 export interface Category {
   /** @format int32 */
   id?: number;
@@ -106,6 +60,29 @@ export interface Category {
   additionalProperties?: Record<string, object>;
 }
 
+export interface User {
+  /** @format int32 */
+  id?: number;
+  userName: string;
+  firstName?: string;
+  lastName?: string;
+  las2peerId: string;
+  profileImage?: string;
+  emailLeadSubscription?: boolean;
+  emailFollowSubscription?: boolean;
+  personalizationEnabled?: boolean;
+
+  /** @format date-time */
+  creationDate?: string;
+
+  /** @format date-time */
+  lastUpdatedDate?: string;
+
+  /** @format date-time */
+  lastLoginDate?: string;
+  email?: string;
+}
+
 export interface UserContext {
   /** The role the user has within the project. Only returned when requesting project resources. */
   userRole?: "ProjectMember" | "ProjectManager" | "ProjectAdmin";
@@ -119,6 +96,29 @@ export interface UserContext {
 
   /** Only returned when requesting requirement resources. */
   isContributor?: boolean;
+}
+
+export interface Attachment {
+  /** @format int32 */
+  id?: number;
+  name: string;
+  description?: string;
+  mimeType: string;
+  identifier: string;
+  fileUrl: string;
+
+  /**
+   * @format int32
+   * @min 0
+   */
+  requirementId: number;
+  creator?: User;
+
+  /** @format date-time */
+  creationDate?: string;
+
+  /** @format date-time */
+  lastUpdatedDate?: string;
 }
 
 export interface Comment {
@@ -191,7 +191,7 @@ export interface Project {
 export interface Requirement {
   /** @format int32 */
   id?: number;
-  name?: string;
+  name: string;
   description: string;
 
   /** @format date-time */
@@ -337,6 +337,23 @@ export namespace Version {
   }
 }
 
+export namespace UserStatistics {
+  /**
+   * No description
+   * @name GetUserStatistics
+   * @summary This method allows to retrieve statistics about the users of the Requirements Bazaar.
+   * @request GET:/user-statistics
+   * @secure
+   */
+  export namespace GetUserStatistics {
+    export type RequestParams = {};
+    export type RequestQuery = { start?: string; end?: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Statistic;
+  }
+}
+
 export namespace Statistics {
   /**
    * No description
@@ -368,54 +385,6 @@ export namespace Notifications {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
-  }
-}
-
-export namespace Attachments {
-  /**
-   * No description
-   * @tags attachments
-   * @name CreateAttachment
-   * @summary This method allows to create a new attachment.
-   * @request POST:/attachments
-   * @secure
-   */
-  export namespace CreateAttachment {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = Attachment;
-    export type RequestHeaders = {};
-    export type ResponseBody = Attachment;
-  }
-  /**
-   * No description
-   * @tags attachments
-   * @name GetAttachment
-   * @summary This method allows to retrieve a certain attachment
-   * @request GET:/attachments/{attachmentId}
-   * @secure
-   */
-  export namespace GetAttachment {
-    export type RequestParams = { attachmentId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Attachment;
-  }
-  /**
-   * No description
-   * @tags attachments
-   * @name DeleteAttachment
-   * @summary This method deletes a specific attachment.
-   * @request DELETE:/attachments/{attachmentId}
-   * @secure
-   */
-  export namespace DeleteAttachment {
-    export type RequestParams = { attachmentId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Attachment;
   }
 }
 
@@ -702,12 +671,27 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
-   * @name UpdateMembership
+   * @name AddMember
+   * @summary This method allows to add a project member.
+   * @request POST:/projects/{projectId}/members
+   * @secure
+   */
+  export namespace AddMember {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = ProjectMember;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name UpdateMember
    * @summary This method allows to modify the project members.
    * @request PUT:/projects/{projectId}/members
    * @secure
    */
-  export namespace UpdateMembership {
+  export namespace UpdateMember {
     export type RequestParams = { projectId: number };
     export type RequestQuery = {};
     export type RequestBody = ProjectMember[];
@@ -749,58 +733,15 @@ export namespace Projects {
    * @tags projects
    * @name RemoveMember
    * @summary This method allows to remove a project member.
-   * @request DELETE:/projects/{projectId}/members/{memberId}
+   * @request DELETE:/projects/{projectId}/members/{memberUserId}
    * @secure
    */
   export namespace RemoveMember {
-    export type RequestParams = { projectId: number; memberId: number };
+    export type RequestParams = { projectId: number; memberUserId: number };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name GetCategoriesForProject
-   * @summary This method returns the list of categories under a given project.
-   * @request GET:/projects/{projectId}/categories
-   * @secure
-   */
-  export namespace GetCategoriesForProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-      sortDirection?: "ASC" | "DESC";
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Category[];
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name GetRequirementsForProject
-   * @summary This method returns the list of requirements for a specific project.
-   * @request GET:/projects/{projectId}/requirements
-   * @secure
-   */
-  export namespace GetRequirementsForProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {
-      page?: number;
-      per_page?: number;
-      search?: string;
-      state?: "all" | "open" | "realized";
-      sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
-      sortDirection?: "ASC" | "DESC";
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Requirement[];
   }
   /**
    * No description
@@ -820,6 +761,7 @@ export namespace Projects {
       sortDirection?: "ASC" | "DESC";
       filters?: ("all" | "created" | "following")[];
       ids?: number[];
+      recursive?: boolean;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -858,32 +800,17 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
-   * @name GetProject
-   * @summary This method allows to retrieve a certain project.
-   * @request GET:/projects/{projectId}
+   * @name GetStatisticsForProject
+   * @summary This method allows to retrieve statistics for one project.
+   * @request GET:/projects/{projectId}/statistics
    * @secure
    */
-  export namespace GetProject {
+  export namespace GetStatisticsForProject {
     export type RequestParams = { projectId: number };
-    export type RequestQuery = {};
+    export type RequestQuery = { since?: string };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = Project;
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name DeleteProject
-   * @summary This method deletes a specific project.
-   * @request DELETE:/projects/{projectId}
-   * @secure
-   */
-  export namespace DeleteProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = Statistic;
   }
   /**
    * No description
@@ -933,6 +860,79 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
+   * @name GetCategoriesForProject
+   * @summary This method returns the list of categories under a given project.
+   * @request GET:/projects/{projectId}/categories
+   * @secure
+   */
+  export namespace GetCategoriesForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Category[];
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name GetRequirementsForProject
+   * @summary This method returns the list of requirements for a specific project.
+   * @request GET:/projects/{projectId}/requirements
+   * @secure
+   */
+  export namespace GetRequirementsForProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      state?: "all" | "open" | "realized";
+      sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
+      sortDirection?: "ASC" | "DESC";
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement[];
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name GetProject
+   * @summary This method allows to retrieve a certain project.
+   * @request GET:/projects/{projectId}
+   * @secure
+   */
+  export namespace GetProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Project;
+  }
+  /**
+   * No description
+   * @tags projects
+   * @name DeleteProject
+   * @summary This method deletes a specific project.
+   * @request DELETE:/projects/{projectId}
+   * @secure
+   */
+  export namespace DeleteProject {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags projects
    * @name GetContributorsForProject
    * @summary This method returns the list of contributors for a specific project.
    * @request GET:/projects/{projectId}/contributors
@@ -966,51 +966,6 @@ export namespace Projects {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = Feedback[];
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name GetTagsForProject
-   * @summary This method returns the list of tags under a given project.
-   * @request GET:/projects/{projectId}/tags
-   * @secure
-   */
-  export namespace GetTagsForProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Tag[];
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name CreateTag
-   * @summary This method adds a new tag to a given project.
-   * @request POST:/projects/{projectId}/tags
-   * @secure
-   */
-  export namespace CreateTag {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = {};
-    export type RequestBody = Tag;
-    export type RequestHeaders = {};
-    export type ResponseBody = Tag;
-  }
-  /**
-   * No description
-   * @tags projects
-   * @name GetStatisticsForProject
-   * @summary This method allows to retrieve statistics for one project.
-   * @request GET:/projects/{projectId}/statistics
-   * @secure
-   */
-  export namespace GetStatisticsForProject {
-    export type RequestParams = { projectId: number };
-    export type RequestQuery = { since?: string };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Statistic;
   }
 }
 
@@ -1176,21 +1131,6 @@ export namespace Requirements {
   /**
    * No description
    * @tags requirements
-   * @name GetAttachmentsForRequirement
-   * @summary This method returns the list of attachments for a specific requirement.
-   * @request GET:/requirements/{requirementId}/attachments
-   * @secure
-   */
-  export namespace GetAttachmentsForRequirement {
-    export type RequestParams = { requirementId: number };
-    export type RequestQuery = { page?: number; per_page?: number };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = Attachment[];
-  }
-  /**
-   * No description
-   * @tags requirements
    * @name GetRequirement
    * @summary This method returns a specific requirement.
    * @request GET:/requirements/{requirementId}
@@ -1338,6 +1278,21 @@ export namespace Requirements {
     export type RequestHeaders = {};
     export type ResponseBody = RequirementContributors;
   }
+  /**
+   * No description
+   * @tags requirements
+   * @name GetAttachmentsForRequirement
+   * @summary This method returns the list of attachments for a specific requirement.
+   * @request GET:/requirements/{requirementId}/attachments
+   * @secure
+   */
+  export namespace GetAttachmentsForRequirement {
+    export type RequestParams = { requirementId: number };
+    export type RequestQuery = { page?: number; per_page?: number };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Attachment[];
+  }
 }
 
 export namespace Users {
@@ -1436,6 +1391,24 @@ export namespace Users {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = EntityOverview;
+  }
+}
+
+export namespace Webhook {
+  /**
+   * No description
+   * @tags webhook
+   * @name HandleWebhook
+   * @summary Webhook Endpoint
+   * @request POST:/webhook/{projectId}/github
+   * @secure
+   */
+  export namespace HandleWebhook {
+    export type RequestParams = { projectId: number };
+    export type RequestQuery = {};
+    export type RequestBody = string;
+    export type RequestHeaders = { "X-GitHub-Event"?: string; "X-Hub-Signature-256"?: string };
+    export type ResponseBody = void;
   }
 }
 
@@ -1675,6 +1648,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
+  userStatistics = {
+    /**
+     * No description
+     *
+     * @name GetUserStatistics
+     * @summary This method allows to retrieve statistics about the users of the Requirements Bazaar.
+     * @request GET:/user-statistics
+     * @secure
+     */
+    getUserStatistics: (query?: { start?: string; end?: string }, params: RequestParams = {}) =>
+      this.request<Statistic, void>({
+        path: `/user-statistics`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+  };
   statistics = {
     /**
      * No description
@@ -1708,63 +1700,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/notifications`,
         method: "POST",
         secure: true,
-        ...params,
-      }),
-  };
-  attachments = {
-    /**
-     * No description
-     *
-     * @tags attachments
-     * @name CreateAttachment
-     * @summary This method allows to create a new attachment.
-     * @request POST:/attachments
-     * @secure
-     */
-    createAttachment: (body: Attachment, params: RequestParams = {}) =>
-      this.request<Attachment, void>({
-        path: `/attachments`,
-        method: "POST",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags attachments
-     * @name GetAttachment
-     * @summary This method allows to retrieve a certain attachment
-     * @request GET:/attachments/{attachmentId}
-     * @secure
-     */
-    getAttachment: (attachmentId: number, params: RequestParams = {}) =>
-      this.request<Attachment, void>({
-        path: `/attachments/${attachmentId}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags attachments
-     * @name DeleteAttachment
-     * @summary This method deletes a specific attachment.
-     * @request DELETE:/attachments/{attachmentId}
-     * @secure
-     */
-    deleteAttachment: (attachmentId: number, params: RequestParams = {}) =>
-      this.request<Attachment, void>({
-        path: `/attachments/${attachmentId}`,
-        method: "DELETE",
-        secure: true,
-        format: "json",
         ...params,
       }),
   };
@@ -2123,12 +2058,31 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
-     * @name UpdateMembership
+     * @name AddMember
+     * @summary This method allows to add a project member.
+     * @request POST:/projects/{projectId}/members
+     * @secure
+     */
+    addMember: (projectId: number, body: ProjectMember, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/projects/${projectId}/members`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name UpdateMember
      * @summary This method allows to modify the project members.
      * @request PUT:/projects/{projectId}/members
      * @secure
      */
-    updateMembership: (projectId: number, body: ProjectMember[], params: RequestParams = {}) =>
+    updateMember: (projectId: number, body: ProjectMember[], params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/projects/${projectId}/members`,
         method: "PUT",
@@ -2182,73 +2136,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags projects
      * @name RemoveMember
      * @summary This method allows to remove a project member.
-     * @request DELETE:/projects/{projectId}/members/{memberId}
+     * @request DELETE:/projects/{projectId}/members/{memberUserId}
      * @secure
      */
-    removeMember: (projectId: number, memberId: number, params: RequestParams = {}) =>
+    removeMember: (projectId: number, memberUserId: number, params: RequestParams = {}) =>
       this.request<void, void>({
-        path: `/projects/${projectId}/members/${memberId}`,
+        path: `/projects/${projectId}/members/${memberUserId}`,
         method: "DELETE",
         secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name GetCategoriesForProject
-     * @summary This method returns the list of categories under a given project.
-     * @request GET:/projects/{projectId}/categories
-     * @secure
-     */
-    getCategoriesForProject: (
-      projectId: number,
-      query?: {
-        page?: number;
-        per_page?: number;
-        search?: string;
-        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
-        sortDirection?: "ASC" | "DESC";
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Category[], void>({
-        path: `/projects/${projectId}/categories`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name GetRequirementsForProject
-     * @summary This method returns the list of requirements for a specific project.
-     * @request GET:/projects/{projectId}/requirements
-     * @secure
-     */
-    getRequirementsForProject: (
-      projectId: number,
-      query?: {
-        page?: number;
-        per_page?: number;
-        search?: string;
-        state?: "all" | "open" | "realized";
-        sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
-        sortDirection?: "ASC" | "DESC";
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Requirement[], void>({
-        path: `/projects/${projectId}/requirements`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
         ...params,
       }),
 
@@ -2270,6 +2165,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortDirection?: "ASC" | "DESC";
         filters?: ("all" | "created" | "following")[];
         ids?: number[];
+        recursive?: boolean;
       },
       params: RequestParams = {},
     ) =>
@@ -2326,34 +2222,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
-     * @name GetProject
-     * @summary This method allows to retrieve a certain project.
-     * @request GET:/projects/{projectId}
+     * @name GetStatisticsForProject
+     * @summary This method allows to retrieve statistics for one project.
+     * @request GET:/projects/{projectId}/statistics
      * @secure
      */
-    getProject: (projectId: number, params: RequestParams = {}) =>
-      this.request<Project, void>({
-        path: `/projects/${projectId}`,
+    getStatisticsForProject: (projectId: number, query?: { since?: string }, params: RequestParams = {}) =>
+      this.request<Statistic, void>({
+        path: `/projects/${projectId}/statistics`,
         method: "GET",
+        query: query,
         secure: true,
         format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name DeleteProject
-     * @summary This method deletes a specific project.
-     * @request DELETE:/projects/{projectId}
-     * @secure
-     */
-    deleteProject: (projectId: number, params: RequestParams = {}) =>
-      this.request<void, void>({
-        path: `/projects/${projectId}`,
-        method: "DELETE",
-        secure: true,
         ...params,
       }),
 
@@ -2420,6 +2300,100 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags projects
+     * @name GetCategoriesForProject
+     * @summary This method returns the list of categories under a given project.
+     * @request GET:/projects/{projectId}/categories
+     * @secure
+     */
+    getCategoriesForProject: (
+      projectId: number,
+      query?: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        sort?: ("name" | "date" | "last_activity" | "requirement" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Category[], void>({
+        path: `/projects/${projectId}/categories`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name GetRequirementsForProject
+     * @summary This method returns the list of requirements for a specific project.
+     * @request GET:/projects/{projectId}/requirements
+     * @secure
+     */
+    getRequirementsForProject: (
+      projectId: number,
+      query?: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        state?: "all" | "open" | "realized";
+        sort?: ("date" | "last_activity" | "name" | "vote" | "comment" | "follower")[];
+        sortDirection?: "ASC" | "DESC";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Requirement[], void>({
+        path: `/projects/${projectId}/requirements`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name GetProject
+     * @summary This method allows to retrieve a certain project.
+     * @request GET:/projects/{projectId}
+     * @secure
+     */
+    getProject: (projectId: number, params: RequestParams = {}) =>
+      this.request<Project, void>({
+        path: `/projects/${projectId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name DeleteProject
+     * @summary This method deletes a specific project.
+     * @request DELETE:/projects/{projectId}
+     * @secure
+     */
+    deleteProject: (projectId: number, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/projects/${projectId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags projects
      * @name GetContributorsForProject
      * @summary This method returns the list of contributors for a specific project.
      * @request GET:/projects/{projectId}/contributors
@@ -2457,63 +2431,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<Feedback[], void>({
         path: `/projects/${projectId}/feedbacks`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name GetTagsForProject
-     * @summary This method returns the list of tags under a given project.
-     * @request GET:/projects/{projectId}/tags
-     * @secure
-     */
-    getTagsForProject: (projectId: number, params: RequestParams = {}) =>
-      this.request<Tag[], void>({
-        path: `/projects/${projectId}/tags`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name CreateTag
-     * @summary This method adds a new tag to a given project.
-     * @request POST:/projects/{projectId}/tags
-     * @secure
-     */
-    createTag: (projectId: number, body: Tag, params: RequestParams = {}) =>
-      this.request<Tag, void>({
-        path: `/projects/${projectId}/tags`,
-        method: "POST",
-        body: body,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags projects
-     * @name GetStatisticsForProject
-     * @summary This method allows to retrieve statistics for one project.
-     * @request GET:/projects/{projectId}/statistics
-     * @secure
-     */
-    getStatisticsForProject: (projectId: number, query?: { since?: string }, params: RequestParams = {}) =>
-      this.request<Statistic, void>({
-        path: `/projects/${projectId}/statistics`,
         method: "GET",
         query: query,
         secure: true,
@@ -2729,29 +2646,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags requirements
-     * @name GetAttachmentsForRequirement
-     * @summary This method returns the list of attachments for a specific requirement.
-     * @request GET:/requirements/{requirementId}/attachments
-     * @secure
-     */
-    getAttachmentsForRequirement: (
-      requirementId: number,
-      query?: { page?: number; per_page?: number },
-      params: RequestParams = {},
-    ) =>
-      this.request<Attachment[], void>({
-        path: `/requirements/${requirementId}/attachments`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags requirements
      * @name GetRequirement
      * @summary This method returns a specific requirement.
      * @request GET:/requirements/{requirementId}
@@ -2932,6 +2826,29 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         format: "json",
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name GetAttachmentsForRequirement
+     * @summary This method returns the list of attachments for a specific requirement.
+     * @request GET:/requirements/{requirementId}/attachments
+     * @secure
+     */
+    getAttachmentsForRequirement: (
+      requirementId: number,
+      query?: { page?: number; per_page?: number },
+      params: RequestParams = {},
+    ) =>
+      this.request<Attachment[], void>({
+        path: `/requirements/${requirementId}/attachments`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
   };
   users = {
     /**
@@ -3052,6 +2969,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         query: query,
         secure: true,
         format: "json",
+        ...params,
+      }),
+  };
+  webhook = {
+    /**
+     * No description
+     *
+     * @tags webhook
+     * @name HandleWebhook
+     * @summary Webhook Endpoint
+     * @request POST:/webhook/{projectId}/github
+     * @secure
+     */
+    handleWebhook: (projectId: number, body: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/webhook/${projectId}/github`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
   };

@@ -43,6 +43,13 @@
     our open source repositories, by sending us design proposals, or by volunteering to translate the page to one of
     your native languages. Simply drop us an email at reqbaz@dbis.rwth-aachen.de and tell us about your idea.</p>
 
+
+  <h2>Used Third Party Resources</h2>
+  <ul>
+    <li><a href="https://www.flaticon.com/free-icons/democracy" title="democracy icons">Democracy icons created by Freepik - Flaticon</a></li>
+    <li><a href="https://www.flaticon.com/free-icons/qa" title="QA icons">QA icons created by Freepik - Flaticon</a></li>
+  </ul>
+
 </template>
 
 <script lang="ts">

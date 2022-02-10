@@ -22,6 +22,89 @@
     </div>
   </div>
 
+  <section style="text-align: center; " class="p-py-3">
+    <h2>Requirements Bazaar in Numbers</h2>
+
+    <div class="p-grid">
+        <div class="p-col statistics-item">
+          <Autocounter v-if="statistics?.numberOfProjects" class="value"
+            :startAmount='0'
+            :endAmount="statistics?.numberOfProjects"
+            :duration='0.8'
+            separator=','
+            :autoinit='true' />
+          <span v-else class="value">...</span>
+          <p class="label">Projects</p>
+        </div>
+        <div class="p-col statistics-item">
+          <Autocounter v-if="statistics?.numberOfRequirements" class="value"
+            :startAmount='0'
+            :endAmount="statistics?.numberOfRequirements"
+            :duration='0.9'
+            separator=','
+            :autoinit='true' />
+          <span v-else class="value">...</span>
+          <p class="label">Requirements</p>
+        </div>
+        <div class="p-col statistics-item">
+          <Autocounter v-if="statistics?.numberOfComments" class="value"
+            :startAmount='0'
+            :endAmount="statistics?.numberOfComments"
+            :duration='1.0'
+            separator=','
+            :autoinit='true' />
+          <span v-else class="value">...</span>
+          <p class="label">Comments</p>
+        </div>
+        <div class="p-col statistics-item">
+          <Autocounter v-if="userStatistics?.numberOfActiveUsers" class="value"
+            :startAmount='0'
+            :endAmount="userStatistics?.numberOfActiveUsers"
+            :duration='1.1'
+            separator=','
+            :autoinit='true' />
+          <span v-else class="value">...</span>
+          <p class="label">Active Users</p>
+          <p>(in the last year)</p>
+        </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="text-align: center; font-size: 2.5em;">Features</h2>
+    <div class="p-grid">
+
+        <div class="p-col feature">
+          <div class="feature-icon">
+            <img src="/feature-icons/discuss.png" />
+          </div>
+          <h5 class="title" style="text-align: center;">Discuss with Users</h5>
+          <p class="body">Discuss new ideas, and innovate together with your end-users.</p>
+        </div>
+
+        <div class="p-col feature">
+          <div class="feature-icon">
+            <img src="/feature-icons/vote.png" />
+          </div>
+          <h5 class="title">Vote for Requirements</h5>
+          <p class="body">
+            Let users vote for requirements to help developers prioritizing the right features.
+          </p>
+        </div>
+
+        <div class="p-col feature">
+          <div class="feature-icon">
+            <img src="/feature-icons/github.png" />
+          </div>
+          <h5 class="title">Link to GitHub</h5>
+          <p class="body">
+            Link your project to a GitHub repository to keep requirements engineering and
+            development in sync.
+          </p>
+        </div>
+    </div>
+  </section>
+
   <h2>{{ t('landing-how-it-works') }}</h2>
   <div class="description">
     <div>{{ t('landing-step-1') }}</div>
@@ -40,10 +123,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue';
+import { defineComponent, computed, watch, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
+
+
+import { bazaarApi } from '../api/bazaar';
 
 export default defineComponent({
   name: 'Landing',
@@ -61,8 +147,20 @@ export default defineComponent({
       }
     });
 
+    const statistics = ref();
+    bazaarApi.statistics.getStatistics().then(response => statistics.value = response.data);
+
+    const userStatistics = ref();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear( oneYearAgo.getFullYear() - 1 );
+    bazaarApi.userStatistics.getUserStatistics({
+      start: oneYearAgo.toISOString(),
+    }).then(response => userStatistics.value = response.data);
+
     return {
       t,
+      statistics,
+      userStatistics,
     };
   }
 })
@@ -72,5 +170,42 @@ export default defineComponent({
   .description {
     font-size: 15pt;
     margin-bottom: 20px;
+  }
+
+  .statistics-item {
+    text-align: center;
+  }
+
+  .statistics-item .label {
+    font-size: 2em;
+  }
+
+  .statistics-item .value {
+    font-size: 4em;
+    font-weight: bold;
+    color: #4CAF50;
+  }
+
+  .feature {
+    text-align: center;
+  }
+
+  .feature .title {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  .feature .body {
+    text-align: center;
+  }
+
+  .feature-icon {
+    width: 95px;
+    margin: auto;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
   }
 </style>
