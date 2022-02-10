@@ -23,6 +23,20 @@
     "landing-featureGitHubTitle": "Link to GitHub",
     "landing-featureGitHubText": "Link your project to a GitHub repository to keep requirements engineering and development in sync.",
 
+    "projects-exploreText": "Take a look at the public projects on Requirements Bazaar.",
+    "projects-addNewProject": "Add new Project...",
+    "projects-featuredProjects": "Featured Projects",
+    "projects-getFeaturedContactUs": "Contact us to get featured!",
+    "projects-allProjects": "All Projects",
+    "projects-signInToCreateProjectHeader": "Login",
+    "projects-signInToCreateProjectMessage": "You need to sign in to create a project.",
+
+    "sortOption-alphabetically": "Alphabetically",
+    "sortOption-lastActivity": "Last Activity",
+    "sortOption-creationDate": "Creation Date",
+    "sortOption-numRequirements": "Number of Requirements",
+    "sortOption-numFollowers": "Number of Followers",
+
     "last-active-projects": "Last Active Projects",
     "lp-mot": "Listen to your users",
     "project": "Project",
