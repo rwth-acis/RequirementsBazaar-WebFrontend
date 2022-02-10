@@ -10,6 +10,19 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
+## [2.2.1] - 2022-02-10
+
+### Added
+
+- Number of users, projects, comments, and requirements, as well as some feature descriptions on landing page [#184](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/184)
+
+### Changed
+
+- Some dependency updates [#186](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/186), [#187](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/187)
+- French translation updates [#189](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/189)
+- Fixed members tab not sowing after a user signed in [#195](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/195)
+
+
 ## [2.2.0] - 2022-01-29
 
 ### Added
