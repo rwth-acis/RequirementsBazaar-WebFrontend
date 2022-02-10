@@ -52,7 +52,7 @@ export const getters: GetterTree<State, State> & Getters = {
     // then sort according to sort argument
     switch(parameters.sort) {
       case 'last_activity':
-        projects.sort(lexicographicalSortFunction('lastUpdatedDate', sortAscending));
+        projects.sort(lexicographicalSortFunction('lastActivity', sortAscending));
         break;
       case 'date':
         projects.sort(lexicographicalSortFunction('creationDate', sortAscending));
