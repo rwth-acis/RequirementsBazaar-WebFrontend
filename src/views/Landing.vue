@@ -76,7 +76,7 @@
 
         <div class="p-col feature">
           <div class="feature-icon">
-            <img src="feature-icons/discuss.png" />
+            <img src="/feature-icons/discuss.png" />
           </div>
           <h5 class="title" style="text-align: center;">Discuss with Users</h5>
           <p class="body">Discuss new ideas, and innovate together with your end-users.</p>
@@ -84,7 +84,7 @@
 
         <div class="p-col feature">
           <div class="feature-icon">
-            <img src="feature-icons/vote.png" />
+            <img src="/feature-icons/vote.png" />
           </div>
           <h5 class="title">Vote for Requirements</h5>
           <p class="body">
@@ -94,7 +94,7 @@
 
         <div class="p-col feature">
           <div class="feature-icon">
-            <img src="feature-icons/github.png" />
+            <img src="/feature-icons/github.png" />
           </div>
           <h5 class="title">Link to GitHub</h5>
           <p class="body">
