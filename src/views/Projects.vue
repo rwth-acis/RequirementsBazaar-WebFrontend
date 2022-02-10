@@ -70,11 +70,11 @@ export default defineComponent({
     const searchQuery = ref('');
     const selectedSort = ref('name');
     const sortOptions = [
-      {name: t('sortOption-alphabetically'), value: 'name'},
-      {name: t('sortOption-lastActivity'), value: 'last_activity'},
-      {name: t('sortOption-creationDate'), value: 'date'},
-      {name: t('sortOption-numRequirements'), value: 'requirement'},
-      {name: t('sortOption-numFollowers'), value: 'follower'},
+      {name: t('sorting-alphabetical'), value: 'name'},
+      {name: t('sorting-activity'), value: 'last_activity'},
+      {name: t('sorting-date'), value: 'date'},
+      {name: t('sorting-requirements'), value: 'requirement'},
+      {name: t('sorting-followers'), value: 'follower'},
     ];
     const sortAscending = ref(true);
     const page = ref(0);
