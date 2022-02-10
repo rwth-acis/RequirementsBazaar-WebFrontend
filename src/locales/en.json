@@ -1,5 +1,6 @@
 {
     "settings": "Settings",
+
     "lp-title": "We Connect the People That Matter",
     "lp-desc": "Requirements Bazaar allows users to discuss innovative ideas so that developers can focus on features that really matter.",
     "landing-welcome": "Welcome to Requirements Bazaar!",
@@ -8,6 +9,20 @@
     "landing-step-2": "2. Invite users to your project",
     "landing-step-3": "3. Respond to requirements from your community",
     "landing-try-it-out": "Try It Out",
+    "landing-reqBazInNumbers": "Requirements Bazaar in Numbers",
+    "landing-projectsCountLabel": "Projects",
+    "landing-requirementsCountLabel": "Requirements",
+    "landing-commentsCountLabel": "Comments",
+    "landing-activeUsersCountLabel": "Active Users",
+    "landing-activeUsersCountRangeLabel": "(in the last year)",
+    "landing-features": "Features",
+    "landing-featureDiscussTitle": "Discuss with Users",
+    "landing-featureDiscussText": "Discuss new ideas, and innovate together with your end-users.",
+    "landing-featureVoteTitle": "Vote for Requirements",
+    "landing-featureVoteText": "Let users vote for requirements to help developers prioritizing the right features.",
+    "landing-featureGitHubTitle": "Link to GitHub",
+    "landing-featureGitHubText": "Link your project to a GitHub repository to keep requirements engineering and development in sync.",
+
     "last-active-projects": "Last Active Projects",
     "lp-mot": "Listen to your users",
     "project": "Project",

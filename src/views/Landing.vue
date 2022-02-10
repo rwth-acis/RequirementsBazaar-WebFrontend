@@ -23,7 +23,7 @@
   </div>
 
   <section style="text-align: center; " class="p-py-3">
-    <h2>Requirements Bazaar in Numbers</h2>
+    <h2>{{ t('landing-reqBazInNumbers') }}</h2>
 
     <div class="p-grid">
         <div class="p-col statistics-item">
@@ -34,7 +34,7 @@
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
-          <p class="label">Projects</p>
+          <p class="label">{{ t('landing-projectsCountLabel') }}</p>
         </div>
         <div class="p-col statistics-item">
           <Autocounter v-if="statistics?.numberOfRequirements" class="value"
@@ -44,7 +44,7 @@
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
-          <p class="label">Requirements</p>
+          <p class="label">{{ t('landing-requirementsCountLabel') }}</p>
         </div>
         <div class="p-col statistics-item">
           <Autocounter v-if="statistics?.numberOfComments" class="value"
@@ -54,7 +54,7 @@
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
-          <p class="label">Comments</p>
+          <p class="label">{{ t('landing-commentsCountLabel') }}</p>
         </div>
         <div class="p-col statistics-item">
           <Autocounter v-if="userStatistics?.numberOfActiveUsers" class="value"
@@ -64,31 +64,31 @@
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
-          <p class="label">Active Users</p>
-          <p>(in the last year)</p>
+          <p class="label">{{ t('landing-activeUsersCountLabel') }}</p>
+          <p>{{ t('landing-activeUsersCountRangeLabel') }}</p>
         </div>
     </div>
   </section>
 
   <section>
-    <h2 style="text-align: center; font-size: 2.5em;">Features</h2>
+    <h2 style="text-align: center; font-size: 2.5em;">{{ t('landing-features') }}</h2>
     <div class="p-grid">
 
         <div class="p-col feature">
           <div class="feature-icon">
             <img src="/feature-icons/discuss.png" />
           </div>
-          <h5 class="title" style="text-align: center;">Discuss with Users</h5>
-          <p class="body">Discuss new ideas, and innovate together with your end-users.</p>
+          <h5 class="title" style="text-align: center;">{{ t('landing-featureDiscussTitle') }}</h5>
+          <p class="body">{{ t('landing-featureDiscussText') }}</p>
         </div>
 
         <div class="p-col feature">
           <div class="feature-icon">
             <img src="/feature-icons/vote.png" />
           </div>
-          <h5 class="title">Vote for Requirements</h5>
+          <h5 class="title">{{ t('landing-featureVoteTitle') }}</h5>
           <p class="body">
-            Let users vote for requirements to help developers prioritizing the right features.
+            {{ t('landing-featureVoteText') }}
           </p>
         </div>
 
@@ -96,10 +96,9 @@
           <div class="feature-icon">
             <img src="/feature-icons/github.png" />
           </div>
-          <h5 class="title">Link to GitHub</h5>
+          <h5 class="title">{{ t('landing-featureGitHubTitle') }}</h5>
           <p class="body">
-            Link your project to a GitHub repository to keep requirements engineering and
-            development in sync.
+            {{ t('landing-featureGitHubText') }}
           </p>
         </div>
     </div>
