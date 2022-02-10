@@ -135,5 +135,7 @@
     "home-greeting": "Bonjour",
     "dashboard-requirements": "Activité récente des exigences que vous suivez",
     "dashboard-categories": "Activité récente des catégories que vous suivez",
-    "dashboard-projects": "Activité récente des projets que vous suivez"
+    "dashboard-projects": "Activité récente des projets que vous suivez",
+    "createGithubIssue": "Créer une issue GitHub",
+    "viewOnGitHub": "Voir sur GitHub"
 }
