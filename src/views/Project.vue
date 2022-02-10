@@ -265,20 +265,18 @@ export default defineComponent({
 
     watch(oidcIsAuthenticated, () => store.dispatch(ActionTypes.FetchProject, projectId));
 
+    const MEMBERS_TAB_LABEL = 'Members';
+    const MEMBERS_TAB_ITEM = {
+      label: MEMBERS_TAB_LABEL,
+      to: `/projects/${projectId}/members`
+    };
+
     const tabItems = ref([
       {
         label: 'All Categories', // was: 'Overview'
         to: `/projects/${projectId}`
       },
-      {
-        label: 'Members',
-        to: `/projects/${projectId}/members`
-      }
-      /*
-      {
-        label: 'All Categories',
-        to: `/projects/${projectId}/all`
-      },*/
+      MEMBERS_TAB_ITEM
     ]);
 
     const projectEditorName = ref('');
@@ -291,18 +289,14 @@ export default defineComponent({
 
       //const role = project.value.userContext?.projectRole;
       //if (['ProjectAdmin', 'SystemAdmin'].includes(role)) {
-      const membersItemId = tabItems.value.findIndex(item => item.label === 'Members');
+      const membersItemId = tabItems.value.findIndex(item => item.label === MEMBERS_TAB_LABEL);
       if (!oidcIsAuthenticated.value && membersItemId > -1) {
         tabItems.value.splice(membersItemId, 1);
       }
-      if (oidcIsAuthenticated.value && project.value.userContext?.projectRole === 'ProjectAdmin') {
+      if (oidcIsAuthenticated.value) {
         if (membersItemId === -1) {
-          tabItems.value.push(
-            {
-              label: 'Members',
-              to: `/projects/${projectId}/members`
-            }
-          );
+          // user is authentivated and memebrs tab not visible yet -> add to tab items
+          tabItems.value.push(MEMBERS_TAB_ITEM);
         }
       }
     });
