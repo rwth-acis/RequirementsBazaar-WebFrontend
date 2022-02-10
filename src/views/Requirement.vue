@@ -33,11 +33,11 @@
       </RequirementCard>
     </div>
     <div v-else>
-        Requirement not found...
+        {{ t('requirementDetails-requirementNotFound') }}
     </div>
     <div class="p-m-4 p-d-flex p-jc-center">
         <Button
-            label="Show more Requirements"
+            :label="t('requirementDetails-showMoreRequirements')"
             @click="showMoreRequirements()" />
     </div>
   </div>
@@ -48,7 +48,6 @@ import { computed, defineComponent, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useConfirm } from 'primevue/useconfirm';
 
 import { ActionTypes } from '@/store/actions';
 import { routePathToProject } from '@/router';
@@ -91,7 +90,6 @@ export default defineComponent({
     store.dispatch(ActionTypes.FetchProject, projectId);
 
     watch(parentCategoryId, () => {
-      console.log('fetching category');
       store.dispatch(ActionTypes.FetchCategory, parentCategoryId.value);
     });
 

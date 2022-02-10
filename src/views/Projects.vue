@@ -1,9 +1,9 @@
 <template>
   <h1>{{ t('explore-projects') }}</h1>
-  Take a look at the public projects on Requirements Bazaar.
+  {{ t('projects-exploreText') }}
   <div id="addProjectPanel">
     <Button
-      label="Add new Project..."
+      :label="t('projects-addNewProject')"
       v-if="!showAddProject"
       @click="toggleAddProject" />
     <div class="projectEditorContainer">
@@ -15,10 +15,10 @@
       </ProjectEditor>
     </div>
   </div>
-  <h2>Featured Projects</h2>
+  <h2>{{ t('projects-featuredProjects') }}</h2>
 
-  Contact us to get featured!
-  <h2>All Projects</h2>
+  {{ t('projects-getFeaturedContactUs') }}
+  <h2>{{ t('projects-allProjects') }}</h2>
   <FilterPanel
     v-model:searchQuery="searchQuery"
     :sortOptions="sortOptions"
@@ -70,11 +70,11 @@ export default defineComponent({
     const searchQuery = ref('');
     const selectedSort = ref('name');
     const sortOptions = [
-      {name: 'Alphabetically', value: 'name'},
-      {name: 'Last Activity', value: 'last_activity'},
-      {name: 'Creation Date', value: 'date'},
-      {name: 'Number of Requirements', value: 'requirement'},
-      {name: 'Number of Followers', value: 'follower'},
+      {name: t('sorting-alphabetical'), value: 'name'},
+      {name: t('sorting-activity'), value: 'last_activity'},
+      {name: t('sorting-date'), value: 'date'},
+      {name: t('sorting-requirements'), value: 'requirement'},
+      {name: t('sorting-followers'), value: 'follower'},
     ];
     const sortAscending = ref(true);
     const page = ref(0);
@@ -131,8 +131,8 @@ export default defineComponent({
       } else {
         confirm.require({
           group: 'dialog',
-          message: 'You need to sign in to create a project.',
-          header: 'Login',
+          message: t('projects-signInToCreateProjectMessage'),
+          header: t('projects-signInToCreateProjectHeader'),
           icon: 'pi pi-info-circle',
           rejectClass: 'p-sr-only',
           acceptLabel: 'OK',
