@@ -90,7 +90,7 @@ export const getters: GetterTree<State, State> & Getters = {
     // then sort according to sort argument
     switch(parameters.sort) {
       case 'last_activity':
-        categories.sort(lexicographicalSortFunction('lastUpdatedDate', sortAscending));
+        categories.sort(lexicographicalSortFunction('lastActivity', sortAscending));
         break;
       case 'date':
         categories.sort(lexicographicalSortFunction('creationDate', sortAscending));
@@ -138,7 +138,7 @@ export const getters: GetterTree<State, State> & Getters = {
     // then sort according to sort argument
     switch(parameters.sort) {
       case 'last_activity':
-        requirements.sort(lexicographicalSortFunction('lastUpdatedDate', sortAscending));
+        requirements.sort(lexicographicalSortFunction('lastActivity', sortAscending));
         break;
       case 'date':
         requirements.sort(lexicographicalSortFunction('creationDate', sortAscending));
