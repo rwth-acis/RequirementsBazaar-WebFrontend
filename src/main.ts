@@ -48,6 +48,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Toolbar from 'primevue/toolbar';
 import ProgressBar from 'primevue/progressbar';
+import ProgressSpinner from 'primevue/progressspinner';
 import Message from 'primevue/message';
 import Timeline from 'primevue/timeline';
 
@@ -129,6 +130,7 @@ app.component('DataTable', DataTable);
 app.component('Column', Column);
 app.component('Toolbar', Toolbar);
 app.component("ProgressBar", ProgressBar);
+app.component("ProgressSpinner", ProgressSpinner);
 app.component('Message', Message);
 app.component('Timeline', Timeline);
 

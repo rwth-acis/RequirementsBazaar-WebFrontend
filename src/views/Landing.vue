@@ -127,6 +127,7 @@
           </ProjectCard>
         </router-link>
       </div>
+      <ProgressSpinner v-if="featuredProjects.length === 0" />
     </div>
 
     <p class="description p-py-3">
@@ -144,8 +145,8 @@
         :numberOfRequirements="reqBazProject.numberOfRequirements"
         :compact="false">
       </ProjectCard>
-      <div v-else>
-        {{ t('landing-reqBazProject-cardPlaceholder') }}
+      <div style="text-align: center;" v-else>
+        <ProgressSpinner /> {{ t('landing-reqBazProject-cardPlaceholder') }}
       </div>
     </a>
   </section>
@@ -216,7 +217,6 @@ export default defineComponent({
     prodBazaarApi.projects.getProject(2)
       .then(response => {
         reqBazProject.value = response.data;
-        console.log(reqBazProject.value);
       });
 
     return {
