@@ -105,10 +105,10 @@
   </section>
 
   <section class="p-pt-3 p-pb-5">
-    <h2 style="text-align: center; font-size: 2.5em;">Featured Projects</h2>
+    <h2 style="text-align: center; font-size: 2.5em;">{{ t('landing-featuredProjects-title') }}</h2>
 
     <p class="description">
-      Check out some of our most interesting projects to get to know Requirements Bazaar in more detail.
+      {{ t('landing-featuredProjects-text') }}
     </p>
 
     <div class="featured-projects">
@@ -130,7 +130,7 @@
     </div>
 
     <p class="description p-py-3">
-      New ideas for Requirements Bazaar itself are also tracked and discussed directly on the platform. Feel free to submit your own ideas or discuss the project with other users.
+      {{ t('landing-reqBazProject-description') }}
     </p>
     <a target="_blank" rel="noreferrer" href="https://requirements-bazaar.org/projects/2">
       <ProjectCard v-if="reqBazProject"
@@ -145,7 +145,7 @@
         :compact="false">
       </ProjectCard>
       <div v-else>
-        Click here to open the Requirements Bzaar project!
+        {{ t('landing-reqBazProject-cardPlaceholder') }}
       </div>
     </a>
   </section>
