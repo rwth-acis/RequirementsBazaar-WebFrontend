@@ -14,6 +14,7 @@ export type Getters = {
   getProjectMembers(state: State): (projectId: number) => ProjectMember[];
   activitiesList(state: State): (parameters: any) => Activity[];
   unhandledErrors(state: State): (parameters: any) => UnhandledError[];
+  getFeaturedProjects(state: State): (parameters: any) => Project[];
 }
 
 const numericalSortFunction = (property, sortAscending) => (a, b) => {
@@ -194,6 +195,18 @@ export const getters: GetterTree<State, State> & Getters = {
   unhandledErrors: (state: State) => (parameters: any) => {
 
     return state.unhandledErrors;
+  },
+
+  getFeaturedProjects: (state: State) => (parameters: any) => {
+    const featuredProjects: Project[] = [];
+
+    state.featuredProjectIds.forEach(projectId => {
+      if (state.projects[projectId]) {
+        featuredProjects.push(state.projects[projectId]);
+      }
+    });
+
+    return featuredProjects;
   },
 
 }

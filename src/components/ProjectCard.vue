@@ -5,11 +5,11 @@
     </template>
     <template #title>
       <div>{{ name }}</div>
-      <div class="lastupdate">
+      <div class="lastupdate" v-if="!compact">
         <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
       </div>
     </template>
-    <template #content>
+    <template #content v-if="!compact">
         <vue3-markdown-it :source="description" />
     </template>
     <template #footer>
@@ -39,10 +39,11 @@ export default defineComponent({
     numberOfCategories: { type: Number, required: true },
     numberOfRequirements: { type: Number, required: true },
     numberOfFollowers: { type: Number, required: true },
+    compact: { type: Boolean, default: false},
   },
   setup: (props, context) => {
     const { locale, t } = useI18n({ useScope: 'global' });
-    const { lastActivity, creationDate } = toRefs(props);
+    const { lastActivity, creationDate, compact } = toRefs(props);
 
     const activityDate = computed(() => lastActivity.value || creationDate.value);
 
@@ -71,7 +72,8 @@ export default defineComponent({
       activityDate,
       followersIcon,
       categoriesIcon,
-      requirementsIcon
+      requirementsIcon,
+      compact
     };
   },
 
@@ -90,6 +92,7 @@ export default defineComponent({
   #footer {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     border-top: 1px solid #e8e8e8;
     padding: 0 16px;
     padding-top: 10px;
@@ -107,7 +110,7 @@ export default defineComponent({
     width: 24px;
     height: 24px;
     fill: #757575;
-    margin-right: 10px;
+    margin-right: 5px;
   }
 
   .lastupdate {

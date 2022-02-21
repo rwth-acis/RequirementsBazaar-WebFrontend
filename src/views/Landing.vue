@@ -104,6 +104,32 @@
     </div>
   </section>
 
+  <section class="p-pt-3 p-pb-5">
+    <h2 style="text-align: center; font-size: 2.5em;">Featured Projects</h2>
+
+    <p class="description">
+      Check out some of our most interesting projects to get to know Requirements Bazaar in more detail.
+    </p>
+
+    <div class="featured-projects">
+      <div v-for="project in featuredProjects" :key="project.id" class="p-m-3 project">
+        <router-link :to="'/projects/' + project.id">
+          <ProjectCard
+            :id="project.id"
+            :name="project.name"
+            :description="project.description"
+            :creationDate="project.creationDate"
+            :lastActivity="project.lastActivity"
+            :numberOfCategories="project.numberOfCategories"
+            :numberOfFollowers="project.numberOfFollowers"
+            :numberOfRequirements="project.numberOfRequirements"
+            :compact="false">
+          </ProjectCard>
+        </router-link>
+      </div>
+    </div>
+  </section>
+
   <h2>{{ t('landing-how-it-works') }}</h2>
   <div class="description">
     <div>{{ t('landing-step-1') }}</div>
@@ -127,11 +153,17 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
+import ProjectCard from '@/components/ProjectCard.vue';
+
 
 import { bazaarApi } from '../api/bazaar';
+import { ActionTypes } from '@/store/actions';
 
 export default defineComponent({
   name: 'Landing',
+  components: {
+    ProjectCard
+  },
   props: {
   },
   setup: () => {
@@ -156,10 +188,14 @@ export default defineComponent({
       start: oneYearAgo.toISOString(),
     }).then(response => userStatistics.value = response.data);
 
+    const featuredProjects = computed(() => store.getters.getFeaturedProjects());
+    store.dispatch(ActionTypes.FetchFeaturedProjects);
+
     return {
       t,
       statistics,
       userStatistics,
+      featuredProjects,
     };
   }
 })
@@ -201,6 +237,15 @@ export default defineComponent({
   .feature-icon {
     width: 95px;
     margin: auto;
+  }
+
+  .featured-projects {
+    display: flex;
+    justify-content: center;
+  }
+
+  .featured-projects .project {
+    flex: 1 1 0px;
   }
 
   img {
