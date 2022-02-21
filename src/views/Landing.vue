@@ -104,6 +104,53 @@
     </div>
   </section>
 
+  <section class="p-pt-3 p-pb-5">
+    <h2 style="text-align: center; font-size: 2.5em;">{{ t('landing-featuredProjects-title') }}</h2>
+
+    <p class="description">
+      {{ t('landing-featuredProjects-text') }}
+    </p>
+
+    <div class="featured-projects">
+      <div v-for="project in featuredProjects" :key="project.id" class="p-m-3 project">
+        <router-link :to="'/projects/' + project.id">
+          <ProjectCard
+            :id="project.id"
+            :name="project.name"
+            :description="project.description"
+            :creationDate="project.creationDate"
+            :lastActivity="project.lastActivity"
+            :numberOfCategories="project.numberOfCategories"
+            :numberOfFollowers="project.numberOfFollowers"
+            :numberOfRequirements="project.numberOfRequirements"
+            :compact="false">
+          </ProjectCard>
+        </router-link>
+      </div>
+      <ProgressSpinner v-if="featuredProjects.length === 0" />
+    </div>
+
+    <p class="description p-py-3">
+      {{ t('landing-reqBazProject-description') }}
+    </p>
+    <a target="_blank" rel="noreferrer" href="https://requirements-bazaar.org/projects/2">
+      <ProjectCard v-if="reqBazProject"
+        :id="reqBazProject.id"
+        :name="reqBazProject.name"
+        :description="reqBazProject.description"
+        :creationDate="reqBazProject.creationDate"
+        :lastActivity="reqBazProject.lastActivity"
+        :numberOfCategories="reqBazProject.numberOfCategories"
+        :numberOfFollowers="reqBazProject.numberOfFollowers"
+        :numberOfRequirements="reqBazProject.numberOfRequirements"
+        :compact="false">
+      </ProjectCard>
+      <div style="text-align: center;" v-else>
+        <ProgressSpinner /> {{ t('landing-reqBazProject-cardPlaceholder') }}
+      </div>
+    </a>
+  </section>
+
   <h2>{{ t('landing-how-it-works') }}</h2>
   <div class="description">
     <div>{{ t('landing-step-1') }}</div>
@@ -127,11 +174,17 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
+import ProjectCard from '@/components/ProjectCard.vue';
 
-import { bazaarApi } from '../api/bazaar';
+
+import { bazaarApi, prodBazaarApi } from '../api/bazaar';
+import { ActionTypes } from '@/store/actions';
 
 export default defineComponent({
   name: 'Landing',
+  components: {
+    ProjectCard
+  },
   props: {
   },
   setup: () => {
@@ -156,10 +209,22 @@ export default defineComponent({
       start: oneYearAgo.toISOString(),
     }).then(response => userStatistics.value = response.data);
 
+    const featuredProjects = computed(() => store.getters.getFeaturedProjects());
+    store.dispatch(ActionTypes.FetchFeaturedProjects);
+
+    const reqBazProject = ref();
+
+    prodBazaarApi.projects.getProject(2)
+      .then(response => {
+        reqBazProject.value = response.data;
+      });
+
     return {
       t,
       statistics,
       userStatistics,
+      featuredProjects,
+      reqBazProject,
     };
   }
 })
@@ -201,6 +266,15 @@ export default defineComponent({
   .feature-icon {
     width: 95px;
     margin: auto;
+  }
+
+  .featured-projects {
+    display: flex;
+    justify-content: center;
+  }
+
+  .featured-projects .project {
+    flex: 1 1 0px;
   }
 
   img {

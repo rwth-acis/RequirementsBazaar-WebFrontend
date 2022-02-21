@@ -24,6 +24,7 @@ export type State = {
   activities: {[id: number]: Activity};
   dashboard: Dashboard;
   unhandledErrors: UnhandledError[];
+  featuredProjectIds: number[];
 }
 
 export const state: State = {
@@ -39,4 +40,5 @@ export const state: State = {
     requirements: [],
   },
   unhandledErrors: [],
+  featuredProjectIds: [],
 };

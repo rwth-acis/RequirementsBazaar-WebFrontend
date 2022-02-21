@@ -27,6 +27,8 @@ export enum MutationType {
   SetProjectMembers = 'SET_PROJECT_MEMBERS',
   RemoveProjectMember = 'REMOVE_PROJECT_MEMBER',
 
+  SetFeaturedProjects = 'SET_FEATURED_PROJECTS',
+
   SetDashboard = 'SET_DASHBOARD',
 
   SetActivities = 'SET_ACTIVITIES',
@@ -61,6 +63,8 @@ export type Mutations = {
 
   [MutationType.SetProjectMembers](state: State, {projectId: number, members: any }): void;
   [MutationType.RemoveProjectMember](state: State, parameters: RemoveProjectMemberParameters): void;
+
+  [MutationType.SetFeaturedProjects](state: State, featuredProjects: Project[]): void;
 
   [MutationType.SetDashboard](state: State, dashboard: Dashboard): void;
 
@@ -231,6 +235,24 @@ export const mutations: MutationTree<State> & Mutations = {
     if (localMember && localMember.id) {
       delete state.projectMembers[projectId][localMember.id];
     }
+  },
+
+  /**
+   * Updates the list of featured project IDs and adds/updates the projects in the global project list.
+   *
+   * @param state
+   * @param featuredProjects
+   */
+  [MutationType.SetFeaturedProjects](state: State, featuredProjects: Project[]) {
+    // override
+    state.featuredProjectIds = featuredProjects.map(project => project.id!);
+
+    // update projects in project list
+    featuredProjects.forEach(project => {
+      if (project.id) {
+        state.projects[project.id] = project;
+      }
+    });
   },
 
   [MutationType.SetDashboard](state, dashboard) {

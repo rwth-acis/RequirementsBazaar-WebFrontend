@@ -36,6 +36,8 @@ export enum ActionTypes {
   UpdateProjectMemberRole = "UPDATE_PROJECT_MEMBER_ROLE",
   RemoveProjectMember = "REMOVE_PROJECT_MEMBER",
 
+  FetchFeaturedProjects = "FETCH_FEATURED_PROJECTS",
+
   FetchDashboard = 'FETCH_DASHBOARD',
 
   FetchActivities = 'FETCH_ACTIVITIES',
@@ -141,6 +143,8 @@ export type Actions = {
   [ActionTypes.FetchProjectMembers](context: ActionAugments, projectId: number): void;
   [ActionTypes.UpdateProjectMemberRole](context: ActionAugments, parameters: UpdateProjectMemberRoleParameters): void;
   [ActionTypes.RemoveProjectMember](context: ActionAugments, parameters: RemoveProjectMemberParameters): void;
+
+  [ActionTypes.FetchFeaturedProjects](context: ActionAugments): void;
 
   [ActionTypes.FetchDashboard](context: ActionAugments): void;
 
@@ -410,6 +414,19 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.projects.removeMember(parameters.projectId, parameters.userId);
     if (response.status === 204 || response.status === 200) {
       commit(MutationType.RemoveProjectMember, {projectId: parameters.projectId, userId: parameters.userId});
+    }
+  },
+
+  async [ActionTypes.FetchFeaturedProjects]({ commit }) {
+    // Query most popular projects by follower count
+    const response = await bazaarApi.projects.getProjects({
+      sortDirection: 'DESC',
+      sort: ['follower'],
+      per_page: 3
+    });
+
+    if (response.data && response.status == 200) {
+      commit(MutationType.SetFeaturedProjects, response.data);
     }
   },
 
