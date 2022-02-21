@@ -52,6 +52,8 @@ import ProgressSpinner from 'primevue/progressspinner';
 import Message from 'primevue/message';
 import Timeline from 'primevue/timeline';
 
+import Tooltip from 'primevue/tooltip';
+
 import 'primevue/resources/themes/saga-green/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeflex/primeflex.css';
@@ -104,6 +106,7 @@ app.config.errorHandler = (err, vm, info) => {
 });
 
 app.directive('badge', BadgeDirective);
+app.directive('tooltip', Tooltip);
 
 app.use(ConfirmationService);
 app.component('Avatar', Avatar);
