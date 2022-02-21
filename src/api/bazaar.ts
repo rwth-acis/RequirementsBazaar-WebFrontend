@@ -24,3 +24,9 @@ export const bazaarApi = new Api({
   baseUrl: `${import.meta.env.VITE_BAZAAR_API_URL}`,
   securityWorker: getRequestHeaders,
 });
+
+// uses to access production bazaar API from every possible instance
+export const prodBazaarApi = new Api({
+  baseUrl: `https://requirements-bazaar.org/bazaar`,
+  securityWorker: getRequestHeaders,
+});

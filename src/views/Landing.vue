@@ -128,6 +128,26 @@
         </router-link>
       </div>
     </div>
+
+    <p class="description p-py-3">
+      New ideas for Requirements Bazaar itself are also tracked and discussed directly on the platform. Feel free to submit your own ideas or discuss the project with other users.
+    </p>
+    <a target="_blank" rel="noreferrer" href="https://requirements-bazaar.org/projects/2">
+      <ProjectCard v-if="reqBazProject"
+        :id="reqBazProject.id"
+        :name="reqBazProject.name"
+        :description="reqBazProject.description"
+        :creationDate="reqBazProject.creationDate"
+        :lastActivity="reqBazProject.lastActivity"
+        :numberOfCategories="reqBazProject.numberOfCategories"
+        :numberOfFollowers="reqBazProject.numberOfFollowers"
+        :numberOfRequirements="reqBazProject.numberOfRequirements"
+        :compact="false">
+      </ProjectCard>
+      <div v-else>
+        Click here to open the Requirements Bzaar project!
+      </div>
+    </a>
   </section>
 
   <h2>{{ t('landing-how-it-works') }}</h2>
@@ -156,7 +176,7 @@ import { useRouter } from 'vue-router';
 import ProjectCard from '@/components/ProjectCard.vue';
 
 
-import { bazaarApi } from '../api/bazaar';
+import { bazaarApi, prodBazaarApi } from '../api/bazaar';
 import { ActionTypes } from '@/store/actions';
 
 export default defineComponent({
@@ -191,11 +211,20 @@ export default defineComponent({
     const featuredProjects = computed(() => store.getters.getFeaturedProjects());
     store.dispatch(ActionTypes.FetchFeaturedProjects);
 
+    const reqBazProject = ref();
+
+    prodBazaarApi.projects.getProject(2)
+      .then(response => {
+        reqBazProject.value = response.data;
+        console.log(reqBazProject.value);
+      });
+
     return {
       t,
       statistics,
       userStatistics,
       featuredProjects,
+      reqBazProject,
     };
   }
 })
