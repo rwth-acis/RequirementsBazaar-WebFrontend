@@ -3,6 +3,7 @@ import { State, LocalComment, UnhandledError } from './state'
 
 import { Project, Category, Requirement, Comment, Dashboard, ProjectMember } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
+import { UserVote } from '@/api/bazaar';
 
 export enum MutationType {
   SetProjects = 'SET_PROJECTS',
@@ -41,6 +42,9 @@ type RemoveProjectMemberParameters = {
   userId: number;
 }
 
+/*
+ * TODO Fix type definitions of Mutations. Parameter types are ignored! (see actions for how to do it)
+ */
 export type Mutations = {
   [MutationType.SetProjects](state: State, projects: Project[]): void;
   [MutationType.ReplaceProjects](state: State, project: Project[]): void;
@@ -157,11 +161,36 @@ export const mutations: MutationTree<State> & Mutations = {
     if (!requirement.userContext) {
       requirement.userContext = {isFollower: false};
     }
+    const prevVote = requirement.userContext.userVoted as UserVote | undefined;
     requirement.userContext.userVoted = userVoted;
     if (userVoted === 'UP_VOTE') {
-      (requirement.upVotes !== undefined) ? ++requirement.upVotes : 1;
+      if (prevVote !== 'UP_VOTE') {
+        // increment up votes
+        (requirement.upVotes !== undefined) ? ++requirement.upVotes : 1;
+      }
+      if (prevVote == 'DOWN_VOTE') {
+        // decrement down votes
+        (requirement.downVotes !== undefined) ? --requirement.downVotes : 0;
+      }
+    } else if (userVoted === 'DOWN_VOTE') {
+      if (prevVote !== 'DOWN_VOTE') {
+        // increment down votes
+        (requirement.downVotes !== undefined) ? ++requirement.downVotes : 1;
+      }
+      if (prevVote == 'UP_VOTE') {
+        // decrement up votes
+        (requirement.upVotes !== undefined) ? --requirement.upVotes : 0;
+      }
     } else {
-      (requirement.upVotes !== undefined) ? requirement.upVotes-- : 0;
+      // user removed vote completly
+      if (prevVote === 'DOWN_VOTE') {
+        // decrement down votes
+        (requirement.downVotes !== undefined) ? --requirement.downVotes : 0;
+      }
+      if (prevVote == 'UP_VOTE') {
+        // decrement up votes
+        (requirement.upVotes !== undefined) ? --requirement.upVotes : 0;
+      }
     }
   },
 

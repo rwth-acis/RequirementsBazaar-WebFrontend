@@ -2,7 +2,7 @@ import { ActionContext, ActionTree } from 'vuex';
 import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
-import { bazaarApi, ProjectMemberRole } from '../api/bazaar';
+import { bazaarApi, ProjectMemberRole, UserVote } from '../api/bazaar';
 import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse, ProjectMember } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
 
@@ -84,7 +84,7 @@ type ActivitiesRequestParameters = {
 
 type VoteRequirementParameters = {
   requirementId: number;
-  userVoted: string;
+  userVoted: UserVote;
 }
 
 type FollowResourceParameters = {
@@ -294,6 +294,8 @@ export const actions: ActionTree<State, State> & Actions = {
     let response : HttpResponse<any, void | Requirement>;
     if (parameters.userVoted === 'UP_VOTE') {
       response = await bazaarApi.requirements.vote(parameters.requirementId, { direction: 'up' });
+    } else if (parameters.userVoted === 'DOWN_VOTE') {
+      response = await bazaarApi.requirements.vote(parameters.requirementId, { direction: 'down' });
     } else {
       response = await bazaarApi.requirements.unvote(parameters.requirementId);
     }
