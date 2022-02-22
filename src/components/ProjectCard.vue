@@ -14,9 +14,9 @@
     </template>
     <template #footer>
       <div id="footer">
-        <div><div v-html="followersIcon" class="icon"></div> {{ numberOfFollowers }}</div>
-        <div><div v-html="categoriesIcon" class="icon"></div> {{ numberOfCategories }}</div>
-        <div><div v-html="requirementsIcon" class="icon"></div> {{ numberOfRequirements }}</div>
+        <div><span style="display: flex; align-items: center;" v-tooltip.bottom="t('followers')"><div v-html="followersIcon" class="icon" ></div> {{ numberOfFollowers }}</span></div>
+        <div><span style="display: flex; align-items: center;" v-tooltip.bottom="t('categories')"><div v-html="categoriesIcon" class="icon"></div> {{ numberOfCategories }}</span></div>
+        <div><span style="display: flex; align-items: center;" v-tooltip.bottom="t('requirements')"><div v-html="requirementsIcon" class="icon"></div> {{ numberOfRequirements }}</span></div>
       </div>
     </template>
   </Card>
