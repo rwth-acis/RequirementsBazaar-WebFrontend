@@ -142,7 +142,7 @@
     "landing-requirementsCountLabel": "Exigences",
     "landing-commentsCountLabel": "Commentaires",
     "landing-activeUsersCountLabel": "Utilisateurs actifs",
-    "landing-activeUsersCountRangeLabel": "(l'année dernière)",
+    "landing-activeUsersCountRangeLabel": "l'année dernière",
     "landing-features": "Fonctionnalités",
     "landing-featureDiscussTitle": "Échangez avec les utilisateurs",
     "landing-featureDiscussText": "Discutez de nouvelles idées et innovez avec vos utilisateurs finaux.",
@@ -214,5 +214,7 @@
     "requirementDetails-requirementNotFound": "Exigence introuvable…",
     "user": "Utilisateur",
     "logout": "Se déconnecter",
-    "categoryDetails-nothingToSeeHere": "Il n'y a rien ici."
+    "categoryDetails-nothingToSeeHere": "Il n'y a rien ici.",
+    "landing-featuredProjects-title": "Projets mis en avant",
+    "landing-lastMonthLabel": "le mois dernier"
 }
