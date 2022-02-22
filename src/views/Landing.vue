@@ -35,6 +35,9 @@
             :autoinit='true' />
           <span v-else class="value">...</span>
           <p class="label">{{ t('landing-projectsCountLabel') }}</p>
+          <div class="monthly-change" v-if="lastMonthStatistics?.numberOfProjects !== undefined">
+            <span class="change-value">+ {{ lastMonthStatistics?.numberOfProjects }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
+          </div>
         </div>
         <div class="p-col statistics-item">
           <Autocounter v-if="statistics?.numberOfRequirements" class="value"
@@ -45,6 +48,9 @@
             :autoinit='true' />
           <span v-else class="value">...</span>
           <p class="label">{{ t('landing-requirementsCountLabel') }}</p>
+          <div class="monthly-change" v-if="lastMonthStatistics?.numberOfRequirements !== undefined">
+            <span class="change-value">+ {{ lastMonthStatistics?.numberOfRequirements }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
+          </div>
         </div>
         <div class="p-col statistics-item">
           <Autocounter v-if="statistics?.numberOfComments" class="value"
@@ -55,6 +61,9 @@
             :autoinit='true' />
           <span v-else class="value">...</span>
           <p class="label">{{ t('landing-commentsCountLabel') }}</p>
+          <div class="monthly-change" v-if="lastMonthStatistics?.numberOfComments !== undefined">
+            <span class="change-value">+ {{ lastMonthStatistics?.numberOfComments }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
+          </div>
         </div>
         <div class="p-col statistics-item">
           <Autocounter v-if="userStatistics?.numberOfActiveUsers" class="value"
@@ -64,8 +73,10 @@
             separator=','
             :autoinit='true' />
           <span v-else class="value">...</span>
-          <p class="label">{{ t('landing-activeUsersCountLabel') }}</p>
-          <p>{{ t('landing-activeUsersCountRangeLabel') }}</p>
+          <p class="label" v-tooltip.bottom="t('landing-activeUsersCountRangeLabel')">{{ t('landing-activeUsersCountLabel') }}</p>
+          <div class="monthly-change" v-if="lastMonthUserStatistics?.numberOfNewUsers !== undefined">
+            <span class="change-value">+ {{ lastMonthUserStatistics?.numberOfNewUsers }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
+          </div>
         </div>
     </div>
   </section>
@@ -209,6 +220,19 @@ export default defineComponent({
       start: oneYearAgo.toISOString(),
     }).then(response => userStatistics.value = response.data);
 
+    const lastMonthStatistics = ref();
+    const lastMonthUserStatistics = ref();
+
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    bazaarApi.statistics.getStatistics({
+      since: oneMonthAgo.toISOString()
+    }).then(response => lastMonthStatistics.value = response.data);
+
+    bazaarApi.userStatistics.getUserStatistics({
+      start: oneMonthAgo.toISOString(),
+    }).then(response => lastMonthUserStatistics.value = response.data);
+
     const featuredProjects = computed(() => store.getters.getFeaturedProjects());
     store.dispatch(ActionTypes.FetchFeaturedProjects);
 
@@ -223,6 +247,8 @@ export default defineComponent({
       t,
       statistics,
       userStatistics,
+      lastMonthStatistics,
+      lastMonthUserStatistics,
       featuredProjects,
       reqBazProject,
     };
@@ -248,6 +274,20 @@ export default defineComponent({
     font-size: 4em;
     font-weight: bold;
     color: #4CAF50;
+  }
+
+  .statistics-item .monthly-change {
+    padding-top: 5px;
+    font-weight: bold;
+    color: #ff9800;
+  }
+
+  .statistics-item .monthly-change .change-value {
+    font-size: 1.5em;
+  }
+
+  .statistics-item .monthly-change .suffix {
+    font-size: 0.85em;
   }
 
   .feature {
