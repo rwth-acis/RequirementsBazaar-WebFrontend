@@ -50,7 +50,12 @@
       </div>
 
       <div v-if="activeTab === 'followers'">
-        Followers
+        Followers:
+        <ul>
+          <li v-for="follower in followers" :key="follower.id">
+            {{follower.userName}}
+          </li>
+        </ul>
       </div>
 
       <div v-if="activeTab === 'developers'">
@@ -266,6 +271,13 @@ export default defineComponent({
       }
     };
 
+    const followers = computed(() => store.getters.getRequirementFollowers(requirementId));
+    watch([activeTab], () => {
+      if (activeTab.value == 'followers') {
+        store.dispatch(ActionTypes.FetchRequirementFollowers, requirementId);
+      }
+    }, { immediate: true});
+
     return {
       t,
       oidcIsAuthenticated,
@@ -278,6 +290,7 @@ export default defineComponent({
       moreItems,
       toggleMoreMenu,
       lastActivityDate,
+      followers,
       showMoreRequirements,
       followClick,
       voteClick,

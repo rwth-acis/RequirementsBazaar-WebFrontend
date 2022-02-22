@@ -25,6 +25,7 @@ export enum MutationType {
   SetCommentShowReplyTo = 'SET_COMMENT_SHOW_REPLY_TO',
   RemoveComment = 'REMOVE_COMMENT',
 
+  SetRequirementFollowers = 'SET_REQUIREMENT_FOLLOWERS',
   SetProjectMembers = 'SET_PROJECT_MEMBERS',
   RemoveProjectMember = 'REMOVE_PROJECT_MEMBER',
 
@@ -65,6 +66,7 @@ export type Mutations = {
   [MutationType.SetCommentShowReplyTo](state: State, {commentId: number, showReplyTo: boolean}): void;
   [MutationType.RemoveComment](state: State, commentId: number): void;
 
+  [MutationType.SetRequirementFollowers](state: State, {requirementId, followers}): void;
   [MutationType.SetProjectMembers](state: State, {projectId: number, members: any }): void;
   [MutationType.RemoveProjectMember](state: State, parameters: RemoveProjectMemberParameters): void;
 
@@ -241,6 +243,17 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.RemoveComment](state, commentId) {
     delete state.comments[commentId];
+  },
+
+  [MutationType.SetRequirementFollowers](state: State, {requirementId, followers}) {
+    // reset first
+    state.requirementFollowers[requirementId] = {}
+
+    followers.forEach((follower) => {
+      if (follower.id) {
+        state.requirementFollowers[requirementId][follower.id] = follower;
+      }
+    });
   },
 
   [MutationType.SetProjectMembers](state, {projectId, members}) {
