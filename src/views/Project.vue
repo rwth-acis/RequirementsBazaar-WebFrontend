@@ -120,6 +120,12 @@
           <li><b>{{ t('gitHubSetup-payloadUrlLabel') }}</b>: {{webhookEndpointURL}}</li>
           <li><b>{{ t('gitHubSetup-contentTypeLabel') }}</b>: <i>application/json</i></li>
           <li><b>{{ t('gitHubSetup-secretLabel') }}</b>: {{webhookSecret}}</li>
+          <li><b>{{ t('gitHubSetup-eventsLabel') }}</b>: {{ t('gitHubSetup-eventsLabel-hint') }}:
+            <ul>
+              <li>{{ t('gitHubSetup-eventsLabel-optionAllEvents') }}</li>
+              <li>{{ t('gitHubSetup-eventsLabel-optionSpecificEvents') }}</li>
+            </ul>
+          </li>
         </ul>
 
         <template #footer>
@@ -391,7 +397,7 @@ export default defineComponent({
         id: project.value.id,
         name: project.value.name,
         description: project.value.description,
-        additionalProperties: JSON.parse(JSON.stringify(project.value.additionalProperties)),
+        additionalProperties: JSON.parse(JSON.stringify(project.value.additionalProperties ?? {})),
       };
       if (!projectUpdate.additionalProperties) {
         projectUpdate.additionalProperties = {
