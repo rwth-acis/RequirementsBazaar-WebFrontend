@@ -18,9 +18,13 @@
         <span :title="$dayjs(lastActivityDate).format('LLL')">{{ $dayjs(lastActivityDate).fromNow() }}</span>
         {{t('by')}} {{ requirement.creator?.userName }}
       </div>
+
       <div id="description">
         <vue3-markdown-it :source="requirement?.description" />
       </div>
+
+      <RequirementDevTimeline :additionalProperties="requirement.additionalProperties" />
+
       <div id="menuBar" class="p-mb-4">
         <TabMenu id="tabMenu" :model="tabItems" />
         <div id="actionButtons">
@@ -84,13 +88,13 @@ import { useConfirm } from "primevue/useconfirm";
 
 import { ActionTypes } from '@/store/actions';
 import { routePathToProject, routePathToRequirement } from '@/router';
-import RequirementCard from '@/components/RequirementCard.vue';
+import RequirementDevTimeline from '@/components/RequirementDevTimeline.vue';
 import CommentsList from '@/components/CommentsList.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
 export default defineComponent({
   name: 'Requirement',
-  components: { RequirementCard, ProjectBreadcrumbNav, CommentsList },
+  components: { ProjectBreadcrumbNav, CommentsList, RequirementDevTimeline },
   props: {
   },
   setup: (props) => {
@@ -302,7 +306,7 @@ export default defineComponent({
 
 <style scoped>
   #description {
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
   }
 
   .title h1 {
