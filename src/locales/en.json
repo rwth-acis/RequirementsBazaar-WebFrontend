@@ -52,6 +52,10 @@
     "gitHubSetup-payloadUrlLabel": "Payload URL",
     "gitHubSetup-contentTypeLabel": "Content-type",
     "gitHubSetup-secretLabel": "Secret",
+    "gitHubSetup-eventsLabel": "Which events would you like to trigger this webhook?",
+    "gitHubSetup-eventsLabel-hint": "Select one of the following",
+    "gitHubSetup-eventsLabel-optionAllEvents": "'Send me everything.'",
+    "gitHubSetup-eventsLabel-optionSpecificEvents": "'Select inividual events': Issues, Pull Requests, and Releases",
     "gitHubSetup-goToGitHubSettings": "Go to GitHub Settings",
     "gitHubUrlLabel": "GitHub URL",
 
