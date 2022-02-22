@@ -11,7 +11,14 @@
 
   <div id="content">
     <div v-if="requirement">
-      <h1>{{ requirement.name }}</h1>
+      <div class="p-d-flex p-jc-start p-ai-center">
+        <Badge v-if="requirement.realized" value="Done" class="p-mr-2"></Badge><h1> {{ requirement.name }}</h1>
+      </div>
+      <div class="lastupdate">
+        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
+        {{t('by')}} {{ creator?.userName }}
+        <!--<i class="pi pi-pencil" style="fontSize: 0.7rem" v-if="creationDate !== lastActivity" :title="`initially created on ${$dayjs(lastActivity).format('LLL')}`"></i>-->
+      </div>
       <div id="description">
         <vue3-markdown-it :source="requirement?.description" />
       </div>
@@ -191,10 +198,10 @@ export default defineComponent({
               }
             },
             {
-              label: requirement.value.userContext.realized ? t('markAsUndone') : t('markAsDone'),
+              label: requirement.value.realized ? t('markAsUndone') : t('markAsDone'),
               icon: 'pi pi-check',
               command: () => {
-                store.dispatch(ActionTypes.RealizeRequirement, {requirementId: requirementId, realized: requirement.value.userContext.realized ? false : true});
+                store.dispatch(ActionTypes.RealizeRequirement, {requirementId: requirementId, realized: requirement.value.realized ? false : true});
               }
             },
             {
@@ -253,6 +260,18 @@ export default defineComponent({
 <style scoped>
   #description {
     margin-bottom: 2rem;
+  }
+
+  .title h1 {
+    margin: 0;
+  }
+
+  .lastupdate {
+    padding-top: 5px;
+    padding-bottom: 10px;
+    font-weight: normal;
+    font-size: 0.9em;
+    color: #5d5d5d;
   }
 
   #content {
