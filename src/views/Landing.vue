@@ -162,25 +162,38 @@
     </a>
   </section>
 
-  <h2>{{ t('landing-how-it-works') }}</h2>
-  <div class="description">
-    <div>{{ t('landing-step-1') }}</div>
-    <div>{{ t('landing-step-2') }}</div>
-    <div>{{ t('landing-step-3') }}</div>
-  </div>
+  <div class="p-grid p-pt-3 p-pb-5">
+    <section class="p-col-7">
+      <h2>{{ t('landing-how-it-works') }}</h2>
+      <div class="description">
+        <div>{{ t('landing-step-1') }}</div>
+        <div>{{ t('landing-step-2') }}</div>
+        <div>{{ t('landing-step-3') }}</div>
+      </div>
 
-  <h2>{{ t('landing-try-it-out') }}</h2>
-  <div class="description">
-    <div>{{ t('takeAlook') }}</div>
-  </div>
+      <h2>{{ t('landing-try-it-out') }}</h2>
+      <div class="description">
+        <div>{{ t('takeAlook') }}</div>
+      </div>
 
-  <router-link to="/projects">
-    <Button :label="t('explore-projects')" />
-  </router-link>
+      <router-link to="/projects">
+        <Button :label="t('explore-projects')" />
+      </router-link>
+    </section>
+
+    <div class="p-col-5">
+      <a class="twitter-timeline"
+        href="https://twitter.com/reqbaz"
+        data-height="80vh"
+        data-width="100%">
+        Tweets by @reqbaz
+      </a>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch, ref } from 'vue';
+import { defineComponent, computed, watch, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
@@ -209,6 +222,9 @@ export default defineComponent({
         router.push('/home');
       }
     });
+
+    // Load Twitter script to display timeline
+    onMounted(() => loadTwitterWidgetJS());
 
     const statistics = ref();
     bazaarApi.statistics.getStatistics().then(response => statistics.value = response.data);
@@ -254,6 +270,34 @@ export default defineComponent({
     };
   }
 })
+
+/**
+ * Loads the Twitter widgets.js script which renders the Twitter timeline.
+ *
+ * This function needs to be called from Vue's onMounted() lifecycle hook in order to work correctly inside
+ * a Vue component.
+ *
+ * Taken from: https://developer.twitter.com/en/docs/twitter-for-websites/javascript-api/guides/set-up-twitter-for-websites
+ */
+function loadTwitterWidgetJS() {
+  (window as any).twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode!.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+      t._e.push(f);
+    };
+
+    return t;
+  }(document, "script", "twitter-wjs"));
+}
+
 </script>
 
 <style scoped>
