@@ -24,6 +24,9 @@
       <div id="menuBar" class="p-mb-4">
         <TabMenu id="tabMenu" :model="tabItems" />
         <div id="actionButtons">
+          <Button icon="pi pi-thumbs-up" label="Upvote" class="p-button-sm" :class="{ 'p-button-outlined': requirement?.userContext?.userVoted !== 'UP_VOTE' }" @click="voteClick('UP_VOTE')"></Button>
+          <Button icon="pi pi-thumbs-down" label="Downvote" class="p-button-sm p-button-danger" :class="{ 'p-button-outlined': requirement?.userContext?.userVoted !== 'DOWN_VOTE' }" @click="voteClick('DOWN_VOTE')"></Button>
+
           <Button icon="pi pi-bell" :label="requirement?.userContext?.isFollower ? t('unfollowRequirement') : t('followRequirement')" class="p-button-sm p-ml-3" :class="{ 'p-button-outlined': !requirement?.userContext?.isFollower }" @click="followClick"></Button>
           <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
           <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
@@ -118,6 +121,17 @@ export default defineComponent({
 
     store.dispatch(ActionTypes.FetchRequirement, requirementId);
     store.dispatch(ActionTypes.FetchProject, projectId);
+
+    const alertLogin = (message: string) => {
+      confirm.require({
+          group: 'dialog',
+          message: message,
+          header: 'Login',
+          icon: 'pi pi-info-circle',
+          rejectClass: 'p-sr-only',
+          acceptLabel: 'OK',
+        });
+    }
 
     watch(parentCategoryId, () => {
       store.dispatch(ActionTypes.FetchCategory, parentCategoryId.value);
@@ -239,6 +253,19 @@ export default defineComponent({
       }
     );
 
+    const voteClick = (vote: string) => {
+      if (oidcIsAuthenticated.value) {
+        const parameters = {
+          requirementId: requirementId,
+          userVoted: requirement.value.userContext.userVoted !== vote ? vote : 'NO_VOTE',
+        };
+        console.log('voting with params: voted=' + parameters.userVoted);
+        store.dispatch(ActionTypes.VoteRequirement, parameters);
+      } else {
+        alertLogin(t('signInToVoteRequirement'));
+      }
+    };
+
     return {
       t,
       oidcIsAuthenticated,
@@ -253,6 +280,7 @@ export default defineComponent({
       lastActivityDate,
       showMoreRequirements,
       followClick,
+      voteClick,
       routePathToRequirement
     }
   }
