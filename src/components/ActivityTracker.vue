@@ -1,6 +1,6 @@
 <template>
   <div class="activitiesList">
-    <a v-for="activity in activities" :key="activity.id" class="activity" :href="getActivityTargetUrl(activity)" target="_blank" rel="noreferrer">
+    <a v-for="activity in activities" :key="activity.id" class="activity" :href="getActivityTargetUrl(activity)">
       <UserAvatar :imageUrl="activity.user.profileImage" :userName="activity.user.userName" class="profileImage" />
 
       <div class="activityBody p-ml-1">
