@@ -391,7 +391,7 @@ export default defineComponent({
         id: project.value.id,
         name: project.value.name,
         description: project.value.description,
-        additionalProperties: JSON.parse(JSON.stringify(project.value.additionalProperties)),
+        additionalProperties: JSON.parse(JSON.stringify(project.value.additionalProperties ?? {})),
       };
       if (!projectUpdate.additionalProperties) {
         projectUpdate.additionalProperties = {
