@@ -74,8 +74,8 @@
             :autoinit='true' />
           <span v-else class="value">...</span>
           <p class="label" v-tooltip.bottom="t('landing-activeUsersCountRangeLabel')">{{ t('landing-activeUsersCountLabel') }}</p>
-          <div class="monthly-change" v-if="lastMonthUserStatistics?.numberOfNewUsers !== undefined">
-            <span class="change-value">+ {{ lastMonthUserStatistics?.numberOfNewUsers }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
+          <div class="monthly-change" v-if="lastMonthUserStatistics?.numberOfActiveUsers !== undefined">
+            <span class="change-value">{{ lastMonthUserStatistics?.numberOfActiveUsers }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
           </div>
         </div>
     </div>
