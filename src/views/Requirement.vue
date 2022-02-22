@@ -11,13 +11,12 @@
 
   <div id="content">
     <div v-if="requirement">
-      <div class="p-d-flex p-jc-start p-ai-center">
+      <div class="p-d-flex p-jc-start p-ai-center title">
         <Badge v-if="requirement.realized" value="Done" class="p-mr-2"></Badge><h1> {{ requirement.name }}</h1>
       </div>
       <div class="lastupdate">
-        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
-        {{t('by')}} {{ creator?.userName }}
-        <!--<i class="pi pi-pencil" style="fontSize: 0.7rem" v-if="creationDate !== lastActivity" :title="`initially created on ${$dayjs(lastActivity).format('LLL')}`"></i>-->
+        <span :title="$dayjs(lastActivityDate).format('LLL')">{{ $dayjs(lastActivityDate).fromNow() }}</span>
+        {{t('by')}} {{ requirement.creator?.userName }}
       </div>
       <div id="description">
         <vue3-markdown-it :source="requirement?.description" />
@@ -99,6 +98,8 @@ export default defineComponent({
 
     const requirement = computed(() => store.getters.getRequirementById(requirementId));
     const project = computed(() => store.getters.getProjectById(projectId));
+
+    const lastActivityDate = computed(() => requirement.value?.lastActivity || requirement.value?.creationDate);
 
     const parentCategoryId = computed(() => {
       if (requirement.value) {
@@ -249,6 +250,7 @@ export default defineComponent({
       moreMenu,
       moreItems,
       toggleMoreMenu,
+      lastActivityDate,
       showMoreRequirements,
       followClick,
       routePathToRequirement
