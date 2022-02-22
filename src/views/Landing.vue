@@ -282,7 +282,7 @@ export default defineComponent({
 function loadTwitterWidgetJS() {
   (window as any).twttr = (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0],
-      t = window.twttr || {};
+      t = (window as any).twttr || {};
     if (d.getElementById(id)) return t;
     js = d.createElement(s);
     js.id = id;
