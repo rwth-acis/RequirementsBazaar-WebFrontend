@@ -142,7 +142,7 @@
     "landing-requirementsCountLabel": "Exigences",
     "landing-commentsCountLabel": "Commentaires",
     "landing-activeUsersCountLabel": "Utilisateurs actifs",
-    "landing-activeUsersCountRangeLabel": "(l'année dernière)",
+    "landing-activeUsersCountRangeLabel": "l'année dernière",
     "landing-features": "Fonctionnalités",
     "landing-featureDiscussTitle": "Échangez avec les utilisateurs",
     "landing-featureDiscussText": "Discutez de nouvelles idées et innovez avec vos utilisateurs finaux.",
@@ -214,5 +214,10 @@
     "requirementDetails-requirementNotFound": "Exigence introuvable…",
     "user": "Utilisateur",
     "logout": "Se déconnecter",
-    "categoryDetails-nothingToSeeHere": "Il n'y a rien ici."
+    "categoryDetails-nothingToSeeHere": "Il n'y a rien ici.",
+    "landing-featuredProjects-title": "Projets à la une",
+    "landing-lastMonthLabel": "le mois dernier",
+    "landing-featuredProjects-text": "Consultez certains de nos projets les plus intéressants pour connaître le Requirements Bazaar plus en détail.",
+    "landing-reqBazProject-description": "Les nouvelles idées pour Requirements Bazaar lui-même sont également suivies et discutées directement sur la plateforme. N'hésitez pas à soumettre vos propres idées ou à discuter du projet avec d'autres utilisateurs.",
+    "landing-reqBazProject-cardPlaceholder": "Cliquez ici pour ouvrir le projet Requirements Bazaar !"
 }
