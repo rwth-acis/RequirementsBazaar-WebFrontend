@@ -36,7 +36,7 @@
           <span v-else class="value">...</span>
           <p class="label">{{ t('landing-projectsCountLabel') }}</p>
           <div class="monthly-change" v-if="lastMonthStatistics?.numberOfProjects !== undefined">
-            <span class="change-value">+ {{ lastMonthStatistics?.numberOfProjects }}</span> <span class="suffix">last month</span>
+            <span class="change-value">+ {{ lastMonthStatistics?.numberOfProjects }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
           </div>
         </div>
         <div class="p-col statistics-item">
@@ -49,7 +49,7 @@
           <span v-else class="value">...</span>
           <p class="label">{{ t('landing-requirementsCountLabel') }}</p>
           <div class="monthly-change" v-if="lastMonthStatistics?.numberOfRequirements !== undefined">
-            <span class="change-value">+ {{ lastMonthStatistics?.numberOfRequirements }}</span> <span class="suffix">last month</span>
+            <span class="change-value">+ {{ lastMonthStatistics?.numberOfRequirements }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
           </div>
         </div>
         <div class="p-col statistics-item">
@@ -62,7 +62,7 @@
           <span v-else class="value">...</span>
           <p class="label">{{ t('landing-commentsCountLabel') }}</p>
           <div class="monthly-change" v-if="lastMonthStatistics?.numberOfComments !== undefined">
-            <span class="change-value">+ {{ lastMonthStatistics?.numberOfComments }}</span> <span class="suffix">last month</span>
+            <span class="change-value">+ {{ lastMonthStatistics?.numberOfComments }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
           </div>
         </div>
         <div class="p-col statistics-item">
@@ -75,7 +75,7 @@
           <span v-else class="value">...</span>
           <p class="label" v-tooltip.bottom="t('landing-activeUsersCountRangeLabel')">{{ t('landing-activeUsersCountLabel') }}</p>
           <div class="monthly-change" v-if="lastMonthUserStatistics?.numberOfNewUsers !== undefined">
-            <span class="change-value">+ {{ lastMonthUserStatistics?.numberOfNewUsers }}</span> <span class="suffix">last month</span>
+            <span class="change-value">+ {{ lastMonthUserStatistics?.numberOfNewUsers }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
           </div>
         </div>
     </div>
