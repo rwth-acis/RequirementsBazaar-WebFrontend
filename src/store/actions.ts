@@ -398,7 +398,7 @@ export const actions: ActionTree<State, State> & Actions = {
         id: parameters.memberId, // can be undefined for new members
       }
     ];
-    const response = await bazaarApi.projects.updateMembership(parameters.projectId, memberUpdates);
+    const response = await bazaarApi.projects.updateMember(parameters.projectId, memberUpdates);
     if (response.status === 204 || response.status === 200) {
       // We do not have all information about the user available here to simply add them
       // Workaround: Fetch fresh list of members
