@@ -26,6 +26,14 @@ export default class ErrorHandler {
 
         console.log('[DEBUG] Undetected error type. Logging as error again...')
         console.error(error);
+        // show a message to user anyway
+        this._storeError({
+            message: 'Unknown error: ' + error.toString(),
+            source: 'Frontend',
+            details: error.toString(),
+            timestamp: Date.now(),
+        });
+
         // return false so caller can properly handle if necesarry
         return false;
     }
