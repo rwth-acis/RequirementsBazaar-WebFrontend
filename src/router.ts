@@ -4,6 +4,7 @@ import Home from './views/Home.vue';
 import Privacy from './views/Privacy.vue';
 import About from './views/About.vue';
 import Developer from './views/Developer.vue';
+import Admin from './views/Admin.vue';
 import Projects from './views/Projects.vue';
 import Project from './views/Project.vue';
 import Category from './views/Category.vue';
@@ -63,6 +64,11 @@ export const router = createRouter({
       path: "/developer",
       name: "developer",
       component: Developer,
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: Admin,
     },
     {
       path: "/projects",
