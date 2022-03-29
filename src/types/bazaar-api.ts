@@ -426,6 +426,21 @@ export namespace Admin {
   /**
    * No description
    * @tags webhook
+   * @name TriggerNewProjectsTweet
+   * @summary Manually trigger the Tweet about new projects
+   * @request POST:/admin/twitter/trigger-new-projects-tweet
+   * @secure
+   */
+  export namespace TriggerNewProjectsTweet {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags webhook
    * @name AuthorizeTwitterAccount
    * @summary Authorize ReqBaz to control a certain Twitter account.
    * @request GET:/admin/twitter/authorize
@@ -1787,6 +1802,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     postTestTweet: (params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/admin/twitter/test-tweet`,
+        method: "POST",
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags webhook
+     * @name TriggerNewProjectsTweet
+     * @summary Manually trigger the Tweet about new projects
+     * @request POST:/admin/twitter/trigger-new-projects-tweet
+     * @secure
+     */
+    triggerNewProjectsTweet: (params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/twitter/trigger-new-projects-tweet`,
         method: "POST",
         secure: true,
         type: ContentType.Json,

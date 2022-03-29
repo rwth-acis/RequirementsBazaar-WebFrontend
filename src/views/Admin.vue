@@ -15,6 +15,7 @@
           <div class="p-my-3">
               <Button label="Link Twitter Account" icon="pi pi-link" class="p-button-success" @click="initTwitterAuthorization" />
               <Button label="Post Test Tweet" icon="pi pi-twitter" class="p-button-warning p-mx-5" @click="postTestTweet" />
+              <Button label="Manually Tweet about this weeks new projects" icon="pi pi-twitter" class="p-button-info p-mx-5" @click="triggerNewProjectsTweet" />
           </div>
           <div>
               <h5>Test Output</h5>
@@ -65,7 +66,16 @@ export default defineComponent({
         const response = await bazaarApi.admin.postTestTweet();
 
         testOutput.value.push('Posted Tweet (response: status: ' + response.status + ', data:' + response.data + ')');
-    }
+    };
+
+    const triggerNewProjectsTweet = async () => {
+        testOutput.value.push('Triggering Tweet...');
+        bazaarApi.admin.triggerNewProjectsTweet()
+            .then(response => testOutput.value.push('Triggered weekly Tweet manually. (response: status: ' + response.status + ', data:' + response.data + ')'))
+            .catch(response => {
+                testOutput.value.push('Error from API: (response: status: ' + response.status + ', data:' + response.data + ')');
+            });
+    };
 
     return {
       t,
@@ -74,6 +84,7 @@ export default defineComponent({
       testOutput,
       initTwitterAuthorization,
       postTestTweet,
+      triggerNewProjectsTweet,
     };
   }
 })
