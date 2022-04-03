@@ -48,6 +48,7 @@
 import { computed, ref, watch, defineComponent, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useRoute, useRouter } from 'vue-router';
 import { useConfirm } from "primevue/useconfirm";
 import { ActionTypes } from '../store/actions';
 
@@ -63,12 +64,22 @@ export default defineComponent({
   },
   setup: () => {
     const store = useStore();
+    const route = useRoute();
+    const { replace } = useRouter();
     const { t } = useI18n({ useScope: 'global' });
     const confirm = useConfirm();
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
 
-    const searchQuery = ref('');
-    const selectedSort = ref('name');
+    // init params from URL query params, if present
+    const searchQuery = ref((route.query.q || '').toString());
+    const selectedSort = ref((route.query.sort || 'name').toString()); // sort by name by default
+    const sortAscending = ref((route.query.order || 'a').toString() === 'a'); // encode a == 'ascending', 'b' == 'descending'
+
+    // when searcg and sort params change, update URL
+    watch([searchQuery, selectedSort, sortAscending], () => {
+        replace({ path: route.path, query: { q: searchQuery.value, sort: selectedSort.value, order: sortAscending.value ? 'a' : 'b' } });
+    });
+
     const sortOptions = [
       {name: t('sorting-alphabetical'), value: 'name'},
       {name: t('sorting-activity'), value: 'last_activity'},
@@ -76,7 +87,6 @@ export default defineComponent({
       {name: t('sorting-requirements'), value: 'requirement'},
       {name: t('sorting-followers'), value: 'follower'},
     ];
-    const sortAscending = ref(true);
     const page = ref(0);
     const perPage = ref(20);
 
