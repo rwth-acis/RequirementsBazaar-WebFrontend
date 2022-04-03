@@ -22,6 +22,7 @@ export enum ActionTypes {
   FetchRequirement = 'FETCH_REQUIREMENT',
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
   FetchRequirementFollowers = 'FETCH_REQ_FOLLOWERS',
+  FetchRequirementDevelopers = 'FETCH_REQ_DEVELOPERS',
   CreateRequirement = 'CREATE_REQUIREMENT',
   UpdateRequirement = 'UPDATE_REQUIREMENT',
   VoteRequirement = 'VOTE_REQUIREMENT',
@@ -141,6 +142,7 @@ export type Actions = {
   [ActionTypes.UpdateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
   [ActionTypes.FetchRequirementFollowers](context: ActionAugments, requirementId: number): void;
+  [ActionTypes.FetchRequirementDevelopers](context: ActionAugments, requirementId: number): void;
 
   [ActionTypes.FetchProjectMembers](context: ActionAugments, projectId: number): void;
   [ActionTypes.UpdateProjectMemberRole](context: ActionAugments, parameters: UpdateProjectMemberRoleParameters): void;
@@ -390,6 +392,14 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.requirements.getFollowersForRequirement(requirementId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetRequirementFollowers, {requirementId: requirementId, followers: response.data});
+    }
+  },
+
+  async [ActionTypes.FetchRequirementDevelopers]({ commit }, requirementId) {
+    // TODO Add paging
+    const response = await bazaarApi.requirements.getDevelopersForRequirement(requirementId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetRequirementDevelopers, {requirementId: requirementId, developers: response.data});
     }
   },
 

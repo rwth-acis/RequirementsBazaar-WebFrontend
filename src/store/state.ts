@@ -21,6 +21,9 @@ export type State = {
   requirementFollowers: {
     [requirementId: number]: {[memberId: number]: User}
   };
+  requirementDevelopers: {
+    [requirementId: number]: {[memberId: number]: User}
+  };
   categories: {[id: number]: Category};
   requirements: {[id: number]: Requirement};
   comments: {[id: number]: LocalComment};
@@ -34,6 +37,7 @@ export const state: State = {
   projects: {},
   projectMembers: {},
   requirementFollowers: {},
+  requirementDevelopers: {},
   categories: {},
   requirements: {},
   comments: {},

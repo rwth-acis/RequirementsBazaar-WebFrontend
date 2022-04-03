@@ -71,7 +71,20 @@
       </div>
 
       <div v-if="activeTab === 'developers'">
-        Developers
+        <h3>Developers</h3>
+
+        <div class="p-grid">
+          <div class="p-col-8">
+            <DataTable :value="developers" sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
+              <Column field="userName" header="User">
+                  <template #body="slotProps">
+                      <UserAvatar :imageUrl="slotProps.data.profileImage" :userName="slotProps.data.userName" size="small" />
+                      <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
+                  </template>
+              </Column>
+            </DataTable>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -291,6 +304,13 @@ export default defineComponent({
       }
     }, { immediate: true});
 
+    const developers = computed(() => store.getters.getRequirementDevelopers(requirementId));
+    watch([activeTab], () => {
+      if (activeTab.value == 'developers') {
+        store.dispatch(ActionTypes.FetchRequirementDevelopers, requirementId);
+      }
+    }, { immediate: true});
+
     return {
       t,
       oidcIsAuthenticated,
@@ -304,6 +324,7 @@ export default defineComponent({
       toggleMoreMenu,
       lastActivityDate,
       followers,
+      developers,
       showMoreRequirements,
       followClick,
       voteClick,

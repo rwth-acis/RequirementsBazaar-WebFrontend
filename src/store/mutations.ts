@@ -26,6 +26,7 @@ export enum MutationType {
   RemoveComment = 'REMOVE_COMMENT',
 
   SetRequirementFollowers = 'SET_REQUIREMENT_FOLLOWERS',
+  SetRequirementDevelopers = 'SET_REQUIREMENT_DEVELOPERS',
   SetProjectMembers = 'SET_PROJECT_MEMBERS',
   RemoveProjectMember = 'REMOVE_PROJECT_MEMBER',
 
@@ -67,6 +68,7 @@ export type Mutations = {
   [MutationType.RemoveComment](state: State, commentId: number): void;
 
   [MutationType.SetRequirementFollowers](state: State, {requirementId, followers}): void;
+  [MutationType.SetRequirementDevelopers](state: State, {requirementId, developers}): void;
   [MutationType.SetProjectMembers](state: State, {projectId: number, members: any }): void;
   [MutationType.RemoveProjectMember](state: State, parameters: RemoveProjectMemberParameters): void;
 
@@ -252,6 +254,17 @@ export const mutations: MutationTree<State> & Mutations = {
     followers.forEach((follower) => {
       if (follower.id) {
         state.requirementFollowers[requirementId][follower.id] = follower;
+      }
+    });
+  },
+
+  [MutationType.SetRequirementDevelopers](state: State, {requirementId, developers}) {
+    // reset first
+    state.requirementDevelopers[requirementId] = {}
+
+    developers.forEach((developer) => {
+      if (developer.id) {
+        state.requirementDevelopers[requirementId][developer.id] = developer;
       }
     });
   },

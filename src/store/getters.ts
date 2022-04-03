@@ -13,6 +13,7 @@ export type Getters = {
   commentsList(state: State): (requirementId: number) => Comment[];
   getProjectMembers(state: State): (projectId: number) => ProjectMember[];
   getRequirementFollowers(state: State): (requirementId: number) => User[];
+  getRequirementDevelopers(state: State): (requirementId: number) => User[];
   activitiesList(state: State): (parameters: any) => Activity[];
   unhandledErrors(state: State): (parameters: any) => UnhandledError[];
   getFeaturedProjects(state: State): (parameters: any) => Project[];
@@ -122,6 +123,12 @@ export const getters: GetterTree<State, State> & Getters = {
 
   getRequirementFollowers: (state: State) => (requirementId: number) => {
     let followers: User[] = Object.values(state.requirementFollowers[requirementId] ?? {});
+
+    return followers;
+  },
+
+  getRequirementDevelopers: (state: State) => (requirementId: number) => {
+    let followers: User[] = Object.values(state.requirementDevelopers[requirementId] ?? {});
 
     return followers;
   },
