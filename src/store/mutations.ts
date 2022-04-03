@@ -3,6 +3,7 @@ import { State, LocalComment, UnhandledError } from './state'
 
 import { Project, Category, Requirement, Comment, Dashboard, ProjectMember } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
+import { UserVote } from '@/api/bazaar';
 
 export enum MutationType {
   SetProjects = 'SET_PROJECTS',
@@ -24,8 +25,12 @@ export enum MutationType {
   SetCommentShowReplyTo = 'SET_COMMENT_SHOW_REPLY_TO',
   RemoveComment = 'REMOVE_COMMENT',
 
+  SetRequirementFollowers = 'SET_REQUIREMENT_FOLLOWERS',
+  SetRequirementDevelopers = 'SET_REQUIREMENT_DEVELOPERS',
   SetProjectMembers = 'SET_PROJECT_MEMBERS',
   RemoveProjectMember = 'REMOVE_PROJECT_MEMBER',
+
+  SetFeaturedProjects = 'SET_FEATURED_PROJECTS',
 
   SetDashboard = 'SET_DASHBOARD',
 
@@ -39,6 +44,9 @@ type RemoveProjectMemberParameters = {
   userId: number;
 }
 
+/*
+ * TODO Fix type definitions of Mutations. Parameter types are ignored! (see actions for how to do it)
+ */
 export type Mutations = {
   [MutationType.SetProjects](state: State, projects: Project[]): void;
   [MutationType.ReplaceProjects](state: State, project: Project[]): void;
@@ -59,8 +67,12 @@ export type Mutations = {
   [MutationType.SetCommentShowReplyTo](state: State, {commentId: number, showReplyTo: boolean}): void;
   [MutationType.RemoveComment](state: State, commentId: number): void;
 
+  [MutationType.SetRequirementFollowers](state: State, {requirementId, followers}): void;
+  [MutationType.SetRequirementDevelopers](state: State, {requirementId, developers}): void;
   [MutationType.SetProjectMembers](state: State, {projectId: number, members: any }): void;
   [MutationType.RemoveProjectMember](state: State, parameters: RemoveProjectMemberParameters): void;
+
+  [MutationType.SetFeaturedProjects](state: State, featuredProjects: Project[]): void;
 
   [MutationType.SetDashboard](state: State, dashboard: Dashboard): void;
 
@@ -153,11 +165,36 @@ export const mutations: MutationTree<State> & Mutations = {
     if (!requirement.userContext) {
       requirement.userContext = {isFollower: false};
     }
+    const prevVote = requirement.userContext.userVoted as UserVote | undefined;
     requirement.userContext.userVoted = userVoted;
     if (userVoted === 'UP_VOTE') {
-      (requirement.upVotes !== undefined) ? ++requirement.upVotes : 1;
+      if (prevVote !== 'UP_VOTE') {
+        // increment up votes
+        (requirement.upVotes !== undefined) ? ++requirement.upVotes : 1;
+      }
+      if (prevVote == 'DOWN_VOTE') {
+        // decrement down votes
+        (requirement.downVotes !== undefined) ? --requirement.downVotes : 0;
+      }
+    } else if (userVoted === 'DOWN_VOTE') {
+      if (prevVote !== 'DOWN_VOTE') {
+        // increment down votes
+        (requirement.downVotes !== undefined) ? ++requirement.downVotes : 1;
+      }
+      if (prevVote == 'UP_VOTE') {
+        // decrement up votes
+        (requirement.upVotes !== undefined) ? --requirement.upVotes : 0;
+      }
     } else {
-      (requirement.upVotes !== undefined) ? requirement.upVotes-- : 0;
+      // user removed vote completly
+      if (prevVote === 'DOWN_VOTE') {
+        // decrement down votes
+        (requirement.downVotes !== undefined) ? --requirement.downVotes : 0;
+      }
+      if (prevVote == 'UP_VOTE') {
+        // decrement up votes
+        (requirement.upVotes !== undefined) ? --requirement.upVotes : 0;
+      }
     }
   },
 
@@ -210,6 +247,28 @@ export const mutations: MutationTree<State> & Mutations = {
     delete state.comments[commentId];
   },
 
+  [MutationType.SetRequirementFollowers](state: State, {requirementId, followers}) {
+    // reset first
+    state.requirementFollowers[requirementId] = {}
+
+    followers.forEach((follower) => {
+      if (follower.id) {
+        state.requirementFollowers[requirementId][follower.id] = follower;
+      }
+    });
+  },
+
+  [MutationType.SetRequirementDevelopers](state: State, {requirementId, developers}) {
+    // reset first
+    state.requirementDevelopers[requirementId] = {}
+
+    developers.forEach((developer) => {
+      if (developer.id) {
+        state.requirementDevelopers[requirementId][developer.id] = developer;
+      }
+    });
+  },
+
   [MutationType.SetProjectMembers](state, {projectId, members}) {
     // reset first
     state.projectMembers[projectId] = {}
@@ -231,6 +290,24 @@ export const mutations: MutationTree<State> & Mutations = {
     if (localMember && localMember.id) {
       delete state.projectMembers[projectId][localMember.id];
     }
+  },
+
+  /**
+   * Updates the list of featured project IDs and adds/updates the projects in the global project list.
+   *
+   * @param state
+   * @param featuredProjects
+   */
+  [MutationType.SetFeaturedProjects](state: State, featuredProjects: Project[]) {
+    // override
+    state.featuredProjectIds = featuredProjects.map(project => project.id!);
+
+    // update projects in project list
+    featuredProjects.forEach(project => {
+      if (project.id) {
+        state.projects[project.id] = project;
+      }
+    });
   },
 
   [MutationType.SetDashboard](state, dashboard) {

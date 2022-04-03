@@ -10,6 +10,44 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
+## [2.3.0] - 2022-04-03
+
+### Added
+
+- Add featured projects as well as the 'Requirements Bazaar' project to the landing page
+  [#200](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/200)
+- Add tooltips for project card icons
+  [#202](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/202)
+- Monthly change indicators for statistics on landing page
+  [#203](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/203)
+- Embed Twitter timeline of official @reqbaz account on landing page
+  [#207](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/207)
+- System admins can link a Twitter account to Requirements Bazaar, which can then be used by Requirements Bazaar to tweet about different events automatically
+  [#220](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/220)
+- Button on 'admin page' to trigger weekly 'new projects tweet' manually
+  [#223](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/223)
+- Search and sort parameters for projects are parsed from URL and URL reflects current settings. This enables shareable links to a specifically sorted projects list (e.g., the latest added projects)
+  [#224](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/224)
+
+### Changed
+
+- Replaced hard-coded texts with localized attributes
+  [#198](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/198) and more
+- Fixed: sorting projects by last activity returned wrong results [commit 5958b19893e8edaa0b11ea83436bd63b45436f0c](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/5958b19893e8edaa0b11ea83436bd63b45436f0c)
+- Open activity tracker links in same tab
+  [commit e7c7e3d3fdfa28e9031d91a19a1ac444e89f02d8](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/e7c7e3d3fdfa28e9031d91a19a1ac444e89f02d8)
+- Fixed 'link to GitHub' not working for older projects
+  [#205](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/205)
+- Fixed wrong form validation messages
+  [#216](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/216)
+- Reworked requirement detail page: Replaced the reused requirement card from list pages with an actual detail page in the style of project and category page
+  [#213](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/213)
+- French translation updates
+  [#199](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/199),
+  [#204](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/204), and
+  [#206](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/206)
+
+
 ## [2.2.1] - 2022-02-10
 
 ### Added

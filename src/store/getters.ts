@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex'
 import { State, UnhandledError } from './state'
-import { Project, Category, Requirement, Comment, ProjectMember } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, ProjectMember, User } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export type Getters = {
@@ -12,8 +12,11 @@ export type Getters = {
   getRequirementById(state: State): (id: number) => Requirement | undefined;
   commentsList(state: State): (requirementId: number) => Comment[];
   getProjectMembers(state: State): (projectId: number) => ProjectMember[];
+  getRequirementFollowers(state: State): (requirementId: number) => User[];
+  getRequirementDevelopers(state: State): (requirementId: number) => User[];
   activitiesList(state: State): (parameters: any) => Activity[];
   unhandledErrors(state: State): (parameters: any) => UnhandledError[];
+  getFeaturedProjects(state: State): (parameters: any) => Project[];
 }
 
 const numericalSortFunction = (property, sortAscending) => (a, b) => {
@@ -90,7 +93,7 @@ export const getters: GetterTree<State, State> & Getters = {
     // then sort according to sort argument
     switch(parameters.sort) {
       case 'last_activity':
-        categories.sort(lexicographicalSortFunction('lastUpdatedDate', sortAscending));
+        categories.sort(lexicographicalSortFunction('lastActivity', sortAscending));
         break;
       case 'date':
         categories.sort(lexicographicalSortFunction('creationDate', sortAscending));
@@ -118,6 +121,18 @@ export const getters: GetterTree<State, State> & Getters = {
     return members;
   },
 
+  getRequirementFollowers: (state: State) => (requirementId: number) => {
+    let followers: User[] = Object.values(state.requirementFollowers[requirementId] ?? {});
+
+    return followers;
+  },
+
+  getRequirementDevelopers: (state: State) => (requirementId: number) => {
+    let followers: User[] = Object.values(state.requirementDevelopers[requirementId] ?? {});
+
+    return followers;
+  },
+
   requirementsList: (state) => (categoryId, parameters, realized) => {
     // filter all requirements who have a category object with id equaling the requested categoryId
     let requirements: Requirement[] = Object.values(state.requirements).filter(requirement => (requirement.categories.some(c => c === categoryId)))
@@ -138,7 +153,7 @@ export const getters: GetterTree<State, State> & Getters = {
     // then sort according to sort argument
     switch(parameters.sort) {
       case 'last_activity':
-        requirements.sort(lexicographicalSortFunction('lastUpdatedDate', sortAscending));
+        requirements.sort(lexicographicalSortFunction('lastActivity', sortAscending));
         break;
       case 'date':
         requirements.sort(lexicographicalSortFunction('creationDate', sortAscending));
@@ -194,6 +209,18 @@ export const getters: GetterTree<State, State> & Getters = {
   unhandledErrors: (state: State) => (parameters: any) => {
 
     return state.unhandledErrors;
+  },
+
+  getFeaturedProjects: (state: State) => (parameters: any) => {
+    const featuredProjects: Project[] = [];
+
+    state.featuredProjectIds.forEach(projectId => {
+      if (state.projects[projectId]) {
+        featuredProjects.push(state.projects[projectId]);
+      }
+    });
+
+    return featuredProjects;
   },
 
 }

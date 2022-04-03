@@ -10,7 +10,7 @@
           <ConfirmPopup group="popup"></ConfirmPopup>
         </div>
         <footer>
-          <router-link to="/about">About</router-link> &middot; <router-link to="/developer">Developer</router-link> &middot; <a href="https://rwth-aachen.de/disclaimer" target="_blank">Privacy Policy</a>
+          <router-link to="/about">{{ t('about') }}</router-link> &middot; <router-link to="/developer">{{ t('developer') }}</router-link> &middot; <a href="https://rwth-aachen.de/disclaimer" target="_blank">{{ t('privacyPolicy') }}</a>
         </footer>
       </div>
       <div id="activityTrackerPlaceholder" v-if="activityTrackerVisible"></div>
@@ -34,7 +34,7 @@ export default defineComponent({
     GlobalErrorMessage
   },
   setup: () => {
-    const { locale } = useI18n({ useScope: 'global' });
+    const { t, locale } = useI18n({ useScope: 'global' });
     const isRtl = ref(false);
     watch(locale, (newLocale) => {
       isRtl.value = (newLocale === 'fa') ? true : false;
@@ -42,7 +42,7 @@ export default defineComponent({
 
     const activityTrackerVisible = ref(false);
 
-    return { activityTrackerVisible, isRtl };
+    return { t, activityTrackerVisible, isRtl };
   }
 })
 </script>

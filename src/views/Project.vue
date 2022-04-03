@@ -4,7 +4,7 @@
     :projectName="project.name"
     class="p-mt-3" />
   <h1>{{ project?.name }}</h1>
-  <Button icon="pi pi-tag" label="Join Development on GitHub" class="p-button-sm p-button-outlined"  @click="joinDevelopment" v-if="showButtonJoinDevelopment()"></Button>
+  <Button icon="pi pi-tag" :label="t('projectDetails-joinDevelopmentOnGithub')" class="p-button-sm p-button-outlined"  @click="joinDevelopment" v-if="showButtonJoinDevelopment()"></Button>
   <div id="description">
     <vue3-markdown-it :source="project?.description" />
   </div>
@@ -50,9 +50,9 @@
   <div id="menuBar">
     <TabMenu id="tabMenu" :model="tabItems" />
     <div id="actionButtons">
-      <Button icon="pi pi-tag" label="New Release Available" class="p-button-sm p-button-outlined" v-if="showButtonNewRelease()" @click="newReleaseAvailable"></Button>
-      <Button icon="pi pi-github" label="Connect to GitHub" class="p-button-sm p-button-outlined" v-if="oidcIsAuthenticated && !connectedToGitHub" @click="connectToGithub"></Button>
-      <Button icon="pi pi-github" label="Show on GitHub" class="p-button-sm p-button-outlined" v-if="connectedToGitHub" @click="redirectToGitHubRepository()"></Button>
+      <Button icon="pi pi-tag" :label="t('projectDetails-newRelease')" class="p-button-sm p-button-outlined" v-if="showButtonNewRelease()" @click="newReleaseAvailable"></Button>
+      <Button icon="pi pi-github" :label="t('projectDetails-connectToGitHub')" class="p-button-sm p-button-outlined" v-if="oidcIsAuthenticated && !connectedToGitHub" @click="connectToGithub"></Button>
+      <Button icon="pi pi-github" :label="t('projectDetails-showOnGitHub')" class="p-button-sm p-button-outlined" v-if="connectedToGitHub" @click="redirectToGitHubRepository()"></Button>
       <Button icon="pi pi-bell" :label="oidcIsAuthenticated && project?.userContext?.isFollower ? t('unfollowProject') : t('followProject')" class="p-button-sm" :class="{ 'p-button-outlined': !(oidcIsAuthenticated && project?.userContext?.isFollower) }" @click="followClick"></Button>
       <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
@@ -87,14 +87,14 @@
     </div>
   </div>
 
-  <Dialog v-model:visible="showAddRepositoryDialog" :style="{width: '450px'}" header="Link GitHub repository" :modal="true" class="p-fluid">
+  <Dialog v-model:visible="showAddRepositoryDialog" :style="{width: '450px'}" :header="t('linkRepository-dialogHeader')" :modal="true" class="p-fluid">
         <p class="p-mb-2">
-          To get started, first, paste the base URL of a GitHub Repository that should be connected to this project.
+          {{ t('linkRepository-pasteUrlInstruction') }}
         </p>
         <span class="p-input-icon-left">
             <i class="pi pi-github" />
             <InputText id="repositoryUrl" type="text" v-model="updatedRepositoryUrl" placeholder="https://github.com/{account}/{repository}" />
-            <label for="repositoryUrl">GitHub URL</label>
+            <label for="repositoryUrl">{{ t('gitHubUrlLabel') }}</label>
             <p v-if="repositoryUrlError" style="color: red">
               {{repositoryUrlError}}
             </p>
@@ -102,30 +102,36 @@
 
         <template #footer>
             <ProgressBar mode="indeterminate" class="p-mb-3" v-if="inProgress" />
-            <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showAddRepositoryDialog = false" />
-            <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateRepositoryUrl()" />
+            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-text" @click="showAddRepositoryDialog = false" />
+            <Button :label="t('save')" icon="pi pi-check" class="p-button-text" @click="updateRepositoryUrl()" />
         </template>
     </Dialog>
 
     <Dialog v-model:visible="showConfigureWebhookDilog" :style="{width: '800px'}" header="Configure GitHub Webhook" :modal="true" class="p-fluid">
         <p class="p-mb-2">
-          Now, you need to configure a webhook for the GitHub repository that should be connected to this project.
+          {{ t('gitHubSetup-configureWebhookInstruction') }}
         </p>
         <p>
-          Please go to
+          {{ t('gitHubSetup-pleaseGoTo') }}
           <a :href="githubWebhookSettingsURL" target="_blank" rel="noreferrer" @click="webhookSettingsOpened = true">{{githubWebhookSettingsURL}}</a>
-          and configure the following values:
+          {{ t('gitHubSetup-andConfigureValues') }}
         </p>
         <ul>
-          <li><b>Payload URL</b>: {{webhookEndpointURL}}</li>
-          <li><b>Content-type</b>: <i>application/json</i></li>
-          <li><b>Secret</b>: {{webhookSecret}}</li>
+          <li><b>{{ t('gitHubSetup-payloadUrlLabel') }}</b>: {{webhookEndpointURL}}</li>
+          <li><b>{{ t('gitHubSetup-contentTypeLabel') }}</b>: <i>application/json</i></li>
+          <li><b>{{ t('gitHubSetup-secretLabel') }}</b>: {{webhookSecret}}</li>
+          <li><b>{{ t('gitHubSetup-eventsLabel') }}</b>: {{ t('gitHubSetup-eventsLabel-hint') }}:
+            <ul>
+              <li>{{ t('gitHubSetup-eventsLabel-optionAllEvents') }}</li>
+              <li>{{ t('gitHubSetup-eventsLabel-optionSpecificEvents') }}</li>
+            </ul>
+          </li>
         </ul>
 
         <template #footer>
-            <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showConfigureWebhookDilog = false" />
-            <Button v-if="!webhookSettingsOpened" label="Go to GitHub Settings" icon="pi pi-check" class="p-button-text" @click="openWebhookSettings()" />
-            <Button v-else label="Done" icon="pi pi-check" class="p-button-text" @click="showConfigureWebhookDilog = false" />
+            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-text" @click="showConfigureWebhookDilog = false" />
+            <Button v-if="!webhookSettingsOpened" :label="t('gitHubSetup-goToGitHubSettings')" icon="pi pi-check" class="p-button-text" @click="openWebhookSettings()" />
+            <Button v-else :label="t('done')" icon="pi pi-check" class="p-button-text" @click="showConfigureWebhookDilog = false" />
         </template>
     </Dialog>
 </template>
@@ -265,7 +271,7 @@ export default defineComponent({
 
     watch(oidcIsAuthenticated, () => store.dispatch(ActionTypes.FetchProject, projectId));
 
-    const MEMBERS_TAB_LABEL = 'Members';
+    const MEMBERS_TAB_LABEL = t('projectDetails-members');
     const MEMBERS_TAB_ITEM = {
       label: MEMBERS_TAB_LABEL,
       to: `/projects/${projectId}/members`
@@ -273,7 +279,7 @@ export default defineComponent({
 
     const tabItems = ref([
       {
-        label: 'All Categories', // was: 'Overview'
+        label: t('projectDetails-allCategories'), // was: 'Overview'
         to: `/projects/${projectId}`
       },
       MEMBERS_TAB_ITEM
@@ -304,11 +310,11 @@ export default defineComponent({
     const searchQuery = ref('');
     const selectedSort = ref('name');
     const sortOptions = [
-      {name: 'Alphabetically', value: 'name'},
+      {name: t('sorting-alphabetical'), value: 'name'},
       {name: t('sorting-activity'), value: 'last_activity'},
       {name: t('sorting-date'), value: 'date'},
-      {name: 'Number of Requirements', value: 'requirement'},
-      {name: 'Number of Followers', value: 'follower'},
+      {name: t('sorting-requirements'), value: 'requirement'},
+      {name: t('sorting-followers'), value: 'follower'},
     ];
     const sortAscending = ref(true);
     const page = ref(0);
@@ -380,7 +386,7 @@ export default defineComponent({
 
     const updateRepositoryUrl = () => {
       if (!isGitHubRepositoryUrlValid(updatedRepositoryUrl.value)) {
-        repositoryUrlError.value = 'Please enter a valid GitHub repository URL';
+        repositoryUrlError.value = t('linkRepository-urlInvalid');
         return;
       }
 
@@ -391,7 +397,7 @@ export default defineComponent({
         id: project.value.id,
         name: project.value.name,
         description: project.value.description,
-        additionalProperties: JSON.parse(JSON.stringify(project.value.additionalProperties)),
+        additionalProperties: JSON.parse(JSON.stringify(project.value.additionalProperties ?? {})),
       };
       if (!projectUpdate.additionalProperties) {
         projectUpdate.additionalProperties = {
@@ -434,7 +440,7 @@ export default defineComponent({
       } else {
         confirm.require({
           group: 'dialog',
-          message: 'You need to sign in to follow a project.',
+          message: t('signInToFollowProject'),
           header: 'Login',
           icon: 'pi pi-info-circle',
           rejectClass: 'p-sr-only',
@@ -496,7 +502,7 @@ export default defineComponent({
       } else {
         confirm.require({
           group: 'dialog',
-          message: 'You need to sign in to create a category.',
+          message: t('signInToCreateCategory'),
           header: 'Login',
           icon: 'pi pi-info-circle',
           rejectClass: 'p-sr-only',

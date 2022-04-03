@@ -100,7 +100,14 @@ export default defineComponent({
         };
       }
 
-      store.dispatch(ActionTypes.CreateComment, comment);
+      store.dispatch(ActionTypes.CreateComment, comment).then( _ => {
+        // clear comment text fields
+        if (replyToComment) {
+          event.currentTarget.previousSibling.value = ''; // pretty hacky. TODO refactor
+        } else {
+          message.value = '';
+        }
+      })
     };
 
     const toggleReply = (event, comment: LocalComment) => {

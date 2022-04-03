@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, toRefs } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'ProjectBreadcrumbNav',
@@ -16,11 +17,12 @@ export default defineComponent({
     requirementName: { type: String, required: false },
   },
   setup: (props) => {
+    const { t } = useI18n({ useScope: 'global' });
     const { projectId, projectName, categoryId, categoryName, requirementId, requirementName } = toRefs(props);
 
     const home =  computed(() => {
       return {
-        label: 'Public Projects',
+        label: t('publicProjects'),
         to: `/projects`
       }
     });

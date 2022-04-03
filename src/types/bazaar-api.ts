@@ -29,6 +29,10 @@ export interface Statistic {
   numberOfVotes?: number;
 }
 
+export interface TwitterAuthRedirect {
+  redirectUrl?: string;
+}
+
 export interface Category {
   /** @format int32 */
   id?: number;
@@ -385,6 +389,69 @@ export namespace Notifications {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
+  }
+}
+
+export namespace Admin {
+  /**
+   * No description
+   * @tags webhook
+   * @name TwitterAuthCallback
+   * @summary Redirect callback after Twitter account authorized RqBaz for account control
+   * @request GET:/admin/twitter/auth-cb
+   * @secure
+   */
+  export namespace TwitterAuthCallback {
+    export type RequestParams = {};
+    export type RequestQuery = { code?: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags webhook
+   * @name PostTestTweet
+   * @summary Post a test Tweet on twitter
+   * @request POST:/admin/twitter/test-tweet
+   * @secure
+   */
+  export namespace PostTestTweet {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags webhook
+   * @name TriggerNewProjectsTweet
+   * @summary Manually trigger the Tweet about new projects
+   * @request POST:/admin/twitter/trigger-new-projects-tweet
+   * @secure
+   */
+  export namespace TriggerNewProjectsTweet {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags webhook
+   * @name AuthorizeTwitterAccount
+   * @summary Authorize ReqBaz to control a certain Twitter account.
+   * @request GET:/admin/twitter/authorize
+   * @secure
+   */
+  export namespace AuthorizeTwitterAccount {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TwitterAuthRedirect;
   }
 }
 
@@ -1700,6 +1767,81 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/notifications`,
         method: "POST",
         secure: true,
+        ...params,
+      }),
+  };
+  admin = {
+    /**
+     * No description
+     *
+     * @tags webhook
+     * @name TwitterAuthCallback
+     * @summary Redirect callback after Twitter account authorized RqBaz for account control
+     * @request GET:/admin/twitter/auth-cb
+     * @secure
+     */
+    twitterAuthCallback: (query?: { code?: string }, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/twitter/auth-cb`,
+        method: "GET",
+        query: query,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags webhook
+     * @name PostTestTweet
+     * @summary Post a test Tweet on twitter
+     * @request POST:/admin/twitter/test-tweet
+     * @secure
+     */
+    postTestTweet: (params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/twitter/test-tweet`,
+        method: "POST",
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags webhook
+     * @name TriggerNewProjectsTweet
+     * @summary Manually trigger the Tweet about new projects
+     * @request POST:/admin/twitter/trigger-new-projects-tweet
+     * @secure
+     */
+    triggerNewProjectsTweet: (params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/twitter/trigger-new-projects-tweet`,
+        method: "POST",
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags webhook
+     * @name AuthorizeTwitterAccount
+     * @summary Authorize ReqBaz to control a certain Twitter account.
+     * @request GET:/admin/twitter/authorize
+     * @secure
+     */
+    authorizeTwitterAccount: (params: RequestParams = {}) =>
+      this.request<TwitterAuthRedirect, void>({
+        path: `/admin/twitter/authorize`,
+        method: "GET",
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
   };
