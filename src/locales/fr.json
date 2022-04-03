@@ -219,5 +219,9 @@
     "landing-lastMonthLabel": "le mois dernier",
     "landing-featuredProjects-text": "Consultez certains de nos projets les plus intéressants pour connaître le Requirements Bazaar plus en détail.",
     "landing-reqBazProject-description": "Les nouvelles idées pour Requirements Bazaar lui-même sont également suivies et discutées directement sur la plateforme. N'hésitez pas à soumettre vos propres idées ou à discuter du projet avec d'autres utilisateurs.",
-    "landing-reqBazProject-cardPlaceholder": "Cliquez ici pour ouvrir le projet Requirements Bazaar !"
+    "landing-reqBazProject-cardPlaceholder": "Cliquez ici pour ouvrir le projet Requirements Bazaar !",
+    "gitHubSetup-eventsLabel": "Quels sont les événements que vous souhaitez voir déclencher ce webhook ?",
+    "gitHubSetup-eventsLabel-hint": "Sélectionnez l'une des options suivantes",
+    "gitHubSetup-eventsLabel-optionAllEvents": "« Tout m'envoyer »",
+    "gitHubSetup-eventsLabel-optionSpecificEvents": "« Sélectionner des évènements individuellement » : Issues, Pull Requests, et Releases"
 }
