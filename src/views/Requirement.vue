@@ -113,7 +113,7 @@ import RequirementDevTimeline from '@/components/RequirementDevTimeline.vue';
 import CommentsList from '@/components/CommentsList.vue';
 import UserAvatar from '@/components/UserAvatar.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
-import { confirmDeleteRequirement } from '@/ui-utils/requirement-menu-actions';
+import { confirmDeleteRequirement, createGitHubIssueForRequirement } from '@/ui-utils/requirement-menu-actions';
 
 export default defineComponent({
   name: 'Requirement',
@@ -150,6 +150,18 @@ export default defineComponent({
         return store.getters.getCategoryById(parentCategoryId.value);
       } else {
         return undefined;
+      }
+    });
+
+    //get github_url from project's additionalProperties
+    const projectGithubUrl = computed(() => {
+      if (project.value && project.value.additionalProperties && project.value.additionalProperties.github_url ) {
+        return project.value.additionalProperties.github_url
+      }
+    });
+    const issue_url = computed(() => {
+      if (requirement.value && requirement.value.additionalProperties && requirement.value.additionalProperties.issue_url ) {
+        return requirement.value.additionalProperties.issue_url;
       }
     });
 
@@ -229,7 +241,7 @@ export default defineComponent({
     const moreItems = ref();
     // watch multiple props
     watch(
-      [locale, requirement],
+      [locale, requirement, projectGithubUrl],
       () => {
         if (!requirement.value) {
           return moreItems.value = [];
@@ -264,14 +276,14 @@ export default defineComponent({
               }
             },
             {
-              label: requirement.value.issue_url ? t('viewOnGitHub') : t('createGithubIssue'),
+              label: issue_url.value ? t('viewOnGitHub') : t('createGithubIssue'),
               icon: 'pi pi-github',
-              disabled: requirement.value.github_url === undefined,
+              disabled: projectGithubUrl === undefined,
               command: () => {
-                if (requirement.value.issue_url) {
-                  window.open(requirement.value.issue_url)
+                if (issue_url.value) {
+                  window.open(issue_url.value);
                 } else {
-                  //createGitHubIssueForRequirement();
+                  createGitHubIssueForRequirement(confirm, t, project.value, requirement.value);
                 }
               }
             },
