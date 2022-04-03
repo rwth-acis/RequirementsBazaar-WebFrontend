@@ -54,12 +54,20 @@
       </div>
 
       <div v-if="activeTab === 'followers'">
-        Followers:
-        <ul>
-          <li v-for="follower in followers" :key="follower.id">
-            {{follower.userName}}
-          </li>
-        </ul>
+        <h3>Followers</h3>
+
+        <div class="p-grid">
+          <div class="p-col-8">
+            <DataTable :value="followers" sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
+              <Column field="userName" header="User">
+                  <template #body="slotProps">
+                      <UserAvatar :imageUrl="slotProps.data.profileImage" :userName="slotProps.data.userName" size="small" />
+                      <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
+                  </template>
+              </Column>
+            </DataTable>
+          </div>
+        </div>
       </div>
 
       <div v-if="activeTab === 'developers'">
@@ -90,11 +98,12 @@ import { ActionTypes } from '@/store/actions';
 import { routePathToProject, routePathToRequirement } from '@/router';
 import RequirementDevTimeline from '@/components/RequirementDevTimeline.vue';
 import CommentsList from '@/components/CommentsList.vue';
+import UserAvatar from '@/components/UserAvatar.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
 export default defineComponent({
   name: 'Requirement',
-  components: { ProjectBreadcrumbNav, CommentsList, RequirementDevTimeline },
+  components: { ProjectBreadcrumbNav, CommentsList, RequirementDevTimeline, UserAvatar },
   props: {
   },
   setup: (props) => {
