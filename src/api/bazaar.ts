@@ -20,6 +20,8 @@ const getRequestHeaders = (user: User | null | undefined): RequestParams => {
 
 export type ProjectMemberRole = "ProjectMember" | "ProjectManager" | "ProjectAdmin";
 
+export type UserVote = "UP_VOTE" | "DOWN_VOTE" | "NO_VOTE";
+
 export const bazaarApi = new Api({
   baseUrl: `${import.meta.env.VITE_BAZAAR_API_URL}`,
   securityWorker: getRequestHeaders,

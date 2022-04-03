@@ -117,6 +117,7 @@
     "setAsDefault": "Set as Default Category",
     "deleteCategory": "Delete Category",
     "editCategory": "Edit Category",
+    "editComment": "Edit Comment",
     "created": "Created",
     "updated": "Updated",
     "createRequirement": "Create Requirement",
