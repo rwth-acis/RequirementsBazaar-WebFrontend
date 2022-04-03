@@ -98,6 +98,19 @@
             @click="showMoreRequirements()" />
     </div>
   </div>
+
+  <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
+    <RequirementEditor
+      class="requirementEditor"
+      :requirementId="requirement.id"
+      :projectId="project.id"
+      :categories="requirement.categories"
+      :name="requirement.name"
+      :description="requirement.description"
+      @cancel="requirementEditorCanceled"
+      @save="requirementEditorSaved">
+    </RequirementEditor>
+  </Dialog>
 </template>
 
 <script lang="ts">
@@ -113,11 +126,12 @@ import RequirementDevTimeline from '@/components/RequirementDevTimeline.vue';
 import CommentsList from '@/components/CommentsList.vue';
 import UserAvatar from '@/components/UserAvatar.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
+import RequirementEditor from '../components/RequirementEditor.vue';
 import { confirmDeleteRequirement, createGitHubIssueForRequirement } from '@/ui-utils/requirement-menu-actions';
 
 export default defineComponent({
   name: 'Requirement',
-  components: { ProjectBreadcrumbNav, CommentsList, RequirementDevTimeline, UserAvatar },
+  components: { ProjectBreadcrumbNav, CommentsList, RequirementDevTimeline, UserAvatar, RequirementEditor },
   props: {
   },
   setup: (props) => {
@@ -190,6 +204,14 @@ export default defineComponent({
     const showMoreRequirements = () => {
         push({path: routePathToProject(projectId)})
     };
+
+    const displayRequirementEditor = ref(false);
+    const requirementEditorCanceled = () => {
+      displayRequirementEditor.value = false;
+    }
+    const requirementEditorSaved = () => {
+      displayRequirementEditor.value = false;
+    }
 
     const tabItems = computed(() => {
       // requirement may be undefined during loading or if 404
@@ -272,7 +294,7 @@ export default defineComponent({
               label: t('editRequirement'),
               icon: 'pi pi-pencil',
               command: () => {
-                //displayRequirementEditor.value = true;
+                displayRequirementEditor.value = true;
               }
             },
             {
@@ -343,13 +365,16 @@ export default defineComponent({
       moreMenu,
       moreItems,
       toggleMoreMenu,
+      displayRequirementEditor,
       lastActivityDate,
       followers,
       developers,
       showMoreRequirements,
       followClick,
       voteClick,
-      routePathToRequirement
+      routePathToRequirement,
+      requirementEditorCanceled,
+      requirementEditorSaved,
     }
   }
 })
