@@ -1,6 +1,6 @@
 {
   "name": "reqbaz",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "scripts": {
     "dev": "vite",
     "dev-local-api": "vite --mode dev-local-api",
