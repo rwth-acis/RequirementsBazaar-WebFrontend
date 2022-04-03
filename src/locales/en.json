@@ -120,6 +120,7 @@
     "editComment": "Edit Comment",
     "created": "Created",
     "updated": "Updated",
+    "notFound": "Not Found",
     "createRequirement": "Create Requirement",
     "deleteCompDesc": "This action can't be undone! Are you sure that you want to permanently delete this category?",
     "noRequirement": "Requirement doesn't exist. Redirected you to category page.",

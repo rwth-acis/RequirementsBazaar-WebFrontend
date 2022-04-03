@@ -41,7 +41,7 @@
 
         <Card class="p-my-4">
           <template #title>
-            Comments
+            {{ t('comments') }}
           </template>
           <template #content>
             <comments-list :requirementId="requirement.id" class="commentsList"></comments-list>
@@ -50,11 +50,11 @@
       </div>
 
       <div v-if="activeTab === 'votes'">
-        Votes
+        {{ t('votes') }}
       </div>
 
       <div v-if="activeTab === 'followers'">
-        <h3>Followers</h3>
+        <h3>{{ t('followers') }}</h3>
 
         <div class="p-grid">
           <div class="p-col-8">
@@ -71,7 +71,7 @@
       </div>
 
       <div v-if="activeTab === 'developers'">
-        <h3>Developers</h3>
+        <h3>{{ t('developers') }}</h3>
 
         <div class="p-grid">
           <div class="p-col-8">
@@ -89,7 +89,7 @@
     </div>
 
     <div v-else>
-      <h1>Not Found</h1>
+      <h1>{{ t('notFound') }}</h1>
       {{ t('requirementDetails-requirementNotFound') }}
     </div>
     <div class="p-m-4 p-d-flex p-jc-center">
