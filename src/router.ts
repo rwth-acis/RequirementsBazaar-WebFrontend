@@ -97,7 +97,7 @@ export const router = createRouter({
       component: Category,
     },
     {
-      path: "/projects/:projectId/requirements/:requirementId",
+      path: "/projects/:projectId/requirements/:requirementId/:activeTab?",
       name: "requirement",
       component: Requirement,
     },

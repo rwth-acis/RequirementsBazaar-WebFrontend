@@ -2,7 +2,7 @@ import { ActionContext, ActionTree } from 'vuex';
 import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
-import { bazaarApi, ProjectMemberRole } from '../api/bazaar';
+import { bazaarApi, ProjectMemberRole, UserVote } from '../api/bazaar';
 import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse, ProjectMember } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
 
@@ -21,6 +21,8 @@ export enum ActionTypes {
   FetchRequirementsOfCategory = 'FETCH_REQUIREMENTS',
   FetchRequirement = 'FETCH_REQUIREMENT',
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
+  FetchRequirementFollowers = 'FETCH_REQ_FOLLOWERS',
+  FetchRequirementDevelopers = 'FETCH_REQ_DEVELOPERS',
   CreateRequirement = 'CREATE_REQUIREMENT',
   UpdateRequirement = 'UPDATE_REQUIREMENT',
   VoteRequirement = 'VOTE_REQUIREMENT',
@@ -84,7 +86,7 @@ type ActivitiesRequestParameters = {
 
 type VoteRequirementParameters = {
   requirementId: number;
-  userVoted: string;
+  userVoted: UserVote;
 }
 
 type FollowResourceParameters = {
@@ -139,6 +141,8 @@ export type Actions = {
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.UpdateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.DeleteComment](context: ActionAugments, commentId: number): void;
+  [ActionTypes.FetchRequirementFollowers](context: ActionAugments, requirementId: number): void;
+  [ActionTypes.FetchRequirementDevelopers](context: ActionAugments, requirementId: number): void;
 
   [ActionTypes.FetchProjectMembers](context: ActionAugments, projectId: number): void;
   [ActionTypes.UpdateProjectMemberRole](context: ActionAugments, parameters: UpdateProjectMemberRoleParameters): void;
@@ -294,6 +298,8 @@ export const actions: ActionTree<State, State> & Actions = {
     let response : HttpResponse<any, void | Requirement>;
     if (parameters.userVoted === 'UP_VOTE') {
       response = await bazaarApi.requirements.vote(parameters.requirementId, { direction: 'up' });
+    } else if (parameters.userVoted === 'DOWN_VOTE') {
+      response = await bazaarApi.requirements.vote(parameters.requirementId, { direction: 'down' });
     } else {
       response = await bazaarApi.requirements.unvote(parameters.requirementId);
     }
@@ -378,6 +384,22 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.comments.deleteComment(commentId);
     if (response.data && response.status === 200) {
       commit(MutationType.RemoveComment, commentId);
+    }
+  },
+
+  async [ActionTypes.FetchRequirementFollowers]({ commit }, requirementId) {
+    // TODO Add paging
+    const response = await bazaarApi.requirements.getFollowersForRequirement(requirementId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetRequirementFollowers, {requirementId: requirementId, followers: response.data});
+    }
+  },
+
+  async [ActionTypes.FetchRequirementDevelopers]({ commit }, requirementId) {
+    // TODO Add paging
+    const response = await bazaarApi.requirements.getDevelopersForRequirement(requirementId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetRequirementDevelopers, {requirementId: requirementId, developers: response.data});
     }
   },
 

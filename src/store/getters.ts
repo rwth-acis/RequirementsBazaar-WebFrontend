@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex'
 import { State, UnhandledError } from './state'
-import { Project, Category, Requirement, Comment, ProjectMember } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, ProjectMember, User } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export type Getters = {
@@ -12,6 +12,8 @@ export type Getters = {
   getRequirementById(state: State): (id: number) => Requirement | undefined;
   commentsList(state: State): (requirementId: number) => Comment[];
   getProjectMembers(state: State): (projectId: number) => ProjectMember[];
+  getRequirementFollowers(state: State): (requirementId: number) => User[];
+  getRequirementDevelopers(state: State): (requirementId: number) => User[];
   activitiesList(state: State): (parameters: any) => Activity[];
   unhandledErrors(state: State): (parameters: any) => UnhandledError[];
   getFeaturedProjects(state: State): (parameters: any) => Project[];
@@ -117,6 +119,18 @@ export const getters: GetterTree<State, State> & Getters = {
     let members: ProjectMember[] = Object.values(state.projectMembers[projectId] ?? {});
 
     return members;
+  },
+
+  getRequirementFollowers: (state: State) => (requirementId: number) => {
+    let followers: User[] = Object.values(state.requirementFollowers[requirementId] ?? {});
+
+    return followers;
+  },
+
+  getRequirementDevelopers: (state: State) => (requirementId: number) => {
+    let followers: User[] = Object.values(state.requirementDevelopers[requirementId] ?? {});
+
+    return followers;
   },
 
   requirementsList: (state) => (categoryId, parameters, realized) => {
