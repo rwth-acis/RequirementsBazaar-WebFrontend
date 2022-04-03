@@ -67,6 +67,7 @@ import { useRoute } from 'vue-router';
 import { routePathToRequirement } from '@/router';
 
 import RequirementEditor from '../components/RequirementEditor.vue';
+import { confirmDeleteRequirement } from '@/ui-utils/requirement-menu-actions';
 import { getEnabledCategories } from 'trace_events';
 
 export default defineComponent({
@@ -164,21 +165,7 @@ export default defineComponent({
       (menu as any).value.toggle(event);
     };
 
-    const confirmDelete = () => {
-      confirm.require({
-        header: t('deleteRequirement'),
-        message: t('deleteRequirementDesc'),
-        icon: 'pi pi-info-circle',
-        acceptClass: 'p-button-danger',
-        group: 'dialog',
-        accept: () => {
-          store.dispatch(ActionTypes.DeleteRequirement, id.value);
-        },
-        reject: () => {
-          console.log('not deleted');
-        }
-      });
-    }
+    const confirmDelete = () => confirmDeleteRequirement(confirm, t, store, id.value);
 
     const displayRequirementEditor = ref(false);
     const requirementEditorCanceled = () => {

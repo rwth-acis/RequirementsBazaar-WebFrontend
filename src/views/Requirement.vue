@@ -113,6 +113,7 @@ import RequirementDevTimeline from '@/components/RequirementDevTimeline.vue';
 import CommentsList from '@/components/CommentsList.vue';
 import UserAvatar from '@/components/UserAvatar.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
+import { confirmDeleteRequirement } from '@/ui-utils/requirement-menu-actions';
 
 export default defineComponent({
   name: 'Requirement',
@@ -167,7 +168,9 @@ export default defineComponent({
     }
 
     watch(parentCategoryId, () => {
-      store.dispatch(ActionTypes.FetchCategory, parentCategoryId.value);
+      if (parentCategoryId.value !== null && parentCategoryId.value !== undefined) {
+        store.dispatch(ActionTypes.FetchCategory, parentCategoryId.value);
+      }
     });
 
     const { push } = useRouter();
@@ -276,8 +279,10 @@ export default defineComponent({
               label: t('deleteRequirement'),
               icon: 'pi pi-times',
               command: () => {
-                //confirmDelete();
-              }
+                 confirmDeleteRequirement(confirm, t, store, requirementId, () => {
+                   showMoreRequirements();
+                 });
+              },
             }
           ];
         }
