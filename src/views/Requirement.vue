@@ -182,10 +182,11 @@ export default defineComponent({
             label: `${requirement.value.numberOfComments} ${t('comments')}`,
             to: `${routePathToRequirement(projectId, requirementId)}`,
           },
-          {
+          // TODO backend first needs to support listing votes
+          /*{
             label: `${requirement.value.upVotes} ${t('votes')}`,
             to: `${routePathToRequirement(projectId, requirementId)}/votes`,
-          },
+          },*/
           {
             label: `${requirement.value.numberOfFollowers} ${t('followers')}`,
             to: `${routePathToRequirement(projectId, requirementId)}/followers`,
