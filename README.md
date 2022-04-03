@@ -54,3 +54,13 @@ current generated API is already checked into the repository in the `/src/types`
 npx swagger-typescript-api -p https://beta.requirements-bazaar.org/bazaar/swagger.json -o ./src/types -n bazaar-api.ts --route-types
 npx swagger-typescript-api -p https://beta.requirements-bazaar.org/activities/swagger.json -o ./src/types -n activities-api.ts --route-types
 ```
+
+
+
+## Exprimental Features
+
+The following features are implemented for evaluation, but not yet enabled by default.
+
+### Down Votes
+
+Down votes are disabled by default. Use the `VITE_DOWN_VOTES_ENABLED=false` variable in the environment file to enable the feature.

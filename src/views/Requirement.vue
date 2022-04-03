@@ -29,7 +29,7 @@
         <TabMenu id="tabMenu" :model="tabItems" />
         <div id="actionButtons">
           <Button icon="pi pi-thumbs-up" label="Upvote" class="p-button-sm" :class="{ 'p-button-outlined': requirement?.userContext?.userVoted !== 'UP_VOTE' }" @click="voteClick('UP_VOTE')"></Button>
-          <Button icon="pi pi-thumbs-down" label="Downvote" class="p-button-sm p-button-danger" :class="{ 'p-button-outlined': requirement?.userContext?.userVoted !== 'DOWN_VOTE' }" @click="voteClick('DOWN_VOTE')"></Button>
+          <Button v-if="downVotesEnabled" icon="pi pi-thumbs-down" label="Downvote" class="p-button-sm p-button-danger" :class="{ 'p-button-outlined': requirement?.userContext?.userVoted !== 'DOWN_VOTE' }" @click="voteClick('DOWN_VOTE')"></Button>
 
           <Button icon="pi pi-bell" :label="requirement?.userContext?.isFollower ? t('unfollowRequirement') : t('followRequirement')" class="p-button-sm p-ml-3" :class="{ 'p-button-outlined': !requirement?.userContext?.isFollower }" @click="followClick"></Button>
           <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
@@ -125,6 +125,8 @@ export default defineComponent({
     const confirm = useConfirm();
     const { t, locale } = useI18n({ useScope: 'global' });
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
+
+    const downVotesEnabled = `${import.meta.env.VITE_DOWN_VOTES_ENABLED}`.toLowerCase() === 'true';
 
     const requirementId = Number.parseInt(route.params.requirementId.toString(), 10);
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
@@ -319,6 +321,7 @@ export default defineComponent({
       parentCategory,
       requirement,
       tabItems,
+      downVotesEnabled,
       activeTab,
       moreMenu,
       moreItems,
