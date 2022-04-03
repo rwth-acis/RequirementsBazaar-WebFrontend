@@ -67,7 +67,7 @@ import { useRoute } from 'vue-router';
 import { routePathToRequirement } from '@/router';
 
 import RequirementEditor from '../components/RequirementEditor.vue';
-import { confirmDeleteRequirement } from '@/ui-utils/requirement-menu-actions';
+import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubIssueForRequirement } from '@/ui-utils/requirement-menu-actions';
 import { getEnabledCategories } from 'trace_events';
 
 export default defineComponent({
@@ -137,16 +137,7 @@ export default defineComponent({
         });
     }
 
-    const alertShareGitHub = (message: string) => {
-      confirm.require({
-          group: 'dialog',
-          message: message,
-          header: 'Ops',
-          icon: 'pi pi-info-circle',
-          rejectClass: 'p-sr-only',
-          acceptLabel: 'OK',
-      });
-    }
+
 
     const toggleVote = () => {
       if (oidcIsAuthenticated.value) {
@@ -174,29 +165,6 @@ export default defineComponent({
     const requirementEditorSaved = () => {
       displayRequirementEditor.value = false;
     }
-
-    const createGitHubIssueForRequirement = () => {
-      const githubBaseUrl = project.value.additionalProperties.github_url;
-      const requirementTitle = name.value.replace(/\s/g, '+');
-      const requirementDescription = description.value.replace(/\s/g, '+');
-      const bazaarRequirementUrl = createShareableRequirementLink()
-      if(additionalProperties.value == undefined){
-        confirm.require({
-          header: t('createIssueDialogHeader'),
-          message: t('createIssueDialogMessage'),
-          icon: 'pi pi-external-link',
-          group: 'dialog',
-            accept: () => {
-        window.open(githubBaseUrl+"/issues/new?"+"title="+requirementTitle+"&body="+requirementDescription+" -> _**See+requirement+in+Bazaar:**_ "+bazaarRequirementUrl);
-        },
-            reject: () => {
-        console.log('not redirected');
-        }
-      });
-      }else{
-        alertShareGitHub(t('requirementAlreadyOnGitHub'))
-      }
-    };
 
     const menuItems = ref();
     // watch multiple props
@@ -240,7 +208,12 @@ export default defineComponent({
               if (issue_url) {
                 window.open(issue_url)
               } else {
-                createGitHubIssueForRequirement();
+                createGitHubIssueForRequirement(confirm, t, project.value, {
+                  id: id.value,
+                  name: name.value,
+                  description: description.value,
+                  additionalProperties: additionalProperties.value,
+                });
               }
             }
           },
@@ -257,11 +230,6 @@ export default defineComponent({
         immediate: true
       }
     )
-
-    const createShareableRequirementLink = () => {
-      const path = routePathToRequirement(projectId.value, id.value);
-      return window.location.origin + path;
-    }
 
     const shareMenu = ref(null);
     const toggleShareMenu = (event) => {
@@ -288,7 +256,7 @@ export default defineComponent({
         label: t('copyToClipboard'),
         icon: 'pi pi-copy',
         command: () => {
-          navigator.clipboard.writeText(createShareableRequirementLink());
+          navigator.clipboard.writeText(createShareableRequirementLink(projectId, id));
         },
       },
     ]);
