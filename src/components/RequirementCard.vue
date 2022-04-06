@@ -256,7 +256,7 @@ export default defineComponent({
         label: t('copyToClipboard'),
         icon: 'pi pi-copy',
         command: () => {
-          navigator.clipboard.writeText(createShareableRequirementLink(projectId, id));
+          navigator.clipboard.writeText(createShareableRequirementLink(projectId.value, id.value));
         },
       },
     ]);
