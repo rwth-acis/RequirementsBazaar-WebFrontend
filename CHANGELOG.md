@@ -10,6 +10,12 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
+### Changed
+
+- Fixed invalid shareable requirement link
+  [#235](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/235)
+
+
 ## [2.3.0] - 2022-04-03
 
 ### Added
