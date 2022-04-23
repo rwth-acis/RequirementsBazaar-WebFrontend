@@ -31,6 +31,17 @@
       new ideas for Augmented Reality tools are collected.</li>
   </ul>
 
+  <section>
+    <h2>Requirements Bazaar API</h2>
+    <p>
+      Requirements Bazaar has a public API that can be used to access all the data that is shown in this web frontend.
+      You can find the <i>swagger.json</i> <a href="https://requirements-bazaar.org/bazaar/swagger.json" target="_blank" rel="noopener">here</a>.
+    </p>
+    <p>
+      Also, you can use <a href="https://requirements-bazaar.org/docs/#/projects" target="_blank" rel="noopener">Swagger UI</a> to browse and explore the API directly in the browser.
+    </p>
+  </section>
+
 </template>
 
 <script lang="ts">
