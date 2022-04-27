@@ -202,6 +202,24 @@ export default defineComponent({
       }
     };
 
+    const removeDeletedRequirementsInCurrentListHelper = () => {
+      activeRequirements.value.forEach(requirement => {
+        if (!activeRequirementsFromStore.value.some(e => e.id === requirement.id)
+            && !realizedRequirementsFromStore.value.some(e => e.id === requirement.id)) {
+          // requirement is neither in the active nor in the realized list => it was deleted
+          activeRequirements.value.splice(activeRequirements.value.indexOf(requirement), 1);
+        }
+      });
+
+      realizedRequirements.value.forEach(requirement => {
+        if (!activeRequirementsFromStore.value.some(e => e.id === requirement.id)
+            && !realizedRequirementsFromStore.value.some(e => e.id === requirement.id)) {
+          // requirement is neither in the active nor in the realized list => it was deleted
+          realizedRequirements.value.splice(realizedRequirements.value.indexOf(requirement), 1);
+        }
+      });
+    }
+
     watch(activeRequirementsFromStore, () => {
       if (updatingActiveRequirementsListEnabled.value) {
         activeRequirements.value = activeRequirementsFromStore.value;
@@ -210,6 +228,9 @@ export default defineComponent({
         // instead of replacing the whole list, we update the individual requirements if ID matches ('soft' update)
         activeRequirementsFromStore.value.forEach(replaceRequirementInCurrentListHelper);
       }
+
+      // Remove requirements which no longer exist in store
+      removeDeletedRequirementsInCurrentListHelper();
     });
     watch(realizedRequirementsFromStore, () => {
       if (updatingRealizedRequirementsListEnabled.value) {
@@ -219,6 +240,9 @@ export default defineComponent({
         // instead of replacing the whole list, we update the individual requirements if ID matches ('soft' update)
         realizedRequirementsFromStore.value.forEach(replaceRequirementInCurrentListHelper);
       }
+
+      // Remove requirements which no longer exist in store
+      removeDeletedRequirementsInCurrentListHelper();
     });
 
     store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value});
