@@ -2,7 +2,11 @@ import { routePathToRequirement } from "@/router";
 import { ActionTypes } from "@/store/actions";
 import { Project } from "@/types/bazaar-api";
 
+import { useProgress } from '@/service/ProgressService';
+
 export const confirmDeleteRequirement = (confirm, t, store, id: number, afterDelete: () => void = () => {}) => {
+  const { setLoading } = useProgress();
+
   confirm.require({
     header: t('deleteRequirement'),
     message: t('deleteRequirementDesc'),
@@ -10,8 +14,10 @@ export const confirmDeleteRequirement = (confirm, t, store, id: number, afterDel
     acceptClass: 'p-button-danger',
     group: 'dialog',
     accept: () => {
+      setLoading(true);
       store.dispatch(ActionTypes.DeleteRequirement, id).then(() => {
         afterDelete();
+        setLoading(false);
       });
     },
     reject: () => {

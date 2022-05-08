@@ -51,6 +51,8 @@ import { useVuelidate } from "@vuelidate/core";
 import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
 
+import { useProgress } from '@/service/ProgressService';
+
 export default defineComponent({
   name: 'ProjectEditor',
   props: {
@@ -77,6 +79,7 @@ export default defineComponent({
   setup: ({ name, description, projectId, additionalProperties }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
+    const { startLoading, stopLoading } = useProgress();
 
     const submitted = ref(false);
 
@@ -102,6 +105,7 @@ export default defineComponent({
     }
 
     const handleSubmit = async () => {
+      startLoading();
       submitted.value = true;
 
       const isFormCorrect = await v$.value.$validate();
@@ -117,12 +121,17 @@ export default defineComponent({
       };
 
       if (!projectId) {
-        store.dispatch(ActionTypes.CreateProject, project);
+        store.dispatch(ActionTypes.CreateProject, project).then (() => {
+          stopLoading();
+          emit('save');
+        });
       } else {
         project.id = projectId;
-        store.dispatch(ActionTypes.UpdateProject, project);
+        store.dispatch(ActionTypes.UpdateProject, project).then (() => {
+          stopLoading();
+          emit('save');
+        });
       }
-      emit('save');
     }
 
     return { t, submitted, state, v$, cancel, handleSubmit, turndownService };
