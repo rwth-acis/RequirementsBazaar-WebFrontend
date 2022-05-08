@@ -223,5 +223,7 @@
     "gitHubSetup-eventsLabel": "Quels sont les événements que vous souhaitez voir déclencher ce webhook ?",
     "gitHubSetup-eventsLabel-hint": "Sélectionnez l'une des options suivantes",
     "gitHubSetup-eventsLabel-optionAllEvents": "« Tout m'envoyer »",
-    "gitHubSetup-eventsLabel-optionSpecificEvents": "« Sélectionner des évènements individuellement » : Issues, Pull Requests, et Releases"
+    "gitHubSetup-eventsLabel-optionSpecificEvents": "« Sélectionner des évènements individuellement » : Issues, Pull Requests, et Releases",
+    "editComment": "Modifier le commentaire",
+    "notFound": "Non trouvé"
 }
