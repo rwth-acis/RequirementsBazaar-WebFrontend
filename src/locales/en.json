@@ -210,6 +210,7 @@
     "userSettings": "User Settings",
     "voteSuccessful": "You have successfully voted for this requirement.",
     "unvoteSuccessful": "You have successfully removed your vote for this requirement.",
+    "pleaseBePatient": "Please be patient...",
 
     "devTimeline-title": "Development Timeline",
     "devTimeline-requirementExported": "Requirement Exported",

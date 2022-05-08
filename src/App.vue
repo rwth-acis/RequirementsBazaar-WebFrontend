@@ -17,6 +17,11 @@
       <ActivityTracker class="activityTracker" v-if="activityTrackerVisible"></ActivityTracker>
     </div>
   </div>
+
+  <Dialog v-model:visible="isLoading" :closable="false" :showHeader="false">
+    <ProgressSpinner :style="{'margin-top': '2rem'}" />
+    <div>{{ t('pleaseBePatient') }}</div>
+  </Dialog>
 </template>
 
 <script lang="ts">
@@ -25,6 +30,8 @@ import AppTopbar from './components/AppTopbar.vue';
 import ActivityTracker from './components/ActivityTracker.vue';
 import GlobalErrorMessage from './components/GlobalErrorMessage.vue';
 import { useI18n } from 'vue-i18n';
+
+import { useProgress } from '@/service/ProgressService';
 
 export default defineComponent({
   name: 'App',
@@ -40,9 +47,11 @@ export default defineComponent({
       isRtl.value = (newLocale === 'fa') ? true : false;
 		});
 
+    const { isLoading } = useProgress()
+
     const activityTrackerVisible = ref(false);
 
-    return { t, activityTrackerVisible, isRtl };
+    return { t, activityTrackerVisible, isRtl, isLoading };
   }
 })
 </script>
