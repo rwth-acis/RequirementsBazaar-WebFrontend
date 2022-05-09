@@ -9,10 +9,13 @@
           </router-link>
         </div>
       </div>
-      <div class="lastupdate">
-        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
-        {{t('by')}} {{ creator?.userName }}
-        <!--<i class="pi pi-pencil" style="fontSize: 0.7rem" v-if="creationDate !== lastActivity" :title="`initially created on ${$dayjs(lastActivity).format('LLL')}`"></i>-->
+      <div class="">
+        <div class="lastupdate p-d-flex p-ai-center">
+          <i class="pi pi-plus-circle p-mr-2"></i> <span :title="$dayjs(creationDate).format('LLL')">{{ $dayjs(creationDate).fromNow() }}&nbsp;</span> {{t('by')}} {{ creator?.userName }}
+        </div>
+        <div v-if="showLastActivity" class="lastupdate p-d-flex p-ai-center">
+          <i class="pi pi-user-edit p-mr-2"></i> <span :title="$dayjs(lastActivity).format('LLL')">{{ $dayjs(lastActivity).fromNow() }}&nbsp;</span> {{ t('by')}} {{ lastActivityUser?.userName ?? 'unknown user' }}
+        </div>
       </div>
     </template>
 
@@ -81,6 +84,7 @@ export default defineComponent({
     creator: { type: Object, required: true },
     creationDate: { type: String, required: true },
     lastActivity: { type: String, required: true },
+    lastActivityUser: { type: Object, required: false },
     description: { type: String, required: true },
     upVotes: { type: Number, required: true },
     numberOfComments: { type: Number, required: true },
@@ -91,10 +95,14 @@ export default defineComponent({
     realized: { type: String, required: false },
     brief: { type: Boolean, required: false, default: false },
     additionalProperties: {type: Object, required: false},
+    showLastActivity: {type: Boolean, required: false, default: true},
   },
 
   setup: (props) => {
-    const { id,projectId, userVoted, isFollower, isDeveloper, realized, lastActivity, creationDate, name, description, categories, additionalProperties } = toRefs(props);
+    const {
+      id,projectId, userVoted, isFollower, isDeveloper, realized, lastActivity, lastActivityUser, creationDate, name, description, categories,
+      additionalProperties, showLastActivity,
+    } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const confirm = useConfirm();
@@ -108,8 +116,6 @@ export default defineComponent({
 
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const voted = computed(() => oidcIsAuthenticated.value && (userVoted.value === 'UP_VOTE'));
-
-    const activityDate = computed(() => lastActivity.value || creationDate.value);
 
     const project = computed(() => store.getters.getProjectById(projectId.value));
     store.dispatch(ActionTypes.FetchProject, projectId.value);
@@ -265,7 +271,10 @@ export default defineComponent({
       id,
       projectId,
       voted,
-      activityDate,
+      creationDate,
+      lastActivity,
+      lastActivityUser,
+      showLastActivity,
       oidcIsAuthenticated,
       showComments,
       toggleCommentsPanel,
