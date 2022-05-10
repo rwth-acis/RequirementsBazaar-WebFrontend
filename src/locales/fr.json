@@ -225,5 +225,6 @@
     "gitHubSetup-eventsLabel-optionAllEvents": "« Tout m'envoyer »",
     "gitHubSetup-eventsLabel-optionSpecificEvents": "« Sélectionner des évènements individuellement » : Issues, Pull Requests, et Releases",
     "editComment": "Modifier le commentaire",
-    "notFound": "Non trouvé"
+    "notFound": "Non trouvé",
+    "pleaseBePatient": "Veuillez patienter…"
 }
