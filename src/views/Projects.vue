@@ -36,7 +36,8 @@
           :lastActivity="project.lastActivity"
           :numberOfCategories="project.numberOfCategories"
           :numberOfFollowers="project.numberOfFollowers"
-          :numberOfRequirements="project.numberOfRequirements">
+          :numberOfRequirements="project.numberOfRequirements"
+          :showCreationDate="selectedSort == 'date'">
         </ProjectCard>
       </router-link>
     </div>

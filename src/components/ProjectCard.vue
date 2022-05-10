@@ -5,9 +5,12 @@
     </template>
     <template #title>
       <div>{{ name }}</div>
-      <div class="lastupdate" v-if="!compact">
-        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
+      <div class="lastupdate p-d-flex p-ai-center" v-if="showCreationDate">
+        <span :title="'created ' + $dayjs(creationDate).format('LLL')"><i class="pi pi-plus-circle"></i> created {{ $dayjs(creationDate).fromNow() }}</span>
       </div>
+      <div class="lastupdate p-d-flex p-ai-center" v-if="!compact">
+          <span :title="'last activity ' + $dayjs(lastActivity).format('LLL')"><i class="pi pi-user-edit"></i> {{ $dayjs(lastActivity).fromNow() }}</span>
+        </div>
     </template>
     <template #content v-if="!compact">
         <vue3-markdown-it :source="description" />
@@ -40,10 +43,11 @@ export default defineComponent({
     numberOfRequirements: { type: Number, required: true },
     numberOfFollowers: { type: Number, required: true },
     compact: { type: Boolean, default: false},
+    showCreationDate: { type: Boolean, default: false},
   },
   setup: (props, context) => {
     const { locale, t } = useI18n({ useScope: 'global' });
-    const { lastActivity, creationDate, compact } = toRefs(props);
+    const { lastActivity, creationDate, compact, showCreationDate } = toRefs(props);
 
     const activityDate = computed(() => lastActivity.value || creationDate.value);
 
@@ -73,7 +77,8 @@ export default defineComponent({
       followersIcon,
       categoriesIcon,
       requirementsIcon,
-      compact
+      compact,
+      showCreationDate,
     };
   },
 
