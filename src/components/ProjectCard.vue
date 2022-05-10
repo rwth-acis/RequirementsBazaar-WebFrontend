@@ -10,7 +10,7 @@
       </div>
       <div class="lastupdate p-d-flex p-ai-center" v-if="!compact">
           <span :title="'last activity ' + $dayjs(lastActivity).format('LLL')"><i class="pi pi-user-edit"></i> {{ $dayjs(lastActivity).fromNow() }}</span>
-        </div>
+      </div>
     </template>
     <template #content v-if="!compact">
         <vue3-markdown-it :source="description" />
