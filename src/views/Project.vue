@@ -76,7 +76,8 @@
               :creationDate="category.creationDate"
               :lastActivity="category.lastActivity"
               :numberOfFollowers="category.numberOfFollowers"
-              :numberOfRequirements="category.numberOfRequirements">
+              :numberOfRequirements="category.numberOfRequirements"
+              :showCreationDate="selectedSort === 'date'">
             </CategoryCard>
           </router-link>
         </div>
