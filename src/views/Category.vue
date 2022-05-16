@@ -349,6 +349,7 @@ export default defineComponent({
     }
 
     const editorSaved = () => {
+      forceUpdateRequirementsList();
       toggleAddRequirement();
     }
 
