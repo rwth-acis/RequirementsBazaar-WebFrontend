@@ -10,10 +10,25 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
 
 ## [Unreleased]
 
+## [2.4.0] - 2022-05-16
+
+### Added
+
+- Add loading indicators when editing projects, categories, and requirements
+  [#240](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/240)
+- Separate labels for last activity and creation data, including user the related user name
+  [#244](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/244)
+
 ### Changed
 
 - Fixed invalid shareable requirement link
   [#235](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/235)
+- Fixed adding requirement at wrong position of list after creation
+  [#247](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/247)
+- Migrate to new OIDC domain
+  [#249](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/249)
+- French translation updates
+  [#231](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/231)
 
 
 ## [2.3.0] - 2022-04-03
