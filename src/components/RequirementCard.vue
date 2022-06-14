@@ -55,6 +55,34 @@
       <comments-list :requirementId="id" v-if="showComments" class="commentsList"></comments-list>
     </template>
   </Card>
+
+  <Dialog v-model:visible="displayCategoryDialog" :style="{width: '450px'}" :header="t('changeCategory')" :modal="true" class="p-fluid">
+      <div class="p-field">
+          <label for="category">{{ t('currentCategory') }}: </label> <b>{{category?.name ?? 'no category'}}</b>
+      </div>
+
+      <div class="p-field">
+          <label for="newCategory" class="p-mb-3">{{ t('newCategory' )}}</label>
+          <Dropdown id="newCategory" v-model="selectedCategoryOption" :options="availableCategoryOptions" placeholder="Select a Category">
+              <template #value="slotProps">
+                  <span>
+                      {{slotProps.value.label}}
+                  </span>
+              </template>
+              <template #option="slotProps">
+                  <span>
+                      {{slotProps.option.label}}
+                  </span>
+              </template>
+          </Dropdown>
+      </div>
+
+      <template #footer>
+          <ProgressBar mode="indeterminate" class="mb-3" v-if="changeCategoryInProgress" />
+          <Button :label="t('cancel')" icon="pi pi-times" class="p-button-text" @click="displayCategoryDialog = false" />
+          <Button :label="t('save')" icon="pi pi-check" class="p-button-text" @click="changeRequirementCategory" />
+      </template>
+  </Dialog>
 </template>
 
 <script lang="ts">
@@ -72,6 +100,8 @@ import { routePathToRequirement } from '@/router';
 import RequirementEditor from '../components/RequirementEditor.vue';
 import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubIssueForRequirement } from '@/ui-utils/requirement-menu-actions';
 import { getEnabledCategories } from 'trace_events';
+
+import { useProgress } from '@/service/ProgressService';
 
 export default defineComponent({
   components: { CommentsList, RequirementEditor, RequirementDevTimeline },
@@ -107,6 +137,7 @@ export default defineComponent({
     const store = useStore();
     const confirm = useConfirm();
     const route = useRoute();
+    const { startLoading, stopLoading } = useProgress();
 
     const showComments = ref(false);
 
@@ -119,6 +150,15 @@ export default defineComponent({
 
     const project = computed(() => store.getters.getProjectById(projectId.value));
     store.dispatch(ActionTypes.FetchProject, projectId.value);
+
+    const category = computed(() => {
+      if (categories.value.length > 0) {
+        return store.getters.getCategoryById(categories.value[0]);
+      }
+      return null;
+    });
+
+    const projectCategories = computed(() => store.getters.categoriesList(projectId.value, {page: 0, per_page: 200, sort: 'name', sortDirection: 'ASC', search: ''}));
 
     //get github_url from project's additionalProperties
     const github_url = computed(() => {
@@ -172,6 +212,36 @@ export default defineComponent({
       displayRequirementEditor.value = false;
     }
 
+    const displayCategoryDialog = ref(false);
+    const availableCategoryOptions = computed(() => {
+      return projectCategories.value.map(category => {
+        return {
+          label: category.name,
+          value: category,
+        };
+      });
+    });
+    const selectedCategoryOption = ref();
+    const changeCategoryInProgress = ref(false);
+    const showDisplayCategoryDialog = async () => {
+      startLoading();
+      await store.dispatch(ActionTypes.FetchCategoriesOfProject, {projectId: projectId.value});
+      selectedCategoryOption.value = availableCategoryOptions.value.find(category => category.value.id === categories.value[0]);
+      stopLoading();
+      displayCategoryDialog.value = true;
+    };
+
+    const changeRequirementCategory = async () => {
+      const parameters = {
+        requirementId: id.value,
+        projectId: projectId.value,
+        categoryId: selectedCategoryOption.value.value.id,
+      };
+      await store.dispatch(ActionTypes.MoveRequirement, parameters);
+
+      displayCategoryDialog.value = false;
+    };
+
     const menuItems = ref();
     // watch multiple props
     watch(
@@ -221,6 +291,13 @@ export default defineComponent({
                   additionalProperties: additionalProperties.value,
                 });
               }
+            }
+          },
+          {
+            label: t('moveRequirementToCategory'),
+            icon: 'pi pi-times',
+            command: () => {
+              showDisplayCategoryDialog();
             }
           },
           {
@@ -290,6 +367,12 @@ export default defineComponent({
       requirementEditorCanceled,
       requirementEditorSaved,
       issue_url,
+      displayCategoryDialog,
+      category,
+      availableCategoryOptions,
+      selectedCategoryOption,
+      changeRequirementCategory,
+      changeCategoryInProgress,
     };
   },
 })

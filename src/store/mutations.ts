@@ -19,6 +19,8 @@ export enum MutationType {
   SetRequirementIsFollower = 'SET_REQUIREMENT_ISFOLLOWER',
   SetRequirementIsDeveloper = 'SET_REQUIREMENT_ISDEVELOPER',
   SetRequirementRealized = 'SET_REQUIREMENT_REALIZED',
+  SetRequirementProject = 'SET_REQUIREMENT_PROJECT',
+  SetRequirementCategory = 'SET_REQUIREMENT_CATEGORY',
   RemoveRequirement = 'REMOVE_REQUIREMENT',
   SetComments = 'SET_COMMENTS',
   SetComment = 'SET_COMMENT',
@@ -61,6 +63,8 @@ export type Mutations = {
   [MutationType.SetRequirementIsFollower](state: State, {requirementId: number, isFollower: boolean}): void;
   [MutationType.SetRequirementIsDeveloper](state: State, {requirementId: number, isDeveloper: boolean}): void;
   [MutationType.SetRequirementRealized](state: State, {requirementId: number, realized: string}): void;
+  [MutationType.SetRequirementProject](state: State, {requirementId: number, projectId: number}): void;
+  [MutationType.SetRequirementCategory](state: State, {requirementId: number, categoryId: number}): void;
   [MutationType.RemoveRequirement](state: State, requirementId: number): void;
   [MutationType.SetComments](state: State, comments: LocalComment[]): void;
   [MutationType.SetComment](state: State, comment: LocalComment): void;
@@ -217,6 +221,16 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationType.SetRequirementRealized](state, {requirementId, realized}) {
     const requirement = state.requirements[requirementId];
     requirement.realized = realized;
+  },
+
+  [MutationType.SetRequirementProject](state, {requirementId, projectId}) {
+    const requirement = state.requirements[requirementId];
+    requirement.projectId = projectId;
+  },
+
+  [MutationType.SetRequirementCategory](state, {requirementId, categoryId}) {
+    const requirement = state.requirements[requirementId];
+    requirement.categories = [categoryId];
   },
 
   [MutationType.RemoveRequirement](state, requirementId) {
