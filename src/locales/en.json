@@ -215,6 +215,7 @@
     "changeCategory": "Change Category",
     "currentCategory": "Current Category",
     "newCategory": "New Category",
+    "moveRequirementToCategory": "Move Requirement to Category",
 
     "devTimeline-title": "Development Timeline",
     "devTimeline-requirementExported": "Requirement Exported",
