@@ -212,6 +212,11 @@
     "unvoteSuccessful": "You have successfully removed your vote for this requirement.",
     "pleaseBePatient": "Please be patient...",
 
+    "changeCategory": "Change Category",
+    "currentCategory": "Current Category",
+    "newCategory": "New Category",
+    "moveRequirementToCategory": "Move Requirement to Category",
+
     "devTimeline-title": "Development Timeline",
     "devTimeline-requirementExported": "Requirement Exported",
     "devTimeline-inProgress": "Development in Progress",

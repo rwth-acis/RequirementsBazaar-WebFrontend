@@ -30,6 +30,7 @@ export enum ActionTypes {
   DevelopRequirement = 'DEVELOP_REQUIREMENT',
   RealizeRequirement = 'REALIZE_REQUIREMENT',
   DeleteRequirement = 'DELETE_REQUIREMENT',
+  MoveRequirement = 'MOVE_REQUIREMENT',
   CreateComment = 'CREATE_COMMENT',
   UpdateComment = 'UPDATE_COMMENT',
   DeleteComment = 'DELETE_COMMENT',
@@ -104,6 +105,12 @@ type RealizeRequirementParameters = {
   realized: boolean;
 }
 
+type MoveRequirementParameters = {
+  requirementId: number;
+  projectId: number;
+  categoryId: number;
+}
+
 type UpdateProjectMemberRoleParameters = {
   projectId: number;
   userId: number;
@@ -137,6 +144,7 @@ export type Actions = {
   [ActionTypes.FollowRequirement](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.DevelopRequirement](context: ActionAugments, payload: DevelopRequirementParameters): void;
   [ActionTypes.RealizeRequirement](context: ActionAugments, payload: RealizeRequirementParameters): void;
+  [ActionTypes.MoveRequirement](context: ActionAugments, parameters: MoveRequirementParameters): void;
   [ActionTypes.DeleteRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.CreateComment](context: ActionAugments, payload: Comment): void;
   [ActionTypes.UpdateComment](context: ActionAugments, payload: Comment): void;
@@ -356,6 +364,25 @@ export const actions: ActionTree<State, State> & Actions = {
     } else {
       // reset local commit
       commit(MutationType.SetRequirementRealized, {requirementId: parameters.requirementId, realized: realizedCached});
+    }
+  },
+
+  async [ActionTypes.MoveRequirement]({ commit, getters }, parameters) {
+    const projectIdCached = getters.getRequirementById(parameters.requirementId).projectId;
+    const categoryIdCached = getters.getRequirementById(parameters.requirementId).categories[0];
+
+    commit(MutationType.SetRequirementProject, {requirementId: parameters.requirementId, projectId: parameters.projectId});
+    commit(MutationType.SetRequirementCategory, {requirementId: parameters.requirementId, categoryId: parameters.categoryId});
+
+    let response : HttpResponse<Requirement, void> = await bazaarApi.requirements.moveRequirement(parameters.requirementId,{
+      projectId: parameters.projectId, categoryId: parameters.categoryId
+    });
+    if (response.data && ((response.status === 200) || (response.status === 201))) {
+      commit(MutationType.SetRequirement, response.data);
+    } else {
+      // reset local commit
+      commit(MutationType.SetRequirementProject, {requirementId: parameters.requirementId, projectId: projectIdCached});
+      commit(MutationType.SetRequirementCategory, {requirementId: parameters.requirementId, categoryId: categoryIdCached});
     }
   },
 
