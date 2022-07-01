@@ -226,5 +226,9 @@
     "gitHubSetup-eventsLabel-optionSpecificEvents": "« Sélectionner des évènements individuellement » : Issues, Pull Requests, et Releases",
     "editComment": "Modifier le commentaire",
     "notFound": "Non trouvé",
-    "pleaseBePatient": "Veuillez patienter…"
+    "pleaseBePatient": "Veuillez patienter…",
+    "changeCategory": "Modifier la catégorie",
+    "currentCategory": "Catégorie actuelle",
+    "newCategory": "Nouvelle catégorie",
+    "moveRequirementToCategory": "Déplacer l'exigence vers la catégorie"
 }
