@@ -12,6 +12,7 @@ import Requirement from './views/Requirement.vue';
 import OidcCallback from './views/oidc/OidcCallback.vue';
 import OidcPopupCallback from './views/oidc/OidcPopupCallback.vue'
 import OidcCallbackError from './views/oidc/OidcCallbackError.vue'
+import { useStore } from 'vuex';
 import { vuexOidcCreateRouterMiddleware } from 'vuex-oidc';
 import { store } from './store';
 
@@ -118,5 +119,15 @@ export const routePathToRequirement = (projectId: string | number, requirementId
 router.beforeEach(vuexOidcCreateRouterMiddleware(store, 'oidcStore'))
 router.beforeEach((to, from, next) => {
   console.log({to, from});
-  next();
+
+  const isAuthenticated = store.getters['oidcStore/oidcIsAuthenticated'];
+  console.log('isAuthenticated', isAuthenticated);
+
+  if (to.name === 'landing' && isAuthenticated) {
+    next({name: 'Home'});
+  } else if (to.name === 'Home' && !isAuthenticated) {
+    next({name: 'landing'});
+  } else {
+    next();
+  }
 });
