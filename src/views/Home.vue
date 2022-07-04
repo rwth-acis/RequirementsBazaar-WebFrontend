@@ -1,10 +1,12 @@
 <template>
-  <h1>{{ t('home-greeting') }} {{ oidcUser.given_name }}!</h1>
 
-  <p>{{ t('home-description') }}</p>
+  <div v-if="oidcIsAuthenticated">
+    <h1>{{ t('home-greeting') }} {{ oidcUser.given_name }}!</h1>
 
-  <Dashboard v-if="oidcIsAuthenticated"></Dashboard>
+    <p>{{ t('home-description') }}</p>
 
+    <Dashboard></Dashboard>
+  </div>
 </template>
 
 <script lang="ts">

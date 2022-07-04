@@ -14,6 +14,7 @@ import { Getters, getters } from './getters';
 
 import { oidcSettings } from '../config/oidc';
 import { bazaarApi } from '../api/bazaar';
+import { router } from '../router';
 
 const debug = process.env.NODE_ENV !== 'production';
 
@@ -42,7 +43,13 @@ export const store = createStore<State>({
           console.log('OIDC user is loaded:', user);
           bazaarApi.setSecurityData(user);
         },
-        userUnloaded: () => console.log('OIDC user is unloaded'),
+        userUnloaded: () => {
+          console.log('OIDC user is unloaded');
+          console.log(router);
+          if (router.currentRoute.value.name === 'Home') {
+            router.push({ name: 'landing' });
+          }
+        },
         accessTokenExpiring: () => console.log('Access token will expire'),
         accessTokenExpired: () => console.log('Access token did expire'),
         silentRenewError: () => console.log('OIDC user is unloaded'),
