@@ -74,7 +74,8 @@
             :isFollower="requirement.userContext.isFollower ? true : false"
             :isDeveloper="requirement.userContext.isDeveloper ? true : false"
             :realized="requirement.realized"
-            :additionalProperties="requirement.additionalProperties">
+            :additionalProperties="requirement.additionalProperties"
+            :userContext="requirement.userContext ?? {}">
           </RequirementCard>
         </div>
       </div>
@@ -100,7 +101,8 @@
             :isFollower="requirement.userContext.isFollower ? true : false"
             :isDeveloper="requirement.userContext.isDeveloper ? true : false"
             :realized="requirement.realized"
-            :additionalProperties="requirement.additionalProperties">
+            :additionalProperties="requirement.additionalProperties"
+            :userContext="requirement.userContext ?? {}">
           </RequirementCard>
         </div>
       </div>

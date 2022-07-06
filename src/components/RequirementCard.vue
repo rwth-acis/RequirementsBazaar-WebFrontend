@@ -126,18 +126,22 @@ export default defineComponent({
     brief: { type: Boolean, required: false, default: false },
     additionalProperties: {type: Object, required: false},
     showLastActivity: {type: Boolean, required: false, default: true},
+    userContext: {type: Object, required: false},
   },
 
   setup: (props) => {
     const {
       id,projectId, userVoted, isFollower, isDeveloper, realized, lastActivity, lastActivityUser, creationDate, name, description, categories,
-      additionalProperties, showLastActivity,
+      additionalProperties, showLastActivity, userContext,
     } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const confirm = useConfirm();
     const route = useRoute();
     const { startLoading, stopLoading } = useProgress();
+
+    console.log('userContext:');
+    console.log(userContext.value);
 
     const showComments = ref(false);
 
@@ -293,20 +297,22 @@ export default defineComponent({
               }
             }
           },
-          {
+          ...(userContext.value?.isMoveAllowed ? [
+            {
             label: t('moveRequirementToCategory'),
             icon: 'pi pi-times',
             command: () => {
               showDisplayCategoryDialog();
             }
-          },
-          {
+          }] : []),
+          ...(userContext.value?.isDeleteAllowed ? [
+            {
             label: t('deleteRequirement'),
             icon: 'pi pi-times',
             command: () => {
               confirmDelete();
             }
-          }
+          }] : []),
         ];
       },
       {
