@@ -1,6 +1,6 @@
 <template>
     <div class="card" v-if="members">
-        <div>
+        <div v-if="isModifyMembersAllowed">
             <Button :label="t('projectDetails-addMember')" icon="pi pi-plus" class="p-button-success p-my-3" @click="openNewMemberDialog" />
         </div>
 
@@ -20,8 +20,8 @@
             </Column>
             <Column :exportable="false">
                 <template #body="slotProps">
-                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="openEditMemberDialog(slotProps.data)" />
-                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="confirmRemoveMember(slotProps.data)" />
+                    <Button v-if="isModifyMembersAllowed" icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="openEditMemberDialog(slotProps.data)" />
+                    <Button v-if="isModifyMembersAllowed" icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="confirmRemoveMember(slotProps.data)" />
                 </template>
             </Column>
             <template #groupheader="slotProps">
@@ -137,6 +137,9 @@ export default defineComponent({
     // TODO Ensure this is already loaded when accessing this property!
     bazaarApi.users.getActiveUser().then(resp => activeUser.value = resp.data);
 
+    const project = computed(() => store.getters.getProjectById(projectId));
+    store.dispatch(ActionTypes.FetchProject, projectId);
+
     const inProgress = ref(false);
 
     const members = computed(() => store.getters.getProjectMembers(projectId));
@@ -233,6 +236,11 @@ export default defineComponent({
             });
     };
 
+    const isModifyMembersAllowed = computed(() => {
+        const role = project.value.userContext?.userRole;
+        return oidcIsAuthenticated.value && (role === 'ProjectAdmin' || role === 'ProjectManager');
+    });
+
     return {
       t,
       oidcIsAuthenticated,
@@ -259,7 +267,8 @@ export default defineComponent({
       openEditMemberDialog,
       memberToEdit,
       showEditMemberDialog,
-      submitUpdatedMember
+      submitUpdatedMember,
+      isModifyMembersAllowed,
     };
   }
 })
