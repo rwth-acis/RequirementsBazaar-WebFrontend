@@ -1,22 +1,68 @@
 <template>
-	<div class="layout-topbar">
+<!--
+	<header class="header">
 		<router-link class="p-link layout-menu-button" to="/">
 			<div class="title"><img src="/reqbaz-logo.svg"> Requirements Bazaar</div>
 		</router-link>
-		<div class="layout-topbar-icons">
-			<router-link class="p-link layout-menu-button" to="/projects">
-				<div class="menu-item">{{t('publicProjects')}}</div>
-			</router-link>
-			<Dropdown v-model="locale" :options="availableLocaleNames" optionLabel="name" optionValue="code"/>
-			<i class="pi pi-bell" @click="toggleActivityOverlay"></i>
-			<Button v-if="oidcIsAuthenticated" :label="t('logout')" @click="removeOidcUser" />
-			<Button v-else :label="t('signIn')" @click="authenticateOidcPopup" />
 
-			<OverlayPanel class="activityOverlay" ref="activityOverlay" appendTo="body" :showCloseIcon="false" style="width: 278px; height: 500px;">
-        		<ActivityTracker class="activityTracker"></ActivityTracker>
-			</OverlayPanel>
-		</div>
-	</div>
+        <input class="side-menu" type="checkbox" id="side-menu"/>
+        <label class="hamb" for="side-menu"><span class="hamb-line"></span></label>
+		<nav class="nav">
+			<ul class="menu">
+				<li>
+					<router-link class="p-link layout-menu-button" to="/projects">
+						<div class="menu-item">{{t('publicProjects')}}</div>
+					</router-link>
+				</li>
+				<li>
+					<Dropdown v-model="locale" :options="availableLocaleNames" optionLabel="name" optionValue="code"/>
+				</li>
+				<li>
+					<i class="pi pi-bell" @click="toggleActivityOverlay"></i>
+				</li>
+				<li>
+					<Button v-if="oidcIsAuthenticated" :label="t('logout')" @click="removeOidcUser" />
+					<Button v-else :label="t('signIn')" @click="authenticateOidcPopup" />
+				</li>
+			</ul>
+		</nav>
+		<OverlayPanel class="activityOverlay" ref="activityOverlay" appendTo="body" :showCloseIcon="false" style="width: 278px; height: 500px;">
+			<ActivityTracker class="activityTracker"></ActivityTracker>
+		</OverlayPanel>
+	</header>-->
+
+
+	<header class="header">
+		<!-- Logo -->
+        <router-link class="logo" to="/">
+			<div class="title"><img src="/reqbaz-logo.svg"/> Requirements Bazaar</div>
+		</router-link>
+
+		<!-- Hamburger Menu Button-->
+        <input class="side-menu" type="checkbox" id="side-menu"/>
+        <label class="hamb" for="side-menu"><span class="hamb-line"></span></label>
+
+		<!-- Navigation -->
+        <nav class="nav">
+            <ul class="menu">
+				<li>
+					<router-link class="p-link layout-menu-button" to="/projects">
+						<div class="menu-item">{{t('publicProjects')}}</div>
+					</router-link>
+				</li>
+				<li>
+					<Dropdown v-model="locale" :options="availableLocaleNames" optionLabel="name" optionValue="code"/>
+				</li>
+				<li>
+					<i class="pi pi-bell" @click="toggleActivityOverlay"></i>
+				</li>
+				<li>
+					<Button v-if="oidcIsAuthenticated" :label="t('logout')" @click="removeOidcUser" />
+					<Button v-else :label="t('signIn')" @click="authenticateOidcPopup" />
+				</li>
+			</ul>
+        </nav>
+    </header>
 </template>
 
 <script lang="ts">
