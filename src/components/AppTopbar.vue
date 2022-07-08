@@ -46,7 +46,7 @@
         <nav class="nav">
             <ul class="menu">
 				<li>
-					<router-link class="p-link layout-menu-button" to="/projects">
+					<router-link class="p-link layout-menu-button" to="/projects" @click="closeMenu">
 						<div class="menu-item">{{t('publicProjects')}}</div>
 					</router-link>
 				</li>
@@ -57,8 +57,8 @@
 					<i class="pi pi-bell" @click="toggleActivityOverlay"></i>
 				</li>
 				<li>
-					<Button v-if="oidcIsAuthenticated" :label="t('logout')" @click="removeOidcUser" />
-					<Button v-else :label="t('signIn')" @click="authenticateOidcPopup" />
+					<Button v-if="oidcIsAuthenticated" :label="t('logout')" @click="closeMenu(); removeOidcUser();" />
+					<Button v-else :label="t('signIn')" @click="closeMenu(); authenticateOidcPopup();" />
 				</li>
 			</ul>
         </nav>
@@ -106,7 +106,11 @@ export default defineComponent({
 			{name: 'Shqip', code: 'sq'},
 		]);
 
-    return { t, locale, availableLocaleNames, oidcIsAuthenticated, authenticateOidcPopup, removeOidcUser, activityOverlay, toggleActivityOverlay };
+		const closeMenu = () => {
+			document.getElementById("side-menu").checked = false;
+		};
+
+    return { t, locale, availableLocaleNames, oidcIsAuthenticated, authenticateOidcPopup, removeOidcUser, activityOverlay, toggleActivityOverlay, closeMenu };
   },
 })
 </script>
