@@ -51,7 +51,7 @@
 					</router-link>
 				</li>
 				<li>
-					<Dropdown v-model="locale" :options="availableLocaleNames" optionLabel="name" optionValue="code"/>
+					<Dropdown v-model="locale" :options="availableLocaleNames" optionLabel="name" optionValue="code" @change="closeMenu" />
 				</li>
 				<li>
 					<i class="pi pi-bell" @click="toggleActivityOverlay"></i>
