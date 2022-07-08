@@ -62,6 +62,9 @@
 				</li>
 			</ul>
         </nav>
+		<OverlayPanel class="activityOverlay" ref="activityOverlay" appendTo="body" :showCloseIcon="false" style="width: 278px; height: 500px;">
+			<ActivityTracker class="activityTracker"></ActivityTracker>
+		</OverlayPanel>
     </header>
 </template>
 
