@@ -1,146 +1,19 @@
-.layout-topbar {
-  display: flex;
-  position: fixed;
-  height: 50px;
-  padding: 0.6em 2em 0em 2em;
-  color: #ffffff;
-  z-index: 999;
-  right: 0;
-  @include clearfix();
-  @include linear-gradient-left($topbarLeftBgColor,$topbarRightBgColor);
-  transition: left $transitionDuration;
-
-  .layout-topbar-icons {
-      float: inline-end;
-      /*display: block;*/
-      animation-duration: .5s;
-
-      button {
-          position: relative;
-          color: $topbarItemColor;
-          /*margin-left: 20px;*/
-          display: inline-block;
-          text-decoration: none;
-          transition: color $transitionDuration;
-
-          &:hover {
-              color: $topbarItemHoverColor;
-          }
-
-          &:focus {
-              @include focused();
-          }
-
-          span {
-              &.layout-topbar-icon {
-                  font-size: 1.5em;
-              }
-
-              &.layout-topbar-item-text {
-                  font-size: 20px;
-                  display: none;
-              }
-
-              &.layout-topbar-badge {
-                  position: absolute;
-                  font-size: 10px;
-                  right: -5px;
-                  top: -5px;
-                  width: 16px;
-                  height: 16px;
-                  text-align: center;
-                  line-height: 16px;
-                  color: $topbarItemBadgeColor;
-                  background-color: $topbarItemBadgeBgColor;
-                  border-radius: 50%;
-              }
-          }
-      }
-
-      .layout-topbar-search {
-          padding: 0;
-          position: relative;
-          display: inline-block;
-          top: -4px;
-
-          input {
-              display: inline-block;
-              border: 0 none;
-              font-size: $fontSize;
-              background: transparent;
-              border-bottom: 2px solid $topbarSearchInputBorderBottomColor;
-              outline: 0 none;
-              box-shadow: none;
-              color: $topbarSearchInputColor;
-              width: 100px;
-              padding: 1px 20px 1px 1px;
-              margin: 0px;
-              border-radius: 2px;
-
-              &::-webkit-input-placeholder { color:$topbarSearchInputColor; opacity: .7; transition: opacity $transitionDuration;}
-              &:-moz-placeholder { color:$topbarSearchInputColor; opacity: .7; transition: opacity $transitionDuration;}
-              &::-moz-placeholder { color:$topbarSearchInputColor; opacity: .7; transition: opacity $transitionDuration;}
-              &:-ms-input-placeholder { color:$topbarSearchInputColor; opacity: .7; transition: opacity $transitionDuration;}
-          }
-
-          .layout-topbar-search-icon {
-              font-size: 18px;
-              position: absolute;
-              top: -1px;
-              right: 0px;
-          }
-
-          &:hover {
-              input {
-                  border-bottom-color: $topbarItemHoverColor;
-                  &::-webkit-input-placeholder { opacity: 1 }
-                  &:-moz-placeholder {opacity: 1}
-                  &::-moz-placeholder {opacity: 1}
-                  &:-ms-input-placeholder {opacity: 1}
-              }
-
-              .layout-topbar-search-icon {
-                  color: $topbarItemHoverColor;
-              }
-          }
-      }
-  }
-
-  .layout-menu-button {
-      flex: 1;
-      cursor: pointer;
-      display: inline-block;
-      text-decoration: none;
-      color: $topbarItemColor;
-      transition: color $transitionDuration;
-
-      span {
-          font-size: 1.5em;
-      }
-
-      &:hover {
-          color: $topbarItemHoverColor;
-      }
-  }
-
-  button {
-      cursor: pointer;
-  }
-
-  .menu-item {
-    font-size: 1.2em;
-    font-weight: normal;
-
-    align-items: center;
-  }
-
-  .menu-item:hover {
-    color: $topbarItemHoverColor;
-  }
+ /* Header */
+.header{
+    @include linear-gradient-left($topbarLeftBgColor,$topbarRightBgColor);
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: $topbarHeight;
+    z-index: 999;
 }
-
-
-
+/* Logo */
+.logo{
+    display: inline-block;
+    color: $topbarItemColor;
+    margin: 10px;
+    min-height: 40px;
+}
 
  /* Nav menu */
  .nav{
@@ -148,9 +21,7 @@
     height: 100%;
     position: fixed;
     top: $topbarHeight;
-    //background-color: $topbarLeftBgColor;
     @include linear-gradient-left($topbarLeftBgColor,$topbarRightBgColor);
-    //background-color: red;
     overflow: hidden;
 
 }
@@ -240,24 +111,8 @@ width: 24px;
     top:0;
 }
 
-/* Header */
-.header{
-    @include linear-gradient-left($topbarLeftBgColor,$topbarRightBgColor);
-    position: sticky;
-    top: 0;
-    width: 100%;
-    height: $topbarHeight;
-    z-index: 999;
-}
-/* Logo */
-.logo{
-    display: inline-block;
-    color: $topbarItemColor;
-    margin: 10px;
-    min-height: 40px;
-}
 
-
+/* Responsive changes for larger screens */
 @media (min-width: 768px) {
     .nav{
         max-height: none;
@@ -287,7 +142,6 @@ width: 24px;
     .menu a:hover{
         background-color: transparent;
         color: $topbarItemHoverColor;
-
     }
 
     .hamb{
