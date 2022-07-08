@@ -7,4 +7,5 @@ export const oidcSettings = {
   scope: 'openid email profile',
   automaticSilentRenew: true,
   automaticSilentSignin: true,
+  monitorSession: false,
 };
