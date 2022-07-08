@@ -126,4 +126,15 @@
   button {
       cursor: pointer;
   }
+
+  .menu-item {
+    font-size: 1.2em;
+    font-weight: normal;
+
+    align-items: center;
+  }
+
+  .menu-item:hover {
+    color: $topbarItemHoverColor;
+  }
 }
