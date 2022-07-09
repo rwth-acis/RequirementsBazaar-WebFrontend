@@ -11,8 +11,14 @@
 .logo{
     display: inline-block;
     color: $topbarItemColor;
-    margin: 10px;
+    margin-left: 15px;
     min-height: 40px;
+    height: 100%;
+}
+
+.logo .icon {
+    width: 40px;
+    height: 40px;
 }
 
  /* Nav menu */

@@ -2,7 +2,7 @@
 	<header class="header">
 		<!-- Logo -->
         <router-link class="logo" to="/">
-			<div class="title"><img src="/reqbaz-logo.svg"/> Requirements Bazaar</div>
+			<div class="title"><embed src="/reqbaz-logo.svg" class="icon" /> Requirements Bazaar</div>
 		</router-link>
 
 		<!-- Hamburger Menu Button-->
@@ -94,6 +94,7 @@ export default defineComponent({
 
 	.title {
 		display: flex;
+		height: 100%;
 		font-family: 'Ubuntu Condensed', sans-serif;
 		font-size: 1.5em;
 		font-weight: bold;
