@@ -39,6 +39,7 @@
 import { computed, defineComponent, watch, getCurrentInstance, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 import ActivityTracker from './ActivityTracker.vue';
 
@@ -48,9 +49,10 @@ export default defineComponent({
     ActivityTracker
   },
 	setup: (props, context) => {
-    const { t, locale, availableLocales } = useI18n({ useScope: 'global' });
+        const { t, locale, availableLocales } = useI18n({ useScope: 'global' });
 		const store = useStore();
 		const app = getCurrentInstance();
+		const { push } = useRouter();
 
 		watch(locale, (newLocale) => {
     	app?.appContext.config.globalProperties.$dayjs.locale(newLocale);
@@ -60,9 +62,20 @@ export default defineComponent({
 		const authenticateOidcPopup = () => store.dispatch('oidcStore/authenticateOidcPopup');
 		const removeOidcUser = () => store.dispatch('oidcStore/removeOidcUser');
 
+		const closeMenu = () => {
+			document.getElementById("side-menu").checked = false;
+		};
+
 		const activityOverlay = ref();
 		const toggleActivityOverlay = (event) => {
-			activityOverlay.value.toggle(event);
+			if (window.innerWidth < 768) {
+				event.preventDefault();
+				// navigate to activity tracker page instead of opening the overlay
+				push('/activity-tracker');
+				closeMenu();
+			} else {
+				activityOverlay.value.toggle(event);
+			}
 		}
 
 		const availableLocaleNames = ref([
@@ -75,10 +88,6 @@ export default defineComponent({
 			{name: 'Română', code: 'ro'},
 			{name: 'Shqip', code: 'sq'},
 		]);
-
-		const closeMenu = () => {
-			document.getElementById("side-menu").checked = false;
-		};
 
     return { t, locale, availableLocaleNames, oidcIsAuthenticated, authenticateOidcPopup, removeOidcUser, activityOverlay, toggleActivityOverlay, closeMenu };
   },
