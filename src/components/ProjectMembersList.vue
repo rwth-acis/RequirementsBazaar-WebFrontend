@@ -8,20 +8,24 @@
             sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
             <Column field="userName" header="User">
                 <template #body="slotProps">
-                    <UserAvatar :imageUrl="slotProps.data.userProfileImage" :userName="slotProps.data.userName" size="small" />
-                    <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
+                    <div class="user-field">
+                        <div class="name">
+                            <UserAvatar :imageUrl="slotProps.data.userProfileImage" :userName="slotProps.data.userName" size="small" />
+                            <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
+                        </div>
+                        <div class="user-id">(ID: {{slotProps.data.id}})</div>
+                    </div>
                 </template>
             </Column>
-            <Column field="userId" header="User ID"></Column>
             <Column :exportable="false" header="Role">
                 <template #body="slotProps">
-                    {{slotProps.data.role}}
-                </template>
-            </Column>
-            <Column :exportable="false">
-                <template #body="slotProps">
-                    <Button v-if="isModifyMembersAllowed" icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="openEditMemberDialog(slotProps.data)" />
-                    <Button v-if="isModifyMembersAllowed" icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="confirmRemoveMember(slotProps.data)" />
+                    <div class="role-field">
+                        <div>{{slotProps.data.role}}</div>
+                        <div class="controls">
+                            <Button v-if="isModifyMembersAllowed" icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="openEditMemberDialog(slotProps.data)" />
+                            <Button v-if="isModifyMembersAllowed" icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="confirmRemoveMember(slotProps.data)" />
+                        </div>
+                    </div>
                 </template>
             </Column>
             <template #groupheader="slotProps">
@@ -273,3 +277,51 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.role-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.role-field .controls {
+    margin-top: .75em;
+}
+
+.user-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user-field .name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.user-field .user-id {
+    margin-top: 0.5em;
+}
+
+@media (min-width: 768px) {
+    .role-field {
+        flex-direction: row;
+    }
+
+    .role-field .controls {
+        margin-left: 1em;
+        display: flex;
+        margin-top: .75em;
+    }
+
+    .user-field {
+        flex-direction: row;
+    }
+
+    .user-field .name {
+        margin-right: 0.5em;
+    }
+}
+</style>
