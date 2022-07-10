@@ -1,8 +1,4 @@
 <template>
-  <ProjectBreadcrumbNav v-if="project"
-    :projectId="project.id"
-    :projectName="project.name"
-    class="p-mt-3" />
   <h1>{{ project?.name }}</h1>
   <Button icon="pi pi-tag" :label="t('projectDetails-joinDevelopmentOnGithub')" class="p-button-sm p-button-outlined"  @click="joinDevelopment" v-if="showButtonJoinDevelopment()"></Button>
   <div id="description">

@@ -5,8 +5,6 @@
     :projectName="project.name"
     :categoryId="parentCategory.id"
     :categoryName="parentCategory.name"
-    :requirementId="requirement.id"
-    :requirementName="requirement.name"
     class="p-mt-3" />
 
   <div id="content">

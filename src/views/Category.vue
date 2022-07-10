@@ -3,8 +3,6 @@
   <ProjectBreadcrumbNav v-if="category && project"
     :projectId="category.projectId"
     :projectName="project.name"
-    :categoryId="category.id"
-    :categoryName="category.name"
     class="p-mt-3" />
   <h1>{{ category?.name }}</h1>
   <div id="description">
