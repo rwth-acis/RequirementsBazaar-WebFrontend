@@ -45,7 +45,7 @@
       <div id="actionButtons" v-if="!brief">
         <div id="groupedButtons">
           <Button :label="t('vote')" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
-          <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
+          <Button v-if="windowWidth >= 768" :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
           <Button :label="t('share')" class="p-button-outlined" @click="toggleShareMenu"></Button>
           <Menu ref="shareMenu" :model="shareMenuItems" :popup="true" />
         </div>
@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, toRefs, defineComponent, watch, PropType } from 'vue';
+import { computed, ref, toRefs, defineComponent, watch, PropType, onMounted, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
@@ -139,6 +139,19 @@ export default defineComponent({
     const confirm = useConfirm();
     const route = useRoute();
     const { startLoading, stopLoading } = useProgress();
+
+    const windowWidth = ref(window.innerWidth);
+    const onResize = () => {
+      console.log("resize: " + window.innerWidth);
+          windowWidth.value = window.innerWidth;
+    };
+    onMounted(() => {
+      window.addEventListener('resize', onResize);
+    });
+    onUnmounted(() => {
+      window.removeEventListener('resize', onResize);
+    });
+
 
     console.log('userContext:');
     console.log(userContext.value);
@@ -379,6 +392,7 @@ export default defineComponent({
       selectedCategoryOption,
       changeRequirementCategory,
       changeCategoryInProgress,
+      windowWidth,
     };
   },
 })
