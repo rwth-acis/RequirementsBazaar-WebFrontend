@@ -2,7 +2,10 @@
     <div v-if="issue_url" class="p-mb-3">
       <div class="dev-timeline-header">
         <h2>{{ t('devTimeline-title') }}</h2>
-        <a v-if="issue_url" :href="issue_url" target="_blank" rel="noreferrer" class="p-ml-2 github-link"><i class="pi pi-github"></i> {{ t('viewOnGitHub') }}</a>
+        <a v-if="issue_url" :href="issue_url" @click.stop="() => {} /*prevent click from triggering RequirementCard click*/"
+          target="_blank" rel="noreferrer" class="p-ml-2 github-link">
+          <i class="pi pi-github"></i> {{ t('viewOnGitHub') }}
+        </a>
       </div>
       <Timeline
         :value="timelineEvents"
