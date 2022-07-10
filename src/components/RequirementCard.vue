@@ -102,6 +102,7 @@ import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubI
 import { getEnabledCategories } from 'trace_events';
 
 import { useProgress } from '@/service/ProgressService';
+import { useWindowSize } from '@/ui-utils/window-size';
 
 export default defineComponent({
   components: { CommentsList, RequirementEditor, RequirementDevTimeline },
@@ -140,18 +141,7 @@ export default defineComponent({
     const route = useRoute();
     const { startLoading, stopLoading } = useProgress();
 
-    const windowWidth = ref(window.innerWidth);
-    const onResize = () => {
-      console.log("resize: " + window.innerWidth);
-          windowWidth.value = window.innerWidth;
-    };
-    onMounted(() => {
-      window.addEventListener('resize', onResize);
-    });
-    onUnmounted(() => {
-      window.removeEventListener('resize', onResize);
-    });
-
+    const { windowWidth, windowHeight } = useWindowSize();
 
     console.log('userContext:');
     console.log(userContext.value);
