@@ -596,16 +596,19 @@ export default defineComponent({
   #menuBar {
     width: 100%;
     display: flex;
+    flex-direction: column-reverse;
   }
 
   #menuBar #tabMenu {
     flex: 1;
+    margin-bottom: 1rem;
   }
 
   #actionButtons {
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #dee2e6;
+    justify-content: flex-end;
+    padding-bottom: 0.5rem;
   }
 
   #actionButtons > * {
@@ -647,6 +650,21 @@ export default defineComponent({
     color: green;
     border-radius: 50%;
     z-index: 1;
+}
+
+/* Responsive changes for larger screens */
+@media (min-width: 768px) {
+  #menuBar {
+    flex-direction: row;
+  }
+
+  #menuBar #tabMenu {
+    margin-bottom: 0rem;
+  }
+
+  #actionButtons {
+    border-bottom: 2px solid #dee2e6;
+  }
 }
 
 </style>
