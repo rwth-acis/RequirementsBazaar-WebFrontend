@@ -1,7 +1,7 @@
 <template>
 	<header class="header">
 		<!-- Logo -->
-        <router-link class="logo" to="/">
+        <router-link class="logo" to="/" @click="closeMenu">
 			<div class="title"><embed src="/reqbaz-logo.svg" class="icon" /> Requirements Bazaar</div>
 		</router-link>
 
