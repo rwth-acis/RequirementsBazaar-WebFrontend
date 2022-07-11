@@ -604,11 +604,13 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    flex-wrap: wrap;
     padding-bottom: 0.5rem;
   }
 
   #actionButtons > * {
-    margin-left: 0.3rem;
+    margin-left: 0.4rem;
+    margin-top: 0.4rem;
   }
 
   #tabMenu ::v-deep(.p-tabmenu-nav), #tabMenu ::v-deep(.p-menuitem-link) {
