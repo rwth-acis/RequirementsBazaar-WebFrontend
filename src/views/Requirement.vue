@@ -55,7 +55,7 @@
         <h3>{{ t('followers') }}</h3>
 
         <div class="p-grid">
-          <div class="p-col-8">
+          <div class="p-col-12">
             <DataTable :value="followers" sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
               <Column field="userName" header="User">
                   <template #body="slotProps">
@@ -72,7 +72,7 @@
         <h3>{{ t('developers') }}</h3>
 
         <div class="p-grid">
-          <div class="p-col-8">
+          <div class="p-col-12">
             <DataTable :value="developers" sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
               <Column field="userName" header="User">
                   <template #body="slotProps">
