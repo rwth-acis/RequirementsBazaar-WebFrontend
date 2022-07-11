@@ -9,7 +9,7 @@
 
   <div id="content">
     <div v-if="requirement">
-      <div class="p-d-flex p-jc-start p-ai-center title">
+      <div class="title">
         <Badge v-if="requirement.realized" value="Done" class="p-mr-2"></Badge><h1> {{ requirement.name }}</h1>
       </div>
       <div class="lastupdate">

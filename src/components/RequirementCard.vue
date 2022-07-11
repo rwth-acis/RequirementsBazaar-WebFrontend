@@ -1,13 +1,11 @@
 <template>
   <Card id="card" @click="onCardClick">
     <template #title>
-      <div class="p-d-flex p-jc-between p-ai-center">
-        <div class="p-d-flex p-jc-start p-ai-center">
-          <Badge v-if="realized" value="Done" class="p-mr-2"></Badge>
-          <router-link :to="requirementPagePath" @click.stop="() => {}/*prevents navigating to detail page twice. By default, onCardClick() would be triggered here*/">
-            <div class="title">{{ name }}</div>
-          </router-link>
-        </div>
+      <div class="card-title">
+        <Badge v-if="realized" value="Done" class="p-mr-2"></Badge>
+        <router-link :to="requirementPagePath" @click.stop="() => {}/*prevents navigating to detail page twice. By default, onCardClick() would be triggered here*/">
+          <div class="title">{{ name }}</div>
+        </router-link>
       </div>
       <div class="">
         <div class="lastupdate p-d-flex p-ai-center">
@@ -457,9 +455,18 @@ export default defineComponent({
     margin-inline-end: 0;
   }
 
+  .card-title {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-bottom: 0.25em;
+  }
+
   .title {
     /* normize color which'd be added by router link ->*/
     color: #495057;
+    padding-top: 0.25em;
   }
 
   .moreButton {
@@ -480,5 +487,16 @@ export default defineComponent({
     color: green;
     border-radius: 50%;
     z-index: 1;
+  }
+
+  @media (min-width: 768px) {
+    .card-title {
+      align-items: center;
+      flex-direction: row;
+    }
+
+    .title {
+      padding-top: 0px;
+    }
   }
 </style>
