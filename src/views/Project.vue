@@ -1,8 +1,4 @@
 <template>
-  <ProjectBreadcrumbNav v-if="project"
-    :projectId="project.id"
-    :projectName="project.name"
-    class="p-mt-3" />
   <h1>{{ project?.name }}</h1>
   <Button icon="pi pi-tag" :label="t('projectDetails-joinDevelopmentOnGithub')" class="p-button-sm p-button-outlined"  @click="joinDevelopment" v-if="showButtonJoinDevelopment()"></Button>
   <div id="description">
@@ -596,20 +592,25 @@ export default defineComponent({
   #menuBar {
     width: 100%;
     display: flex;
+    flex-direction: column-reverse;
   }
 
   #menuBar #tabMenu {
     flex: 1;
+    margin-bottom: 1rem;
   }
 
   #actionButtons {
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #dee2e6;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    padding-bottom: 0.5rem;
   }
 
   #actionButtons > * {
-    margin-left: 0.3rem;
+    margin-left: 0.4rem;
+    margin-top: 0.4rem;
   }
 
   #tabMenu ::v-deep(.p-tabmenu-nav), #tabMenu ::v-deep(.p-menuitem-link) {
@@ -647,6 +648,21 @@ export default defineComponent({
     color: green;
     border-radius: 50%;
     z-index: 1;
+}
+
+/* Responsive changes for larger screens */
+@media (min-width: 768px) {
+  #menuBar {
+    flex-direction: row;
+  }
+
+  #menuBar #tabMenu {
+    margin-bottom: 0rem;
+  }
+
+  #actionButtons {
+    border-bottom: 2px solid #dee2e6;
+  }
 }
 
 </style>

@@ -8,10 +8,10 @@
     NEXT DATA RESET (current grace period): September 30, 2021
   </h2>-->
   <div class="p-grid">
-    <div class="p-col">
-      <img src="/reqbaz-responsive.png" style="max-width: 400px;">
+    <div class="p-col-12 p-md-6">
+      <img src="/reqbaz-responsive.png" style="margin-left: auto; margin-right: auto;">
     </div>
-    <div class="p-col">
+    <div class="p-col-12 p-md-6">
       <h2>{{ t('lp-title') }}</h2>
       <div class="description">
         {{ t('lp-desc') }}
@@ -85,7 +85,7 @@
     <h2 style="text-align: center; font-size: 2.5em;">{{ t('landing-features') }}</h2>
     <div class="p-grid">
 
-        <div class="p-col feature">
+        <div class="p-col-12 p-sm-6 p-md-4 feature">
           <div class="feature-icon">
             <img src="/feature-icons/discuss.png" />
           </div>
@@ -93,7 +93,7 @@
           <p class="body">{{ t('landing-featureDiscussText') }}</p>
         </div>
 
-        <div class="p-col feature">
+        <div class="p-col-12 p-sm-6 p-md-4 feature">
           <div class="feature-icon">
             <img src="/feature-icons/vote.png" />
           </div>
@@ -122,8 +122,8 @@
       {{ t('landing-featuredProjects-text') }}
     </p>
 
-    <div class="featured-projects">
-      <div v-for="project in featuredProjects" :key="project.id" class="p-m-3 project">
+    <div class="p-grid">
+      <div v-for="project in featuredProjects" :key="project.id" class="p-m-3 p-col">
         <router-link :to="'/projects/' + project.id">
           <ProjectCard
             :id="project.id"
@@ -163,7 +163,7 @@
   </section>
 
   <div class="p-grid p-pt-3 p-pb-5">
-    <section class="p-col-7">
+    <section class="p-col-12 p-md-7 p-pb-6">
       <h2>{{ t('landing-how-it-works') }}</h2>
       <div class="description">
         <div>{{ t('landing-step-1') }}</div>
@@ -181,7 +181,7 @@
       </router-link>
     </section>
 
-    <div class="p-col-5">
+    <div class="p-col-12 p-md-5">
       <a class="twitter-timeline"
         href="https://twitter.com/reqbaz"
         data-height="80vh"
@@ -350,15 +350,6 @@ function loadTwitterWidgetJS() {
   .feature-icon {
     width: 95px;
     margin: auto;
-  }
-
-  .featured-projects {
-    display: flex;
-    justify-content: center;
-  }
-
-  .featured-projects .project {
-    flex: 1 1 0px;
   }
 
   img {

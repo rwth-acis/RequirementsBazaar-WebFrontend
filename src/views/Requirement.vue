@@ -5,13 +5,11 @@
     :projectName="project.name"
     :categoryId="parentCategory.id"
     :categoryName="parentCategory.name"
-    :requirementId="requirement.id"
-    :requirementName="requirement.name"
     class="p-mt-3" />
 
   <div id="content">
     <div v-if="requirement">
-      <div class="p-d-flex p-jc-start p-ai-center title">
+      <div class="title">
         <Badge v-if="requirement.realized" value="Done" class="p-mr-2"></Badge><h1> {{ requirement.name }}</h1>
       </div>
       <div class="lastupdate">
@@ -57,7 +55,7 @@
         <h3>{{ t('followers') }}</h3>
 
         <div class="p-grid">
-          <div class="p-col-8">
+          <div class="p-col-12">
             <DataTable :value="followers" sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
               <Column field="userName" header="User">
                   <template #body="slotProps">
@@ -74,7 +72,7 @@
         <h3>{{ t('developers') }}</h3>
 
         <div class="p-grid">
-          <div class="p-col-8">
+          <div class="p-col-12">
             <DataTable :value="developers" sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
               <Column field="userName" header="User">
                   <template #body="slotProps">
@@ -404,16 +402,19 @@ export default defineComponent({
   #menuBar {
     width: 100%;
     display: flex;
+    flex-direction: column-reverse;
   }
 
   #menuBar #tabMenu {
     flex: 1;
+    margin-bottom: 1rem;
   }
 
   #actionButtons {
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #dee2e6;
+    justify-content: flex-end;
+    padding-bottom: 0.5rem;
   }
 
   #actionButtons > * {
@@ -426,5 +427,20 @@ export default defineComponent({
 
   #tabMenu ::v-deep(.p-tabmenuitem) {
     background-color: transparent;
+  }
+
+  /* Responsive changes for larger screens */
+  @media (min-width: 768px) {
+    #menuBar {
+      flex-direction: row;
+    }
+
+    #menuBar #tabMenu {
+      margin-bottom: 0rem;
+    }
+
+    #actionButtons {
+      border-bottom: 2px solid #dee2e6;
+    }
   }
 </style>

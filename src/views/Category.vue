@@ -3,8 +3,6 @@
   <ProjectBreadcrumbNav v-if="category && project"
     :projectId="category.projectId"
     :projectName="project.name"
-    :categoryId="category.id"
-    :categoryName="category.name"
     class="p-mt-3" />
   <h1>{{ category?.name }}</h1>
   <div id="description">
@@ -409,16 +407,19 @@ export default defineComponent({
   #menuBar {
     width: 100%;
     display: flex;
+    flex-direction: column-reverse;
   }
 
   #menuBar #tabMenu {
     flex: 1;
+    margin-bottom: 1rem;
   }
 
   #actionButtons {
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #dee2e6;
+    justify-content: flex-end;
+    padding-bottom: 0.5rem;
   }
 
   #actionButtons > * {
@@ -448,5 +449,20 @@ export default defineComponent({
     width: 100%;
     max-width: 700px;
     margin: 10px;
+  }
+
+  /* Responsive changes for larger screens */
+  @media (min-width: 768px) {
+    #menuBar {
+      flex-direction: row;
+    }
+
+    #menuBar #tabMenu {
+      margin-bottom: 0rem;
+    }
+
+    #actionButtons {
+      border-bottom: 2px solid #dee2e6;
+    }
   }
 </style>

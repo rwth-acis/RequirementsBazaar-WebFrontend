@@ -1,10 +1,16 @@
 <template>
-    <div v-if="issue_url">
-      <div class="p-d-flex p-jc-start p-ai-center">
+    <div v-if="issue_url" class="p-mb-3">
+      <div class="dev-timeline-header">
         <h2>{{ t('devTimeline-title') }}</h2>
-        <a v-if="issue_url" :href="issue_url" target="_blank" rel="noreferrer" class="p-ml-2"><i class="pi pi-github"></i> {{ t('viewOnGitHub') }}</a>
+        <a v-if="issue_url" :href="issue_url" @click.stop="() => {} /*prevent click from triggering RequirementCard click*/"
+          target="_blank" rel="noreferrer" class="p-ml-2 github-link">
+          <i class="pi pi-github"></i> {{ t('viewOnGitHub') }}
+        </a>
       </div>
-      <Timeline :value="timelineEvents" layout="horizontal" align="bottom">
+      <Timeline
+        :value="timelineEvents"
+        :layout="windowWidth >= 768 ? 'horizontal' : 'vertical'"
+        :align="windowWidth >= 768 ? 'bottom' : 'left'">
           <template #marker="slotProps">
             <span class="custom-marker">
               <i :class="slotProps.item.status"></i>
@@ -21,6 +27,8 @@
 import { defineComponent, ref, toRefs, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useWindowSize } from '@/ui-utils/window-size';
+
 export default defineComponent({
   name: 'RequirementDevTimeline',
   props: {
@@ -30,6 +38,7 @@ export default defineComponent({
   setup: (props) => {
     const { additionalProperties } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
+    const { windowWidth, windowHeight } = useWindowSize();
 
     const issue_url = computed(() => {
       if (additionalProperties.value && additionalProperties.value.issue_url ) {
@@ -88,12 +97,44 @@ export default defineComponent({
         {label: t('devTimeline-closed'), status: timelineIssueStatus()},
     ]);
 
-      return { t, timelineEvents, issue_url };
+      return { t, timelineEvents, issue_url, windowWidth };
   },
 
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.dev-timeline-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+}
 
+@media (min-width: 768px) {
+  .dev-timeline-header {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 1rem;
+    padding-bottom: 0rem;
+  }
+
+  .dev-timeline-header h2 {
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
+
+  .dev-timeline-header .github-link {
+    padding-left: 1rem;
+  }
+}
+</style>
+
+/* CSS customization for Primevue Timeline component  */
+<style lang="scss">
+.p-timeline-event-opposite {
+  flex: 0 !important;
+}
 </style>

@@ -241,6 +241,7 @@
     "logout": "Logout",
     "signIn": "Sign in",
 
+    "recentActivities": "Recent Activities",
     "dashboard-projects": "Recent activities in projects you follow",
     "dashboard-categories": "Recent activities in categories you follow",
     "dashboard-requirements": "Recent activities in requirements you follow",

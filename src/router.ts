@@ -9,6 +9,7 @@ import Projects from './views/Projects.vue';
 import Project from './views/Project.vue';
 import Category from './views/Category.vue';
 import Requirement from './views/Requirement.vue';
+import ActivityTrackerView from './views/ActivityTrackerView.vue';
 import OidcCallback from './views/oidc/OidcCallback.vue';
 import OidcPopupCallback from './views/oidc/OidcPopupCallback.vue'
 import OidcCallbackError from './views/oidc/OidcCallbackError.vue'
@@ -101,6 +102,11 @@ export const router = createRouter({
       path: "/projects/:projectId/requirements/:requirementId/:activeTab?",
       name: "requirement",
       component: Requirement,
+    },
+    {
+      path: "/activity-tracker",
+      name: "actiity-tracker",
+      component: ActivityTrackerView,
     },
   ],
 });

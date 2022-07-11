@@ -1,129 +1,156 @@
-.layout-topbar {
-  display: flex;
-  position: fixed;
-  height: 50px;
-  padding: 0.6em 2em 0em 2em;
-  color: #ffffff;
-  z-index: 999;
-  right: 0;
-  @include clearfix();
-  @include linear-gradient-left($topbarLeftBgColor,$topbarRightBgColor);
-  transition: left $transitionDuration;
+ /* Header */
+.header{
+    @include linear-gradient-left($topbarLeftBgColor,$topbarRightBgColor);
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: $topbarHeight;
+    z-index: 999;
+}
+/* Logo */
+.logo{
+    display: inline-block;
+    color: $topbarItemColor;
+    margin-left: 15px;
+    min-height: 40px;
+    height: 100%;
+}
 
-  .layout-topbar-icons {
-      float: inline-end;
-      /*display: block;*/
-      animation-duration: .5s;
+.logo .icon {
+    width: 40px;
+    height: 40px;
+}
 
-      button {
-          position: relative;
-          color: $topbarItemColor;
-          /*margin-left: 20px;*/
-          display: inline-block;
-          text-decoration: none;
-          transition: color $transitionDuration;
+ /* Nav menu */
+ .nav{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: $topbarHeight;
+    @include linear-gradient-left($topbarLeftBgColor,$topbarRightBgColor);
+    overflow: hidden;
 
-          &:hover {
-              color: $topbarItemHoverColor;
-          }
+}
 
-          &:focus {
-              @include focused();
-          }
+.menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 1rem;
 
-          span {
-              &.layout-topbar-icon {
-                  font-size: 1.5em;
-              }
+}
 
-              &.layout-topbar-item-text {
-                  font-size: 20px;
-                  display: none;
-              }
+.menu a{
+    display: block;
+    color: $topbarItemColor;
+    font-weight: bold;
+}
+.menu a:hover{
+    background-color: $topbarItemHoverColor;
+}
 
-              &.layout-topbar-badge {
-                  position: absolute;
-                  font-size: 10px;
-                  right: -5px;
-                  top: -5px;
-                  width: 16px;
-                  height: 16px;
-                  text-align: center;
-                  line-height: 16px;
-                  color: $topbarItemBadgeColor;
-                  background-color: $topbarItemBadgeBgColor;
-                  border-radius: 50%;
-              }
-          }
-      }
 
-      .layout-topbar-search {
-          padding: 0;
-          position: relative;
-          display: inline-block;
-          top: -4px;
+.menu li {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: $topbarItemColor;
+    display: flex;
+    justify-content: center;
+}
 
-          input {
-              display: inline-block;
-              border: 0 none;
-              font-size: $fontSize;
-              background: transparent;
-              border-bottom: 2px solid $topbarSearchInputBorderBottomColor;
-              outline: 0 none;
-              box-shadow: none;
-              color: $topbarSearchInputColor;
-              width: 100px;
-              padding: 1px 20px 1px 1px;
-              margin: 0px;
-              border-radius: 2px;
+.nav{
+    max-height: 0;
+    transition: max-height .5s ease-out;
+}
 
-              &::-webkit-input-placeholder { color:$topbarSearchInputColor; opacity: .7; transition: opacity $transitionDuration;}
-              &:-moz-placeholder { color:$topbarSearchInputColor; opacity: .7; transition: opacity $transitionDuration;}
-              &::-moz-placeholder { color:$topbarSearchInputColor; opacity: .7; transition: opacity $transitionDuration;}
-              &:-ms-input-placeholder { color:$topbarSearchInputColor; opacity: .7; transition: opacity $transitionDuration;}
-          }
 
-          .layout-topbar-search-icon {
-              font-size: 18px;
-              position: absolute;
-              top: -1px;
-              right: 0px;
-          }
+/* Hamburger menu icon */
+.hamb{
+    cursor: pointer;
+    float: right;
+    margin: 20px;
+}/* Style label tag */
 
-          &:hover {
-              input {
-                  border-bottom-color: $topbarItemHoverColor;
-                  &::-webkit-input-placeholder { opacity: 1 }
-                  &:-moz-placeholder {opacity: 1}
-                  &::-moz-placeholder {opacity: 1}
-                  &:-ms-input-placeholder {opacity: 1}
-              }
+.hamb-line {
+background: $topbarItemColor;
+display: block;
+height: 2px;
+position: relative;
+width: 24px;
 
-              .layout-topbar-search-icon {
-                  color: $topbarItemHoverColor;
-              }
-          }
-      }
-  }
+} /* Style span tag */
 
-  .layout-menu-button {
-      flex: 1;
-      cursor: pointer;
-      display: inline-block;
-      text-decoration: none;
-      color: $topbarItemColor;
-      transition: color $transitionDuration;
+.hamb-line::before,
+.hamb-line::after{
+    background: $topbarItemColor;
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    transition: all .2s ease-out;
+    width: 100%;
+}
+.hamb-line::before{
+    top: 5px;
+}
+.hamb-line::after{
+    top: -5px;
+}
 
-      span {
-          font-size: 1.5em;
-      }
+.side-menu {
+    display: none;
+} /* Hide checkbox */
 
-      &:hover {
-          color: $topbarItemHoverColor;
-      }
-  }
+/* Toggle menu icon */
+.side-menu:checked ~ .nav{
+    max-height: 100%;
+}
+.side-menu:checked ~ .hamb .hamb-line {
+    background: transparent;
+}
+.side-menu:checked ~ .hamb .hamb-line::before {
+    transform: rotate(-45deg);
+    top:0;
+}
+.side-menu:checked ~ .hamb .hamb-line::after {
+    transform: rotate(45deg);
+    top:0;
+}
 
-  button {
-      cursor: pointer;
-  }
+
+/* Responsive changes for larger screens */
+@media (min-width: 768px) {
+    .nav{
+        max-height: none;
+        top: 0;
+        position: relative;
+        float: right;
+        width: fit-content;
+        background: none;
+    }
+
+    .menu {
+        flex-direction: row;
+        align-items: center;
+        height: 100%;
+        margin-top: 0px;
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+
+    .menu li{
+        display: block;
+        float: left;
+        margin-right: 1rem;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    .menu a:hover{
+        background-color: transparent;
+        color: $topbarItemHoverColor;
+    }
+
+    .hamb{
+        display: none;
+    }
 }
