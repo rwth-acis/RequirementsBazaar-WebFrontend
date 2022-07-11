@@ -1,13 +1,11 @@
 <template>
-  <Card id="card">
+  <Card id="card" @click="onCardClick">
     <template #title>
-      <div class="p-d-flex p-jc-between p-ai-center">
-        <div class="p-d-flex p-jc-start p-ai-center">
-          <Badge v-if="realized" value="Done" class="p-mr-2"></Badge>
-          <router-link :to="'/projects/' + projectId + '/requirements/' + id">
-            <div class="title">{{ name }}</div>
-          </router-link>
-        </div>
+      <div class="card-title">
+        <Badge v-if="realized" value="Done" class="p-mr-2"></Badge>
+        <router-link :to="requirementPagePath" @click.stop="() => {}/*prevents navigating to detail page twice. By default, onCardClick() would be triggered here*/">
+          <div class="title">{{ name }}</div>
+        </router-link>
       </div>
       <div class="">
         <div class="lastupdate p-d-flex p-ai-center">
@@ -40,16 +38,16 @@
       <div id="figures">
         <div id="votes">{{ upVotes }} {{ t('votes') }}</div>
         <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
-        <div id="comments" @click="toggleCommentsPanel">{{ numberOfComments }} {{ t('comments')}}</div>
+        <div id="comments" @click.stop="toggleCommentsPanel">{{ numberOfComments }} {{ t('comments')}}</div>
       </div>
       <div id="actionButtons" v-if="!brief">
         <div id="groupedButtons">
-          <Button :label="t('vote')" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
-          <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
-          <Button :label="t('share')" class="p-button-outlined" @click="toggleShareMenu"></Button>
+          <Button :label="t('vote')" :class="{ 'p-button-outlined': !voted }" @click.stop="toggleVote"></Button>
+          <Button v-if="windowWidth >= 768" :label="t('addComment')" @click.stop="toggleCommentsPanel" class="p-button-outlined"></Button>
+          <Button :label="t('share')" class="p-button-outlined" @click.stop="toggleShareMenu"></Button>
           <Menu ref="shareMenu" :model="shareMenuItems" :popup="true" />
         </div>
-        <Button v-if="oidcIsAuthenticated" type="button" class="p-button-outlined moreButton" label="..." @click="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
+        <Button v-if="oidcIsAuthenticated" type="button" class="p-button-outlined moreButton" label="..." @click.stop="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
         <Menu ref="menu" :model="menuItems" :popup="true" />
       </div>
       <comments-list :requirementId="id" v-if="showComments" class="commentsList"></comments-list>
@@ -86,14 +84,14 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, toRefs, defineComponent, watch, PropType } from 'vue';
+import { computed, ref, toRefs, defineComponent, watch, PropType, onMounted, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 import { useConfirm } from "primevue/useconfirm";
 import CommentsList from './CommentsList.vue';
 import RequirementDevTimeline from '@/components/RequirementDevTimeline.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { routePathToRequirement } from '@/router';
 
@@ -102,6 +100,7 @@ import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubI
 import { getEnabledCategories } from 'trace_events';
 
 import { useProgress } from '@/service/ProgressService';
+import { useWindowSize } from '@/ui-utils/window-size';
 
 export default defineComponent({
   components: { CommentsList, RequirementEditor, RequirementDevTimeline },
@@ -138,7 +137,10 @@ export default defineComponent({
     const store = useStore();
     const confirm = useConfirm();
     const route = useRoute();
+    const { push } = useRouter();
     const { startLoading, stopLoading } = useProgress();
+
+    const { windowWidth, windowHeight } = useWindowSize();
 
     console.log('userContext:');
     console.log(userContext.value);
@@ -350,6 +352,11 @@ export default defineComponent({
       },
     ]);
 
+    const requirementPagePath = computed(() => routePathToRequirement(projectId.value, id.value));
+    const onCardClick = () => {
+      push(requirementPagePath.value);
+    };
+
     return {
       id,
       projectId,
@@ -379,6 +386,9 @@ export default defineComponent({
       selectedCategoryOption,
       changeRequirementCategory,
       changeCategoryInProgress,
+      windowWidth,
+      onCardClick,
+      requirementPagePath,
     };
   },
 })
@@ -445,9 +455,18 @@ export default defineComponent({
     margin-inline-end: 0;
   }
 
+  .card-title {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-bottom: 0.25em;
+  }
+
   .title {
     /* normize color which'd be added by router link ->*/
     color: #495057;
+    padding-top: 0.25em;
   }
 
   .moreButton {
@@ -468,5 +487,16 @@ export default defineComponent({
     color: green;
     border-radius: 50%;
     z-index: 1;
+  }
+
+  @media (min-width: 768px) {
+    .card-title {
+      align-items: center;
+      flex-direction: row;
+    }
+
+    .title {
+      padding-top: 0px;
+    }
   }
 </style>

@@ -71,7 +71,6 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   height: 100vh;
-  padding-top: 50px;
   margin-left: 1rem;
 }
 
