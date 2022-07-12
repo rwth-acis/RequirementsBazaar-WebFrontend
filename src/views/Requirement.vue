@@ -8,6 +8,10 @@
     class="p-mt-3" />
 
   <div id="content">
+    <div v-if="loading" class="loading-container">
+      <ProgressSpinner />
+    </div>
+
     <div v-if="requirement">
       <div class="title">
         <Badge v-if="requirement.realized" value="Done" class="p-mr-2"></Badge><h1> {{ requirement.name }}</h1>
@@ -63,6 +67,11 @@
                       <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
                   </template>
               </Column>
+              <template #empty>
+                <div class="empty-table-message">
+                  {{ t('noFollowers') }}
+                </div>
+              </template>
             </DataTable>
           </div>
         </div>
@@ -80,13 +89,18 @@
                       <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
                   </template>
               </Column>
+              <template #empty>
+                <div class="empty-table-message">
+                  {{ t('noDevelopers') }}
+                </div>
+              </template>
             </DataTable>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-else>
+    <div v-if="requirement === undefined && !loading">
       <h1>{{ t('notFound') }}</h1>
       {{ t('requirementDetails-requirementNotFound') }}
     </div>
@@ -145,6 +159,7 @@ export default defineComponent({
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
     const activeTab = computed(() => route.params.activeTab);
 
+    const loading = ref(true);
     const requirement = computed(() => store.getters.getRequirementById(requirementId));
     const project = computed(() => store.getters.getProjectById(projectId));
 
@@ -177,7 +192,9 @@ export default defineComponent({
       }
     });
 
-    store.dispatch(ActionTypes.FetchRequirement, requirementId);
+    store.dispatch(ActionTypes.FetchRequirement, requirementId).then(() => {
+      loading.value = false;
+    });
     store.dispatch(ActionTypes.FetchProject, projectId);
 
     const alertLogin = (message: string) => {
@@ -355,6 +372,7 @@ export default defineComponent({
       t,
       oidcIsAuthenticated,
       project,
+      loading,
       parentCategory,
       requirement,
       tabItems,
@@ -385,6 +403,15 @@ export default defineComponent({
 
   .title h1 {
     margin: 0;
+  }
+
+  .loading-container {
+    text-align: center;
+  }
+
+  .empty-table-message {
+    width: 100%;
+    text-align: center;
   }
 
   .lastupdate {
