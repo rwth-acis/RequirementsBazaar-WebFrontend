@@ -25,6 +25,8 @@ export default defineConfig({
         short_name: 'Requirements Bazaar',
         description: 'Requirements Bazaar allows users to discuss innovative ideas so that developers can focus on features that really matter.',
         theme_color: '#447500',
+        background_color: '#447500',
+        display: 'standalone',
         icons: [
           {
             src: 'logo-192x192.png',
@@ -35,6 +37,12 @@ export default defineConfig({
             src: 'logo-512x512.png',
             sizes: '512x512',
             type: 'image/png'
+          },
+          {
+            src: 'logo-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable'
           }
         ]
       }
