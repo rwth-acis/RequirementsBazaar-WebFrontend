@@ -39,6 +39,8 @@
     "@vuedx/typescript-plugin-vue": "^0.6.0",
     "sass": "^1.32.8",
     "typescript": "^4.2.3",
-    "vite": "^2.0.5"
+    "vite": "^2.0.5",
+    "vite-plugin-pwa": "^0.12.3",
+    "workbox-precaching": "^6.5.3"
   }
 }
