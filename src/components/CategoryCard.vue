@@ -2,6 +2,7 @@
   <Card id="card">
     <template #title>
       <div>{{ name }}</div>
+      <div style="display: none;">{{updateTrigger}}</div>
       <div class="lastupdate p-d-flex p-ai-center" v-if="showCreationDate">
         <span :title="'created ' + $dayjs(creationDate).format('LLL')"><i class="pi pi-plus-circle"></i> created {{ $dayjs(creationDate).fromNow() }}</span>
       </div>
@@ -22,8 +23,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, toRefs } from 'vue'
+import { computed, defineComponent, toRefs, watch, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
+import dayjs from 'dayjs'
 
 import { followersIcon, requirementsIcon } from '../assets/reqbaz-icons.js';
 
@@ -43,8 +45,18 @@ export default defineComponent({
     const { locale, t } = useI18n({ useScope: 'global' });
     const { lastActivity, creationDate, showCreationDate } = toRefs(props);
 
+    /*
+     * NOTE: This is workaround to force Vue to re-render the component when the locale changes.
+     */
+    const updateTrigger = ref(false);
+    watch([locale], () => {
+      console.log('changed');
+      updateTrigger.value = !updateTrigger.value;
+    });
+
     return {
       t,
+      updateTrigger,
       lastActivity,
       creationDate,
       showCreationDate,
