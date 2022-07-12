@@ -40,6 +40,7 @@ import { computed, defineComponent, watch, getCurrentInstance, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import Cookies from 'js-cookie';
 
 import ActivityTracker from './ActivityTracker.vue';
 
@@ -55,7 +56,8 @@ export default defineComponent({
 		const { push } = useRouter();
 
 		watch(locale, (newLocale) => {
-    	app?.appContext.config.globalProperties.$dayjs.locale(newLocale);
+    	  app?.appContext.config.globalProperties.$dayjs.locale(newLocale);
+		  Cookies.set('locale', newLocale);
 		});
 
 		const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
