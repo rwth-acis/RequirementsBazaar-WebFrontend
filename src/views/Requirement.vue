@@ -67,6 +67,11 @@
                       <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
                   </template>
               </Column>
+              <template #empty>
+                <div class="empty-table-message">
+                  {{ t('noFollowers') }}
+                </div>
+              </template>
             </DataTable>
           </div>
         </div>
@@ -84,6 +89,11 @@
                       <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
                   </template>
               </Column>
+              <template #empty>
+                <div class="empty-table-message">
+                  {{ t('noDevelopers') }}
+                </div>
+              </template>
             </DataTable>
           </div>
         </div>
@@ -396,6 +406,11 @@ export default defineComponent({
   }
 
   .loading-container {
+    text-align: center;
+  }
+
+  .empty-table-message {
+    width: 100%;
     text-align: center;
   }
 
