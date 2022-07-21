@@ -230,5 +230,8 @@
     "changeCategory": "Modifier la catégorie",
     "currentCategory": "Catégorie actuelle",
     "newCategory": "Nouvelle catégorie",
-    "moveRequirementToCategory": "Déplacer l'exigence vers la catégorie"
+    "moveRequirementToCategory": "Déplacer l'exigence vers la catégorie",
+    "noDevelopers": "Aucun développeur. Peut-être que vous pouvez développer cette fonctionnalité ?",
+    "noFollowers": "Aucun abonné. Soyez le premier à suivre ce projet !",
+    "recentActivities": "Activités récentes"
 }
