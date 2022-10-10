@@ -127,11 +127,8 @@ router.beforeEach((to, from, next) => {
   console.log({to, from});
 
   const isAuthenticated = store.getters['oidcStore/oidcIsAuthenticated'];
-  console.log('isAuthenticated', isAuthenticated);
 
-  if (to.name === 'landing' && isAuthenticated) {
-    next({name: 'Home'});
-  } else if (to.name === 'Home' && !isAuthenticated) {
+  if (to.name === 'Home' && !isAuthenticated) {
     next({name: 'landing'});
   } else {
     next();
