@@ -140,6 +140,7 @@
     "noEmptyFields": "You can't have empty fields!",
     "allProjects": "All Projects",
     "myProjects": "My Projects",
+    "dashboard": "Dashboard",
     "welcome": "Welcome back ",
     "delCommTitle": "Delete Comment",
     "delCommDesc": "This action can't be undone! Are you sure that you want to permanently delete this comment?",
