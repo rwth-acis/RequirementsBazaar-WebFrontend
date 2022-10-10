@@ -12,6 +12,11 @@
 		<!-- Navigation -->
         <nav class="nav">
             <ul class="menu">
+				<li v-if="oidcIsAuthenticated">
+					<router-link class="p-link" to="/home" @click="closeMenu">
+						<div class="menu-item">{{t('dashboard')}}</div>
+					</router-link>
+				</li>
 				<li>
 					<router-link class="p-link" to="/projects" @click="closeMenu">
 						<div class="menu-item">{{t('publicProjects')}}</div>
