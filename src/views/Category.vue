@@ -124,6 +124,10 @@ import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
 import { Requirement } from '@/types/bazaar-api';
 
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+
 export default defineComponent({
   name: 'Category',
   components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor, ProjectBreadcrumbNav },
@@ -342,7 +346,68 @@ export default defineComponent({
           confirmDelete();
         }
       },
+      {
+        label: t('exportRequirementsActive'),
+        icon: 'pi pi-file-pdf',
+        command: () => {
+          exportRequirements(false);
+        }
+      },
+      {
+        label: t('exportRequirementsCompleted'),
+        icon: 'pi pi-file-pdf',
+        command: () => {
+          exportRequirements(true);
+        }
+      },
     ]);
+
+  const exportRequirements=(isCompleted:boolean) => {
+  console.log('Export started...')
+  var bod = [[ { text: t('formTitle'), bold: true}, { text: t('formDesc'), bold: true }]];
+  if(isCompleted){
+    var header ={text:t('headerExportProjectComplete')+" "+project.value.name+":\n\n", style: 'header'}
+    var fileName = "completed_requirements"+"_"+projectId+".pdf"
+    for (let i = 0; i < realizedRequirements.value.length; i++) {
+      bod.push([ { text:realizedRequirements.value[i].name, bold: false}, { text: realizedRequirements.value[i].description, bold: false }]);
+    }
+  } else {
+    var header ={text:t('headerExportProjectActive')+" "+project.value.name+":\n\n", style: 'header'}
+    var fileName = "active_requirements"+"_"+projectId+".pdf"
+    for (let i = 0; i < activeRequirements.value.length; i++) {
+      bod.push([ { text:activeRequirements.value[i].name, bold: false}, { text: activeRequirements.value[i].description, bold: false }]);
+    }
+  }
+  var docDefinition = {
+    content: [
+      header,
+      {
+        layout: {
+          hLineColor: function (i, node) {
+            return (i === 0 || i === node.table.body.length || i==1) ? 'black' : 'gray';
+          },
+          vLineColor: function (i, node) {
+            return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+          }
+        },
+        table: {
+          headerRows: 1,
+          widths: [ 100, '*'],
+          body: bod
+        }
+      }
+    ],
+    styles: {
+      header: {
+        fontSize: 15,
+        bold: true
+      }
+  }
+};
+
+  pdfMake.createPdf(docDefinition).download(fileName);
+  console.log('Export finished')
+};
 
     const editorCanceled = () => {
       toggleAddRequirement();

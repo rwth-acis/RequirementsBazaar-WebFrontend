@@ -96,7 +96,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { routePathToRequirement } from '@/router';
 
 import RequirementEditor from '../components/RequirementEditor.vue';
-import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubIssueForRequirement } from '@/ui-utils/requirement-menu-actions';
+import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubIssueForRequirement, exportToPDF } from '@/ui-utils/requirement-menu-actions';
 import { getEnabledCategories } from 'trace_events';
 
 import { useProgress } from '@/service/ProgressService';
@@ -315,6 +315,13 @@ export default defineComponent({
               confirmDelete();
             }
           }] : []),
+          {
+              label: t('exportRequirement'),
+              icon: 'pi pi-file-pdf',
+              command: () => {
+                exportToPDF(project.value,{id: id.value, name: name.value, description: description.value}, t);
+              }
+            }
         ];
       },
       {
