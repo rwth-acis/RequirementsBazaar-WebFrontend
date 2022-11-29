@@ -3,6 +3,10 @@ import { ActionTypes } from "@/store/actions";
 import { Project } from "@/types/bazaar-api";
 
 import { useProgress } from '@/service/ProgressService';
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+
 
 export const confirmDeleteRequirement = (confirm, t, store, id: number, afterDelete: () => void = () => {}) => {
   const { setLoading } = useProgress();
@@ -52,6 +56,44 @@ export const createGitHubIssueForRequirement = (confirm, t, project: Project, re
   }else{
     alertShareGitHub(confirm, t('requirementAlreadyOnGitHub'))
   }
+};
+
+export const exportToPDF=(project: Project, requirement: { id: number, name: string, description: string},t) => {
+  console.log('Export started...')
+  var fileName = "requirement"+"_"+requirement.id+".pdf"
+
+  var docDefinition = {
+    content: [
+    {text: t('headerExportRequirement')+" "+project.name+":\n\n", style: 'header'},
+      {
+        layout: {
+          hLineColor: function (i, node) {
+            return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+          },
+          vLineColor: function (i, node) {
+            return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+          }
+        },
+        table: {
+          headerRows: 1,
+          widths: [ 'auto', '*'],
+          body: [
+            [ { text: t('formTitle'), bold: true , noWrap: true}, { text: t('formDesc'), bold: true }],
+            [ requirement.name, requirement.description],
+          ]
+        }
+      }
+    ],
+    styles: {
+      header: {
+        fontSize: 15,
+        bold: true
+      }
+  }
+};
+
+  pdfMake.createPdf(docDefinition).download(fileName);
+  console.log('Export finished')
 };
 
 const alertShareGitHub = (confirm, message: string) => {

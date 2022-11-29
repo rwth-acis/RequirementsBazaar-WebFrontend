@@ -149,6 +149,7 @@
     "noFollowers": "No followers. Be the first one to follow the project!",
     "by": " by ",
     "deleteRequirement": "Delete Requirement",
+    "exportRequirement": "Export Requirement",
     "deleteRequirementDesc": "This action can't be undone! Are you sure that you want to permanently delete this requirement?",
     "showContributors": "Show Contributors",
     "markAsDone": "Mark as done",
@@ -249,5 +250,11 @@
     "dashboard-categories": "Recent activities in categories you follow",
     "dashboard-requirements": "Recent activities in requirements you follow",
     "home-greeting": "Hi",
-    "home-description": "This is your personal dashboard with every update you need."
+    "home-description": "This is your personal dashboard with every update you need.",
+
+    "headerExportRequirement": "Requirement of",
+    "headerExportProjectComplete": "Completed Requirements for",
+    "headerExportProjectActive": "Active Requirements for",
+    "exportRequirementsCompleted": "Export Completed Requirements",
+    "exportRequirementsActive": "Export Active Requirements"
 }

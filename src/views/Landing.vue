@@ -184,7 +184,7 @@
     <div class="p-col-12 p-md-5">
       <a class="twitter-timeline"
         href="https://twitter.com/reqbaz"
-        data-height="80vh"
+        data-height="270vh"
         data-width="100%">
         Tweets by @reqbaz
       </a>

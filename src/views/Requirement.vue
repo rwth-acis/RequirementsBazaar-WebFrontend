@@ -139,7 +139,7 @@ import CommentsList from '@/components/CommentsList.vue';
 import UserAvatar from '@/components/UserAvatar.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
-import { confirmDeleteRequirement, createGitHubIssueForRequirement } from '@/ui-utils/requirement-menu-actions';
+import { confirmDeleteRequirement, createGitHubIssueForRequirement, exportToPDF } from '@/ui-utils/requirement-menu-actions';
 
 export default defineComponent({
   name: 'Requirement',
@@ -332,6 +332,13 @@ export default defineComponent({
                    showMoreRequirements();
                  });
               },
+            },
+            {
+              label: t('exportRequirement'),
+              icon: 'pi pi-file-pdf',
+              command: () => {
+                exportToPDF(project.value, requirement.value, t);
+              }
             }
           ];
         }
