@@ -234,5 +234,11 @@
     "noDevelopers": "Aucun développeur. Peut-être que vous pouvez développer cette fonctionnalité ?",
     "noFollowers": "Aucun abonné. Soyez le premier à suivre ce projet !",
     "recentActivities": "Activités récentes",
-    "dashboard": "Tableau de bord"
+    "dashboard": "Tableau de bord",
+    "headerExportProjectActive": "Exigences actives pour",
+    "exportRequirementsCompleted": "Exporter les exigences complétées",
+    "headerExportProjectComplete": "Exigences complétées pour",
+    "exportRequirement": "Exporter l'exigence",
+    "headerExportRequirement": "Exigence pour",
+    "exportRequirementsActive": "Exporter les exigences actives"
 }
