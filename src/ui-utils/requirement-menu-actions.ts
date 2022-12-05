@@ -1,6 +1,6 @@
 import { routePathToRequirement } from "@/router";
 import { ActionTypes } from "@/store/actions";
-import { Project } from "@/types/bazaar-api";
+import { Category, Project } from "@/types/bazaar-api";
 
 import { useProgress } from '@/service/ProgressService';
 import * as pdfMake from "pdfmake/build/pdfmake";
@@ -58,13 +58,13 @@ export const createGitHubIssueForRequirement = (confirm, t, project: Project, re
   }
 };
 
-export const exportToPDF=(project: Project, requirement: { id: number, name: string, description: string},t) => {
+export const exportToPDF=(category: Category, requirement: { id: number, name: string, description: string},t) => {
   console.log('Export started...')
   var fileName = "requirement"+"_"+requirement.id+".pdf"
 
   var docDefinition = {
     content: [
-    {text: t('headerExportRequirement')+" "+project.name+":\n\n", style: 'header'},
+    {text: t('headerExportRequirement')+" "+category.name+":\n\n", style: 'header'},
       {
         layout: {
           hLineColor: function (i, node) {
@@ -79,7 +79,7 @@ export const exportToPDF=(project: Project, requirement: { id: number, name: str
           widths: [ 'auto', '*'],
           body: [
             [ { text: t('formTitle'), bold: true , noWrap: true}, { text: t('formDesc'), bold: true }],
-            [ requirement.name, requirement.description],
+            [ requirement.name.split('\\\\').join('\\'), requirement.description.split('\\\\').join('\\')],
           ]
         }
       }
@@ -95,6 +95,46 @@ export const exportToPDF=(project: Project, requirement: { id: number, name: str
   pdfMake.createPdf(docDefinition).download(fileName);
   console.log('Export finished')
 };
+
+export const exportToTex=(category: Category, requirement: { id: number, name: string, description: string},t) => {
+  // create the TeX string
+  let texString = buildTexString(category, requirement, t);
+
+  // download it
+  let fileName = "requirement"+"_"+requirement.id+".tex"
+  let content = new Blob([texString],{type: 'text/plain'});
+  let saveFile = new File([content], fileName);
+
+  const objUrl = URL.createObjectURL(saveFile);
+  const atag = document.createElement('a');
+
+  atag.setAttribute('href', objUrl);
+  atag.setAttribute('download', fileName);
+  atag.click()
+}
+
+function buildTexString(category: Category, requirement: { id: number, name: string, description: string},t){
+  const setupTable =
+  `% It is necessary to add xcolor, colortbl and array to your Preamble!
+  \\newcolumntype{L}[1]{>{\\raggedright\\let\\newline\\\\\\arraybackslash\\hspace{0pt}}m{#1}}
+  \\begin{table}[h]
+      \\label{tab:req_`+requirement.id+`}
+      \\begin{tabular}{!{\\color{black}\\vrule}L{0.25\\textwidth}!{\\color{gray}\\vrule}L{0.65\\textwidth}!{\\color{black}\\vrule}}
+        \\hline
+        \\textbf{Title} & \\textbf{Description}\\\\
+        \\hline\n`
+
+  const endOfTable =
+  `\n\t\t\t\t\\arrayrulecolor{black}\\hline
+      \\end{tabular}
+    \\caption{`+t('headerExportRequirement')+" "+category.name+`}
+  \\end{table}`;
+
+  var content = '\t\t\t\t'+ requirement.name.split('\\\\').join('\\textbackslash') + '&'
+                + requirement.description.split('\\\\').join('\\textbackslash')+'\\\\';
+  var texString = setupTable.concat(content, endOfTable);
+  return texString;
+}
 
 const alertShareGitHub = (confirm, message: string) => {
   confirm.require({

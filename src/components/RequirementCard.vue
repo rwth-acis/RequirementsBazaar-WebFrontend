@@ -96,7 +96,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { routePathToRequirement } from '@/router';
 
 import RequirementEditor from '../components/RequirementEditor.vue';
-import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubIssueForRequirement, exportToPDF } from '@/ui-utils/requirement-menu-actions';
+import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubIssueForRequirement, exportToPDF, exportToTex } from '@/ui-utils/requirement-menu-actions';
 import { getEnabledCategories } from 'trace_events';
 
 import { useProgress } from '@/service/ProgressService';
@@ -316,10 +316,17 @@ export default defineComponent({
             }
           }] : []),
           {
-              label: t('exportRequirement'),
+              label: t('exportRequirementPdf'),
               icon: 'pi pi-file-pdf',
               command: () => {
-                exportToPDF(project.value,{id: id.value, name: name.value, description: description.value}, t);
+                exportToPDF(category.value,{id: id.value, name: name.value, description: description.value}, t);
+              }
+            },
+            {
+              label: t('exportRequirementTex'),
+              icon: 'pi pi-file-o',
+              command: () => {
+                exportToTex(category.value, {id: id.value, name: name.value, description: description.value}, t);
               }
             }
         ];

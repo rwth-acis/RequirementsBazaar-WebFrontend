@@ -149,7 +149,9 @@
     "noFollowers": "No followers. Be the first one to follow the project!",
     "by": " by ",
     "deleteRequirement": "Delete Requirement",
-    "exportRequirement": "Export Requirement",
+    "exportRequirementPdf": "Export Requirement PDF",
+    "exportRequirementTex": "Export Requirement LaTeX",
+
     "deleteRequirementDesc": "This action can't be undone! Are you sure that you want to permanently delete this requirement?",
     "showContributors": "Show Contributors",
     "markAsDone": "Mark as done",
@@ -253,8 +255,10 @@
     "home-description": "This is your personal dashboard with every update you need.",
 
     "headerExportRequirement": "Requirement of",
-    "headerExportProjectComplete": "Completed Requirements for",
-    "headerExportProjectActive": "Active Requirements for",
+    "headerExportCatAll" : "Requirements of",
+    "headerExportCatComplete": "Completed Requirements of",
+    "headerExportCatActive": "Active Requirements of",
     "exportRequirementsCompleted": "Export Completed Requirements",
-    "exportRequirementsActive": "Export Active Requirements"
+    "exportRequirementsActive": "Export Active Requirements",
+    "exportRequirementsAll" : "Export All Requirements"
 }

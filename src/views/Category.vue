@@ -350,34 +350,135 @@ export default defineComponent({
         label: t('exportRequirementsActive'),
         icon: 'pi pi-file-pdf',
         command: () => {
-          exportRequirements(false);
+          exportRequirementsPdf(false, false);
         }
       },
       {
         label: t('exportRequirementsCompleted'),
         icon: 'pi pi-file-pdf',
         command: () => {
-          exportRequirements(true);
+          exportRequirementsPdf(true, false);
+        }
+      },
+      {
+        label: t('exportRequirementsAll'),
+        icon: 'pi pi-file-pdf',
+        command: () => {
+          exportRequirementsPdf(false, true);
+        }
+      },
+      {
+        label: t('exportRequirementsActive'),
+        icon: 'pi pi-file-o',
+        command: () => {
+          exportRequirementsTex(false, false);
+        }
+      },
+      {
+        label: t('exportRequirementsCompleted'),
+        icon: 'pi pi-file-o',
+        command: () => {
+          exportRequirementsTex(true, false);
+        }
+      },
+      {
+        label: t('exportRequirementsAll'),
+        icon: 'pi pi-file-o',
+        command: () => {
+          exportRequirementsTex(false, true);
         }
       },
     ]);
 
-  const exportRequirements=(isCompleted:boolean) => {
-  console.log('Export started...')
-  var bod = [[ { text: t('formTitle'), bold: true}, { text: t('formDesc'), bold: true }]];
-  if(isCompleted){
-    var header ={text:t('headerExportProjectComplete')+" "+project.value.name+":\n\n", style: 'header'}
-    var fileName = "completed_requirements"+"_"+projectId+".pdf"
-    for (let i = 0; i < realizedRequirements.value.length; i++) {
-      bod.push([ { text:realizedRequirements.value[i].name, bold: false}, { text: realizedRequirements.value[i].description, bold: false }]);
+  const exportRequirementsTex=(isCompleted:boolean, all:boolean) => {
+    console.log('Export TeX started...');
+    if(all){
+      var label = 'tab:reqs_'+category.value.id;
+      var key = 'headerExportCatAll';
+      var fileName = "requirements"+"_"+categoryId+".tex";
+      var reqList = realizedRequirements.value.concat(activeRequirements.value);
+    } else {
+      if(isCompleted){
+        var label = 'tab:reqs_completed_'+category.value.id;
+        var key = 'headerExportCatComplete';
+        var fileName = "completed_requirements"+"_"+categoryId+".tex";
+        var reqList = realizedRequirements.value;
+      } else {
+        var label = 'tab:reqs_active_'+category.value.id;
+        var key = 'headerExportCatActive';
+        var fileName = "active_requirements"+"_"+categoryId+".tex";
+        var reqList = activeRequirements.value;
+      }
     }
+    // strings for the latex table format
+    const setupTable =
+    `% It is necessary to add xcolor, colortbl and array to your Preamble!
+    \\newcolumntype{L}[1]{>{\\raggedright\\let\\newline\\\\\\arraybackslash\\hspace{0pt}}m{#1}}
+    \\begin{table}[h]
+        \\label{`+label+`} %Label for referencing
+        \\begin{tabular}{!{\\color{black}\\vrule}L{0.25\\textwidth}!{\\color{gray}\\vrule}L{0.65\\textwidth}!{\\color{black}\\vrule}} %Change numbers to scale width of columns
+          \\hline
+          \\textbf{Title} & \\textbf{Description}\\\\
+          \\hline\n`
+
+    const endOfTable =
+    `       \\end{tabular}
+      \\caption{`+t(key)+" "+category.value.name+`} %Caption of the table
+    \\end{table}`;
+
+    // body of the latex table
+    var body = '';
+    var hlineGray = '\n\t\t\t\t\t\\arrayrulecolor{gray}\\hline\n';
+    var hlineBlack = '\n\t\t\t\t\t\\arrayrulecolor{black}\\hline\n';
+    for (let i = 0; i < reqList.length; i++) {
+      let name = reqList[i].name.split('\\\\').join('\\textbackslash');
+      let description = reqList[i].description.split('\\\\').join('\\textbackslash');
+      body += '\t\t\t\t\t'+ name + '&' + description +'\\\\';
+      if (i == reqList.length-1){
+        body += hlineBlack;
+      } else {
+        body += hlineGray;
+      }
+    }
+    let texString = setupTable+body+endOfTable;
+    downloadTex(texString, fileName);
+    console.log('Export TeX finished');
+  }
+
+  function downloadTex(texString: string, fileName: string){
+    let content = new Blob([texString],{type: 'text/plain'});
+    let saveFile = new File([content], fileName);
+
+    const objUrl = URL.createObjectURL(saveFile);
+    const atag = document.createElement('a');
+
+    atag.setAttribute('href', objUrl);
+    atag.setAttribute('download', fileName);
+    atag.click()
+  }
+
+  const exportRequirementsPdf=(isCompleted:boolean, all:boolean) => {
+  console.log('Export PDF started...');
+  var bod = [[ { text: t('formTitle'), bold: true}, { text: t('formDesc'), bold: true }]];
+  if(all){
+      var header ={text:t('headerExportCatAll')+" "+category.value.name+":\n\n", style: 'header'};
+      var fileName = "requirements"+"_"+categoryId+".pdf";
+      var reqList = realizedRequirements.value.concat(activeRequirements.value);
   } else {
-    var header ={text:t('headerExportProjectActive')+" "+project.value.name+":\n\n", style: 'header'}
-    var fileName = "active_requirements"+"_"+projectId+".pdf"
-    for (let i = 0; i < activeRequirements.value.length; i++) {
-      bod.push([ { text:activeRequirements.value[i].name, bold: false}, { text: activeRequirements.value[i].description, bold: false }]);
+    if(isCompleted){
+      var header ={text:t('headerExportCatComplete')+" "+category.value.name+":\n\n", style: 'header'};
+      var fileName = "completed_requirements"+"_"+categoryId+".pdf";
+      var reqList = realizedRequirements.value;
+    } else {
+      var header ={text:t('headerExportCatActive')+" "+category.value.name+":\n\n", style: 'header'};
+      var fileName = "active_requirements"+"_"+categoryId+".pdf";
+      var reqList = activeRequirements.value;
     }
   }
+  for (let i = 0; i < reqList.length; i++) {
+      bod.push([ { text:reqList[i].name.split('\\\\').join('\\'), bold: false},
+      { text: reqList[i].description.split('\\\\').join('\\'), bold: false }]);
+    }
   var docDefinition = {
     content: [
       header,
@@ -404,9 +505,8 @@ export default defineComponent({
       }
   }
 };
-
   pdfMake.createPdf(docDefinition).download(fileName);
-  console.log('Export finished')
+  console.log('Export PDF finished');
 };
 
     const editorCanceled = () => {

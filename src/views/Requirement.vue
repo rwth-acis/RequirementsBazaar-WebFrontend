@@ -139,7 +139,7 @@ import CommentsList from '@/components/CommentsList.vue';
 import UserAvatar from '@/components/UserAvatar.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
-import { confirmDeleteRequirement, createGitHubIssueForRequirement, exportToPDF } from '@/ui-utils/requirement-menu-actions';
+import { confirmDeleteRequirement, createGitHubIssueForRequirement, exportToPDF, exportToTex} from '@/ui-utils/requirement-menu-actions';
 
 export default defineComponent({
   name: 'Requirement',
@@ -334,10 +334,17 @@ export default defineComponent({
               },
             },
             {
-              label: t('exportRequirement'),
+              label: t('exportRequirementPdf'),
               icon: 'pi pi-file-pdf',
               command: () => {
-                exportToPDF(project.value, requirement.value, t);
+                exportToPDF(parentCategory.value, requirement.value, t);
+              }
+            },
+            {
+              label: t('exportRequirementTex'),
+              icon: 'pi pi-file-o',
+              command: () => {
+                exportToTex(parentCategory.value, requirement.value, t);
               }
             }
           ];
