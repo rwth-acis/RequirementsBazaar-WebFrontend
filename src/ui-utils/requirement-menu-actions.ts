@@ -130,10 +130,28 @@ function buildTexString(category: Category, requirement: { id: number, name: str
     \\caption{`+t('headerExportRequirement')+" "+category.name+`}
   \\end{table}`;
 
-  var content = '\t\t\t\t'+ requirement.name.split('\\\\').join('\\textbackslash') + '&'
-                + requirement.description.split('\\\\').join('\\textbackslash')+'\\\\';
+  var content = '\t\t\t\t'+ makeTexCompatible(requirement.name) + '&'
+                + makeTexCompatible(requirement.description)+'\\\\';
   var texString = setupTable.concat(content, endOfTable);
   return texString;
+}
+
+function makeTexCompatible(text: string){
+  text = text.split('\\\\').join('\\textbackslash ');
+  text = text.split('\\').join('\\textbackslash ');
+  text = text.split('{').join('\\{');
+  text = text.split('}').join('\\}');
+  text = text.split('<').join('\\textless');
+  text = text.split('>').join('\\textgreater');
+  text = text.split('%').join('\\%');
+  text = text.split('$').join('\\$');
+  text = text.split('&').join('\\&');
+  text = text.split('_').join('\\_');
+  text = text.split('#').join('\\#');
+  text = text.split('|').join('\\textbar');
+  text = text.split('–').join('\\textendash');
+  text = text.split('¿').join('\\textquestiondown');
+  return text
 }
 
 const alertShareGitHub = (confirm, message: string) => {

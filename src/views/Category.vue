@@ -38,6 +38,8 @@
     <TabMenu id="tabMenu" :model="tabItems" @click="forceUpdateRequirementsList()" />
     <div id="actionButtons">
       <Button icon="pi pi-bell" :label="category?.userContext?.isFollower ? t('unfollowCategory') : t('followCategory')" class="p-button-sm" :class="{ 'p-button-outlined': !category?.userContext?.isFollower }" @click="followClick"></Button>
+      <Button :label="t('exportBtn')" class="p-button-sm p-button-outlined" @click="toggleExportMenu" v-if="oidcIsAuthenticated"></Button>
+      <Menu id="overlay_menu" ref="exportMenu" :model="exportItems" :popup="true" />
       <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
     </div>
@@ -346,46 +348,53 @@ export default defineComponent({
           confirmDelete();
         }
       },
-      {
-        label: t('exportRequirementsActive'),
-        icon: 'pi pi-file-pdf',
-        command: () => {
-          exportRequirementsPdf(false, false);
-        }
-      },
-      {
-        label: t('exportRequirementsCompleted'),
-        icon: 'pi pi-file-pdf',
-        command: () => {
-          exportRequirementsPdf(true, false);
-        }
-      },
-      {
-        label: t('exportRequirementsAll'),
+    ]);
+
+    const exportMenu = ref(null);
+    const toggleExportMenu = (event) => {
+      (exportMenu as any).value.toggle(event);
+    };
+    const exportItems = ref([
+     {
+        label: t('exportRequirementsAllPdf'),
         icon: 'pi pi-file-pdf',
         command: () => {
           exportRequirementsPdf(false, true);
         }
       },
       {
-        label: t('exportRequirementsActive'),
+        label: t('exportRequirementsActivePdf'),
+        icon: 'pi pi-file-pdf',
+        command: () => {
+          exportRequirementsPdf(false, false);
+        }
+      },
+      {
+        label: t('exportRequirementsCompletedPdf'),
+        icon: 'pi pi-file-pdf',
+        command: () => {
+          exportRequirementsPdf(true, false);
+        }
+      },
+      {
+        label: t('exportRequirementsAllTex'),
+        icon: 'pi pi-file-o',
+        command: () => {
+          exportRequirementsTex(false, true);
+        }
+      },
+      {
+        label: t('exportRequirementsActiveTex'),
         icon: 'pi pi-file-o',
         command: () => {
           exportRequirementsTex(false, false);
         }
       },
       {
-        label: t('exportRequirementsCompleted'),
+        label: t('exportRequirementsCompletedTex'),
         icon: 'pi pi-file-o',
         command: () => {
           exportRequirementsTex(true, false);
-        }
-      },
-      {
-        label: t('exportRequirementsAll'),
-        icon: 'pi pi-file-o',
-        command: () => {
-          exportRequirementsTex(false, true);
         }
       },
     ]);
@@ -431,8 +440,8 @@ export default defineComponent({
     var hlineGray = '\n\t\t\t\t\t\\arrayrulecolor{gray}\\hline\n';
     var hlineBlack = '\n\t\t\t\t\t\\arrayrulecolor{black}\\hline\n';
     for (let i = 0; i < reqList.length; i++) {
-      let name = reqList[i].name.split('\\\\').join('\\textbackslash');
-      let description = reqList[i].description.split('\\\\').join('\\textbackslash');
+      let name = makeTexCompatible(reqList[i].name, true)
+      let description = makeTexCompatible(reqList[i].description, false);
       body += '\t\t\t\t\t'+ name + '&' + description +'\\\\';
       if (i == reqList.length-1){
         body += hlineBlack;
@@ -443,6 +452,25 @@ export default defineComponent({
     let texString = setupTable+body+endOfTable;
     downloadTex(texString, fileName);
     console.log('Export TeX finished');
+  }
+
+    function makeTexCompatible(text: string, name: boolean){
+    text = text.split('\\\\').join('\\textbackslash ');
+    if(name){
+      text = text.split('\\').join('\\textbackslash ');
+    }
+    text = text.split('{').join('\\{');
+    text = text.split('}').join('\\}');
+    text = text.split('<').join('\\textless');
+    text = text.split('>').join('\\textgreater');
+    text = text.split('%').join('\\%');
+    text = text.split('$').join('\\$');
+    text = text.split('&').join('\\&');
+    text = text.split('#').join('\\#');
+    text = text.split('|').join('\\textbar');
+    text = text.split('–').join('\\textendash');
+    text = text.split('¿').join('\\textquestiondown');
+    return text
   }
 
   function downloadTex(texString: string, fileName: string){
@@ -528,6 +556,9 @@ export default defineComponent({
       moreMenu,
       toggleMoreMenu,
       moreItems,
+      exportMenu,
+      toggleExportMenu,
+      exportItems,
       activeRequirements,
       realizedRequirements,
       forceUpdateRequirementsList,
