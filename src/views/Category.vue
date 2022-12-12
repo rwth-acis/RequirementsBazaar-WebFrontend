@@ -18,6 +18,16 @@
       @save="categoryEditorSaved">
     </CategoryEditor>
   </Dialog>
+  <Dialog :header="t('exportCategory')" v-model:visible="displayExportPopup" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '30vw'}" :modal="true">
+    <ExportCategoryPopup
+      :categoryName="category?.name"
+      :categoryId="category?.id"
+      :realizedRequirements="realizedRequirements"
+      :activeRequirements="activeRequirements"
+      @cancel="exportPopupCanceled"
+      @save="exportPopupSaved">
+    </ExportCategoryPopup>
+  </Dialog>
   <div id="addRequirementPanel">
     <Button
       :label="t('categoryDetails-addRequirement')"
@@ -38,8 +48,6 @@
     <TabMenu id="tabMenu" :model="tabItems" @click="forceUpdateRequirementsList()" />
     <div id="actionButtons">
       <Button icon="pi pi-bell" :label="category?.userContext?.isFollower ? t('unfollowCategory') : t('followCategory')" class="p-button-sm" :class="{ 'p-button-outlined': !category?.userContext?.isFollower }" @click="followClick"></Button>
-      <Button :label="t('exportBtn')" class="p-button-sm p-button-outlined" @click="toggleExportMenu" v-if="oidcIsAuthenticated"></Button>
-      <Menu id="overlay_menu" ref="exportMenu" :model="exportItems" :popup="true" />
       <Button label="..." class="p-button-sm p-button-outlined" @click="toggleMoreMenu" v-if="oidcIsAuthenticated"></Button>
       <Menu id="overlay_menu" ref="moreMenu" :model="moreItems" :popup="true" />
     </div>
@@ -121,18 +129,15 @@ import { ActionTypes } from '../store/actions';
 import FilterPanel from '../components/FilterPanel.vue';
 import RequirementCard from '../components/RequirementCard.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
+import ExportCategoryPopup from '../components/ExportCategoryPopup.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
 import { Requirement } from '@/types/bazaar-api';
 
-import * as pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
-
 export default defineComponent({
   name: 'Category',
-  components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor, ProjectBreadcrumbNav },
+  components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor, ProjectBreadcrumbNav, ExportCategoryPopup },
   props: {
   },
   setup: (props) => {
@@ -322,11 +327,20 @@ export default defineComponent({
     }
 
     const displayCategoryEditor = ref(false);
+    const displayExportPopup = ref(false);
+
     const categoryEditorCanceled = () => {
       displayCategoryEditor.value = false;
     }
     const categoryEditorSaved = () => {
       displayCategoryEditor.value = false;
+    }
+
+    const exportPopupCanceled = () => {
+      displayExportPopup.value = false;
+    }
+    const exportPopupSaved = () => {
+      displayExportPopup.value = false;
     }
 
     const moreMenu = ref(null);
@@ -348,175 +362,14 @@ export default defineComponent({
           confirmDelete();
         }
       },
-    ]);
-
-    const exportMenu = ref(null);
-    const toggleExportMenu = (event) => {
-      (exportMenu as any).value.toggle(event);
-    };
-    const exportItems = ref([
-     {
-        label: t('exportRequirementsAllPdf'),
-        icon: 'pi pi-file-pdf',
-        command: () => {
-          exportRequirementsPdf(false, true);
-        }
-      },
       {
-        label: t('exportRequirementsActivePdf'),
-        icon: 'pi pi-file-pdf',
+        label: t('exportBtn'),
+        icon: 'pi pi-download',
         command: () => {
-          exportRequirementsPdf(false, false);
-        }
-      },
-      {
-        label: t('exportRequirementsCompletedPdf'),
-        icon: 'pi pi-file-pdf',
-        command: () => {
-          exportRequirementsPdf(true, false);
-        }
-      },
-      {
-        label: t('exportRequirementsAllTex'),
-        icon: 'pi pi-file-o',
-        command: () => {
-          exportRequirementsTex(false, true);
-        }
-      },
-      {
-        label: t('exportRequirementsActiveTex'),
-        icon: 'pi pi-file-o',
-        command: () => {
-          exportRequirementsTex(false, false);
-        }
-      },
-      {
-        label: t('exportRequirementsCompletedTex'),
-        icon: 'pi pi-file-o',
-        command: () => {
-          exportRequirementsTex(true, false);
+          displayExportPopup.value = true;
         }
       },
     ]);
-
-  const exportRequirementsTex=(isCompleted:boolean, all:boolean) => {
-    console.log('Export TeX started...');
-    if(all){
-      var label = 'tab:reqs_'+category.value.id;
-      var key = 'headerExportCatAll';
-      var fileName = "requirements"+"_"+categoryId+".tex";
-      var reqList = realizedRequirements.value.concat(activeRequirements.value);
-    } else {
-      if(isCompleted){
-        var label = 'tab:reqs_completed_'+category.value.id;
-        var key = 'headerExportCatComplete';
-        var fileName = "completed_requirements"+"_"+categoryId+".tex";
-        var reqList = realizedRequirements.value;
-      } else {
-        var label = 'tab:reqs_active_'+category.value.id;
-        var key = 'headerExportCatActive';
-        var fileName = "active_requirements"+"_"+categoryId+".tex";
-        var reqList = activeRequirements.value;
-      }
-    }
-    // strings for the latex Itemize
-    const setupItemize =t(key)+" "+category.value.name+':\n\\begin{itemize}\n';
-    const endItemize ='\n\\end{itemize}';
-
-    // body of the latex itemize
-    var body = '';
-    for (let i = 0; i < reqList.length; i++) {
-      let name = makeTexCompatible(reqList[i].name, true)
-      let description = makeTexCompatible(reqList[i].description, false);
-      body += '\t\\item \\textbf\{'+ name + ':\} ' + description +'\n';
-    }
-    let texString = setupItemize+body+endItemize;
-    downloadTex(texString, fileName);
-    console.log('Export TeX finished');
-  }
-
-    function makeTexCompatible(text: string, name: boolean){
-    text = text.split('\\\\').join('\\textbackslash ');
-    if(name){
-      text = text.split('\\').join('\\textbackslash ');
-    }
-    text = text.split('{').join('\\{');
-    text = text.split('}').join('\\}');
-    text = text.split('<').join('\\textless');
-    text = text.split('>').join('\\textgreater');
-    text = text.split('%').join('\\%');
-    text = text.split('$').join('\\$');
-    text = text.split('&').join('\\&');
-    text = text.split('#').join('\\#');
-    text = text.split('|').join('\\textbar');
-    text = text.split('–').join('\\textendash');
-    text = text.split('¿').join('\\textquestiondown');
-    return text
-  }
-
-  function downloadTex(texString: string, fileName: string){
-    let content = new Blob([texString],{type: 'text/plain'});
-    let saveFile = new File([content], fileName);
-
-    const objUrl = URL.createObjectURL(saveFile);
-    const atag = document.createElement('a');
-
-    atag.setAttribute('href', objUrl);
-    atag.setAttribute('download', fileName);
-    atag.click()
-  }
-
-  const exportRequirementsPdf=(isCompleted:boolean, all:boolean) => {
-  console.log('Export PDF started...');
-  var bod = [[ { text: t('formTitle'), bold: true}, { text: t('formDesc'), bold: true }]];
-  if(all){
-      var header ={text:t('headerExportCatAll')+" "+category.value.name+":\n\n", style: 'header'};
-      var fileName = "requirements"+"_"+categoryId+".pdf";
-      var reqList = realizedRequirements.value.concat(activeRequirements.value);
-  } else {
-    if(isCompleted){
-      var header ={text:t('headerExportCatComplete')+" "+category.value.name+":\n\n", style: 'header'};
-      var fileName = "completed_requirements"+"_"+categoryId+".pdf";
-      var reqList = realizedRequirements.value;
-    } else {
-      var header ={text:t('headerExportCatActive')+" "+category.value.name+":\n\n", style: 'header'};
-      var fileName = "active_requirements"+"_"+categoryId+".pdf";
-      var reqList = activeRequirements.value;
-    }
-  }
-  for (let i = 0; i < reqList.length; i++) {
-      bod.push([ { text:reqList[i].name.split('\\\\').join('\\'), bold: false},
-      { text: reqList[i].description.split('\\\\').join('\\'), bold: false }]);
-    }
-  var docDefinition = {
-    content: [
-      header,
-      {
-        layout: {
-          hLineColor: function (i, node) {
-            return (i === 0 || i === node.table.body.length || i==1) ? 'black' : 'gray';
-          },
-          vLineColor: function (i, node) {
-            return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          }
-        },
-        table: {
-          headerRows: 1,
-          widths: [ 100, '*'],
-          body: bod
-        }
-      }
-    ],
-    styles: {
-      header: {
-        fontSize: 15,
-        bold: true
-      }
-  }
-};
-  pdfMake.createPdf(docDefinition).download(fileName);
-  console.log('Export PDF finished');
-};
 
     const editorCanceled = () => {
       toggleAddRequirement();
@@ -537,9 +390,6 @@ export default defineComponent({
       moreMenu,
       toggleMoreMenu,
       moreItems,
-      exportMenu,
-      toggleExportMenu,
-      exportItems,
       activeRequirements,
       realizedRequirements,
       forceUpdateRequirementsList,
@@ -553,8 +403,11 @@ export default defineComponent({
       editorCanceled,
       editorSaved,
       displayCategoryEditor,
+      displayExportPopup,
       categoryEditorCanceled,
       categoryEditorSaved,
+      exportPopupSaved,
+      exportPopupCanceled,
     }
   }
 })

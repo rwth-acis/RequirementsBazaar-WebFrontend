@@ -258,11 +258,15 @@
     "headerExportCatAll" : "Requirements of",
     "headerExportCatComplete": "Completed Requirements of",
     "headerExportCatActive": "Active Requirements of",
-    "exportRequirementsCompletedPdf": "Completed (PDF)",
-    "exportRequirementsActivePdf": "Active (PDF)",
-    "exportRequirementsAllPdf" : "All (PDF)",
-    "exportRequirementsCompletedTex": "Completed (LaTeX)",
-    "exportRequirementsActiveTex": "Active (LaTeX)",
-    "exportRequirementsAllTex" : "All (LaTeX)",
-    "exportBtn" : "Export ..."
+    "exportRequirementsCompleted": "Completed Requirements",
+    "exportRequirementsActive": "Active Requirements",
+    "exportRequirementsAll" : "All Requirements",
+    "exportRequirementsPdf" : "PDF",
+    "exportRequirementsTex" : "LaTeX",
+    "exportBtn" : "Export",
+    "selectReqType": "Select Requirements",
+    "selectFileType": "Select File type",
+    "reqType": "Type of Requirements:",
+    "fileType": "Save as:",
+    "exportCategory": "Export Category"
 }
