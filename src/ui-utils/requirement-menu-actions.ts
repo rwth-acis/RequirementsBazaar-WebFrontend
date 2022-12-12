@@ -114,31 +114,19 @@ export const exportToTex=(category: Category, requirement: { id: number, name: s
 }
 
 function buildTexString(category: Category, requirement: { id: number, name: string, description: string},t){
-  const setupTable =
-  `% It is necessary to add xcolor, colortbl and array to your Preamble!
-  \\newcolumntype{L}[1]{>{\\raggedright\\let\\newline\\\\\\arraybackslash\\hspace{0pt}}m{#1}}
-  \\begin{table}[h]
-      \\label{tab:req_`+requirement.id+`}
-      \\begin{tabular}{!{\\color{black}\\vrule}L{0.25\\textwidth}!{\\color{gray}\\vrule}L{0.65\\textwidth}!{\\color{black}\\vrule}}
-        \\hline
-        \\textbf{Title} & \\textbf{Description}\\\\
-        \\hline\n`
+  const setupItemize =t('headerExportRequirement')+" "+category.name+':\n\\begin{itemize}\n';
+  const endItemize ='\n\\end{itemize}';
 
-  const endOfTable =
-  `\n\t\t\t\t\\arrayrulecolor{black}\\hline
-      \\end{tabular}
-    \\caption{`+t('headerExportRequirement')+" "+category.name+`}
-  \\end{table}`;
-
-  var content = '\t\t\t\t'+ makeTexCompatible(requirement.name) + '&'
-                + makeTexCompatible(requirement.description)+'\\\\';
-  var texString = setupTable.concat(content, endOfTable);
+  var content = '\t\\item \\textbf\{'+ makeTexCompatible(requirement.name, true) + ':\} '+ makeTexCompatible(requirement.description, false);
+  var texString = setupItemize.concat(content, endItemize);
   return texString;
 }
 
-function makeTexCompatible(text: string){
+function makeTexCompatible(text: string, name: boolean){
   text = text.split('\\\\').join('\\textbackslash ');
-  text = text.split('\\').join('\\textbackslash ');
+  if(name){
+    text = text.split('\\').join('\\textbackslash ');
+  }
   text = text.split('{').join('\\{');
   text = text.split('}').join('\\}');
   text = text.split('<').join('\\textless');

@@ -419,37 +419,18 @@ export default defineComponent({
         var reqList = activeRequirements.value;
       }
     }
-    // strings for the latex table format
-    const setupTable =
-    `% It is necessary to add xcolor, colortbl and array to your Preamble!
-    \\newcolumntype{L}[1]{>{\\raggedright\\let\\newline\\\\\\arraybackslash\\hspace{0pt}}m{#1}}
-    \\begin{table}[h]
-        \\label{`+label+`} %Label for referencing
-        \\begin{tabular}{!{\\color{black}\\vrule}L{0.25\\textwidth}!{\\color{gray}\\vrule}L{0.65\\textwidth}!{\\color{black}\\vrule}} %Change numbers to scale width of columns
-          \\hline
-          \\textbf{Title} & \\textbf{Description}\\\\
-          \\hline\n`
+    // strings for the latex Itemize
+    const setupItemize =t(key)+" "+category.value.name+':\n\\begin{itemize}\n';
+    const endItemize ='\n\\end{itemize}';
 
-    const endOfTable =
-    `       \\end{tabular}
-      \\caption{`+t(key)+" "+category.value.name+`} %Caption of the table
-    \\end{table}`;
-
-    // body of the latex table
+    // body of the latex itemize
     var body = '';
-    var hlineGray = '\n\t\t\t\t\t\\arrayrulecolor{gray}\\hline\n';
-    var hlineBlack = '\n\t\t\t\t\t\\arrayrulecolor{black}\\hline\n';
     for (let i = 0; i < reqList.length; i++) {
       let name = makeTexCompatible(reqList[i].name, true)
       let description = makeTexCompatible(reqList[i].description, false);
-      body += '\t\t\t\t\t'+ name + '&' + description +'\\\\';
-      if (i == reqList.length-1){
-        body += hlineBlack;
-      } else {
-        body += hlineGray;
-      }
+      body += '\t\\item \\textbf\{'+ name + ':\} ' + description +'\n';
     }
-    let texString = setupTable+body+endOfTable;
+    let texString = setupItemize+body+endItemize;
     downloadTex(texString, fileName);
     console.log('Export TeX finished');
   }
