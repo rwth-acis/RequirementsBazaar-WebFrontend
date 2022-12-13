@@ -268,5 +268,6 @@
     "selectFileType": "Select File type",
     "reqType": "Type of Requirements:",
     "fileType": "Save as:",
-    "exportCategory": "Export Category"
+    "exportCategory": "Export Category",
+    "exportRequirement": "Export Requirement"
 }

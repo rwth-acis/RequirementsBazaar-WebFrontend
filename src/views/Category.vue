@@ -19,14 +19,14 @@
     </CategoryEditor>
   </Dialog>
   <Dialog :header="t('exportCategory')" v-model:visible="displayExportPopup" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '30vw'}" :modal="true">
-    <ExportCategoryPopup
+    <ExportPopup
       :categoryName="category?.name"
-      :categoryId="category?.id"
+      :id="category?.id"
       :realizedRequirements="realizedRequirements"
       :activeRequirements="activeRequirements"
       @cancel="exportPopupCanceled"
       @save="exportPopupSaved">
-    </ExportCategoryPopup>
+    </ExportPopup>
   </Dialog>
   <div id="addRequirementPanel">
     <Button
@@ -129,7 +129,7 @@ import { ActionTypes } from '../store/actions';
 import FilterPanel from '../components/FilterPanel.vue';
 import RequirementCard from '../components/RequirementCard.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
-import ExportCategoryPopup from '../components/ExportCategoryPopup.vue';
+import ExportPopup from '../components/ExportPopup.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
@@ -137,7 +137,7 @@ import { Requirement } from '@/types/bazaar-api';
 
 export default defineComponent({
   name: 'Category',
-  components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor, ProjectBreadcrumbNav, ExportCategoryPopup },
+  components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor, ProjectBreadcrumbNav, ExportPopup },
   props: {
   },
   setup: (props) => {
