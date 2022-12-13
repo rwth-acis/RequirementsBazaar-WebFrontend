@@ -3,10 +3,6 @@ import { ActionTypes } from "@/store/actions";
 import { Project } from "@/types/bazaar-api";
 
 import { useProgress } from '@/service/ProgressService';
-import * as pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
-
 
 export const confirmDeleteRequirement = (confirm, t, store, id: number, afterDelete: () => void = () => {}) => {
   const { setLoading } = useProgress();
