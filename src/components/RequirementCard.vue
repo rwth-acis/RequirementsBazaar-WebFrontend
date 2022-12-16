@@ -35,6 +35,16 @@
           @save="requirementEditorSaved">
         </RequirementEditor>
       </Dialog>
+      <Dialog :header="t('exportRequirement')" v-model:visible="displayExportPopup" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '30vw'}" :modal="true">
+        <ExportPopup
+          :categoryName="category.name"
+          :id="id"
+          :activeRequirements="[requirement]"
+          :isCategory="false"
+          @cancel="exportPopupCanceled"
+          @save="exportPopupSaved">
+        </ExportPopup>
+      </Dialog>
       <div id="figures">
         <div id="votes">{{ upVotes }} {{ t('votes') }}</div>
         <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
@@ -96,14 +106,15 @@ import { useRoute, useRouter } from 'vue-router';
 import { routePathToRequirement } from '@/router';
 
 import RequirementEditor from '../components/RequirementEditor.vue';
-import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubIssueForRequirement, exportToPDF } from '@/ui-utils/requirement-menu-actions';
+import ExportPopup from './ExportPopup.vue';
+import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubIssueForRequirement} from '@/ui-utils/requirement-menu-actions';
 import { getEnabledCategories } from 'trace_events';
 
 import { useProgress } from '@/service/ProgressService';
 import { useWindowSize } from '@/ui-utils/window-size';
 
 export default defineComponent({
-  components: { CommentsList, RequirementEditor, RequirementDevTimeline },
+  components: { CommentsList, RequirementEditor, RequirementDevTimeline, ExportPopup },
   name: 'RequirementCard',
   props: {
     id: { type: Number, required: true },
@@ -248,6 +259,21 @@ export default defineComponent({
       displayCategoryDialog.value = false;
     };
 
+    const displayExportPopup = ref(false);
+    const exportPopupCanceled = () => {
+      displayExportPopup.value = false;
+    }
+    const exportPopupSaved = () => {
+      displayExportPopup.value = false;
+    }
+
+    var requirement = {
+                id: id.value,
+                name: name.value,
+                description: description.value,
+                additionalProperties: additionalProperties.value,
+              }
+
     const menuItems = ref();
     // watch multiple props
     watch(
@@ -316,12 +342,12 @@ export default defineComponent({
             }
           }] : []),
           {
-              label: t('exportRequirement'),
-              icon: 'pi pi-file-pdf',
+              label: t('exportBtn'),
+              icon: 'pi pi-download',
               command: () => {
-                exportToPDF(project.value,{id: id.value, name: name.value, description: description.value}, t);
+                displayExportPopup.value = true;
               }
-            }
+          },
         ];
       },
       {
@@ -396,6 +422,10 @@ export default defineComponent({
       windowWidth,
       onCardClick,
       requirementPagePath,
+      displayExportPopup,
+      exportPopupSaved,
+      exportPopupCanceled,
+      requirement
     };
   },
 })

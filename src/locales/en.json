@@ -149,7 +149,9 @@
     "noFollowers": "No followers. Be the first one to follow the project!",
     "by": " by ",
     "deleteRequirement": "Delete Requirement",
-    "exportRequirement": "Export Requirement",
+    "exportRequirementPdf": "Export PDF",
+    "exportRequirementTex": "Export LaTeX",
+
     "deleteRequirementDesc": "This action can't be undone! Are you sure that you want to permanently delete this requirement?",
     "showContributors": "Show Contributors",
     "markAsDone": "Mark as done",
@@ -253,8 +255,19 @@
     "home-description": "This is your personal dashboard with every update you need.",
 
     "headerExportRequirement": "Requirement of",
-    "headerExportProjectComplete": "Completed Requirements for",
-    "headerExportProjectActive": "Active Requirements for",
-    "exportRequirementsCompleted": "Export Completed Requirements",
-    "exportRequirementsActive": "Export Active Requirements"
+    "headerExportCatAll" : "Requirements of",
+    "headerExportCatComplete": "Completed Requirements of",
+    "headerExportCatActive": "Active Requirements of",
+    "exportRequirementsCompleted": "Completed Requirements",
+    "exportRequirementsActive": "Active Requirements",
+    "exportRequirementsAll" : "All Requirements",
+    "exportRequirementsPdf" : "PDF",
+    "exportRequirementsTex" : "LaTeX",
+    "exportBtn" : "Export",
+    "selectReqType": "Select Requirements",
+    "selectFileType": "Select File type",
+    "reqType": "Type of Requirements:",
+    "fileType": "Export format:",
+    "exportCategory": "Export Category",
+    "exportRequirement": "Export Requirement"
 }

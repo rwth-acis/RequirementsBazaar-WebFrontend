@@ -27,6 +27,17 @@
 
       <RequirementDevTimeline :additionalProperties="requirement.additionalProperties" />
 
+      <Dialog :header="t('exportRequirement')" v-model:visible="displayExportPopup" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '30vw'}" :modal="true">
+        <ExportPopup
+          :categoryName="parentCategory.name"
+          :id="requirement.id"
+          :activeRequirements="[requirement]"
+          :isCategory="false"
+          @cancel="exportPopupCanceled"
+          @save="exportPopupSaved">
+        </ExportPopup>
+      </Dialog>
+
       <div id="menuBar" class="p-mb-4">
         <TabMenu id="tabMenu" :model="tabItems" />
         <div id="actionButtons">
@@ -139,11 +150,12 @@ import CommentsList from '@/components/CommentsList.vue';
 import UserAvatar from '@/components/UserAvatar.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
-import { confirmDeleteRequirement, createGitHubIssueForRequirement, exportToPDF } from '@/ui-utils/requirement-menu-actions';
+import ExportPopup from '../components/ExportPopup.vue';
+import { confirmDeleteRequirement, createGitHubIssueForRequirement} from '@/ui-utils/requirement-menu-actions';
 
 export default defineComponent({
   name: 'Requirement',
-  components: { ProjectBreadcrumbNav, CommentsList, RequirementDevTimeline, UserAvatar, RequirementEditor },
+  components: { ProjectBreadcrumbNav, CommentsList, RequirementDevTimeline, UserAvatar, RequirementEditor, ExportPopup },
   props: {
   },
   setup: (props) => {
@@ -270,6 +282,14 @@ export default defineComponent({
       }
     };
 
+    const displayExportPopup = ref(false);
+    const exportPopupCanceled = () => {
+      displayExportPopup.value = false;
+    }
+    const exportPopupSaved = () => {
+      displayExportPopup.value = false;
+    }
+
     const moreMenu = ref(null);
     const toggleMoreMenu = (event) => {
       (moreMenu as any).value.toggle(event);
@@ -334,12 +354,12 @@ export default defineComponent({
               },
             },
             {
-              label: t('exportRequirement'),
-              icon: 'pi pi-file-pdf',
+              label: t('exportBtn'),
+              icon: 'pi pi-download',
               command: () => {
-                exportToPDF(project.value, requirement.value, t);
+                displayExportPopup.value = true;
               }
-            }
+            },
           ];
         }
       },
@@ -398,6 +418,9 @@ export default defineComponent({
       routePathToRequirement,
       requirementEditorCanceled,
       requirementEditorSaved,
+      displayExportPopup,
+      exportPopupSaved,
+      exportPopupCanceled,
     }
   }
 })
