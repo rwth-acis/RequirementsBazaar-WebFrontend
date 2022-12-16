@@ -9,6 +9,20 @@ Releases prior to v2.0.1 are only documented on
 the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/releases)
 
 ## [Unreleased]
+## [2.4.1] - 2022-12-16
+
+### Added
+
+- Add export of single Requirements and Categories to Pdf and LaTeX
+  [#271](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/271)
+
+### Changed
+
+- Changed size of twitter timeline on landing page
+  [commit 5094c610450af878a7ca00fc0edc2fb84b17dc1d](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/5094c610450af878a7ca00fc0edc2fb84b17dc1d)
+- French translation updates
+  [#248](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/248)
+
 
 ## [2.4.0] - 2022-05-16
 
