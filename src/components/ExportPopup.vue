@@ -20,8 +20,8 @@ import { defineComponent, PropType, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
 import Dropdown from 'primevue/dropdown';
 
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+import 'pdfmake/build/vfs_fonts';
+
 
 export default defineComponent({
   name: 'ExportPopup',
