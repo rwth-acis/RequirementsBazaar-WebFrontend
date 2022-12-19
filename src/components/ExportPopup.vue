@@ -18,10 +18,8 @@ import { Requirement } from '@/types/bazaar-api';
 import { defineComponent, PropType, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
 import Dropdown from 'primevue/dropdown';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-import "pdfmake/build/pdfmake"
-const pdfMake = window["pdfMake"];
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as pdfMake from 'pdfmake/build/pdfmake.js';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 
 
 export default defineComponent({
@@ -234,7 +232,24 @@ export default defineComponent({
         }
       };
       // Workaround for fonts as the import suggested by the docs causes error
-      pdfMake.createPdf(docDefinition).download(fileName);
+      pdfMake.createPdf(docDefinition, {},
+      {
+        // Default font should still be available
+        Roboto: {
+          normal: 'Roboto-Regular.ttf',
+          bold: 'Roboto-Medium.ttf',
+          italics: 'Roboto-Italic.ttf',
+          bolditalics: 'Roboto-Italic.ttf'
+        },
+        // Make sure you define all 4 components - normal, bold, italics, bolditalics - (even if they all point to the same font file)
+        TimesNewRoman: {
+          normal: 'Times-New-Roman-Regular.ttf',
+          bold: 'Times-New-Roman-Bold.ttf',
+          italics: 'Times-New-Roman-Italics.ttf',
+          bolditalics: 'Times-New-Roman-Italics.ttf'
+        }
+      },
+      pdfFonts.pdfMake.vfs).download(fileName);
       console.log('Export PDF finished');
     };
 
