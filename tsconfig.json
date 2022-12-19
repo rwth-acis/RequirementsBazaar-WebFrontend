@@ -13,10 +13,12 @@
     "sourceMap": true,
     "baseUrl": ".",
     "noImplicitAny": false,
+    "typeRoots": ["./node_modules/@types"],
     "types": [
       "vite/client",
       "node",
-      "@intlify/vite-plugin-vue-i18n/client"
+      "@intlify/vite-plugin-vue-i18n/client",
+      "pdfmake"
     ],
     "paths": {
       "@/*": [
