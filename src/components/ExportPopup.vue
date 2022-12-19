@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
+import * as pdfFonts from "pdfmake/build/vfs_fonts.js"; // <-- vfs_fonts has to be imported before pdfmake
 import * as pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Requirement } from '@/types/bazaar-api';
 import { defineComponent, PropType, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
