@@ -40,7 +40,6 @@
     "src/**/*.vue"
   ],
   "exclude": [
-    "node_modules",
-    "pdfmake.js"
+    "node_modules"
   ]
 }
