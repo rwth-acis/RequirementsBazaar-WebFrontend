@@ -6,7 +6,7 @@ import App from './App.vue';
 
 import Cookies from 'js-cookie';
 
-import messages from '@intlify/vite-plugin-vue-i18n/messages';
+import messages from '@intlify/unplugin-vue-i18n/messages';
 
 import VueMarkdownIt from 'vue3-markdown-it';
 import Vue3Autocounter from 'vue3-autocounter';

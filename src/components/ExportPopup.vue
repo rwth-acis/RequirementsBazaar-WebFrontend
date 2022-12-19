@@ -18,8 +18,10 @@ import { Requirement } from '@/types/bazaar-api';
 import { defineComponent, PropType, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
 import Dropdown from 'primevue/dropdown';
-import * as pdfMake from 'pdfmake/build/pdfmake.js';
+import * as pdfMake from "pdfmake/build/pdfmake";
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
 export default defineComponent({
   name: 'ExportPopup',
@@ -51,7 +53,6 @@ export default defineComponent({
   },
   emits: ['cancel', 'save'],
   setup: ({ id, categoryName, realizedRequirements, activeRequirements, isCategory }, { emit }) => {
-    (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
     const { t } = useI18n({ useScope: 'global' });
     const selectedReqType = ref({ name: t('exportRequirementsAll'), code: 'ALL' });
     const submitted = ref(false);
@@ -231,7 +232,6 @@ export default defineComponent({
           }
         }
       };
-      // Workaround for fonts as the import suggested by the docs causes error
       pdfMake.createPdf(docDefinition).download(fileName);
       console.log('Export PDF finished');
     };
