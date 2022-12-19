@@ -18,8 +18,9 @@ import { Requirement } from '@/types/bazaar-api';
 import { defineComponent, PropType, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
 import Dropdown from 'primevue/dropdown';
-import * as pdfFonts from "pdfmake/build/vfs_fonts.js"; // <-- vfs_fonts has to be imported before pdfmake
-import pdfMake from 'pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import "pdfmake/build/pdfmake"
+const pdfMake = window["pdfMake"];
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
