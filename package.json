@@ -3,7 +3,7 @@
   "version": "2.4.1",
   "scripts": {
     "dev": "vite",
-    "dev-local-api": "vite --mode dev-local-api",
+    "dev-local-api": "vite --mode dev-local-api --port 3000",
     "build": "vite build",
     "build-dev": "vite build --mode development",
     "build-beta": "vite build --mode beta",
@@ -13,14 +13,12 @@
   "dependencies": {
     "@appnest/masonry-layout": "^2.0.8",
     "@intlify/unplugin-vue-i18n": "^0.8.1",
-    "@types/pdfmake": "^0.2.2",
     "@vuelidate/core": "^2.0.0-alpha.16",
     "@vuelidate/validators": "^2.0.0-alpha.22",
     "dayjs": "^1.10.4",
     "js-cookie": "^3.0.1",
     "markdown-it": "^12.3.2",
     "oidc-client": "^1.11.5",
-    "pdfmake": "^0.2.7",
     "primeflex": "^2.0.0",
     "primeicons": "^4.1.0",
     "primevue": "^3.3.4",
@@ -36,7 +34,6 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.31",
-    "@types/pdfmake": "^0.2.2",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vuedx/typecheck": "^0.6.0",
     "@vuedx/typescript-plugin-vue": "^0.6.0",

@@ -17,7 +17,6 @@
     "types": [
       "vite/client",
       "node",
-      "@intlify/vite-plugin-vue-i18n/client",
       "pdfmake"
     ],
     "paths": {
