@@ -18,6 +18,9 @@ import { Requirement } from '@/types/bazaar-api';
 import { defineComponent, PropType, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
 import Dropdown from 'primevue/dropdown';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default defineComponent({
   name: 'ExportPopup',
@@ -181,7 +184,54 @@ export default defineComponent({
 
     const exportRequirementsPdf = (isCompleted: boolean, all: boolean) => {
       console.log('Export PDF started...');
-
+      var bod = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
+      if (all) {
+        var header = { text: t('headerExportCatAll') + " " + categoryName + ":\n\n", style: 'header' };
+        var fileName = "requirements" + "_" + id + ".pdf";
+        var reqList = realized.concat(active);
+      } else {
+        if (isCompleted) {
+          var header = { text: t('headerExportCatComplete') + " " + categoryName + ":\n\n", style: 'header' };
+          var fileName = "completed_requirements" + "_" + id + ".pdf";
+          var reqList = realized;
+        } else {
+          var header = isCategory ? { text: t('headerExportCatActive') + " " + categoryName + ":\n\n", style: 'header' } :
+            { text: t('headerExportRequirement') + " " + categoryName + ":\n\n", style: 'header' };
+          var fileName = isCategory ? "active_requirements" + "_" + id + ".pdf" : "requirement" + "_" + id + ".pdf";
+          var reqList = active;
+        }
+      }
+      for (let i = 0; i < reqList.length; i++) {
+        bod.push([{ text: reqList[i].name.split('\\\\').join('\\'), bold: false },
+        { text: reqList[i].description.split('\\\\').join('\\'), bold: false }]);
+      }
+      var docDefinition = {
+        content: [
+          header,
+          {
+            layout: {
+              hLineColor: function (i, node) {
+                return (i === 0 || i === node.table.body.length || i == 1) ? 'black' : 'gray';
+              },
+              vLineColor: function (i, node) {
+                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+              }
+            },
+            table: {
+              headerRows: 1,
+              widths: [100, '*'],
+              body: bod
+            }
+          }
+        ],
+        styles: {
+          header: {
+            fontSize: 15,
+            bold: true
+          }
+        }
+      };
+      pdfMake.createPdf(docDefinition).download(fileName);
       console.log('Export PDF finished');
     };
 

@@ -19,6 +19,7 @@
     "js-cookie": "^3.0.1",
     "markdown-it": "^12.3.2",
     "oidc-client": "^1.11.5",
+    "pdfmake": "^0.2.7",
     "primeflex": "^2.0.0",
     "primeicons": "^4.1.0",
     "primevue": "^3.3.4",
