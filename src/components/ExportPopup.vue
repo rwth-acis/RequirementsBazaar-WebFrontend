@@ -18,7 +18,7 @@ import { Requirement } from '@/types/bazaar-api';
 import { defineComponent, PropType, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
 import Dropdown from 'primevue/dropdown';
-import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfmake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
 export default defineComponent({
@@ -204,7 +204,7 @@ export default defineComponent({
         bod.push([{ text: reqList[i].name.split('\\\\').join('\\'), bold: false },
         { text: reqList[i].description.split('\\\\').join('\\'), bold: false }]);
       }
-      var docDefinition = {
+      const docDefinition = {
         content: [
           header,
           {
@@ -230,7 +230,7 @@ export default defineComponent({
           }
         }
       };
-      pdfMake.createPdf(docDefinition, {},
+      pdfmake.createPdf(docDefinition, {},
       {
         // Default font should still be available
         Roboto: {

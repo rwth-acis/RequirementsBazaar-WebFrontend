@@ -5,8 +5,10 @@ import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { VitePWA } from "vite-plugin-pwa"
 //import viteComponents from 'vite-plugin-components';
 
+
+
 // https://vitejs.dev/config/
-export default defineConfig({
+const config = defineConfig({
   plugins: [
     vue({
       template: {
@@ -52,5 +54,11 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'), // enables us to use import @/components etc. instead of using relative paths like ./../components
     }
-  }
-})
+  },
+  rollup: {
+    external: ['pdfmake/build/pdfmake', 'pdfmake/build/vfs_fonts'],
+  },
+});
+
+module.exports = config;
+export default config;
