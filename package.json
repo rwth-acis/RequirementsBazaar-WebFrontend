@@ -2,7 +2,7 @@
   "name": "reqbaz",
   "version": "2.4.1",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000",
     "dev-local-api": "vite --mode dev-local-api --port 3000",
     "build": "vite build",
     "build-dev": "vite build --mode development",
@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.31",
+    "@types/pdfmake": "^0.2.2",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vuedx/typecheck": "^0.6.0",
     "@vuedx/typescript-plugin-vue": "^0.6.0",
