@@ -22,6 +22,10 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
   [commit 5094c610450af878a7ca00fc0edc2fb84b17dc1d](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/5094c610450af878a7ca00fc0edc2fb84b17dc1d)
 - French translation updates
   [#248](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/248)
+- Updated vite to v4.0.2
+  [commit 0a7de6edca35706b426540156cac21a94821fe1f](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/0a7de6edca35706b426540156cac21a94821fe1f)
+- Updated vue to v3.2.45
+  [commit 0a7de6edca35706b426540156cac21a94821fe1f](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/0a7de6edca35706b426540156cac21a94821fe1f)
 
 
 ## [2.4.0] - 2022-05-16
