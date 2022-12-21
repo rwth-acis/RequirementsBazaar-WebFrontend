@@ -59,6 +59,4 @@ const config = defineConfig({
     external: ['pdfmake/build/pdfmake', 'pdfmake/build/vfs_fonts'],
   },
 });
-
-module.exports = config;
 export default config;
