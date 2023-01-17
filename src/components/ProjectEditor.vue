@@ -2,14 +2,14 @@
   <div class="p-fluid">
     <form @submit.prevent="handleSubmit()" class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('formTitle') }}</label>
+        <label for="name">{{ t('formTitle') }}</label>
         <InputText id="name" type="text" v-model="v$.name.$model" />
         <div class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
           <small class="p-error">{{ error.$message.replace('Value', 'Title') }}</small>
         </div>
       </div>
       <div class="p-field">
-        <label for="description">{{ t('formDesc') }}</label>
+        <label for="description">{{ t('formDesc') }}</label>
         <Editor v-model="v$.description.$model" editorStyle="height: 100px">
           <template #toolbar>
             <span class="ql-formats">
@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="p-field">
-        <label for="repository">{{ t('Repository') }}</label>
+        <label for="repository">{{ t('Repository') }}</label>
         <InputText id="repository" type="text" v-model="v$.repositoryURL.$model" />
         <div class="input-errors" v-for="error of v$.repositoryURL.$errors" :key="error.$uid">
           <small class="p-error">{{ error.$message }}</small>
@@ -68,7 +68,7 @@ export default defineComponent({
       type: Number,
       required: false,
     },
-    additionalProperties:{
+    additionalProperties: {
       type: Object,
       required: false,
     },
@@ -105,11 +105,14 @@ export default defineComponent({
     }
 
     const handleSubmit = async () => {
-      startLoading();
       submitted.value = true;
 
       const isFormCorrect = await v$.value.$validate();
-      if (!isFormCorrect) return;
+      if (!isFormCorrect) {
+        return;
+      } else {
+        startLoading();
+      }
 
       const updatedAdditionalProperties = JSON.parse(JSON.stringify(additionalProperties ?? {}));
       updatedAdditionalProperties.github_url = state.repositoryURL;
@@ -121,13 +124,13 @@ export default defineComponent({
       };
 
       if (!projectId) {
-        store.dispatch(ActionTypes.CreateProject, project).then (() => {
+        store.dispatch(ActionTypes.CreateProject, project).then(() => {
           stopLoading();
           emit('save');
         });
       } else {
         project.id = projectId;
-        store.dispatch(ActionTypes.UpdateProject, project).then (() => {
+        store.dispatch(ActionTypes.UpdateProject, project).then(() => {
           stopLoading();
           emit('save');
         });
@@ -140,11 +143,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .footer {
-    text-align: end;
-  }
+.footer {
+  text-align: end;
+}
 
-  .footer ::v-deep(.p-button) {
-    width: auto;
-  }
+.footer ::v-deep(.p-button) {
+  width: auto;
+}
 </style>

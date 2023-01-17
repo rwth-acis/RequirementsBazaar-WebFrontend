@@ -100,12 +100,15 @@ export default defineComponent({
     }
 
     const handleSubmit = async () => {
-      setLoading(true);
       submitted.value = true;
 
       const isFormCorrect = await v$.value.$validate();
       // you can show some extra alert to the user or just leave the each field to show it's `$errors`.
-      if (!isFormCorrect) return;
+      if (!isFormCorrect) {
+        return;
+      } else {
+        setLoading(true);
+      }
 
       const requirement: Requirement = {
         name: state.name,

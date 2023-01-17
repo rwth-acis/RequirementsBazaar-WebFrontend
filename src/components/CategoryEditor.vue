@@ -96,11 +96,14 @@ export default defineComponent({
     }
 
     const handleSubmit = async() => {
-      startLoading();
       submitted.value = true;
 
       const isFormCorrect = await v$.value.$validate();
-      if (!isFormCorrect) return;
+      if (!isFormCorrect) {
+        return;
+      } else {
+        startLoading();
+      }
 
       const category: Category = {
         name: state.name,
