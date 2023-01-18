@@ -200,7 +200,6 @@ import { useRouter } from 'vue-router';
 
 import ProjectCard from '@/components/ProjectCard.vue';
 
-
 import { bazaarApi, prodBazaarApi } from '../api/bazaar';
 import { ActionTypes } from '@/store/actions';
 
@@ -224,7 +223,14 @@ export default defineComponent({
     });
 
     // Load Twitter script to display timeline
-    onMounted(() => loadTwitterWidgetJS());
+    onMounted(() => {
+      loadTwitterWidgetJS();
+      try {
+        (window as any).twttr.widgets.load();
+      } catch (error) {
+        console.log(error);
+      }
+    });
 
     const statistics = ref();
     bazaarApi.statistics.getStatistics().then(response => statistics.value = response.data);
