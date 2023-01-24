@@ -27,7 +27,7 @@
 
       <RequirementDevTimeline :additionalProperties="requirement.additionalProperties" />
 
-      <Dialog :header="t('exportRequirement')" v-model:visible="displayExportPopup" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '30vw'}" :modal="true">
+      <Dialog :header="t('exportRequirement')" v-model:visible="displayExportPopup" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '25vw'}" :modal="true">
         <ExportPopup
           :categoryName="parentCategory.name"
           :id="requirement.id"

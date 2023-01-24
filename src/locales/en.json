@@ -222,6 +222,7 @@
     "currentCategory": "Current Category",
     "newCategory": "New Category",
     "moveRequirementToCategory": "Move Requirement to Category",
+    "selectCategoryPlaceholder": "Select a Category",
 
     "devTimeline-title": "Development Timeline",
     "devTimeline-requirementExported": "Requirement Exported",
