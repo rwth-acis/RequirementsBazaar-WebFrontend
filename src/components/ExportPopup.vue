@@ -69,69 +69,73 @@ export default defineComponent({
       { name: t('exportRequirementsTex'), code: 'TEX' }
     ]);
 
-
-
     const cancel = () => {
       emit('cancel');
     }
 
     const handleSubmit = () => {
       submitted.value = true;
-      var chosenType = selectedReqType.value.code;
-      var chosenFileType = selectedFileType.value.code;
+      let chosenType = selectedReqType.value.code;
+      let chosenFileType = selectedFileType.value.code;
 
       if (chosenFileType == "PDF") {
-        if (isCategory) {
-          switch (chosenType) {
-            case "ALL":
-              exportRequirementsPdf(true, true);
-              break;
-            case "ACTIVE":
-              exportRequirementsPdf(false, false);
-              break;
-            case "COMPLETE":
-              exportRequirementsPdf(true, false);
-              break;
-          }
-        } else {
-          exportRequirementsPdf(false, false);
+        handlePdf(chosenType);
+      } else {
+        handleTex(chosenType);
+      }
+      emit('save');
+    }
+
+    function handlePdf(chosenType: string) {
+      if (isCategory) {
+        switch (chosenType) {
+          case "ALL":
+            exportRequirementsPdf(true, true);
+            break;
+          case "ACTIVE":
+            exportRequirementsPdf(false, false);
+            break;
+          case "COMPLETE":
+            exportRequirementsPdf(true, false);
+            break;
         }
       } else {
-        if (isCategory) {
-          switch (chosenType) {
-            case "ALL":
-              exportRequirementsTex(true, true);
-              break;
-            case "ACTIVE":
-              exportRequirementsTex(false, false);
-              break;
-            case "COMPLETE":
-              exportRequirementsTex(true, false);
-              break;
-          }
-        } else {
-          exportRequirementsTex(false, false);
-        }
+        exportRequirementsPdf(false, false);
       }
+    }
 
-      emit('save');
+    function handleTex(chosenType: string) {
+      if (isCategory) {
+        switch (chosenType) {
+          case "ALL":
+            exportRequirementsTex(true, true);
+            break;
+          case "ACTIVE":
+            exportRequirementsTex(false, false);
+            break;
+          case "COMPLETE":
+            exportRequirementsTex(true, false);
+            break;
+        }
+      } else {
+        exportRequirementsTex(false, false);
+      }
     }
 
     const exportRequirementsTex = (isCompleted: boolean, all: boolean) => {
       console.log('Export TeX started...');
+      let key = isCategory ? 'headerExportCatActive' : "headerExportRequirement";
+      let fileName = isCategory ? "active_requirements" + "_" + id + ".tex" : "requirement" + "_" + id + ".tex";
+      let reqList = active;
       if (all) {
-        var key = 'headerExportCatAll';
-        var fileName = "requirements" + "_" + id + ".tex";
-        var reqList = realized.concat(active);
+        key = 'headerExportCatAll';
+        fileName = "requirements" + "_" + id + ".tex";
+        reqList = realized.concat(active);
       } else {
         if (isCompleted) {
-          var key = 'headerExportCatComplete';
-          var fileName = "completed_requirements" + "_" + id + ".tex";
-          var reqList = realized;
-        } else {
-          var key = isCategory ? 'headerExportCatActive' : "headerExportRequirement";
-          var fileName = isCategory ? "active_requirements" + "_" + id + ".tex" : "requirement" + "_" + id + ".tex";
-          var reqList = active;
+          key = 'headerExportCatComplete';
+          fileName = "completed_requirements" + "_" + id + ".tex";
+          reqList = realized;
         }
       }
       // strings for the latex Itemize
@@ -178,32 +182,33 @@ export default defineComponent({
 
       atag.setAttribute('href', objUrl);
       atag.setAttribute('download', fileName);
-      atag.click()
+      atag.click();
     }
 
     const exportRequirementsPdf = (isCompleted: boolean, all: boolean) => {
       console.log('Export PDF started...');
-      var bod = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
+      let bod = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
+      let header = isCategory ? { text: t('headerExportCatActive') + " " + categoryName + ":\n\n", style: 'header' } :
+        { text: t('headerExportRequirement') + " " + categoryName + ":\n\n", style: 'header' };
+      let fileName = isCategory ? "active_requirements" + "_" + id + ".pdf" : "requirement" + "_" + id + ".pdf";
+      let reqList = active;
       if (all) {
-        var header = { text: t('headerExportCatAll') + " " + categoryName + ":\n\n", style: 'header' };
-        var fileName = "requirements" + "_" + id + ".pdf";
-        var reqList = realized.concat(active);
+        header = { text: t('headerExportCatAll') + " " + categoryName + ":\n\n", style: 'header' };
+        fileName = "requirements" + "_" + id + ".pdf";
+        reqList = realized.concat(active);
       } else {
         if (isCompleted) {
-          var header = { text: t('headerExportCatComplete') + " " + categoryName + ":\n\n", style: 'header' };
-          var fileName = "completed_requirements" + "_" + id + ".pdf";
-          var reqList = realized;
-        } else {
-          var header = isCategory ? { text: t('headerExportCatActive') + " " + categoryName + ":\n\n", style: 'header' } :
-            { text: t('headerExportRequirement') + " " + categoryName + ":\n\n", style: 'header' };
-          var fileName = isCategory ? "active_requirements" + "_" + id + ".pdf" : "requirement" + "_" + id + ".pdf";
-          var reqList = active;
+          header = { text: t('headerExportCatComplete') + " " + categoryName + ":\n\n", style: 'header' };
+          fileName = "completed_requirements" + "_" + id + ".pdf";
+          reqList = realized;
         }
       }
-      for (let i = 0; i < reqList.length; i++) {
-        bod.push([{ text: reqList[i].name.split('\\\\').join('\\'), bold: false },
-        { text: reqList[i].description.split('\\\\').join('\\'), bold: false }]);
-      }
+
+      reqList.forEach((req: Requirement) => {
+        bod.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
+        { text: req.description.split('\\\\').join('\\'), bold: false }]);
+      })
+
       const docDefinition = {
         content: [
           header,
@@ -231,23 +236,23 @@ export default defineComponent({
         }
       };
       pdfmake.createPdf(docDefinition, {},
-      {
-        // Default font should still be available
-        Roboto: {
-          normal: 'Roboto-Regular.ttf',
-          bold: 'Roboto-Medium.ttf',
-          italics: 'Roboto-Italic.ttf',
-          bolditalics: 'Roboto-Italic.ttf'
+        {
+          // Default font should still be available
+          Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-Italic.ttf'
+          },
+          // Make sure you define all 4 components - normal, bold, italics, bolditalics - (even if they all point to the same font file)
+          TimesNewRoman: {
+            normal: 'Times-New-Roman-Regular.ttf',
+            bold: 'Times-New-Roman-Bold.ttf',
+            italics: 'Times-New-Roman-Italics.ttf',
+            bolditalics: 'Times-New-Roman-Italics.ttf'
+          }
         },
-        // Make sure you define all 4 components - normal, bold, italics, bolditalics - (even if they all point to the same font file)
-        TimesNewRoman: {
-          normal: 'Times-New-Roman-Regular.ttf',
-          bold: 'Times-New-Roman-Bold.ttf',
-          italics: 'Times-New-Roman-Italics.ttf',
-          bolditalics: 'Times-New-Roman-Italics.ttf'
-        }
-      },
-      pdfFonts.pdfMake.vfs).download(fileName);
+        pdfFonts.pdfMake.vfs).download(fileName);
       console.log('Export PDF finished');
     };
 
