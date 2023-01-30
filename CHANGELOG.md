@@ -9,7 +9,7 @@ Releases prior to v2.0.1 are only documented on
 the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/releases)
 
 ## [Unreleased]
-## [2.4.1] - 2022-12-16
+## [2.5.0] - 2023-01-30
 
 ### Added
 
@@ -26,6 +26,12 @@ the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFro
   [commit 0a7de6edca35706b426540156cac21a94821fe1f](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/0a7de6edca35706b426540156cac21a94821fe1f)
 - Updated vue to v3.2.45
   [commit 0a7de6edca35706b426540156cac21a94821fe1f](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/0a7de6edca35706b426540156cac21a94821fe1f)
+- Updated primeicons to v6.0.1
+  [commit 296053fd3bd52bda6a14091dd315f92bd672825b](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/296053fd3bd52bda6a14091dd315f92bd672825b)
+- Changed Icons of move requirement and delete
+  [commit e2f4d0adbdfc8227ec97794b4f5facc175f95f3b](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/e2f4d0adbdfc8227ec97794b4f5facc175f95f3b)
+- Fixed loading indicator when error occurs
+  [commit 8f080e8ac103b15140f19e4f6a8a4d9f7421b54a](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/8f080e8ac103b15140f19e4f6a8a4d9f7421b54a)
 
 
 ## [2.4.0] - 2022-05-16
