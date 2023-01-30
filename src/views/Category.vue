@@ -357,7 +357,7 @@ export default defineComponent({
       },
       {
         label: t('deleteCategory'),
-        icon: 'pi pi-times',
+        icon: 'pi pi-trash',
         command: () => {
           confirmDelete();
         }

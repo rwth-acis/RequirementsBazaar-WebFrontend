@@ -346,7 +346,7 @@ export default defineComponent({
             },
             {
               label: t('deleteRequirement'),
-              icon: 'pi pi-times',
+              icon: 'pi pi-trash',
               command: () => {
                  confirmDeleteRequirement(confirm, t, store, requirementId, () => {
                    showMoreRequirements();
