@@ -211,6 +211,7 @@ export interface Requirement {
   categories: number[];
   attachments?: Attachment[];
   tags?: Tag[];
+  gamificationNotifications?: Notification[];
 
   /** @format date-time */
   creationDate?: string;
@@ -247,6 +248,13 @@ export interface Tag {
   id?: number;
   name: string;
   colour: string;
+}
+
+export interface Notification{
+  typeId: string;
+  type: string;
+  message: string;
+  memberId: string;
 }
 
 export interface CategoryContributors {

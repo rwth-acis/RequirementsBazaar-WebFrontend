@@ -160,6 +160,9 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetRequirement](state, requirement) {
     if (requirement.id) {
+      if(requirement.gamificationNotifications?.length == 0){
+        console.warn('test');
+      }
       state.requirements[requirement.id] = requirement;
     }
   },
