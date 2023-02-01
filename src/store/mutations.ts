@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { State, LocalComment, UnhandledError } from './state'
 
-import { Project, Category, Requirement, Comment, Dashboard, ProjectMember } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, Dashboard, ProjectMember, GamificationNotification } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 import { UserVote } from '@/api/bazaar';
 
@@ -162,6 +162,11 @@ export const mutations: MutationTree<State> & Mutations = {
     if (requirement.id) {
       if(requirement.gamificationNotifications?.length == 0){
         console.warn('test');
+      } else {
+        if(requirement.gamificationNotifications){
+          const notification = requirement.gamificationNotifications[0];
+          console.warn(notification.message);
+        }
       }
       state.requirements[requirement.id] = requirement;
     }
