@@ -1,6 +1,6 @@
 {
   "name": "reqbaz",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "scripts": {
     "dev": "vite --port 3000",
     "dev-local-api": "vite --mode dev-local-api --port 3000",
