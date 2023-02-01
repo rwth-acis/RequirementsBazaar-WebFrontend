@@ -211,7 +211,7 @@ export interface Requirement {
   categories: number[];
   attachments?: Attachment[];
   tags?: Tag[];
-  gamificationNotifications?: Notification[];
+  gamificationNotifications?: GamificationNotification[];
 
   /** @format date-time */
   creationDate?: string;
@@ -250,7 +250,7 @@ export interface Tag {
   colour: string;
 }
 
-export interface Notification{
+export interface GamificationNotification{
   typeId: string;
   type: string;
   message: string;
