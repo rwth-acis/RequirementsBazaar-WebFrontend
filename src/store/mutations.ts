@@ -39,6 +39,7 @@ export enum MutationType {
   SetActivities = 'SET_ACTIVITIES',
 
   _AddUnhandledError = 'ADD_UNHANDLED_ERROR',
+  AddNotification = 'ADD_NOTIFICATION',
 }
 
 type RemoveProjectMemberParameters = {
@@ -84,6 +85,8 @@ export type Mutations = {
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
 
   [MutationType._AddUnhandledError](state: State, error: UnhandledError): void;
+  [MutationType.AddNotification](state: State, payload: string): void;
+
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -160,12 +163,12 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetRequirement](state, requirement) {
     if (requirement.id) {
-      if(requirement.gamificationNotifications?.length == 0){
-        console.warn('test');
-      } else {
+      if(requirement.gamificationNotifications?.length != 0){
         if(requirement.gamificationNotifications){
           const notification = requirement.gamificationNotifications[0];
-          console.warn(notification.message);
+          state.notification = [];
+          state.notification.push(notification.message);
+          state.notification.push(notification.type);
         }
       }
       state.requirements[requirement.id] = requirement;
@@ -346,5 +349,9 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType._AddUnhandledError](state, error) {
     state.unhandledErrors.push(error);
+  },
+
+  [MutationType.AddNotification](state, payload) {
+    state.notification = payload;
   },
 }

@@ -31,6 +31,7 @@ export type State = {
   dashboard: Dashboard;
   unhandledErrors: UnhandledError[];
   featuredProjectIds: number[];
+  notification: string[];
 }
 
 export const state: State = {
@@ -49,4 +50,5 @@ export const state: State = {
   },
   unhandledErrors: [],
   featuredProjectIds: [],
+  notification: [],
 };

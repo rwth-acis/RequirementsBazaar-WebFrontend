@@ -17,6 +17,7 @@ export type Getters = {
   activitiesList(state: State): (parameters: any) => Activity[];
   unhandledErrors(state: State): (parameters: any) => UnhandledError[];
   getFeaturedProjects(state: State): (parameters: any) => Project[];
+  getNotifications(state: State): (parameters: any) => string[];
 }
 
 const numericalSortFunction = (property, sortAscending) => (a, b) => {
@@ -222,5 +223,9 @@ export const getters: GetterTree<State, State> & Getters = {
 
     return featuredProjects;
   },
+
+  getNotifications: (state: State) => (parameters: any) => {
+    return state.notification;
+  }
 
 }

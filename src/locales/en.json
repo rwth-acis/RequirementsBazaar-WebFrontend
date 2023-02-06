@@ -270,5 +270,9 @@
     "reqType": "Type of Requirements:",
     "fileType": "Export format:",
     "exportCategory": "Export Category",
-    "exportRequirement": "Export Requirement"
+    "exportRequirement": "Export Requirement",
+
+    "QUEST": "Quest completed!",
+    "ACHIEVEMENT": "Achievment completed!",
+    "BADGE": "Badge earned!"
 }
