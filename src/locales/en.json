@@ -252,6 +252,7 @@
     "dashboard-projects": "Recent activities in projects you follow",
     "dashboard-categories": "Recent activities in categories you follow",
     "dashboard-requirements": "Recent activities in requirements you follow",
+    "dashboard-badges": "Achievements",
     "home-greeting": "Hi",
     "home-description": "This is your personal dashboard with every update you need.",
 
@@ -273,6 +274,6 @@
     "exportRequirement": "Export Requirement",
 
     "QUEST": "Quest completed!",
-    "ACHIEVEMENT": "Achievment completed!",
+    "ACHIEVEMENT": "Achievement completed!",
     "BADGE": "Badge earned!"
 }

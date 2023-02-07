@@ -47,6 +47,8 @@ export const state: State = {
     projects: [],
     categories: [],
     requirements: [],
+    isGamified: false,
+    badges:[],
   },
   unhandledErrors: [],
   featuredProjectIds: [],

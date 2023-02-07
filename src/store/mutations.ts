@@ -85,7 +85,7 @@ export type Mutations = {
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
 
   [MutationType._AddUnhandledError](state: State, error: UnhandledError): void;
-  [MutationType.AddNotification](state: State, payload: string): void;
+  [MutationType.AddNotification](state: State, payload: GamificationNotification): void;
 
 };
 
@@ -349,6 +349,6 @@ export const mutations: MutationTree<State> & Mutations = {
   },
 
   [MutationType.AddNotification](state, payload) {
-    state.notification = payload;
+    state.notification.push(payload);
   },
 }

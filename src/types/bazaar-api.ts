@@ -328,10 +328,19 @@ export interface RequirementContributors {
   attachmentCreator?: User[];
 }
 
+export interface GfBadge {
+  id: string;
+  name: string;
+  description: string;
+  notificationMessage: string;
+  useNotification: boolean;
+}
 export interface Dashboard {
   projects: Project[];
   categories: Category[];
   requirements: Requirement[];
+  badges: GfBadge[];
+  isGamified: boolean;
 }
 
 export interface EntityOverview {
