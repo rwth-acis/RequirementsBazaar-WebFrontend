@@ -165,10 +165,7 @@ export const mutations: MutationTree<State> & Mutations = {
     if (requirement.id) {
       if(requirement.gamificationNotifications?.length != 0){
         if(requirement.gamificationNotifications){
-          const notification = requirement.gamificationNotifications[0];
-          state.notification = [];
-          state.notification.push(notification.message);
-          state.notification.push(notification.type);
+          state.notification = requirement.gamificationNotifications;
         }
       }
       state.requirements[requirement.id] = requirement;

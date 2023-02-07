@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import AppTopbar from './components/AppTopbar.vue';
 import ActivityTracker from './components/ActivityTracker.vue';
 import GlobalErrorMessage from './components/GlobalErrorMessage.vue';
@@ -38,6 +38,7 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from "vuex";
 import { useToast } from "primevue/usetoast";
 import Toast from 'primevue/toast';
+import { GamificationNotification } from '@/types/bazaar-api';
 
 import { useProgress } from '@/service/ProgressService';
 
@@ -55,16 +56,16 @@ export default defineComponent({
     const store = useStore();
     const toast = useToast();
     watch(() => store.getters.getNotifications(),
-      (notification, prevMessage) => {
-        console.log("Gamification message", notification.at(-1));
-        console.log("Gamification message", notification.at(0));
-        if (notification) {
-          toast.add({
+      (notifications, prevMessages) => {
+        if (notifications) {
+          notifications.forEach((notification: GamificationNotification) => {
+            toast.add({
             severity: "success",
-            summary: t(notification.at(-1)),
-            detail: notification.at(0),
+            summary: t(notification.type),
+            detail: notification.message,
             group: "br",
-            life: 5000,
+            life: 6000,
+          });
           });
         }
       }
