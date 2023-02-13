@@ -1,18 +1,25 @@
 <template>
-  <Card id="card">
+  <Card id="card" @click="onCardClick">
     <template #title>
-      <div class="p-d-flex p-jc-between p-ai-center">
-        <div class="p-d-flex p-jc-start p-ai-center">
-          <Badge v-if="realized" value="Done" class="p-mr-2"></Badge>
-          <router-link :to="'/projects/' + projectId + '/requirements/' + id">
-            <div class="title">{{ name }}</div>
-          </router-link>
-        </div>
+      <div class="card-title">
+        <Badge v-if="realized" value="Done" class="p-mr-2"></Badge>
+        <router-link :to="requirementPagePath"
+          @click.stop="() => { }/*prevents navigating to detail page twice. By default, onCardClick() would be triggered here*/">
+          <div class="title">{{ name }}</div>
+        </router-link>
       </div>
-      <div class="lastupdate">
-        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
-        {{t('by')}} {{ creator?.userName }}
-        <!--<i class="pi pi-pencil" style="fontSize: 0.7rem" v-if="creationDate !== lastActivity" :title="`initially created on ${$dayjs(lastActivity).format('LLL')}`"></i>-->
+      <div class="">
+        <div class="lastupdate p-d-flex p-ai-center">
+          <i class="pi pi-plus-circle p-mr-2"></i> <span :title="$dayjs(creationDate).format('LLL')">{{
+            $dayjs(creationDate).fromNow()
+          }}&nbsp;</span> {{ t('by') }} {{ creator?.userName }}
+        </div>
+        <div v-if="showLastActivity" class="lastupdate p-d-flex p-ai-center">
+          <i class="pi pi-user-edit p-mr-2"></i> <span :title="$dayjs(lastActivity).format('LLL')">{{
+            $dayjs(lastActivity).fromNow()
+          }}&nbsp;</span> {{ t('by') }} {{ lastActivityUser?.userName ?? 'unknown user'
+}}
+        </div>
       </div>
     </template>
 
@@ -22,36 +29,72 @@
       <!-- Timeline -->
       <RequirementDevTimeline :additionalProperties="additionalProperties" />
 
-      <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '50vw'}" :modal="true">
-        <RequirementEditor
-          class="requirementEditor"
-          :requirementId="id"
-          :projectId="projectId"
-          :categories="categories"
-          :name="name"
-          :description="description"
-          @cancel="requirementEditorCanceled"
-          @save="requirementEditorSaved">
+      <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor"
+        :breakpoints="{ '960px': '75vw', '640px': '100vw' }" :style="{ width: '50vw' }" :modal="true">
+        <RequirementEditor class="requirementEditor" :requirementId="id" :projectId="projectId" :categories="categories"
+          :name="name" :description="description" @cancel="requirementEditorCanceled" @save="requirementEditorSaved">
         </RequirementEditor>
       </Dialog>
+      <Dialog :header="t('exportRequirement')" v-model:visible="displayExportPopup"
+        :breakpoints="{ '960px': '75vw', '640px': '100vw' }" :style="{ width: '25vw' }" :modal="true">
+        <ExportPopup :categoryName="category.name" :id="id" :activeRequirements="[requirement]" :isCategory="false"
+          @cancel="exportPopupCanceled" @save="exportPopupSaved">
+        </ExportPopup>
+      </Dialog>
       <div id="figures">
-        <div id="votes">{{ upVotes }} {{ t('votes') }}</div>
-        <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
-        <div id="comments" @click="toggleCommentsPanel">{{ numberOfComments }} {{ t('comments')}}</div>
+        <div id="votes">{{ upVotes }} {{ t('votes') }}</div>
+        <div id="followers">{{ numberOfFollowers }} {{ t('followers') }}</div>
+        <div id="comments" @click.stop="toggleCommentsPanel">{{ numberOfComments }} {{ t('comments') }}</div>
       </div>
       <div id="actionButtons" v-if="!brief">
         <div id="groupedButtons">
-          <Button :label="t('vote')" :class="{ 'p-button-outlined': !voted }" @click="toggleVote"></Button>
-          <Button :label="t('addComment')" @click="toggleCommentsPanel" class="p-button-outlined"></Button>
-          <Button :label="t('share')" class="p-button-outlined" @click="toggleShareMenu"></Button>
+          <Button :label="t('vote')" :class="{ 'p-button-outlined': !voted }" @click.stop="toggleVote"></Button>
+          <Button v-if="windowWidth >= 768" :label="t('addComment')" @click.stop="toggleCommentsPanel"
+            class="p-button-outlined"></Button>
+          <Button :label="t('share')" class="p-button-outlined" @click.stop="toggleShareMenu"></Button>
           <Menu ref="shareMenu" :model="shareMenuItems" :popup="true" />
         </div>
-        <Button v-if="oidcIsAuthenticated" type="button" class="p-button-outlined moreButton" label="..." @click="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu"/>
+        <Button v-if="oidcIsAuthenticated" type="button" class="p-button-outlined moreButton" label="..."
+          @click.stop="toggleMenu" aria-haspopup="true" aria-controls="overlay_menu" />
         <Menu ref="menu" :model="menuItems" :popup="true" />
       </div>
       <comments-list :requirementId="id" v-if="showComments" class="commentsList"></comments-list>
     </template>
   </Card>
+
+  <Dialog v-model:visible="displayCategoryDialog" :breakpoints="{ '960px': '75vw', '640px': '100vw' }"
+    :style="{ width: '25vw' }" :header="t('changeCategory')" :modal="true" class="p-fluid">
+    <div class="p-field">
+      <label for="category">{{ t('currentCategory') }}: </label> <b>{{ category?.name ?? 'no category'}}</b>
+    </div>
+
+    <div class="p-field">
+      <label for="newCategory" class="p-mb-3">{{ t('newCategory') }}</label>
+      <Dropdown id="newCategory" v-model="selectedCategoryOption" :options="availableCategoryOptions"
+        :placeholder="t('selectCategoryPlaceholder')">
+        <template #value="slotProps">
+          <span>
+            {{ slotProps.value.label }}
+          </span>
+        </template>
+        <template #option="slotProps">
+          <span>
+            {{ slotProps.option.label }}
+          </span>
+        </template>
+      </Dropdown>
+    </div>
+
+    <template #footer>
+      <div class="footer">
+        <ProgressBar mode="indeterminate" class="mb-3" v-if="changeCategoryInProgress" />
+        <Button :label="t('cancel')" icon="pi pi-times" class="p-button-outlined p-ml-2 p-mr-2"
+          @click="displayCategoryDialog = false" />
+        <Button :label="t('save')" icon="pi pi-check"
+          @click="changeRequirementCategory" />
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script lang="ts">
@@ -62,16 +105,20 @@ import { ActionTypes } from '../store/actions';
 import { useConfirm } from "primevue/useconfirm";
 import CommentsList from './CommentsList.vue';
 import RequirementDevTimeline from '@/components/RequirementDevTimeline.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { routePathToRequirement } from '@/router';
 
 import RequirementEditor from '../components/RequirementEditor.vue';
+import ExportPopup from './ExportPopup.vue';
 import { confirmDeleteRequirement, createShareableRequirementLink, createGitHubIssueForRequirement } from '@/ui-utils/requirement-menu-actions';
 import { getEnabledCategories } from 'trace_events';
 
+import { useProgress } from '@/service/ProgressService';
+import { useWindowSize } from '@/ui-utils/window-size';
+
 export default defineComponent({
-  components: { CommentsList, RequirementEditor, RequirementDevTimeline },
+  components: { CommentsList, RequirementEditor, RequirementDevTimeline, ExportPopup },
   name: 'RequirementCard',
   props: {
     id: { type: Number, required: true },
@@ -81,6 +128,7 @@ export default defineComponent({
     creator: { type: Object, required: true },
     creationDate: { type: String, required: true },
     lastActivity: { type: String, required: true },
+    lastActivityUser: { type: Object, required: false },
     description: { type: String, required: true },
     upVotes: { type: Number, required: true },
     numberOfComments: { type: Number, required: true },
@@ -90,15 +138,27 @@ export default defineComponent({
     isDeveloper: { type: Boolean, required: true },
     realized: { type: String, required: false },
     brief: { type: Boolean, required: false, default: false },
-    additionalProperties: {type: Object, required: false},
+    additionalProperties: { type: Object, required: false },
+    showLastActivity: { type: Boolean, required: false, default: true },
+    userContext: { type: Object, required: false },
   },
 
   setup: (props) => {
-    const { id,projectId, userVoted, isFollower, isDeveloper, realized, lastActivity, creationDate, name, description, categories, additionalProperties } = toRefs(props);
+    const {
+      id, projectId, userVoted, isFollower, isDeveloper, realized, lastActivity, lastActivityUser, creationDate, name, description, categories,
+      additionalProperties, showLastActivity, userContext,
+    } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
     const confirm = useConfirm();
     const route = useRoute();
+    const { push } = useRouter();
+    const { startLoading, stopLoading } = useProgress();
+
+    const { windowWidth, windowHeight } = useWindowSize();
+
+    console.log('userContext:');
+    console.log(userContext.value);
 
     const showComments = ref(false);
 
@@ -109,32 +169,39 @@ export default defineComponent({
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const voted = computed(() => oidcIsAuthenticated.value && (userVoted.value === 'UP_VOTE'));
 
-    const activityDate = computed(() => lastActivity.value || creationDate.value);
-
     const project = computed(() => store.getters.getProjectById(projectId.value));
     store.dispatch(ActionTypes.FetchProject, projectId.value);
 
+    const category = computed(() => {
+      if (categories.value.length > 0) {
+        return store.getters.getCategoryById(categories.value[0]);
+      }
+      return null;
+    });
+
+    const projectCategories = computed(() => store.getters.categoriesList(projectId.value, { page: 0, per_page: 200, sort: 'name', sortDirection: 'ASC', search: '' }));
+
     //get github_url from project's additionalProperties
     const github_url = computed(() => {
-      if (project.value && project.value.additionalProperties && project.value.additionalProperties.github_url ) {
+      if (project.value && project.value.additionalProperties && project.value.additionalProperties.github_url) {
         return project.value.additionalProperties.github_url
       }
     });
     const issue_url = computed(() => {
-      if (additionalProperties.value && additionalProperties.value.issue_url ) {
+      if (additionalProperties.value && additionalProperties.value.issue_url) {
         return additionalProperties.value.issue_url
       }
     });
 
     const alertLogin = (message: string) => {
       confirm.require({
-          group: 'dialog',
-          message: message,
-          header: 'Login',
-          icon: 'pi pi-info-circle',
-          rejectClass: 'p-sr-only',
-          acceptLabel: 'OK',
-        });
+        group: 'dialog',
+        message: message,
+        header: 'Login',
+        icon: 'pi pi-info-circle',
+        rejectClass: 'p-sr-only',
+        acceptLabel: 'OK',
+      });
     }
 
 
@@ -166,6 +233,51 @@ export default defineComponent({
       displayRequirementEditor.value = false;
     }
 
+    const displayCategoryDialog = ref(false);
+    const availableCategoryOptions = computed(() => {
+      return projectCategories.value.map(category => {
+        return {
+          label: category.name,
+          value: category,
+        };
+      });
+    });
+    const selectedCategoryOption = ref();
+    const changeCategoryInProgress = ref(false);
+    const showDisplayCategoryDialog = async () => {
+      startLoading();
+      await store.dispatch(ActionTypes.FetchCategoriesOfProject, { projectId: projectId.value });
+      selectedCategoryOption.value = availableCategoryOptions.value.find(category => category.value.id === categories.value[0]);
+      stopLoading();
+      displayCategoryDialog.value = true;
+    };
+
+    const changeRequirementCategory = async () => {
+      const parameters = {
+        requirementId: id.value,
+        projectId: projectId.value,
+        categoryId: selectedCategoryOption.value.value.id,
+      };
+      await store.dispatch(ActionTypes.MoveRequirement, parameters);
+
+      displayCategoryDialog.value = false;
+    };
+
+    const displayExportPopup = ref(false);
+    const exportPopupCanceled = () => {
+      displayExportPopup.value = false;
+    }
+    const exportPopupSaved = () => {
+      displayExportPopup.value = false;
+    }
+
+    var requirement = {
+      id: id.value,
+      name: name.value,
+      description: description.value,
+      additionalProperties: additionalProperties.value,
+    }
+
     const menuItems = ref();
     // watch multiple props
     watch(
@@ -176,21 +288,21 @@ export default defineComponent({
             label: isFollower ? t('unfollowRequirement') : t('followRequirement'),
             icon: 'pi pi-bell',
             command: () => {
-              store.dispatch(ActionTypes.FollowRequirement, {id: id.value, isFollower: isFollower ? false : true});
+              store.dispatch(ActionTypes.FollowRequirement, { id: id.value, isFollower: isFollower ? false : true });
             }
           },
           {
             label: isDeveloper ? t('undevelopRequirement') : t('developRequirement'),
             icon: 'pi pi-file',
             command: () => {
-              store.dispatch(ActionTypes.DevelopRequirement, {requirementId: id.value, isDeveloper: isDeveloper ? false : true});
+              store.dispatch(ActionTypes.DevelopRequirement, { requirementId: id.value, isDeveloper: isDeveloper ? false : true });
             }
           },
           {
             label: realized ? t('markAsUndone') : t('markAsDone'),
             icon: 'pi pi-check',
             command: () => {
-              store.dispatch(ActionTypes.RealizeRequirement, {requirementId: id.value, realized: realized ? false : true});
+              store.dispatch(ActionTypes.RealizeRequirement, { requirementId: id.value, realized: realized ? false : true });
             }
           },
           {
@@ -217,13 +329,29 @@ export default defineComponent({
               }
             }
           },
+          ...(userContext.value?.isMoveAllowed ? [
+            {
+              label: t('moveRequirementToCategory'),
+              icon: 'pi pi-arrow-right-arrow-left',
+              command: () => {
+                showDisplayCategoryDialog();
+              }
+            }] : []),
+          ...(userContext.value?.isDeleteAllowed ? [
+            {
+              label: t('deleteRequirement'),
+              icon: 'pi pi-trash',
+              command: () => {
+                confirmDelete();
+              }
+            }] : []),
           {
-            label: t('deleteRequirement'),
-            icon: 'pi pi-times',
+            label: t('exportBtn'),
+            icon: 'pi pi-download',
             command: () => {
-              confirmDelete();
+              displayExportPopup.value = true;
             }
-          }
+          },
         ];
       },
       {
@@ -256,16 +384,24 @@ export default defineComponent({
         label: t('copyToClipboard'),
         icon: 'pi pi-copy',
         command: () => {
-          navigator.clipboard.writeText(createShareableRequirementLink(projectId, id));
+          navigator.clipboard.writeText(createShareableRequirementLink(projectId.value, id.value));
         },
       },
     ]);
+
+    const requirementPagePath = computed(() => routePathToRequirement(projectId.value, id.value));
+    const onCardClick = () => {
+      push(requirementPagePath.value);
+    };
 
     return {
       id,
       projectId,
       voted,
-      activityDate,
+      creationDate,
+      lastActivity,
+      lastActivityUser,
+      showLastActivity,
       oidcIsAuthenticated,
       showComments,
       toggleCommentsPanel,
@@ -281,94 +417,136 @@ export default defineComponent({
       requirementEditorCanceled,
       requirementEditorSaved,
       issue_url,
+      displayCategoryDialog,
+      category,
+      availableCategoryOptions,
+      selectedCategoryOption,
+      changeRequirementCategory,
+      changeCategoryInProgress,
+      windowWidth,
+      onCardClick,
+      requirementPagePath,
+      displayExportPopup,
+      exportPopupSaved,
+      exportPopupCanceled,
+      requirement
     };
   },
 })
 </script>
 
 <style scoped>
-  #card ::v-deep(.p-card-content) {
-    padding: 0;
-  }
+#card ::v-deep(.p-card-content) {
+  padding: 0;
+}
 
-  #timeline {
-    margin-bottom: 1rem;
-  }
+#timeline {
+  margin-bottom: 1rem;
+}
 
-  .lastupdate {
-    padding-top: 0.25em;
-    font-weight: normal;
-    font-size: 0.6em;
-    color: #5d5d5d;
-  }
+.lastupdate {
+  padding-top: 0.25em;
+  font-weight: normal;
+  font-size: 0.6em;
+  color: #5d5d5d;
+}
 
-  #figures {
-    display: flex;
+#figures {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding-top: 0.5em;
+  font-weight: bold;
+}
+
+#followers {
+  flex: 1;
+  text-align: center;
+}
+
+#comments {
+  text-align: end;
+}
+
+#comments:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#actionButtons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-top: 1rem;
+}
+
+#groupedButtons {
+  display: flex;
+  flex: 1;
+}
+
+#groupedButtons>* {
+  display: flex;
+  flex: 1;
+  margin-inline-end: .5rem;
+  font-weight: bold;
+}
+
+#groupedButtons :last-child {
+  margin-inline-end: 0;
+}
+
+.card-title {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-bottom: 0.25em;
+}
+
+.title {
+  /* normize color which'd be added by router link ->*/
+  color: #495057;
+  padding-top: 0.25em;
+}
+
+.moreButton {
+  margin-inline-start: .5rem;
+}
+
+.commentsList {
+  padding-top: 1.5rem;
+}
+
+/*Timeline*/
+.custom-marker {
+  display: flex;
+  width: 2rem;
+  height: 1rem;
+  align-items: center;
+  justify-content: center;
+  color: green;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .card-title {
+    align-items: center;
     flex-direction: row;
-    width: 100%;
-    padding-top: 0.5em;
-    font-weight: bold;
-  }
-
-  #followers {
-    flex: 1;
-    text-align: center;
-  }
-
-  #comments {
-    text-align: end;
-  }
-
-  #comments:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-
-  #actionButtons {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    padding-top: 1rem;
-  }
-
-  #groupedButtons {
-    display: flex;
-    flex: 1;
-  }
-
-  #groupedButtons > * {
-    display: flex;
-    flex: 1;
-    margin-inline-end: .5rem;
-    font-weight: bold;
-  }
-
-  #groupedButtons :last-child {
-    margin-inline-end: 0;
   }
 
   .title {
-    /* normize color which'd be added by router link ->*/
-    color: #495057;
+    padding-top: 0px;
   }
+}
 
-  .moreButton {
-    margin-inline-start: .5rem;
-  }
+.footer {
+  text-align: end;
+  margin-top: 2%;
+}
 
-  .commentsList {
-    padding-top: 1.5rem;
-  }
-
-    /*Timeline*/
-  .custom-marker {
-    display: flex;
-    width: 2rem;
-    height: 1rem;
-    align-items: center;
-    justify-content: center;
-    color: green;
-    border-radius: 50%;
-    z-index: 1;
-  }
+.footer ::v-deep(.p-button) {
+  width: auto;
+}
 </style>

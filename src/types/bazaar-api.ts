@@ -217,6 +217,8 @@ export interface Requirement {
 
   /** @format date-time */
   lastUpdatedDate?: string;
+  lastUpdatingUser?: User;
+  lastActivityUser?: User;
 
   /** @format date-time */
   lastActivity?: string;
@@ -298,6 +300,14 @@ export interface ProjectContributors {
 
 export interface Direction {
   direction?: "up" | "down";
+}
+
+export interface NewRequirementLocation {
+  /** @format int32 */
+  projectId?: number;
+
+  /** @format int32 */
+  categoryId?: number;
 }
 
 export interface RequirementContributors {
@@ -1297,6 +1307,21 @@ export namespace Requirements {
     export type RequestParams = { requirementId: number };
     export type RequestQuery = {};
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = Requirement;
+  }
+  /**
+   * No description
+   * @tags requirements
+   * @name MoveRequirement
+   * @summary This method moves the requirement to another category or even another project.
+   * @request POST:/requirements/{requirementId}/move
+   * @secure
+   */
+  export namespace MoveRequirement {
+    export type RequestParams = { requirementId: number };
+    export type RequestQuery = {};
+    export type RequestBody = NewRequirementLocation;
     export type RequestHeaders = {};
     export type ResponseBody = Requirement;
   }
@@ -2911,6 +2936,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/requirements/${requirementId}/developers`,
         method: "DELETE",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags requirements
+     * @name MoveRequirement
+     * @summary This method moves the requirement to another category or even another project.
+     * @request POST:/requirements/{requirementId}/move
+     * @secure
+     */
+    moveRequirement: (requirementId: number, body: NewRequirementLocation, params: RequestParams = {}) =>
+      this.request<Requirement, void>({
+        path: `/requirements/${requirementId}/move`,
+        method: "POST",
+        body: body,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),

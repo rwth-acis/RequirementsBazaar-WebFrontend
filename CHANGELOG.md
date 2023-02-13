@@ -9,6 +9,51 @@ Releases prior to v2.0.1 are only documented on
 the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/releases)
 
 ## [Unreleased]
+## [2.5.0] - 2023-01-30
+
+### Added
+
+- Add export of single Requirements and Categories to Pdf and LaTeX
+  [#271](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/271)
+
+### Changed
+
+- Changed size of twitter timeline on landing page
+  [commit 5094c610450af878a7ca00fc0edc2fb84b17dc1d](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/5094c610450af878a7ca00fc0edc2fb84b17dc1d)
+- French translation updates
+  [#248](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/248)
+- Updated vite to v4.0.2
+  [commit 0a7de6edca35706b426540156cac21a94821fe1f](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/0a7de6edca35706b426540156cac21a94821fe1f)
+- Updated vue to v3.2.45
+  [commit 0a7de6edca35706b426540156cac21a94821fe1f](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/0a7de6edca35706b426540156cac21a94821fe1f)
+- Updated primeicons to v6.0.1
+  [commit 296053fd3bd52bda6a14091dd315f92bd672825b](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/296053fd3bd52bda6a14091dd315f92bd672825b)
+- Changed Icons of move requirement and delete
+  [commit e2f4d0adbdfc8227ec97794b4f5facc175f95f3b](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/e2f4d0adbdfc8227ec97794b4f5facc175f95f3b)
+- Fixed loading indicator when error occurs
+  [commit 8f080e8ac103b15140f19e4f6a8a4d9f7421b54a](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/8f080e8ac103b15140f19e4f6a8a4d9f7421b54a)
+
+
+## [2.4.0] - 2022-05-16
+
+### Added
+
+- Add loading indicators when editing projects, categories, and requirements
+  [#240](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/240)
+- Separate labels for last activity and creation data, including user the related user name
+  [#244](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/244)
+
+### Changed
+
+- Fixed invalid shareable requirement link
+  [#235](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/235)
+- Fixed adding requirement at wrong position of list after creation
+  [#247](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/247)
+- Migrate to new OIDC domain
+  [#249](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/249)
+- French translation updates
+  [#231](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/231)
+
 
 ## [2.3.0] - 2022-04-03
 

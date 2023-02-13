@@ -8,10 +8,10 @@
     NEXT DATA RESET (current grace period): September 30, 2021
   </h2>-->
   <div class="p-grid">
-    <div class="p-col">
-      <img src="/reqbaz-responsive.png" style="max-width: 400px;">
+    <div class="p-col-12 p-md-6">
+      <img src="/reqbaz-responsive.png" style="margin-left: auto; margin-right: auto;">
     </div>
-    <div class="p-col">
+    <div class="p-col-12 p-md-6">
       <h2>{{ t('lp-title') }}</h2>
       <div class="description">
         {{ t('lp-desc') }}
@@ -26,58 +26,52 @@
     <h2>{{ t('landing-reqBazInNumbers') }}</h2>
 
     <div class="p-grid">
-        <div class="p-col statistics-item">
-          <Autocounter v-if="statistics?.numberOfProjects" class="value"
-            :startAmount='0'
-            :endAmount="statistics?.numberOfProjects"
-            :duration='0.8'
-            separator=','
-            :autoinit='true' />
-          <span v-else class="value">...</span>
-          <p class="label">{{ t('landing-projectsCountLabel') }}</p>
-          <div class="monthly-change" v-if="lastMonthStatistics?.numberOfProjects !== undefined">
-            <span class="change-value">+ {{ lastMonthStatistics?.numberOfProjects }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
-          </div>
+      <div class="p-col statistics-item">
+        <Autocounter v-if="statistics?.numberOfProjects" class="value" :startAmount='0'
+          :endAmount="statistics?.numberOfProjects" :duration='0.8' separator=',' :autoinit='true' />
+        <span v-else class="value">...</span>
+        <p class="label">{{ t('landing-projectsCountLabel') }}</p>
+        <div class="monthly-change" v-if="lastMonthStatistics?.numberOfProjects !== undefined">
+          <span class="change-value">+ {{ lastMonthStatistics?.numberOfProjects }}</span> <span class="suffix">{{
+            t('landing-lastMonthLabel')
+          }}</span>
         </div>
-        <div class="p-col statistics-item">
-          <Autocounter v-if="statistics?.numberOfRequirements" class="value"
-            :startAmount='0'
-            :endAmount="statistics?.numberOfRequirements"
-            :duration='0.9'
-            separator=','
-            :autoinit='true' />
-          <span v-else class="value">...</span>
-          <p class="label">{{ t('landing-requirementsCountLabel') }}</p>
-          <div class="monthly-change" v-if="lastMonthStatistics?.numberOfRequirements !== undefined">
-            <span class="change-value">+ {{ lastMonthStatistics?.numberOfRequirements }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
-          </div>
+      </div>
+      <div class="p-col statistics-item">
+        <Autocounter v-if="statistics?.numberOfRequirements" class="value" :startAmount='0'
+          :endAmount="statistics?.numberOfRequirements" :duration='0.9' separator=',' :autoinit='true' />
+        <span v-else class="value">...</span>
+        <p class="label">{{ t('landing-requirementsCountLabel') }}</p>
+        <div class="monthly-change" v-if="lastMonthStatistics?.numberOfRequirements !== undefined">
+          <span class="change-value">+ {{ lastMonthStatistics?.numberOfRequirements }}</span> <span class="suffix">{{
+            t('landing-lastMonthLabel')
+          }}</span>
         </div>
-        <div class="p-col statistics-item">
-          <Autocounter v-if="statistics?.numberOfComments" class="value"
-            :startAmount='0'
-            :endAmount="statistics?.numberOfComments"
-            :duration='1.0'
-            separator=','
-            :autoinit='true' />
-          <span v-else class="value">...</span>
-          <p class="label">{{ t('landing-commentsCountLabel') }}</p>
-          <div class="monthly-change" v-if="lastMonthStatistics?.numberOfComments !== undefined">
-            <span class="change-value">+ {{ lastMonthStatistics?.numberOfComments }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
-          </div>
+      </div>
+      <div class="p-col statistics-item">
+        <Autocounter v-if="statistics?.numberOfComments" class="value" :startAmount='0'
+          :endAmount="statistics?.numberOfComments" :duration='1.0' separator=',' :autoinit='true' />
+        <span v-else class="value">...</span>
+        <p class="label">{{ t('landing-commentsCountLabel') }}</p>
+        <div class="monthly-change" v-if="lastMonthStatistics?.numberOfComments !== undefined">
+          <span class="change-value">+ {{ lastMonthStatistics?.numberOfComments }}</span> <span class="suffix">{{
+            t('landing-lastMonthLabel')
+          }}</span>
         </div>
-        <div class="p-col statistics-item">
-          <Autocounter v-if="userStatistics?.numberOfActiveUsers" class="value"
-            :startAmount='0'
-            :endAmount="userStatistics?.numberOfActiveUsers"
-            :duration='1.1'
-            separator=','
-            :autoinit='true' />
-          <span v-else class="value">...</span>
-          <p class="label" v-tooltip.bottom="t('landing-activeUsersCountRangeLabel')">{{ t('landing-activeUsersCountLabel') }}</p>
-          <div class="monthly-change" v-if="lastMonthUserStatistics?.numberOfActiveUsers !== undefined">
-            <span class="change-value">{{ lastMonthUserStatistics?.numberOfActiveUsers }}</span> <span class="suffix">{{ t('landing-lastMonthLabel') }}</span>
-          </div>
+      </div>
+      <div class="p-col statistics-item">
+        <Autocounter v-if="userStatistics?.numberOfActiveUsers" class="value" :startAmount='0'
+          :endAmount="userStatistics?.numberOfActiveUsers" :duration='1.1' separator=',' :autoinit='true' />
+        <span v-else class="value">...</span>
+        <p class="label" v-tooltip.bottom="t('landing-activeUsersCountRangeLabel')">{{
+          t('landing-activeUsersCountLabel')
+        }}</p>
+        <div class="monthly-change" v-if="lastMonthUserStatistics?.numberOfActiveUsers !== undefined">
+          <span class="change-value">{{ lastMonthUserStatistics?.numberOfActiveUsers }}</span> <span class="suffix">{{
+            t('landing-lastMonthLabel')
+          }}</span>
         </div>
+      </div>
     </div>
   </section>
 
@@ -85,33 +79,33 @@
     <h2 style="text-align: center; font-size: 2.5em;">{{ t('landing-features') }}</h2>
     <div class="p-grid">
 
-        <div class="p-col feature">
-          <div class="feature-icon">
-            <img src="/feature-icons/discuss.png" />
-          </div>
-          <h5 class="title" style="text-align: center;">{{ t('landing-featureDiscussTitle') }}</h5>
-          <p class="body">{{ t('landing-featureDiscussText') }}</p>
+      <div class="p-col-12 p-sm-6 p-md-4 feature">
+        <div class="feature-icon">
+          <img src="/feature-icons/discuss.png" />
         </div>
+        <h5 class="title" style="text-align: center;">{{ t('landing-featureDiscussTitle') }}</h5>
+        <p class="body">{{ t('landing-featureDiscussText') }}</p>
+      </div>
 
-        <div class="p-col feature">
-          <div class="feature-icon">
-            <img src="/feature-icons/vote.png" />
-          </div>
-          <h5 class="title">{{ t('landing-featureVoteTitle') }}</h5>
-          <p class="body">
-            {{ t('landing-featureVoteText') }}
-          </p>
+      <div class="p-col-12 p-sm-6 p-md-4 feature">
+        <div class="feature-icon">
+          <img src="/feature-icons/vote.png" />
         </div>
+        <h5 class="title">{{ t('landing-featureVoteTitle') }}</h5>
+        <p class="body">
+          {{ t('landing-featureVoteText') }}
+        </p>
+      </div>
 
-        <div class="p-col feature">
-          <div class="feature-icon">
-            <img src="/feature-icons/github.png" />
-          </div>
-          <h5 class="title">{{ t('landing-featureGitHubTitle') }}</h5>
-          <p class="body">
-            {{ t('landing-featureGitHubText') }}
-          </p>
+      <div class="p-col feature">
+        <div class="feature-icon">
+          <img src="/feature-icons/github.png" />
         </div>
+        <h5 class="title">{{ t('landing-featureGitHubTitle') }}</h5>
+        <p class="body">
+          {{ t('landing-featureGitHubText') }}
+        </p>
+      </div>
     </div>
   </section>
 
@@ -122,19 +116,13 @@
       {{ t('landing-featuredProjects-text') }}
     </p>
 
-    <div class="featured-projects">
-      <div v-for="project in featuredProjects" :key="project.id" class="p-m-3 project">
+    <div class="p-grid">
+      <div v-for="project in featuredProjects" :key="project.id" class="p-m-3 p-col">
         <router-link :to="'/projects/' + project.id">
-          <ProjectCard
-            :id="project.id"
-            :name="project.name"
-            :description="project.description"
-            :creationDate="project.creationDate"
-            :lastActivity="project.lastActivity"
-            :numberOfCategories="project.numberOfCategories"
-            :numberOfFollowers="project.numberOfFollowers"
-            :numberOfRequirements="project.numberOfRequirements"
-            :compact="false">
+          <ProjectCard :id="project.id" :name="project.name" :description="project.description"
+            :creationDate="project.creationDate" :lastActivity="project.lastActivity"
+            :numberOfCategories="project.numberOfCategories" :numberOfFollowers="project.numberOfFollowers"
+            :numberOfRequirements="project.numberOfRequirements" :compact="false">
           </ProjectCard>
         </router-link>
       </div>
@@ -145,15 +133,10 @@
       {{ t('landing-reqBazProject-description') }}
     </p>
     <a target="_blank" rel="noreferrer" href="https://requirements-bazaar.org/projects/2">
-      <ProjectCard v-if="reqBazProject"
-        :id="reqBazProject.id"
-        :name="reqBazProject.name"
-        :description="reqBazProject.description"
-        :creationDate="reqBazProject.creationDate"
-        :lastActivity="reqBazProject.lastActivity"
-        :numberOfCategories="reqBazProject.numberOfCategories"
-        :numberOfFollowers="reqBazProject.numberOfFollowers"
-        :numberOfRequirements="reqBazProject.numberOfRequirements"
+      <ProjectCard v-if="reqBazProject" :id="reqBazProject.id" :name="reqBazProject.name"
+        :description="reqBazProject.description" :creationDate="reqBazProject.creationDate"
+        :lastActivity="reqBazProject.lastActivity" :numberOfCategories="reqBazProject.numberOfCategories"
+        :numberOfFollowers="reqBazProject.numberOfFollowers" :numberOfRequirements="reqBazProject.numberOfRequirements"
         :compact="false">
       </ProjectCard>
       <div style="text-align: center;" v-else>
@@ -163,7 +146,7 @@
   </section>
 
   <div class="p-grid p-pt-3 p-pb-5">
-    <section class="p-col-7">
+    <section class="p-col-12 p-md-7 p-pb-6">
       <h2>{{ t('landing-how-it-works') }}</h2>
       <div class="description">
         <div>{{ t('landing-step-1') }}</div>
@@ -181,11 +164,8 @@
       </router-link>
     </section>
 
-    <div class="p-col-5">
-      <a class="twitter-timeline"
-        href="https://twitter.com/reqbaz"
-        data-height="80vh"
-        data-width="100%">
+    <div class="p-col-12 p-md-5">
+      <a class="twitter-timeline" href="https://twitter.com/reqbaz" data-height="270vh" data-width="100%">
         Tweets by @reqbaz
       </a>
     </div>
@@ -199,7 +179,6 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 import ProjectCard from '@/components/ProjectCard.vue';
-
 
 import { bazaarApi, prodBazaarApi } from '../api/bazaar';
 import { ActionTypes } from '@/store/actions';
@@ -224,14 +203,24 @@ export default defineComponent({
     });
 
     // Load Twitter script to display timeline
-    onMounted(() => loadTwitterWidgetJS());
+    onMounted(() => {
+      loadTwitterWidgetJS();
+      // workaround refresh twitter widget after route change
+      try {
+        if ((window as any).twttr.widgets) {
+          (window as any).twttr.widgets.load();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
 
     const statistics = ref();
     bazaarApi.statistics.getStatistics().then(response => statistics.value = response.data);
 
     const userStatistics = ref();
     const oneYearAgo = new Date();
-    oneYearAgo.setFullYear( oneYearAgo.getFullYear() - 1 );
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
     bazaarApi.userStatistics.getUserStatistics({
       start: oneYearAgo.toISOString(),
     }).then(response => userStatistics.value = response.data);
@@ -280,7 +269,7 @@ export default defineComponent({
  * Taken from: https://developer.twitter.com/en/docs/twitter-for-websites/javascript-api/guides/set-up-twitter-for-websites
  */
 function loadTwitterWidgetJS() {
-  (window as any).twttr = (function(d, s, id) {
+  (window as any).twttr = (function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0],
       t = (window as any).twttr || {};
     if (d.getElementById(id)) return t;
@@ -290,7 +279,7 @@ function loadTwitterWidgetJS() {
     fjs.parentNode!.insertBefore(js, fjs);
 
     t._e = [];
-    t.ready = function(f) {
+    t.ready = function (f) {
       t._e.push(f);
     };
 
@@ -301,68 +290,59 @@ function loadTwitterWidgetJS() {
 </script>
 
 <style scoped>
-  .description {
-    font-size: 15pt;
-    margin-bottom: 20px;
-  }
+.description {
+  font-size: 15pt;
+  margin-bottom: 20px;
+}
 
-  .statistics-item {
-    text-align: center;
-  }
+.statistics-item {
+  text-align: center;
+}
 
-  .statistics-item .label {
-    font-size: 2em;
-  }
+.statistics-item .label {
+  font-size: 2em;
+}
 
-  .statistics-item .value {
-    font-size: 4em;
-    font-weight: bold;
-    color: #4CAF50;
-  }
+.statistics-item .value {
+  font-size: 4em;
+  font-weight: bold;
+  color: #4CAF50;
+}
 
-  .statistics-item .monthly-change {
-    padding-top: 5px;
-    font-weight: bold;
-    color: #ff9800;
-  }
+.statistics-item .monthly-change {
+  padding-top: 5px;
+  font-weight: bold;
+  color: #ff9800;
+}
 
-  .statistics-item .monthly-change .change-value {
-    font-size: 1.5em;
-  }
+.statistics-item .monthly-change .change-value {
+  font-size: 1.5em;
+}
 
-  .statistics-item .monthly-change .suffix {
-    font-size: 0.85em;
-  }
+.statistics-item .monthly-change .suffix {
+  font-size: 0.85em;
+}
 
-  .feature {
-    text-align: center;
-  }
+.feature {
+  text-align: center;
+}
 
-  .feature .title {
-    font-size: 1.5em;
-    font-weight: bold;
-  }
+.feature .title {
+  font-size: 1.5em;
+  font-weight: bold;
+}
 
-  .feature .body {
-    text-align: center;
-  }
+.feature .body {
+  text-align: center;
+}
 
-  .feature-icon {
-    width: 95px;
-    margin: auto;
-  }
+.feature-icon {
+  width: 95px;
+  margin: auto;
+}
 
-  .featured-projects {
-    display: flex;
-    justify-content: center;
-  }
-
-  .featured-projects .project {
-    flex: 1 1 0px;
-  }
-
-  img {
-    width: 100%;
-    height: auto;
-  }
+img {
+  width: 100%;
+  height: auto;
+}
 </style>

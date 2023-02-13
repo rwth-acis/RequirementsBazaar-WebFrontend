@@ -4,7 +4,9 @@ import { store } from "./store";
 import { createI18n } from 'vue-i18n'
 import App from './App.vue';
 
-import messages from '@intlify/vite-plugin-vue-i18n/messages';
+import Cookies from 'js-cookie';
+
+import messages from '@intlify/unplugin-vue-i18n/messages';
 
 import VueMarkdownIt from 'vue3-markdown-it';
 import Vue3Autocounter from 'vue3-autocounter';
@@ -64,7 +66,7 @@ import ErrorHandler from './service/ErrorHandler';
 const app = createApp(App);
 const i18n = createI18n({
   legacy: false,
-  locale: 'en',
+  locale: (Cookies.get('locale') ?? 'en'),
   fallbackLocale: 'en',
   messages
 });

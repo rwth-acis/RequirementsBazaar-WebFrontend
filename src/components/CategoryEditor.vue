@@ -44,6 +44,8 @@ import { useVuelidate } from "@vuelidate/core";
 import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
 
+import { useProgress } from '@/service/ProgressService';
+
 export default defineComponent({
   name: 'CategoryEditor',
   props: {
@@ -70,6 +72,7 @@ export default defineComponent({
   setup: ({ name, description, categoryId, projectId }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
+    const { startLoading, stopLoading } = useProgress();
 
     const submitted = ref(false);
 
@@ -96,7 +99,11 @@ export default defineComponent({
       submitted.value = true;
 
       const isFormCorrect = await v$.value.$validate();
-      if (!isFormCorrect) return;
+      if (!isFormCorrect) {
+        return;
+      } else {
+        startLoading();
+      }
 
       const category: Category = {
         name: state.name,
@@ -105,12 +112,17 @@ export default defineComponent({
       };
 
       if (!categoryId) {
-        store.dispatch(ActionTypes.CreateCategory, category);
+        store.dispatch(ActionTypes.CreateCategory, category).then(() => {
+          stopLoading();
+          emit('save');
+        });
       } else {
         category.id = categoryId;
-        store.dispatch(ActionTypes.UpdateCategory, category);
+        store.dispatch(ActionTypes.UpdateCategory, category).then(() => {
+          stopLoading();
+          emit('save');
+        });
       }
-      emit('save');
     }
 
     return { t, submitted, state, v$, cancel, handleSubmit, turndownService };

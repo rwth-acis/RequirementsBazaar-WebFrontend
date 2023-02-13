@@ -8,6 +8,9 @@
       </template>
     </Dialog>
     <div>
+      <div v-if="comments.length === 0">
+        <p>{{ t('noComments') }}</p>
+      </div>
       <div v-for="comment in comments" :key="comment.id" class="comment p-mb-3">
         <div class="p-d-flex p-mb-1" :class="{ reply: comment.replyToComment }">
             <!-- NOTE: creator attribute may be null (e.g., when comment was deleted) -->

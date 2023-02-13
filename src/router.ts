@@ -9,9 +9,11 @@ import Projects from './views/Projects.vue';
 import Project from './views/Project.vue';
 import Category from './views/Category.vue';
 import Requirement from './views/Requirement.vue';
+import ActivityTrackerView from './views/ActivityTrackerView.vue';
 import OidcCallback from './views/oidc/OidcCallback.vue';
 import OidcPopupCallback from './views/oidc/OidcPopupCallback.vue'
 import OidcCallbackError from './views/oidc/OidcCallbackError.vue'
+import { useStore } from 'vuex';
 import { vuexOidcCreateRouterMiddleware } from 'vuex-oidc';
 import { store } from './store';
 
@@ -101,6 +103,11 @@ export const router = createRouter({
       name: "requirement",
       component: Requirement,
     },
+    {
+      path: "/activity-tracker",
+      name: "actiity-tracker",
+      component: ActivityTrackerView,
+    },
   ],
 });
 
@@ -118,5 +125,12 @@ export const routePathToRequirement = (projectId: string | number, requirementId
 router.beforeEach(vuexOidcCreateRouterMiddleware(store, 'oidcStore'))
 router.beforeEach((to, from, next) => {
   console.log({to, from});
-  next();
+
+  const isAuthenticated = store.getters['oidcStore/oidcIsAuthenticated'];
+
+  if (to.name === 'Home' && !isAuthenticated) {
+    next({name: 'landing'});
+  } else {
+    next();
+  }
 });

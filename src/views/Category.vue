@@ -3,8 +3,6 @@
   <ProjectBreadcrumbNav v-if="category && project"
     :projectId="category.projectId"
     :projectName="project.name"
-    :categoryId="category.id"
-    :categoryName="category.name"
     class="p-mt-3" />
   <h1>{{ category?.name }}</h1>
   <div id="description">
@@ -19,6 +17,16 @@
       @cancel="categoryEditorCanceled"
       @save="categoryEditorSaved">
     </CategoryEditor>
+  </Dialog>
+  <Dialog :header="t('exportCategory')" v-model:visible="displayExportPopup" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '25vw'}" :modal="true">
+    <ExportPopup
+      :categoryName="category?.name"
+      :id="category?.id"
+      :realizedRequirements="realizedRequirements"
+      :activeRequirements="activeRequirements"
+      @cancel="exportPopupCanceled"
+      @save="exportPopupSaved">
+    </ExportPopup>
   </Dialog>
   <div id="addRequirementPanel">
     <Button
@@ -69,11 +77,13 @@
             :creator="requirement.creator"
             :creationDate="requirement.creationDate"
             :lastActivity="requirement.lastActivity"
+            :lastActivityUser="requirement.lastActivityUser"
             :userVoted="requirement.userContext.userVoted"
             :isFollower="requirement.userContext.isFollower ? true : false"
             :isDeveloper="requirement.userContext.isDeveloper ? true : false"
             :realized="requirement.realized"
-            :additionalProperties="requirement.additionalProperties">
+            :additionalProperties="requirement.additionalProperties"
+            :userContext="requirement.userContext ?? {}">
           </RequirementCard>
         </div>
       </div>
@@ -94,11 +104,13 @@
             :creator="requirement.creator"
             :creationDate="requirement.creationDate"
             :lastActivity="requirement.lastActivity"
+            :lastActivityUser="requirement.lastActivityUser"
             :userVoted="requirement.userContext.userVoted"
             :isFollower="requirement.userContext.isFollower ? true : false"
             :isDeveloper="requirement.userContext.isDeveloper ? true : false"
             :realized="requirement.realized"
-            :additionalProperties="requirement.additionalProperties">
+            :additionalProperties="requirement.additionalProperties"
+            :userContext="requirement.userContext ?? {}">
           </RequirementCard>
         </div>
       </div>
@@ -117,6 +129,7 @@ import { ActionTypes } from '../store/actions';
 import FilterPanel from '../components/FilterPanel.vue';
 import RequirementCard from '../components/RequirementCard.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
+import ExportPopup from '../components/ExportPopup.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
@@ -124,7 +137,7 @@ import { Requirement } from '@/types/bazaar-api';
 
 export default defineComponent({
   name: 'Category',
-  components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor, ProjectBreadcrumbNav },
+  components: { FilterPanel, RequirementCard, CategoryEditor, RequirementEditor, ProjectBreadcrumbNav, ExportPopup },
   props: {
   },
   setup: (props) => {
@@ -202,6 +215,24 @@ export default defineComponent({
       }
     };
 
+    const removeDeletedRequirementsInCurrentListHelper = () => {
+      activeRequirements.value.forEach(requirement => {
+        if (!activeRequirementsFromStore.value.some(e => e.id === requirement.id)
+            && !realizedRequirementsFromStore.value.some(e => e.id === requirement.id)) {
+          // requirement is neither in the active nor in the realized list => it was deleted
+          activeRequirements.value.splice(activeRequirements.value.indexOf(requirement), 1);
+        }
+      });
+
+      realizedRequirements.value.forEach(requirement => {
+        if (!activeRequirementsFromStore.value.some(e => e.id === requirement.id)
+            && !realizedRequirementsFromStore.value.some(e => e.id === requirement.id)) {
+          // requirement is neither in the active nor in the realized list => it was deleted
+          realizedRequirements.value.splice(realizedRequirements.value.indexOf(requirement), 1);
+        }
+      });
+    }
+
     watch(activeRequirementsFromStore, () => {
       if (updatingActiveRequirementsListEnabled.value) {
         activeRequirements.value = activeRequirementsFromStore.value;
@@ -210,6 +241,9 @@ export default defineComponent({
         // instead of replacing the whole list, we update the individual requirements if ID matches ('soft' update)
         activeRequirementsFromStore.value.forEach(replaceRequirementInCurrentListHelper);
       }
+
+      // Remove requirements which no longer exist in store
+      removeDeletedRequirementsInCurrentListHelper();
     });
     watch(realizedRequirementsFromStore, () => {
       if (updatingRealizedRequirementsListEnabled.value) {
@@ -219,6 +253,9 @@ export default defineComponent({
         // instead of replacing the whole list, we update the individual requirements if ID matches ('soft' update)
         realizedRequirementsFromStore.value.forEach(replaceRequirementInCurrentListHelper);
       }
+
+      // Remove requirements which no longer exist in store
+      removeDeletedRequirementsInCurrentListHelper();
     });
 
     store.dispatch(ActionTypes.FetchRequirementsOfCategory, {categoryId: categoryId, query: parameters.value});
@@ -290,11 +327,20 @@ export default defineComponent({
     }
 
     const displayCategoryEditor = ref(false);
+    const displayExportPopup = ref(false);
+
     const categoryEditorCanceled = () => {
       displayCategoryEditor.value = false;
     }
     const categoryEditorSaved = () => {
       displayCategoryEditor.value = false;
+    }
+
+    const exportPopupCanceled = () => {
+      displayExportPopup.value = false;
+    }
+    const exportPopupSaved = () => {
+      displayExportPopup.value = false;
     }
 
     const moreMenu = ref(null);
@@ -311,9 +357,16 @@ export default defineComponent({
       },
       {
         label: t('deleteCategory'),
-        icon: 'pi pi-times',
+        icon: 'pi pi-trash',
         command: () => {
           confirmDelete();
+        }
+      },
+      {
+        label: t('exportBtn'),
+        icon: 'pi pi-download',
+        command: () => {
+          displayExportPopup.value = true;
         }
       },
     ]);
@@ -323,6 +376,7 @@ export default defineComponent({
     }
 
     const editorSaved = () => {
+      forceUpdateRequirementsList();
       toggleAddRequirement();
     }
 
@@ -349,8 +403,11 @@ export default defineComponent({
       editorCanceled,
       editorSaved,
       displayCategoryEditor,
+      displayExportPopup,
       categoryEditorCanceled,
       categoryEditorSaved,
+      exportPopupSaved,
+      exportPopupCanceled,
     }
   }
 })
@@ -380,16 +437,19 @@ export default defineComponent({
   #menuBar {
     width: 100%;
     display: flex;
+    flex-direction: column-reverse;
   }
 
   #menuBar #tabMenu {
     flex: 1;
+    margin-bottom: 1rem;
   }
 
   #actionButtons {
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #dee2e6;
+    justify-content: flex-end;
+    padding-bottom: 0.5rem;
   }
 
   #actionButtons > * {
@@ -419,5 +479,20 @@ export default defineComponent({
     width: 100%;
     max-width: 700px;
     margin: 10px;
+  }
+
+  /* Responsive changes for larger screens */
+  @media (min-width: 768px) {
+    #menuBar {
+      flex-direction: row;
+    }
+
+    #menuBar #tabMenu {
+      margin-bottom: 0rem;
+    }
+
+    #actionButtons {
+      border-bottom: 2px solid #dee2e6;
+    }
   }
 </style>

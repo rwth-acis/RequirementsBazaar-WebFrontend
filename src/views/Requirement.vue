@@ -5,13 +5,15 @@
     :projectName="project.name"
     :categoryId="parentCategory.id"
     :categoryName="parentCategory.name"
-    :requirementId="requirement.id"
-    :requirementName="requirement.name"
     class="p-mt-3" />
 
   <div id="content">
+    <div v-if="loading" class="loading-container">
+      <ProgressSpinner />
+    </div>
+
     <div v-if="requirement">
-      <div class="p-d-flex p-jc-start p-ai-center title">
+      <div class="title">
         <Badge v-if="requirement.realized" value="Done" class="p-mr-2"></Badge><h1> {{ requirement.name }}</h1>
       </div>
       <div class="lastupdate">
@@ -24,6 +26,17 @@
       </div>
 
       <RequirementDevTimeline :additionalProperties="requirement.additionalProperties" />
+
+      <Dialog :header="t('exportRequirement')" v-model:visible="displayExportPopup" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '25vw'}" :modal="true">
+        <ExportPopup
+          :categoryName="parentCategory.name"
+          :id="requirement.id"
+          :activeRequirements="[requirement]"
+          :isCategory="false"
+          @cancel="exportPopupCanceled"
+          @save="exportPopupSaved">
+        </ExportPopup>
+      </Dialog>
 
       <div id="menuBar" class="p-mb-4">
         <TabMenu id="tabMenu" :model="tabItems" />
@@ -57,7 +70,7 @@
         <h3>{{ t('followers') }}</h3>
 
         <div class="p-grid">
-          <div class="p-col-8">
+          <div class="p-col-12">
             <DataTable :value="followers" sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
               <Column field="userName" header="User">
                   <template #body="slotProps">
@@ -65,6 +78,11 @@
                       <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
                   </template>
               </Column>
+              <template #empty>
+                <div class="empty-table-message">
+                  {{ t('noFollowers') }}
+                </div>
+              </template>
             </DataTable>
           </div>
         </div>
@@ -74,7 +92,7 @@
         <h3>{{ t('developers') }}</h3>
 
         <div class="p-grid">
-          <div class="p-col-8">
+          <div class="p-col-12">
             <DataTable :value="developers" sortMode="single" sortField="role" :sortOrder="1" scrollable scrollHeight="800px">
               <Column field="userName" header="User">
                   <template #body="slotProps">
@@ -82,13 +100,18 @@
                       <span class="image-text p-pl-2">{{slotProps.data.userName}}</span>
                   </template>
               </Column>
+              <template #empty>
+                <div class="empty-table-message">
+                  {{ t('noDevelopers') }}
+                </div>
+              </template>
             </DataTable>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-else>
+    <div v-if="requirement === undefined && !loading">
       <h1>{{ t('notFound') }}</h1>
       {{ t('requirementDetails-requirementNotFound') }}
     </div>
@@ -127,11 +150,12 @@ import CommentsList from '@/components/CommentsList.vue';
 import UserAvatar from '@/components/UserAvatar.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 import RequirementEditor from '../components/RequirementEditor.vue';
-import { confirmDeleteRequirement, createGitHubIssueForRequirement } from '@/ui-utils/requirement-menu-actions';
+import ExportPopup from '../components/ExportPopup.vue';
+import { confirmDeleteRequirement, createGitHubIssueForRequirement} from '@/ui-utils/requirement-menu-actions';
 
 export default defineComponent({
   name: 'Requirement',
-  components: { ProjectBreadcrumbNav, CommentsList, RequirementDevTimeline, UserAvatar, RequirementEditor },
+  components: { ProjectBreadcrumbNav, CommentsList, RequirementDevTimeline, UserAvatar, RequirementEditor, ExportPopup },
   props: {
   },
   setup: (props) => {
@@ -147,6 +171,7 @@ export default defineComponent({
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
     const activeTab = computed(() => route.params.activeTab);
 
+    const loading = ref(true);
     const requirement = computed(() => store.getters.getRequirementById(requirementId));
     const project = computed(() => store.getters.getProjectById(projectId));
 
@@ -179,7 +204,9 @@ export default defineComponent({
       }
     });
 
-    store.dispatch(ActionTypes.FetchRequirement, requirementId);
+    store.dispatch(ActionTypes.FetchRequirement, requirementId).then(() => {
+      loading.value = false;
+    });
     store.dispatch(ActionTypes.FetchProject, projectId);
 
     const alertLogin = (message: string) => {
@@ -255,6 +282,14 @@ export default defineComponent({
       }
     };
 
+    const displayExportPopup = ref(false);
+    const exportPopupCanceled = () => {
+      displayExportPopup.value = false;
+    }
+    const exportPopupSaved = () => {
+      displayExportPopup.value = false;
+    }
+
     const moreMenu = ref(null);
     const toggleMoreMenu = (event) => {
       (moreMenu as any).value.toggle(event);
@@ -311,13 +346,20 @@ export default defineComponent({
             },
             {
               label: t('deleteRequirement'),
-              icon: 'pi pi-times',
+              icon: 'pi pi-trash',
               command: () => {
                  confirmDeleteRequirement(confirm, t, store, requirementId, () => {
                    showMoreRequirements();
                  });
               },
-            }
+            },
+            {
+              label: t('exportBtn'),
+              icon: 'pi pi-download',
+              command: () => {
+                displayExportPopup.value = true;
+              }
+            },
           ];
         }
       },
@@ -357,6 +399,7 @@ export default defineComponent({
       t,
       oidcIsAuthenticated,
       project,
+      loading,
       parentCategory,
       requirement,
       tabItems,
@@ -375,6 +418,9 @@ export default defineComponent({
       routePathToRequirement,
       requirementEditorCanceled,
       requirementEditorSaved,
+      displayExportPopup,
+      exportPopupSaved,
+      exportPopupCanceled,
     }
   }
 })
@@ -387,6 +433,15 @@ export default defineComponent({
 
   .title h1 {
     margin: 0;
+  }
+
+  .loading-container {
+    text-align: center;
+  }
+
+  .empty-table-message {
+    width: 100%;
+    text-align: center;
   }
 
   .lastupdate {
@@ -404,16 +459,19 @@ export default defineComponent({
   #menuBar {
     width: 100%;
     display: flex;
+    flex-direction: column-reverse;
   }
 
   #menuBar #tabMenu {
     flex: 1;
+    margin-bottom: 1rem;
   }
 
   #actionButtons {
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #dee2e6;
+    justify-content: flex-end;
+    padding-bottom: 0.5rem;
   }
 
   #actionButtons > * {
@@ -426,5 +484,20 @@ export default defineComponent({
 
   #tabMenu ::v-deep(.p-tabmenuitem) {
     background-color: transparent;
+  }
+
+  /* Responsive changes for larger screens */
+  @media (min-width: 768px) {
+    #menuBar {
+      flex-direction: row;
+    }
+
+    #menuBar #tabMenu {
+      margin-bottom: 0rem;
+    }
+
+    #actionButtons {
+      border-bottom: 2px solid #dee2e6;
+    }
   }
 </style>

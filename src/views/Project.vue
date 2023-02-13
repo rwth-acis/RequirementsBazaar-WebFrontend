@@ -1,8 +1,4 @@
 <template>
-  <ProjectBreadcrumbNav v-if="project"
-    :projectId="project.id"
-    :projectName="project.name"
-    class="p-mt-3" />
   <h1>{{ project?.name }}</h1>
   <Button icon="pi pi-tag" :label="t('projectDetails-joinDevelopmentOnGithub')" class="p-button-sm p-button-outlined"  @click="joinDevelopment" v-if="showButtonJoinDevelopment()"></Button>
   <div id="description">
@@ -76,7 +72,8 @@
               :creationDate="category.creationDate"
               :lastActivity="category.lastActivity"
               :numberOfFollowers="category.numberOfFollowers"
-              :numberOfRequirements="category.numberOfRequirements">
+              :numberOfRequirements="category.numberOfRequirements"
+              :showCreationDate="selectedSort === 'date'">
             </CategoryCard>
           </router-link>
         </div>
@@ -101,9 +98,11 @@
         </span>
 
         <template #footer>
+          <div class="footer">
             <ProgressBar mode="indeterminate" class="p-mb-3" v-if="inProgress" />
-            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-text" @click="showAddRepositoryDialog = false" />
-            <Button :label="t('save')" icon="pi pi-check" class="p-button-text" @click="updateRepositoryUrl()" />
+            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-outlined p-ml-2 p-mr-2" @click="showAddRepositoryDialog = false" />
+            <Button :label="t('save')" icon="pi pi-check" @click="updateRepositoryUrl()" />
+          </div>
         </template>
     </Dialog>
 
@@ -129,9 +128,11 @@
         </ul>
 
         <template #footer>
-            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-text" @click="showConfigureWebhookDilog = false" />
-            <Button v-if="!webhookSettingsOpened" :label="t('gitHubSetup-goToGitHubSettings')" icon="pi pi-check" class="p-button-text" @click="openWebhookSettings()" />
-            <Button v-else :label="t('done')" icon="pi pi-check" class="p-button-text" @click="showConfigureWebhookDilog = false" />
+          <div class="footer">
+            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-outlined p-ml-2 p-mr-2" @click="showConfigureWebhookDilog = false" />
+            <Button v-if="!webhookSettingsOpened" :label="t('gitHubSetup-goToGitHubSettings')" icon="pi pi-check" @click="openWebhookSettings()" />
+            <Button v-else :label="t('done')" icon="pi pi-check" @click="showConfigureWebhookDilog = false" />
+          </div>
         </template>
     </Dialog>
 </template>
@@ -595,20 +596,25 @@ export default defineComponent({
   #menuBar {
     width: 100%;
     display: flex;
+    flex-direction: column-reverse;
   }
 
   #menuBar #tabMenu {
     flex: 1;
+    margin-bottom: 1rem;
   }
 
   #actionButtons {
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #dee2e6;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    padding-bottom: 0.5rem;
   }
 
   #actionButtons > * {
-    margin-left: 0.3rem;
+    margin-left: 0.4rem;
+    margin-top: 0.4rem;
   }
 
   #tabMenu ::v-deep(.p-tabmenu-nav), #tabMenu ::v-deep(.p-menuitem-link) {
@@ -646,6 +652,21 @@ export default defineComponent({
     color: green;
     border-radius: 50%;
     z-index: 1;
+}
+
+/* Responsive changes for larger screens */
+@media (min-width: 768px) {
+  #menuBar {
+    flex-direction: row;
+  }
+
+  #menuBar #tabMenu {
+    margin-bottom: 0rem;
+  }
+
+  #actionButtons {
+    border-bottom: 2px solid #dee2e6;
+  }
 }
 
 </style>

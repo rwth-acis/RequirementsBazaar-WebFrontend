@@ -2,8 +2,12 @@
   <Card id="card">
     <template #title>
       <div>{{ name }}</div>
-      <div class="lastupdate">
-        <span :title="$dayjs(activityDate).format('LLL')">{{ $dayjs(activityDate).fromNow() }}</span>
+      <div style="display: none;">{{updateTrigger}}</div>
+      <div class="lastupdate p-d-flex p-ai-center" v-if="showCreationDate">
+        <span :title="'created ' + $dayjs(creationDate).format('LLL')"><i class="pi pi-plus-circle"></i> created {{ $dayjs(creationDate).fromNow() }}</span>
+      </div>
+      <div class="lastupdate p-d-flex p-ai-center" v-if="!compact">
+          <span :title="'last activity ' + $dayjs(lastActivity).format('LLL')"><i class="pi pi-user-edit"></i> {{ $dayjs(lastActivity).fromNow() }}</span>
       </div>
     </template>
     <template #content>
@@ -19,8 +23,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, toRefs } from 'vue'
+import { computed, defineComponent, toRefs, watch, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
+import dayjs from 'dayjs'
 
 import { followersIcon, requirementsIcon } from '../assets/reqbaz-icons.js';
 
@@ -34,16 +39,27 @@ export default defineComponent({
     lastActivity: { type: String, required: true },
     numberOfRequirements: { type: Number, required: true },
     numberOfFollowers: { type: Number, required: true },
+    showCreationDate: { type: Boolean, default: false },
   },
   setup: (props, context) => {
     const { locale, t } = useI18n({ useScope: 'global' });
-    const { lastActivity, creationDate } = toRefs(props);
+    const { lastActivity, creationDate, showCreationDate } = toRefs(props);
 
-    const activityDate = computed(() => lastActivity.value || creationDate.value);
+    /*
+     * NOTE: This is workaround to force Vue to re-render the component when the locale changes.
+     */
+    const updateTrigger = ref(false);
+    watch([locale], () => {
+      console.log('changed');
+      updateTrigger.value = !updateTrigger.value;
+    });
 
     return {
       t,
-      activityDate,
+      updateTrigger,
+      lastActivity,
+      creationDate,
+      showCreationDate,
       followersIcon,
       requirementsIcon
     };

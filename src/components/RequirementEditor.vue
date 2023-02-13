@@ -44,6 +44,8 @@ import { useVuelidate } from "@vuelidate/core";
 import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
 
+import { useProgress } from '@/service/ProgressService';
+
 export default defineComponent({
   name: 'RequirementEditor',
   props: {
@@ -74,6 +76,7 @@ export default defineComponent({
   setup: ({ name, description, projectId, categories, requirementId }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
+    const { setLoading } = useProgress();
 
     const submitted = ref(false);
 
@@ -101,7 +104,11 @@ export default defineComponent({
 
       const isFormCorrect = await v$.value.$validate();
       // you can show some extra alert to the user or just leave the each field to show it's `$errors`.
-      if (!isFormCorrect) return;
+      if (!isFormCorrect) {
+        return;
+      } else {
+        setLoading(true);
+      }
 
       const requirement: Requirement = {
         name: state.name,
@@ -111,12 +118,17 @@ export default defineComponent({
       };
 
       if (!requirementId) {
-        store.dispatch(ActionTypes.CreateRequirement, requirement);
+        store.dispatch(ActionTypes.CreateRequirement, requirement).then (() => {
+          setLoading(false);
+          emit('save');
+        });
       } else {
         requirement.id = requirementId;
-        store.dispatch(ActionTypes.UpdateRequirement, requirement);
+        store.dispatch(ActionTypes.UpdateRequirement, requirement).then(() => {
+          setLoading(false);
+          emit('save');
+        });
       }
-      emit('save');
     }
 
     return { t, submitted, state, v$, cancel, handleSubmit, turndownService };

@@ -5,7 +5,7 @@ This is the Vue3 based implementation of the Requirements Bazaar Frontend.
 - Vuex 4
 - Vue Router 4
 - PrimeVue 3
-- Vite 2
+- Vite 4
 - Typescript
 - SASS
 

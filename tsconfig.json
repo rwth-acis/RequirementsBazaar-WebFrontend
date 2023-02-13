@@ -4,6 +4,7 @@
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
+    "allowJs": true,
     "importHelpers": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
@@ -13,10 +14,11 @@
     "sourceMap": true,
     "baseUrl": ".",
     "noImplicitAny": false,
+    "typeRoots": ["./node_modules/@types"],
     "types": [
       "vite/client",
       "node",
-      "@intlify/vite-plugin-vue-i18n/client"
+      "pdfmake"
     ],
     "paths": {
       "@/*": [

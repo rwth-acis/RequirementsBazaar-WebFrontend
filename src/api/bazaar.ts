@@ -11,7 +11,7 @@ const getRequestHeaders = (user: User | null | undefined): RequestParams => {
       'Content-Type': 'application/json',
       'Authorization': `Basic ${window.btoa(`${user.profile.preferred_username}:${user.profile.sub}`)}`,
       'access-token': user.access_token,
-      'oidc_provider': 'https://api.learning-layers.eu/o/oauth2',
+      'oidc_provider': 'https://auth.las2peer.org/o/oauth2',
     },
     redirect: 'follow',
     referrerPolicy: 'no-referrer',
