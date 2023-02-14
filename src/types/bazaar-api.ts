@@ -334,6 +334,7 @@ export interface GfBadge {
   description: string;
   notificationMessage: string;
   useNotification: boolean;
+  img: string;
 }
 export interface Dashboard {
   projects: Project[];

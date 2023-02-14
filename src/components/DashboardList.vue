@@ -44,8 +44,10 @@
   </masonry-layout>
   <template v-if=dashboard.isGamified>
     <h2>{{ t('dashboard-badges') }}</h2>
-    <masonry-layout maxcolwidth="400" gap="15" cols="auto">
-      <h4 v-for="badge in dashboard.badges">{{badge.name}}</h4>
+    <masonry-layout maxcolwidth="400" gap="5" cols="auto">
+      <figure v-for="badge in dashboard.badges">
+        <img v-bind:src="'data:image/png;base64,'+badge.img" alt="gf_badge" v-tooltip.top="badge.description"/>
+      </figure>
     </masonry-layout>
   </template>
 
@@ -56,12 +58,11 @@ import { ActionTypes } from '../store/actions';
 import { computed, defineComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import { GfBadge } from '@/types/bazaar-api';
 
 import ProjectCard from '../components/ProjectCard.vue';
 import CategoryCard from '../components/CategoryCard.vue';
 import RequirementCard from '../components/RequirementCard.vue';
-
+import Tooltip from 'primevue/tooltip';
 
 export default defineComponent({
   name: 'Dashboard',
@@ -69,6 +70,9 @@ export default defineComponent({
     ProjectCard,
     CategoryCard,
     RequirementCard,
+  },
+  directives: {
+    'tooltip': Tooltip
   },
   setup: () => {
     const { t } = useI18n({ useScope: 'global' });
@@ -87,5 +91,15 @@ export default defineComponent({
 
 
 <style scoped>
+
+figure {
+    display: inline-block;
+    margin: 5px; /* adjust as needed */
+}
+figure img {
+    vertical-align: top;
+    width: 6rem;
+    height: 6rem;
+}
 
 </style>
