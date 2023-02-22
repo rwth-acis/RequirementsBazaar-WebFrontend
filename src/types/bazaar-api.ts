@@ -327,7 +327,6 @@ export interface RequirementContributors {
   commentCreator?: User[];
   attachmentCreator?: User[];
 }
-
 export interface GfBadge {
   id: string;
   name: string;
@@ -336,11 +335,23 @@ export interface GfBadge {
   useNotification: boolean;
   img: string;
 }
+export interface GfStatus {
+  pointUnitName: string;
+  memberLevel: number;
+  nextLevelPoint: number;
+  nextLevelName: string;
+  progress: number;
+  rank: number;
+  nextLevel: number;
+  memberLevelName: string;
+  memberPoint: number;
+}
 export interface Dashboard {
   projects: Project[];
   categories: Category[];
   requirements: Requirement[];
-  badges: GfBadge[];
+  badges?: GfBadge[];
+  status?: GfStatus;
   isGamified: boolean;
 }
 

@@ -1,4 +1,27 @@
 <template>
+  <template v-if=dashboard.isGamified>
+    <div class="rank">
+      <h3 style="display: inline-block">{{ t('dashboard-rank') }} </h3>
+      <span style="margin-left: 1rem"> {{ dashboard.status.memberLevelName }}</span>
+    </div>
+    <div class="parent">
+      <div class="levelCurrent">
+        <span style="white-space:pre">{{ t('level') }} {{ dashboard.status.memberLevel }}</span>
+      </div>
+      <div class="progressBar">
+        <ProgressBar :value="dashboard.status.progress" :show-value="true">
+          ({{ dashboard.status.memberPoint }}/{{ dashboard.status.nextLevelPoint }})
+        </ProgressBar>
+      </div>
+      <div class="levelNext">
+        <span style="white-space:pre">{{ t('level') }} {{ dashboard.status.nextLevel }}</span>
+      </div>
+      <div class="progress">
+        <span>{{ t('next-rank') }} {{ dashboard.status.nextLevelName }}</span>
+      </div>
+    </div>
+  </template>
+
   <h2>{{ t('dashboard-projects') }}</h2>
 
   <masonry-layout maxcolwidth="400" gap="15" cols="auto">
@@ -42,12 +65,15 @@
       </router-link>
     </div>
   </masonry-layout>
-  <template v-if=dashboard.isGamified>
+  <template v-if="dashboard.isGamified">
     <h2>{{ t('dashboard-badges') }}</h2>
-    <masonry-layout maxcolwidth="400" gap="5" cols="auto">
-      <figure v-for="badge in dashboard.badges">
-        <img v-bind:src="'data:image/png;base64,'+badge.img" alt="gf_badge" v-tooltip.top="badge.description"/>
-      </figure>
+    <masonry-layout maxcolwidth="400" gap="10" cols="auto">
+      <div class="figs">
+        <figure v-for="badge in dashboard.badges">
+          <img v-bind:src="'data:image/png;base64,' + badge.img" alt="gf_badge" v-tooltip.top="badge.description" />
+          <figcaption>{{ badge.name }}</figcaption>
+        </figure>
+      </div>
     </masonry-layout>
   </template>
 
@@ -91,15 +117,52 @@ export default defineComponent({
 
 
 <style scoped>
-
 figure {
-    display: inline-block;
-    margin: 5px; /* adjust as needed */
-}
-figure img {
-    vertical-align: top;
-    width: 6rem;
-    height: 6rem;
+  display: inline-block;
+  margin-left: 1rem;
+  margin-right: 1rem;
+
+  /* adjust as needed */
 }
 
+figure img {
+  vertical-align: top;
+  width: 6rem;
+  height: 6rem;
+}
+
+figure figcaption {
+  text-align: center;
+  font-weight: bold;
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: 4rem auto 4rem auto;
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.levelCurrent {
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.progressBar {
+  grid-area: 1 / 2 / 2 / 3
+}
+
+.levelNext {
+  grid-area: 1 / 3 / 2 / 4;
+  text-align: right;
+}
+
+.progress {
+  grid-area: 2 / 1 / 3 / 4;
+  text-align: center;
+  white-space: pre;
+}
+
+.p-progressbar {
+  min-width: 5rem;
+  max-width: auto;
+}
 </style>

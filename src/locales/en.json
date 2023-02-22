@@ -253,8 +253,11 @@
     "dashboard-categories": "Recent activities in categories you follow",
     "dashboard-requirements": "Recent activities in requirements you follow",
     "dashboard-badges": "Achievements",
+    "dashboard-rank":"Your current rank:",
     "home-greeting": "Hi",
     "home-description": "This is your personal dashboard with every update you need.",
+    "level": "Level:",
+    "next-rank": "Next Rank:",
 
     "headerExportRequirement": "Requirement of",
     "headerExportCatAll" : "Requirements of",
@@ -275,5 +278,6 @@
 
     "QUEST": "Quest completed!",
     "ACHIEVEMENT": "Achievement completed!",
-    "BADGE": "Badge earned!"
+    "BADGE": "Badge earned!",
+    "LEVEL": "Level Up!"
 }
