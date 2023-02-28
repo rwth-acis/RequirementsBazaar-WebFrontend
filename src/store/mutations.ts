@@ -119,6 +119,11 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetProject](state, project) {
     if (project.id) {
+      if(project.gamificationNotifications?.length != 0){
+        if(project.gamificationNotifications){
+          state.notification = project.gamificationNotifications;
+        }
+      }
       state.projects[project.id] = project;
     }
   },
@@ -255,6 +260,11 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetComment](state, comment) {
     if (comment.id) {
+      if(comment.gamificationNotifications?.length != 0){
+        if(comment.gamificationNotifications){
+          state.notification = comment.gamificationNotifications;
+        }
+      }
       state.comments[comment.id] = comment;
     }
   },

@@ -150,6 +150,7 @@ export interface Comment {
   lastUpdatedDate?: string;
   deleted?: boolean;
   _context?: EntityContext;
+  gamificationNotifications?: GamificationNotification[];
 }
 
 export interface EntityContext {
@@ -190,6 +191,7 @@ export interface Project {
   numberOfFollowers?: number;
   userContext?: UserContext;
   additionalProperties?: Record<string, object>;
+  gamificationNotifications?: GamificationNotification[];
 }
 
 export interface Requirement {
