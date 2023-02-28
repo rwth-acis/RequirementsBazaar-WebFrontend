@@ -1,23 +1,18 @@
 <template>
   <template v-if=dashboard.isGamified>
     <div class="rank">
-      <h3 style="display: inline-block">{{ t('dashboard-rank') }} </h3>
-      <span style="margin-left: 1rem"> {{ dashboard.status.memberLevelName }}</span>
+      <h3 style="display: inline-block; white-space: pre">{{ t('level') }} {{ dashboard.status.memberLevel }}: {{ dashboard.status.memberLevelName }}</h3>
     </div>
     <div class="parent">
-      <div class="levelCurrent">
-        <span style="white-space:pre">{{ t('level') }} {{ dashboard.status.memberLevel }}</span>
-      </div>
       <div class="progressBar">
         <ProgressBar :value="dashboard.status.progress" :show-value="true">
-          ({{ dashboard.status.memberPoint }}/{{ dashboard.status.nextLevelPoint }})
+          {{ dashboard.status.memberPoint }} / {{ dashboard.status.nextLevelPoint }}
         </ProgressBar>
       </div>
-      <div class="levelNext">
-        <span style="white-space:pre">{{ t('level') }} {{ dashboard.status.nextLevel }}</span>
-      </div>
+
       <div class="progress">
-        <span>{{ t('next-rank') }} {{ dashboard.status.nextLevelName }}</span>
+        <h4 style="display: inline-block">{{  t('next-rank') }} </h4>
+        <span style="margin-left: 0.5rem"> {{ dashboard.status.nextLevelName }}</span>
       </div>
     </div>
   </template>
@@ -138,27 +133,20 @@ figure figcaption {
 
 .parent {
   display: grid;
-  grid-template-columns: 4rem auto 4rem auto;
+  grid-template-columns: 1rem auto 1rem auto;
   grid-template-rows: repeat(2, 1fr);
 }
 
-.levelCurrent {
-  grid-area: 1 / 1 / 2 / 2;
-}
-
 .progressBar {
-  grid-area: 1 / 2 / 2 / 3
-}
-
-.levelNext {
-  grid-area: 1 / 3 / 2 / 4;
-  text-align: right;
+  grid-area: 1 / 2 / 2 / 3;
+  white-space: pre;
 }
 
 .progress {
   grid-area: 2 / 1 / 3 / 4;
   text-align: center;
   white-space: pre;
+  margin-top: -4%;
 }
 
 .p-progressbar {

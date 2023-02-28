@@ -256,8 +256,8 @@
     "dashboard-rank":"Your current rank:",
     "home-greeting": "Hi",
     "home-description": "This is your personal dashboard with every update you need.",
-    "level": "Level:",
-    "next-rank": "Next Rank:",
+    "level": "Level",
+    "next-rank": "Next:",
 
     "headerExportRequirement": "Requirement of",
     "headerExportCatAll" : "Requirements of",
