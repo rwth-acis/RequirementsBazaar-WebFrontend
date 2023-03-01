@@ -314,6 +314,12 @@ export const actions: ActionTree<State, State> & Actions = {
     if (!response.ok) {
       // reset local commit
       commit(MutationType.SetRequirementVote, {requirementId: parameters.requirementId, userVoted: userVotedCached});
+    } else {
+      // set the notifications if present
+      const response = await bazaarApi.requirements.getRequirement(parameters.requirementId);
+      if (response.data && response.status === 200) {
+        commit(MutationType.SetGfNotification, response.data);
+      }
     }
   },
 

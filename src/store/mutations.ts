@@ -40,6 +40,8 @@ export enum MutationType {
 
   _AddUnhandledError = 'ADD_UNHANDLED_ERROR',
   AddNotification = 'ADD_NOTIFICATION',
+  SetGfNotification = 'SET_GFNOTIFICATION',
+
 }
 
 type RemoveProjectMemberParameters = {
@@ -60,6 +62,7 @@ export type Mutations = {
   [MutationType.SetCategoryIsFollower](state: State, {categoryId: number, isFollower: boolean}): void;
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
+  [MutationType.SetGfNotification](state: State, requirement: Requirement): void;
   [MutationType.SetRequirementVote](state: State, {requirementId: number, userVoted: string}): void;
   [MutationType.SetRequirementIsFollower](state: State, {requirementId: number, isFollower: boolean}): void;
   [MutationType.SetRequirementIsDeveloper](state: State, {requirementId: number, isDeveloper: boolean}): void;
@@ -174,6 +177,16 @@ export const mutations: MutationTree<State> & Mutations = {
         }
       }
       state.requirements[requirement.id] = requirement;
+    }
+  },
+
+  [MutationType.SetGfNotification](state, requirement){
+    if (requirement.id) {
+      if(requirement.gamificationNotifications?.length != 0){
+        if(requirement.gamificationNotifications){
+          state.notification = requirement.gamificationNotifications;
+        }
+      }
     }
   },
 
