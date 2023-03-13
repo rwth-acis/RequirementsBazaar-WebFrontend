@@ -335,7 +335,7 @@ export default defineComponent({
             {
               label: issue_url.value ? t('viewOnGitHub') : t('createGithubIssue'),
               icon: 'pi pi-github',
-              disabled: projectGithubUrl === undefined,
+              disabled: projectGithubUrl.value === undefined,
               command: () => {
                 if (issue_url.value) {
                   window.open(issue_url.value);
