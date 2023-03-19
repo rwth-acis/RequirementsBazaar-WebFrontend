@@ -149,6 +149,11 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetCategory](state, category) {
     if (category.id) {
+      if(category.gamificationNotifications?.length != 0){
+        if(category.gamificationNotifications){
+          state.notification = category.gamificationNotifications;
+        }
+      }
       state.categories[category.id] = category;
     }
   },
@@ -356,6 +361,11 @@ export const mutations: MutationTree<State> & Mutations = {
   },
 
   [MutationType.SetDashboard](state, dashboard) {
+    if(dashboard.gamificationNotifications?.length != 0){
+      if(dashboard.gamificationNotifications){
+        state.notification = dashboard.gamificationNotifications;
+      }
+    }
     state.dashboard = dashboard;
   },
 

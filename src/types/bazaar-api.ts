@@ -62,6 +62,7 @@ export interface Category {
   numberOfFollowers?: number;
   userContext?: UserContext;
   additionalProperties?: Record<string, object>;
+  gamificationNotifications?: GamificationNotification[];
 }
 
 export interface User {
@@ -355,6 +356,7 @@ export interface Dashboard {
   badges?: GfBadge[];
   status?: GfStatus;
   isGamified: boolean;
+  gamificationNotifications?: GamificationNotification[];
 }
 
 export interface EntityOverview {
