@@ -62,7 +62,7 @@
   </masonry-layout>
   <template v-if="dashboard.isGamified">
     <h2>{{ t('dashboard-badges') }}</h2>
-    <masonry-layout maxcolwidth="400" gap="10" cols="auto">
+    <masonry-layout maxcolwidth="1000" gap="10" cols="auto">
       <div class="figs">
         <figure v-for="badge in dashboard.badges">
           <img v-bind:src="'data:image/png;base64,' + badge.img" alt="gf_badge" v-tooltip.top="badge.description" />
