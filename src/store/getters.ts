@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex'
 import { State, UnhandledError } from './state'
-import { Project, Category, Requirement, Comment, ProjectMember, User } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, ProjectMember, User, GamificationNotification} from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export type Getters = {
@@ -17,6 +17,7 @@ export type Getters = {
   activitiesList(state: State): (parameters: any) => Activity[];
   unhandledErrors(state: State): (parameters: any) => UnhandledError[];
   getFeaturedProjects(state: State): (parameters: any) => Project[];
+  getNotifications(state: State): (parameters: any) => GamificationNotification[];
 }
 
 const numericalSortFunction = (property, sortAscending) => (a, b) => {
@@ -222,5 +223,9 @@ export const getters: GetterTree<State, State> & Getters = {
 
     return featuredProjects;
   },
+
+  getNotifications: (state: State) => (parameters: any) => {
+    return state.notification;
+  }
 
 }

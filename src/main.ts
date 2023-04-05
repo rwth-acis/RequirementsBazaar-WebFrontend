@@ -53,6 +53,8 @@ import ProgressBar from 'primevue/progressbar';
 import ProgressSpinner from 'primevue/progressspinner';
 import Message from 'primevue/message';
 import Timeline from 'primevue/timeline';
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
 
 import Tooltip from 'primevue/tooltip';
 
@@ -77,6 +79,7 @@ dayjs.extend(relativeTime);
 app.use(router);
 app.use(store);
 app.use(PrimeVue);
+app.use(ToastService);
 app.use(i18n);
 app.use(VueMarkdownIt);
 app.config.globalProperties.$dayjs = dayjs;
@@ -140,5 +143,6 @@ app.component('Message', Message);
 app.component('Timeline', Timeline);
 
 app.component('Autocounter', Vue3Autocounter);
+app.component('Toast', Toast);
 
 app.mount('#app');

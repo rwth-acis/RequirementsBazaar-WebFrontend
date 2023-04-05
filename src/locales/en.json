@@ -252,8 +252,12 @@
     "dashboard-projects": "Recent activities in projects you follow",
     "dashboard-categories": "Recent activities in categories you follow",
     "dashboard-requirements": "Recent activities in requirements you follow",
+    "dashboard-badges": "Achievements",
+    "dashboard-rank":"Your current rank:",
     "home-greeting": "Hi",
     "home-description": "This is your personal dashboard with every update you need.",
+    "level": "Level",
+    "next-rank": "Next:",
 
     "headerExportRequirement": "Requirement of",
     "headerExportCatAll" : "Requirements of",
@@ -270,5 +274,10 @@
     "reqType": "Type of Requirements:",
     "fileType": "Export format:",
     "exportCategory": "Export Category",
-    "exportRequirement": "Export Requirement"
+    "exportRequirement": "Export Requirement",
+
+    "QUEST": "Quest completed!",
+    "ACHIEVEMENT": "Achievement completed!",
+    "BADGE": "Badge earned!",
+    "LEVEL": "Level Up!"
 }
