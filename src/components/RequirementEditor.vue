@@ -25,6 +25,10 @@
           <small class="p-error">{{ error.$message.replace('Value', 'Description') }}</small>
         </div>
       </div>
+      <div class="p-field">
+        <label for="tags">{{t('formTag')}}</label>
+        <Dropdown id="tag" v-model="selectedTag" :options="tagTypes" optionLabel="name" :required="true"/>
+      </div>
       <div class="footer">
         <Button :label="t('cancel')" @click="cancel" class="p-button-outlined p-ml-2 p-mr-2" />
         <Button type="submit" :label="t('save')" />
@@ -34,13 +38,15 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, PropType, reactive } from 'vue'
+import { ref, defineComponent, PropType, reactive, computed } from 'vue'
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 import { Requirement } from '../types/bazaar-api';
 import { required, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
+import { Tag } from '@/types/bazaar-api';
+
 import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
 
@@ -94,6 +100,21 @@ export default defineComponent({
     const v$ = useVuelidate(rules, state);
 
     const turndownService = new TurndownService();
+    const tags = computed(() => store.getters.getProjectTags(projectId));
+    const tagList: Array<{name: String,code: Number}> = [];
+    const noneTag = { name: t('tagNone'), code: 0 };
+    tagList.push(noneTag);
+
+    console.log(tags.value)
+    tags.value.forEach((tag: Tag) => {
+      if(tag.id){
+        let tagEntry = {name: tag.name , code: tag.id}
+        tagList.push(tagEntry);
+      }
+    });
+
+    const selectedTag = ref(noneTag);
+    const tagTypes = ref(tagList);
 
     const cancel = () => {
       emit('cancel');
@@ -101,6 +122,7 @@ export default defineComponent({
 
     const handleSubmit = async () => {
       submitted.value = true;
+      var chosenTag = selectedTag.value;
 
       const isFormCorrect = await v$.value.$validate();
       // you can show some extra alert to the user or just leave the each field to show it's `$errors`.
@@ -110,9 +132,19 @@ export default defineComponent({
         setLoading(true);
       }
 
+      var reqTag;
+      tags.value.forEach((tag: Tag) => {
+        if(tag.id){
+          if(tag.id == chosenTag.code){
+            reqTag = tag;
+          }
+        }
+      });
+
       const requirement: Requirement = {
         name: state.name,
         description: turndownService.turndown(state.description),
+        tags:[reqTag],
         projectId,
         categories,
       };
@@ -131,7 +163,7 @@ export default defineComponent({
       }
     }
 
-    return { t, submitted, state, v$, cancel, handleSubmit, turndownService };
+    return { t, submitted, state, v$, cancel, handleSubmit, turndownService, selectedTag, tagTypes };
   }
 })
 </script>

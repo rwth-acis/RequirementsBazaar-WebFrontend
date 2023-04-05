@@ -251,6 +251,7 @@ export interface Tag {
   id?: number;
   name: string;
   colour: string;
+  projectId: number;
 }
 
 export interface GamificationNotification{

@@ -55,7 +55,8 @@
           :lastActivity="requirement.lastActivity" :userVoted="requirement.userContext.userVoted"
           :isFollower="requirement.userContext.isFollower ? true : false"
           :isDeveloper="requirement.userContext.isDeveloper ? true : false" :realized="requirement.realized"
-          :brief="true">
+          :brief="true"
+          :tags ="requirement.tags ?? {}">
         </RequirementCard>
       </router-link>
     </div>
