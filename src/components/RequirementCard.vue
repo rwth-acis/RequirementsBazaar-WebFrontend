@@ -332,7 +332,7 @@ export default defineComponent({
           ...(userContext.value?.isMoveAllowed ? [
             {
               label: t('moveRequirementToCategory'),
-              icon: 'pi pi-arrow-right',
+              icon: 'pi pi-arrow-right-arrow-left',
               command: () => {
                 showDisplayCategoryDialog();
               }
@@ -340,7 +340,7 @@ export default defineComponent({
           ...(userContext.value?.isDeleteAllowed ? [
             {
               label: t('deleteRequirement'),
-              icon: 'pi pi-times',
+              icon: 'pi pi-trash',
               command: () => {
                 confirmDelete();
               }

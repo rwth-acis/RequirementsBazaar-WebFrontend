@@ -98,9 +98,11 @@
         </span>
 
         <template #footer>
+          <div class="footer">
             <ProgressBar mode="indeterminate" class="p-mb-3" v-if="inProgress" />
-            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-text" @click="showAddRepositoryDialog = false" />
-            <Button :label="t('save')" icon="pi pi-check" class="p-button-text" @click="updateRepositoryUrl()" />
+            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-outlined p-ml-2 p-mr-2" @click="showAddRepositoryDialog = false" />
+            <Button :label="t('save')" icon="pi pi-check" @click="updateRepositoryUrl()" />
+          </div>
         </template>
     </Dialog>
 
@@ -126,9 +128,11 @@
         </ul>
 
         <template #footer>
-            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-text" @click="showConfigureWebhookDilog = false" />
-            <Button v-if="!webhookSettingsOpened" :label="t('gitHubSetup-goToGitHubSettings')" icon="pi pi-check" class="p-button-text" @click="openWebhookSettings()" />
-            <Button v-else :label="t('done')" icon="pi pi-check" class="p-button-text" @click="showConfigureWebhookDilog = false" />
+          <div class="footer">
+            <Button :label="t('cancel')" icon="pi pi-times" class="p-button-outlined p-ml-2 p-mr-2" @click="showConfigureWebhookDilog = false" />
+            <Button v-if="!webhookSettingsOpened" :label="t('gitHubSetup-goToGitHubSettings')" icon="pi pi-check" @click="openWebhookSettings()" />
+            <Button v-else :label="t('done')" icon="pi pi-check" @click="showConfigureWebhookDilog = false" />
+          </div>
         </template>
     </Dialog>
 </template>

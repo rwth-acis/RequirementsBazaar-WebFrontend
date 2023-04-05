@@ -254,5 +254,6 @@
     "exportCategory": "Exporter la catégorie",
     "headerExportCatActive": "Exigences actives de",
     "headerExportCatComplete": "Exigences complétées de",
-    "reqType": "Type d'exigence :"
+    "reqType": "Type d'exigence :",
+    "selectCategoryPlaceholder": "Sélectionner une catégorie"
 }
