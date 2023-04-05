@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex'
 import { State, UnhandledError } from './state'
-import { Project, Category, Requirement, Comment, ProjectMember, User, GamificationNotification} from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, ProjectMember, User, GamificationNotification, Tag} from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export type Getters = {
@@ -226,6 +226,11 @@ export const getters: GetterTree<State, State> & Getters = {
 
   getNotifications: (state: State) => (parameters: any) => {
     return state.notification;
-  }
+  },
+
+  getProjectTags: (state: State) => (projectId: number) => {
+    let tags: Tag[] = Object.values(state.tags[projectId] ?? {});
+    return tags;
+  },
 
 }

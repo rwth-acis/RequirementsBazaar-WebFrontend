@@ -8,6 +8,10 @@
           <div class="title">{{ name }}</div>
         </router-link>
       </div>
+      <div id="tags" v-for="tag in tagList" :key="tag.id">
+            <Badge :style="{ background: tag.colour}" :value=tag.name ></Badge>
+      </div>
+
       <div class="">
         <div class="lastupdate p-d-flex p-ai-center">
           <i class="pi pi-plus-circle p-mr-2"></i> <span :title="$dayjs(creationDate).format('LLL')">{{
@@ -106,6 +110,7 @@ import { useConfirm } from "primevue/useconfirm";
 import CommentsList from './CommentsList.vue';
 import RequirementDevTimeline from '@/components/RequirementDevTimeline.vue';
 import { useRoute, useRouter } from 'vue-router';
+import { Tag } from '@/types/bazaar-api';
 
 import { routePathToRequirement } from '@/router';
 
@@ -141,12 +146,13 @@ export default defineComponent({
     additionalProperties: { type: Object, required: false },
     showLastActivity: { type: Boolean, required: false, default: true },
     userContext: { type: Object, required: false },
+    tags: { type: Object, required: false},
   },
 
   setup: (props) => {
     const {
       id, projectId, userVoted, isFollower, isDeveloper, realized, lastActivity, lastActivityUser, creationDate, name, description, categories,
-      additionalProperties, showLastActivity, userContext,
+      additionalProperties, showLastActivity, userContext, tags
     } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
@@ -159,6 +165,17 @@ export default defineComponent({
 
     console.log('userContext:');
     console.log(userContext.value);
+
+    const tagList: Array<Tag> = [];
+
+    if(tags.value){
+      tags.value.forEach((tag: Tag) => {
+      if(tag.id){
+        tagList.push(tag);
+      }
+    });
+    }
+
 
     const showComments = ref(false);
 
@@ -395,6 +412,7 @@ export default defineComponent({
     };
 
     return {
+      tagList,
       id,
       projectId,
       voted,

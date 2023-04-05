@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { State, LocalComment, UnhandledError } from './state'
 
-import { Project, Category, Requirement, Comment, Dashboard, ProjectMember, GamificationNotification } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, Dashboard, ProjectMember, GamificationNotification, Tag } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 import { UserVote } from '@/api/bazaar';
 
@@ -13,6 +13,7 @@ export enum MutationType {
   SetCategories = 'SET_CATEGORIES',
   SetCategory = 'SET_CATEGORY',
   SetCategoryIsFollower = 'SET_CATEGORY_IS_FOLLOWER',
+  SetProjectTags = 'SET_PROJECT_TAGS',
   SetRequirements = 'SET_REQUIREMENTS',
   SetRequirement = 'SET_REQUIREMENT',
   SetRequirementVote = 'SET_REQUIREMENT_VOTE',
@@ -57,6 +58,7 @@ export type Mutations = {
   [MutationType.ReplaceProjects](state: State, project: Project[]): void;
   [MutationType.SetProject](state: State, project: Project): void;
   [MutationType.SetProjectIsFollower](state: State, {projectId: number, isFollower: boolean}): void;
+  [MutationType.SetProjectTags](state: State, {projectId, tags}): void;
   [MutationType.SetCategories](state: State, categories: Category[]): void;
   [MutationType.SetCategory](state: State, category: Category): void;
   [MutationType.SetCategoryIsFollower](state: State, {categoryId: number, isFollower: boolean}): void;
@@ -143,6 +145,16 @@ export const mutations: MutationTree<State> & Mutations = {
     categories.forEach((category) => {
       if (category.id) {
         state.categories[category.id] = category;
+      }
+    });
+  },
+
+  [MutationType.SetProjectTags](state, {projectId , tags}) {
+    state.tags[projectId] = {}
+
+    tags.forEach((tag) => {
+      if (tag.id) {
+        state.tags[projectId][tag.id] = tag;
       }
     });
   },
