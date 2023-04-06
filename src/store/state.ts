@@ -50,7 +50,7 @@ export const state: State = {
     projects: [],
     categories: [],
     requirements: [],
-    isGamified: false,
+    isGamified: "false",
     badges:[],
   },
   unhandledErrors: [],

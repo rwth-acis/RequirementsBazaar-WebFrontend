@@ -356,7 +356,7 @@ export interface Dashboard {
   requirements: Requirement[];
   badges?: GfBadge[];
   status?: GfStatus;
-  isGamified: boolean;
+  isGamified: string;
   gamificationNotifications?: GamificationNotification[];
 }
 
