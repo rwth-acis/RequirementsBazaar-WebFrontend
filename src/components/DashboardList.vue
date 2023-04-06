@@ -1,7 +1,7 @@
 <template>
-  <template v-if=dashboard.isGamified>
+  <template v-if=isGamified>
     <div class="rank">
-      <h3 style="display: inline-block; white-space: pre">{{ t('level') }} {{ dashboard.status.memberLevel }}: {{ dashboard.status.memberLevelName }}</h3>
+      <h3 style="display: inline-block; white-space: pre">{{ t('level') }} {{ dashboard.isGamified ? dashboard.status.memberLevel: null }}: {{ dashboard.status.memberLevelName }}</h3>
     </div>
     <div class="parent">
       <div class="progressBar">
@@ -61,7 +61,7 @@
       </router-link>
     </div>
   </masonry-layout>
-  <template v-if="dashboard.isGamified">
+  <template v-if="isGamified">
     <h2>{{ t('dashboard-badges') }}</h2>
     <masonry-layout maxcolwidth="1000" gap="10" cols="auto">
       <div class="figs">
@@ -101,11 +101,16 @@ export default defineComponent({
     const store = useStore();
 
     const dashboard = computed(() => store.state.dashboard);
+    var isGamified = false;
+    if(dashboard.value.isGamified){
+      isGamified = true;
+    }
     store.dispatch(ActionTypes.FetchDashboard);
 
     return {
       t,
       dashboard,
+      isGamified,
     };
   }
 })
