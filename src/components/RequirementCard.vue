@@ -9,7 +9,7 @@
         </router-link>
       </div>
       <div id="tags" v-for="tag in tagList" :key="tag.id">
-            <Badge :style="{ background: tag.colour}" :value=tag.name ></Badge>
+        <Badge :style="{ background: tag.colour }" :value=tag.name></Badge>
       </div>
 
       <div class="">
@@ -36,7 +36,7 @@
       <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor"
         :breakpoints="{ '960px': '75vw', '640px': '100vw' }" :style="{ width: '50vw' }" :modal="true">
         <RequirementEditor class="requirementEditor" :requirementId="id" :projectId="projectId" :categories="categories"
-          :name="name" :description="description" @cancel="requirementEditorCanceled" @save="requirementEditorSaved">
+          :name="name" :description="description" :tag="tagList[0]" @cancel="requirementEditorCanceled" @save="requirementEditorSaved">
         </RequirementEditor>
       </Dialog>
       <Dialog :header="t('exportRequirement')" v-model:visible="displayExportPopup"
@@ -69,7 +69,7 @@
   <Dialog v-model:visible="displayCategoryDialog" :breakpoints="{ '960px': '75vw', '640px': '100vw' }"
     :style="{ width: '25vw' }" :header="t('changeCategory')" :modal="true" class="p-fluid">
     <div class="p-field">
-      <label for="category">{{ t('currentCategory') }}: </label> <b>{{ category?.name ?? 'no category'}}</b>
+      <label for="category">{{ t('currentCategory') }}: </label> <b>{{ category?.name ?? 'no category' }}</b>
     </div>
 
     <div class="p-field">
@@ -94,8 +94,7 @@
         <ProgressBar mode="indeterminate" class="mb-3" v-if="changeCategoryInProgress" />
         <Button :label="t('cancel')" icon="pi pi-times" class="p-button-outlined p-ml-2 p-mr-2"
           @click="displayCategoryDialog = false" />
-        <Button :label="t('save')" icon="pi pi-check"
-          @click="changeRequirementCategory" />
+        <Button :label="t('save')" icon="pi pi-check" @click="changeRequirementCategory" />
       </div>
     </template>
   </Dialog>
@@ -146,7 +145,7 @@ export default defineComponent({
     additionalProperties: { type: Object, required: false },
     showLastActivity: { type: Boolean, required: false, default: true },
     userContext: { type: Object, required: false },
-    tags: { type: Object, required: false},
+    tags: { type: Object, required: false },
   },
 
   setup: (props) => {
@@ -168,12 +167,12 @@ export default defineComponent({
 
     const tagList: Array<Tag> = [];
 
-    if(tags.value){
+    if (tags.value) {
       tags.value.forEach((tag: Tag) => {
-      if(tag.id){
-        tagList.push(tag);
-      }
-    });
+        if (tag.id) {
+          tagList.push(tag);
+        }
+      });
     }
 
 
@@ -482,8 +481,8 @@ export default defineComponent({
   text-align: center;
 }
 
-#tags{
-  float:right;
+#tags {
+  float: right;
 }
 
 #comments {
