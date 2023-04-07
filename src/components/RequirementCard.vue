@@ -482,6 +482,10 @@ export default defineComponent({
   text-align: center;
 }
 
+#tags{
+  float:right;
+}
+
 #comments {
   text-align: end;
 }
