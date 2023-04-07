@@ -95,6 +95,8 @@
     "filterCategoriesLabel": "Filter the list by category name or description",
     "formTitle": "Title",
     "formDesc": "Description",
+    "formTag": "Tag",
+    "tagNone": "No Tag",
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
