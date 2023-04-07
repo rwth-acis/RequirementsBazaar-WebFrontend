@@ -21,6 +21,10 @@
         {{t('by')}} {{ requirement.creator?.userName }}
       </div>
 
+      <div id="tags" v-for="tag in requirement.tags" :key="tag.id">
+            <Badge :style="{ background: tag.colour}" :value=tag.name ></Badge>
+      </div>
+
       <div id="description">
         <vue3-markdown-it :source="requirement?.description" />
       </div>
@@ -498,6 +502,9 @@ export default defineComponent({
 
     #actionButtons {
       border-bottom: 2px solid #dee2e6;
+    }
+    #tags{
+      float:right;
     }
   }
 </style>

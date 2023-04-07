@@ -111,7 +111,8 @@
             :isDeveloper="requirement.userContext.isDeveloper ? true : false"
             :realized="requirement.realized"
             :additionalProperties="requirement.additionalProperties"
-            :userContext="requirement.userContext ?? {}">
+            :userContext="requirement.userContext ?? {}"
+            :tags ="requirement.tags ?? {}">
           </RequirementCard>
         </div>
       </div>
