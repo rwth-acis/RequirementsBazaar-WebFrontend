@@ -100,12 +100,11 @@ export default defineComponent({
     const v$ = useVuelidate(rules, state);
 
     const turndownService = new TurndownService();
+    store.dispatch(ActionTypes.FetchTags,projectId);
     const tags = computed(() => store.getters.getProjectTags(projectId));
     const tagList: Array<{name: String,code: Number}> = [];
-    const noneTag = { name: t('tagNone'), code: 0 };
+    const noneTag = { name: t('tagNone'), code: -1 };
     tagList.push(noneTag);
-
-    console.log(tags.value)
     tags.value.forEach((tag: Tag) => {
       if(tag.id){
         let tagEntry = {name: tag.name , code: tag.id}
@@ -144,7 +143,7 @@ export default defineComponent({
       const requirement: Requirement = {
         name: state.name,
         description: turndownService.turndown(state.description),
-        tags:[reqTag],
+        tags:reqTag?[reqTag]:undefined,
         projectId,
         categories,
       };
