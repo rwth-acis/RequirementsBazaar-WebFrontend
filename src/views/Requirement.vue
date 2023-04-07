@@ -134,6 +134,7 @@
       :categories="requirement.categories"
       :name="requirement.name"
       :description="requirement.description"
+      :tag="requirement.tags[0]"
       @cancel="requirementEditorCanceled"
       @save="requirementEditorSaved">
     </RequirementEditor>

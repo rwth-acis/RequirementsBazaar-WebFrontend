@@ -2,14 +2,14 @@
   <div class="p-fluid">
     <form @submit.prevent="handleSubmit()" class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('formTitle') }}</label>
+        <label for="name">{{ t('formTitle') }}</label>
         <InputText id="name" type="text" v-model="v$.name.$model" />
         <div class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
           <small class="p-error">{{ error.$message.replace('Value', 'Title') }}</small>
         </div>
       </div>
       <div class="p-field">
-        <label for="description">{{ t('formDesc') }}</label>
+        <label for="description">{{ t('formDesc') }}</label>
         <Editor v-model="v$.description.$model" editorStyle="height: 100px">
           <template #toolbar>
             <span class="ql-formats">
@@ -26,8 +26,8 @@
         </div>
       </div>
       <div class="p-field">
-        <label for="tags">{{t('formTag')}}</label>
-        <Dropdown id="tag" v-model="selectedTag" :options="tagTypes" optionLabel="name" :required="true"/>
+        <label for="tags">{{ t('formTag') }}</label>
+        <Dropdown id="tag" v-model="selectedTag" :options="tagTypes" optionLabel="name" :required="true" />
       </div>
       <div class="footer">
         <Button :label="t('cancel')" @click="cancel" class="p-button-outlined p-ml-2 p-mr-2" />
@@ -65,7 +65,7 @@ export default defineComponent({
     },
     projectId: {
       type: Number,
-      required: true
+      required: true,
     },
     categories: {
       type: Array as PropType<Array<number>>,
@@ -73,13 +73,17 @@ export default defineComponent({
     },
     requirementId: {
       type: Number,
-      required: false
+      required: false,
+    },
+    tag: {
+      type: Object as PropType<Tag>,
+      required: false,
     },
     onCancel: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
     onSave: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
   },
   emits: ['cancel', 'save'],
-  setup: ({ name, description, projectId, categories, requirementId }, { emit }) => {
+  setup: ({ name, description, projectId, categories, requirementId, tag }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
     const { setLoading } = useProgress();
@@ -100,19 +104,27 @@ export default defineComponent({
     const v$ = useVuelidate(rules, state);
 
     const turndownService = new TurndownService();
-    store.dispatch(ActionTypes.FetchTags,projectId);
-    const tags = computed(() => store.getters.getProjectTags(projectId));
-    const tagList: Array<{name: String,code: Number}> = [];
+    const tagList: Array<{ name: String, code: Number }> = [];
     const noneTag = { name: t('tagNone'), code: -1 };
     tagList.push(noneTag);
-    tags.value.forEach((tag: Tag) => {
-      if(tag.id){
-        let tagEntry = {name: tag.name , code: tag.id}
+
+    store.dispatch(ActionTypes.FetchTags, projectId);
+    const storeTags = computed(() => store.getters.getProjectTags(projectId));
+    storeTags.value.forEach((tag: Tag) => {
+      if (tag.id) {
+        let tagEntry = { name: tag.name, code: tag.id }
         tagList.push(tagEntry);
       }
     });
+    console.error(tag)
+    if (tag) {
+      var oldTag = { name: tag.name, code: tag.id };
+      var selectedTag = ref(oldTag)
+    } else {
+      var selectedTag = ref(noneTag)
+    }
 
-    const selectedTag = ref(noneTag);
+
     const tagTypes = ref(tagList);
 
     const cancel = () => {
@@ -132,24 +144,25 @@ export default defineComponent({
       }
 
       var reqTag;
-      tags.value.forEach((tag: Tag) => {
-        if(tag.id){
-          if(tag.id == chosenTag.code){
+      storeTags.value.forEach((tag: Tag) => {
+        if (tag.id) {
+          if (tag.id == chosenTag.code) {
             reqTag = tag;
           }
         }
       });
+      console.error(reqTag)
 
       const requirement: Requirement = {
         name: state.name,
         description: turndownService.turndown(state.description),
-        tags:reqTag?[reqTag]:undefined,
+        tags: reqTag ? [reqTag] : undefined,
         projectId,
         categories,
       };
 
       if (!requirementId) {
-        store.dispatch(ActionTypes.CreateRequirement, requirement).then (() => {
+        store.dispatch(ActionTypes.CreateRequirement, requirement).then(() => {
           setLoading(false);
           emit('save');
         });
@@ -168,11 +181,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .footer {
-    text-align: end;
-  }
+.footer {
+  text-align: end;
+}
 
-  .footer ::v-deep(.p-button) {
-    width: auto;
-  }
+.footer ::v-deep(.p-button) {
+  width: auto;
+}
 </style>

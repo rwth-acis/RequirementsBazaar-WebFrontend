@@ -248,7 +248,7 @@ export interface Requirement {
 
 export interface Tag {
   /** @format int32 */
-  id?: number;
+  id: number;
   name: string;
   colour: string;
   projectId: number;
