@@ -214,6 +214,7 @@ export default defineComponent({
       loading.value = false;
     });
     store.dispatch(ActionTypes.FetchProject, projectId);
+    store.dispatch(ActionTypes.FetchTags, projectId)
 
     const alertLogin = (message: string) => {
       confirm.require({
