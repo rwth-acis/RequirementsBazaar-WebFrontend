@@ -135,6 +135,7 @@
       :name="requirement.name"
       :description="requirement.description"
       :tag="requirement.tags[0]"
+      :projectTags="projectTags"
       @cancel="requirementEditorCanceled"
       @save="requirementEditorSaved">
     </RequirementEditor>
@@ -399,6 +400,7 @@ export default defineComponent({
         store.dispatch(ActionTypes.FetchRequirementDevelopers, requirementId);
       }
     }, { immediate: true});
+    const projectTags = computed(() => store.getters.getProjectTags(projectId));
 
     return {
       t,
@@ -426,6 +428,7 @@ export default defineComponent({
       displayExportPopup,
       exportPopupSaved,
       exportPopupCanceled,
+      projectTags,
     }
   }
 })

@@ -36,7 +36,7 @@
       <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor"
         :breakpoints="{ '960px': '75vw', '640px': '100vw' }" :style="{ width: '50vw' }" :modal="true">
         <RequirementEditor class="requirementEditor" :requirementId="id" :projectId="projectId" :categories="categories"
-          :name="name" :description="description" :tag="tagList[0]" @cancel="requirementEditorCanceled" @save="requirementEditorSaved">
+          :name="name" :description="description" :tag="tagList[0]" :projectTags="projectTags" @cancel="requirementEditorCanceled" @save="requirementEditorSaved">
         </RequirementEditor>
       </Dialog>
       <Dialog :header="t('exportRequirement')" v-model:visible="displayExportPopup"
@@ -146,12 +146,13 @@ export default defineComponent({
     showLastActivity: { type: Boolean, required: false, default: true },
     userContext: { type: Object, required: false },
     tags: { type: Object, required: false },
+    projectTags: { type: Array as PropType<Array<Tag>>, required: true },
   },
 
   setup: (props) => {
     const {
       id, projectId, userVoted, isFollower, isDeveloper, realized, lastActivity, lastActivityUser, creationDate, name, description, categories,
-      additionalProperties, showLastActivity, userContext, tags
+      additionalProperties, showLastActivity, userContext, tags, projectTags
     } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
@@ -446,7 +447,8 @@ export default defineComponent({
       displayExportPopup,
       exportPopupSaved,
       exportPopupCanceled,
-      requirement
+      requirement,
+      projectTags
     };
   },
 })

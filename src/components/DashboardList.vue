@@ -56,7 +56,8 @@
           :isFollower="requirement.userContext.isFollower ? true : false"
           :isDeveloper="requirement.userContext.isDeveloper ? true : false" :realized="requirement.realized"
           :brief="true"
-          :tags ="requirement.tags ?? {}">
+          :tags ="requirement.tags ?? {}"
+          :projectTags="requirement.tags ?? {}">
         </RequirementCard>
       </router-link>
     </div>

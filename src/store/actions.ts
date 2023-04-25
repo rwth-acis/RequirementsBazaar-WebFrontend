@@ -231,7 +231,6 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   async [ActionTypes.FetchTags]({ commit }, projectId) {
-    console.warn(projectId)
     const response = await bazaarApi.projects.getTagsForProject(projectId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetProjectTags, {projectId: projectId, tags: response.data});

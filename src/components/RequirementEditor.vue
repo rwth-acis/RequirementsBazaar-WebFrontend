@@ -79,11 +79,15 @@ export default defineComponent({
       type: Object as PropType<Tag>,
       required: false,
     },
+    projectTags: {
+      type: Array as PropType<Array<Tag>>,
+      required: true,
+    },
     onCancel: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
     onSave: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
   },
   emits: ['cancel', 'save'],
-  setup: ({ name, description, projectId, categories, requirementId, tag }, { emit }) => {
+  setup: ({ name, description, projectId, categories, requirementId, tag, projectTags }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
     const { setLoading } = useProgress();
@@ -104,27 +108,24 @@ export default defineComponent({
     const v$ = useVuelidate(rules, state);
 
     const turndownService = new TurndownService();
-    const tagList: Array<{ name: String, code: Number }> = [];
-    const noneTag = { name: t('tagNone'), code: -1 };
-    tagList.push(noneTag);
 
+    const noneTag = { name: t('tagNone'), code: -1 };
+    const tagList: Array<{ name: String, code: Number }> = [];
+    tagList.push(noneTag);
     store.dispatch(ActionTypes.FetchTags, projectId);
-    const storeTags = computed(() => store.getters.getProjectTags(projectId));
-    storeTags.value.forEach((tag: Tag) => {
+    projectTags.forEach((tag: Tag) => {
       if (tag.id) {
         let tagEntry = { name: tag.name, code: tag.id }
         tagList.push(tagEntry);
       }
     });
-    console.error(tag)
+
     if (tag) {
       var oldTag = { name: tag.name, code: tag.id };
       var selectedTag = ref(oldTag)
     } else {
       var selectedTag = ref(noneTag)
     }
-
-
     const tagTypes = ref(tagList);
 
     const cancel = () => {
@@ -144,14 +145,13 @@ export default defineComponent({
       }
 
       var reqTag;
-      storeTags.value.forEach((tag: Tag) => {
+      projectTags.forEach((tag: Tag) => {
         if (tag.id) {
           if (tag.id == chosenTag.code) {
             reqTag = tag;
           }
         }
       });
-      console.error(reqTag)
 
       const requirement: Requirement = {
         name: state.name,
