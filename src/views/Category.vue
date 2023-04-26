@@ -173,6 +173,7 @@ export default defineComponent({
       {name: t('sorting-comments'), value: 'comment'},
       {name: t('sorting-followers'), value: 'follower'},
       {name: t('sorting-votes'), value: 'vote'},
+      {name: t('sorting-tags'), value: 'tag'},
     ];
     const sortAscending = ref(false);
     const page = ref(0);

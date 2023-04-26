@@ -168,6 +168,13 @@ export const getters: GetterTree<State, State> & Getters = {
       case 'vote':
         requirements.sort(numericalSortFunction('upVotes', sortAscending));
         break;
+      case 'tag':
+        requirements.sort((a, b) => {
+          const aTag = a.tags?.[0]? a.tags[0].name : '';
+          const bTag = b.tags?.[0]? b.tags[0].name : '';
+          return sortAscending ? aTag.localeCompare(bTag) : bTag.localeCompare(aTag);
+        });
+        break;
     }
 
     requirements = requirements.filter(requirement => requirement.name?.toLowerCase().includes(parameters.search.toLowerCase()));
