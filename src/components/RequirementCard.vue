@@ -8,7 +8,7 @@
           <div class="title">{{ name }}</div>
         </router-link>
       </div>
-      <div id="tags" v-for="tag in tagList" :key="tag.id">
+      <div id="tags" v-for="tag in tags" :key="tag.id">
         <Badge :style="{ background: tag.colour }" :value=tag.name></Badge>
       </div>
 
