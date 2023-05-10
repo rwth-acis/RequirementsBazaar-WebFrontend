@@ -114,12 +114,20 @@ export default defineComponent({
 
 
 <style scoped>
+.figs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  max-width: 600px;
+}
 figure {
-  display: inline-block;
-  margin-left: 1rem;
-  margin-right: 1rem;
-
-  /* adjust as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin:0 0.5rem;
+  margin-top: 0.2rem;
+  width: 8rem;
+  height: 11rem;
 }
 
 figure img {
@@ -131,6 +139,8 @@ figure img {
 figure figcaption {
   text-align: center;
   font-weight: bold;
+  word-break: break-word;
+  margin-top: 0.5rem;
 }
 
 .parent {
