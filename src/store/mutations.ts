@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { State, LocalComment, UnhandledError } from './state'
 
-import { Project, Category, Requirement, Comment, Dashboard, ProjectMember } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, Dashboard, ProjectMember, GamificationNotification, Tag } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 import { UserVote } from '@/api/bazaar';
 
@@ -13,6 +13,7 @@ export enum MutationType {
   SetCategories = 'SET_CATEGORIES',
   SetCategory = 'SET_CATEGORY',
   SetCategoryIsFollower = 'SET_CATEGORY_IS_FOLLOWER',
+  SetProjectTags = 'SET_PROJECT_TAGS',
   SetRequirements = 'SET_REQUIREMENTS',
   SetRequirement = 'SET_REQUIREMENT',
   SetRequirementVote = 'SET_REQUIREMENT_VOTE',
@@ -39,6 +40,9 @@ export enum MutationType {
   SetActivities = 'SET_ACTIVITIES',
 
   _AddUnhandledError = 'ADD_UNHANDLED_ERROR',
+  AddNotification = 'ADD_NOTIFICATION',
+  SetGfNotification = 'SET_GFNOTIFICATION',
+
 }
 
 type RemoveProjectMemberParameters = {
@@ -54,11 +58,13 @@ export type Mutations = {
   [MutationType.ReplaceProjects](state: State, project: Project[]): void;
   [MutationType.SetProject](state: State, project: Project): void;
   [MutationType.SetProjectIsFollower](state: State, {projectId: number, isFollower: boolean}): void;
+  [MutationType.SetProjectTags](state: State, {projectId, tags}): void;
   [MutationType.SetCategories](state: State, categories: Category[]): void;
   [MutationType.SetCategory](state: State, category: Category): void;
   [MutationType.SetCategoryIsFollower](state: State, {categoryId: number, isFollower: boolean}): void;
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
+  [MutationType.SetGfNotification](state: State, requirement: Requirement): void;
   [MutationType.SetRequirementVote](state: State, {requirementId: number, userVoted: string}): void;
   [MutationType.SetRequirementIsFollower](state: State, {requirementId: number, isFollower: boolean}): void;
   [MutationType.SetRequirementIsDeveloper](state: State, {requirementId: number, isDeveloper: boolean}): void;
@@ -84,6 +90,8 @@ export type Mutations = {
   [MutationType.SetActivities](state: State, activities: Activity[]): void;
 
   [MutationType._AddUnhandledError](state: State, error: UnhandledError): void;
+  [MutationType.AddNotification](state: State, payload: GamificationNotification): void;
+
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -116,6 +124,11 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetProject](state, project) {
     if (project.id) {
+      if(project.gamificationNotifications?.length != 0){
+        if(project.gamificationNotifications){
+          state.notification = project.gamificationNotifications;
+        }
+      }
       state.projects[project.id] = project;
     }
   },
@@ -136,8 +149,23 @@ export const mutations: MutationTree<State> & Mutations = {
     });
   },
 
+  [MutationType.SetProjectTags](state, {projectId , tags}) {
+    state.tags[projectId] = {}
+
+    tags.forEach((tag) => {
+      if (tag.id) {
+        state.tags[projectId][tag.id] = tag;
+      }
+    });
+  },
+
   [MutationType.SetCategory](state, category) {
     if (category.id) {
+      if(category.gamificationNotifications?.length != 0){
+        if(category.gamificationNotifications){
+          state.notification = category.gamificationNotifications;
+        }
+      }
       state.categories[category.id] = category;
     }
   },
@@ -160,7 +188,22 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetRequirement](state, requirement) {
     if (requirement.id) {
+      if(requirement.gamificationNotifications?.length != 0){
+        if(requirement.gamificationNotifications){
+          state.notification = requirement.gamificationNotifications;
+        }
+      }
       state.requirements[requirement.id] = requirement;
+    }
+  },
+
+  [MutationType.SetGfNotification](state, requirement){
+    if (requirement.id) {
+      if(requirement.gamificationNotifications?.length != 0){
+        if(requirement.gamificationNotifications){
+          state.notification = requirement.gamificationNotifications;
+        }
+      }
     }
   },
 
@@ -247,6 +290,11 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType.SetComment](state, comment) {
     if (comment.id) {
+      if(comment.gamificationNotifications?.length != 0){
+        if(comment.gamificationNotifications){
+          state.notification = comment.gamificationNotifications;
+        }
+      }
       state.comments[comment.id] = comment;
     }
   },
@@ -325,6 +373,11 @@ export const mutations: MutationTree<State> & Mutations = {
   },
 
   [MutationType.SetDashboard](state, dashboard) {
+    if(dashboard.gamificationNotifications?.length != 0){
+      if(dashboard.gamificationNotifications){
+        state.notification = dashboard.gamificationNotifications;
+      }
+    }
     state.dashboard = dashboard;
   },
 
@@ -338,5 +391,9 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationType._AddUnhandledError](state, error) {
     state.unhandledErrors.push(error);
+  },
+
+  [MutationType.AddNotification](state, payload) {
+    state.notification.push(payload);
   },
 }

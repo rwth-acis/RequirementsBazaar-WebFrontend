@@ -323,6 +323,8 @@ export default defineComponent({
     const sortDirection = computed(() => sortAscending.value ? 'ASC' : 'DESC');
     const parameters = computed(() => {return {page: page.value, per_page: perPage.value, sort: selectedSort.value, sortDirection: sortDirection.value, search: searchQuery.value}});
     const categories = computed(() => store.getters.categoriesList(projectId, parameters.value));
+    store.dispatch(ActionTypes.FetchTags, projectId);
+
     store.dispatch(ActionTypes.FetchCategoriesOfProject, {projectId: projectId, query: parameters.value});
     watch(selectedSort, () => {
       sortAscending.value = selectedSort.value === 'name';

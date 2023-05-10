@@ -21,6 +21,10 @@
         {{t('by')}} {{ requirement.creator?.userName }}
       </div>
 
+      <div id="tags" v-for="tag in requirement.tags" :key="tag.id">
+            <Badge :style="{ background: tag.colour}" :value=tag.name ></Badge>
+      </div>
+
       <div id="description">
         <vue3-markdown-it :source="requirement?.description" />
       </div>
@@ -130,6 +134,8 @@
       :categories="requirement.categories"
       :name="requirement.name"
       :description="requirement.description"
+      :tag="requirement.tags[0]"
+      :projectTags="projectTags"
       @cancel="requirementEditorCanceled"
       @save="requirementEditorSaved">
     </RequirementEditor>
@@ -208,6 +214,7 @@ export default defineComponent({
       loading.value = false;
     });
     store.dispatch(ActionTypes.FetchProject, projectId);
+    store.dispatch(ActionTypes.FetchTags, projectId)
 
     const alertLogin = (message: string) => {
       confirm.require({
@@ -335,7 +342,7 @@ export default defineComponent({
             {
               label: issue_url.value ? t('viewOnGitHub') : t('createGithubIssue'),
               icon: 'pi pi-github',
-              disabled: projectGithubUrl === undefined,
+              disabled: projectGithubUrl.value === undefined,
               command: () => {
                 if (issue_url.value) {
                   window.open(issue_url.value);
@@ -394,6 +401,7 @@ export default defineComponent({
         store.dispatch(ActionTypes.FetchRequirementDevelopers, requirementId);
       }
     }, { immediate: true});
+    const projectTags = computed(() => store.getters.getProjectTags(projectId));
 
     return {
       t,
@@ -421,6 +429,7 @@ export default defineComponent({
       displayExportPopup,
       exportPopupSaved,
       exportPopupCanceled,
+      projectTags,
     }
   }
 })
@@ -498,6 +507,9 @@ export default defineComponent({
 
     #actionButtons {
       border-bottom: 2px solid #dee2e6;
+    }
+    #tags{
+      float:right;
     }
   }
 </style>

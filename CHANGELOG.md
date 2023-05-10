@@ -9,6 +9,21 @@ Releases prior to v2.0.1 are only documented on
 the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/releases)
 
 ## [Unreleased]
+## [2.6.0] - 2023-05-10
+
+### Added
+
+- Add priority labels to requirements
+  [#280](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/280)
+- Add Gamification
+  [#279](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/279)
+
+### Changed
+
+- Changed export to include labels as headings
+  [commit fa175d9e3145ee0bf4cf204b6dd0211723214edc](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/fa175d9e3145ee0bf4cf204b6dd0211723214edc)
+
+
 ## [2.5.0] - 2023-01-30
 
 ### Added

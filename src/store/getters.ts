@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex'
 import { State, UnhandledError } from './state'
-import { Project, Category, Requirement, Comment, ProjectMember, User } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, ProjectMember, User, GamificationNotification, Tag} from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export type Getters = {
@@ -17,6 +17,7 @@ export type Getters = {
   activitiesList(state: State): (parameters: any) => Activity[];
   unhandledErrors(state: State): (parameters: any) => UnhandledError[];
   getFeaturedProjects(state: State): (parameters: any) => Project[];
+  getNotifications(state: State): (parameters: any) => GamificationNotification[];
 }
 
 const numericalSortFunction = (property, sortAscending) => (a, b) => {
@@ -167,6 +168,13 @@ export const getters: GetterTree<State, State> & Getters = {
       case 'vote':
         requirements.sort(numericalSortFunction('upVotes', sortAscending));
         break;
+      case 'tag':
+        requirements.sort((a, b) => {
+          const aTag = a.tags?.[0]? a.tags[0].name : '';
+          const bTag = b.tags?.[0]? b.tags[0].name : '';
+          return sortAscending ? aTag.localeCompare(bTag) : bTag.localeCompare(aTag);
+        });
+        break;
     }
 
     requirements = requirements.filter(requirement => requirement.name?.toLowerCase().includes(parameters.search.toLowerCase()));
@@ -221,6 +229,15 @@ export const getters: GetterTree<State, State> & Getters = {
     });
 
     return featuredProjects;
+  },
+
+  getNotifications: (state: State) => (parameters: any) => {
+    return state.notification;
+  },
+
+  getProjectTags: (state: State) => (projectId: number) => {
+    let tags: Tag[] = Object.values(state.tags[projectId] ?? {});
+    return tags;
   },
 
 }

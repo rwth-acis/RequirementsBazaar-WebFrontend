@@ -62,6 +62,7 @@ export interface Category {
   numberOfFollowers?: number;
   userContext?: UserContext;
   additionalProperties?: Record<string, object>;
+  gamificationNotifications?: GamificationNotification[];
 }
 
 export interface User {
@@ -150,6 +151,7 @@ export interface Comment {
   lastUpdatedDate?: string;
   deleted?: boolean;
   _context?: EntityContext;
+  gamificationNotifications?: GamificationNotification[];
 }
 
 export interface EntityContext {
@@ -190,6 +192,7 @@ export interface Project {
   numberOfFollowers?: number;
   userContext?: UserContext;
   additionalProperties?: Record<string, object>;
+  gamificationNotifications?: GamificationNotification[];
 }
 
 export interface Requirement {
@@ -211,6 +214,7 @@ export interface Requirement {
   categories: number[];
   attachments?: Attachment[];
   tags?: Tag[];
+  gamificationNotifications?: GamificationNotification[];
 
   /** @format date-time */
   creationDate?: string;
@@ -244,9 +248,17 @@ export interface Requirement {
 
 export interface Tag {
   /** @format int32 */
-  id?: number;
+  id: number;
   name: string;
   colour: string;
+  projectId: number;
+}
+
+export interface GamificationNotification{
+  typeId: string;
+  type: string;
+  message: string;
+  memberId: string;
 }
 
 export interface CategoryContributors {
@@ -319,11 +331,33 @@ export interface RequirementContributors {
   commentCreator?: User[];
   attachmentCreator?: User[];
 }
-
+export interface GfBadge {
+  id: string;
+  name: string;
+  description: string;
+  notificationMessage: string;
+  useNotification: boolean;
+  img: string;
+}
+export interface GfStatus {
+  pointUnitName: string;
+  memberLevel: number;
+  nextLevelPoint: number;
+  nextLevelName: string;
+  progress: number;
+  rank: number;
+  nextLevel: number;
+  memberLevelName: string;
+  memberPoint: number;
+}
 export interface Dashboard {
   projects: Project[];
   categories: Category[];
   requirements: Requirement[];
+  badges?: GfBadge[];
+  status?: GfStatus;
+  isGamified: string;
+  gamificationNotifications?: GamificationNotification[];
 }
 
 export interface EntityOverview {

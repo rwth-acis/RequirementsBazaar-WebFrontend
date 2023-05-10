@@ -10,6 +10,7 @@ export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
   SearchProjects = 'SEARCH_PROJECTS',
   FetchProject = 'FETCH_PROJECT',
+  FetchTags = 'FETCH_TAGS',
   FollowProject = 'FOLLOW_PROJECT',
   CreateProject = 'CREATE_PROJECT',
   UpdateProject = 'UPDATE_PROJECT',
@@ -125,6 +126,7 @@ type RemoveProjectMemberParameters = {
 
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
+  [ActionTypes.FetchTags](context: ActionAugments, projectId: number): void;
   [ActionTypes.SearchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
   [ActionTypes.FollowProject](context: ActionAugments, payload: FollowResourceParameters): void;
@@ -228,6 +230,13 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
+  async [ActionTypes.FetchTags]({ commit }, projectId) {
+    const response = await bazaarApi.projects.getTagsForProject(projectId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetProjectTags, {projectId: projectId, tags: response.data});
+    }
+  },
+
   async [ActionTypes.FetchCategory]({ commit }, categoryId) {
     const response = await bazaarApi.categories.getCategory(categoryId);
     if (response.data && response.status === 200) {
@@ -314,6 +323,12 @@ export const actions: ActionTree<State, State> & Actions = {
     if (!response.ok) {
       // reset local commit
       commit(MutationType.SetRequirementVote, {requirementId: parameters.requirementId, userVoted: userVotedCached});
+    } else {
+      // set the notifications if present
+      const response = await bazaarApi.requirements.getRequirement(parameters.requirementId);
+      if (response.data && response.status === 200) {
+        commit(MutationType.SetGfNotification, response.data);
+      }
     }
   },
 
