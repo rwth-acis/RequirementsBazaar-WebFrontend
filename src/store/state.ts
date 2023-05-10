@@ -1,4 +1,4 @@
-import { Project, Category, Requirement, Comment, Dashboard, ProjectMember, User, GamificationNotification } from '../types/bazaar-api';
+import { Project, Category, Requirement, Comment, Dashboard, ProjectMember, User, GamificationNotification, Tag } from '../types/bazaar-api';
 import { Activity } from '../types/activities-api';
 
 export interface LocalComment extends Comment {
@@ -32,6 +32,9 @@ export type State = {
   unhandledErrors: UnhandledError[];
   featuredProjectIds: number[];
   notification: GamificationNotification[];
+  tags: {
+    [projectId: number]: {[tagId: number]: Tag}
+  };
 }
 
 export const state: State = {
@@ -47,10 +50,11 @@ export const state: State = {
     projects: [],
     categories: [],
     requirements: [],
-    isGamified: false,
+    isGamified: "false",
     badges:[],
   },
   unhandledErrors: [],
   featuredProjectIds: [],
   notification: [],
+  tags: {},
 };

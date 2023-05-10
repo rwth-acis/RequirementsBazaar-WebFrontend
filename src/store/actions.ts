@@ -10,6 +10,7 @@ export enum ActionTypes {
   FetchProjects = 'FETCH_PROJECTS',
   SearchProjects = 'SEARCH_PROJECTS',
   FetchProject = 'FETCH_PROJECT',
+  FetchTags = 'FETCH_TAGS',
   FollowProject = 'FOLLOW_PROJECT',
   CreateProject = 'CREATE_PROJECT',
   UpdateProject = 'UPDATE_PROJECT',
@@ -125,6 +126,7 @@ type RemoveProjectMemberParameters = {
 
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
+  [ActionTypes.FetchTags](context: ActionAugments, projectId: number): void;
   [ActionTypes.SearchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchProject](context: ActionAugments, projectId: number): void;
   [ActionTypes.FollowProject](context: ActionAugments, payload: FollowResourceParameters): void;
@@ -225,6 +227,13 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.projects.getCategoriesForProject(parameters.projectId, parameters.query);
     if (response.data && response.status === 200) {
       commit(MutationType.SetCategories, response.data);
+    }
+  },
+
+  async [ActionTypes.FetchTags]({ commit }, projectId) {
+    const response = await bazaarApi.projects.getTagsForProject(projectId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.SetProjectTags, {projectId: projectId, tags: response.data});
     }
   },
 

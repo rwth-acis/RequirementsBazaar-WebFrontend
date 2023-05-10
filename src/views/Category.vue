@@ -39,6 +39,7 @@
         v-if="showAddRequirement"
         :projectId="category?.projectId"
         :categories="[category?.id]"
+        :projectTags="projectTags"
         @cancel="editorCanceled"
         @save="editorSaved">
       </RequirementEditor>
@@ -83,7 +84,9 @@
             :isDeveloper="requirement.userContext.isDeveloper ? true : false"
             :realized="requirement.realized"
             :additionalProperties="requirement.additionalProperties"
-            :userContext="requirement.userContext ?? {}">
+            :userContext="requirement.userContext ?? {}"
+            :tags ="requirement.tags ?? {}"
+            :projectTags="projectTags">
           </RequirementCard>
         </div>
       </div>
@@ -110,7 +113,8 @@
             :isDeveloper="requirement.userContext.isDeveloper ? true : false"
             :realized="requirement.realized"
             :additionalProperties="requirement.additionalProperties"
-            :userContext="requirement.userContext ?? {}">
+            :userContext="requirement.userContext ?? {}"
+            :tags ="requirement.tags ?? {}">
           </RequirementCard>
         </div>
       </div>
@@ -150,9 +154,12 @@ export default defineComponent({
     const categoryId = Number.parseInt(route.params.categoryId.toString(), 10);
     const projectId = Number.parseInt(route.params.projectId.toString(), 10);
     const done = computed(() => route.params.done ? true : false);
+    store.dispatch(ActionTypes.FetchTags, projectId);
+
 
     const category = computed(() => store.getters.getCategoryById(categoryId));
     const project = computed(() => store.getters.getProjectById(projectId));
+    const projectTags = computed(() => store.getters.getProjectTags(projectId));
 
     store.dispatch(ActionTypes.FetchCategory, categoryId);
     store.dispatch(ActionTypes.FetchProject, projectId);
@@ -166,6 +173,7 @@ export default defineComponent({
       {name: t('sorting-comments'), value: 'comment'},
       {name: t('sorting-followers'), value: 'follower'},
       {name: t('sorting-votes'), value: 'vote'},
+      {name: t('sorting-tags'), value: 'tag'},
     ];
     const sortAscending = ref(false);
     const page = ref(0);
@@ -408,6 +416,7 @@ export default defineComponent({
       categoryEditorSaved,
       exportPopupSaved,
       exportPopupCanceled,
+      projectTags
     }
   }
 })

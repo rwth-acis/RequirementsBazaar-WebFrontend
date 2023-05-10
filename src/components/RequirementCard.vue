@@ -8,6 +8,10 @@
           <div class="title">{{ name }}</div>
         </router-link>
       </div>
+      <div id="tags" v-for="tag in tags" :key="tag.id">
+        <Badge :style="{ background: tag.colour }" :value=tag.name></Badge>
+      </div>
+
       <div class="">
         <div class="lastupdate p-d-flex p-ai-center">
           <i class="pi pi-plus-circle p-mr-2"></i> <span :title="$dayjs(creationDate).format('LLL')">{{
@@ -32,7 +36,7 @@
       <Dialog :header="t('editRequirement')" v-model:visible="displayRequirementEditor"
         :breakpoints="{ '960px': '75vw', '640px': '100vw' }" :style="{ width: '50vw' }" :modal="true">
         <RequirementEditor class="requirementEditor" :requirementId="id" :projectId="projectId" :categories="categories"
-          :name="name" :description="description" @cancel="requirementEditorCanceled" @save="requirementEditorSaved">
+          :name="name" :description="description" :tag="tagList[0]" :projectTags="projectTags" @cancel="requirementEditorCanceled" @save="requirementEditorSaved">
         </RequirementEditor>
       </Dialog>
       <Dialog :header="t('exportRequirement')" v-model:visible="displayExportPopup"
@@ -65,7 +69,7 @@
   <Dialog v-model:visible="displayCategoryDialog" :breakpoints="{ '960px': '75vw', '640px': '100vw' }"
     :style="{ width: '25vw' }" :header="t('changeCategory')" :modal="true" class="p-fluid">
     <div class="p-field">
-      <label for="category">{{ t('currentCategory') }}: </label> <b>{{ category?.name ?? 'no category'}}</b>
+      <label for="category">{{ t('currentCategory') }}: </label> <b>{{ category?.name ?? 'no category' }}</b>
     </div>
 
     <div class="p-field">
@@ -90,8 +94,7 @@
         <ProgressBar mode="indeterminate" class="mb-3" v-if="changeCategoryInProgress" />
         <Button :label="t('cancel')" icon="pi pi-times" class="p-button-outlined p-ml-2 p-mr-2"
           @click="displayCategoryDialog = false" />
-        <Button :label="t('save')" icon="pi pi-check"
-          @click="changeRequirementCategory" />
+        <Button :label="t('save')" icon="pi pi-check" @click="changeRequirementCategory" />
       </div>
     </template>
   </Dialog>
@@ -106,6 +109,7 @@ import { useConfirm } from "primevue/useconfirm";
 import CommentsList from './CommentsList.vue';
 import RequirementDevTimeline from '@/components/RequirementDevTimeline.vue';
 import { useRoute, useRouter } from 'vue-router';
+import { Tag } from '@/types/bazaar-api';
 
 import { routePathToRequirement } from '@/router';
 
@@ -141,12 +145,14 @@ export default defineComponent({
     additionalProperties: { type: Object, required: false },
     showLastActivity: { type: Boolean, required: false, default: true },
     userContext: { type: Object, required: false },
+    tags: { type: Object, required: false },
+    projectTags: { type: Array as PropType<Array<Tag>>, required: true },
   },
 
   setup: (props) => {
     const {
       id, projectId, userVoted, isFollower, isDeveloper, realized, lastActivity, lastActivityUser, creationDate, name, description, categories,
-      additionalProperties, showLastActivity, userContext,
+      additionalProperties, showLastActivity, userContext, tags, projectTags
     } = toRefs(props);
     const { locale, t } = useI18n({ useScope: 'global' });
     const store = useStore();
@@ -159,6 +165,17 @@ export default defineComponent({
 
     console.log('userContext:');
     console.log(userContext.value);
+
+    const tagList: Array<Tag> = [];
+
+    if (tags.value) {
+      tags.value.forEach((tag: Tag) => {
+        if (tag.id) {
+          tagList.push(tag);
+        }
+      });
+    }
+
 
     const showComments = ref(false);
 
@@ -395,6 +412,7 @@ export default defineComponent({
     };
 
     return {
+      tagList,
       id,
       projectId,
       voted,
@@ -429,7 +447,8 @@ export default defineComponent({
       displayExportPopup,
       exportPopupSaved,
       exportPopupCanceled,
-      requirement
+      requirement,
+      projectTags
     };
   },
 })
@@ -462,6 +481,10 @@ export default defineComponent({
 #followers {
   flex: 1;
   text-align: center;
+}
+
+#tags {
+  float: right;
 }
 
 #comments {

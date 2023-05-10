@@ -2,14 +2,14 @@
   <div class="p-fluid">
     <form @submit.prevent="handleSubmit()" class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('formTitle') }}</label>
+        <label for="name">{{ t('formTitle') }}</label>
         <InputText id="name" type="text" v-model="v$.name.$model" />
         <div class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
           <small class="p-error">{{ error.$message.replace('Value', 'Title') }}</small>
         </div>
       </div>
       <div class="p-field">
-        <label for="description">{{ t('formDesc') }}</label>
+        <label for="description">{{ t('formDesc') }}</label>
         <Editor v-model="v$.description.$model" editorStyle="height: 100px">
           <template #toolbar>
             <span class="ql-formats">
@@ -25,6 +25,10 @@
           <small class="p-error">{{ error.$message.replace('Value', 'Description') }}</small>
         </div>
       </div>
+      <div class="p-field">
+        <label for="tags">{{ t('formTag') }}</label>
+        <Dropdown id="tag" v-model="selectedTag" :options="tagTypes" optionLabel="name" :required="true" />
+      </div>
       <div class="footer">
         <Button :label="t('cancel')" @click="cancel" class="p-button-outlined p-ml-2 p-mr-2" />
         <Button type="submit" :label="t('save')" />
@@ -34,13 +38,15 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, PropType, reactive } from 'vue'
+import { ref, defineComponent, PropType, reactive, computed } from 'vue'
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 import { Requirement } from '../types/bazaar-api';
 import { required, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
+import { Tag } from '@/types/bazaar-api';
+
 import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
 
@@ -59,7 +65,7 @@ export default defineComponent({
     },
     projectId: {
       type: Number,
-      required: true
+      required: true,
     },
     categories: {
       type: Array as PropType<Array<number>>,
@@ -67,13 +73,21 @@ export default defineComponent({
     },
     requirementId: {
       type: Number,
-      required: false
+      required: false,
+    },
+    tag: {
+      type: Object as PropType<Tag>,
+      required: false,
+    },
+    projectTags: {
+      type: Array as PropType<Array<Tag>>,
+      required: true,
     },
     onCancel: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
     onSave: Function as PropType<(x: string) => void>, /* workaround for typing custom events */
   },
   emits: ['cancel', 'save'],
-  setup: ({ name, description, projectId, categories, requirementId }, { emit }) => {
+  setup: ({ name, description, projectId, categories, requirementId, tag, projectTags }, { emit }) => {
     const store = useStore();
     const { t } = useI18n({ useScope: 'global' });
     const { setLoading } = useProgress();
@@ -95,12 +109,32 @@ export default defineComponent({
 
     const turndownService = new TurndownService();
 
+    const noneTag = { name: t('tagNone'), code: -1 };
+    const tagList: Array<{ name: String, code: Number }> = [];
+    tagList.push(noneTag);
+    store.dispatch(ActionTypes.FetchTags, projectId);
+    projectTags.forEach((tag: Tag) => {
+      if (tag.id) {
+        let tagEntry = { name: tag.name, code: tag.id }
+        tagList.push(tagEntry);
+      }
+    });
+
+    if (tag) {
+      var oldTag = { name: tag.name, code: tag.id };
+      var selectedTag = ref(oldTag)
+    } else {
+      var selectedTag = ref(noneTag)
+    }
+    const tagTypes = ref(tagList);
+
     const cancel = () => {
       emit('cancel');
     }
 
     const handleSubmit = async () => {
       submitted.value = true;
+      var chosenTag = selectedTag.value;
 
       const isFormCorrect = await v$.value.$validate();
       // you can show some extra alert to the user or just leave the each field to show it's `$errors`.
@@ -110,15 +144,25 @@ export default defineComponent({
         setLoading(true);
       }
 
+      var reqTag;
+      projectTags.forEach((tag: Tag) => {
+        if (tag.id) {
+          if (tag.id == chosenTag.code) {
+            reqTag = tag;
+          }
+        }
+      });
+
       const requirement: Requirement = {
         name: state.name,
         description: turndownService.turndown(state.description),
+        tags: reqTag ? [reqTag] : undefined,
         projectId,
         categories,
       };
 
       if (!requirementId) {
-        store.dispatch(ActionTypes.CreateRequirement, requirement).then (() => {
+        store.dispatch(ActionTypes.CreateRequirement, requirement).then(() => {
           setLoading(false);
           emit('save');
         });
@@ -131,17 +175,17 @@ export default defineComponent({
       }
     }
 
-    return { t, submitted, state, v$, cancel, handleSubmit, turndownService };
+    return { t, submitted, state, v$, cancel, handleSubmit, turndownService, selectedTag, tagTypes };
   }
 })
 </script>
 
 <style scoped>
-  .footer {
-    text-align: end;
-  }
+.footer {
+  text-align: end;
+}
 
-  .footer ::v-deep(.p-button) {
-    width: auto;
-  }
+.footer ::v-deep(.p-button) {
+  width: auto;
+}
 </style>

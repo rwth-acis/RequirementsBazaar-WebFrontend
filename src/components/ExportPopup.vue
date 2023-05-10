@@ -138,20 +138,62 @@ export default defineComponent({
           reqList = realized;
         }
       }
-      // strings for the latex Itemize
-      const setupItemize = t(key) + " " + categoryName + ':\n\\begin{itemize}\n';
-      const endItemize = '\n\\end{itemize}';
-
-      // body of the latex itemize
-      var body = '';
-      for (let i = 0; i < reqList.length; i++) {
-        let name = makeTexCompatible(reqList[i].name, true)
-        let description = makeTexCompatible(reqList[i].description, false);
-        body += '\t\\item \\textbf\{' + name + ':\} ' + description + '\n';
-      }
-      let texString = setupItemize + body + endItemize;
+      const texString = getTexString(reqList, key);
       downloadTex(texString, fileName);
       console.log('Export TeX finished');
+    }
+
+    function getTexString(reqList: Requirement[], key: string){
+            // create seperated lists for tags
+            const must = getMustRequirements(reqList);
+      const should = getShouldRequirements(reqList);
+      const could = getCouldRequirements(reqList);
+      const uncat = getUncatRequirements(reqList);
+      // strings for the latex Itemize
+      const header = '\\subsection*\{'+t(key) + " " + categoryName+'\}';
+      const beginItemize = '\n\\begin{itemize}\n';
+      const endItemize = '\n\\end{itemize}';
+
+      // bodys of the latex itemize
+      let texString = header
+
+      if(uncat.length != 0){
+        var bodyUncat = '';
+        for (let i = 0; i < uncat.length; i++) {
+          let name = makeTexCompatible(uncat[i].name, true)
+          let description = makeTexCompatible(uncat[i].description, false);
+          bodyUncat += '\t\\item \\textbf\{' + name + ':\} ' + description + '\n';
+        }
+        texString += beginItemize + bodyUncat + endItemize;
+      }
+      if(must.length!= 0){
+        var bodyMust = '';
+        for (let i = 0; i < must.length; i++) {
+          let name = makeTexCompatible(must[i].name, true)
+          let description = makeTexCompatible(must[i].description, false);
+          bodyMust += '\t\\item \\textbf\{' + name + ':\} ' + description + '\n';
+        }
+        texString += '\\paragraph\{Must:\}'+ beginItemize + bodyMust + endItemize;
+      }
+      if(should.length !=0){
+        var bodyShould = '';
+        for (let i = 0; i < should.length; i++) {
+          let name = makeTexCompatible(should[i].name, true)
+          let description = makeTexCompatible(should[i].description, false);
+          bodyShould += '\t\\item \\textbf\{' + name + ':\} ' + description + '\n';
+        }
+        texString += '\\paragraph\{Should:\}'+ beginItemize + bodyShould + endItemize;
+      }
+      if(could.length!=0){
+        var bodyCould = '';
+        for (let i = 0; i < could.length; i++) {
+          let name = makeTexCompatible(could[i].name, true)
+          let description = makeTexCompatible(could[i].description, false);
+          bodyCould += '\t\\item \\textbf\{' + name + ':\} ' + description + '\n';
+        }
+        texString += '\\paragraph\{Could:\}'+ beginItemize + bodyCould + endItemize;
+      }
+      return texString;
     }
 
     function makeTexCompatible(text: string, name: boolean) {
@@ -185,9 +227,59 @@ export default defineComponent({
       atag.click();
     }
 
+    function getMustRequirements(reqs: Array<Requirement>) {
+      var must: Requirement[] = [];
+      reqs.forEach((req: Requirement) => {
+        if (req.tags && req.tags.length != 0) {
+          if (req.tags[0].name == 'Must') {
+            must.push(req);
+          }
+        }
+      });
+      return must;
+    }
+
+    function getShouldRequirements(reqs: Array<Requirement>) {
+      var should: Requirement[] = [];
+      reqs.forEach((req: Requirement) => {
+        if (req.tags && req.tags.length != 0) {
+          if (req.tags[0].name == 'Should') {
+            should.push(req);
+          }
+        }
+      });
+      return should;
+    }
+
+    function getCouldRequirements(reqs: Array<Requirement>) {
+      var could: Requirement[] = [];
+      reqs.forEach((req: Requirement) => {
+        if (req.tags && req.tags.length != 0) {
+          if (req.tags[0].name == 'Could') {
+            could.push(req);
+          }
+        }
+      });
+      return could;
+    }
+
+    function getUncatRequirements(reqs: Array<Requirement>) {
+      var uncat: Requirement[] = [];
+      reqs.forEach((req: Requirement) => {
+        if (!req.tags || req.tags.length == 0) {
+          uncat.push(req);
+        }
+      });
+      return uncat;
+    }
+
     const exportRequirementsPdf = (isCompleted: boolean, all: boolean) => {
       console.log('Export PDF started...');
-      let bod = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
+      let bodMust = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
+      let bodShould = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
+      let bodCould = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
+      let bodUncat = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
+
       let header = isCategory ? { text: t('headerExportCatActive') + " " + categoryName + ":\n\n", style: 'header' } :
         { text: t('headerExportRequirement') + " " + categoryName + ":\n\n", style: 'header' };
       let fileName = isCategory ? "active_requirements" + "_" + id + ".pdf" : "requirement" + "_" + id + ".pdf";
@@ -204,14 +296,35 @@ export default defineComponent({
         }
       }
 
-      reqList.forEach((req: Requirement) => {
-        bod.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
+      // create seperated lists for tags
+      const must = getMustRequirements(reqList);
+      const should = getShouldRequirements(reqList);
+      const could = getCouldRequirements(reqList);
+      const uncat = getUncatRequirements(reqList);
+      const mustHeader = must.length!= 0? { text: 'Must:', fontSize: 14, bold: true, margin: [0, 10, 0, 5]}: undefined;
+      const shouldHeader = should.length!=0? { text: 'Should:', fontSize: 14, bold: true, margin: [0, 10, 0, 5] }: undefined;
+      const couldHeader = could.length!=0? { text: 'Could:', fontSize: 14, bold: true, margin: [0, 10, 0, 5] }: undefined;
+
+      must.forEach((req: Requirement) => {
+        bodMust.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
+        { text: req.description.split('\\\\').join('\\'), bold: false }]);
+      })
+      should.forEach((req: Requirement) => {
+        bodShould.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
+        { text: req.description.split('\\\\').join('\\'), bold: false }]);
+      })
+      could.forEach((req: Requirement) => {
+        bodCould.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
+        { text: req.description.split('\\\\').join('\\'), bold: false }]);
+      })
+      uncat.forEach((req: Requirement) => {
+        bodUncat.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
         { text: req.description.split('\\\\').join('\\'), bold: false }]);
       })
 
       const docDefinition = {
         content: [
-          header,
+          header, uncat.length !=0?
           {
             layout: {
               hLineColor: function (i, node) {
@@ -224,13 +337,61 @@ export default defineComponent({
             table: {
               headerRows: 1,
               widths: [100, '*'],
-              body: bod
+              body: bodUncat
             }
-          }
+          }:undefined,
+          mustHeader,  must.length !=0?
+          {
+            layout: {
+              hLineColor: function (i, node) {
+                return (i === 0 || i === node.table.body.length || i == 1) ? 'black' : 'gray';
+              },
+              vLineColor: function (i, node) {
+                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+              }
+            },
+            table: {
+              headerRows: 1,
+              widths: [100, '*'],
+              body: bodMust
+            }
+          }: undefined,
+          shouldHeader, should.length !=0?
+          {
+            layout: {
+              hLineColor: function (i, node) {
+                return (i === 0 || i === node.table.body.length || i == 1) ? 'black' : 'gray';
+              },
+              vLineColor: function (i, node) {
+                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+              }
+            },
+            table: {
+              headerRows: 1,
+              widths: [100, '*'],
+              body: bodShould
+            }
+          }: undefined,
+          couldHeader, could.length != 0?
+          {
+            layout: {
+              hLineColor: function (i, node) {
+                return (i === 0 || i === node.table.body.length || i == 1) ? 'black' : 'gray';
+              },
+              vLineColor: function (i, node) {
+                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+              }
+            },
+            table: {
+              headerRows: 1,
+              widths: [100, '*'],
+              body: bodCould
+            }
+          }:undefined,
         ],
         styles: {
           header: {
-            fontSize: 15,
+            fontSize: 18,
             bold: true
           }
         }
