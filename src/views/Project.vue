@@ -150,6 +150,7 @@ import CategoryCard from '../components/CategoryCard.vue';
 import ProjectEditor from '../components/ProjectEditor.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
 import ProjectMembersList from '../components/ProjectMembersList.vue';
+import ProjectTagsList from '../components/ProjectTagsList.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
 import { Project } from '@/types/bazaar-api';
@@ -162,6 +163,7 @@ export default defineComponent({
     CategoryEditor,
     ProjectMembersList,
     ProjectBreadcrumbNav,
+    ProjectTagsList,
   },
   name: 'Project',
   props: {
@@ -278,12 +280,19 @@ export default defineComponent({
       to: `/projects/${projectId}/members`
     };
 
+    const TAGS_TAB_LABEL = t('projectDetails-tags');
+    const TAGS_TAB_ITEM = {
+      label: TAGS_TAB_LABEL,
+      to: `/projects/${projectId}/tags`
+    };
+
     const tabItems = ref([
       {
         label: t('projectDetails-allCategories'), // was: 'Overview'
         to: `/projects/${projectId}`
       },
-      MEMBERS_TAB_ITEM
+      MEMBERS_TAB_ITEM,
+      TAGS_TAB_ITEM
     ]);
 
     const projectEditorName = ref('');
