@@ -11,7 +11,7 @@
                 <template #body="slotProps">
                     <div class="user-field">
                         <div class="name">
-                            <span class="image-text p-pl-2">{{ slotProps.data.tagName }}</span>
+                            <span class="image-text p-pl-2">{{ slotProps.data.name }}</span>
                         </div>
 
                     </div>
@@ -20,7 +20,7 @@
             <Column :exportable="false" header="Role">
                 <template #body="slotProps">
                     <div class="role-field">
-                        <div>{{ slotProps.data.role }}</div>
+                        <div>{{ slotProps.data.colour }}</div>
                         <div class="controls">
                             <Button icon="pi pi-pencil"
                                 class="p-button-rounded p-button-success p-mr-2"
@@ -33,7 +33,7 @@
             </Column>
             <template #groupheader="slotProps">
                 <!--<i class="pi pi-user-plus p-pr-3" style="fontSize: 2rem; vertical-align: middle;"></i>-->
-                <h3>{{ slotProps.data.role }}s</h3>
+                <h3>{{ slotProps.data.colour }}s</h3>
             </template>
         </DataTable>
     </div>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="p-field">
-            <label for="inventoryStatus" class="p-mb-3">{{ t('role') }}</label>
+            <label for="inventoryStatus" class="p-mb-3">{{ t('colour') }}</label>
             todo color picker
         </div>
 
@@ -69,7 +69,8 @@
         </div>
 
         <div class="p-field">
-            <label for="inventoryStatus" class="p-mb-3">{{ t('role') }}</label>
+            <label for="inventoryStatus" class="p-mb-3">{{ t('colour') }}</label>
+            todo color picker
         </div>
 
         <template #footer>
@@ -86,7 +87,7 @@
         <div class="confirmation-content">
             <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
             <span v-if="tagToRemove">{{ t('projectDetails-areYouSureYouWantToRemove') }}
-                <b>{{ tagToRemove.userName }}</b> {{ t('projectDetails-fromTheProject') }}</span>
+                <b>{{ tagToRemove.name }}</b> {{ t('projectDetails-fromTheProject') }}</span>
         </div>
         <template #footer>
             <div class="footer">
@@ -100,14 +101,12 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, defineComponent, onMounted, watch } from 'vue'
+import { computed, ref, defineComponent, onMounted } from 'vue'
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
-import { ProjectMember, Tag, User } from '../types/bazaar-api';
-import { bazaarApi, ProjectMemberRole } from '../api/bazaar';
-
-import UserAvatar from './UserAvatar.vue';
+import {Tag, User } from '../types/bazaar-api';
+import { bazaarApi} from '../api/bazaar';
 
 export default defineComponent({
     name: 'ProjectTagsList',

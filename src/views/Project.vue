@@ -79,8 +79,11 @@
         </div>
       </div>
     </div>
-    <div v-if="!showCategories">
+    <div v-if="!showCategories && !showTags">
       <ProjectMembersList v-if="project" :projectId="project.id" />
+    </div>
+    <div v-if="!showCategories && showTags">
+      <ProjectTagsList v-if="project" :projectId="project.id" />
     </div>
   </div>
 
@@ -179,6 +182,8 @@ export default defineComponent({
     const project = computed(() => store.getters.getProjectById(projectId));
     store.dispatch(ActionTypes.FetchProject, projectId);
     const showCategories = computed(() => route.params.members ? false : true);
+    const showTags = computed(() => route.params.tags? true:false);
+
 
     // read values for the timeline
     const hook_id_value = computed(() => project.value?.additionalProperties?.hook_id);
@@ -306,13 +311,24 @@ export default defineComponent({
       //const role = project.value.userContext?.projectRole;
       //if (['ProjectAdmin', 'SystemAdmin'].includes(role)) {
       const membersItemId = tabItems.value.findIndex(item => item.label === MEMBERS_TAB_LABEL);
+      const tagsItemId = tabItems.value.findIndex(item => item.label === TAGS_TAB_LABEL);
+
       if (!oidcIsAuthenticated.value && membersItemId > -1) {
         tabItems.value.splice(membersItemId, 1);
       }
       if (oidcIsAuthenticated.value) {
         if (membersItemId === -1) {
-          // user is authentivated and memebrs tab not visible yet -> add to tab items
+          // user is authenticated and memebers tab not visible yet -> add to tab items
           tabItems.value.push(MEMBERS_TAB_ITEM);
+        }
+      }
+      if (!oidcIsAuthenticated.value && tagsItemId > -1) {
+        tabItems.value.splice(tagsItemId, 2);
+      }
+      if (oidcIsAuthenticated.value) {
+        if (tagsItemId === -1) {
+          // user is authenticated and tags tab not visible yet -> add to tab items
+          tabItems.value.push(TAGS_TAB_ITEM);
         }
       }
     });
@@ -553,6 +569,7 @@ export default defineComponent({
       projectEditorCanceled,
       projectEditorSaved,
       showCategories,
+      showTags,
       connectToGithub,
       timelineEvents,
       newReleaseAvailable,

@@ -42,12 +42,18 @@ export enum MutationType {
   _AddUnhandledError = 'ADD_UNHANDLED_ERROR',
   AddNotification = 'ADD_NOTIFICATION',
   SetGfNotification = 'SET_GFNOTIFICATION',
+  RemoveTag = 'REMOVE_TAG',
 
 }
 
 type RemoveProjectMemberParameters = {
   projectId: number;
   userId: number;
+}
+
+type RemoveTagParameters = {
+  projectId: number;
+  tagId: number;
 }
 
 /*
@@ -81,6 +87,8 @@ export type Mutations = {
   [MutationType.SetRequirementDevelopers](state: State, {requirementId, developers}): void;
   [MutationType.SetProjectMembers](state: State, {projectId: number, members: any }): void;
   [MutationType.RemoveProjectMember](state: State, parameters: RemoveProjectMemberParameters): void;
+  [MutationType.RemoveTag](state: State, parameters: RemoveTagParameters): void;
+
 
   [MutationType.SetFeaturedProjects](state: State, featuredProjects: Project[]): void;
 
@@ -157,6 +165,15 @@ export const mutations: MutationTree<State> & Mutations = {
         state.tags[projectId][tag.id] = tag;
       }
     });
+  },
+
+  [MutationType.RemoveTag](state, {projectId, tagId}) {
+    if (!state.tags[projectId]) {
+      // Project tags are not tracked in local state
+      return;
+    }
+
+    delete state.tags[projectId][tagId];
   },
 
   [MutationType.SetCategory](state, category) {
