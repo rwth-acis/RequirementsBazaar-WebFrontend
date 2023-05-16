@@ -7,20 +7,10 @@
 
         <DataTable :value="tags" rowGroupMode="subheader" groupRowsBy="name" sortMode="single" sortField="name"
             :sortOrder="1" scrollable scrollHeight="800px">
-            <Column field="Name" header="Name">
-                <template #body="slotProps">
-                    <div class="user-field">
-                        <div class="name">
-                            <span class="image-text p-pl-2">{{ slotProps.data.name }}</span>
-                        </div>
-
-                    </div>
-                </template>
-            </Column>
-            <Column :exportable="false" header="Colour">
+            <Column :exportable="false" header="Label">
                 <template #body="slotProps">
                     <div class="role-field">
-                        <div>{{ slotProps.data.colour }}</div>
+                        <Badge :style="{ background: slotProps.data.colour }" :value=slotProps.data.name></Badge>
                     </div>
                 </template>
             </Column>
@@ -50,7 +40,7 @@
 
         <div class="p-field">
             <label for="inventoryStatus" class="p-mb-3">{{ t('tagColour') }}</label>
-            <ColorPicker v-model="tagToAdd.colour" inputId="cp-hex" format="hex" class="mb-3" />
+                <ColorPicker v-model="tagToAdd.colour" inputId="cp-hex" format="hex" class="colorPicker" />
         </div>
 
         <template #footer>
@@ -75,7 +65,7 @@
 
         <div class="p-field">
             <label for="inventoryStatus" class="p-mb-3">{{ t('tagColour') }}</label>
-            <ColorPicker v-model="tagToEdit!.colour" inputId="cp-hex" format="hex" class="mb-3" />
+            <ColorPicker v-model="tagToEdit!.colour" inputId="cp-hex" format="hex" class="colorPicker" />
         </div>
 
         <template #footer>
@@ -125,7 +115,6 @@ export default defineComponent({
         const { t } = useI18n({ useScope: 'global' });
         const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
         const oidcUser = computed(() => store.getters['oidcStore/oidcUser']);
-        const colour = 'ff0000'
 
         onMounted(() => {
             //(input as any).value.$el.focus();
@@ -185,7 +174,7 @@ export default defineComponent({
                 id: -1,
                 projectId: projectId,
                 name: "New Tag",
-                colour: "#0000" // default
+                colour: "#447500" // default
             };
             tagSubmitted.value = false;
             showAddTagDialog.value = true;
@@ -199,6 +188,9 @@ export default defineComponent({
                 return;
             }
             else{
+                if (!tagToAdd.value!.colour.startsWith("#")) {
+                    tagToAdd.value.colour = "#" + tagToAdd.value.colour;
+                }
                 inProgress.value = true;
             }
             store.dispatch(ActionTypes.CreateTag, { projectId: projectId, id: tagToAdd.value!.id, name: tagToAdd.value.name, colour: tagToAdd.value.colour })
@@ -231,6 +223,9 @@ export default defineComponent({
             }
             else{
                 inProgress.value = true;
+                if (!tagToEdit.value!.colour.startsWith("#")) {
+                    tagToEdit.value!.colour = "#" + tagToEdit.value!.colour;
+                }
             }
             store.dispatch(ActionTypes.UpdateTag, {
                 projectId: projectId, id: tagToEdit.value!.id, name: tagToEdit.value!.name, colour: tagToEdit.value!.colour
@@ -262,7 +257,6 @@ export default defineComponent({
             submitUpdatedTag,
             v$,
             vE$,
-            colour,
         };
     }
 })
@@ -294,6 +288,10 @@ export default defineComponent({
     align-items: flex-start;
 }
 
+.colorPicker{
+    display: flex;
+}
+
 .user-field .name {
     display: flex;
     flex-direction: row;
@@ -302,6 +300,12 @@ export default defineComponent({
 
 .user-field .user-id {
     margin-top: 0.5em;
+}
+.custom-colorpicker {
+  opacity: 1; /* Reset the opacity */
+  cursor: not-allowed; /* Reset the cursor */
+  background-color: #f4f4f4; /* Set the desired background color for the disabled state */
+  color: #333; /* Set the desired text color for the disabled state */
 }
 
 @media (min-width: 768px) {
