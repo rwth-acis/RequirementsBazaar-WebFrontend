@@ -43,6 +43,7 @@ export enum MutationType {
   AddNotification = 'ADD_NOTIFICATION',
   SetGfNotification = 'SET_GFNOTIFICATION',
   RemoveTag = 'REMOVE_TAG',
+  SetTag = 'SET_TAG',
 
 }
 
@@ -88,6 +89,7 @@ export type Mutations = {
   [MutationType.SetProjectMembers](state: State, {projectId: number, members: any }): void;
   [MutationType.RemoveProjectMember](state: State, parameters: RemoveProjectMemberParameters): void;
   [MutationType.RemoveTag](state: State, parameters: RemoveTagParameters): void;
+  [MutationType.SetTag](state: State, tag: Tag): void;
 
 
   [MutationType.SetFeaturedProjects](state: State, featuredProjects: Project[]): void;
@@ -165,6 +167,10 @@ export const mutations: MutationTree<State> & Mutations = {
         state.tags[projectId][tag.id] = tag;
       }
     });
+  },
+
+  [MutationType.SetTag](state, tag) {
+      state.tags[tag.projectId][tag.id] = tag;
   },
 
   [MutationType.RemoveTag](state, {projectId, tagId}) {

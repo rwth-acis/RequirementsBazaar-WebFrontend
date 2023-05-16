@@ -17,10 +17,15 @@
                     </div>
                 </template>
             </Column>
-            <Column :exportable="false" header="Role">
+            <Column :exportable="false" header="Colour">
                 <template #body="slotProps">
                     <div class="role-field">
                         <div>{{ slotProps.data.colour }}</div>
+                    </div>
+                </template>
+            </Column>
+            <Column :exportable="false" header="">
+                <template #body="slotProps">
                         <div class="controls">
                             <Button icon="pi pi-pencil"
                                 class="p-button-rounded p-button-success p-mr-2"
@@ -28,28 +33,24 @@
                             <Button icon="pi pi-trash"
                                 class="p-button-rounded p-button-danger" @click="confirmRemoveTag(slotProps.data)" />
                         </div>
-                    </div>
                 </template>
             </Column>
-            <template #groupheader="slotProps">
-                <!--<i class="pi pi-user-plus p-pr-3" style="fontSize: 2rem; vertical-align: middle;"></i>-->
-                <h3>{{ slotProps.data.colour }}s</h3>
-            </template>
         </DataTable>
     </div>
 
     <Dialog v-model:visible="showAddTagDialog" :style="{ width: '450px' }" :header="t('projectDetails-addTag')"
         :modal="true" class="p-fluid">
         <div class="p-field">
-            <label for="name">{{ t('name') }}</label>
-            <small class="p-error" v-if="tagSubmitted && !tagToAdd.name">{{
-                t('projectDetails-tagNameIsRequired')
-            }}</small>
+            <label for="name">{{ t('tagName') }}</label>
+            <InputText id="name" type="text" v-model="tagToAdd.name" />
+            <div class="input-errors" v-for="error of v$.tagToAdd.name.$errors" :key="error.$uid">
+                <small class="p-error">{{ error.$message.replace('Value', 'Name') }}</small>
+             </div>
         </div>
 
         <div class="p-field">
-            <label for="inventoryStatus" class="p-mb-3">{{ t('colour') }}</label>
-            todo color picker
+            <label for="inventoryStatus" class="p-mb-3">{{ t('tagColour') }}</label>
+            <ColorPicker v-model="tagToAdd.colour" inputId="cp-hex" format="hex" class="mb-3" />
         </div>
 
         <template #footer>
@@ -62,15 +63,19 @@
         </template>
     </Dialog>
 
-    <Dialog v-model:visible="showEditTagDialog" :style="{ width: '450px' }" header="Edit Tag" :modal="true"
+    <Dialog v-model:visible="showEditTagDialog" :style="{ width: '450px' }" :header="t('projectDetails-editTag')" :modal="true"
         class="p-fluid">
         <div class="p-field">
-            <label for="name">{{ t('name') }}: </label> <b>{{ tagToEdit.name }}</b>
+            <label for="name">{{ t('tagName') }}</label>
+            <InputText id="name" type="text" v-model="tagToEdit!.name" />
+            <div class="input-errors" v-for="error of vE$.tagToEdit.name.$errors" :key="error.$uid">
+                <small class="p-error">{{ error.$message.replace('Value', 'Name') }}</small>
+             </div>
         </div>
 
         <div class="p-field">
-            <label for="inventoryStatus" class="p-mb-3">{{ t('colour') }}</label>
-            todo color picker
+            <label for="inventoryStatus" class="p-mb-3">{{ t('tagColour') }}</label>
+            <ColorPicker v-model="tagToEdit!.colour" inputId="cp-hex" format="hex" class="mb-3" />
         </div>
 
         <template #footer>
@@ -86,7 +91,7 @@
     <Dialog v-model:visible="showRemoveTagDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
         <div class="confirmation-content">
             <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
-            <span v-if="tagToRemove">{{ t('projectDetails-areYouSureYouWantToRemove') }}
+            <span v-if="tagToRemove">{{ t('projectDetails-areYouSureYouWantToRemoveTag') }}
                 <b>{{ tagToRemove.name }}</b> {{ t('projectDetails-fromTheProject') }}</span>
         </div>
         <template #footer>
@@ -106,7 +111,9 @@ import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { ActionTypes } from '../store/actions';
 import {Tag, User } from '../types/bazaar-api';
-import { bazaarApi} from '../api/bazaar';
+import { required } from "@vuelidate/validators";
+import { useVuelidate } from "@vuelidate/core";
+
 
 export default defineComponent({
     name: 'ProjectTagsList',
@@ -118,22 +125,19 @@ export default defineComponent({
         const { t } = useI18n({ useScope: 'global' });
         const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
         const oidcUser = computed(() => store.getters['oidcStore/oidcUser']);
+        const colour = 'ff0000'
 
         onMounted(() => {
             //(input as any).value.$el.focus();
             console.log("mounted");
         });
 
-        const activeUser = ref<User>();
-        // TODO Ensure this is already loaded when accessing this property!
-        bazaarApi.users.getActiveUser().then(resp => activeUser.value = resp.data);
-
         const project = computed(() => store.getters.getProjectById(projectId));
         store.dispatch(ActionTypes.FetchProject, projectId);
 
         const inProgress = ref(false);
 
-        const tags = computed(() => store.getters.getProjectTags(projectId));
+        var tags = computed(() => store.getters.getProjectTags(projectId));
         store.dispatch(ActionTypes.FetchTags, projectId);
 
         const tagToRemove = ref();
@@ -162,6 +166,20 @@ export default defineComponent({
             name: "New Tag",
             colour: "#0000" // default
         });
+        const rulesAdd = {
+              tagToAdd: {
+                name: { required },
+                },
+            };
+        const rulesEdit = {
+              tagToEdit: {
+                name: { required },
+                },
+            };
+        const tagToEdit = ref<Tag>();
+
+
+        const v$ = useVuelidate(rulesAdd, { tagToAdd });
         const openNewTagDialog = () => {
             tagToAdd.value = {
                 id: -1,
@@ -173,11 +191,17 @@ export default defineComponent({
             showAddTagDialog.value = true;
         };
 
-        const selectedTag = ref<User>();
+        const submitTag = async () => {
+            tagSubmitted.value = true;
+            const isFormCorrect = await v$.value.$validate();
 
-        const submitTag = () => {
-            inProgress.value = true;
-            store.dispatch(ActionTypes.UpdateTag, { projectId: projectId, tagId: selectedTag.value!.id, name: tagToAdd.value.name, colour: tagToAdd.value.colour })
+            if (!isFormCorrect) {
+                return;
+            }
+            else{
+                inProgress.value = true;
+            }
+            store.dispatch(ActionTypes.CreateTag, { projectId: projectId, id: tagToAdd.value!.id, name: tagToAdd.value.name, colour: tagToAdd.value.colour })
                 .then(() => {
                     showAddTagDialog.value = false;
                     inProgress.value = false;
@@ -185,7 +209,7 @@ export default defineComponent({
         };
 
         const showEditTagDialog = ref(false);
-        const tagToEdit = ref<Tag>();
+        const vE$ = useVuelidate(rulesEdit, { tagToEdit });
 
         const openEditTagDialog = (tag: Tag) => {
             // IMPORTANT: clone here so we do not modify a Vuex state object!
@@ -198,10 +222,18 @@ export default defineComponent({
             showEditTagDialog.value = true;
         };
 
-        const submitUpdatedTag = () => {
-            inProgress.value = true;
+        const submitUpdatedTag = async () => {
+            tagSubmitted.value = true;
+            const isFormCorrect = await vE$.value.$validate();
+
+            if (!isFormCorrect) {
+                return;
+            }
+            else{
+                inProgress.value = true;
+            }
             store.dispatch(ActionTypes.UpdateTag, {
-                projectId: projectId, tagId: selectedTag.value!.id, name: tagToAdd.value.name, colour: tagToAdd.value.colour
+                projectId: projectId, id: tagToEdit.value!.id, name: tagToEdit.value!.name, colour: tagToEdit.value!.colour
             })
                 .then(() => {
                     showEditTagDialog.value = false;
@@ -223,12 +255,14 @@ export default defineComponent({
             tagToAdd,
             tagSubmitted,
             submitTag,
-            selectedTag,
             inProgress,
             openEditTagDialog,
             tagToEdit,
             showEditTagDialog,
             submitUpdatedTag,
+            v$,
+            vE$,
+            colour,
         };
     }
 })

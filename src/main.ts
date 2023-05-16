@@ -48,6 +48,7 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import ColorPicker from 'primevue/colorpicker';
 import Toolbar from 'primevue/toolbar';
 import ProgressBar from 'primevue/progressbar';
 import ProgressSpinner from 'primevue/progressspinner';
@@ -144,5 +145,6 @@ app.component('Timeline', Timeline);
 
 app.component('Autocounter', Vue3Autocounter);
 app.component('Toast', Toast);
+app.component('ColorPicker', ColorPicker);
 
 app.mount('#app');

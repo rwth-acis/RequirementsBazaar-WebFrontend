@@ -182,7 +182,8 @@ export default defineComponent({
     const project = computed(() => store.getters.getProjectById(projectId));
     store.dispatch(ActionTypes.FetchProject, projectId);
     const showCategories = computed(() => route.params.members ? false : true);
-    const showTags = computed(() => route.params.tags? true:false);
+    const showTags = computed(() => route.params.members == 'tags' ? true:false);
+
 
 
     // read values for the timeline
@@ -297,7 +298,7 @@ export default defineComponent({
         to: `/projects/${projectId}`
       },
       MEMBERS_TAB_ITEM,
-      TAGS_TAB_ITEM
+      TAGS_TAB_ITEM,
     ]);
 
     const projectEditorName = ref('');
@@ -315,19 +316,12 @@ export default defineComponent({
 
       if (!oidcIsAuthenticated.value && membersItemId > -1) {
         tabItems.value.splice(membersItemId, 1);
+        tabItems.value.splice(tagsItemId, 2);
       }
       if (oidcIsAuthenticated.value) {
         if (membersItemId === -1) {
           // user is authenticated and memebers tab not visible yet -> add to tab items
           tabItems.value.push(MEMBERS_TAB_ITEM);
-        }
-      }
-      if (!oidcIsAuthenticated.value && tagsItemId > -1) {
-        tabItems.value.splice(tagsItemId, 2);
-      }
-      if (oidcIsAuthenticated.value) {
-        if (tagsItemId === -1) {
-          // user is authenticated and tags tab not visible yet -> add to tab items
           tabItems.value.push(TAGS_TAB_ITEM);
         }
       }

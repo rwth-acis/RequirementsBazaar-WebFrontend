@@ -83,11 +83,6 @@ export const router = createRouter({
       component: Project,
     },
     {
-      path: "/projects/:projectId/:tags?",
-      name: "project-tags",
-      component: Project,
-    },
-    {
       path: "/projects/:projectId/all",
       name: "project-all",
       component: Project,

@@ -14,6 +14,7 @@ export enum ActionTypes {
   FollowProject = 'FOLLOW_PROJECT',
   CreateProject = 'CREATE_PROJECT',
   UpdateProject = 'UPDATE_PROJECT',
+  CreateTag = 'CREATE_TAG',
   UpdateTag = 'UPDATE_Tag',
   RemoveTag = 'REMOVE_Tag',
 
@@ -140,6 +141,7 @@ export type Actions = {
   [ActionTypes.FollowProject](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.CreateProject](context: ActionAugments, payload: Project): void;
   [ActionTypes.UpdateProject](context: ActionAugments, payload: Project): void;
+  [ActionTypes.CreateTag](context: ActionAugments, payload: Tag): void;
   [ActionTypes.UpdateTag](context: ActionAugments, payload: Tag): void;
   [ActionTypes.RemoveTag](context: ActionAugments, parameters: RemoveTagParameters): void;
   [ActionTypes.FetchCategoriesOfProject](context: ActionAugments, payload: CategoriesRequestParameters): void;
@@ -247,9 +249,17 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
 
+  async [ActionTypes.CreateTag]({ commit }, tag) {
+    const response = await bazaarApi.projects.createTag(tag.projectId, tag);
+    if (response.data && response.status === 201) {
+      commit(MutationType.SetTag, response.data);
+    }
+
+  },
+
   async [ActionTypes.UpdateTag]({ dispatch }, tag) {
     const response = await bazaarApi.projects.editTag(tag.projectId, tag);
-    if (response.data && response.status === 200) {
+    if (response.status === 204) {
       dispatch(ActionTypes.FetchTags, tag.projectId);
     }
   },
