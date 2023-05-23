@@ -144,10 +144,8 @@ export default defineComponent({
     }
 
     function getTexString(reqList: Requirement[], key: string){
-            // create seperated lists for tags
-            const must = getMustRequirements(reqList);
-      const should = getShouldRequirements(reqList);
-      const could = getCouldRequirements(reqList);
+      // create map filtered by tags
+      const tagged = getFilteredTagRequirements(reqList);
       const uncat = getUncatRequirements(reqList);
       // strings for the latex Itemize
       const header = '\\subsection*\{'+t(key) + " " + categoryName+'\}';
@@ -166,33 +164,16 @@ export default defineComponent({
         }
         texString += beginItemize + bodyUncat + endItemize;
       }
-      if(must.length!= 0){
-        var bodyMust = '';
-        for (let i = 0; i < must.length; i++) {
-          let name = makeTexCompatible(must[i].name, true)
-          let description = makeTexCompatible(must[i].description, false);
-          bodyMust += '\t\\item \\textbf\{' + name + ':\} ' + description + '\n';
+      tagged.forEach((reqs: Requirement[], key: string) =>{
+        var bod = '';
+        for (let i = 0; i < reqs.length; i++) {
+          let name = makeTexCompatible(reqs[i].name, true)
+          let description = makeTexCompatible(reqs[i].description, false);
+          bod += '\t\\item \\textbf\{' + name + ':\} ' + description + '\n';
         }
-        texString += '\\paragraph\{Must:\}'+ beginItemize + bodyMust + endItemize;
-      }
-      if(should.length !=0){
-        var bodyShould = '';
-        for (let i = 0; i < should.length; i++) {
-          let name = makeTexCompatible(should[i].name, true)
-          let description = makeTexCompatible(should[i].description, false);
-          bodyShould += '\t\\item \\textbf\{' + name + ':\} ' + description + '\n';
-        }
-        texString += '\\paragraph\{Should:\}'+ beginItemize + bodyShould + endItemize;
-      }
-      if(could.length!=0){
-        var bodyCould = '';
-        for (let i = 0; i < could.length; i++) {
-          let name = makeTexCompatible(could[i].name, true)
-          let description = makeTexCompatible(could[i].description, false);
-          bodyCould += '\t\\item \\textbf\{' + name + ':\} ' + description + '\n';
-        }
-        texString += '\\paragraph\{Could:\}'+ beginItemize + bodyCould + endItemize;
-      }
+        texString += '\\paragraph\{'+ key +':\}'+ beginItemize + bod + endItemize;
+      });
+
       return texString;
     }
 
@@ -227,40 +208,20 @@ export default defineComponent({
       atag.click();
     }
 
-    function getMustRequirements(reqs: Array<Requirement>) {
-      var must: Requirement[] = [];
+    function getFilteredTagRequirements(reqs: Array<Requirement>) {
+      var filtered = new Map<string, Requirement[]>();
       reqs.forEach((req: Requirement) => {
         if (req.tags && req.tags.length != 0) {
-          if (req.tags[0].name == 'Must') {
-            must.push(req);
+          if(filtered.has(req.tags[0].name)){
+            let reqList = filtered.get(req.tags[0].name)
+            reqList?.push(req)
+            filtered.set(req.tags[0].name, reqList!)
+          } else {
+            filtered.set(req.tags[0].name, [req])
           }
         }
       });
-      return must;
-    }
-
-    function getShouldRequirements(reqs: Array<Requirement>) {
-      var should: Requirement[] = [];
-      reqs.forEach((req: Requirement) => {
-        if (req.tags && req.tags.length != 0) {
-          if (req.tags[0].name == 'Should') {
-            should.push(req);
-          }
-        }
-      });
-      return should;
-    }
-
-    function getCouldRequirements(reqs: Array<Requirement>) {
-      var could: Requirement[] = [];
-      reqs.forEach((req: Requirement) => {
-        if (req.tags && req.tags.length != 0) {
-          if (req.tags[0].name == 'Could') {
-            could.push(req);
-          }
-        }
-      });
-      return could;
+      return filtered;
     }
 
     function getUncatRequirements(reqs: Array<Requirement>) {
@@ -275,9 +236,6 @@ export default defineComponent({
 
     const exportRequirementsPdf = (isCompleted: boolean, all: boolean) => {
       console.log('Export PDF started...');
-      let bodMust = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
-      let bodShould = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
-      let bodCould = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
       let bodUncat = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
 
       let header = isCategory ? { text: t('headerExportCatActive') + " " + categoryName + ":\n\n", style: 'header' } :
@@ -297,32 +255,25 @@ export default defineComponent({
       }
 
       // create seperated lists for tags
-      const must = getMustRequirements(reqList);
-      const should = getShouldRequirements(reqList);
-      const could = getCouldRequirements(reqList);
+      const tagged = getFilteredTagRequirements(reqList)
       const uncat = getUncatRequirements(reqList);
-      const mustHeader = must.length!= 0? { text: 'Must:', fontSize: 14, bold: true, margin: [0, 10, 0, 5]}: undefined;
-      const shouldHeader = should.length!=0? { text: 'Should:', fontSize: 14, bold: true, margin: [0, 10, 0, 5] }: undefined;
-      const couldHeader = could.length!=0? { text: 'Could:', fontSize: 14, bold: true, margin: [0, 10, 0, 5] }: undefined;
+      interface IpdfEl {head: {text: string;fontSize: number;bold: boolean;margin: number[];}; bod: {text: string;bold: boolean;}[][]; };
+      var pdfElements :IpdfEl[] = [];
 
-      must.forEach((req: Requirement) => {
-        bodMust.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
-        { text: req.description.split('\\\\').join('\\'), bold: false }]);
-      })
-      should.forEach((req: Requirement) => {
-        bodShould.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
-        { text: req.description.split('\\\\').join('\\'), bold: false }]);
-      })
-      could.forEach((req: Requirement) => {
-        bodCould.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
-        { text: req.description.split('\\\\').join('\\'), bold: false }]);
-      })
+      tagged.forEach((reqs: Requirement[], key: string) =>{
+        let head={ text: key+':', fontSize: 14, bold: true, margin: [0, 10, 0, 5]};
+        let bod = [[{ text: t('formTitle'), bold: true }, { text: t('formDesc'), bold: true }]];
+        for (let i = 0; i < reqs.length; i++) {
+          bod.push([{ text: reqs[i].name.split('\\\\').join('\\'), bold: false },
+          { text: reqs[i].description.split('\\\\').join('\\'), bold: false }]);
+        }
+        pdfElements.push({head,bod})
+      });
       uncat.forEach((req: Requirement) => {
         bodUncat.push([{ text: req.name.split('\\\\').join('\\'), bold: false },
         { text: req.description.split('\\\\').join('\\'), bold: false }]);
       })
-
-      const docDefinition = {
+      var docDefinition = {
         content: [
           header, uncat.length !=0?
           {
@@ -340,54 +291,6 @@ export default defineComponent({
               body: bodUncat
             }
           }:undefined,
-          mustHeader,  must.length !=0?
-          {
-            layout: {
-              hLineColor: function (i, node) {
-                return (i === 0 || i === node.table.body.length || i == 1) ? 'black' : 'gray';
-              },
-              vLineColor: function (i, node) {
-                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-              }
-            },
-            table: {
-              headerRows: 1,
-              widths: [100, '*'],
-              body: bodMust
-            }
-          }: undefined,
-          shouldHeader, should.length !=0?
-          {
-            layout: {
-              hLineColor: function (i, node) {
-                return (i === 0 || i === node.table.body.length || i == 1) ? 'black' : 'gray';
-              },
-              vLineColor: function (i, node) {
-                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-              }
-            },
-            table: {
-              headerRows: 1,
-              widths: [100, '*'],
-              body: bodShould
-            }
-          }: undefined,
-          couldHeader, could.length != 0?
-          {
-            layout: {
-              hLineColor: function (i, node) {
-                return (i === 0 || i === node.table.body.length || i == 1) ? 'black' : 'gray';
-              },
-              vLineColor: function (i, node) {
-                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-              }
-            },
-            table: {
-              headerRows: 1,
-              widths: [100, '*'],
-              body: bodCould
-            }
-          }:undefined,
         ],
         styles: {
           header: {
@@ -396,6 +299,24 @@ export default defineComponent({
           }
         }
       };
+      pdfElements.forEach((el:{head: {text: string;fontSize: number;bold: boolean;margin: number[];}; bod: {text: string;bold: boolean;}[][]; })=>{
+        docDefinition.content.push(
+            el.head,
+            {
+            layout: {
+              hLineColor: function (i, node) {
+                return (i === 0 || i === node.table.body.length || i == 1) ? 'black' : 'gray';
+              },
+              vLineColor: function (i, node) {
+                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+              }
+            },
+            table: {
+              headerRows: 1,
+              widths: [100, '*'],
+              body: el.bod
+            }
+          })});
       pdfmake.createPdf(docDefinition, {},
         {
           // Default font should still be available
