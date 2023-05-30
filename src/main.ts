@@ -38,6 +38,7 @@ import Dialog from 'primevue/dialog';
 import Dropdown from 'primevue/dropdown';
 import Editor from 'primevue/editor';
 import InputText from 'primevue/inputtext';
+import InputSwitch from 'primevue/inputswitch';
 import Menu from 'primevue/menu';
 import OverlayPanel from 'primevue/overlaypanel';
 import ScrollTop from 'primevue/scrolltop';
@@ -146,5 +147,6 @@ app.component('Timeline', Timeline);
 app.component('Autocounter', Vue3Autocounter);
 app.component('Toast', Toast);
 app.component('ColorPicker', ColorPicker);
+app.component('InputSwitch', InputSwitch);
 
 app.mount('#app');

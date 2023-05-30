@@ -284,6 +284,7 @@
     "fileType": "Export format:",
     "exportCategory": "Export Category",
     "exportRequirement": "Export Requirement",
+    "tagHeader": "Use labels as header:",
 
     "QUEST": "Quest completed!",
     "ACHIEVEMENT": "Achievement completed!",
