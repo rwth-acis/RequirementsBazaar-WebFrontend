@@ -3,7 +3,7 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 
 import { bazaarApi, ProjectMemberRole, UserVote } from '../api/bazaar';
-import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse, ProjectMember } from '../types/bazaar-api';
+import { Projects, Categories, Requirements, Project, Category, Requirement, Comment, HttpResponse, ProjectMember,Tag } from '../types/bazaar-api';
 import { activitiesApi } from '../api/activities';
 
 export enum ActionTypes {
@@ -14,6 +14,10 @@ export enum ActionTypes {
   FollowProject = 'FOLLOW_PROJECT',
   CreateProject = 'CREATE_PROJECT',
   UpdateProject = 'UPDATE_PROJECT',
+  CreateTag = 'CREATE_TAG',
+  UpdateTag = 'UPDATE_Tag',
+  RemoveTag = 'REMOVE_Tag',
+
   FetchCategoriesOfProject = 'FETCH_CATEGORIES',
   FetchCategory = 'FETCH_CATEGORY',
   FollowCategory = 'FOLLOW_CATEGORY',
@@ -124,6 +128,11 @@ type RemoveProjectMemberParameters = {
   userId: number;
 }
 
+type RemoveTagParameters = {
+  projectId: number;
+  tagId: number;
+}
+
 export type Actions = {
   [ActionTypes.FetchProjects](context: ActionAugments, payload: ProjectsRequestParameters): void;
   [ActionTypes.FetchTags](context: ActionAugments, projectId: number): void;
@@ -132,6 +141,9 @@ export type Actions = {
   [ActionTypes.FollowProject](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.CreateProject](context: ActionAugments, payload: Project): void;
   [ActionTypes.UpdateProject](context: ActionAugments, payload: Project): void;
+  [ActionTypes.CreateTag](context: ActionAugments, payload: Tag): void;
+  [ActionTypes.UpdateTag](context: ActionAugments, payload: Tag): void;
+  [ActionTypes.RemoveTag](context: ActionAugments, parameters: RemoveTagParameters): void;
   [ActionTypes.FetchCategoriesOfProject](context: ActionAugments, payload: CategoriesRequestParameters): void;
   [ActionTypes.FetchCategory](context: ActionAugments, categoryId: number): void;
   [ActionTypes.FollowCategory](context: ActionAugments, payload: FollowResourceParameters): void;
@@ -234,6 +246,28 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.projects.getTagsForProject(projectId);
     if (response.data && response.status === 200) {
       commit(MutationType.SetProjectTags, {projectId: projectId, tags: response.data});
+    }
+  },
+
+  async [ActionTypes.CreateTag]({ commit }, tag) {
+    const response = await bazaarApi.projects.createTag(tag.projectId, tag);
+    if (response.data && response.status === 201) {
+      commit(MutationType.SetTag, response.data);
+    }
+
+  },
+
+  async [ActionTypes.UpdateTag]({ dispatch }, tag) {
+    const response = await bazaarApi.projects.editTag(tag.projectId, tag);
+    if (response.status === 204) {
+      dispatch(ActionTypes.FetchTags, tag.projectId);
+    }
+  },
+
+  async [ActionTypes.RemoveTag]({ commit }, parameters) {
+    const response = await bazaarApi.projects.removeTag(parameters.projectId, parameters.tagId);
+    if (response.status === 204 || response.status === 200) {
+      commit(MutationType.RemoveTag, {projectId: parameters.projectId, tagId: parameters.tagId});
     }
   },
 

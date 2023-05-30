@@ -842,6 +842,36 @@ export namespace Projects {
   /**
    * No description
    * @tags projects
+   * @name EditTag
+   * @summary This method edits a tag of a given project.
+   * @request PUT:/projects/{projectId}/tags
+   * @secure
+   */
+    export namespace EditTag {
+      export type RequestParams = { projectId: number };
+      export type RequestQuery = {};
+      export type RequestBody = Tag;
+      export type RequestHeaders = {};
+      export type ResponseBody = void;
+    }
+  /**
+   * No description
+   * @tags projects
+   * @name RemoveTag
+   * @summary This method allows to delete a project tag.
+   * @request DELETE:/projects/{projectId}/tags/{tagId}
+   * @secure
+   */
+  export namespace RemoveTag {
+    export type RequestParams = { projectId: number; tagId: number };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags projects
    * @name RemoveMember
    * @summary This method allows to remove a project member.
    * @request DELETE:/projects/{projectId}/members/{memberUserId}
@@ -2330,6 +2360,43 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         format: "json",
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name EditTag
+     * @summary This method edits a tag of a given project.
+     * @request PUT:/projects/{projectId}/tags
+     * @secure
+     */
+    editTag: (projectId: number, body: Tag, params: RequestParams = {}) =>
+    this.request<Tag, void>({
+      path: `/projects/${projectId}/tags`,
+      method: "PUT",
+      body: body,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    }),
+
+    /**
+     * No description
+     *
+     * @tags projects
+     * @name RemoveTag
+     * @summary This method allows to remove a project tag.
+     * @request DELETE:/projects/{projectId}/tags/{memberUserId}
+     * @secure
+     */
+        removeTag: (projectId: number, tagId: number, params: RequestParams = {}) =>
+        this.request<void, void>({
+          path: `/projects/${projectId}/tags/${tagId}`,
+          method: "DELETE",
+          secure: true,
+          ...params,
+        }),
 
     /**
      * No description
