@@ -1,6 +1,6 @@
 <template>
     <div class="card" v-if="tags">
-        <div>
+        <div v-if="isModifyTagsAllowed">
             <Button :label="t('projectDetails-addTag')" icon="pi pi-plus" class="p-button-success p-my-3"
                 @click="openNewTagDialog" />
         </div>
@@ -19,9 +19,9 @@
                         <div class="controls">
                             <Button icon="pi pi-pencil"
                                 class="p-button-rounded p-button-success p-mr-2"
-                                @click="openEditTagDialog(slotProps.data)" />
+                                @click="openEditTagDialog(slotProps.data)" v-if="isModifyTagsAllowed" />
                             <Button icon="pi pi-trash"
-                                class="p-button-rounded p-button-danger" @click="confirmRemoveTag(slotProps.data)" />
+                                class="p-button-rounded p-button-danger" @click="confirmRemoveTag(slotProps.data)" v-if="isModifyTagsAllowed" />
                         </div>
                 </template>
             </Column>
@@ -238,6 +238,10 @@ export default defineComponent({
                 });
             inProgress.value = false;
         };
+        const isModifyTagsAllowed = computed(() => {
+            const role = project.value.userContext?.userRole;
+            return oidcIsAuthenticated.value && (role === 'ProjectAdmin' || role === 'ProjectManager');
+        });
 
         return {
             t,
@@ -260,6 +264,7 @@ export default defineComponent({
             submitUpdatedTag,
             v$,
             vE$,
+            isModifyTagsAllowed
         };
     }
 })
