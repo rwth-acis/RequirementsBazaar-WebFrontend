@@ -145,6 +145,7 @@ export default defineComponent({
                     showRemoveTagDialog.value = false;
                     inProgress.value = false;
                 });
+            inProgress.value = false;
         };
 
         const showAddTagDialog = ref(false);
@@ -198,6 +199,7 @@ export default defineComponent({
                     showAddTagDialog.value = false;
                     inProgress.value = false;
                 });
+            inProgress.value = false;
         };
 
         const showEditTagDialog = ref(false);
@@ -234,6 +236,7 @@ export default defineComponent({
                     showEditTagDialog.value = false;
                     inProgress.value = false;
                 });
+            inProgress.value = false;
         };
 
         return {
