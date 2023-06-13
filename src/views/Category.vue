@@ -18,7 +18,7 @@
       @save="categoryEditorSaved">
     </CategoryEditor>
   </Dialog>
-  <Dialog :header="t('exportCategory')" v-model:visible="displayExportPopup" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '25vw'}" :modal="true">
+  <Dialog :header="t('exportCategory')" v-model:visible="displayExportPopup" :breakpoints="{'1080px': '120vw', '640px': '120vw'}" :style="{width: '30vw'}" :modal="true">
     <ExportPopup
       :categoryName="category?.name"
       :id="category?.id"

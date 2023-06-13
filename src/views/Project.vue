@@ -79,8 +79,11 @@
         </div>
       </div>
     </div>
-    <div v-if="!showCategories">
+    <div v-if="!showCategories && !showTags">
       <ProjectMembersList v-if="project" :projectId="project.id" />
+    </div>
+    <div v-if="!showCategories && showTags">
+      <ProjectTagsList v-if="project" :projectId="project.id" />
     </div>
   </div>
 
@@ -150,6 +153,7 @@ import CategoryCard from '../components/CategoryCard.vue';
 import ProjectEditor from '../components/ProjectEditor.vue';
 import CategoryEditor from '../components/CategoryEditor.vue';
 import ProjectMembersList from '../components/ProjectMembersList.vue';
+import ProjectTagsList from '../components/ProjectTagsList.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
 import { Project } from '@/types/bazaar-api';
@@ -162,6 +166,7 @@ export default defineComponent({
     CategoryEditor,
     ProjectMembersList,
     ProjectBreadcrumbNav,
+    ProjectTagsList,
   },
   name: 'Project',
   props: {
@@ -177,6 +182,9 @@ export default defineComponent({
     const project = computed(() => store.getters.getProjectById(projectId));
     store.dispatch(ActionTypes.FetchProject, projectId);
     const showCategories = computed(() => route.params.members ? false : true);
+    const showTags = computed(() => route.params.members == 'tags' ? true:false);
+
+
 
     // read values for the timeline
     const hook_id_value = computed(() => project.value?.additionalProperties?.hook_id);
@@ -278,12 +286,19 @@ export default defineComponent({
       to: `/projects/${projectId}/members`
     };
 
+    const TAGS_TAB_LABEL = t('projectDetails-tags');
+    const TAGS_TAB_ITEM = {
+      label: TAGS_TAB_LABEL,
+      to: `/projects/${projectId}/tags`
+    };
+
     const tabItems = ref([
       {
         label: t('projectDetails-allCategories'), // was: 'Overview'
         to: `/projects/${projectId}`
       },
-      MEMBERS_TAB_ITEM
+      MEMBERS_TAB_ITEM,
+      TAGS_TAB_ITEM,
     ]);
 
     const projectEditorName = ref('');
@@ -297,13 +312,17 @@ export default defineComponent({
       //const role = project.value.userContext?.projectRole;
       //if (['ProjectAdmin', 'SystemAdmin'].includes(role)) {
       const membersItemId = tabItems.value.findIndex(item => item.label === MEMBERS_TAB_LABEL);
+      const tagsItemId = tabItems.value.findIndex(item => item.label === TAGS_TAB_LABEL);
+
       if (!oidcIsAuthenticated.value && membersItemId > -1) {
         tabItems.value.splice(membersItemId, 1);
+        tabItems.value.splice(tagsItemId, 2);
       }
       if (oidcIsAuthenticated.value) {
         if (membersItemId === -1) {
-          // user is authentivated and memebrs tab not visible yet -> add to tab items
+          // user is authenticated and memebers tab not visible yet -> add to tab items
           tabItems.value.push(MEMBERS_TAB_ITEM);
+          tabItems.value.push(TAGS_TAB_ITEM);
         }
       }
     });
@@ -544,6 +563,7 @@ export default defineComponent({
       projectEditorCanceled,
       projectEditorSaved,
       showCategories,
+      showTags,
       connectToGithub,
       timelineEvents,
       newReleaseAvailable,

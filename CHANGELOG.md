@@ -9,6 +9,20 @@ Releases prior to v2.0.1 are only documented on
 the [GitHub Release Page](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/releases)
 
 ## [Unreleased]
+
+## [2.6.1] - 2023-06-13
+
+### Added
+
+- Make priority labels customizable
+  [#282](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/pull/282)
+
+### Changed
+
+- Changed export dialog to choose if labels are exported
+  [commit 0c5c6b1f493ed7af2ea3c77a0c82673a2dcd0995](https://github.com/rwth-acis/RequirementsBazaar-WebFrontend/commit/0c5c6b1f493ed7af2ea3c77a0c82673a2dcd0995)
+
+
 ## [2.6.0] - 2023-05-10
 
 ### Added
