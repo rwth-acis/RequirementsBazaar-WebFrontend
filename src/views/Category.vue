@@ -125,10 +125,11 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue';
 import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useConfirm } from 'primevue/useconfirm';
 import { ActionTypes } from '../store/actions';
+import { useProgress } from '@/service/ProgressService';
 
 import FilterPanel from '../components/FilterPanel.vue';
 import RequirementCard from '../components/RequirementCard.vue';
@@ -138,6 +139,7 @@ import RequirementEditor from '../components/RequirementEditor.vue';
 import ProjectBreadcrumbNav from '@/components/ProjectBreadcrumbNav.vue';
 
 import { Requirement } from '@/types/bazaar-api';
+import { routePathToProject } from '@/router';
 
 export default defineComponent({
   name: 'Category',
@@ -147,6 +149,7 @@ export default defineComponent({
   setup: (props) => {
     const store = useStore();
     const route = useRoute();
+    const { push } = useRouter();
     const { t } = useI18n({ useScope: 'global' });
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const confirm = useConfirm();
@@ -317,7 +320,12 @@ export default defineComponent({
         to: `/projects/${projectId}/categories/${categoryId}/done`,
       },
     ]);
-
+    const isDeleteAllowed = computed(() => {
+            const role = project.value.userContext?.userRole;
+            return oidcIsAuthenticated.value && (role === 'ProjectAdmin' || role === 'ProjectManager');
+        });
+    const projectPagePath = computed(() => routePathToProject(projectId));
+    const { setLoading } = useProgress();
     const confirmDelete = () => {
       confirm.require({
         header: t('deleteCategory'),
@@ -326,12 +334,23 @@ export default defineComponent({
         acceptClass: 'p-button-danger',
         group: 'dialog',
         accept: () => {
-          console.log('deleted');
+          if (isDeleteAllowed){
+            setLoading(true);
+            store.dispatch(ActionTypes.DeleteCategory, categoryId).then(() => {
+            setLoading(false);
+            push(projectPagePath.value);
+          }).finally( () => {
+            setLoading(false);});
+          }
+          else {
+            console.warn('Not authorized');
+          }
         },
         reject: () => {
           console.log('not deleted');
         }
       });
+      setLoading(false);
     }
 
     const displayCategoryEditor = ref(false);

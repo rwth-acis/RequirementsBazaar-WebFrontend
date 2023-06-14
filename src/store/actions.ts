@@ -23,6 +23,8 @@ export enum ActionTypes {
   FollowCategory = 'FOLLOW_CATEGORY',
   CreateCategory = 'CREATE_CATEGORY',
   UpdateCategory = 'UPDATE_CATEGORY',
+  DeleteCategory = 'DELETE_CATEGORY',
+
   FetchRequirementsOfCategory = 'FETCH_REQUIREMENTS',
   FetchRequirement = 'FETCH_REQUIREMENT',
   FetchCommentsOfRequirement = 'FETCH_COMMENTS',
@@ -149,6 +151,7 @@ export type Actions = {
   [ActionTypes.FollowCategory](context: ActionAugments, payload: FollowResourceParameters): void;
   [ActionTypes.CreateCategory](context: ActionAugments, payload: Category): void;
   [ActionTypes.UpdateCategory](context: ActionAugments, payload: Category): void;
+  [ActionTypes.DeleteCategory](context: ActionAugments, categoryId: number): void;
   [ActionTypes.FetchRequirementsOfCategory](context: ActionAugments, payload: RequirementsRequestParameters): void;
   [ActionTypes.FetchRequirement](context: ActionAugments, requirementId: number): void;
   [ActionTypes.FetchCommentsOfRequirement](context: ActionAugments, requirementId: number): void;
@@ -305,6 +308,13 @@ export const actions: ActionTree<State, State> & Actions = {
     const response = await bazaarApi.categories.updateCategory(category);
     if (response.data && response.status === 200) {
       commit(MutationType.SetCategory, response.data);
+    }
+  },
+
+  async [ActionTypes.DeleteCategory]({ commit }, categoryId) {
+    const response = await bazaarApi.categories.deleteCategory(categoryId);
+    if (response.data && response.status === 200) {
+      commit(MutationType.RemoveCategory, categoryId);
     }
   },
 

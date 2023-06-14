@@ -12,6 +12,7 @@ export enum MutationType {
   SetProjectIsFollower = 'SET_PROJECT_IS_FOLLOWER',
   SetCategories = 'SET_CATEGORIES',
   SetCategory = 'SET_CATEGORY',
+  RemoveCategory = 'REMOVE_CATEGORY',
   SetCategoryIsFollower = 'SET_CATEGORY_IS_FOLLOWER',
   SetProjectTags = 'SET_PROJECT_TAGS',
   SetRequirements = 'SET_REQUIREMENTS',
@@ -68,6 +69,7 @@ export type Mutations = {
   [MutationType.SetProjectTags](state: State, {projectId, tags}): void;
   [MutationType.SetCategories](state: State, categories: Category[]): void;
   [MutationType.SetCategory](state: State, category: Category): void;
+  [MutationType.RemoveCategory](state: State, categoryId: number): void;
   [MutationType.SetCategoryIsFollower](state: State, {categoryId: number, isFollower: boolean}): void;
   [MutationType.SetRequirements](state: State, requirements: Requirement[]): void;
   [MutationType.SetRequirement](state: State, requirement: Requirement): void;
@@ -157,6 +159,10 @@ export const mutations: MutationTree<State> & Mutations = {
         state.categories[category.id] = category;
       }
     });
+  },
+
+  [MutationType.RemoveRequirement](state, categoryId) {
+    delete state.categories[categoryId];
   },
 
   [MutationType.SetProjectTags](state, {projectId , tags}) {
