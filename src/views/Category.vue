@@ -149,7 +149,7 @@ export default defineComponent({
   setup: (props) => {
     const store = useStore();
     const route = useRoute();
-    const { push } = useRouter();
+    const { push, go } = useRouter();
     const { t } = useI18n({ useScope: 'global' });
     const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated']);
     const confirm = useConfirm();
@@ -336,9 +336,10 @@ export default defineComponent({
         accept: () => {
           if (isDeleteAllowed){
             setLoading(true);
-            store.dispatch(ActionTypes.DeleteCategory, categoryId).then(() => {
+            store.dispatch(ActionTypes.DeleteCategory, categoryId).then(async () => {
             setLoading(false);
-            push(projectPagePath.value);
+            await push(projectPagePath.value);
+            go(0)
           }).finally( () => {
             setLoading(false);});
           }
