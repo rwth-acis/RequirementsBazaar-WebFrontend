@@ -133,5 +133,12 @@
     "edit": "Bearbeiten",
     "dashboard-projects": "Letzte Änderungen in verfolgten Projekten",
     "dashboard-categories": "Letzte Änderungen in verfolgten Kategorien",
-    "dashboard-requirements": "Letzte Änderungen in verfolgten Anforderungen"
+    "dashboard-requirements": "Letzte Änderungen in verfolgten Anforderungen",
+    "landing-commentsCountLabel": "Kommentare",
+    "landing-activeUsersCountRangeLabel": "im letzten Jahr",
+    "landing-features": "Funktionen",
+    "landing-activeUsersCountLabel": "Aktive Benutzer",
+    "landing-projectsCountLabel": "Projekte",
+    "landing-requirementsCountLabel": "Anforderungen",
+    "landing-lastMonthLabel": "letzter Monat"
 }
